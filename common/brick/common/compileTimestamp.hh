@@ -91,12 +91,4 @@ namespace brick {
 } // namespace brick
 
 
-/* ======= Declarations to maintain compatibility with legacy code. ======= */
-
-namespace brick {
-
-  using common::CompileTimestamp;
-  
-} // namespace brick
-
 #endif /* #ifndef BRICK_COMMON_COMPILETIMESTAMP_HH */

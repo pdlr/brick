@@ -103,20 +103,7 @@ namespace brick {
 } // namespace brick
 
 
-/* ======= Declarations to maintain compatibility with legacy code. ======= */
-
-namespace brick {
-
-  using common::ByteOrder;
-  using common::BRICK_BIG_ENDIAN;
-  using common::BRICK_LITTLE_ENDIAN;
-  using common::getByteOrder;
-  using common::switchByteOrder;
-  
-} // namespace brick
-
-
-/* ============ Implementation of template functions below ============ */
+/* ============ Implementation of template functions follows ============ */
 
 #include <algorithm>
 

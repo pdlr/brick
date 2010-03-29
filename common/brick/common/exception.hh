@@ -308,7 +308,7 @@ namespace brick {
        * copied from buffer.
        */
       virtual void
-      setPayload(unsigned char* buffer, unsigned int& payloadSize) throw();
+      setPayload(unsigned char* buffer, unsigned int payloadSize) throw();
       
 
       /** 

@@ -34,7 +34,7 @@ namespace brick {
     public:
       /* ============ Typedefs "inherited" from StreamType ============ */
       /// This typedef simply mirrors StreamType::char_type.
-      typedef StreamType::char_type char_type;
+      typedef typename StreamType::char_type char_type;
 
 
       /* ================== New typedefs and constants ================== */
@@ -86,7 +86,8 @@ namespace brick {
        * @param flags This argument specifies flags that influence the
        * behavior of the InputStream instance.
        */
-      InputStream(StreamType& inputStream, FormatFlag flags=NO_FLAG)
+      InputStream(StreamType& inputStream,
+                  FormatFlag flags=NO_FLAG)
         : m_istream(inputStream),
           m_skipWhiteSpace((flags & SKIP_WHITESPACE) != 0),
           m_sloppyExpect((flags & SLOPPY_EXPECT) != 0) {}
@@ -164,7 +165,7 @@ namespace brick {
        * corresponding istream member function.
        */
       void
-      clear(StreamType::iostate state=StreamType::goodbit) {
+      clear(typename StreamType::iostate state=StreamType::goodbit) {
         m_istream.clear(state);
       }
 
@@ -202,7 +203,7 @@ namespace brick {
        * @return The return value is simply the return value of the
        * corresponding StreamType member function.
        */
-      StreamType::int_type
+      typename StreamType::int_type
       get() {
         return m_istream.get();
       }
@@ -234,7 +235,7 @@ namespace brick {
        * @return The return value is simply the return value of the
        * corresponding StreamType member function.
        */
-      StreamType::int_type
+      typename StreamType::int_type
       peek() {
         return m_istream.peek();
       }
@@ -252,8 +253,8 @@ namespace brick {
        * @return The return value is a reference to *this.
        */
       InputStream&
-      expect(StreamType::char_type inputChar) {
-        StreamType::char_type readChar = 0;
+      expect(typename StreamType::char_type inputChar) {
+        typename StreamType::char_type readChar = 0;
         *this >> readChar;
         if(readChar != inputChar) {
           this->clear(std::ios_base::failbit);
@@ -303,7 +304,7 @@ namespace brick {
       InputStream&
       expect(const char* inputCString, size_t stringSize=0) {
         // We need an area into which to read.
-        StreamType::char_type inputBuffer[s_chunkSize + 1];
+        typename StreamType::char_type inputBuffer[s_chunkSize + 1];
 
         // Remove leading white space, if required.
         if(m_skipWhiteSpace) {
@@ -369,7 +370,7 @@ namespace brick {
        */
       void
       skipWhiteSpace() {
-        StreamType::char_type inputChar;
+        typename StreamType::char_type inputChar;
         m_istream >> inputChar;
         m_istream.putback(inputChar);
       }

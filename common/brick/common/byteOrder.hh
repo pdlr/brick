@@ -15,8 +15,8 @@
 
 #include <algorithm>
 #include <sstream>
-#include <brick/common/exception.hh>>
-#include <brick/common/types.hh>>
+#include <brick/common/exception.hh>
+#include <brick/common/types.hh>
 
 namespace brick {
 

@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file brick/common/compileTimestamp.cpp
+* @file brick/common/compileTimestamp.cc
 * Source file defining CompileTimestamp class.
 *
 * Copyright (C) 2006-2010 David LaRose, dlr@cs.cmu.edu
@@ -85,7 +85,7 @@ namespace brick {
     parseCompilerTimeString(const std::string& compilerTimeString)
     {
       std::istringstream compilerTimeStream(compilerTimeString);
-      InputStream brickStream(compilerTimeStream);
+      InputStream<std::istringstream> brickStream(compilerTimeStream);
       brickStream >> m_hour;
       brickStream.expect(":");
       brickStream >> m_minute;

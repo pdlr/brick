@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file brick/common/exception.cpp
+* @file brick/common/exception.cc
 * 
 * Source file defining some exception types.
 *
@@ -14,7 +14,7 @@
 #include <cstdio>
 #include <cstring>
 #include <stdexcept>
-#include <brick/common/exception.hh>>
+#include <brick/common/exception.hh>
 
 // Anonymous namespace for local functions.
 namespace {
@@ -117,7 +117,7 @@ namespace brick {
     Exception::
     Exception(const char* message, const char* fileName, int lineNumber)
       throw()
-      : std::exception()
+      : std::exception(),
         m_message(),
         m_payload(),
         m_payloadSize(0)
@@ -133,7 +133,7 @@ namespace brick {
     Exception(const char* message, const char* functionName,
               const char* fileName, int lineNumber)
       throw()
-      : std::exception()
+      : std::exception(),
         m_message(),
         m_payload(),
         m_payloadSize(0)
@@ -148,7 +148,7 @@ namespace brick {
     Exception::
     Exception(const Exception& source)
       throw()
-      : std::exception()
+      : std::exception(),
         m_message(),
         m_payload(),
         m_payloadSize(0)
@@ -162,7 +162,7 @@ namespace brick {
     // exception class.
     void
     Exception::
-    getPayload(unsigned char* buffer, unsigned int& payloadSize)
+    getPayload(unsigned char* buffer, unsigned int& payloadSize) throw()
     {
       payloadSize = m_payloadSize;
       memcpy(buffer, m_payload, m_payloadSize);
@@ -173,9 +173,11 @@ namespace brick {
     // exception class.
     void
     Exception::
-    setPayload(unsigned char* buffer, unsigned int payloadSize)
+    setPayload(unsigned char* buffer, unsigned int payloadSize) throw()
     {
-      m_payloadSize = std::min(payloadSize, BRICK_EXCEPTION_PAYLOAD_SIZE);
+      m_payloadSize = std::min(
+        payloadSize,
+        static_cast<unsigned int>(BRICK_EXCEPTION_PAYLOAD_SIZE));
       memcpy(m_payload, buffer, m_payloadSize);
     }
       
@@ -188,8 +190,8 @@ namespace brick {
       if(this != &source) {
         strncpy(m_message, source.m_message, BRICK_EXCEPTION_MESSAGE_LENGTH);
         m_message[BRICK_EXCEPTION_MESSAGE_LENGTH - 1] = '\0';
-        m_payloadSize = other.m_payloadSize;
-        memcpy(m_payload, other.m_payload, m_payloadSize);
+        m_payloadSize = source.m_payloadSize;
+        memcpy(m_payload, source.m_payload, m_payloadSize);
       }
       return *this;
     }
@@ -199,7 +201,7 @@ namespace brick {
     Exception::
     Exception(const char* message, const char* childClassName)
       throw()
-      : std::exception()
+      : std::exception(),
         m_message(),
         m_payload(),
         m_payloadSize(0)
@@ -215,7 +217,7 @@ namespace brick {
               const char* functionName, const char* fileName,
               int lineNumber)
       throw()
-      : std::exception()
+      : std::exception(),
         m_message(),
         m_payload(),
         m_payloadSize(0)

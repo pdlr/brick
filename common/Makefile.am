@@ -18,7 +18,7 @@ VPATH			= @srcdir@
 
 # We need to recurse into the following directories.
 
-SUBDIRS			= doc brick
+SUBDIRS			= doc brick/common
 
 
 # Specify the list of additional files that need to be included in the

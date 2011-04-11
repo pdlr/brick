@@ -4,6 +4,7 @@ import os
 import string
 import sys
 
+import pdb
 
 if __name__ == '__main__':
 
@@ -52,9 +53,9 @@ if __name__ == '__main__':
   
   # Fix include directives and doxygen file comments.
   os.system("sed "
-            + "-e 's/dlrCommon\/\(\S\)\(\S*\.\S*\)/brick\/common\/\l\1\2/g' "
-            + "-e 's/\(brick\/\S*\/\S*\.\)h$/\1hh/' "
-            + "-e 's/\(brick\/\S*\/\S*\.\)h\>/\1hh/' "
+            + r"-e 's/dlrCommon\/\(\S\)\(\S*\.\S*\)/brick\/common\/\l\1\2/g' "
+            + r"-e 's/\(brick\/\S*\/\S*\.\)h$/\1hh/' "
+            + r"-e 's/\(brick\/\S*\/\S*\.\)h\>/\1hh/' "
             + "< %s > %s" % (outputFileName, tempFileName))
   os.system("cp %s %s" % (tempFileName, outputFileName))
 

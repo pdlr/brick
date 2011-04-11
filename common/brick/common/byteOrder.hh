@@ -45,6 +45,26 @@ namespace brick {
 
 
     /** 
+     * This function swaps the byte order of a single value.
+     * 
+     * @param inputValue This argument is the value to be byte-swapped.
+     * 
+     * @param fromByteOrder This argument indicates the current byte
+     * order of the values in the array.
+     * 
+     * @param toByteOrder This argument specifies the desired final byte
+     * order for the data in the array.
+     *
+     * @return The byte-swapped value.
+     */
+    template <class Type>
+    inline Type
+    switchByteOrder(Type inputValue,
+                    ByteOrder fromByteOrder,
+                    ByteOrder toByteOrder);
+
+    
+    /** 
      * This function takes a pointer to a C-style array of values and
      * modifies the array in place so that it has a particular byte
      * order.
@@ -322,6 +342,19 @@ namespace brick {
     }
 
 
+    // This function swaps the byte order of a single value.
+    template <class Type>
+    inline Type
+    switchByteOrder(Type inputValue,
+                    ByteOrder fromByteOrder,
+                    ByteOrder toByteOrder)
+    {
+      Type returnValue;
+      switchByteOrder(&inputValue, 1, &returnValue, fromByteOrder, toByteOrder);
+      return returnValue;
+    }
+
+    
     // This function takes a pointer to a C-style array of values and
     // modifies the array in place so that it has a particular byte
     // order.

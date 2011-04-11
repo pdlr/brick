@@ -60,17 +60,18 @@ namespace brick {
      ** will be deleted.
      **
      ** One note regarding thread safety: if you use ReferenceCount as
-     ** a member of a class that is shared between threads, and that
-     ** manages its own mutex locking (such as dlrThread::Monitor)
-     ** construction and destruction of the members of the containing
-     ** class will most likely happen outside of the locked sections
-     ** of code.  This means that the ReferenceCount copy constructor
-     ** and destructor will be called without protection, which is not
-     ** thread-safe.  To solve this, you can dynamically allocate the
-     ** ReferenceCount instance using new, keep a pointer to the
-     ** ReferenceCount as a member of the class, and explicitly manage
-     ** copying, incrementing, and decrementing of the ReferenceCount
-     ** inside the locked sections of code.
+     ** a member of a class that is shared between threads, and this
+     ** class manages its own mutex locking (such as
+     ** brick::thread::Monitor), construction and destruction of the
+     ** members of the containing class will most likely happen
+     ** outside of the locked sections of code.  This means that the
+     ** ReferenceCount copy constructor and destructor will be called
+     ** without protection, which is not thread-safe.  To solve this,
+     ** you can dynamically allocate the ReferenceCount instance using
+     ** new, keep a pointer to the ReferenceCount as a member of the
+     ** class, and explicitly manage copying, incrementing, and
+     ** decrementing of the ReferenceCount inside the locked sections
+     ** of code.
      **/
     class ReferenceCount
     {

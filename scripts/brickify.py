@@ -53,6 +53,7 @@ if __name__ == '__main__':
   # Fix include directives and doxygen file comments.
   os.system("sed "
             + r"-e 's/dlrCommon\/\(\S\)\(\S*\.\S*\)/brick\/common\/\l\1\2/g' "
+            + r"-e 's/dlrOptimization\/\(\S\)\(\S*\.\S*\)/brick\/optimization\/\l\1\2/g' "
             + r"-e 's/\(brick\/\S*\/\S*\.\)h$/\1hh/' "
             + r"-e 's/\(brick\/\S*\/\S*\.\)h\>/\1hh/' "
             + "< %s > %s" % (outputFileName, tempFileName))

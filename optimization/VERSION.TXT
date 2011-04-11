@@ -1,0 +1,3 @@
+/** @file VERSION.TXT
+This is dlrOptimization version 2.1a1
+**/

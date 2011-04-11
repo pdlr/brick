@@ -21,9 +21,9 @@ namespace brick {
     // levels to an automatically generated stack trace.
     void
     addTrace(brick::common::Exception& caughtException,
-             std::string& message)
+             std::string const& message)
     {
-      const char* ellipsisString = "...\n";
+      const char* ellipsisString = "...";
       const size_t ellipsisLength = strlen(ellipsisString);
 
       // Sanity check.
@@ -38,15 +38,14 @@ namespace brick {
         useEllipsis = true;
         messageLength = BRICK_COMMON_TRACE_MESSAGE_LENGTH - ellipsisLength;
       }
-      
+
       // Copy the message into the next part of the stack trace.
       // Exception is smart enough not to overflow.
       caughtException.setPayload(
         caughtException.getPayloadSize(), message.c_str(), messageLength);
-        if(useEllipsis) {
-          caughtException.setPayload(
-            caughtException.getPayloadSize(), ellipsisString, ellipsisLength);
-        }
+      if(useEllipsis) {
+        caughtException.setPayload(
+          caughtException.getPayloadSize(), ellipsisString, ellipsisLength);
       }
     }
 
@@ -57,14 +56,19 @@ namespace brick {
     getTrace(brick::common::Exception const& caughtException)
     {
       unsigned int dummy;
-      unsigned char* buffer =
-        new unsigned char[caughtException.getPayloadSize()];
-      caughtException.getPayload(buffer, dummy);
-      return std::string(buffer);
+      char* buffer = new char[caughtException.getPayloadSize()];
+      try {
+        caughtException.getPayload(buffer, dummy);
+        std::string returnValue(buffer, caughtException.getPayloadSize());
+        delete[] buffer;
+        return returnValue;
+      } catch(...) {
+        delete[] buffer;
+        throw;
+      }
+      return "";
     }
-    
+  
   } // namespace common
 
 } // namespace brick
-
-#endif /* #ifndef BRICK_COMMON_TRACEABLE_HH */

@@ -38,6 +38,16 @@
 #define BRICK_COMMON_USE_TRACEABLE 0
 #endif /* #ifndef BRICK_COMMON_USE_TRACEABLE */
 
+
+/**
+ ** This macro specifies how many characters are allowable in the
+ ** description of each level of a stack trace.  The total number of
+ ** stack levels you can report will be greater than or equal to
+ ** BRICK_EXCEPTION_PAYLOAD_SIZE / BRICK_COMMON_TRACE_MESSAGE_LENGTH.
+ **/
+#define BRICK_COMMON_TRACE_MESSAGE_LENGTH 512
+
+
 /**
  ** If BRICK_COMMON_USE_TRACEABLE is nonzero, this macro works with
  ** END_TRACEABLE to build a stack trace.  Use it inside each function
@@ -90,24 +100,25 @@
  **/
 #if BRICK_COMMON_USE_TRACEABLE
 
-#define END_TRACEABLE(functionName, argumentList) \
-  } catch(brick::Exception& caughtException) { \
-    try { \
-      std::ostringstream brick_end_traceable_message; \
-      brick_end_traceable_message \
-        << "\n\n  (" << __FILE__ << ", " << __LINE__ << "): " \
-        << #functionName << "()"; \
-      brick_end_traceable_message \
-        << brick::describeArguments argumentList; \
-      addTrace(caughtException, brick_end_traceable_message.str());      \
-    } catch(...) { \
-      /* Empty. The most likely reason to get here is std::bad_alloc */ \
-      /* during the call to describeArguments() or during the call to */ \
-      /* addTrace(). */ \
-    } \
-    /* This throw statment should rethrow the brick::Exception instance, */ \
-    /* _not_ any exception caught by the catch(...) statement above. */ \
-    throw; \
+#define END_TRACEABLE(functionName, argumentList)                          \
+  } catch(brick::common::Exception& caughtException) {                     \
+    try {                                                                  \
+      std::ostringstream brick_common_end_traceable_message;               \
+      brick_common_end_traceable_message                                   \
+        << "\n\n  (" << __FILE__ << ", " << __LINE__ << "): "              \
+        << #functionName << "()";                                          \
+      brick_common_end_traceable_message                                   \
+        << brick::common::describeArguments argumentList;                  \
+      addTrace(caughtException, brick_common_end_traceable_message.str()); \
+    } catch(...) {                                                         \
+      /* Empty. The most likely reason to get here is std::bad_alloc   */  \
+      /* during the call to describeArguments() or during the call to  */  \
+      /* addTrace().                                                   */  \
+    }                                                                      \
+    /* This throw statment should rethrow the brick::common Exception  */  \
+    /* instance, _not_ any exception caught by the catch(...)          */  \
+    /* statement above.                                                */  \
+    throw;                                                                 \
   }
 
 #else /* #if BRICK_COMMON_USE_TRACEABLE */
@@ -136,7 +147,7 @@ namespace brick {
      */
     void
     addTrace(brick::common::Exception& caughtException,
-             std::string& message);
+             std::string const& message);
 
 
     /** 

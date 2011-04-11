@@ -13,6 +13,8 @@
 #ifndef BRICK_COMMON_CONSTANTS_HH
 #define BRICK_COMMON_CONSTANTS_HH
 
+#include <brick/common/types.hh>
+
 namespace brick {
 
   namespace common {
@@ -20,20 +22,21 @@ namespace brick {
     namespace constants {
 
       // Basic physical constants.
-      const double e = 2.7182818284590451;
-      const double pi = 3.141592653589793238;
+      const brick::common::Float64 e = 2.7182818284590451;
+      const brick::common::Float64 pi = 3.141592653589793238;
 
       // Empirical constants.
-      const double avogadro = 6.02214179E23;
+      const brick::common::Float64 avogadro = 6.02214179E23;
 
       // Constants that derive from the basic ones.
-      const double degreesPerRadian = 180.0 / pi;
-      const double piOverTwo = 1.5707963267948966;
-      const double radiansPerDegree = pi / 180.0;
-      const double rootTwo = 1.4142135623730951;
-      const double rootOverTwo = 0.70710678118654757;
-      
-    } // nameapace contants
+      const brick::common::Float64 degreesPerRadian = 180.0 / pi;
+      const brick::common::Float64 piOverTwo = 1.5707963267948966;
+      const brick::common::Float64 radiansPerDegree = pi / 180.0;
+      const brick::common::Float64 rootTwo = 1.4142135623730951;
+      const brick::common::Float64 rootOverTwo = 0.70710678118654757;
+      const brick::common::Float64 twoPi = 2.0 * pi;
+
+    } // namespace contants
 
   } // namespace common
 

@@ -214,7 +214,8 @@ namespace brick {
 } // namespace brick
 
 
-int main(int argc, char** argv)
+// int main(int argc, char** argv)
+int main(int, char**)
 {
   bool result = true;
   result &= brick::common::testGetByteOrder();

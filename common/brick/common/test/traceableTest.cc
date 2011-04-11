@@ -187,7 +187,8 @@ namespace {
 } // anonymous namespace
 
 
-int main(int argc, char** argv)
+// int main(int argc, char** argv)
+int main(int, char**)
 {
   bool result = true;
   result &= testEllipsis();

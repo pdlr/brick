@@ -1,4 +1,4 @@
-export COMMONFLAGS="-Wall -g"
+export COMMONFLAGS="-Wall -Wextra -Wunsafe-loop-optimizations -Wshadow -g"
 
 export CFLAGS="$COMMONFLAGS"
 

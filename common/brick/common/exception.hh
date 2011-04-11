@@ -1,10 +1,10 @@
 /**
 ***************************************************************************
-* @file brick/common/exception.hh
+* @file brick/common/Exception.hh
 * 
 * Header file declaring some exception types.
 *
-* Copyright (c) 2003-2010, David LaRose, dlr@cs.cmu.edu
+* Copyright (c) 2003-2011, David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
@@ -28,15 +28,19 @@
 
 
 /**
- ** This macro to controls how much extra storage will be statically
+ ** This macro controls how much extra storage will be statically
  ** allocated in each exception instance to handle additional
- ** user-defined payload data.  I specifies how much extra stuff you
+ ** user-defined payload data.  It specifies how much extra stuff you
  ** can piggyback onto a brick::exception if you want to communicate
  ** with calling contexts in a way that doesn't involve the "what"
  ** message.
+ **
+ ** WARNING: If you change the value of this macro, then the size of
+ ** brick::Exception will change, and you must recompile all of your
+ ** code with the new value or you'll have nasty linkage errors.
  **/
 #ifndef BRICK_EXCEPTION_PAYLOAD_SIZE
-#define BRICK_EXCEPTION_PAYLOAD_SIZE 512
+#define BRICK_EXCEPTION_PAYLOAD_SIZE 8192
 #endif /* #ifndef BRICK_EXCEPTION_PAYLOAD_SIZE */
 
 
@@ -162,6 +166,7 @@ namespace brick {
      ** from a routine in namespace crl, you need to catch the
      ** standard exceptions explicitly, like this:
      **
+     ** @code
      **   try {
      **     brick::foo();
      **   } catch(brick::Exception& e) {
@@ -169,17 +174,20 @@ namespace brick {
      **   } catch {std::exception& e) {
      **     // ...
      **   }
+     ** @endcode
      **
      ** if you must handle every possible exception from a routine in
      ** namespace brick, and you don't care about the added features of
      ** brick::Exception, you can omit the catch(brick::Exception&) block
      ** and still catch everything, like this:
      **
+     ** @code
      **   try {
      **     brick::foo();
      **   } catch {std::exception& e) {
      **     // ...
      **   }
+     ** @endcode
      **   
      **
      ** Finally, note that brick::Exception and its immediate subclasses
@@ -267,9 +275,30 @@ namespace brick {
        * many bytes of data were copied.
        */
       virtual void
-      getPayload(unsigned char* buffer, unsigned int& payloadSize) throw();
+      getPayload(unsigned char* buffer,
+                 unsigned int& payloadSize) const throw();
 
 
+      /** 
+       * This public method copies returns the current length of the
+       * user-supplied data stored in the exception class.  It is
+       * useful if you need to append to that data using the three
+       * argument version of member function setPayload().  You might
+       * use it like this:
+       *
+       * @code
+       *   char[] message = "To be appended.\n";
+       *   myException.setPayload(myException.getPayloadSize(),
+       *                          message, sizeof(message));
+       * @endcode
+       * 
+       * @param return The return value indicates the current size of
+       * the user supplied payload data.
+       */
+      virtual unsigned int
+      getPayloadSize() const throw();
+
+      
       /** 
        * This public method copies user-supplied data into the
        * exception class.  It is used in conjunction with getPayload()
@@ -285,6 +314,32 @@ namespace brick {
        */
       virtual void
       setPayload(unsigned char* buffer, unsigned int payloadSize) throw();
+      
+
+      /** 
+       * This public method copies user-supplied data into the
+       * exception class.  It differs from the two-argument version of
+       * setPayload() in that the user-supplied data is copied after
+       * skipping over a user-determined number of bytes of internal
+       * storage.  See member function getPayloadSize() for an example
+       * of how to use this member function.  If the existing payload
+       * is shorter than skipBytes, then any uninitialized bytes of
+       * the payload will be filled in with \0.
+       *
+       * @param skipBytes This argument specifies how many bytes of
+       * exisiting payload to skip before beginning to copy the input
+       * buffer.
+       *
+       * @param buffer This argument points to a data buffer from
+       * which at most BRICK_EXCEPTION_PAYLOAD_SIZE bytes will be
+       * copied.
+       * 
+       * @param payloadSize This argument controls how many bytes are
+       * copied from buffer.
+       */
+      virtual void
+      setPayload(unsigned int skipBytes, unsigned char* buffer,
+                 unsigned int payloadSize) throw();
       
 
       /** 
@@ -318,7 +373,9 @@ namespace brick {
        * argument is set to 0, the what() message will simply be copied
        * from message.  For example, calling the constructor like this:
        *
+       * @code
        *   brick::Exception("My message.", "MyException")
+       * @endcode
        *
        * results in the following what() message:
        *
@@ -326,7 +383,9 @@ namespace brick {
        *
        * Calling the constructor like this:
        *
+       * @code
        *   brick::Exception("My message.", 0)
+       * @endcode
        *
        * results in the following what() message:
        *
@@ -350,8 +409,10 @@ namespace brick {
        * arguments in a visually pleasing way.  The constructor might be
        * called from a derived class like this:
        *
+       * @code
        *   brick::Exception("My message.", "MyException", "myFunction(int)",
        *                    "myFile.cc", 265)
+       * @endcode
        * 
        * @param message This argument is a C-style string specifying the
        * desired what() message.
@@ -396,7 +457,7 @@ namespace brick {
     class IOException : public Exception {
     public:
       IOException() throw()
-      : Exception("", "IOException") {}
+        : Exception("", "IOException") {}
 
       IOException(const char* message) throw()
         : Exception(message, "IOException") {}
@@ -482,4 +543,4 @@ namespace brick {
   
 } // namespace brick
 
-#endif /* #ifndef BRICK_COMMON_EXCEPTION_HH */
+#endif /* #ifndef BRICK_COMMON_EXCEPTION_HHH */

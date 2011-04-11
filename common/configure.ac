@@ -12,7 +12,8 @@ AC_INIT(brick::common, 1.0)
 AC_CONFIG_SRCDIR(brick/common/Makefile.am)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR([m4])
-AM_CONFIG_HEADER(config.h:config-h.in)
+AC_CONFIG_HEADERS(config.h)
+# AM_CONFIG_HEADER(config.h:config-h.in)
 AM_INIT_AUTOMAKE(1.7)
 AM_MAINTAINER_MODE
 

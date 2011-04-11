@@ -1,5 +1,7 @@
-export CFLAGS="-Wall -g"
+export COMMONFLAGS="-Wall -g"
 
-export CXXFLAGS="-Wall -g"
+export CFLAGS="$COMMONFLAGS"
 
-./configure --prefix=$HOME
+export CXXFLAGS="$COMMONFLAGS"
+
+./configure --prefix=/var/tmp

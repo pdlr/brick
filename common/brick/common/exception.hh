@@ -82,27 +82,6 @@
 
 
 /** 
- * The BRICK_THROW3 macro is exactly equivalent to the DLR_THROW macro.
- * You might use it like this:
- *
- *   BRICK_THROW3(brick::IndexException, "myFunction(int)",
- *              "Argument value is out-of-bounds.");
- * 
- * @param exception This argument specifies the type of exception to
- * throw.
- * 
- * @param functionName This argument specifies the name of the
- * function from which the exception is being thrown.
- * 
- * @param message This argument specifies a C-style string describing
- * the error.
- */
-#define BRICK_THROW3(exception, functionName, message) {        \
-    throw exception(message, functionName, __FILE__, __LINE__); \
-  }
-
-
-/** 
  * This macro makes it easy to declare new exception types.  The point
  * of the Exception class heirarchy is to encourage client code to
  * derive its own exception classes.  Unfortunately, there are several
@@ -163,12 +142,9 @@
   }
 
 
-
 /**
- ** This namespace comprises all of the symbols defined in the
- ** dlr_libs suite of libraries.  These libraries include code for
- ** exception handling, unit testing, basic numeric types, and
- ** optimization, among other things.
+ ** This namespace comprises all of the symbols defined in the brick utility
+ ** libraries.
  **/
 namespace brick {
 
@@ -182,10 +158,9 @@ namespace brick {
     
     /**
      ** Base class for all exceptions thrown from code in namespace brick.
-     ** Note that we _don't_ catch standard exceptions and re-throw.
-     ** This means if you must handle every possibly exception from a
-     ** routine in namespace brick, you need to catch the standard
-     ** exceptions as well, like this:
+     ** Note that if you must handle every possible exception
+     ** from a routine in namespace crl, you need to catch the
+     ** standard exceptions explicitly, like this:
      **
      **   try {
      **     brick::foo();
@@ -195,9 +170,10 @@ namespace brick {
      **     // ...
      **   }
      **
-     ** Note that since brick::Exception is derived from std::exception,
-     ** you can omit the catch(brick::Exception&) block and still catch
-     ** everything, like this:
+     ** if you must handle every possible exception from a routine in
+     ** namespace brick, and you don't care about the added features of
+     ** brick::Exception, you can omit the catch(brick::Exception&) block
+     ** and still catch everything, like this:
      **
      **   try {
      **     brick::foo();
@@ -208,7 +184,7 @@ namespace brick {
      **
      ** Finally, note that brick::Exception and its immediate subclasses
      ** use no dynamically allocated memory.  Presumably this will pay
-     ** off sometime.
+     ** off eventually.
      **/
     class Exception : public std::exception {
     public:

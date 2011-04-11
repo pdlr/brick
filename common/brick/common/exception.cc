@@ -10,6 +10,7 @@
 ***************************************************************************
 **/
 
+#include <algorithm>
 #include <cstdarg>
 #include <cstdio>
 #include <cstring>
@@ -162,7 +163,7 @@ namespace brick {
     // exception class.
     void
     Exception::
-    getPayload(unsigned char* buffer, unsigned int& payloadSize) throw()
+    getPayload(char* buffer, unsigned int& payloadSize) const throw()
     {
       payloadSize = m_payloadSize;
       memcpy(buffer, m_payload, m_payloadSize);
@@ -173,7 +174,7 @@ namespace brick {
     // exception class.
     void
     Exception::
-    setPayload(unsigned char* buffer, unsigned int bufferSize) throw()
+    setPayload(char const* buffer, unsigned int bufferSize) throw()
     {
       this->setPayload(0, buffer, bufferSize);
     }
@@ -183,10 +184,11 @@ namespace brick {
     // exception class.
     void
     Exception::
-    setPayload(unsigned int skipBytes, unsigned char* buffer,
+    setPayload(unsigned int skipBytes, char const* buffer,
                unsigned int bufferSize) throw()
     {
-      skipBytes = std::min(skipBytes, BRICK_EXCEPTION_PAYLOAD_SIZE);
+      skipBytes = std::min(
+        skipBytes, static_cast<unsigned int>(BRICK_EXCEPTION_PAYLOAD_SIZE));
       if(skipBytes > m_payloadSize) {
         std::memset(m_payload + m_payloadSize, '\0', skipBytes - m_payloadSize);
       }

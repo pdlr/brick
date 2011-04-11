@@ -275,8 +275,7 @@ namespace brick {
        * many bytes of data were copied.
        */
       virtual void
-      getPayload(unsigned char* buffer,
-                 unsigned int& payloadSize) const throw();
+      getPayload(char* buffer, unsigned int& payloadSize) const throw();
 
 
       /** 
@@ -313,7 +312,7 @@ namespace brick {
        * copied from buffer.
        */
       virtual void
-      setPayload(unsigned char* buffer, unsigned int bufferSize) throw();
+      setPayload(char const* buffer, unsigned int bufferSize) throw();
       
 
       /** 
@@ -338,7 +337,7 @@ namespace brick {
        * copied from buffer.
        */
       virtual void
-      setPayload(unsigned int skipBytes, unsigned char* buffer,
+      setPayload(unsigned int skipBytes, char const* buffer,
                  unsigned int bufferSize) throw();
       
 
@@ -444,7 +443,7 @@ namespace brick {
        */
       char m_message[BRICK_EXCEPTION_MESSAGE_LENGTH];
 
-      unsigned char m_payload[BRICK_EXCEPTION_PAYLOAD_SIZE];
+      char m_payload[BRICK_EXCEPTION_PAYLOAD_SIZE];
       unsigned int m_payloadSize;
     };
 

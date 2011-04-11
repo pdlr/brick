@@ -19,7 +19,8 @@ TESTS = \
 # Specify which tests should be build from source.
 
 check_PROGRAMS = \
-	byteOrderTest
+	byteOrderTest \
+	traceableTest
 
 
 # For each test which should be built from source, specify which 
@@ -27,6 +28,9 @@ check_PROGRAMS = \
 
 byteOrderTest_SOURCES = \
 	byteOrderTest.cc
+
+traceableTest_SOURCES = \
+	traceableTest.cc
 
 
 # Set the include path.

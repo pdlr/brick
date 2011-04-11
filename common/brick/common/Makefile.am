@@ -28,6 +28,7 @@ AM_CPPFLAGS		= -I$(top_srcdir)
 
 brickCommondir            = $(includedir)/brick/common
 brickCommon_HEADERS       = \
+	argumentDescription.hh \
 	byteOrder.hh \
 	compileTimestamp.hh \
 	constants.hh \
@@ -36,6 +37,7 @@ brickCommon_HEADERS       = \
 	mathFunctions.hh \
 	referenceCount.hh \
 	stridedPointer.hh \
+	traceable.hh \
 	triple.hh \
 	types.hh
 
@@ -45,7 +47,8 @@ brickCommon_HEADERS       = \
 lib_LTLIBRARIES         = libbrickCommon.la
 libbrickCommon_la_SOURCES = \
 	compileTimestamp.cc compileTimestamp.hh \
-	exception.cc exception.hh
+	exception.cc exception.hh \
+	traceable.cc traceable.hh
 
 
 # List the files that need to be cleaned.

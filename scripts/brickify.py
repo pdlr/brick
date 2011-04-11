@@ -38,7 +38,7 @@ if __name__ == '__main__':
   #    into macros that start with "DLR_".
   #  - 4th command turns macros that start with "DLR_" (no underscore)
   #    into macros that start with "BRICK_".
-  #  - 5th command turns macros that start with "_H" into macros that
+  #  - 5th command turns macros that end with "_H" into macros that
   #    start with "_HH".
   os.system("sed "
             + r"-e 's/_DLR/DLR/' "
@@ -52,10 +52,9 @@ if __name__ == '__main__':
   
   # Fix include directives and doxygen file comments.
   os.system("sed "
-            + "-e 's/dlrCommon\//brick\/common\//' "
-            + "-e 's/\(brick\/[^ 	]\/[^ 	]\)\.cpp/\1.cc/' "
-            + "-e 's/\.h$/\.hh/' "
-            + "-e 's/\.h\>/\.hh\>/' "
+            + "-e 's/dlrCommon\/\(\S\)\(\S*\.\S*\)/brick\/common\/\u\1\2/g' "
+            + "-e 's/\(brick\/\S*\/\S*\.\)h$/\1hh/' "
+            + "-e 's/\(brick\/\S*\/\S*\.\)h\>/\1hh/' "
             + "< %s > %s" % (outputFileName, tempFileName))
   os.system("cp %s %s" % (tempFileName, outputFileName))
 

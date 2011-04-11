@@ -13,7 +13,8 @@ VPATH			= @srcdir@
 # Specify which tests should be run.
 
 TESTS = \
-	byteOrderTest
+	byteOrderTest \
+	traceableTest
 
 
 # Specify which tests should be build from source.

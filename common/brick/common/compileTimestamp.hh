@@ -14,27 +14,15 @@
 #define BRICK_COMMON_COMPILETIMESTAMP_HH
 
 namespace brick {
-  namespace common {
-    /// @cond privateCode    
-    namespace privateCode {
-      const std::string compilerDateString(__DATE__);
-      const std::string compilerTimeString(__TIME__);
-    } // namespace privateCode;
-    /// @endcond
-  } // namespace common
-} // namespace brick;
-
-
-namespace brick {
 
   namespace common {
 
     /**
      ** The CompileTimestamp class permits user code to conveniently
-     ** assess when it was compiled.  To use this class, simply include
-     ** compileTimestamp.hh> and instantiate an instance of
-     ** CompileTimestamp.  This CompileTimestamp instance will reflect
-     ** the time at which the source file was compiled.
+     ** assess when it was compiled.  To use this class, simply
+     ** include compileTimestamp.hh and instantiate an instance of
+     ** CompileTimestamp.  The resulting CompileTimestamp instance
+     ** will reflect the time at which the source file was compiled.
      **/
     class CompileTimestamp
     {
@@ -46,8 +34,8 @@ namespace brick {
       CompileTimestamp()
         : m_day(0), m_hour(0), m_minute(0), m_month(0), m_second(0),
           m_year(0) {
-        this->parseCompilerDateString(privateCode::compilerDateString);
-        this->parseCompilerTimeString(privateCode::compilerTimeString);
+        this->parseCompilerDateString(std::string(__DATE__));
+        this->parseCompilerTimeString(std::string(__TIME__));
       }
 
 

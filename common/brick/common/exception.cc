@@ -4,7 +4,7 @@
 * 
 * Source file defining some exception types.
 *
-* Copyright (C) 2003-2010, David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2003-2011, David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
@@ -173,12 +173,27 @@ namespace brick {
     // exception class.
     void
     Exception::
-    setPayload(unsigned char* buffer, unsigned int payloadSize) throw()
+    setPayload(unsigned char* buffer, unsigned int bufferSize) throw()
     {
-      m_payloadSize = std::min(
-        payloadSize,
-        static_cast<unsigned int>(BRICK_EXCEPTION_PAYLOAD_SIZE));
-      memcpy(m_payload, buffer, m_payloadSize);
+      this->setPayload(0, buffer, bufferSize);
+    }
+
+
+    // This public method copies user-supplied data into the
+    // exception class.
+    void
+    Exception::
+    setPayload(unsigned int skipBytes, unsigned char* buffer,
+               unsigned int bufferSize) throw()
+    {
+      skipBytes = std::min(skipBytes, BRICK_EXCEPTION_PAYLOAD_SIZE);
+      if(skipBytes > m_payloadSize) {
+        std::memset(m_payload + m_payloadSize, '\0', skipBytes - m_payloadSize);
+      }
+      bufferSize = std::min(
+        bufferSize, BRICK_EXCEPTION_PAYLOAD_SIZE - skipBytes);
+      memcpy(m_payload + skipBytes, buffer, bufferSize);
+      m_payloadSize = skipBytes + bufferSize;
     }
       
 

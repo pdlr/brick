@@ -296,7 +296,7 @@ namespace brick {
        * the user supplied payload data.
        */
       virtual unsigned int
-      getPayloadSize() const throw();
+      getPayloadSize() const throw() {return m_payloadSize;}
 
       
       /** 
@@ -309,11 +309,11 @@ namespace brick {
        * which at most BRICK_EXCEPTION_PAYLOAD_SIZE bytes will be
        * copied.
        * 
-       * @param payloadSize This argument controls how many bytes are
+       * @param bufferSize This argument controls how many bytes are
        * copied from buffer.
        */
       virtual void
-      setPayload(unsigned char* buffer, unsigned int payloadSize) throw();
+      setPayload(unsigned char* buffer, unsigned int bufferSize) throw();
       
 
       /** 
@@ -334,12 +334,12 @@ namespace brick {
        * which at most BRICK_EXCEPTION_PAYLOAD_SIZE bytes will be
        * copied.
        * 
-       * @param payloadSize This argument controls how many bytes are
+       * @param bufferSize This argument controls how many bytes are
        * copied from buffer.
        */
       virtual void
       setPayload(unsigned int skipBytes, unsigned char* buffer,
-                 unsigned int payloadSize) throw();
+                 unsigned int bufferSize) throw();
       
 
       /** 

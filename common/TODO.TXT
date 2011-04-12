@@ -1,0 +1,1 @@
+- Change InputStream to be a collection of IO manipulators.

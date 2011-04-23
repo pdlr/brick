@@ -20,29 +20,6 @@
 namespace brick {
 
   namespace common {
-
-    template <class Type = unsigned int>
-    class Enum {
-    public:
-      Enum(Type value = 0) : m_value(value) {}
-      ~Enum() {}
-
-      operator bool() const {return static_cast<bool>(m_value);}
-      
-      Enum operator&(Enum<Type> const& other) const {
-        return Enum<Type>(m_value & other.m_value);
-      }
-      Enum operator|(Enum<Type> const& other) const {
-        return Enum<Type>(m_value | other.m_value);
-      }
-      
-
-      Type getValue();
-
-    private:
-      Type m_value;
-    };
-    
     
     /**
      ** This class reads from an inputstream and checks to make sure
@@ -112,10 +89,17 @@ namespace brick {
 
 #endif
 
-      struct FormatFlag : public Enum<unsigned int> {
-        FormatFlag(unsigned int value) : Enum<unsigned int>(value){}
-        FormatFlag(Enum<unsigned int> const& value)
-          : Enum<unsigned int>(value){}
+      struct FormatFlag {
+        unsigned int value;
+        
+        FormatFlag(unsigned int arg = 0) : value(arg) {}
+        operator bool() const {return static_cast<bool>(value);}
+        FormatFlag operator&(FormatFlag const& other) const {
+          return FormatFlag(value & other.value);
+        }
+        FormatFlag operator|(FormatFlag const& other) const {
+          return FormatFlag(value | other.value);
+        }
       };
       static const FormatFlag NoFlag;
       static const FormatFlag SkipWhitespace;

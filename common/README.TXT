@@ -52,10 +52,10 @@ possible version looks like this:
 > make install
 @endcode
 
-If you're using the source files from subversion, you need to add a step:
+If you're using the source files from mercurial, you need to add a step:
 
 @code
-> [get source from svn]
+> [get source from mercurial]
 > ./bootstrap
 > ./configure
 > make

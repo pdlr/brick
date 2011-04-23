@@ -13,7 +13,7 @@
 #include <sstream>
 #include <brick/common/compileTimestamp.hh>
 #include <brick/common/exception.hh>
-#include <brick/common/inputStream.hh>
+#include <brick/common/expect.hh>
 
 namespace brick {
 

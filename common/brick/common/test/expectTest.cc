@@ -11,7 +11,7 @@
 
 #include <sstream>
 #include <string>
-#include <brick/common/inputStream.hh>
+#include <brick/common/expect.hh>
 
 namespace brick {
 

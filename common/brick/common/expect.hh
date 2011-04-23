@@ -30,8 +30,8 @@ namespace brick {
      **   myInputStream >> Expect("Number attending:") >> attendeeCount;
      **
      **   // Less strict: accept leading whitespace without issues.
-     **   myInputStream >> Expect("Number attending:", Expect::SkipWhitespace)
-     **                 >> attendeeCount;
+     **   Expect::FormatFlag flags = Expect::SkipWhitespace
+     **   myInputStream >> Expect("Number attending:", flags) >> attendeeCount;
      **
      **   // Don't actually look at the input.  Just read an
      **   // appropriate number of characters.
@@ -41,9 +41,8 @@ namespace brick {
      **   // First skip any leading whitespace, then read the required
      **   // number of input characters without actually looking at
      **   // them.
-     **   myInputStream >> Expect("Number attending:",
-     **                           Expect::Sloppy | Expect::SkipWhitespace)
-     **                 >> attendeeCount;
+     **   Expect::FormatFlag flags = Expect::SkipWhitespace | Expect::Sloppy;
+     **   myInputStream >> Expect("Number attending:", flags) >> attendeeCount;
      **   
      ** @endCode
      **
@@ -53,56 +52,36 @@ namespace brick {
     class Expect {
     public:
 
-# if 0
       /**
        ** This local type represents available modifiers to Expect's
        ** behavior.  See the usage example in the class documentation
-       ** for more information.
+       ** for more information.  We'd very much like to use an enum
+       ** here, but we want to allow bitwise operations on these
+       ** modifiers, and that gets tricky with enums (the result of
+       ** the bitwise operation is an integral type, which you can't
+       ** cast back to an enum).  We don't want to use an integral
+       ** type directly, because that would introduce an ambiguity in
+       ** the Expect constructors (Expect(char const*, size_t) vs
+       ** Expect(char const*, FormatFlag)).  Instead, we create this
+       ** surrogate.
        **/
-      typedef enum {
-        /// Default behavior.  Expect target exactly.
-        NoFlag         = 0x00,
-
-        /// Remove any preceding whitespace from the stream input
-        /// before comparing against the expectation.
-        SkipWhitespace = 0x01,
-
-        /// Simply read the correct number of bytes from the input
-        /// stream, but don't actually verify the that the bytes have the
-        /// right value.
-        Sloppy         = 0x02,
-      } FormatEnum;
-
-      /**
-       ** This type gives us a way to represent the result of applying
-       ** bitwise operations to FormatEnum values.
-       **/
-      struct FormatFlag {
-        unsigned int skipWhitespace : 1;
-        unsigned int sloppy : 1;
-
-        FormatFlag(unsigned int formatEnum)
-          : skipWhitespace(formatEnum & SkipWhitespace),
-            sloppy(formatEnum & Sloppy)
-          {}
-      };
-
-#endif
-
       struct FormatFlag {
         unsigned int value;
-        
-        FormatFlag(unsigned int arg = 0) : value(arg) {}
-        operator bool() const {return static_cast<bool>(value);}
-        FormatFlag operator&(FormatFlag const& other) const {
-          return FormatFlag(value & other.value);
-        }
-        FormatFlag operator|(FormatFlag const& other) const {
-          return FormatFlag(value | other.value);
-        }
+        explicit FormatFlag(unsigned int arg = 0) : value(arg) {}
+        operator unsigned int() const {return value;}
       };
+
+      /// Default behavior.  Expect target exactly.
       static const FormatFlag NoFlag;
+
+      /// Remove any preceding whitespace from the stream input
+      /// before comparing against the expectation.
       static const FormatFlag SkipWhitespace;
+
+      /// Simply read the correct number of bytes from the input
+      /// stream, but don't actually verify the that the bytes have
+      /// the right value.  This is useful if you need to read from
+      /// disk as fast as possible.
       static const FormatFlag Sloppy;
       
       

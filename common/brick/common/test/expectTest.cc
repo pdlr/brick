@@ -96,7 +96,7 @@ namespace brick {
       std::string inString;
       std::istringstream message0("Foo bar \t\n  baz  hork\n\nspork");
       Expect::FormatFlag flags(Expect::Sloppy);
-      message0 >> Expect("Foo", flags) >> Expect("nbyrn", flags)
+      message0 >> Expect("Foo", Expect::Sloppy) >> Expect("nbyrn", flags)
                >> Expect("\t\n  b", flags) >> inString;
       if(!message0) {
         return false;

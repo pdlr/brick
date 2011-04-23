@@ -48,6 +48,7 @@ lib_LTLIBRARIES         = libbrickCommon.la
 libbrickCommon_la_SOURCES = \
 	compileTimestamp.cc compileTimestamp.hh \
 	exception.cc exception.hh \
+	inputStream.cc inputStream.hh \
 	traceable.cc traceable.hh
 
 

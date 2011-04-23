@@ -84,14 +84,11 @@ namespace brick {
     CompileTimestamp::
     parseCompilerTimeString(const std::string& compilerTimeString)
     {
-      std::istringstream compilerTimeStream(compilerTimeString);
-      InputStream<std::istringstream> brickStream(compilerTimeStream);
-      brickStream >> m_hour;
-      brickStream.expect(":");
-      brickStream >> m_minute;
-      brickStream.expect(":");
-      brickStream >> m_second;
-      if(!brickStream) {
+      std::istringstream inputStream(compilerTimeString);
+      inputStream >> m_hour >> Expect(":")
+                  >> m_minute >> Expect(":")
+                  >> m_second;
+      if(!inputStream) {
 	std::ostringstream message;
 	message << "Unable to parse time string \"" << compilerTimeString
 		<< "\".";

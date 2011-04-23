@@ -54,7 +54,7 @@ dnl Output.
 AC_OUTPUT(Makefile \
           doc/Makefile \
           brick/common/Makefile \
-	  brick/common/test/Makefile)
+          brick/common/test/Makefile)
 
 echo \
 "------------------------------------------------------------------------

@@ -1,5 +1,8 @@
-export CFLAGS="-Wall -O2"
+export INSTALLDIR="/var/tmp"
+export COMMONFLAGS="-Wall -Wextra -Wunsafe-loop-optimizations -Wshadow -O2"
 
-export CXXFLAGS="-Wall -O2"
+export CPPFLAGS="-I$INSTALLDIR"
+export CFLAGS="$COMMONFLAGS"
+export CXXFLAGS="$COMMONFLAGS"
 
-./configure --prefix=$HOME
+./configure --prefix=$INSTALLDIR

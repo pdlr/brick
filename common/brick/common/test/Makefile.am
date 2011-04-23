@@ -14,7 +14,7 @@ VPATH			= @srcdir@
 
 TESTS = \
 	byteOrderTest \
-	inputStreamTest \
+	expectTest \
 	traceableTest
 
 
@@ -22,7 +22,7 @@ TESTS = \
 
 check_PROGRAMS = \
 	byteOrderTest \
-	inputStreamTest \
+	expectTest \
 	traceableTest
 
 
@@ -32,8 +32,8 @@ check_PROGRAMS = \
 byteOrderTest_SOURCES = \
 	byteOrderTest.cc
 
-inputStreamTest_SOURCES = \
-	inputStreamTest.cc
+expectTest_SOURCES = \
+	expectTest.cc
 
 traceableTest_SOURCES = \
 	traceableTest.cc

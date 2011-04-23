@@ -33,7 +33,7 @@ brickCommon_HEADERS       = \
 	compileTimestamp.hh \
 	constants.hh \
 	exception.hh \
-	inputStream.hh \
+	expect.hh \
 	mathFunctions.hh \
 	referenceCount.hh \
 	stridedPointer.hh \
@@ -48,7 +48,7 @@ lib_LTLIBRARIES         = libbrickCommon.la
 libbrickCommon_la_SOURCES = \
 	compileTimestamp.cc compileTimestamp.hh \
 	exception.cc exception.hh \
-	inputStream.cc inputStream.hh \
+	expect.cc expect.hh \
 	traceable.cc traceable.hh
 
 

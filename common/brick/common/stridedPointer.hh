@@ -1,6 +1,7 @@
 /**
 ***************************************************************************
-* @file brick/common/stridedPointer.hh> 
+* @file brick/common/stridedPointer.hh>
+*
 * Header file declaring StridedPointer class.
 *
 * Copyright (C) 2002-2003 David LaRose, dlr@cs.cmu.edu

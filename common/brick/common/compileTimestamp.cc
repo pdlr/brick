@@ -1,6 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/common/compileTimestamp.cc
+*
 * Source file defining CompileTimestamp class.
 *
 * Copyright (C) 2006-2010 David LaRose, dlr@cs.cmu.edu

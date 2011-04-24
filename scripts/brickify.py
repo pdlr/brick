@@ -31,6 +31,12 @@ if __name__ == '__main__':
             + "< %s > %s" % (outputFileName, tempFileName))
   os.system("cp %s %s" % (tempFileName, outputFileName))
 
+  # Make email addresses consistent.
+  os.system("sed "
+            + r"-e 's/dlr@alumni.carnegiemellon.edu/dlr@cs.cmu.edu/' "
+            + "< %s > %s" % (outputFileName, tempFileName))
+  os.system("cp %s %s" % (tempFileName, outputFileName))
+
   # Fix include guards and macro names.
   #  - 1st and 2nd commands remove leading and trailing "_" from DLR
   #    macros.
@@ -59,6 +65,7 @@ if __name__ == '__main__':
             + r"-e 's/dlrOptimization\/\(\S\)\(\S*\.\S*\)/brick\/optimization\/\l\1\2/g' "
             + r"-e 's/\(brick\/\S*\/\S*\.\)h$/\1hh/' "
             + r"-e 's/\(brick\/\S*\/\S*\.\)h\>/\1hh/' "
+            + r"-e 's/\(brick\/\S*\/\S*\.\)cpp\>/\1cc/' "
             + "< %s > %s" % (outputFileName, tempFileName))
   os.system("cp %s %s" % (tempFileName, outputFileName))
 

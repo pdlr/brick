@@ -1,0 +1,2 @@
+- Take the line wrapping code from test/testFixture.hh and turn it into an 
+  autofill() function.

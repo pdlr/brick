@@ -1,0 +1,3 @@
+/** @file VERSION.TXT
+This is brick::utilities version 1.0.
+**/

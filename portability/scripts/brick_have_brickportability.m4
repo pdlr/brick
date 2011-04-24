@@ -23,7 +23,7 @@ AC_DEFUN([BRICK_HAVE_BRICKPORTABILITY],
          [brick::portability::getCurrentTime();],
          [AC_MSG_RESULT([yes])],
          [AC_MSG_ERROR([Unable to build a test program against 
-          libbrickPortability.  Please check that the brickPortability utility 
+          libbrickPortability.  Please check that the brickPortability 
           library is installed.  If it is, and this test still fails, try 
           modifying the LDFLAGS environment variable so that the compiler 
           can more easily find the missing library.  Please also check that any 

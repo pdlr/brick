@@ -1,7 +1,7 @@
 dnl
 dnl BRICK_HAVE_BRICK_COMMON()
 dnl
-dnl Call this autoconf macro to check whether the dlrCommon library
+dnl Call this autoconf macro to check whether the brick::common library
 dnl development files are installed on your system.
 
 AC_DEFUN([BRICK_HAVE_BRICK_COMMON],

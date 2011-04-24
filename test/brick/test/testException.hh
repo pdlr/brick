@@ -30,7 +30,7 @@ namespace brick {
      ** it can also be thrown explicitly by the test code.
      **/
     class TestException;
-    BRICK_DECLARE_EXCEPTION_TYPE(TestException, brick::Exception);
+    BRICK_DECLARE_EXCEPTION_TYPE(TestException, brick::common::Exception);
 
   } // namespace test
   

@@ -25,7 +25,7 @@
  **/
 #define BRICK_TEST_ASSERT(assertion) { \
   if(!(assertion)) { \
-    BRICK_THROW2(brick::TestException, (#assertion)); \
+    BRICK_THROW2(brick::test::TestException, (#assertion)); \
   } \
 }
 
@@ -39,7 +39,7 @@
 #define BRICK_TEST_ASSERT_EXCEPTION(exceptionType, assertion) { \
   try { \
     assertion; \
-    BRICK_THROW2(brick::TestException, \
+    BRICK_THROW2(brick::test::TestException, \
                (#assertion " should throw " #exceptionType)); \
   } catch(const exceptionType&) {} \
 }

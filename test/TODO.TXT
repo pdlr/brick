@@ -1,0 +1,2 @@
+- Change ifndef to ifdef in autoregister.h.
+- Update sample code for TestFixture.

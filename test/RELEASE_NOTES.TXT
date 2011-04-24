@@ -1,0 +1,8 @@
+/** @file RELEASE_NOTES.TXT
+This file gives a high level overview of recent changes.
+
+Revision 1.0
+
+- Created brick::test by adapting dlrTest version 2.1.
+
+**/

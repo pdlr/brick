@@ -54,6 +54,8 @@ if __name__ == '__main__':
   os.system("sed "
             + r"-e 's/dlrCommon\/\(\S\)\(\S*\.\S*\)/brick\/common\/\l\1\2/g' "
             + r"-e 's/dlrPortability\/\(\S\)\(\S*\.\S*\)/brick\/portability\/\l\1\2/g' "
+            + r"-e 's/dlrTest\/\(\S\)\(\S*\.\S*\)/brick\/test\/\l\1\2/g' "
+            + r"-e 's/dlrUtilities\/\(\S\)\(\S*\.\S*\)/brick\/utilities\/\l\1\2/g' "
             + r"-e 's/dlrOptimization\/\(\S\)\(\S*\.\S*\)/brick\/optimization\/\l\1\2/g' "
             + r"-e 's/\(brick\/\S*\/\S*\.\)h$/\1hh/' "
             + r"-e 's/\(brick\/\S*\/\S*\.\)h\>/\1hh/' "

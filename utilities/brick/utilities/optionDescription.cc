@@ -45,7 +45,7 @@ namespace brick {
       : m_name(name),
         m_shortAppearance(shortAppearance),
         m_longAppearance(longAppearance),
-        m_requiresValue(requiresValue),
+        m_requiresValue(requireValue),
         m_allowPartialMatch(allowPartialMatch),
         m_docString(docString),
         m_defaultValue(defaultValue)

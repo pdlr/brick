@@ -38,7 +38,7 @@ namespace brick {
     OptionDescription(std::string const& name,
                       std::string const& shortAppearance,
                       std::string const& longAppearance,
-                      bool requiresValue,
+                      bool requireValue,
                       bool allowPartialMatch,
                       std::string const& docString,
                       std::string const& defaultValue)

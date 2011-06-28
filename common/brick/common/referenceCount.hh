@@ -21,10 +21,49 @@ namespace brick {
     
     /**
      ** The ReferenceCount class provides a convenient way to track a
-     ** shared resource so you know when to delete it.  Here is a
-     ** simple example of how you might use ReferenceCount to
-     ** implement an vector class with automatically managed shallow
-     ** copy semantics:
+     ** shared resource so you know when to delete it.  ReferenceCount
+     ** has two states: counted and uncounted.  It defaults to, and is
+     ** normally used in, the counted state.
+     **
+     ** In the counted state, ReferenceCount maintains an internal
+     ** count, which defaults to 1 at construction time.  Copying the
+     ** ReferenceCount instance increments the count, and destroying
+     ** the instance or any of its copies decrements the count.  If
+     ** the user initializes the count to 1 when constructing the
+     ** ReferenceCount instance, and then copies the instance whenever
+     ** the pointer to the shared resource is copied, then the count
+     ** provides a way of tracking how many copies of the shared
+     ** pointer are in use.  Increment and decrement operators are
+     ** provided so that the user can explicitly change the count if
+     ** necessary, but be very careful if you do this, as you can (for
+     ** example) fool the ReferenceCount instance into thinking that
+     ** no other ReferenceCount instances share the same count,
+     ** leading to memory errors when you destroy it.  Explicitly
+     ** decrementing the count past 1 is legal, but it's not clear why
+     ** you would want to do this.  Destroying the ReferenceCount with
+     ** a count of 1 or less will delete the internal count.
+     **
+     ** Calling the reset() method while in the counted state
+     ** decrements the count (affecting any copies), then abandons the
+     ** count and starts a new one. Calling reset() with argument 0
+     ** puts the ReferenceCount instance into the uncounted state.
+     ** Calling the reset() method with an argument greater than 1
+     ** starts the count at the specified value, indicating that other
+     ** references to the shared resource already exist.
+     **
+     ** In the uncounted state, the increment and decrement operators
+     ** have no effect, copying the ReferenceCount instance simply
+     ** creates another uncounted ReferenceCount instance, and
+     ** destroying copies has no effect on the count.  This is useful
+     ** if you need to create a ReferenceCount instance now, but only
+     ** initialize the count (using reset()) later when the shared
+     ** resource is allocated.  The only way to move from the
+     ** uncounted state to the counted state is to call the reset()
+     ** method with no argument, or with a nonzero argument.
+     ** 
+     ** Here is a simple example of how you might use ReferenceCount
+     ** to implement an vector class with automatically managed
+     ** shallow copy semantics:
      **
      ** @code
      **   template <class ElementType>
@@ -55,9 +94,9 @@ namespace brick {
      ** instance of MyVector and the copying instance of MyVector know
      ** that m_vectorPtr is shared.  Subsequent copies will further
      ** increment the count inside m_referenceCount.  When the copies
-     ** are deleted, the ReferenceCount destructor will decrement this
-     ** count until when the very last copy is destroyed, m_vectorPtr
-     ** will be deleted.
+     ** are destroyed, the ReferenceCount destructor will decrement
+     ** this count until, when the very last copy is destroyed,
+     ** m_vectorPtr will be deleted.
      **
      ** One note regarding thread safety: if you use ReferenceCount as
      ** a member of a class that is shared between threads, and this
@@ -71,51 +110,62 @@ namespace brick {
      ** new, keep a pointer to the ReferenceCount as a member of the
      ** class, and explicitly manage copying, incrementing, and
      ** decrementing of the ReferenceCount inside the locked sections
-     ** of code.
+     ** of code.  Alternatively, you could do the locking outside the
+     ** class (perhaps using brick::thread::Monitor) so that
+     ** constructor and destructor calls are protected.
      **/
     class ReferenceCount
     {
     public:
       /** 
-       * The default constructor sets the reference count to 1, indicating
-       * a new and unshared condition.  To indicate that there are existing
-       * references, pass a constructor argument greater than 1.  Use an
-       * argument of zero to indicate that the shared data has not been
-       * initialized.
+       * The default constructor sets the reference count to 1,
+       * indicating a counted and unshared condition.  To indicate
+       * that there are existing references, pass a constructor
+       * argument greater than 1.  Use an argument of zero to indicate
+       * that the shared data has not been initialized, and leave
+       * *this in the uncounted state.
        * 
        * @param count This argument specifies to what value the count
        * should be initialized.  For most applications, this argument
-       * should be set to 1.
+       * should be set to 1.  Setting this argument to zero indicates
+       * that no reference counting should be done (until a subsequent
+       * call to the reset() method).
        */
       ReferenceCount(size_t count=1)
         : m_countPtr(0) {
-        if(count != 0) {
-          m_countPtr = new size_t;
-          *m_countPtr = count;
-        }
+        this->reset(count);
       }
 
     
       /** 
-       * This is the copy constructor.  After copying, both ReferenceCount
-       * instances share the same count, and the count is incremented by one.
+       * This is the copy constructor.  If *this is in the counted
+       * state, then after copying both ReferenceCount instances share
+       * the same count, and the count is incremented by one.  If
+       * *this is in the uncounted state, then the copy will also be
+       * uncounted.
        * 
        * @param other The ReferenceCount instance to be copied.
        */
       ReferenceCount(const ReferenceCount& other)
         : m_countPtr(other.m_countPtr) {
-        if(m_countPtr != 0) {++(*m_countPtr);}
+        ++(*this);
       }
 
     
       /** 
-       * Decrements the count and destroys the ReferenceCount instance.
+       * Decrements the count (if the ReferenceCount instance is in
+       * the counted state) and destroys the ReferenceCount instance.
        */
-      ~ReferenceCount() {this->deleteIfNecessary();}
+      ~ReferenceCount() {
+        --(*this);
+        this->deleteIfNecessary();
+      }
 
     
       /** 
-       * The pre-increment operator increments the count by one.
+       * The pre-increment operator increments the count by one, if
+       * the ReferenceCount instance is in the counted state, and has
+       * no impact in the uncounted state.
        * 
        * @return A Reference to the incremented ReferenceCount instance.
        */
@@ -138,15 +188,15 @@ namespace brick {
 
     
       /** 
-       * The pre-decrement operator decrements the count by one.
+       * The pre-decrement operator decrements the count by one, if
+       * the ReferenceCount instance is in the counted state, and has
+       * no impact in the uncounted state.
        * 
        * @return A Reference to the decremented ReferenceCount instance.
        */
       ReferenceCount&
       operator--() {
-        if(m_countPtr != 0) {
-          if((*m_countPtr) != 0) {--(*m_countPtr);}
-        }
+        if(m_countPtr != 0) {--(*m_countPtr);}
         return *this;
       }
 
@@ -185,18 +235,18 @@ namespace brick {
        */
       ReferenceCount&
       operator-=(size_t offset) {
-        if(m_countPtr != 0) {
-          if((*m_countPtr) > offset) {(*m_countPtr) -= offset;}
-          else {(*m_countPtr) = 0;}
-        }
+        if(m_countPtr != 0) {(*m_countPtr) -= offset;}
         return *this;
       }
 
     
       /** 
-       * The assignment operator copies its argument.  After copying,
-       * both ReferenceCount instances share the same count, and the count
-       * is incremented by one.
+       * The assignment operator copies its argument.  After copying a
+       * ReferenceCount instance that is in the counted state, both
+       * ReferenceCount instances share the same count, and the count
+       * is incremented by one.  After copying a ReferenceCount
+       * instance that is in the uncounted state, both ReferenceCount
+       * instances are uncounted.
        * 
        * @param source The ReferenceCount instance to be copied.
        * @return A reference to *this.
@@ -205,35 +255,53 @@ namespace brick {
       operator=(const ReferenceCount& source) {
         // Check for self-assignment.
         if (this != &source) {
+          // Release the count that was previously tracked by *this.
+          --(*this);
           this->deleteIfNecessary();
+
+          // Adopt the new count and increment it.
           m_countPtr = source.m_countPtr;
-          if(m_countPtr != 0) {++(*m_countPtr);}
+          ++(*this);
         }
         return *this;
       }
 
     
       /** 
-       * This member function returns the current count.
+       * This member function returns the current count if the
+       * ReferenceCount instance is in the counted state, or 0
+       * otherwise.
        * 
        * @return The internal reference count.
        */
-      size_t
-      count() const {return *m_countPtr;}
+      int
+      getCount() const {
+        if(this->isCounted()) {return *m_countPtr;}
+        return 0;
+      }
 
     
       /** 
+       * This member function returns true if the ReferenceCount
+       * instance is in the counted state (see class documentation for
+       * ReferenceCount).
+       * 
+       * @return true if *this is in the counted state.
+       */
+      bool
+      isCounted() const {return this->m_countPtr != 0;}
+
+
+      /** 
        * This member function returns true if more than one
-       * ReferenceCount object is sharing the same data.  That is, it
-       * returns true if the internal count is greater than 1.
+       * ReferenceCount object is sharing the count with *this.  That
+       * is, it returns true if *this is in the counted state, and the
+       * internal count is greater than 1.
        * 
        * @return true if the internal count is greater than 1.
        */
       bool
-      isShared() const {
-        if(m_countPtr == 0) {return false;}
-        return ((*m_countPtr) > 1);
-      }
+      isShared() const {return (this->getCount() > 1);}
 
     
       /** 
@@ -248,27 +316,15 @@ namespace brick {
        */
       void
       reset(size_t count=1) {
+        --(*this);
         this->deleteIfNecessary();
         if(count != 0) {
-          m_countPtr = new size_t;
+          m_countPtr = new int;
           *m_countPtr = count;
         }
       }
 
       
-      /** 
-       * This member function is identical to member function
-       * isShared().  It is included for backwards compatibility with
-       * previous versions of ReferenceCount.
-       * 
-       * @return true if the internal count is greater than 1.
-       */
-      bool
-      shared() const {
-        return this->isShared();
-      }
-
-    
     private:
 
       /** 
@@ -277,19 +333,15 @@ namespace brick {
        */
       void deleteIfNecessary() {
         if(m_countPtr != 0) {
-          switch(*m_countPtr) {
-          case 0:
-          case 1:
+          if((*m_countPtr) <= 0) {
             delete m_countPtr;
             m_countPtr = 0;
-            break;
-          default:
-            --(*m_countPtr);
           }
         }
       }
-    
-      size_t* m_countPtr;
+
+      
+      int* m_countPtr;
     };
 
   } // namespace common

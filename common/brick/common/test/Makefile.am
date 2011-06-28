@@ -15,6 +15,7 @@ VPATH			= @srcdir@
 TESTS = \
 	byteOrderTest \
 	expectTest \
+	referenceCountTest \
 	traceableTest
 
 
@@ -23,6 +24,7 @@ TESTS = \
 check_PROGRAMS = \
 	byteOrderTest \
 	expectTest \
+	referenceCountTest \
 	traceableTest
 
 
@@ -34,6 +36,9 @@ byteOrderTest_SOURCES = \
 
 expectTest_SOURCES = \
 	expectTest.cc
+
+referenceCountTest_SOURCES = \
+	referenceCountTest.cc
 
 traceableTest_SOURCES = \
 	traceableTest.cc

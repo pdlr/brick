@@ -328,15 +328,16 @@ namespace brick {
     private:
 
       /** 
-       * This member function decrements the count and deletes the
-       * corresponding pointer if no references remain.
+       * This member function deletes the internal count pointer
+       * pointer if no references remain, and (always) resets the
+       * pointer to 0.
        */
       void deleteIfNecessary() {
         if(m_countPtr != 0) {
           if((*m_countPtr) <= 0) {
             delete m_countPtr;
-            m_countPtr = 0;
           }
+          m_countPtr = 0;
         }
       }
 

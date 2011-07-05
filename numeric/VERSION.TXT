@@ -1,0 +1,3 @@
+/** @file VERSION.TXT
+This is brick::numeric version 1.0.
+**/

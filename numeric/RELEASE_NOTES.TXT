@@ -1,0 +1,8 @@
+/** @file RELEASE_NOTES.TXT
+This file gives a high level overview of recent changes.
+
+Revision 1.0
+
+- Created brick::numeric by adapting dlrNumeric version 2.3a4.
+
+**/

@@ -48,9 +48,8 @@ got this library.
 
 @subsection autotools GNU Autotools
 
-On every other platform, building and installing is done via GNU
-Autotools.  If you're building from a tarball, the simplest
-possible version looks like this:
+Building and installing is done via GNU Autotools.  If you're building 
+from a tarball, the simplest possible version looks like this:
 
 @code
 > tar -xvf brickutilities-x.y.z.tar.gz

@@ -3,7 +3,7 @@
 * @file brick/test/autoregister.cpp
 *
 * Source file allowing control of what gets run by the main() routine
-* in libdlrTestAutomaticMain.
+* in libbrickTestAutomaticMain.
 *
 * Copyright (C) 2007-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.

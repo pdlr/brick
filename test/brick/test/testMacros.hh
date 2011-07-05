@@ -2,7 +2,7 @@
 ***************************************************************************
 * @file brick/test/testMacros.hh
 * 
-* Header file declaring macros for dlrTest library.
+* Header file declaring macros for brick::test library.
 *
 * Copyright (C) 2004-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.

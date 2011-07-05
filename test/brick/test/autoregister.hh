@@ -3,7 +3,7 @@
 * @file brick/test/autoregister.hh
 *
 * Header file allowing control of what gets run by the main() routine
-* in libdlrTestAutomaticMain.
+* in libbrickTestAutomaticMain.
 *
 * Copyright (C) 2007-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
@@ -34,7 +34,7 @@ namespace brick {
     /** 
      * This function Registers a test fixture with the pre-written
      * main() function so that it will be run automatically if the
-     * user chooses to link with libdlrTestAutoMain.  This function
+     * user chooses to link with libbrickTestAutoMain.  This function
      * can be disabled by defining BRICK_TEST_NO_AUTOMATIC_REGISTRATION.
      *
      * @param testFixture This argument is the test fixture to be
@@ -49,7 +49,7 @@ namespace brick {
     /** 
      * This function unregisters a test fixture with the pre-written
      * main() function so that it will not be be run automatically if
-     * the user chooses to link with libdlrTestAutoMain.  It undoes
+     * the user chooses to link with libbrickTestAutoMain.  It undoes
      * the effect of registerTestFixture().  This function can be
      * disabled by defining BRICK_TEST_NO_AUTOMATIC_REGISTRATION.
      *

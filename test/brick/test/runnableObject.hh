@@ -33,7 +33,7 @@ namespace brick {
       /** 
        * Constructor registers with the pre-written main() function so
        * that it will be run automatically if the user chooses to link
-       * with libdlrTestAutoMain.
+       * with libbrickTestAutoMain.
        */
       RunnableObject() {registerTestFixture(*this);}
 
@@ -42,7 +42,7 @@ namespace brick {
        * Destructor un-registers with the pre-written main() function
        * so that the no-longer-valid RunnableObject instance won't be
        * invoked automatically if the user chooses to link with
-       * libdlrTestAutoMain.
+       * libbrickTestAutoMain.
        */
       virtual
       ~RunnableObject() {unregisterTestFixture(*this);}

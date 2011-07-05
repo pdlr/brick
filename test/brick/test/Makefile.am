@@ -24,6 +24,7 @@ AM_CPPFLAGS		= -I$(top_srcdir)
 brickTestdir				= $(includedir)/brick/test
 brickTest_HEADERS			= \
 	autoregister.hh \
+	functors.hh \
 	runnableObject.hh \
 	testException.hh \
 	testFixture.hh \

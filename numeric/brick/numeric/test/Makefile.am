@@ -16,19 +16,22 @@ VPATH			= @srcdir@
 # Specify which tests should be run.
 
 TESTS			= \
-	array1DTest
+	array1DTest \
+	array2DTest
 
 
 # Specify which tests should be build from source.
 
 check_PROGRAMS          = \
-	array1DTest
+	array1DTest \
+	array2DTest
 
 
 # For each test which should be built from source, specify which 
 # source files.
 
 array1DTest_SOURCES		= array1DTest.cc arrayTestCommon.hh
+array2DTest_SOURCES		= array2DTest.cc arrayTestCommon.hh
 
 
 # Set the include path.

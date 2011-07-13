@@ -34,6 +34,7 @@ brickCommon_HEADERS       = \
 	constants.hh \
 	exception.hh \
 	expect.hh \
+	functional.hh \
 	mathFunctions.hh \
 	referenceCount.hh \
 	stridedPointer.hh \

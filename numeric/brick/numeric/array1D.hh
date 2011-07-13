@@ -702,13 +702,14 @@ namespace brick {
       /* ======== Private member functions ======== */
 
       /** 
-       * Allocate memory for array data and for reference count.
+       * Allocate memory for array data and initialize reference count.
        */
       void
       allocate(size_t arraySize);
 
       /** 
-       * Optionally throw an exception if index is beyond the range of
+       * Optionally (if and only if BRICK_NUMERIC_CHECKBOUNDS is
+       * defined) throw an exception if index is beyond the range of
        * this array.
        *
        * @param index The index to check.
@@ -1280,7 +1281,7 @@ namespace brick {
         std::ostringstream message;
         message << "Size mismatch: required size is " << arraySize
                 << " while *this has dimension " << this->size() << ".";
-        BRICK_THROW(IndexException, "Array1D::checkDimension()",
+        BRICK_THROW(common::IndexException, "Array1D::checkDimension()",
                   message.str().c_str());
       }
 #endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
@@ -1320,6 +1321,10 @@ namespace brick {
     Array1D<Type>::
     copy(const Type2* dataPtr)
     {
+      if(dataPtr == 0) {
+        BRICK_THROW(common::ValueException, "Array1D::copy(const Type2*)",
+                    "Argument is a NULL pointer.");
+      }
       std::copy(dataPtr, dataPtr + m_size, m_dataPtr);
     }
 
@@ -1362,6 +1367,9 @@ namespace brick {
       try{
         common::Expect::FormatFlag flags = common::Expect::SkipWhitespace;
       
+        // Skip any preceding whitespace.
+        inputStream >> common::Expect("", flags);
+
         // We won't require the input format to start with "Array1D(", but
         // if it does we read it here.
         bool foundIntro = false;
@@ -1571,17 +1579,17 @@ namespace brick {
     void Array1D<Type>::
     allocate(size_t arraySize)
     {
-      // First make sure to release any shared resources.
+      // Make sure to release any shared resources.
       this->deAllocate();
       
-      // First check array size.  It doesn't make sense to allocate memory
+      // Check array size.  It doesn't make sense to allocate memory
       // for a zero size array.
-      if(arraySize > 0) {
-        // Allocate data storage, and a new reference count.  new() should
-        // throw an exception if we run out of memory.
-        m_dataPtr = new(Type[arraySize]);
-        m_size = arraySize;
-
+      m_size = arraySize;
+      if(m_size > 0) {
+        // Allocate data storage.  new() should throw an exception if
+        // we run out of memory.
+        m_dataPtr = new(Type[m_size]);
+ 
         // Set reference count to show that exactly one Array is pointing
         // to this data.
         m_referenceCount.reset(1);

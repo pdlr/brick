@@ -3,7 +3,7 @@
 * @file arrayTestCommon.h
 * Source file defining ArrayTestCommon class template.
 *
-* Copyright (C) 2004 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2004-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

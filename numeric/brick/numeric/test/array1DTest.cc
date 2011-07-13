@@ -4,7 +4,7 @@
 * 
 * Source file defining Array1DTest class.
 *
-* Copyright (C) 2004 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2004-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
@@ -13,8 +13,6 @@
 #include <math.h>
 #include <iomanip>
 #include <sstream>
-// #include <brick/common/functional.hh>
-// #include <brick/numeric/utilities.hh>
 #include <brick/numeric/array1D.hh>
 #include <brick/test/functors.hh>
 

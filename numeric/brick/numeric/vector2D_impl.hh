@@ -1,16 +1,22 @@
 /**
 ***************************************************************************
-* @file vector2D.cpp
+* @file brick/numeric/vector2D_impl.hh
 *
 * Implementation file defining Vector2D class template.
 *
-* Copyright (C) 2000-2007 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2000-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
 **/
 
-#include <brick/numeric/vector2D.hh>
+#ifndef BRICK_NUMERIC_VECTOR2D_IMPL_HH
+#define BRICK_NUMERIC_VECTOR2D_IMPL_HH
+
+// This file is included by vector2D.hh, and should not be directly included
+// by user code, so no need to include vector2D.hh here.
+// 
+// #include <brick/numeric/vector2D.hh>
 
 namespace brick {
 
@@ -30,7 +36,7 @@ namespace brick {
     // This constructor explicitly sets the 2D coordinates.
     template <class Type>
     Vector2D<Type>::
-    Vector2D(double xCoord, double yCoord)
+    Vector2D(Type const& xCoord, Type const& yCoord)
       : m_x(xCoord),
         m_y(yCoord)
     {
@@ -42,7 +48,7 @@ namespace brick {
     // This constructor explicitly sets 2D homogeneous coordinates.
     template <class Type>
     Vector2D<Type>::
-    Vector2D(double xCoord, double yCoord, double alpha)
+    Vector2D(Type const& xCoord, Type const& yCoord, Type const& alpha)
       : m_x(xCoord),
         m_y(yCoord)
     {
@@ -83,7 +89,7 @@ namespace brick {
       
     // This member function returns the X component of the Vector2D.
     template <class Type>
-    inline double const&
+    inline Type const&
     Vector2D<Type>::
     getX() const
     {
@@ -93,7 +99,7 @@ namespace brick {
 
     // This member function returns the Y component of the Vector2D.
     template <class Type>
-    inline double const&
+    inline Type const&
     Vector2D<Type>::
     getY() const
     {
@@ -103,9 +109,9 @@ namespace brick {
     
     // This member function sets the X component of the Vector2D.
     template <class Type>
-    inline double const&
+    inline Type const&
     Vector2D<Type>::
-    setX(double const& newX)
+    setX(Type const& newX)
     {
       m_x = newX;
       return m_x;
@@ -114,9 +120,9 @@ namespace brick {
 
     // This member function sets the Y component of the Vector2D.
     template <class Type>
-    inline double const&
+    inline Type const&
     Vector2D<Type>::
-    setY(double const& newY)
+    setY(Type const& newY)
     {
       m_y = newY;
       return m_y;
@@ -128,7 +134,7 @@ namespace brick {
     template <class Type>
     inline Vector2D<Type> const&
     Vector2D<Type>::
-    setValue(double xCoord, double yCoord)
+    setValue(Type const& xCoord, Type const& yCoord)
     {
       m_x = xCoord;
       m_y = yCoord;
@@ -140,7 +146,7 @@ namespace brick {
     template <class Type>
     inline Vector2D<Type> const&
     Vector2D<Type>::
-    setValue(double xCoord, double yCoord, double alpha)
+    setValue(Type const& xCoord, Type const& yCoord, Type const& alpha)
     {
       m_x = xCoord;
       m_y = yCoord;
@@ -148,10 +154,12 @@ namespace brick {
     }
 
 
+#if 0
+    
     // This member function returns the X component of the Vector2D
     // by value.
     template <class Type>
-    inline double
+    inline Type
     Vector2D<Type>::
     x() const
     {
@@ -169,6 +177,7 @@ namespace brick {
       return m_y;
     }
     
+#endif /* #if 0 */
 
     // The assignment operator deep copies its argument.
     template <class Type>
@@ -185,7 +194,7 @@ namespace brick {
     // The indexing operator returns a reference to the x, or y
     // component of *this as if *this were a two element array.
     template <class Type>
-    inline double&
+    inline Type&
     Vector2D<Type>::
     operator[](size_t index)
     {
@@ -199,7 +208,7 @@ namespace brick {
     // The indexing operator returns the value of the x, or y
     // component of *this as if *this were a two element array.
     template <class Type>
-    inline double
+    inline Type
     Vector2D<Type>::
     operator[](size_t index) const
     {
@@ -213,7 +222,7 @@ namespace brick {
     template <class Type>
     Vector2D<Type>&
     Vector2D<Type>::
-    operator*=(double scalar)
+    operator*=(Type const& scalar)
     {
       m_x *= scalar; m_y *= scalar; return *this;
     }
@@ -224,10 +233,10 @@ namespace brick {
     template <class Type>
     Vector2D<Type>&
     Vector2D<Type>::
-    operator/=(double scalar)
+    operator/=(Type const& scalar)
     {
       if (scalar == 0.0) {
-        BRICK_THROW(ValueException, "Vector2D::operator/=()",
+        BRICK_THROW(common::ValueException, "Vector2D::operator/=()",
                     "Bad scalar: Divide by Zero\n");
       }
       m_x /= scalar; m_y /= scalar; return *this;
@@ -270,11 +279,11 @@ namespace brick {
     template <class Type>
     inline void
     Vector2D<Type>::
-    normalize(double alpha)
+    normalize(Type const& alpha)
     {
       if(alpha == 1.0) {return;}
       if(alpha == 0.0) {
-        BRICK_THROW(ValueException, "Vector2D::normalize()",
+        BRICK_THROW(common::ValueException, "Vector2D::normalize()",
                     "Bad alpha (0.0).");
       }
       m_x /= alpha; m_y /= alpha;
@@ -283,14 +292,14 @@ namespace brick {
 
     template <class Type>
     inline Vector2D<Type>
-    operator+(double scalar0, const Vector2D<Type>& vector0)
+    operator+(Type scalar0, const Vector2D<Type>& vector0)
     {
       return vector0 + scalar0;
     }
   
     template <class Type>
     inline Vector2D<Type>
-    operator*(double scalar0, const Vector2D<Type>& vector0)
+    operator*(Type scalar0, const Vector2D<Type>& vector0)
     {
       return vector0 * scalar0;
     }
@@ -330,7 +339,7 @@ namespace brick {
   
     template <class Type>
     Vector2D<Type>
-    operator+(const Vector2D<Type>& vector0, double scalar)
+    operator+(const Vector2D<Type>& vector0, Type scalar)
     {
       return Vector2D<Type>(vector0.x() + scalar,
                             vector0.y() + scalar);
@@ -338,7 +347,7 @@ namespace brick {
 
     template <class Type>
     Vector2D<Type>
-    operator-(const Vector2D<Type>& vector0, double scalar)
+    operator-(const Vector2D<Type>& vector0, Type scalar)
     {
       return Vector2D<Type>(vector0.x() - scalar,
                             vector0.y() - scalar);
@@ -346,7 +355,7 @@ namespace brick {
 
     template <class Type>
     Vector2D<Type>
-    operator*(const Vector2D<Type>& vector0, double scalar)
+    operator*(const Vector2D<Type>& vector0, Type scalar)
     {
       return Vector2D<Type>(vector0.x() * scalar,
                             vector0.y() * scalar);
@@ -354,7 +363,7 @@ namespace brick {
 
     template <class Type>
     Vector2D<Type>
-    operator/(const Vector2D<Type>& vector0, double scalar)
+    operator/(const Vector2D<Type>& vector0, Type scalar)
     {
       return Vector2D<Type>(vector0.x() / scalar,
                             vector0.y() / scalar);
@@ -390,7 +399,7 @@ namespace brick {
       const char intro[] = "Vector2D<Type>(";
       const char intermission[] = ",";
       const char outro[] = ")";
-      double x, y;
+      Type x, y;
       char inChar;
       size_t index;
 
@@ -429,3 +438,5 @@ namespace brick {
   } // namespace numeric
 
 } // namespace brick
+
+#endif  /* #ifndef BRICK_NUMERIC_VECTOR2D_IMPL_HH */

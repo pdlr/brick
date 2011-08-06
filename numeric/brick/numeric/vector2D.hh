@@ -2,7 +2,7 @@
 ***************************************************************************
 * @file brick/numeric/vector2D.hh
 *
-* Header file declaring Vector2D class.
+* Header file declaring Vector2D class template.
 *
 * Copyright (C) 2001-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
@@ -10,8 +10,8 @@
 ***************************************************************************
 **/
 
-#ifndef BRICK_VECTOR2D_HH
-#define BRICK_VECTOR2D_HH
+#ifndef BRICK_NUMERIC_VECTOR2D_HH
+#define BRICK_NUMERIC_VECTOR2D_HH
 
 #include <iostream>
 #include <brick/common/exception.hh>
@@ -92,7 +92,7 @@ namespace brick {
        * @return The return value is the X coordinate.
        */
       inline Type const&
-      getX() const {return m_x;}
+      getX() const;
 
 
       /** 
@@ -101,33 +101,9 @@ namespace brick {
        * @return The return value is the Y coordinate.
        */
       inline Type const&
-      getY() const {return m_y;}
+      getY() const;
 
     
-      /** 
-       * This member function sets the X component of the Vector2D.
-       *
-       * @param newX This parameter is the value to which the X
-       * coordinate will be set.
-       *
-       * @return The return value is the new X coordinate.
-       */
-      inline Type const&
-      setX(Type const& newX) {m_x = newX; return m_x;}
-
-
-      /** 
-       * This member function sets the Y component of the Vector2D.
-       *
-       * @param newY This parameter is the value to which the Y
-       * coordinate will be set.
-       *
-       * @return The return value is the new Y coordinate.
-       */
-      inline Type const&
-      setY(Type const& newY) {m_y = newY; return m_y;}
-
-
       /** 
        * This member function explicitly sets the sets coordinates of
        * the Vector2D instance.
@@ -140,6 +116,30 @@ namespace brick {
        */
       inline Vector2D<Type> const&
       setValue(Type const& xCoord, Type const& yCoord);
+
+
+      /** 
+       * This member function sets the X component of the Vector2D.
+       *
+       * @param newX This parameter is the value to which the X
+       * coordinate will be set.
+       *
+       * @return The return value is the new X coordinate.
+       */
+      inline Type const&
+      setX(Type const& newX);
+
+
+      /** 
+       * This member function sets the Y component of the Vector2D.
+       *
+       * @param newY This parameter is the value to which the Y
+       * coordinate will be set.
+       *
+       * @return The return value is the new Y coordinate.
+       */
+      inline Type const&
+      setY(Type const& newY);
 
 
       /** 
@@ -167,7 +167,7 @@ namespace brick {
        */
       inline Type&
       x() {return m_x;}
-#end if /* #if 0 */
+#endif /* #if 0 */
 
       /** 
        * This member function returns the X component of the Vector2D
@@ -186,7 +186,7 @@ namespace brick {
        * @return The return value the Y coordinate.
        */
       inline Type& y() {return m_y;}
-#end if /* #if 0 */
+#endif /* #if 0 */
 
     
       /** 
@@ -285,7 +285,7 @@ namespace brick {
        * @return The return value is a reference to *this after the
        * operation has been performed.
        */
-      Vector2D&
+      inline Vector2D&
       operator-=(Vector2D const& vec);
 
 
@@ -295,7 +295,8 @@ namespace brick {
        * 
        * @return The return value is a negated copy of *this.
        */
-      Vector2D operator-();
+      inline Vector2D
+      operator-();
 
       
     private:
@@ -521,6 +522,6 @@ namespace brick {
 
 
 // Definitions of inline and template functions.
-#include <vector2D_impl.hh>
+#include <brick/numeric/vector2D_impl.hh>
 
-#endif // #ifndef BRICK_VECTOR2D_HH
+#endif /* #ifndef BRICK_NUMERIC_VECTOR2D_HH */

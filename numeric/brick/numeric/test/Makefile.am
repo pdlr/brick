@@ -18,7 +18,8 @@ VPATH			= @srcdir@
 TESTS			= \
 	array1DTest \
 	array2DTest \
-	transform2DTest
+	transform2DTest \
+	transform3DTest
 
 
 # Specify which tests should be build from source.
@@ -26,7 +27,8 @@ TESTS			= \
 check_PROGRAMS          = \
 	array1DTest \
 	array2DTest \
-	transform2DTest
+	transform2DTest \
+	transform3DTest
 
 
 # For each test which should be built from source, specify which 
@@ -35,6 +37,7 @@ check_PROGRAMS          = \
 array1DTest_SOURCES		= array1DTest.cc arrayTestCommon.hh
 array2DTest_SOURCES		= array2DTest.cc arrayTestCommon.hh
 transform2DTest_SOURCES		= transform2DTest.cc arrayTestCommon.hh
+transform3DTest_SOURCES		= transform3DTest.cc arrayTestCommon.hh
 
 
 # Set the include path.

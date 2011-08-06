@@ -59,7 +59,8 @@ namespace brick {
        * @param alpha Scale factor.
        */
       inline
-      Vector3D(Type const& xCoord, Type const& yCoord, Type const& zCoord, Type const& alpha);
+      Vector3D(Type const& xCoord, Type const& yCoord, Type const& zCoord,
+               Type const& alpha);
 
       
       /** 
@@ -68,7 +69,7 @@ namespace brick {
        * @param source The Vector3D to be copied.
        */
       inline
-      Vector3D(const Vector3D& source);
+      Vector3D(const Vector3D<Type>& source);
 
 
       /** 
@@ -83,7 +84,7 @@ namespace brick {
        *
        * @return A reference to *this.
        */
-      inline Vector3D&
+      inline Vector3D<Type>&
       clear();
 
       
@@ -121,9 +122,8 @@ namespace brick {
        * @param yCoord The desired Y coordinate.
        * @param zCoord The desired Z coordinate.
        */
-      inline void setValue(Type const& xCoord, Type const& yCoord, Type const& zCoord) {
-        m_x = xCoord; m_y = yCoord; m_z = zCoord;
-      }
+      inline void
+      setValue(Type const& xCoord, Type const& yCoord, Type const& zCoord);
 
 
       /** 
@@ -181,7 +181,7 @@ namespace brick {
        * @return A reference to the x component of the vector.
        */
       inline Type& x() {return m_x;}
-#end if /* #if 0 */
+#endif /* #if 0 */
 
 
       /** 
@@ -198,7 +198,7 @@ namespace brick {
        * @return A reference to the y component of the vector.
        */
       inline Type& y() {return m_y;}
-#end if /* #if 0 */
+#endif /* #if 0 */
 
       /** 
        * Returns the y component of the vector by value.
@@ -214,7 +214,7 @@ namespace brick {
        * @return A reference to the z component of the vector.
        */
       inline Type& z() {return m_z;}
-#end if /* #if 0 */
+#endif /* #if 0 */
 
       
       /** 
@@ -231,8 +231,8 @@ namespace brick {
        * @param source The vector to be copied.
        * @return Reference to *this.
        */
-      inline Vector3D&
-      operator=(const Vector3D& source);
+      inline Vector3D<Type>&
+      operator=(const Vector3D<Type>& source);
       
 
       /** 
@@ -266,7 +266,7 @@ namespace brick {
        * @param scalar X, Y, and Z values will be multiplied by this value.
        * @return Reference to *this.
        */
-      inline Vector3D&
+      inline Vector3D<Type>&
       operator*=(Type const& scalar);
 
       
@@ -276,7 +276,7 @@ namespace brick {
        * @param scalar X, Y, and Z values will be divided by this value.
        * @return Reference to *this.
        */
-      inline Vector3D&
+      inline Vector3D<Type>&
       operator/=(Type const& scalar);
 
 
@@ -286,8 +286,8 @@ namespace brick {
        * @param vec The elements of vec will be added to *this.
        * @return Reference to *this.
        */
-      inline Vector3D&
-      operator+=(const Vector3D& vec);
+      inline Vector3D<Type>&
+      operator+=(const Vector3D<Type>& vec);
 
 
       /** 
@@ -296,8 +296,8 @@ namespace brick {
        * @param vec The elements of vec will be subtracted from *this.
        * @return Reference to *this.
        */
-      inline Vector3D&
-      operator-=(const Vector3D& vec);
+      inline Vector3D<Type>&
+      operator-=(const Vector3D<Type>& vec);
 
 
       /** 
@@ -305,7 +305,7 @@ namespace brick {
        * 
        * @return The result of the negation.
        */
-      inline Vector3D
+      inline Vector3D<Type>
       operator-();
 
     private:
@@ -332,8 +332,9 @@ namespace brick {
      * @return A Vector3D instance in which the value of each element is
      * equal to the sum of the corresponding elements of the two arguments.
      */
-    Vector3D
-    operator+(const Vector3D& vector0, const Vector3D& vector1);
+    template <class Type>
+    Vector3D<Type>
+    operator+(const Vector3D<Type>& vector0, const Vector3D<Type>& vector1);
 
     
     /** 
@@ -348,8 +349,9 @@ namespace brick {
      * equal to the difference of the corresponding elements of the two
      * arguments.
      */
-    Vector3D
-    operator-(const Vector3D& vector0, const Vector3D& vector1);
+    template <class Type>
+    Vector3D<Type>
+    operator-(const Vector3D<Type>& vector0, const Vector3D<Type>& vector1);
 
     
     /** 
@@ -362,8 +364,9 @@ namespace brick {
      * @return A Vector3D instance in which the value of each element is
      * equal to the product of the corresponding elements of the two arguments.
      */
-    Vector3D
-    operator*(const Vector3D& vector0, const Vector3D& vector1);
+    template <class Type>
+    Vector3D<Type>
+    operator*(const Vector3D<Type>& vector0, const Vector3D<Type>& vector1);
 
     
     /** 
@@ -377,8 +380,9 @@ namespace brick {
      * equal to the corresponding value of the first argument divided by
      * the corresponding value of the second argument.
      */
-    Vector3D
-    operator/(const Vector3D& vector0, const Vector3D& vector1);
+    template <class Type>
+    Vector3D<Type>
+    operator/(const Vector3D<Type>& vector0, const Vector3D<Type>& vector1);
 
     
     /** 
@@ -392,7 +396,9 @@ namespace brick {
      * equal to the corresponding value of the first argument plus the
      * value of the second argument.
      */
-    Vector3D operator+(const Vector3D& vector0, Type const& scalar0);
+    template <class Type>
+    Vector3D<Type>
+    operator+(const Vector3D<Type>& vector0, Type const& scalar0);
 
     
     /** 
@@ -406,7 +412,9 @@ namespace brick {
      * equal to the corresponding value of the first argument minus the
      * value of the second argument.
      */
-    Vector3D operator-(const Vector3D& vector0, Type const& scalar0);
+    template <class Type>
+    Vector3D<Type>
+    operator-(const Vector3D<Type>& vector0, Type const& scalar0);
 
     
     /** 
@@ -420,7 +428,9 @@ namespace brick {
      * equal to the corresponding value of the first argument multiplied by
      * the value of the second argument.
      */
-    Vector3D operator*(const Vector3D& vector0, Type const& scalar0);
+    template <class Type>
+    Vector3D<Type>
+    operator*(const Vector3D<Type>& vector0, Type const& scalar0);
 
     
     /** 
@@ -434,7 +444,9 @@ namespace brick {
      * equal to the corresponding value of the first argument divided by
      * the value of the second argument.
      */
-    Vector3D operator/(const Vector3D& vector0, Type const& scalar0);
+    template <class Type>
+    Vector3D<Type>
+    operator/(const Vector3D<Type>& vector0, Type const& scalar0);
 
     
     /**
@@ -444,7 +456,9 @@ namespace brick {
      * @param  vector1  Second vector to compare.
      * @return  Result of comparing @p vector0 to @p vector1 for equality.
      */
-    bool operator==(const Vector3D& vector0, const Vector3D& vector1);
+    template <class Type>
+    bool
+    operator==(const Vector3D<Type>& vector0, const Vector3D<Type>& vector1);
 
     
     /**
@@ -455,7 +469,9 @@ namespace brick {
      * @return  Result of comparing @p vector0 to @p vector1 for
      *          inequality.
      */
-    bool operator!=(const Vector3D& vector0, const Vector3D& vector1);
+    template <class Type>
+    bool
+    operator!=(const Vector3D<Type>& vector0, const Vector3D<Type>& vector1);
 
 
     /** 
@@ -470,7 +486,9 @@ namespace brick {
      * the sum of the scalar argument and the corresponding element of
      * the Vector3D argument.
      */
-    Vector3D operator+(Type const& scalar0, const Vector3D& vector0);
+    template <class Type>
+    Vector3D<Type>
+    operator+(Type const& scalar0, const Vector3D<Type>& vector0);
 
 
     /** 
@@ -485,7 +503,9 @@ namespace brick {
      * the product of the scalar argument and the corresponding element
      * of the Vector3D argument.
      */
-    Vector3D operator*(Type const& scalar0, const Vector3D& vector0);
+    template <class Type>
+    Vector3D<Type>
+    operator*(Type const& scalar0, const Vector3D<Type>& vector0);
 
 
     /** 
@@ -503,7 +523,9 @@ namespace brick {
      * @return The return value is a reference to the input stream after
      * the write has taken place.
      */
-    std::ostream& operator<<(std::ostream& stream, const Vector3D& vector0);
+    template <class Type>
+    std::ostream&
+    operator<<(std::ostream& stream, const Vector3D<Type>& vector0);
 
 
     /** 
@@ -520,7 +542,9 @@ namespace brick {
      * @return The return value is a reference to the input stream after
      * the read has taken place.
      */
-    std::istream& operator>>(std::istream& stream, Vector3D& vector0);
+    template <class Type>
+    std::istream&
+    operator>>(std::istream& stream, Vector3D<Type>& vector0);
 
   } // namespace numeric
 
@@ -528,6 +552,6 @@ namespace brick {
 
 
 // Definitions of inline and template functions.
-#include <vector2D_impl.hh>
+#include <brick/numeric/vector3D_impl.hh>
 
 #endif /* #ifndef BRICK_NUMERIC_VECTOR3D_HH */

@@ -57,6 +57,8 @@ namespace brick {
        * @param a20 The value of one element of the transformation matrix.
        * @param a21 The value of one element of the transformation matrix.
        * @param a22 The value of one element of the transformation matrix.
+       * @param doNormalize If true, the matrix will be rescaled so that its
+       * lower right element is 1.0.
        */
       inline
       Transform2D(Type const& a00, Type const& a01, Type const& a02,
@@ -70,6 +72,8 @@ namespace brick {
        *
        * @param source A 2D array containing the elements of the desired
        * homogeneous transformation.
+       * @param doNormalize If true, the resulting transform will be
+       * rescaled so that its lower right element is 1.0.
        */
       Transform2D(Array2D<Type> const& source, bool doNormalize = false);
       
@@ -148,6 +152,8 @@ namespace brick {
        * @param a20 The value of one element of the transformation matrix.
        * @param a21 The value of one element of the transformation matrix.
        * @param a22 The value of one element of the transformation matrix.
+       * @param doNormalize If true, the matrix will be rescaled so that its
+       * lower right element is 1.0.
        */
       void
       setTransform(Type const& a00, Type const& a01, Type const& a02,

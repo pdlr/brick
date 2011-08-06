@@ -1,1 +1,10 @@
 - Add typecodes to templated class serialization.
+
+- Add check size and reinit function for Array2D.
+
+- Maybe add Array2D::setData(const Type*).
+
+- Give Array1D a beginPtr as well as dataPtr.  Make Array2D::getRow()
+  referenceCount.
+
+- Make Array2D support row alignment.  Watch out for STL algos, though.

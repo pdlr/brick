@@ -4,7 +4,7 @@
 *
 * Source file defining Transform2D class.
 *
-* Copyright (C) 2001-2007 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2001-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

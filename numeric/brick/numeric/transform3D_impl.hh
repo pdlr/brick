@@ -80,7 +80,7 @@ namespace brick {
     template <class Type>
     inline
     Transform3D<Type>::
-    Transform3D(const Transform3D<Type>& src)
+    Transform3D(Transform3D<Type> const& src)
       : m_00(src.m_00), m_01(src.m_01), m_02(src.m_02), m_03(src.m_03),
         m_10(src.m_10), m_11(src.m_11), m_12(src.m_12), m_13(src.m_13),
         m_20(src.m_20), m_21(src.m_21), m_22(src.m_22), m_23(src.m_23),

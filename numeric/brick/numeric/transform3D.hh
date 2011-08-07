@@ -92,7 +92,7 @@ namespace brick {
        * @param src This is the Transform3D instance to be copied.
        */
       inline
-      Transform3D(const Transform3D& src);
+      Transform3D(Transform3D<Type> const& src);
 
 
       /** 

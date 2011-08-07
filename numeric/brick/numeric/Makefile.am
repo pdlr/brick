@@ -31,7 +31,13 @@ brickNumeric_HEADERS	= \
 	array1D.hh \
 	array2D.hh \
 	functional.hh \
-	numericTraits.hh
+	numericTraits.hh \
+	transform2D.hh transform2D_impl.hh \
+	transform3D.hh transform3D_impl.hh \
+	transform3DTo3D.hh transform3DTo3D_impl.hh \
+	vector2D.hh vector2D_impl.hh \
+	vector3D.hh vector3D_impl.hh \
+	utilities.hh utilities_impl.hh \
 
 
 # Define the library to build.

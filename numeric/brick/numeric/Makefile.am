@@ -32,6 +32,8 @@ brickNumeric_HEADERS	= \
 	array2D.hh array2D_impl.hh \
 	array3D.hh array3D_impl.hh \
 	functional.hh \
+	index2D.hh \
+	index3D.hh \
 	numericTraits.hh \
 	transform2D.hh transform2D_impl.hh \
 	transform3D.hh transform3D_impl.hh \
@@ -44,7 +46,9 @@ brickNumeric_HEADERS	= \
 # Define the library to build.
 
 lib_LTLIBRARIES		= libbrickNumeric.la
-libbrickNumeric_la_SOURCES = 
+libbrickNumeric_la_SOURCES = \
+	index2D.cc \
+	index3D.cc
 
 
 # List the files that need to be cleaned.

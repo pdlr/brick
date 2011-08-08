@@ -28,8 +28,9 @@ AM_CPPFLAGS		= -I$(top_srcdir)
 
 brickNumericdir		= $(includedir)/brickNumeric
 brickNumeric_HEADERS	= \
-	array1D.hh \
-	array2D.hh \
+	array1D.hh array1D_impl.hh \
+	array2D.hh array2D_impl.hh \
+	array3D.hh array3D_impl.hh \
 	functional.hh \
 	numericTraits.hh \
 	transform2D.hh transform2D_impl.hh \

@@ -91,7 +91,8 @@ namespace brick {
        * @param arrayColumns Number of columns in the array after successful
        * construction.
        */
-      Array2D(size_t arrayRows, size_t arrayColumns);
+      Array2D(size_t arrayRows, size_t arrayColumns,
+              size_t rowStep = 0);
 
 
       /**
@@ -108,8 +109,9 @@ namespace brick {
        * the array will be constructed.
        */
       explicit
-      Array2D(const std::string& inputString);
-
+      Array2D(const std::string& inputString,
+              size_t rowStep = 0);
+        
       
       /** 
        * The copy constructor does a shallow copy.  The newly created
@@ -135,7 +137,8 @@ namespace brick {
        * @param dataPtr A C-style array of Type into which the newly
        * constructed Array2D should index.
        */
-      Array2D(size_t arrayRows, size_t arrayColumns, Type* const dataPtr);
+      Array2D(size_t arrayRows, size_t arrayColumns, Type* const dataPtr,
+              size_t rowStep = 0);
 
 
       /** 
@@ -161,6 +164,31 @@ namespace brick {
        */
       Array2D(size_t arrayRows, size_t arrayColumns, Type* const dataPtr,
               common::ReferenceCount const& referenceCount);
+
+      
+      /** 
+       * Construct an array around external data that was allocated by
+       * an Array?D instance.  Arrays constructed in this way _do_
+       * implement reference counting, and will delete dataPtr when
+       * done.  This constructor is provided primarily so that other
+       * dimensionality array classes can return Array2D instances that
+       * reference their data without being friend classes.  Caveat
+       * emptor.
+       * 
+       * @param arrayRows This argument specifies the number of rows in the
+       * array.
+       * 
+       * @param arrayColumns This argument specifies the number of columns in
+       * the array.
+       * 
+       * @param dataPtr This argument is a C-style array containing the
+       * data to which the new Array2D instance should refer.
+       * 
+       * @param referenceCount ReferenceCount instance indicating
+       * the number of Array classes currently using dataPtr.
+       */
+      Array2D(size_t arrayRows, size_t arrayColumns, Type* const dataPtr,
+              size_t rowStep, common::ReferenceCount const& referenceCount);
 
       
       /**
@@ -462,7 +490,7 @@ namespace brick {
       Type*
       getData(size_t rowIndex, size_t columnIndex) {
         this->checkBounds(rowIndex, columnIndex);
-        return m_dataPtr + columnIndex + (rowIndex * m_columns);
+        return m_dataPtr + columnIndex + (rowIndex * m_rowStep);
       }
 
       /**
@@ -479,7 +507,7 @@ namespace brick {
       const Type*
       getData(size_t rowIndex, size_t columnIndex) const {
         this->checkBounds(rowIndex, columnIndex);
-        return m_dataPtr + columnIndex + (rowIndex * m_columns);
+        return m_dataPtr + columnIndex + (rowIndex * m_rowStep);
       }
 
       
@@ -566,6 +594,16 @@ namespace brick {
 
 
       /** 
+       * Returns the spacing (in elements, not bytes) between the
+       * beginning of subsequent rows of the array.
+       * 
+       * @return Number elements between consecutive rows.
+       */
+      size_t
+      getRowStep() const {return m_rowStep;}
+
+
+      /** 
        * Returns the number of elements in the array.  This is the
        * product of rows() and columns().
        * 
@@ -574,6 +612,27 @@ namespace brick {
       size_t
       getSize() const {return m_size;}
 
+
+      /** 
+       * Returns the number of elements in the storage area used by
+       * the array.  This is the product of rows() and getRowStep().
+       * 
+       * @return Number of elements.
+       */
+      size_t
+      getStorageSize() const {return m_storageSize;}
+
+
+      /** 
+       * Indicates whether or not there is unused space between rows
+       * of the array.
+       * 
+       * @return The return value is true if rows are contiguous,
+       * false if there is padding.
+       */
+      bool
+      isContiguous() const {return m_columns == m_rowStep;}
+      
 
       /** 
        * Returns true if the array instance contains no elements.  It
@@ -646,7 +705,8 @@ namespace brick {
        * @param arrayColumns Requested column dimension.
        */
       void
-      reinit(size_t arrayRows, size_t arrayColumns);
+      reinit(size_t arrayRows, size_t arrayColumns,
+             size_t rowStep = 0);
 
       
       /** 
@@ -661,7 +721,8 @@ namespace brick {
        * @param arrayColumns Requested column dimension.
        */
       inline void
-      reinitIfNecessary(size_t arrayRows, size_t arrayColumns);
+      reinitIfNecessary(size_t arrayRows, size_t arrayColumns,
+                        size_t rowStep = 0);
 
 
       /**
@@ -679,7 +740,7 @@ namespace brick {
        * do not match.
        */
       void
-      reshape(int arrayRows, int arrayColumns);
+      reshape(int arrayRows, int arrayColumns, int rowStep = 0);
 
       
       /**
@@ -715,7 +776,7 @@ namespace brick {
        * specified row of the Array2D instance.
        */
       iterator
-      rowBegin(size_t rowIndex) {return m_dataPtr + rowIndex * m_columns;}
+      rowBegin(size_t rowIndex) {return m_dataPtr + rowIndex * m_rowStep;}
 
       
       /** 
@@ -730,7 +791,7 @@ namespace brick {
        */
       const_iterator
       rowBegin(size_t rowIndex) const {
-	return m_dataPtr + rowIndex * m_columns;
+	return m_dataPtr + rowIndex * m_rowStep;
       }
 
       
@@ -746,7 +807,7 @@ namespace brick {
        */
       iterator
       rowEnd(size_t rowIndex) {
-	return m_dataPtr + (rowIndex + 1) * m_columns;
+	return m_dataPtr + (rowIndex + 1) * m_rowStep;
       }
 
 
@@ -762,7 +823,7 @@ namespace brick {
        */
       const_iterator
       rowEnd(size_t rowIndex) const {
-	return m_dataPtr + (rowIndex + 1) * m_columns;
+	return m_dataPtr + (rowIndex + 1) * m_rowStep;
       }
 
       
@@ -929,7 +990,7 @@ namespace brick {
       Type&
       operator()(size_t rowIndex, size_t columnIndex) {
         this->checkBounds(rowIndex, columnIndex);
-        return m_dataPtr[columnIndex + rowIndex * m_columns];
+        return m_dataPtr[columnIndex + rowIndex * m_rowStep];
       }
     
 
@@ -945,7 +1006,7 @@ namespace brick {
       Type
       operator()(size_t rowIndex, size_t columnIndex) const {
         this->checkBounds(rowIndex, columnIndex);
-        return m_dataPtr[columnIndex + rowIndex * m_columns];
+        return m_dataPtr[columnIndex + rowIndex * m_rowStep];
       }
 
 
@@ -1082,7 +1143,7 @@ namespace brick {
        * Allocate memory for array data and initialize reference count.
        */
       void
-      allocate(size_t arrayRows, size_t arrayColumns);
+      allocate(size_t arrayRows, size_t arrayColumns, size_t rowStep = 0);
     
 
       /** 
@@ -1108,6 +1169,28 @@ namespace brick {
       checkBounds(size_t row, size_t column) const;
 
 
+#if 0
+      /** 
+       * Computes the size, in number of elements, of the storage
+       * required for a (rows x columns) array in which rows are
+       * aligned on rowStep element boundaries.
+       * 
+       * @param rows Number of rows in the target array.
+       * 
+       * @param columns Number of columns in the target array.
+       * 
+       * @param rowStep Number of elements between subsequent rows
+       * (including end-of-row padding).  Zero indicates no padding
+       * (same as rowStep == columns).
+       * 
+       * @return The return value is the size (number of Type
+       * instances, not number of bytes) of the required storage.
+       */
+      size_t
+      computeStorageSize(size_t rows, size_t columns, size_t rowStep);
+#endif
+      
+      
        /** 
        * Release the memory for array data by decrementing the reference
        * count, or by returning the memory to the heap if it is not
@@ -1155,7 +1238,9 @@ namespace brick {
       /* ********Private data members******** */
       size_t m_rows;
       size_t m_columns;
+      size_t m_rowStep;
       size_t m_size;
+      size_t m_storageSize;
       Type* m_dataPtr;
       common::ReferenceCount m_referenceCount;
     };
@@ -1506,993 +1591,6 @@ namespace brick {
 
 } // namespace brick
 
-
-/*******************************************************************
- * Member function definitions follow.  This would be a .cc file
- * if it weren't templated.
- *******************************************************************/
-
-#include <algorithm>
-#include <functional>
-#include <sstream>
-#include <vector>
-#include <brick/common/expect.hh>
-#include <brick/common/functional.hh>
-#include <brick/numeric/functional.hh>
-#include <brick/numeric/numericTraits.hh>
-
-namespace brick {
-
-  namespace numeric {
-    
-    // Static constant describing how the string representation of an
-    // Array2D should start.
-    template <class Type>
-    const std::string&
-    Array2D<Type>::
-    ioIntro()
-    {
-      static const std::string intro = "Array2D(";
-      return intro;
-    }
-
-    // Static constant describing how the string representation of an
-    // Array2D should end.
-    template <class Type>
-    const char&
-    Array2D<Type>::
-    ioOutro()
-    {
-      static const char outro = ')';
-      return outro;
-    }
-
-
-    // Static constant describing how the the data portion of the
-    // string representation of an Array1D should start.
-    template <class Type>
-    const char&
-    Array2D<Type>::
-    ioOpening()
-    {
-      static const char opening = '[';
-      return opening;
-    }
-
-
-    // Static constant describing how the the data portion of the
-    // string representation of an Array2D should end.
-    template <class Type>
-    const char&
-    Array2D<Type>::
-    ioClosing()
-    {
-      static const char closing = ']';
-      return closing;
-    }
-
-
-    // Static constant describing how individual elements should be
-    // separated in the string representation of Array2D.
-    template <class Type>
-    const char&
-    Array2D<Type>::
-    ioSeparator()
-    {
-      static const char separator = ',';
-      return separator;
-    }
-
-    // Non-static member functions below.
-
-    template <class Type>
-    Array2D<Type>::
-    Array2D()
-      : m_rows(0),
-        m_columns(0),
-        m_size(0),
-        m_dataPtr(0),
-        m_referenceCount(0)
-    {
-      // Empty
-    }
-
-
-    template <class Type>
-    Array2D<Type>::
-    Array2D(size_t arrayRows, size_t arrayColumns)
-      : m_rows(arrayRows),
-        m_columns(arrayColumns),
-        m_size(0),           // This will be set in the call to allocate().
-        m_dataPtr(0),        // This will be set in the call to allocate().
-        m_referenceCount(0)  // This will be set in the call to allocate().
-    {
-      this->allocate(arrayRows, arrayColumns);
-    }
-
-  
-    // Construct from an initialization string.
-    template <class Type>
-    Array2D<Type>::
-    Array2D(const std::string& inputString)
-      : m_rows(0),
-        m_columns(0),
-        m_size(0),
-        m_dataPtr(0),
-        m_referenceCount(0)
-    {
-      // We'll use the stream input operator to parse the string.
-      std::istringstream inputStream(inputString);
-
-      // Now read the string into an array.
-      Array2D<Type> inputArray;
-      inputStream >> inputArray;
-      if(!inputStream) {
-        std::ostringstream message;
-        message << "Couldn't parse input string: \"" << inputString << "\".";
-        BRICK_THROW(common::ValueException, "Array2D::Array2D(const std::string&)",
-                   message.str().c_str());                 
-      }
-
-      // If all went well, copy into *this.
-      *this = inputArray;
-    }
-
-
-    /* When copying from a Array2D do a shallow copy */
-    /* Update reference count if the array we're copying has */
-    /* valid data. */
-    template <class Type>
-    Array2D<Type>::
-    Array2D(const Array2D<Type>& source)
-      : m_rows(source.m_rows),
-        m_columns(source.m_columns),
-        m_size(source.m_size),
-        m_dataPtr(source.m_dataPtr),
-        m_referenceCount(source.m_referenceCount)
-    {
-      // Empty.
-    }
-
-  
-    /* Here's a constructor for getting image data into the array */
-    /* cheaply. */
-    template <class Type>
-    Array2D<Type>::
-    Array2D(size_t arrayRows, size_t arrayColumns, Type* const dataPtr)
-      : m_rows(arrayRows),
-        m_columns(arrayColumns),
-        m_size(arrayRows * arrayColumns),
-        m_dataPtr(dataPtr),
-        m_referenceCount(0)
-    {
-      // Empty
-    }
-
-  
-    // Construct an array around external data that was allocated by
-    // an Array?D instance.
-    template <class Type>
-    Array2D<Type>::
-    Array2D(size_t arrayRows, size_t arrayColumns, Type* const dataPtr,
-            common::ReferenceCount const& referenceCount)
-      : m_rows(arrayRows),
-        m_columns(arrayColumns),
-        m_size(arrayRows*arrayColumns),
-        m_dataPtr(dataPtr),
-        m_referenceCount(referenceCount)
-    {
-      // Empty.
-    }
-
-  
-    template <class Type>
-    Array2D<Type>::
-    ~Array2D()
-    {
-      deAllocate();
-    }
-
-  
-    template <class Type>
-    inline void Array2D<Type>::
-    checkDimension(size_t
-#ifdef BRICK_NUMERIC_CHECKBOUNDS
-                   arrayRows
-#endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
-                   , size_t
-#ifdef BRICK_NUMERIC_CHECKBOUNDS
-                   arrayColumns
-#endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
-      ) const
-    {
-#ifdef BRICK_NUMERIC_CHECKBOUNDS
-      if(arrayRows != this->rows()
-         || arrayColumns != this->columns()) {
-        std::ostringstream message;
-        message << "Size mismatch: required dimension is ("
-                << arrayRows << ", " << arrayColumns << ") "
-                << " while *this has dimension "
-                << this->rows() << ", " << this->columns() << ").";
-        BRICK_THROW(common::IndexException, "Array2D::checkDimension()",
-                    message.str().c_str());
-      }
-#endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
-    }
-
-
-    template <class Type>
-    Array2D<Type> Array2D<Type>::
-    copy() const
-    {
-      Array2D<Type> newArray(m_rows, m_columns);
-      newArray.copy(*this);
-      return newArray;
-    }
-
-    
-    template <class Type> template <class Type2>
-    void Array2D<Type>::
-    copy(const Array2D<Type2>& source)
-    {
-      if(source.size() != m_size) {
-        std::ostringstream message;
-        message << "Mismatched array sizes. Source array has "
-                << source.size() << " elements, while destination array has "
-                << m_size << " elements.";
-        BRICK_THROW(common::ValueException, "Array2D::copy(const Array2D&)",
-                    message.str().c_str());
-      }
-      if(m_size != 0) {
-        this->copy(source.data());
-      }
-    }
-
-
-    template <class Type> template <class Type2>
-    void Array2D<Type>::
-    copy(const Type2* dataPtr)
-    {
-      if(dataPtr == 0) {
-        BRICK_THROW(common::ValueException, "Array2D::copy(const Type2*)",
-                    "Argument is a NULL pointer.");
-      }
-      std::transform(dataPtr, dataPtr + m_size, m_dataPtr,
-                     StaticCastFunctor<Type2, Type>());
-    }
-
-
-    template <class Type>
-    Array1D<Type> Array2D<Type>::
-    getRow(size_t index)
-    {
-      this->checkBounds(index, 0);
-      return Array1D<Type>(this->columns(),
-                           m_dataPtr + (index * this->m_columns));
-    }
-
-  
-    template <class Type>
-    const Array1D<Type> Array2D<Type>::
-    getRow(size_t index) const
-    {
-      this->checkBounds(index, 0);
-      return Array1D<Type>(this->columns(),
-                           m_dataPtr + (index * this->m_columns));
-    }
-
-
-    template <class Type>
-    const Array1D<Type> Array2D<Type>::
-    ravel() const
-    {
-      if(this->isReferenceCounted()) {
-        return Array1D<Type>(m_size, m_dataPtr, m_referenceCount);
-      }
-      return Array1D<Type>(m_size, m_dataPtr);
-    }
-
-    
-    template <class Type>
-    Array1D<Type> Array2D<Type>::
-    ravel()
-    {
-      if(this->isReferenceCounted()) {
-        return Array1D<Type>(m_size, m_dataPtr, m_referenceCount);
-      }
-      return Array1D<Type>(m_size, m_dataPtr);
-    }
-
-
-    template <class Type>
-    std::istream&
-    Array2D<Type>::
-    readFromStream(std::istream& inputStream)
-    {
-      // Most of the time, InputType will be the same as Type.
-      // TextOutputType is the type one would use to write out a value
-      // of Type.  Not surprisingly, this is the type you need to use
-      // when reading those values back in.
-      typedef typename NumericTraits<Type>::TextOutputType InputType;
-
-      // If stream is in a bad state, we can't read from it.
-      if (!inputStream){
-        return inputStream;
-      }
-    
-      // It's a lot easier to use a try block than to be constantly
-      // testing whether the IO has succeeded, so we tell inputStream to
-      // complain if anything goes wrong.
-      std::ios_base::iostate oldExceptionState = inputStream.exceptions();
-      inputStream.exceptions(
-        std::ios_base::badbit | std::ios_base::failbit | std::ios_base::eofbit);
-
-      // Now on with the show.
-      try{
-        common::Expect::FormatFlag flags = common::Expect::SkipWhitespace;
-
-        // Skip any preceding whitespace.
-        inputStream >> common::Expect("", flags);
-              
-        // We won't require the input format to start with "Array2D(", but
-        // if it does we read it here.
-        bool foundIntro = false;
-        if(inputStream.peek() == ioIntro()[0]) {
-          foundIntro = true;
-          inputStream >> common::Expect(ioIntro(), flags);
-        }
-
-        // OK.  We've dispensed with the intro.  What's left should be of
-        // the format "[row, row, row, ...]".  We require the square
-        // brackets to be there.
-        inputStream >> common::Expect(&(ioOpening()), 1, flags);
-
-        // Read the data.  We'll use the Array1D<Type> stream operator to
-        // read each row.
-        Array1D<Type> inputValue;
-        std::vector< Array1D<Type> > inputBuffer;
-        while(1) {
-          // Read the next row.
-          inputStream >> inputValue;
-          inputBuffer.push_back(inputValue);
-
-          // Read the separator, or else the closing character.
-          char inChar = 0;
-          inputStream >> inChar;
-          if(inChar == ioClosing()) {
-            // Found a closing.  Stop here.
-            break;
-          }
-          if(inChar != ioSeparator()) {
-            // Missing separator?  Fail here.
-            inputStream.clear(std::ios_base::failbit);
-          }
-        }
-    
-        // If we found an intro, we expect the corresponding outro.
-        if(foundIntro) {
-          inputStream >> common::Expect(&(ioOutro()), 1, flags);
-        }
-
-        // Now we're done with all of the parsing, verify that all rows
-        // have the same length.
-        size_t arrayRows = inputBuffer.size();
-        size_t arrayColumns = ((inputBuffer.size() != 0)
-                               ? inputBuffer[0].size() : 0);
-        for(size_t index = 1; index < arrayRows; ++index) {
-          if(inputBuffer[index].size() != arrayColumns) {
-            // Inconsistent row lengths!  Fail here.
-            inputStream.clear(std::ios_base::failbit);
-          }
-        }
-
-        // And finally, copy the data.
-        this->reinit(arrayRows, arrayColumns);
-        for(size_t index = 0; index < arrayRows; ++index) {
-          std::copy(inputBuffer[index].begin(), inputBuffer[index].end(),
-                    this->begin() + (index * arrayColumns));
-        }
-      } catch(std::ios_base::failure) {
-        // Empty
-      }
-      inputStream.exceptions(oldExceptionState);
-      return inputStream;
-    }
-  
-
-    template <class Type>
-    void Array2D<Type>::
-    reinit(size_t arrayRows, size_t arrayColumns)
-    {
-      this->allocate(arrayRows, arrayColumns);
-    }
-
-
-    template <class Type>
-    void Array2D<Type>::
-    reinitIfNecessary(size_t arrayRows, size_t arrayColumns)
-    {
-      if(this->size() != arrayRows * arrayColumns) {
-        this->reinit(arrayRows, arrayColumns);
-      } else {
-        if(this->rows() != arrayRows) {
-          this->reshape(arrayRows, arrayColumns);
-        }
-      }
-    }
-
-
-    /* After reshaping, matrix is still row major order */
-    template <class Type>
-    void Array2D<Type>::
-    reshape(int arrayRows, int arrayColumns)
-    {
-      // If one axis is specified as -1, it will be automatically 
-      // chosen to match the number of elements in the array.
-      if((arrayRows == -1) && (arrayColumns != 0)) {
-        arrayRows = static_cast<int>(this->size()) / arrayColumns;
-      } else
-        if((arrayColumns == -1) && (arrayRows != 0)) {
-          arrayColumns = static_cast<int>(this->size()) / arrayRows;
-        }
-      if((arrayRows * arrayColumns) != static_cast<int>(this->size())) {
-        std::ostringstream message;
-        message << "Can't reshape a(n) " << this->size()
-                << " element array to have " << arrayRows << " rows and "
-                << arrayColumns << " columns.";
-        BRICK_THROW(common::ValueException, "Array2D::reshape()",
-                    message.str().c_str());
-      }
-      m_rows = arrayRows;
-      m_columns = arrayColumns;
-    }
-
-  
-    template <class Type>
-    Array1D<size_t> Array2D<Type>::
-    shape() const
-    {
-      Array1D<size_t> rc(2);
-      rc(0) = this->rows();
-      rc(1) = this->columns();
-      return rc;
-    }
-
-
-    template <class Type>
-    size_t Array2D<Type>::
-    shape(size_t axis) const
-    {
-      size_t result;
-      switch(axis) {
-      case 0:
-        result = this->rows();
-        break;
-      case 1:
-        result = this->columns();
-        break;
-      default:
-        std::ostringstream message;
-        message << "Invalid Axis: "<< axis << ".";
-        BRICK_THROW(common::ValueException, "Array2D::shape(size_t)",
-                    message.str().c_str());
-        result = 0;
-        break;
-      }
-      return result;
-    }
-
-
-    template <class Type>
-    Array2D<Type>& Array2D<Type>::
-    operator=(Type value)
-    {
-      std::fill(m_dataPtr, m_dataPtr + m_size, value);
-      return *this;
-    }
-
-  
-    template <class Type>
-    Array2D<Type>& Array2D<Type>::
-    operator=(const Array2D<Type>& source)
-    {
-      // Check for self-assignment
-      if(&source != this) {
-        this->deAllocate();
-        m_rows = source.m_rows;
-        m_columns = source.m_columns;
-        m_size = source.m_size;
-        m_dataPtr = source.m_dataPtr;
-        m_referenceCount = source.m_referenceCount;
-      }
-      return *this;
-    }
-
-
-    template <class Type> template <class Type2>
-    Array2D<Type>&
-    Array2D<Type>::
-    operator+=(const Array2D<Type2>& arg)
-    {
-      if(m_size != arg.size()) {
-        std::ostringstream message;
-        message << "Mismatched array sizes. Argument array is "
-                << arg.rows() << " x " << arg.columns()
-                << ", while destination array is "
-                << m_rows << " x " << m_columns << ".";
-        BRICK_THROW(common::ValueException, "Array2D::operator+=()",
-                    message.str().c_str());
-      }
-      std::transform(m_dataPtr, m_dataPtr + m_size, arg.data(), m_dataPtr,
-                     std::plus<Type>());
-      return *this;
-    }
-
-
-    template <class Type> template <class Type2>
-    Array2D<Type>&
-    Array2D<Type>::
-    operator-=(const Array2D<Type2>& arg)
-    {
-      if(m_size != arg.size()) {
-        std::ostringstream message;
-        message << "Mismatched array sizes. Argument array is "
-                << arg.rows() << " x " << arg.columns()
-                << ", while destination array is "
-                << m_rows << " x " << m_columns << ".";
-        BRICK_THROW(common::ValueException, "Array2D::operator-=()",
-                    message.str().c_str());
-      }
-      std::transform(m_dataPtr, m_dataPtr + m_size, arg.data(), m_dataPtr,
-                     std::minus<Type>());
-      return *this;
-    }
-
-
-    template <class Type> template <class Type2>
-    Array2D<Type>&
-    Array2D<Type>::
-    operator*=(const Array2D<Type2>& arg)
-    {
-      if(m_size != arg.size()) {
-        std::ostringstream message;
-        message << "Mismatched array sizes. Argument array is "
-                << arg.rows() << " x " << arg.columns()
-                << ", while destination array is "
-                << m_rows << " x " << m_columns << ".";
-        BRICK_THROW(common::ValueException, "Array2D::operator*=()",
-                    message.str().c_str());
-      }
-      std::transform(m_dataPtr, m_dataPtr + m_size, arg.data(), m_dataPtr,
-                     std::multiplies<Type>());
-      return *this;
-    }
-
-
-    template <class Type> template <class Type2>
-    Array2D<Type>&
-    Array2D<Type>::
-    operator/=(const Array2D<Type2>& arg)
-    {
-      if(m_size != arg.size()) {
-        std::ostringstream message;
-        message << "Mismatched array sizes. Argument array is "
-                << arg.rows() << " x " << arg.columns()
-                << ", while destination array is "
-                << m_rows << " x " << m_columns << ".";
-        BRICK_THROW(common::ValueException, "Array2D::operator/=()",
-                    message.str().c_str());
-      }
-      std::transform(m_dataPtr, m_dataPtr + m_size, arg.data(), m_dataPtr,
-                     std::divides<Type>());
-      return *this;
-    }
-
-
-    template <class Type>
-    Array2D<Type>&
-    Array2D<Type>::
-    operator*=(Type arg)
-    {
-      std::transform(m_dataPtr, m_dataPtr + m_size, m_dataPtr,
-                     std::bind2nd(std::multiplies<Type>(), arg));
-      return *this;
-    }
-
-
-    template <class Type>
-    Array2D<Type>&
-    Array2D<Type>::
-    operator/=(Type arg)
-    {
-      std::transform(m_dataPtr, m_dataPtr + m_size, m_dataPtr,
-                     std::bind2nd(std::divides<Type>(), arg));
-      return *this;
-    }
-
-
-    template <class Type>
-    Array2D<Type>&
-    Array2D<Type>::
-    operator+=(Type arg)
-    {
-      std::transform(m_dataPtr, m_dataPtr + m_size, m_dataPtr,
-                     std::bind2nd(std::plus<Type>(), arg));
-      return *this;
-    }
-
-
-    template <class Type>
-    Array2D<Type>&
-    Array2D<Type>::
-    operator-=(Type arg)
-    {
-      std::transform(m_dataPtr, m_dataPtr + m_size, m_dataPtr,
-                     std::bind2nd(std::minus<Type>(), arg));
-      return *this;
-    }
-
-
-    template <class Type>
-    Array2D<Type> Array2D<Type>::
-    transpose() const
-    {
-      Array2D<Type> newMx(m_columns, m_rows);
-
-      // Waiting for row & column iterators
-      Type *tPtr0 = newMx.m_dataPtr;
-      for(size_t j = 0; j < m_columns; ++j) {
-        // const Type *tPtr1 = this->data(0, j);
-        const Type *tPtr1 = this->data(j);
-        for(size_t i = 0; i < m_rows; ++i) {
-          *tPtr0 = *tPtr1;
-          ++tPtr0;
-          tPtr1 += m_columns;
-        }
-      }
-      return newMx;
-    }
-
-
-    template <class Type>
-    void Array2D<Type>::
-    allocate(size_t arrayRows, size_t arrayColumns)
-    {
-      // Make sure to release any shared resources.
-      this->deAllocate();
-      
-      // Check array size.  It doesn't make sense to allocate memory
-      // for a zero size array.
-      m_rows = arrayRows;
-      m_columns = arrayColumns;
-      m_size = m_rows * m_columns;
-      if(m_size > 0) {
-        // Allocate data storage.  new() should throw an exception if
-        // we run out of memory.
-        m_dataPtr = new(Type[m_size]);
-
-        // Set reference count to show that exactly one Array is pointing
-        // to this data.
-        m_referenceCount.reset(1);
-      }
-      return;
-    }
-
-
-    template <class Type>
-    inline void Array2D<Type>::
-    checkBounds(size_t
-#ifdef BRICK_NUMERIC_CHECKBOUNDS
-                index
-#endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
-      ) const
-    {
-#ifdef BRICK_NUMERIC_CHECKBOUNDS
-      if(index >= m_size) {
-        std::ostringstream message;
-        message << "Index " << index << " is invalid for a(n) " << m_rows
-                << " x " << m_columns << " array.";
-        BRICK_THROW(common::IndexException, "Array2D::checkBounds(size_t)",
-                    message.str().c_str());
-      }
-#endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
-    }
-
-
-    template <class Type>
-    inline void Array2D<Type>::
-    checkBounds(size_t
-#ifdef BRICK_NUMERIC_CHECKBOUNDS
-                rowIndex
-#endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
-                , size_t
-#ifdef BRICK_NUMERIC_CHECKBOUNDS
-                columnIndex
-#endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
-      ) const
-    {
-#ifdef BRICK_NUMERIC_CHECKBOUNDS
-      if(rowIndex >= m_rows) {
-        std::ostringstream message;
-        message << "Row index " << rowIndex << " is invalid for a(n) "
-                << m_rows << " x " << m_columns << " array.";
-        BRICK_THROW(common::IndexException,
-                    "Array2D::checkBounds(size_t, size_t)",
-                    message.str().c_str());
-      }
-      if(columnIndex >= m_columns) {
-        std::ostringstream message;
-        message << "Column index " << columnIndex << " is invalid for a(n) "
-                << m_rows << " x " << m_columns << " array.";
-        BRICK_THROW(common::IndexException,
-                    "Array2D::checkBounds(size_t, size_t)",
-                    message.str().c_str());
-      }
-#endif
-    }
-
-
-    template <class Type>
-    void Array2D<Type>::
-    deAllocate()
-    {
-      // Are we responsible for deallocating the contents of this array?
-      if(m_referenceCount.isCounted()) {
-        // If yes, are we currently the only array pointing to this data?
-        if(!m_referenceCount.isShared()) {
-          // If yes, then delete the data.
-          delete[] m_dataPtr;
-        }
-      }
-      // Abandon our pointers to data.  Reference would take care of
-      // itself, but it's cleaner conceptually to wipe it here, rather
-      // than waiting for a subsequent call to ~ReferenceCount() or
-      // ReferenceCount.allocate().
-      m_dataPtr = 0;
-      m_size = 0;
-      m_rows = 0;
-      m_columns = 0;
-      m_referenceCount.reset(0);
-    }
-
-    /* Non-member functions that will ultimately wind up in a different file */
-
-    template <class Type>
-    inline Array2D<Type>
-    sqrt(const Array2D<Type>& array0)
-    {
-      return squareRoot(array0);
-    }
-
-    // This function returns an Array2D instance of the same shape and
-    // element type as its input, in which each element contains the
-    // square root of the corresponding element of the input array.
-    template <class Type>
-    Array2D<Type>
-    squareRoot(const Array2D<Type>& array0)
-    {
-      Array2D<Type> result(array0.rows(), array0.columns());
-      std::transform(array0.begin(), array0.end(),
-                     result.begin(), SquareRootFunctor<Type>());
-      return result;
-    }
-
-    template <class Type>
-    Array2D<Type> operator+(const Array2D<Type>& array0,
-                            const Array2D<Type>& array1)
-    {
-      if((array0.rows() != array1.rows())
-         || (array0.columns() != array1.columns())) {
-        std::ostringstream message;
-        message << "Array sizes do not match.  Array0 is " << array0.rows()
-                << " x " << array0.columns() << ", while array1 is "
-                << array1.rows() << " x " << array1.columns() << ".";
-        BRICK_THROW(common::ValueException, "Array2D::operator+()",
-                    message.str().c_str());
-      }
-      Array2D<Type> result(array0.rows(), array0.columns());
-      std::transform(array0.begin(), array0.end(), array1.begin(),
-                     result.begin(), std::plus<Type>());
-      return result;
-    }
-
-    template <class Type>
-    Array2D<Type> operator-(const Array2D<Type>& array0,
-                            const Array2D<Type>& array1)
-    {
-      if((array0.rows() != array1.rows())
-         || (array0.columns() != array1.columns())) {
-        std::ostringstream message;
-        message << "Array sizes do not match.  Array0 is " << array0.rows()
-                << " x " << array0.columns() << ", while array1 is "
-                << array1.rows() << " x " << array1.columns() << ".";
-        BRICK_THROW(common::ValueException, "Array2D::operator-()", message.str().c_str());
-      }
-      Array2D<Type> result(array0.rows(), array0.columns());
-      std::transform(array0.begin(), array0.end(), array1.begin(),
-                     result.begin(), std::minus<Type>());
-      return result;
-    }
-
-    template <class Type>
-    Array2D<Type> operator*(const Array2D<Type>& array0,
-                            const Array2D<Type>& array1)
-    {
-      if((array0.rows() != array1.rows())
-         || (array0.columns() != array1.columns())) {
-        std::ostringstream message;
-        message << "Array sizes do not match.  Array0 is " << array0.rows()
-                << " x " << array0.columns() << ", while array1 is "
-                << array1.rows() << " x " << array1.columns() << ".";
-        BRICK_THROW(common::ValueException, "Array2D::operator*()", message.str().c_str());
-      }
-      Array2D<Type> result(array0.rows(), array0.columns());
-      std::transform(array0.begin(), array0.end(), array1.begin(),
-                     result.begin(), std::multiplies<Type>());
-      return result;
-    }
-
-    template <class Type>
-    Array2D<Type> operator/(const Array2D<Type>& array0,
-                            const Array2D<Type>& array1)
-    {
-      if((array0.rows() != array1.rows())
-         || (array0.columns() != array1.columns())) {
-        std::ostringstream message;
-        message << "Array sizes do not match.  Array0 is " << array0.rows()
-                << " x " << array0.columns() << ", while array1 is "
-                << array1.rows() << " x " << array1.columns() << ".";
-        BRICK_THROW(common::ValueException, "Array2D::operator/()", message.str().c_str());
-      }
-      Array2D<Type> result(array0.rows(), array0.columns());
-      std::transform(array0.begin(), array0.end(), array1.begin(),
-                     result.begin(), std::divides<Type>());
-      return result;
-    }
-
-    template <class Type>
-    Array2D<Type> operator+(const Array2D<Type>& array0, Type scalar)
-    {
-      Array2D<Type> result(array0.rows(), array0.columns());
-      std::transform(array0.begin(), array0.end(), result.begin(),
-                     std::bind2nd(std::plus<Type>(), scalar));
-      return result;
-    }
-
-    template <class Type>
-    Array2D<Type> operator-(const Array2D<Type>& array0, Type scalar)
-    {
-      Array2D<Type> result(array0.rows(), array0.columns());
-      std::transform(array0.begin(), array0.end(), result.begin(),
-                     std::bind2nd(std::minus<Type>(), scalar));
-      return result;
-    }
-
-    template <class Type>
-    Array2D<Type> operator*(const Array2D<Type>& array0, Type scalar)
-    {
-      Array2D<Type> result(array0.rows(), array0.columns());
-      std::transform(array0.begin(), array0.end(), result.begin(),
-                     std::bind2nd(std::multiplies<Type>(), scalar));
-      return result;
-    }
-
-    template <class Type>
-    Array2D<Type> operator/(const Array2D<Type>& array0, Type scalar)
-    {
-      Array2D<Type> result(array0.rows(), array0.columns());
-      std::transform(array0.begin(), array0.end(), result.begin(),
-                     std::bind2nd(std::divides<Type>(), scalar));
-      return result;
-    }
-
-    template <class Type>
-    inline Array2D<Type> operator+(Type scalar, const Array2D<Type>& array0)
-    {
-      return array0 + scalar;
-    }
-
-    template <class Type>
-    inline Array2D<Type> operator*(Type scalar, const Array2D<Type>& array0)
-    {
-      return array0 * scalar;
-    }
-
-
-    // Elementwise comparison of an Array2D with a constant.
-    template <class Type>
-    Array2D<bool>
-    operator==(const Array2D<Type>& array0, const Type arg)
-    {
-      Array2D<bool> result(array0.rows(), array0.columns());
-      std::transform(array0.begin(), array0.end(), result.data(),
-                     std::bind2nd(std::equal_to<Type>(), arg));
-      return result;
-    }
-
-    
-    // Elementwise comparison of an Array2D with another array.
-    template <class Type>
-    Array2D<bool>
-    operator==(const Array2D<Type>& array0, const Array2D<Type>& array1)
-    {
-      array0.checkDimension(array1.rows(), array1.columns());
-      Array2D<bool> result(array0.rows(), array0.columns());
-      std::transform(array0.begin(), array0.end(), array1.begin(),
-                     result.begin(), std::equal_to<Type>());
-      return result;
-    }
-
-  
-    template <class Type>
-    Array2D<bool> operator>(const Array2D<Type>& array0, Type arg)
-    {
-      Array2D<bool> result(array0.rows(), array0.columns());
-      std::transform(array0.begin(), array0.end(), result.begin(),
-                     std::bind2nd(std::greater<Type>(), arg));
-      return result;
-    }
-
-    template <class Type>
-    Array2D<bool> operator<(const Array2D<Type>& array0, Type arg)
-    {
-      Array2D<bool> result(array0.rows(), array0.columns());
-      std::transform(array0.begin(), array0.end(), result.begin(),
-                     std::bind2nd(std::less<Type>(), arg));
-      return result;
-    }
-
-    template <class Type>
-    Array2D<bool> operator>=(const Array2D<Type>& array0, Type arg)
-    {
-      Array2D<bool> result(array0.rows(), array0.columns());
-      std::transform(array0.begin(), array0.end(), result.begin(),
-                     std::bind2nd(std::greater_equal<Type>(), arg));
-      return result;
-    }
-
-    template <class Type>
-    Array2D<bool> operator<=(const Array2D<Type>& array0, Type arg)
-    {
-      Array2D<bool> result(array0.rows(), array0.columns());
-      std::transform(array0.begin(), array0.end(), result.begin(),
-                     std::bind2nd(std::less_equal<Type>(), arg));
-      return result;
-    }
-
-    template <class Type>
-    std::ostream& operator<<(std::ostream& stream, const Array2D<Type>& array0)
-    {
-      // Most of the time, OutputType will be the same as Type.
-      typedef typename NumericTraits<Type>::TextOutputType OutputType;
-
-      stream << "Array2D([[";
-      for(size_t row = 0; row < array0.rows(); ++row) {
-        if (array0.columns() > 0) {
-          for(size_t column = 0; column < array0.columns() - 1; ++column) {
-            stream << static_cast<OutputType>(array0(row, column)) << ", ";
-          }
-          stream << static_cast<OutputType>(array0(row, array0.columns() - 1));
-          if(row != array0.rows() - 1) {
-            stream << "],\n";
-            stream << "         [";
-          }
-        }
-      }	
-      stream << "]])";
-      stream.flush();
-      return stream;
-    }
-
-  
-    template <class Type>
-    std::istream& operator>>(std::istream& inputStream, Array2D<Type>& array0)
-    {
-      return array0.readFromStream(inputStream);
-    }
-  
-  } // namespace numeric
-
-} // namespace brick
+#include <brick/numeric/array2D_impl.hh>
 
 #endif /* #ifdef BRICK_ARRAY2D_HH */

@@ -10,7 +10,13 @@
 ***************************************************************************
 **/
 
-#include <brick/numeric/transform2D.hh>
+#ifndef BRICK_NUMERIC_TRANSFORM2D_IMPL_HH
+#define BRICK_NUMERIC_TRANSFORM2D_IMPL_HH
+
+// This file is included by transform2D.hh, and should not be directly
+// included by user code, so no need to include transform2D.hh here.
+// 
+// #include <brick/numeric/transform2D.hh>
 
 namespace brick {
 
@@ -624,3 +630,5 @@ namespace brick {
   } // namespace numeric
 
 } // namespace brick
+
+#endif /* #ifndef BRICK_NUMERIC_TRANSFORM2D_IMPL_HH */

@@ -10,7 +10,13 @@
 ***************************************************************************
 **/
 
-#include <brick/numeric/transform3D.hh>
+#ifndef BRICK_NUMERIC_TRANSFORM3D_IMPL_HH
+#define BRICK_NUMERIC_TRANSFORM3D_IMPL_HH
+
+// This file is included by transform3D.hh, and should not be directly
+// included by user code, so no need to include transform3D.hh here.
+// 
+// #include <brick/numeric/transform3D.hh>
 
 namespace brick {
 
@@ -991,3 +997,5 @@ namespace brick {
   } // namespace numeric
 
 } // namespace brick
+
+#endif /* #ifndef BRICK_NUMERIC_TRANSFORM3D_IMPL_HH */

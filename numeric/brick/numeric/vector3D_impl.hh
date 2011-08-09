@@ -10,7 +10,13 @@
 ***************************************************************************
 **/
 
-#include <brick/numeric/vector3D.hh>
+#ifndef BRICK_NUMERIC_VECTOR3D_IMPL_HH
+#define BRICK_NUMERIC_VECTOR3D_IMPL_HH
+
+// This file is included by vector3D.hh, and should not be directly included
+// by user code, so no need to include vector3D.hh here.
+// 
+// #include <brick/numeric/vector3D.hh>
 
 namespace brick {
 
@@ -420,3 +426,5 @@ namespace brick {
   } // namespace numeric
 
 } // namespace brick
+
+#endif  /* #ifndef BRICK_NUMERIC_VECTOR3D_IMPL_HH */

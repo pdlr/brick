@@ -2,7 +2,7 @@
 ***************************************************************************
 * @file brick/numeric/vector2D_impl.hh
 *
-* Implementation file defining Vector2D class template.
+* Implementation file for Vector2D class template.
 *
 * Copyright (C) 2000-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.

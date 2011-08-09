@@ -762,25 +762,25 @@ namespace brick {
        * Static constant describing how the string representation of an
        * Array3D should end.
        */
-      static const std::string& ioOutro();
+      static const char& ioOutro();
 
       /**
        * Static constant describing how the the data portion of the
        * string representation of an Array3D should start.
        */
-      static const char ioOpening = '[';
+      static const char& ioOpening();
 
       /**
        * Static constant describing how the the data portion of the
        * string representation of an Array3D should end.
        */
-      static const char ioClosing = ']';
+      static const char& ioClosing();
 
       /**
        * Static constant describing how individual elements should be
        * separated in the string representation of Array3D.
        */
-      static const char ioSeparator = ',';
+      static const char& ioSeparator();
     
       // Private member variables
       size_t m_shape0;

@@ -39,17 +39,53 @@ namespace brick {
       return intro;
     }
 
-  
     // Static constant describing how the string representation of an
     // Array3D should end.
     template <class Type>
-    const std::string&
+    const char&
     Array3D<Type>::
     ioOutro()
     {
-      static const std::string outro = ")";
+      static const char outro = ')';
       return outro;
     }
+
+
+    // Static constant describing how the the data portion of the
+    // string representation of an Array1D should start.
+    template <class Type>
+    const char&
+    Array3D<Type>::
+    ioOpening()
+    {
+      static const char opening = '[';
+      return opening;
+    }
+
+
+    // Static constant describing how the the data portion of the
+    // string representation of an Array3D should end.
+    template <class Type>
+    const char&
+    Array3D<Type>::
+    ioClosing()
+    {
+      static const char closing = ']';
+      return closing;
+    }
+
+
+    // Static constant describing how individual elements should be
+    // separated in the string representation of Array3D.
+    template <class Type>
+    const char&
+    Array3D<Type>::
+    ioSeparator()
+    {
+      static const char separator = ',';
+      return separator;
+    }
+
 
     // Non-static member functions below.
 
@@ -107,7 +143,7 @@ namespace brick {
       if(!inputStream) {
         std::ostringstream message;
         message << "Couldn't parse input string: \"" << inputString << "\".";
-        BRICK_THROW3(ValueException, "Array3D::Array3D(const std::string&)",
+        BRICK_THROW(common::ValueException, "Array3D::Array3D(const std::string&)",
                    message.str().c_str());                 
       }
 
@@ -166,7 +202,13 @@ namespace brick {
 
     template <class Type>
     inline void Array3D<Type>::
-    checkDimension(size_t arrayShape0, size_t arrayShape1, size_t arrayShape2) const
+    checkDimension(
+#ifdef BRICK_NUMERIC_CHECKBOUNDS
+      size_t arrayShape0, size_t arrayShape1, size_t arrayShape2
+#else /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
+      size_t, size_t, size_t
+#endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS [...] #else */
+      ) const
     {
 #ifdef BRICK_NUMERIC_CHECKBOUNDS
       if(arrayShape0 != this->shape0()
@@ -178,7 +220,7 @@ namespace brick {
                 << " while *this has dimension "
                 << this->shape0() << ", " << this->shape1() << ", "
                 << this->shape2() << ") ";
-        BRICK_THROW(IndexException, "Array3D::checkDimension()",
+        BRICK_THROW(common::IndexException, "Array3D::checkDimension()",
                   message.str().c_str());
       }
 #endif
@@ -204,7 +246,7 @@ namespace brick {
         message << "Mismatched array sizes. Source array has "
                 << source.size() << " elements, while destination array has "
                 << m_size << " elements.";
-        BRICK_THROW3(ValueException, "Array3D::copy(const Array3D&)",
+        BRICK_THROW(common::ValueException, "Array3D::copy(const Array3D&)",
                    message.str().c_str());
       }
       if(m_size != 0) {
@@ -218,7 +260,7 @@ namespace brick {
     copy(const Type2* dataPtr)
     {
       if (dataPtr == 0) {
-        BRICK_THROW(ValueException, "Array3D::copy(const Type2*)",
+        BRICK_THROW(common::ValueException, "Array3D::copy(const Type2*)",
                   "Argument is a NULL pointer.");
       }
       std::copy(dataPtr, dataPtr + m_size, m_dataPtr);
@@ -249,22 +291,23 @@ namespace brick {
 
       // Now on with the show.
       try{
-        // Construct an InputStream instance so we can use our
-        // convenience functions.
-        InputStream stream(inputStream);
+        common::Expect::FormatFlag flags = common::Expect::SkipWhitespace;
+
+        // Skip any preceding whitespace.
+        inputStream >> common::Expect("", flags);
 
         // We won't require the input format to start with "Array3D(", but
         // if it does we read it here.
         bool foundIntro = false;
-        if(stream.peek() == ioIntro()[0]) {
+        if(inputStream.peek() == ioIntro()[0]) {
           foundIntro = true;
-          stream.expect(ioIntro());
+          inputStream >> common::Expect(ioIntro(), flags);
         }
 
         // OK.  We've dispensed with the intro.  What's left should be of
         // the format "[row, row, row, ...]".  We require the square
         // brackets to be there.
-        stream.expect(ioOpening);
+        inputStream >> common::Expect(&(ioOpening()), 1, flags);
 
         // Read the data.  We'll use the Array1D<Type> stream operator to
         // read each row.
@@ -272,25 +315,25 @@ namespace brick {
         std::vector< Array2D<Type> > inputBuffer;
         while(1) {
           // Read the next row.
-          stream >> inputValue;
+          inputStream >> inputValue;
           inputBuffer.push_back(inputValue);
 
           // Read the separator, or else the closing character.
           char inChar = 0;
-          stream >> inChar;
-          if(inChar == ioClosing) {
+          inputStream >> inChar;
+          if(inChar == this->ioClosing()) {
             // Found a closing.  Stop here.
             break;
           }
-          if(inChar != ioSeparator) {
+          if(inChar != this->ioSeparator()) {
             // Missing separator?  Fail here.
-            stream.clear(std::ios_base::failbit);
+            inputStream.clear(std::ios_base::failbit);
           }
         }
     
         // If we found an intro, we expect the corresponding outro.
         if(foundIntro) {
-          stream.expect(ioOutro());
+          inputStream >> common::Expect(&(ioOutro()), 1, flags);
         }
 
         // Now we're done with all of the parsing, verify that all slices
@@ -302,7 +345,7 @@ namespace brick {
           if((inputBuffer[index].rows() != arrayShape1)
              || (inputBuffer[index].columns() != arrayShape2)) {
             // Inconsistent slice sizes!  Fail here.
-            stream.clear(std::ios_base::failbit);
+            inputStream.clear(std::ios_base::failbit);
           }
         }
 
@@ -369,7 +412,7 @@ namespace brick {
         message << "Can't reshape a(n) " << this->size()
                 << " element array to be " << arrayShape0 << " x " << arrayShape1
                 << " x " << arrayShape2 << ".";
-        BRICK_THROW(ValueException, "Array3D::reshape()", message.str().c_str());
+        BRICK_THROW(common::ValueException, "Array3D::reshape()", message.str().c_str());
       }
 
       m_shape0 = static_cast<size_t>(arrayShape0);
@@ -408,7 +451,7 @@ namespace brick {
       default:
         std::ostringstream message;
         message << "Invalid Axis: "<< axis << ".";
-        BRICK_THROW(ValueException, "Array3D::shape(size_t)",
+        BRICK_THROW(common::ValueException, "Array3D::shape(size_t)",
                   message.str().c_str());
         break;
       }
@@ -479,7 +522,7 @@ namespace brick {
         message << "Mismatched array sizes. Argument array has "
                 << arg.size() << " elements, while destination array has "
                 << m_size << " elements.";
-        BRICK_THROW(ValueException, "Array3D::operator*=()",
+        BRICK_THROW(common::ValueException, "Array3D::operator*=()",
                   message.str().c_str());
       }
       std::transform(m_dataPtr, m_dataPtr + m_size, arg.data(), m_dataPtr,
@@ -497,7 +540,7 @@ namespace brick {
         message << "Mismatched array sizes. Argument array has "
                 << arg.size() << " elements, while destination array has "
                 << m_size << " elements.";
-        BRICK_THROW(ValueException, "Array3D::operator/=()",
+        BRICK_THROW(common::ValueException, "Array3D::operator/=()",
                   message.str().c_str());
       }
       std::transform(m_dataPtr, m_dataPtr + m_size, arg.data(), m_dataPtr,
@@ -515,7 +558,7 @@ namespace brick {
         message << "Mismatched array sizes. Argument array has "
                 << arg.size() << " elements, while destination array has "
                 << m_size << " elements.";
-        BRICK_THROW(ValueException, "Array3D::operator+=()",
+        BRICK_THROW(common::ValueException, "Array3D::operator+=()",
                   message.str().c_str());
       }
       std::transform(m_dataPtr, m_dataPtr + m_size, arg.data(), m_dataPtr,
@@ -533,7 +576,7 @@ namespace brick {
         message << "Mismatched array sizes. Argument array has "
                 << arg.size() << " elements, while destination array has "
                 << m_size << " elements.";
-        BRICK_THROW(ValueException, "Array3D::operator-=()",
+        BRICK_THROW(common::ValueException, "Array3D::operator-=()",
                   message.str().c_str());
       }
       std::transform(m_dataPtr, m_dataPtr + m_size, arg.data(), m_dataPtr,
@@ -604,44 +647,56 @@ namespace brick {
 
     template <class Type>
     inline void Array3D<Type>::
-    checkBounds(size_t index) const
+    checkBounds(
+#ifdef BRICK_NUMERIC_CHECKBOUNDS
+      size_t index
+#else /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
+      size_t
+#endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS [...] #else */
+      ) const
     {
 #ifdef BRICK_NUMERIC_CHECKBOUNDS
       if(index >= m_size) {
         std::ostringstream message;
         message << "Index " << index << " is invalid for a(n) " << m_size
                 << " element array.";
-        BRICK_THROW(IndexException, "Array3D::checkBounds(size_t)",
+        BRICK_THROW(common::IndexException, "Array3D::checkBounds(size_t)",
                   message.str().c_str());
       }
-#endif
+#endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
     }
 
   
     template <class Type>
     inline void Array3D<Type>::
-    checkBounds(size_t index0, size_t index1, size_t index2) const
+    checkBounds(
+#ifdef BRICK_NUMERIC_CHECKBOUNDS
+      size_t index0, size_t index1, size_t index2
+#else /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
+      size_t, size_t, size_t
+#endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS [...] #else */
+      ) const
     {
 #ifdef BRICK_NUMERIC_CHECKBOUNDS
       if(index0 >= m_shape0) {
         std::ostringstream message;
         message << "index0 should be less than " << m_shape0
                 << ", but is actually " << index0 << ".";
-        BRICK_THROW3(IndexException, "Array3D::checkBounds()",
+        BRICK_THROW(common::IndexException, "Array3D::checkBounds()",
                    message.str().c_str());
       }
       if(index1 >= m_shape1) {
         std::ostringstream message;
         message << "index1 should be less than " << m_shape1
                 << ", but is actually " << index1 << ".";
-        BRICK_THROW3(IndexException, "Array3D::checkBounds()",
+        BRICK_THROW(common::IndexException, "Array3D::checkBounds()",
                    message.str().c_str());
       }
       if(index2 >= m_shape2) {
         std::ostringstream message;
         message << "index2 should be less than " << m_shape2
                 << ", but is actually " << index2 << ".";
-        BRICK_THROW3(IndexException, "Array3D::checkBounds()",
+        BRICK_THROW(common::IndexException, "Array3D::checkBounds()",
                    message.str().c_str());
       }
 #endif
@@ -701,7 +756,7 @@ namespace brick {
                 << ", while array1 is "
                 << array1.shape0() << " x " << array1.shape1()
                 << " x " << array1.shape2() << ".";
-        BRICK_THROW(ValueException, "Array3D::operator+()", message.str().c_str());
+        BRICK_THROW(common::ValueException, "Array3D::operator+()", message.str().c_str());
       }
       Array3D<Type> result(array0.shape0(), array0.shape1(), array0.shape2());
       std::transform(array0.begin(), array0.end(), array1.begin(),
@@ -724,7 +779,7 @@ namespace brick {
                 << ", while array1 is "
                 << array1.shape0() << " x " << array1.shape1()
                 << " x " << array1.shape2() << ".";
-        BRICK_THROW(ValueException, "Array3D::operator-()", message.str().c_str());
+        BRICK_THROW(common::ValueException, "Array3D::operator-()", message.str().c_str());
       }
       Array3D<Type> result(array0.shape0(), array0.shape1(), array0.shape2());
       std::transform(array0.begin(), array0.end(), array1.begin(),
@@ -747,7 +802,7 @@ namespace brick {
                 << ", while array1 is "
                 << array1.shape0() << " x " << array1.shape1()
                 << " x " << array1.shape2() << ".";
-        BRICK_THROW(ValueException, "Array3D::operator*()", message.str().c_str());
+        BRICK_THROW(common::ValueException, "Array3D::operator*()", message.str().c_str());
       }
       Array3D<Type> result(array0.shape0(), array0.shape1(), array0.shape2());
       std::transform(array0.begin(), array0.end(), array1.begin(),
@@ -770,7 +825,7 @@ namespace brick {
                 << ", while array1 is "
                 << array1.shape0() << " x " << array1.shape1()
                 << " x " << array1.shape2() << ".";
-        BRICK_THROW(ValueException, "Array3D::operator/()", message.str().c_str());
+        BRICK_THROW(common::ValueException, "Array3D::operator/()", message.str().c_str());
       }
       Array3D<Type> result(array0.shape0(), array0.shape1(), array0.shape2());
       std::transform(array0.begin(), array0.end(), array1.begin(), result.begin(),

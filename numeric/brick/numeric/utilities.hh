@@ -512,7 +512,7 @@ namespace brick {
      * @return The return value is an Array1D instance containing the
      * sums of the rows or columns of the input array.
      */
-    template <class Type, class ResultType>
+    template <class ResultType, class Type>
     inline Array1D<ResultType>
     axisSum(const Array2D<Type>& array0, size_t axis);
     
@@ -553,7 +553,7 @@ namespace brick {
      * @return The return value is an Array1D instance containing the
      * sums of the rows or columns of the input array.
      */
-    template <class Type, class ResultType, class Functor>
+    template <class ResultType, class Type, class Functor>
     Array1D<ResultType>
     axisSum(const Array2D<Type>& array0, size_t axis,
             const ResultType& initialValue, Functor adder);
@@ -1087,7 +1087,7 @@ namespace brick {
      *
      * @return The return value is the mean of the elements of array0.
      */
-    template <class Iterator, class Type>
+    template <class Type, class Iterator>
     Type
     mean(const Iterator& beginIter, const Iterator& endIter);
 
@@ -1102,7 +1102,7 @@ namespace brick {
      *
      * @return The return value is the mean of the elements of array0.
      */
-    template <class Type0, class Type1>
+    template <class Type1, class Type0>
     inline Type1
     mean(const Array1D<Type0>& array0);
   
@@ -1220,7 +1220,7 @@ namespace brick {
      * @return The return value is the normalized correlation of the two
      * signals.
      */
-    template <class Type, class Type2>
+    template <class Type2, class Type>
     Type2
     normalizedCorrelation(const Array1D<Type>& signal0,
                           const Array1D<Type>& signal1);
@@ -1273,7 +1273,7 @@ namespace brick {
      *
      * @return The outer product of the two arguments.
      */
-    template <class Type0, class Type1, class Type2>
+    template <class Type2, class Type0, class Type1>
     Array2D<Type2>
     outerProduct(const Array1D<Type0>& array0, const Array1D<Type1>& array1);
 
@@ -1475,7 +1475,7 @@ namespace brick {
     inline Array2D<Type>
     skewSymmetric(const Array1D<Type>& vector0);
 
-
+#if 0
     /** 
      * This function computes the real roots of the quadratic polynomial
      * c0*x^2 + c1*x + c2 = 0.
@@ -1539,7 +1539,8 @@ namespace brick {
     solveQuadratic(Type c0, Type c1, Type c2,
                    Type& root0, Type& root1, bool& valid,
                    bool checkValidity=true);
-
+#endif
+    
     
     /** 
      * This function computes the standard deviation of the elements
@@ -1575,7 +1576,7 @@ namespace brick {
      *
      * @return The summation of all the elements of array0.
      */
-    template <class Type, class Type2>
+    template <class Type2, class Type>
     Type2
     sum(const Array1D<Type>& array0);
 
@@ -1601,7 +1602,7 @@ namespace brick {
      * @return The summation of all the elements in the region of
      * interest.
      */
-    template <class Type, class Type2>
+    template <class Type2, class Type>
     Type2
     sum(const Array2D<Type>& array0,
         const Index2D& upperLeftCorner,

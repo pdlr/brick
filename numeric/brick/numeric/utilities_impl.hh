@@ -55,7 +55,7 @@ namespace brick {
          * @return This function throws an exception, and so does not return.
          */
         inline Type operator()(const Type& input) {
-          BRICK_THROW3(NotImplementedException,
+          BRICK_THROW(common::NotImplementedException,
                      "absFunctor<Type>::operator()(const Type&)",
                      "absFunctor must be specialized for each type.");
           return static_cast<Type>(0);
@@ -465,7 +465,7 @@ namespace brick {
       default:
         std::ostringstream message;
         message << "Axis " << axis << " is invalid for an Array2D.";
-        BRICK_THROW3(IndexException, "axisMaximum(const Array2D&, size_t, ...)",
+        BRICK_THROW(common::IndexException, "axisMaximum(const Array2D&, size_t, ...)",
                    message.str().c_str());
         break;
       }
@@ -525,7 +525,7 @@ namespace brick {
       default:
         std::ostringstream message;
         message << "Axis " << axis << " is invalid for an Array2D.";
-        BRICK_THROW3(IndexException, "axisMinimum(const Array2D&, size_t, ...)",
+        BRICK_THROW(common::IndexException, "axisMinimum(const Array2D&, size_t, ...)",
                    message.str().c_str());
         break;
       }
@@ -535,18 +535,18 @@ namespace brick {
 
     // This function returns an Array1D in which each element has the
     // sum of one row or column of the input Array2D.
-    template <class Type, class ResultType>
+    template <class ResultType, class Type>
     inline Array1D<ResultType>
     axisSum(const Array2D<Type>& array0, size_t axis)
     {
-      return axisSum(array0, axis, type_tag<ResultType>(),
-                     static_cast<ResultType>(0), std::plus<ResultType>());
+      return axisSum<ResultType>(
+        array0, axis, static_cast<ResultType>(0), std::plus<ResultType>());
     }
 
     
     // This function returns an Array1D in which each element has the
     // sum of one row or column of the input Array2D.
-    template <class Type, class ResultType, class Functor>
+    template <class ResultType, class Type, class Functor>
     Array1D<ResultType>
     axisSum(const Array2D<Type>& array0, size_t axis,
             const ResultType& initialValue, Functor adder)
@@ -581,7 +581,7 @@ namespace brick {
       default:
         std::ostringstream message;
         message << "Axis " << axis << " is invalid for an Array2D.";
-        BRICK_THROW3(IndexException, "axisSum(const Array2D&, size_t, ...)",
+        BRICK_THROW(common::IndexException, "axisSum(const Array2D&, size_t, ...)",
                    message.str().c_str());
         break;
       }
@@ -633,7 +633,7 @@ namespace brick {
         message << "Condition and input arguments must have the same "
                 << "size, but condition has size = " << condition.size()
                 << ", while input has size = " << input.size() << ".";
-        BRICK_THROW3(ValueException,
+        BRICK_THROW(common::ValueException,
                    "compress(const Array1D&, const Array1D&, size_t)",
                    message.str().c_str());
       }
@@ -703,7 +703,7 @@ namespace brick {
         message << "Input arguments must have matching sizes, but x.size() == "
                 << x.size() << " and y.size() == " << y.size() << "."
                 << std::endl;
-        BRICK_THROW3(ValueException, "dot()", message.str().c_str());
+        BRICK_THROW(common::ValueException, "dot()", message.str().c_str());
       }
       return std::inner_product(x.begin(), x.end(), y.begin(),
                                 static_cast<Type2>(0));
@@ -751,17 +751,6 @@ namespace brick {
       return XMatrix;
     }
   
-    // This function returns a 2D matrix with the specified shape in
-    // which the elements on the diagonal are set to 1, and all other
-    // elements are set to 0.
-    template <class Type>
-    Array2D<Type>
-    identity(size_t rows, size_t columns)
-    {
-      return identity<Type>(rows, columns);
-    }
-
-
     // This function returns a 2D matrix with the specified shape in
     // which the elements on the diagonal are set to 1, and all other
     // elements are set to 0.
@@ -918,7 +907,8 @@ namespace brick {
         message << "Can't left-multiply a "
                 << matrix0.rows() << " x " << matrix0.columns()
                 << " matrix by a " << vector0.size() << " element vector\n";
-        BRICK_THROW(ValueException, "matrixMultiply()", message.str().c_str());
+        BRICK_THROW(common::ValueException, "matrixMultiply()",
+                    message.str().c_str());
       }
       Array1D<Type2> result = zeros<Type2>(matrix0.columns());
       size_t index = 0;
@@ -946,7 +936,7 @@ namespace brick {
         message << "matrixMultiply() -- can't right-multiply a "
                 << matrix0.rows() << " x " << matrix0.columns()
                 << " matrix by a " << vector0.size() << " element vector\n";
-        BRICK_THROW(ValueException, "matrixMultiply()", message.str().c_str());
+        BRICK_THROW(common::ValueException, "matrixMultiply()", message.str().c_str());
       }
       Array1D<Type2> result(matrix0.rows());
       for(size_t row = 0; row < matrix0.rows(); ++row) {
@@ -971,7 +961,7 @@ namespace brick {
                 << " matrix by a "
                 << matrix0.rows() << " x " << matrix0.columns()
                 << " matrix\n";
-        BRICK_THROW(ValueException, "matrixMultiply()", message.str().c_str());
+        BRICK_THROW(common::ValueException, "matrixMultiply()", message.str().c_str());
       }
       Array2D<Type2> result = zeros<Type2>(matrix0.rows(), matrix1.columns());
       for(size_t resultRow = 0; resultRow < result.rows(); ++resultRow) {
@@ -1006,7 +996,7 @@ namespace brick {
     maximum(const Array1D<Type>& array0, Functor comparator)
     {
       if(array0.size() == 0) {
-        BRICK_THROW3(ValueException, "maximum()",
+        BRICK_THROW(common::ValueException, "maximum()",
                    "Can't find the maximum element of an empty array.");
       }
       return *std::max_element(array0.begin(), array0.end(), comparator);
@@ -1015,7 +1005,7 @@ namespace brick {
 
     // This function computes the average value, or geometric mean, of
     // the elements of input sequence.
-    template <class Iterator, class Type>
+    template <class Type, class Iterator>
     Type
     mean(const Iterator& beginIter, const Iterator& endIter)
     {
@@ -1033,7 +1023,7 @@ namespace brick {
     // This function computes the average value, or geometric mean, of
     // the elements of its argument, and allows the user to specify the
     // precision with which the computation is carried out.
-    template <class Type0, class Type1>
+    template <class Type1, class Type0>
     inline Type1
     mean(const Array1D<Type0>& array0)
     {
@@ -1167,7 +1157,7 @@ namespace brick {
     minimum(const Array1D<Type>& array0)
     {
       if(array0.size() == 0) {
-        BRICK_THROW3(ValueException, "minimum()",
+        BRICK_THROW(common::ValueException, "minimum()",
                    "Can't find the minimum element of an empty array.");
       }
       return minimum(array0, std::less<Type>());
@@ -1199,11 +1189,11 @@ namespace brick {
         }
         double resultPrime = objectiveFunction.derivative(argument);
         if(resultPrime == 0.0) {
-          BRICK_THROW(ValueException, "newtonRaphson()", "Zero derivative.");
+          BRICK_THROW(common::ValueException, "newtonRaphson()", "Zero derivative.");
         }
         argument = argument - (result / resultPrime);
       }
-      BRICK_THROW(ValueException, "newtonRaphson()",
+      BRICK_THROW(common::ValueException, "newtonRaphson()",
                 "Root finding failed to converge.");
       return 0.0;  // keep compiler happy
     }
@@ -1211,13 +1201,13 @@ namespace brick {
 
     // This function computes the normalized correlation of two Array1D
     // arguments.
-    template <class Type, class Type2>
+    template <class Type2, class Type>
     Type2
     normalizedCorrelation(const Array1D<Type>& signal0,
                           const Array1D<Type>& signal1)
     {
       if(signal0.size() != signal1.size()) {
-        BRICK_THROW(ValueException, "normalizedCorrelation()",
+        BRICK_THROW(common::ValueException, "normalizedCorrelation()",
                   "Input arrays must have the same size.");
       }
       Type2 oneOverN =
@@ -1274,7 +1264,7 @@ namespace brick {
     // This function computes the outer product of two input Array1D
     // instances and allows the user to control which type is used to do the
     // computation.
-    template <class Type0, class Type1, class Type2>
+    template <class Type2, class Type0, class Type1>
     Array2D<Type2>
     outerProduct(const Array1D<Type0>& x, const Array1D<Type1>& y)
     {
@@ -1299,7 +1289,7 @@ namespace brick {
     range(Type start, Type stop, Type stride)
     {
       if(stride == 0) {
-        BRICK_THROW3(ValueException, "range(Type, Type, Type)",
+        BRICK_THROW(common::ValueException, "range(Type, Type, Type)",
                    "Argument \"stride\" must not be equal to 0.");
       }
       int length = static_cast<int>((stop - start) / stride);
@@ -1394,7 +1384,7 @@ namespace brick {
         std::ostringstream message;
         message << "Argument must have exactly 3 elements, but instead has "
                 << vector0.size() << "elements.";
-        BRICK_THROW(ValueException, "skewSymmetric()", message.str().c_str());
+        BRICK_THROW(common::ValueException, "skewSymmetric()", message.str().c_str());
       }
       Array2D<Type> returnVal(3, 3);
       returnVal(0, 0) = 0;
@@ -1412,6 +1402,7 @@ namespace brick {
     }
 
 
+#if 0
     // This function computes the real roots of the quadratic polynomial
     // c0*x^2 + c1*x + c0 = 0.
     template <class Type>
@@ -1421,7 +1412,7 @@ namespace brick {
     {
       valid = solveQuadratic(c0, c1, c2, root0, root1);
     }
-
+#endif
     
     // This function computes the standard deviation of a group of
     // scalar samples.
@@ -1435,7 +1426,7 @@ namespace brick {
 
     // This function computes the sum of all elements in the input
     // array.
-    template <class Type, class Type2>
+    template <class Type2, class Type>
     Type2
     sum(const Array1D<Type>& array0)
     {
@@ -1446,7 +1437,7 @@ namespace brick {
 
     // This function computes the sum of those elements of its
     // argument which lie within a rectangular region of interest.
-    template <class Type, class Type2>
+    template <class Type2, class Type>
     Type2
     sum(const Array2D<Type>& array0,
         const Index2D& upperLeftCorner,

@@ -35,6 +35,7 @@ brickNumeric_HEADERS	= \
 	index2D.hh \
 	index3D.hh \
 	numericTraits.hh \
+	solveQuadratic.hh solveQuadratic_impl.hh \
 	transform2D.hh transform2D_impl.hh \
 	transform3D.hh transform3D_impl.hh \
 	transform3DTo2D.hh transform3DTo2D_impl.hh \

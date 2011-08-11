@@ -20,10 +20,10 @@ TESTS			= \
 	array2DTest \
 	array3DTest \
 	index3DTest \
+	solveQuadraticTest \
 	transform2DTest \
 	transform3DTest \
-	utilitiesTest \
-	utilitiesTemplateTest
+	utilitiesTest
 
 
 # Specify which tests should be build from source.
@@ -33,10 +33,10 @@ check_PROGRAMS          = \
 	array2DTest \
 	array3DTest \
 	index3DTest \
+	solveQuadraticTest \
 	transform2DTest \
 	transform3DTest \
-	utilitiesTest \
-	utilitiesTemplateTest
+	utilitiesTest
 
 
 # For each test which should be built from source, specify which 
@@ -46,10 +46,10 @@ array1DTest_SOURCES		= array1DTest.cc arrayTestCommon.hh
 array2DTest_SOURCES		= array2DTest.cc arrayTestCommon.hh
 array3DTest_SOURCES		= array3DTest.cc arrayTestCommon.hh
 index3DTest_SOURCES		= index3DTest.cc
+solveQuadraticTest_SOURCES	= solveQuadraticTest.cc
 transform2DTest_SOURCES		= transform2DTest.cc arrayTestCommon.hh
 transform3DTest_SOURCES		= transform3DTest.cc arrayTestCommon.hh
 utilitiesTest_SOURCES		= utilitiesTest.cc
-utilitiesTemplateTest_SOURCES	= utilitiesTemplateTest.cc
 
 
 # Set the include path.

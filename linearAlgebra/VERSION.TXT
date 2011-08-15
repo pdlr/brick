@@ -1,0 +1,3 @@
+/** @file VERSION.TXT
+This is brick::linearAlgebra version 1.0.
+**/

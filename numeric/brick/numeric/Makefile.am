@@ -26,7 +26,7 @@ AM_CPPFLAGS		= -I$(top_srcdir)
 # Define the list of header files to install and the location to
 # install them.
 
-brickNumericdir		= $(includedir)/brickNumeric
+brickNumericdir		= $(includedir)/brick/numeric
 brickNumeric_HEADERS	= \
 	array1D.hh array1D_impl.hh \
 	array2D.hh array2D_impl.hh \

@@ -1,20 +1,23 @@
 /**
 ***************************************************************************
-* @file linearAlgebra.cpp
+* @file brick/linearAlgebra/linearAlgebra.cpp
 *
 * Source file defining linear algebra functions.  Many of these depend
 * on the LAPACK and BLAS libraries.
 *
-* Copyright (C) 2001-2008 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2001-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 ***************************************************************************
 **/
 
 #include <brick/common/exception.hh>
-#include <dlrLinearAlgebra/linearAlgebra.h>
-#include <dlrLinearAlgebra/clapack.h>
+#include <brick/linearAlgebra/linearAlgebra.hh>
+#include <brick/linearAlgebra/clapack.hh>
 #include <brick/numeric/utilities.hh>
 
+// Using directives for this source file only.
+using namespace brick::common;
+using namespace brick::numeric;
 
 namespace brick {
 
@@ -25,20 +28,20 @@ namespace brick {
   namespace linearAlgebra {
 
     void
-    choleskyFactorization(const Array2D<Float64>& inputArray,
+    choleskyFactorization(Array2D<Float64> const& inputArray,
                           Array2D<Float64>& kArray,
                           bool isUpperTriangular)
     {
       // Argument checking.
       if(inputArray.size() == 0) {
-        BRICK_THROW3(ValueException,
-                   "choleskyFactorization()",
-                   "Argument inputArray cannot have zero size.");
+        BRICK_THROW(brick::common::ValueException,
+                    "choleskyFactorization()",
+                    "Argument inputArray cannot have zero size.");
       }
       if(inputArray.rows() != inputArray.columns()) {
-        BRICK_THROW3(ValueException,
-                   "choleskyFactorization()",
-                   "Argument inputArray must be square.");
+        BRICK_THROW(brick::common::ValueException,
+                    "choleskyFactorization()",
+                    "Argument inputArray must be square.");
       }
     
       // Transpose A to match LAPACK's convention.  Since inputArray
@@ -90,12 +93,12 @@ namespace brick {
         std::ostringstream message;
         message << "Call to dpotrf_ returns " << INFO
                 << ".  Something is wrong.";
-        BRICK_THROW3(ValueException, "choleskyFactorization()",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException, "choleskyFactorization()",
+                    message.str().c_str());
       } else if(INFO > 0L) {
         std::ostringstream message;
-        BRICK_THROW3(ValueException, "choleskyFactorization()",
-                   "Input matrix is not positive definite.");
+        BRICK_THROW(brick::common::ValueException, "choleskyFactorization()",
+                    "Input matrix is not positive definite.");
       }
 
       // Recover the result.
@@ -104,13 +107,13 @@ namespace brick {
 
     
     Float64
-    determinant(const Array2D<Float64>& A)
+    determinant(Array2D<Float64> const& A)
     {
       // First argument checking.
       if(A.columns() != A.rows()) {
-        BRICK_THROW3(ValueException,
-                   "determinant(const Array2D<Float64>&)",
-                   "Input array is not square.");
+        BRICK_THROW(brick::common::ValueException,
+                    "determinant(Array2D<Float64> const&)",
+                    "Input array is not square.");
       }
 
       // In this routine, we take advantage of the fact that the
@@ -131,9 +134,9 @@ namespace brick {
         std::ostringstream message;
         message << "Call to dgetrf_ returns " << info
                 << ".  Something is wrong.";
-        BRICK_THROW3(ValueException,
-                   "determinant(const Array2D<Float64>&)",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException,
+                    "determinant(Array2D<Float64> const&)",
+                    message.str().c_str());
       }
 
       // Compute the product of the diagonal elements, and find out if
@@ -159,18 +162,18 @@ namespace brick {
 
   
     Array1D<Float64>
-    eigenvaluesSymmetric(const Array2D<Float64>& inputArray)
+    eigenvaluesSymmetric(Array2D<Float64> const& inputArray)
     {
       // Argument checking.
       if(inputArray.size() == 0) {
-        BRICK_THROW3(ValueException,
-                   "eigenvaluesSymmetric()",
-                   "Argument inputArray cannot have zero size.");
+        BRICK_THROW(brick::common::ValueException,
+                    "eigenvaluesSymmetric()",
+                    "Argument inputArray cannot have zero size.");
       }
       if(inputArray.rows() != inputArray.columns()) {
-        BRICK_THROW3(ValueException,
-                   "eigenvaluesSymmetric()",
-                   "Argument inputArray must be square.");
+        BRICK_THROW(brick::common::ValueException,
+                    "eigenvaluesSymmetric()",
+                    "Argument inputArray must be square.");
       }
     
       // Transpose A to match LAPACK's convention.  Since inputArray is
@@ -211,9 +214,9 @@ namespace brick {
         std::ostringstream message;
         message << "First call to dsyev_ returns " << INFO
                 << ".  Something is wrong.";
-        BRICK_THROW3(ValueException,
-                   "eigenvaluesSymmetric()",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException,
+                    "eigenvaluesSymmetric()",
+                    message.str().c_str());
       }
     
       // Resize workspace.
@@ -229,9 +232,9 @@ namespace brick {
         std::ostringstream message;
         message << "Second call to dsyev_ returns " << INFO
                 << ".  Something is wrong.";
-        BRICK_THROW3(ValueException,
-                   "eigenvaluesSymmetric()",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException,
+                    "eigenvaluesSymmetric()",
+                    message.str().c_str());
       }
 
       // Our convention differs from LAPACK's about the order of eigenvalues.
@@ -241,21 +244,21 @@ namespace brick {
 
 
     void
-    eigenvectors(const Array2D<Float64>& inputArray,
+    eigenvectors(Array2D<Float64> const& inputArray,
                  Array1D< std::complex<Float64> >& eigenvalues,
                  Array2D< std::complex<Float64> >& eigenvectors,
                  bool isSortRequired)
     {
       // Argument checking.
       if(inputArray.size() == 0) {
-        BRICK_THROW3(ValueException,
-                   "eigenvectors()",
-                   "Argument inputArray cannot have zero size.");
+        BRICK_THROW(brick::common::ValueException,
+                    "eigenvectors()",
+                    "Argument inputArray cannot have zero size.");
       }
       if(inputArray.rows() != inputArray.columns()) {
-        BRICK_THROW3(ValueException,
-                   "eigenvectors()",
-                   "Argument inputArray must be square.");
+        BRICK_THROW(brick::common::ValueException,
+                    "eigenvectors()",
+                    "Argument inputArray must be square.");
       }
     
       // Transpose A to match LAPACK's convention.
@@ -291,7 +294,8 @@ namespace brick {
         std::ostringstream message;
         message << "First call to dgeev_ returns " << INFO
                 << ".  Something is wrong.";
-        BRICK_THROW3(ValueException, "eigenvectors()", message.str().c_str());
+        BRICK_THROW(brick::common::ValueException, "eigenvectors()",
+                    message.str().c_str());
       }
     
       // Resize workspace.
@@ -310,7 +314,8 @@ namespace brick {
         std::ostringstream message;
         message << "Second call to dgeev_ returns " << INFO
                 << ".  Something is wrong.";
-        BRICK_THROW3(ValueException, "eigenvectors()", message.str().c_str());
+        BRICK_THROW(brick::common::ValueException, "eigenvectors()",
+                    message.str().c_str());
       }
 
       // Check the sizes of the return references.
@@ -374,20 +379,20 @@ namespace brick {
 
     
     void
-    eigenvectorsSymmetric(const Array2D<Float64>& inputArray,
+    eigenvectorsSymmetric(Array2D<Float64> const& inputArray,
                           Array1D<Float64>& eigenvalues,
                           Array2D<Float64>& eigenvectors)
     {
       // Argument checking.
       if(inputArray.size() == 0) {
-        BRICK_THROW3(ValueException,
-                   "eigenvectorsSymmetric()",
-                   "Argument inputArray cannot have zero size.");
+        BRICK_THROW(brick::common::ValueException,
+                    "eigenvectorsSymmetric()",
+                    "Argument inputArray cannot have zero size.");
       }
       if(inputArray.rows() != inputArray.columns()) {
-        BRICK_THROW3(ValueException,
-                   "eigenvectorsSymmetric()",
-                   "Argument inputArray must be square.");
+        BRICK_THROW(brick::common::ValueException,
+                    "eigenvectorsSymmetric()",
+                    "Argument inputArray must be square.");
       }
     
       // Transpose A to match LAPACK's convention.  Since inputArray is
@@ -428,9 +433,9 @@ namespace brick {
         std::ostringstream message;
         message << "First call to dsyev_ returns " << INFO
                 << ".  Something is wrong.";
-        BRICK_THROW3(ValueException,
-                   "eigenvectorsSymmetric()",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException,
+                    "eigenvectorsSymmetric()",
+                    message.str().c_str());
       }
     
       // Resize workspace.
@@ -446,9 +451,9 @@ namespace brick {
         std::ostringstream message;
         message << "Second call to dsyev_ returns " << INFO
                 << ".  Something is wrong.";
-        BRICK_THROW3(ValueException,
-                   "eigenvectorsSymmetric()",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException,
+                    "eigenvectorsSymmetric()",
+                    message.str().c_str());
       }
 
       // Recover the result.  Eigenvectors are left in aColumnMajor, but
@@ -490,17 +495,16 @@ namespace brick {
 
 
     Array2D<Float64>
-    inverse(const Array2D<Float64>& A)
+    inverse(Array2D<Float64> const& A)
     {
       // First argument checking.
       if(A.columns() != A.rows()) {
-        BRICK_THROW3(ValueException,
-                   "inverse(const Array2D<Float64>&)",
-                   "Input array is not square.");
+        BRICK_THROW(brick::common::ValueException,
+                    "inverse(Array2D<Float64> const&)",
+                    "Input array is not square.");
       }
       // Now set up some linear equations to solve.
-      Array2D<Float64> AInverse =
-        identity(A.rows(), A.rows(), type_tag<Float64>());
+      Array2D<Float64> AInverse = identity<Float64>(A.rows(), A.rows());
       Array2D<Float64> AA = A.transpose();
       // And solve for the inverse matrix.
       linearSolveInPlace(AA, AInverse); //Modifies AInverse.
@@ -511,8 +515,8 @@ namespace brick {
     // This function computes the best linear fit between the two input
     // arrays.
     std::pair<Float64, Float64>
-    linearFit(const Array1D<Float64>& array0,
-              const Array1D<Float64>& array1)
+    linearFit(Array1D<Float64> const& array0,
+              Array1D<Float64> const& array1)
     {
       // We're looking for constants a and b which most nearly (in the
       // least squares sense) satisfy the equation
@@ -538,30 +542,30 @@ namespace brick {
         message << "Arguments array0 and array1 must have the same size, "
                 << "but are of size " << array0.size()
                 << " and " << array1.size() << " respectively." << std::endl;
-        BRICK_THROW3(ValueException,
-                   "linearFit(const Array1D<Float64>&, const Array1D<Float64>&)",
-                   message.str().c_str());                 
+        BRICK_THROW(brick::common::ValueException,
+                    "linearFit(Array1D<Float64> const&, Array1D<Float64> const&)",
+                    message.str().c_str());                 
       }
       if(array0.size() == 0) {
-        BRICK_THROW3(ValueException,
-                   "linearFit(const Array1D<Float64>&, const Array1D<Float64>&)",
-                   "Arguments cannot have zero size.");
+        BRICK_THROW(brick::common::ValueException,
+                    "linearFit(Array1D<Float64> const&, Array1D<Float64> const&)",
+                    "Arguments cannot have zero size.");
       }
 
       // Do linear regression.
       Array2D<Float64> AMatrix(2, 2);
-      AMatrix(0, 0) = dot(array0, array0);
-      AMatrix(0, 1) = sum(array0);
-      AMatrix(1, 0) = sum(array0);
+      AMatrix(0, 0) = dot<Float64>(array0, array0);
+      AMatrix(0, 1) = sum<Float64>(array0);
+      AMatrix(1, 0) = sum<Float64>(array0);
       AMatrix(1, 1) = array0.size();
 
       Array1D<Float64> bVector(2);
-      bVector(0) = dot(array0, array1);
-      bVector(1) = sum(array1);
+      bVector(0) = dot<Float64>(array0, array1);
+      bVector(1) = sum<Float64>(array1);
     
       Array2D<Float64> AInverse = inverse(AMatrix);
 
-      Array1D<Float64> result = matrixMultiply(AInverse, bVector);
+      Array1D<Float64> result = matrixMultiply<Float64>(AInverse, bVector);
       return std::make_pair(result(0), result(1));
     }
 
@@ -569,26 +573,26 @@ namespace brick {
     // This function solves the system of equations A*x = b, where A and
     // b are known Array2D<double> instances.
     Array1D<Float64>
-    linearLeastSquares(const Array2D<Float64>& A, const Array1D<Float64>& b)
+    linearLeastSquares(Array2D<Float64> const& A, Array1D<Float64> const& b)
     {
       // First some argument checking.
       if(A.size() == 0) {
-        BRICK_THROW3(
-          ValueException,
-          "linearLeastSquares(const Array2D<Float64>&, const Array1D<Float64>&)",
-          "Input array A must have nonzero size.");
+        BRICK_THROW(brick::common::
+                    ValueException,
+                    "linearLeastSquares(Array2D<Float64> const&, Array1D<Float64> const&)",
+                    "Input array A must have nonzero size.");
       }
       if(A.rows() != b.size()) {
-        BRICK_THROW3(
-          ValueException,
-          "linearLeastSquares(const Array2D<Float64>&, const Array1D<Float64>&)",
-          "The number of rows in input array A must be the same as the number "
-          "of elements in b.");
+        BRICK_THROW(brick::common::
+                    ValueException,
+                    "linearLeastSquares(Array2D<Float64> const&, Array1D<Float64> const&)",
+                    "The number of rows in input array A must be the same as the number "
+                    "of elements in b.");
       }
 
       // This two-line implementation is slow.
       // Array2D<Float64> APInv = pseudoinverse(A);
-      // return matrixMultiply(APInv, b);
+      // return matrixMultiply<Float64>(APInv, b);
 
       // Set up scalar arguments for the LAPACK routine.
       char trans = 'N';
@@ -615,9 +619,9 @@ namespace brick {
         std::ostringstream message;
         message << "First call to dgels_ returns " << info
                 << ".  Something is wrong.";
-        BRICK_THROW3(ValueException,
-                   "linearLeastSquares()",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException,
+                    "linearLeastSquares()",
+                    message.str().c_str());
       }
     
       // Resize workspace.
@@ -633,9 +637,9 @@ namespace brick {
         std::ostringstream message;
         message << "Second call to dgels_ returns " << info
                 << ".  Something is wrong.";
-        BRICK_THROW3(ValueException,
-                   "linearLeastSquares()",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException,
+                    "linearLeastSquares()",
+                    message.str().c_str());
       }
 
       if(bCopy.size() == A.columns()) {
@@ -670,14 +674,14 @@ namespace brick {
     {
       // First some argument checking.
       if(A.rows() != b.rows()) {
-        BRICK_THROW3(ValueException,
-                   "linearSolveInPlace(Array2D<Float64>&, Array2D<Float64>&)",
-                   "Input arrays A and b must have the same number of rows.");
+        BRICK_THROW(brick::common::ValueException,
+                    "linearSolveInPlace(Array2D<Float64>&, Array2D<Float64>&)",
+                    "Input arrays A and b must have the same number of rows.");
       }
       if(A.rows() != A.columns()) {
-        BRICK_THROW3(ValueException,
-                   "linearSolveInPlace(Array2D<Float64>&, Array2D<Float64>&)",
-                   "Input array A must be square.");
+        BRICK_THROW(brick::common::ValueException,
+                    "linearSolveInPlace(Array2D<Float64>&, Array2D<Float64>&)",
+                    "Input array A must be square.");
       }
 
       // Grr.  Have to transpose to match lapack.
@@ -698,9 +702,9 @@ namespace brick {
         message << "Call to dgesv_ returns " << info << ".  Something is wrong."
                 << "  Perhaps the the input equations are poorly conditioned "
                 << "or perhaps there is no solution.";
-        BRICK_THROW3(ValueException,
-                   "linearSolveInPlace(Array2D<Float64>&, Array2D<Float64>&)",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException,
+                    "linearSolveInPlace(Array2D<Float64>&, Array2D<Float64>&)",
+                    message.str().c_str());
       }
     }
 
@@ -708,29 +712,29 @@ namespace brick {
     // This function solves the system of equations A*x = b, where A is
     // a known tridiagonal matrix and b is a known vector.
     Array1D<Float64>
-    linearSolveTridiagonal(const Array1D<Float64>& subDiagonal,
-                           const Array1D<Float64>& centerDiagonal,
-                           const Array1D<Float64>& superDiagonal,
-                           const Array1D<Float64>& bVector)
+    linearSolveTridiagonal(Array1D<Float64> const& subDiagonal,
+                           Array1D<Float64> const& centerDiagonal,
+                           Array1D<Float64> const& superDiagonal,
+                           Array1D<Float64> const& bVector)
     {
       // First some argument checking.
       if(subDiagonal.size() != superDiagonal.size()) {
-        BRICK_THROW3(ValueException,
-                   "linearSolveTridiagonal()",
-                   "Input arguments subDiagonal and superDiagonal "
-                   "must have the same size.");
+        BRICK_THROW(brick::common::ValueException,
+                    "linearSolveTridiagonal()",
+                    "Input arguments subDiagonal and superDiagonal "
+                    "must have the same size.");
       }
       if(centerDiagonal.size() != bVector.size()) {
-        BRICK_THROW3(ValueException,
-                   "linearSolveTridiagonal()",
-                   "Input arguments centerDiagonal and bVector "
-                   "must have the same size.");
+        BRICK_THROW(brick::common::ValueException,
+                    "linearSolveTridiagonal()",
+                    "Input arguments centerDiagonal and bVector "
+                    "must have the same size.");
       }
       if(centerDiagonal.size() != subDiagonal.size() + 1) {
-        BRICK_THROW3(ValueException,
-                   "linearSolveTridiagonal()",
-                   "Input argument centerDiagonal must have one more element "
-                   "than input argument subDiagonal.");
+        BRICK_THROW(brick::common::ValueException,
+                    "linearSolveTridiagonal()",
+                    "Input argument centerDiagonal must have one more element "
+                    "than input argument subDiagonal.");
       }
 
     
@@ -752,9 +756,9 @@ namespace brick {
         message << "Call to dgtsv_ returns " << INFO << ".  Something is wrong."
                 << "  Perhaps the the input equations are poorly conditioned "
                 << "or perhaps there is no solution.";
-        BRICK_THROW3(ValueException,
-                   "linearSolveTridiagonal()",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException,
+                    "linearSolveTridiagonal()",
+                    message.str().c_str());
       }
 
       return xVector;
@@ -764,7 +768,7 @@ namespace brick {
     // This function computes the QR factorization of a general
     // matrix.
     void
-    qrFactorization(const Array2D<Float64>& inputArray,
+    qrFactorization(Array2D<Float64> const& inputArray,
                     Array2D<Float64>& qArray,
                     Array2D<Float64>& rArray)
     {
@@ -790,14 +794,14 @@ namespace brick {
       // Now invoke the LAPACK routine to find the optimal workspace
       // size.
       dgeqrf_(&rows, &columns, AColumnMajor.data(), &lda, tauArray.data(),
-             &temporaryWorkspace, &lwork, &info);
+              &temporaryWorkspace, &lwork, &info);
 
       // Check for errors.
       if(info != 0L) {
         std::ostringstream message;
         message << "First call to dgeqrf_ returns " << info
                 << ".  Something is wrong.";
-        BRICK_THROW3(ValueException, "qrFactorization()", message.str().c_str());
+        BRICK_THROW(brick::common::ValueException, "qrFactorization()", message.str().c_str());
       }
     
       // Resize workspace.
@@ -806,14 +810,14 @@ namespace brick {
 
       // Call again to solve the system of equations.
       dgeqrf_(&rows, &columns, AColumnMajor.data(), &lda, tauArray.data(),
-             doubleWorkspace.data(), &lwork, &info);
+              doubleWorkspace.data(), &lwork, &info);
     
       // Check for errors.
       if(info != 0L) {
         std::ostringstream message;
         message << "Second call to dgeqrf_ returns " << info
                 << ".  Something is wrong.";
-        BRICK_THROW3(ValueException, "qrFactorization()", message.str().c_str());
+        BRICK_THROW(brick::common::ValueException, "qrFactorization()", message.str().c_str());
       }
 
       // Prepare reference arguments to receive the result.
@@ -889,7 +893,7 @@ namespace brick {
           }
         }
 
-        qArray = matrixMultiply(qArray, reflector);
+        qArray = matrixMultiply<Float64>(qArray, reflector);
       }
 
       // Make sure diagonal elements of rArray are non-negative, as
@@ -911,18 +915,18 @@ namespace brick {
     // as many rows as columns, and returns the Moore-Penrose
     // pseudoinverse.
     Array2D<Float64>
-    pseudoinverse(const Array2D<Float64>& A)
+    pseudoinverse(Array2D<Float64> const& A)
     {
       Array2D<Float64> ATranspose = A.transpose();
-      Array2D<Float64> ATA = matrixMultiply(ATranspose, A);
-      return matrixMultiply(inverse(ATA), ATranspose);
+      Array2D<Float64> ATA = matrixMultiply<Float64>(ATranspose, A);
+      return matrixMultiply<Float64>(inverse(ATA), ATranspose);
     }
 
 
     // This function computes the singular value decomposition of a
     // matrix.
     void
-    singularValueDecomposition(const Array2D<Float64>& inputArray,
+    singularValueDecomposition(Array2D<Float64> const& inputArray,
                                Array2D<Float64>& uArray,
                                Array1D<Float64>& sigmaArray,
                                Array2D<Float64>& vTransposeArray,
@@ -931,9 +935,9 @@ namespace brick {
     {
       // Argument checking.
       if(inputArray.size() == 0) {
-        BRICK_THROW3(ValueException,
-                   "singularValueDecomposition()",
-                   "Argument inputArray cannot have zero size.");
+        BRICK_THROW(brick::common::ValueException,
+                    "singularValueDecomposition()",
+                    "Argument inputArray cannot have zero size.");
       }
 
       // Note(xxx): Fix things so that isFullRangeRequired is not ignored.
@@ -1009,9 +1013,9 @@ namespace brick {
         std::ostringstream message;
         message << "First call to dgesdd_ returns " << INFO
                 << ".  Something is wrong.";
-        BRICK_THROW3(ValueException,
-                   "singularValueDecomposition()",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException,
+                    "singularValueDecomposition()",
+                    message.str().c_str());
       }
     
       // Resize workspace.
@@ -1030,25 +1034,25 @@ namespace brick {
         std::ostringstream message;
         message << "Second call to dgesdd_ returns " << INFO
                 << ".  Something is wrong.";
-        BRICK_THROW3(ValueException,
-                   "singularValueDecomposition()",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException,
+                    "singularValueDecomposition()",
+                    message.str().c_str());
       }
     } 
 
 
 
     void
-    singularValueDecompositionSimple(const Array2D<Float64>& inputArray,
+    singularValueDecompositionSimple(Array2D<Float64> const& inputArray,
                                      Array2D<Float64>& uArray,
                                      Array1D<Float64>& sigmaArray,
                                      Array2D<Float64>& vTransposeArray)
     {
       // Argument checking.
       if(inputArray.size() == 0) {
-        BRICK_THROW3(ValueException,
-                   "singularValueDecomposition()",
-                   "Argument inputArray cannot have zero size.");
+        BRICK_THROW(brick::common::ValueException,
+                    "singularValueDecomposition()",
+                    "Argument inputArray cannot have zero size.");
       }
     
       // We do not transpose A. Instead, we let LAPACK operate on the
@@ -1108,9 +1112,9 @@ namespace brick {
         std::ostringstream message;
         message << "First call to dgesdd_ returns " << INFO
                 << ".  Something is wrong.";
-        BRICK_THROW3(ValueException,
-                   "singularValueDecomposition()",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException,
+                    "singularValueDecomposition()",
+                    message.str().c_str());
       }
     
       // Resize workspace.
@@ -1128,9 +1132,9 @@ namespace brick {
         std::ostringstream message;
         message << "Second call to dgesdd_ returns " << INFO
                 << ".  Something is wrong.";
-        BRICK_THROW3(ValueException,
-                   "singularValueDecomposition()",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException,
+                    "singularValueDecomposition()",
+                    message.str().c_str());
       }
     } 
 
@@ -1140,14 +1144,14 @@ namespace brick {
 //   // explicitly transposes the matrix before passing it to LAPACK.
 //   void
 //   singularValueDecomposition(
-//     const Array2D<double>& inputArray,
+//     Array2D<double> const& inputArray,
 //     Array2D<double>& uArray,
 //     Array1D<double>& sigmaArray,
 //     Array2D<double>& vTransposeArray)
 //   {
 //     // Argument checking.
 //     if(inputArray.size() == 0) {
-//       BRICK_THROW3(ValueException,
+//       BRICK_THROW(brick::common::ValueException,
 //                  "singularValueDecomposition()",
 //                  "Argument inputArray cannot have zero size.");
 //     }
@@ -1189,7 +1193,7 @@ namespace brick {
 //       std::ostringstream message;
 //       message << "First call to dgesdd_ returns " << INFO
 //               << ".  Something is wrong.";
-//       BRICK_THROW3(ValueException,
+//       BRICK_THROW(brick::common::ValueException,
 //                  "singularValueDecomposition()",
 //                  message.str().c_str());
 //     }
@@ -1210,7 +1214,7 @@ namespace brick {
 //       std::ostringstream message;
 //       message << "Second call to dgesdd_ returns " << INFO
 //               << ".  Something is wrong.";
-//       BRICK_THROW3(ValueException,
+//       BRICK_THROW(brick::common::ValueException,
 //                  "singularValueDecomposition()",
 //                  message.str().c_str());
 //     }
@@ -1224,13 +1228,13 @@ namespace brick {
     // This function computes the singular values a matrix without
     // computing the associated U and V matrices.
     Array1D<Float64>
-    singularValues(const Array2D<Float64>& inputArray)
+    singularValues(Array2D<Float64> const& inputArray)
     {
       // Argument checking.
       if(inputArray.size() == 0) {
-        BRICK_THROW3(ValueException,
-                   "singularValues()",
-                   "Argument inputArray cannot have zero size.");
+        BRICK_THROW(brick::common::ValueException,
+                    "singularValues()",
+                    "Argument inputArray cannot have zero size.");
       }
     
       // Transpose A to match LAPACK's convention.
@@ -1274,9 +1278,9 @@ namespace brick {
         std::ostringstream message;
         message << "First call to dgesdd_ returns " << INFO
                 << ".  Something is wrong.";
-        BRICK_THROW3(ValueException,
-                   "singularValues()",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException,
+                    "singularValues()",
+                    message.str().c_str());
       }
     
       // Resize workspace.
@@ -1303,9 +1307,9 @@ namespace brick {
         std::ostringstream message;
         message << "Second call to dgesdd_ returns " << INFO
                 << ".  Something is wrong.";
-        BRICK_THROW3(ValueException,
-                   "singularValues()",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException,
+                    "singularValues()",
+                    message.str().c_str());
       }
 
       // Return the result.

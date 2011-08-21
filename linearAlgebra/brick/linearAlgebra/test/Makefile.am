@@ -16,19 +16,19 @@ VPATH			= @srcdir@
 # Specify which tests should be run.
 
 TESTS			= \
-	utilitiesTest
+	linearAlgebraTest
 
 
 # Specify which tests should be build from source.
 
 check_PROGRAMS          = \
-	utilitiesTest
+	linearAlgebraTest
 
 
 # For each test which should be built from source, specify which 
 # source files.
 
-utilitiesTest_SOURCES		= utilitiesTest.cc
+linearAlgebraTest_SOURCES		= linearAlgebraTest.cc
 
 
 # Set the include path.
@@ -39,7 +39,7 @@ AM_CPPFLAGS		= -I$(top_srcdir)
 # Explicitly set library locations to avoid linking with previously
 # installed versions of the libraries.
 
-AM_LDFLAGS		= -L$(top_builddir)/brick/numeric
+AM_LDFLAGS		= -L$(top_builddir)/brick/linearAlgebra
 
 
 # Specify which libraries are needed to build these tests.

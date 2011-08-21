@@ -1,11 +1,11 @@
 /**
 ***************************************************************************
-* @file dlrLinearAlgebra/linearAlgebra.h
+* @file brick/linearAlgebra/linearAlgebra.h
 *
 * Header file declaring linear algebra functions.  Many of these depend
 * on the LAPACK and BLAS libraries.
 *
-* Copyright (C) 2001-2008 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2001-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 ***************************************************************************
 **/
@@ -40,8 +40,8 @@ namespace brick {
      * triangular matrix.
      */
     void
-    choleskyFactorization(const Array2D<Float64>& inputArray,
-                          Array2D<Float64>& kArray,
+    choleskyFactorization(brick::numeric::Array2D<brick::common::Float64> const& inputArray,
+                          brick::numeric::Array2D<brick::common::Float64>& kArray,
                           bool isUpperTriangular = true);
 
     
@@ -54,8 +54,8 @@ namespace brick {
      * @return The return value is a Float64 representing the determinant
      * of the input argument.
      */
-    Float64
-    determinant(const Array2D<Float64>& A);
+    brick::common::Float64
+    determinant(brick::numeric::Array2D<brick::common::Float64> const& A);
 
 
     /** 
@@ -70,8 +70,8 @@ namespace brick {
      * @return The return value is an Array1D<Float64> instance
      * containing the eigenvalues, sorted into descending order.
      */
-    Array1D<Float64>
-    eigenvaluesSymmetric(const Array2D<Float64>& inputArray);
+    brick::numeric::Array1D<brick::common::Float64>
+    eigenvaluesSymmetric(brick::numeric::Array2D<brick::common::Float64> const& inputArray);
 
 
     /** 
@@ -98,9 +98,9 @@ namespace brick {
      * eigenvalues.
      */
     void
-    eigenvectors(const Array2D<Float64>& inputArray,
-                 Array1D< std::complex<Float64> >& eigenvalues,
-                 Array2D< std::complex<Float64> >& eigenvectors,
+    eigenvectors(brick::numeric::Array2D<brick::common::Float64> const& inputArray,
+                 brick::numeric::Array1D< std::complex<brick::common::Float64> >& eigenvalues,
+                 brick::numeric::Array2D< std::complex<brick::common::Float64> >& eigenvectors,
                  bool isSortRequired = false);
 
     
@@ -125,9 +125,9 @@ namespace brick {
      * eigenvalue, and so on.
      */
     void
-    eigenvectorsSymmetric(const Array2D<Float64>& inputArray,
-                          Array1D<Float64>& eigenvalues,
-                          Array2D<Float64>& eigenvectors);
+    eigenvectorsSymmetric(brick::numeric::Array2D<brick::common::Float64> const& inputArray,
+                          brick::numeric::Array1D<brick::common::Float64>& eigenvalues,
+                          brick::numeric::Array2D<brick::common::Float64>& eigenvectors);
 
   
     /** 
@@ -139,8 +139,8 @@ namespace brick {
      * @param A This argument is the matrix to be inverted.
      * @return The return value is the inverse of argument A.
      */
-    Array2D<Float64>
-    inverse(const Array2D<Float64>& A);
+    brick::numeric::Array2D<brick::common::Float64>
+    inverse(brick::numeric::Array2D<brick::common::Float64> const& A);
 
   
     /** 
@@ -162,9 +162,9 @@ namespace brick {
      * @return The return value is a pair of Float64s in which the first
      * element is the variable a and the second is the variable b.
      */
-    std::pair<Float64, Float64>
-    linearFit(const Array1D<Float64>& array0,
-              const Array1D<Float64>& array1);
+    std::pair<brick::common::Float64, brick::common::Float64>
+    linearFit(brick::numeric::Array1D<brick::common::Float64> const& array0,
+              brick::numeric::Array1D<brick::common::Float64> const& array1);
 
   
     /** 
@@ -184,8 +184,9 @@ namespace brick {
      * satisfies the equation.  "Nearly" is defined in the least-squares
      * sense.
      */
-    Array1D<Float64>
-    linearLeastSquares(const Array2D<Float64>& A, const Array1D<Float64>& b);
+    brick::numeric::Array1D<brick::common::Float64>
+    linearLeastSquares(brick::numeric::Array2D<brick::common::Float64> const& A,
+                       brick::numeric::Array1D<brick::common::Float64> const& b);
 
 
     /** 
@@ -202,7 +203,8 @@ namespace brick {
      * the recovered value of x.
      */
     void
-    linearSolveInPlace(Array2D<Float64>& A, Array1D<Float64>& b);
+    linearSolveInPlace(brick::numeric::Array2D<brick::common::Float64>& A,
+                       brick::numeric::Array1D<brick::common::Float64>& b);
 
 
     /** 
@@ -220,7 +222,8 @@ namespace brick {
      * the recovered value of x.
      */
     void
-    linearSolveInPlace(Array2D<Float64>& A, Array2D<Float64>& b);
+    linearSolveInPlace(brick::numeric::Array2D<brick::common::Float64>& A,
+                       brick::numeric::Array2D<brick::common::Float64>& b);
   
 
     /** 
@@ -247,11 +250,12 @@ namespace brick {
      * satisfies the equation.  "Nearly" is defined in the least-squares
      * sense.
      */
-    Array1D<Float64>
-    linearSolveTridiagonal(const Array1D<Float64>& subDiagonal,
-                           const Array1D<Float64>& centerDiagonal,
-                           const Array1D<Float64>& superDiagonal,
-                           const Array1D<Float64>& bVector);
+    brick::numeric::Array1D<brick::common::Float64>
+    linearSolveTridiagonal(
+      brick::numeric::Array1D<brick::common::Float64> const& subDiagonal,
+      brick::numeric::Array1D<brick::common::Float64> const& centerDiagonal,
+      brick::numeric::Array1D<brick::common::Float64> const& superDiagonal,
+      brick::numeric::Array1D<brick::common::Float64> const& bVector);
   
     
     /** 
@@ -265,8 +269,8 @@ namespace brick {
      *
      * @return The return value is the pseudoinverse of argument A.
      */
-    Array2D<Float64>
-    pseudoinverse(const Array2D<Float64>& A);
+    brick::numeric::Array2D<brick::common::Float64>
+    pseudoinverse(brick::numeric::Array2D<brick::common::Float64> const& A);
 
 
     /** 
@@ -290,9 +294,9 @@ namespace brick {
      * resized (i.e., new memory will be allocated).
      */
     void
-    qrFactorization(const Array2D<Float64>& inputArray,
-                    Array2D<Float64>& qArray,
-                    Array2D<Float64>& rArray);
+    qrFactorization(brick::numeric::Array2D<brick::common::Float64> const& inputArray,
+                    brick::numeric::Array2D<brick::common::Float64>& qArray,
+                    brick::numeric::Array2D<brick::common::Float64>& rArray);
 
     
     /** 
@@ -341,12 +345,13 @@ namespace brick {
      * uArray for more information.
      */
     void
-    singularValueDecomposition(const Array2D<Float64>& inputArray,
-                               Array2D<Float64>& uArray,
-                               Array1D<Float64>& sigmaArray,
-                               Array2D<Float64>& vTransposeArray,
-                               bool isNullSpaceRequired=false,
-                               bool isFullRangeRequired=false);
+    singularValueDecomposition(
+      brick::numeric::Array2D<brick::common::Float64> const& inputArray,
+      brick::numeric::Array2D<brick::common::Float64>& uArray,
+      brick::numeric::Array1D<brick::common::Float64>& sigmaArray,
+      brick::numeric::Array2D<brick::common::Float64>& vTransposeArray,
+      bool isNullSpaceRequired=false,
+      bool isFullRangeRequired=false);
 
   
     /** 
@@ -359,29 +364,10 @@ namespace brick {
      * @return The return value is an Array1D of singular values in
      * descending order.
      */
-    Array1D<Float64>
-    singularValues(const Array2D<Float64>& inputArray);
+    brick::numeric::Array1D<brick::common::Float64>
+    singularValues(brick::numeric::Array2D<brick::common::Float64> const& inputArray);
   
   } // namespace linearAlgebra
-  
-} // namespace brick
-
-
-/* ======= Declarations to maintain compatibility with legacy code. ======= */
-
-namespace brick {
-
-  using linearAlgebra::determinant;
-  using linearAlgebra::eigenvaluesSymmetric;
-  using linearAlgebra::eigenvectorsSymmetric;
-  using linearAlgebra::inverse;
-  using linearAlgebra::linearFit;
-  using linearAlgebra::linearLeastSquares;
-  using linearAlgebra::linearSolveInPlace;
-  using linearAlgebra::linearSolveTridiagonal;
-  using linearAlgebra::pseudoinverse;
-  using linearAlgebra::singularValueDecomposition;
-  using linearAlgebra::singularValues;
   
 } // namespace brick
 

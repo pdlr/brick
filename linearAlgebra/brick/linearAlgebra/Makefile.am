@@ -26,14 +26,14 @@ AM_CPPFLAGS		= -I$(top_srcdir)
 # Define the list of header files to install and the location to
 # install them.
 
-brickLinearAlgebradir		= $(includedir)/brick/numeric
-brickNumeric_HEADERS	= \
-	clapack.h \
+brickLinearAlgebradir		= $(includedir)/brick/linearAlgebra
+brickLinearAlgebra_HEADERS	= \
+	clapack.hh \
 	linearAlgebra.hh
 
 # Define the library to build.
 
-lib_LTLIBRARIES		= libbricklinearAlgebra.la
+lib_LTLIBRARIES		= libbrickLinearAlgebra.la
 libbrickLinearAlgebra_la_SOURCES = \
 	linearAlgebra.cc linearAlgebra.hh
 

@@ -62,8 +62,11 @@ if __name__ == '__main__':
             + r"-e 's/dlrPortability\/\(\S\)\(\S*\.\S*\)/brick\/portability\/\l\1\2/g' "
             + r"-e 's/dlrTest\/\(\S\)\(\S*\.\S*\)/brick\/test\/\l\1\2/g' "
             + r"-e 's/dlrNumeric\/\(\S\)\(\S*\.\S*\)/brick\/numeric\/\l\1\2/g' "
+            + r"-e 's/dlrLinearAlgebra\/\(\S\)\(\S*\.\S*\)/brick\/linearAlgebra\/\l\1\2/g' "
+            + r"-e 's/dlrGeometry\/\(\S\)\(\S*\.\S*\)/brick\/geometry\/\l\1\2/g' "
             + r"-e 's/dlrUtilities\/\(\S\)\(\S*\.\S*\)/brick\/utilities\/\l\1\2/g' "
             + r"-e 's/dlrOptimization\/\(\S\)\(\S*\.\S*\)/brick\/optimization\/\l\1\2/g' "
+            + r"-e 's/dlrComputerVision\/\(\S\)\(\S*\.\S*\)/brick\/computerVision\/\l\1\2/g' "
             + r"-e 's/\(brick\/\S*\/\S*\.\)h$/\1hh/' "
             + r"-e 's/\(brick\/\S*\/\S*\.\)h\>/\1hh/' "
             + r"-e 's/\(brick\/\S*\/\S*\.\)cpp\>/\1cc/' "
@@ -81,5 +84,13 @@ if __name__ == '__main__':
             + "-e 's/dlr::/brick::/' "
             + "< %s > %s" % (outputFileName, tempFileName))
   os.system("cp %s %s" % (tempFileName, outputFileName))
+
+  # Comment out unused test arguments.
+  os.system("sed "
+            + "-e 's/std::string\& testName\) \{\}/std::string\& /* testName */\) \{\}/' "
+            + "< %s > %s" % (outputFileName, tempFileName))
+  os.system("cp %s %s" % (tempFileName, outputFileName))
+
+
 # end if
 

@@ -697,7 +697,7 @@ namespace brick {
      *
      * @return The inner product of the two arguments.
      */
-    template <class Type0, class Type1, class Type2>
+    template <class Type2, class Type1, class Type0>
     inline Type2
     dot(const Array1D<Type0>& array0, const Array1D<Type1>& array1);
 
@@ -711,9 +711,9 @@ namespace brick {
      *
      * @return The inner product of the two Vector2D arguments.
      */
-    template <class Type, class Type2>
-    inline Type2
-    dot(const Vector2D<Type>& vector0, const Vector2D<Type>& vector1);
+    template <class Type1, class Type0>
+    inline Type1
+    dot(const Vector2D<Type0>& vector0, const Vector2D<Type0>& vector1);
 
     
     /** 
@@ -725,9 +725,9 @@ namespace brick {
      *
      * @return The inner product of the two Vector3D arguments.
      */
-    template <class Type, class Type2>
-    inline Type2
-    dot(const Vector3D<Type>& vector0, const Vector3D<Type>& vector1);
+    template <class Type1, class Type0>
+    inline Type1
+    dot(const Vector3D<Type0>& vector0, const Vector3D<Type0>& vector1);
 
     
     /** 
@@ -866,9 +866,9 @@ namespace brick {
      *
      * @return The magnitude of the input argument.
      */  
-    template <class Type>
-    inline Type
-    magnitude(const Array1D<Type>& array0);
+    template <class Type1, class Type0>
+    inline Type1
+    magnitude(const Array1D<Type0>& array0);
 
     /** 
      * This function computes the magnitude of its input argument.  That
@@ -879,9 +879,9 @@ namespace brick {
      *
      * @return The magnitude of the input argument.
      */  
-    template <class Type>
-    inline double
-    magnitude(const Vector2D<Type>& vector0);
+    template <class Type1, class Type0>
+    inline Type1
+    magnitude(const Vector2D<Type0>& vector0);
 
     /** 
      * This function computes the magnitude of its input argument.  That
@@ -892,9 +892,9 @@ namespace brick {
      *
      * @return The magnitude of the input argument.
      */  
-    template <class Type>
-    inline double
-    magnitude(const Vector3D<Type>& vector0);
+    template <class Type1, class Type0>
+    inline Type1
+    magnitude(const Vector3D<Type0>& vector0);
 
   
     /** 
@@ -907,9 +907,9 @@ namespace brick {
      *
      * @return The squared magnitude of the input argument.
      */  
-    template <class Type>
-    inline typename NumericTraits<Type>::ProductType
-    magnitudeSquared(const Array1D<Type>& array0);
+    template <class Type1, class Type0>
+    inline Type1
+    magnitudeSquared(const Array1D<Type0>& array0);
 
   
     /** 
@@ -922,9 +922,9 @@ namespace brick {
      *
      * @return The squared magnitude of the input argument.
      */  
-    template <class Type>
-    inline double
-    magnitudeSquared(const Vector2D<Type>& vector0);
+    template <class Type1, class Type0>
+    inline Type1
+    magnitudeSquared(const Vector2D<Type0>& vector0);
 
   
     /** 
@@ -937,9 +937,9 @@ namespace brick {
      *
      * @return The squared magnitude of the input argument.
      */  
-    template <class Type>
-    inline double
-    magnitudeSquared(const Vector3D<Type>& vector0);
+    template <class Type1, class Type0>
+    inline Type1
+    magnitudeSquared(const Vector3D<Type0>& vector0);
   
 
     /** 
@@ -964,7 +964,7 @@ namespace brick {
      * NumericTraits<Type>::ProductType for the element type of the
      * arguments.
      */
-    template <class Type0, class Type1, class Type2>
+    template <class Type2, class Type1, class Type0>
     Array1D<Type2>
     matrixMultiply(const Array1D<Type0>& vector0,
                    const Array2D<Type1>& matrix0);
@@ -990,7 +990,7 @@ namespace brick {
      * NumericTraits<Type>::ProductType for the element type of the
      * arguments.
      */
-    template <class Type0, class Type1, class Type2>
+    template <class Type2, class Type1, class Type0>
     Array1D<Type2>
     matrixMultiply(const Array2D<Type0>& matrix0,
                    const Array1D<Type1>& vector0);
@@ -1013,7 +1013,7 @@ namespace brick {
      * NumericTraits<Type>::ProductType for the element type of the
      * arguments.
      */
-    template <class Type0, class Type1, class Type2>
+    template <class Type2, class Type1, class Type0>
     Array2D<Type2>
     matrixMultiply(const Array2D<Type0>& matrix0,
                    const Array2D<Type1>& matrix1);

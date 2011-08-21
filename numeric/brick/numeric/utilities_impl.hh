@@ -694,45 +694,46 @@ namespace brick {
     // This function computes the inner product of two input arrays, and
     // allows the user to control which type is used to do the
     // calculation.
-    template <class Type0, class Type1, class Type2>
+    template <class Type2, class Type1, class Type0>
     inline Type2
-    dot(const Array1D<Type0>& x, const Array1D<Type1>& y)
+    dot(const Array1D<Type0>& array0, const Array1D<Type1>& array1)
     {
-      if(x.size() != y.size()) {
+      if(array0.size() != array1.size()) {
         std::ostringstream message;
-        message << "Input arguments must have matching sizes, but x.size() == "
-                << x.size() << " and y.size() == " << y.size() << "."
+        message << "Input arguments must have matching sizes, "
+                << "but array0.size() == " << array0.size()
+                << " and array1.size() == " << array1.size() << "."
                 << std::endl;
         BRICK_THROW(common::ValueException, "dot()", message.str().c_str());
       }
-      return std::inner_product(x.begin(), x.end(), y.begin(),
+      return std::inner_product(array0.begin(), array0.end(), array1.begin(),
                                 static_cast<Type2>(0));
     }
 
 
     // This function computes the inner product of two Vector2D instances.
-    template <class Type, class Type2>
-    inline Type2
-    dot(const Vector2D<Type>& vector0, const Vector2D<Type>& vector1)
+    template <class Type1, class Type0>
+    inline Type1
+    dot(const Vector2D<Type0>& vector0, const Vector2D<Type0>& vector1)
     {
-      return ((static_cast<Type2>(vector0.x())
-               * static_cast<Type2>(vector1.x()))
-              + (static_cast<Type2>(vector0.y())
-                 * static_cast<Type2>(vector1.y())));
+      return ((static_cast<Type1>(vector0.x())
+               * static_cast<Type1>(vector1.x()))
+              + (static_cast<Type1>(vector0.y())
+                 * static_cast<Type1>(vector1.y())));
     }
 
     
     // This function computes the inner product of two Vector3D instances.
-    template <class Type, class Type2>
-    inline Type2
-    dot(const Vector3D<Type>& vector0, const Vector3D<Type>& vector1)
+    template <class Type1, class Type0>
+    inline Type1
+    dot(const Vector3D<Type0>& vector0, const Vector3D<Type0>& vector1)
     {
-      return ((static_cast<Type2>(vector0.x())
-               * static_cast<Type2>(vector1.x()))
-              + (static_cast<Type2>(vector0.y())
-                 * static_cast<Type2>(vector1.y()))
-              + (static_cast<Type2>(vector0.z())
-                 * static_cast<Type2>(vector1.z())));
+      return ((static_cast<Type1>(vector0.x())
+               * static_cast<Type1>(vector1.x()))
+              + (static_cast<Type1>(vector0.y())
+                 * static_cast<Type1>(vector1.y()))
+              + (static_cast<Type1>(vector0.z())
+                 * static_cast<Type1>(vector1.z())));
     }
 
     
@@ -839,58 +840,66 @@ namespace brick {
 
   
     // This function computes the magnitude of its input argument.
-    template <class Type>
-    inline Type
-    magnitude(const Array1D<Type>& array0)
+    template <class Type1, class Type0>
+    inline Type1
+    magnitude(const Array1D<Type0>& array0)
     {
-      return static_cast<Type>(std::sqrt(magnitudeSquared(array0)));
+      // TBD.
+      return static_cast<Type1>(std::sqrt(magnitudeSquared<double>(array0)));
     }
 
   
     // This function computes the magnitude of its input argument.
-    template <class Type>
-    inline double
-    magnitude(const Vector2D<Type>& vector0) {
-      return std::sqrt(magnitudeSquared(vector0));
+    template <class Type1, class Type0>
+    inline Type1
+    magnitude(const Vector2D<Type0>& vector0) {
+      // TBD.
+      return static_cast<Type1>(std::sqrt(magnitudeSquared<double>(vector0)));
     }
 
   
     // This function computes the magnitude of its input argument.
-    template <class Type>
-    inline double
-    magnitude(const Vector3D<Type>& vector0) {
-      return std::sqrt(magnitudeSquared(vector0));
+    template <class Type1, class Type0>
+    inline Type1
+    magnitude(const Vector3D<Type0>& vector0) {
+      return static_cast<Type1>(std::sqrt(magnitudeSquared<double>(vector0)));
     }
 
 
     // This function computes the square of the magnitude of its input
     // argument.
-    template <class Type>
-    inline typename NumericTraits<Type>::ProductType
-    magnitudeSquared(const Array1D<Type>& array0)
+    template <class Type1, class Type0>
+    inline Type1
+    magnitudeSquared(const Array1D<Type0>& array0)
     {
-      typedef typename NumericTraits<Type>::ProductType ProductType;
       return std::inner_product(array0.begin(), array0.end(),
-                                array0.begin(), static_cast<ProductType>(0));
+                                array0.begin(), static_cast<Type0>(0));
     }
 
 
     // This function computes the square of the magnitude of its input
     // argument.
-    template <class Type>
-    inline double
-    magnitudeSquared(const Vector2D<Type>& vector0) {
-      return (vector0.x() * vector0.x() + vector0.y() * vector0.y());
+    template <class Type1, class Type0>
+    inline Type1
+    magnitudeSquared(const Vector2D<Type0>& vector0) {
+      return ((static_cast<Type1>(vector0.x())
+               * static_cast<Type1>(vector0.x()))
+              + (static_cast<Type1>(vector0.y())
+                 * static_cast<Type1>(vector0.y())));
     }
 
   
     // This function computes the square of the magnitude of its input
     // argument.
-    template <class Type>
-    inline double
-    magnitudeSquared(const Vector3D<Type>& vector0) {
-      return (vector0.x() * vector0.x() + vector0.y() * vector0.y()
-              + vector0.z() * vector0.z());
+    template <class Type1, class Type0>
+    inline Type1
+    magnitudeSquared(const Vector3D<Type0>& vector0) {
+      return ((static_cast<Type1>(vector0.x())
+               * static_cast<Type1>(vector0.x()))
+              + (static_cast<Type1>(vector0.y())
+                 * static_cast<Type1>(vector0.y()))
+              + (static_cast<Type1>(vector0.z())
+                 * static_cast<Type1>(vector0.z())));
     }
 
   
@@ -898,7 +907,7 @@ namespace brick {
     // matrixMultiply(const Array1D<Type>&, const Array2D<Type>&), above.
     // This function differs in that the element type of the return
     // value is set explicitly using a third argument.
-    template <class Type0, class Type1, class Type2>
+    template <class Type2, class Type1, class Type0>
     Array1D<Type2>
     matrixMultiply(const Array1D<Type0>& vector0, const Array2D<Type1>& matrix0)
     {
@@ -927,7 +936,7 @@ namespace brick {
     // matrixMultiply(const Array2D<Type>&, const Array1D<Type>&), above.
     // This function differs in that the element type of the return
     // value is set explicitly using a third argument.
-    template <class Type0, class Type1, class Type2>
+    template <class Type2, class Type1, class Type0>
     Array1D<Type2>
     matrixMultiply(const Array2D<Type0>& matrix0, const Array1D<Type1>& vector0)
     {
@@ -950,7 +959,7 @@ namespace brick {
     // matrixMultiply(const Array2D<Type>&, const Array2D<Type>&), above.
     // This function differs in that the element type of the return
     // value is set explicitly using a third argument.
-    template <class Type0, class Type1, class Type2>
+    template <class Type2, class Type1, class Type0>
     Array2D<Type2>
     matrixMultiply(const Array2D<Type0>& matrix0, const Array2D<Type1>& matrix1)
     {

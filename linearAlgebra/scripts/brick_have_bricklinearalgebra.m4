@@ -1,7 +1,7 @@
 dnl
-dnl DLR_HAVE_DLRLINEARALGEBRA()
+dnl BRICK_HAVE_BRICKLINEARALGEBRA()
 dnl
-dnl Call this autoconf macro to check whether the dlrCommon library
+dnl Call this autoconf macro to check whether the brickLinearAlgebra library
 dnl development files are installed on your system.
 
 AC_DEFUN([BRICK_HAVE_BRICK_LINEARALGEBRA],

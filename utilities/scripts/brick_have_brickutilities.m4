@@ -10,7 +10,7 @@ AC_DEFUN([BRICK_HAVE_BRICKUTILITIES],
      AC_CHECK_HEADER(brick/utilities/timeUtilities.hh, 
          [],
          [AC_MSG_ERROR([Unable to find brick/utilities/timeUtilities.hh. 
-              Please check that the brick::utilities utility library is 
+              Please check that the brickUtilities utility library is 
               installed.  If it is, and this test still fails, try modifying 
               the CPPFLAGS environment variable so that the compiler can 
               more easily find the missing include file.])])

@@ -4,6 +4,8 @@ import os
 import string
 import sys
 
+import pdb
+
 GREP = '/bin/grep'
 MAKE = '/usr/bin/make'
 MV = '/bin/mv'
@@ -15,16 +17,21 @@ TEMPDIR = '/var/tmp/brickBuild'
 def prepareDistribution(packageName, sourceDir, version):
 
   # Tarfiles are named "brickfoo.tar.gz", not "brickFoo.tar.gz", so we
-  # need a lowercase version of the package name.
-  packageNameLC = packageName.lower()
+  # need a lowercase version of the package name.  Also, the user is
+  # likely to forget whether he should specify packages as
+  # "brickcommon" or "common," so we standardize the "brick" part
+  # here.
+  packageNameLC = packageName.lower().replace('brick', '')
+  brickPackageNameLC = 'brick' + packageNameLC
+  brickPackageNameMC = 'brick' + packageName[0].upper() + packageName[1:]
 
   # We need a civilized version of the revision number to use as a tag
   # in the VCS.
   revisionTag = ('%s_version%s' % 
-                 (packageName, string.replace(version, '.', '_')))
+                 (brickPackageNameMC, string.replace(version, '.', '_')))
 
   # On with the show.
-  os.chdir(sourceDir)
+  os.chdir(os.path.join(sourceDir, packageNameLC))
 
   errorNumber = 1
 
@@ -65,11 +72,11 @@ def prepareDistribution(packageName, sourceDir, version):
   
   errorNumber += 1
   if os.system(TAR + ' -zxvf %s/%s-"%s".tar.gz' 
-               % (sourceDir, packageNameLC, version)) != 0:
+               % (sourceDir, brickPackageNameLC, version)) != 0:
     return errorNumber
   # end if
 
-  os.chdir('%s-%s' % (packageNameLC, version))
+  os.chdir('%s-%s' % (brickPackageNameLC, version))
   
   errorNumber += 1
   if os.system('./configure') != 0:
@@ -107,7 +114,7 @@ def prepareDistribution(packageName, sourceDir, version):
   os.chdir(TEMPDIR)
   
   errorNumber += 1
-  if os.system(RM + ' -rf %s-"%s"' % (packageNameLC, version)) != 0:
+  if os.system(RM + ' -rf %s-"%s"' % (brickPackageNameLC, version)) != 0:
     return errorNumber
   # end if
 
@@ -132,7 +139,8 @@ if __name__ == '__main__':
   packageName = sys.argv[1]
   version = sys.argv[2]
   sourceDir = os.path.realpath(os.curdir)
-  
+
+  pdb.set_trace()
   returnCode = prepareDistribution(packageName, sourceDir, version)
   sys.exit(returnCode)
 # end if

@@ -18,14 +18,7 @@ VPATH			= @srcdir@
 
 # We need to recurse into the following directories.
 
-SUBDIRS			= doc dlrOptimization
-
-
-# This rule lets us simply add the directory visualc to EXTRA_DIST, 
-# rather than specifying its contents file-by-file.
-
-dist-hook:
-	rm -rf `/usr/bin/find $(distdir)/visualc -name .svn`
+SUBDIRS			= doc brick/optimization
 
 
 # Specify the list of additional files that need to be included in the
@@ -42,8 +35,7 @@ AUX_DIST		= $(ac_aux_dir)/config.guess \
 EXTRA_DIST              = LICENSE.TXT \
 			  README.TXT \
 			  RELEASE_NOTES.TXT \
-			  VERSION.TXT \
-			  visualc
+			  VERSION.TXT
 
 # Define how to build the documenation.
 

@@ -4,7 +4,7 @@
 *
 * Header file declaring OptimizerLM class.
 *
-* (C) Copyright 2003-2007 David LaRose, dlr@cs.cmu.edu
+* (C) Copyright 2003-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying LICENSE file for details.
 *
 ***************************************************************************

@@ -8,11 +8,12 @@ dnl
 
 
 dnl Initialization.
-AC_INIT(dlrOptimization, 2.1a1)
-AC_CONFIG_SRCDIR(dlrOptimization/Makefile.am)
+AC_INIT(brickoptimization, 1.0)
+AC_CONFIG_SRCDIR(optimization/Makefile.am)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR([m4])
-AM_CONFIG_HEADER(config.h:config-h.in)
+AC_CONFIG_HEADERS(config.h)
+# AM_CONFIG_HEADER(config.h:config-h.in)
 AM_INIT_AUTOMAKE(1.7)
 AM_MAINTAINER_MODE
 
@@ -31,25 +32,24 @@ dnl Use C++ compiler to build programs when running ./configure.
 AC_LANG([C++])
 
 
+dnl Checks for libraries.
+ACX_LAPACK([],
+           [AC_MSG_ERROR([Unable to find lapack libraries.  Please check that 
+            lapack is installed.  If it is, and this test still fails, try
+            modifying the CPPFLAGS and LDFLAGS environment variable so that 
+            the compiler can more easily find this the required files.])])
+BRICK_HAVE_BRICK_COMMON
+BRICK_HAVE_BRICK_PORTABILITY
+BRICK_HAVE_BRICK_NUMERIC
+BRICK_HAVE_BRICK_LINEARALGEBRA
+
+
 dnl Checks for header files.
 AC_HEADER_STDC
 
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
-
-
-dnl Checks for library functions.
-ACX_LAPACK([],
-           [AC_MSG_ERROR([Unable to find lapack libraries.  Please check that 
-            lapack is installed.  If it is, and this test still fails, try
-            modifying the CPPFLAGS and LDFLAGS environment variable so that 
-            the compiler can more easily find this the required files.])])
-DLR_HAVE_DLRCOMMON
-DLR_HAVE_DLRPORTABILITY
-DLR_HAVE_DLRNUMERIC
-DLR_HAVE_DLRLINEARALGEBRA
-
 
 dnl Other stuff.
 AC_SUBST(ac_aux_dir)
@@ -58,7 +58,7 @@ AC_SUBST(ac_aux_dir)
 dnl Output.
 AC_OUTPUT(Makefile \
           doc/Makefile \
-          dlrOptimization/Makefile)
+          brick/optimization/Makefile)
 
 echo \
 "------------------------------------------------------------------------

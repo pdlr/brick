@@ -55,7 +55,7 @@ if __name__ == '__main__':
             + r"-e 's/_H/_HH/' "
             + "< %s > %s" % (outputFileName, tempFileName))
   os.system("cp %s %s" % (tempFileName, outputFileName))
-  
+
   # Fix include directives and doxygen file comments.
   os.system("sed "
             + r"-e 's/dlrCommon\/\(\S\)\(\S*\.\S*\)/brick\/common\/\l\1\2/g' "
@@ -86,11 +86,12 @@ if __name__ == '__main__':
   os.system("cp %s %s" % (tempFileName, outputFileName))
 
   # Comment out unused test arguments.
-  os.system("sed "
-            + "-e 's/std::string\& testName\) \{\}/std::string\& /* testName */\) \{\}/' "
-            + "< %s > %s" % (outputFileName, tempFileName))
-  os.system("cp %s %s" % (tempFileName, outputFileName))
-
+  if 0:
+    os.system("sed "
+              + "-e 's/std::string\& testName\) \{\}/std::string\& \/* testName *\/\) \{\}/' "
+              + "< %s > %s" % (outputFileName, tempFileName))
+    os.system("cp %s %s" % (tempFileName, outputFileName))
+  # end if
 
 # end if
 

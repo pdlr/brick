@@ -1,5 +1,9 @@
-export CFLAGS="-Wall -g -D_DLRNUMERIC_CHECKBOUNDS_"
+export INSTALLDIR="/var/tmp"
+export COMMONFLAGS="-Wall -Wextra -Wunsafe-loop-optimizations -Wshadow -g"
 
-export CXXFLAGS="-Wall -g -D_DLRNUMERIC_CHECKBOUNDS_"
+export CPPFLAGS="-I$INSTALLDIR/include"
+export LDFLAGS="-L$INSTALLDIR/lib"
+export CFLAGS="$COMMONFLAGS"
+export CXXFLAGS="$COMMONFLAGS"
 
-./configure --prefix=/home/dlr/
+./configure --prefix=$INSTALLDIR

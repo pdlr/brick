@@ -15,9 +15,9 @@
 
 #include <limits>
 #include <vector>
-#include <brick/common/triple.hh>>
-#include <brick/optimization/optimizer.hh>>
-#include <brick/optimization/optimizerLineSearch.hh>>
+#include <brick/common/triple.hh>
+#include <brick/optimization/optimizer.hh>
+#include <brick/optimization/optimizerLineSearch.hh>
 
 namespace brick {
 
@@ -371,10 +371,10 @@ namespace brick {
 #include <cmath>
 #include <iomanip>
 #include <iostream>
-#include <brick/numeric/array1D.hh>>
-#include <brick/numeric/array2D.hh>>
-#include <brick/numeric/utilities.hh>>
-#include <brick/optimization/optimizerCommon.hh>>
+#include <brick/numeric/array1D.hh>
+#include <brick/numeric/array2D.hh>
+#include <brick/numeric/utilities.hh>
+#include <brick/optimization/optimizerCommon.hh>
 
 namespace brick {
 

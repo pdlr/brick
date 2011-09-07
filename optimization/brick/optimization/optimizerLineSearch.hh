@@ -13,8 +13,8 @@
 #ifndef BRICK_OPTIMIZATION_OPTIMIZERLINESEARCH_HH
 #define BRICK_OPTIMIZATION_OPTIMIZERLINESEARCH_HH
 
-#include <brick/optimization/optimizer.hh>>
-#include <brick/optimization/optimizerCommon.hh>>
+#include <brick/optimization/optimizer.hh>
+#include <brick/optimization/optimizerCommon.hh>
 
 namespace brick {
 
@@ -232,8 +232,8 @@ namespace brick {
 
 #include <cmath>
 #include <sstream>
-#include <brick/common/exception.hh>>
-#include <brick/optimization/optimizerCommon.hh>>
+#include <brick/common/exception.hh>
+#include <brick/optimization/optimizerCommon.hh>
 
 namespace brick {
 

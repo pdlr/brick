@@ -14,7 +14,7 @@
 #define BRICK_OPTIMIZATION_OPTIMIZERCOMMON_HH
 
 #include <cmath>
-#include <brick/numeric/array2D.hh>>
+#include <brick/numeric/array2D.hh>
 
 namespace brick {
 
@@ -106,7 +106,7 @@ namespace brick {
  * if it weren't templated.
  *******************************************************************/
 
-#include <brick/common/exception.hh>>
+#include <brick/common/exception.hh>
 
 namespace brick {
 

@@ -14,7 +14,7 @@
 #define BRICK_OPTIMIZATION_GRADIENTFUNCTION_HH
 
 #include <functional>
-#include <brick/numeric/derivativeRidders.hh>>
+#include <brick/numeric/derivativeRidders.hh>
 
 namespace brick {
 

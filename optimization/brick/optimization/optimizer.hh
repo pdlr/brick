@@ -209,8 +209,8 @@ namespace brick {
  * if it weren't templated.
  *******************************************************************/
 
-#include <dlrNumeric/array1D.hh>>
-#include <brick/optimization/optimizerCommon.hh>>
+#include <dlrNumeric/array1D.hh>
+#include <brick/optimization/optimizerCommon.hh>
 
 namespace brick {
 

@@ -173,11 +173,11 @@ namespace brick {
 
     private:
 
-      typedef numeric::NDimensionalFunctorAdapter<Functor, Scalar>
+      typedef brick::numeric::NDimensionalFunctorAdapter<Functor, Scalar>
         FunctorAdaptor;
 
       Scalar m_errorTolerance;
-      numeric::DerivativeRidders<FunctorAdaptor> m_ridders;
+      brick::numeric::DerivativeRidders<FunctorAdaptor> m_ridders;
 
       // Experimental members to allow auto-tuning of initial Ridders
       // step.

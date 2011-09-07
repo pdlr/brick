@@ -677,7 +677,7 @@ namespace brick {
       }
     
       // Set up inverse hessian estimate.
-      Array2D<double> inverseHessian(dimensionality, dimensionality);
+      brick::numeric::Array2D<double> inverseHessian(dimensionality, dimensionality);
       inverseHessian = 0.0;
       for(size_t index = 0; index < dimensionality; ++index) {
         // initialize to identity.
@@ -768,7 +768,7 @@ namespace brick {
         }
 
         // Temporarily save gradient value.
-        Array1D<double> deltaGradient(dimensionality);
+        brick::numeric::Array1D<double> deltaGradient(dimensionality);
         for(size_t index = 0; index < dimensionality; ++index) {
           deltaGradient[index] = -currentGradient[index];
         }
@@ -805,7 +805,7 @@ namespace brick {
         }
 
         // Now prepare to update estimate of the inverse hessian.
-        Array1D<double> inverseHessianTimesDeltaGradient =
+        brick::numeric::Array1D<double> inverseHessianTimesDeltaGradient =
           matrixMultiply(inverseHessian, deltaGradient);
         double fac = dotArgumentType(deltaGradient, searchStep);
         if(fac < 0.0) {

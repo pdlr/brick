@@ -140,8 +140,8 @@ namespace brick {
       void
       computeGradientAndHessian(
         typename SSDFunctor::argument_type const& theta,
-        numeric::Array1D<common::Float64>& dEdX,
-        numeric::Array2D<common::Float64>& d2EdX2);
+        brick::numeric::Array1D<common::Float64>& dEdX,
+        brick::numeric::Array2D<common::Float64>& d2EdX2);
       
     private:
       SSDFunctor m_functor;
@@ -202,8 +202,8 @@ namespace brick {
     GradientFunctionLM<SSDFunctor, Scalar>::
     computeGradientAndHessian(
       typename SSDFunctor::argument_type const& theta,
-      numeric::Array1D<common::Float64>& dEdX,
-      numeric::Array2D<common::Float64>& d2EdX2)
+      brick::numeric::Array1D<common::Float64>& dEdX,
+      brick::numeric::Array2D<common::Float64>& d2EdX2)
     {
       // Note(xxx): Move all of these Array?D constructors out of this
       // function so as to no to gobs of extra new/delete cycles.
@@ -214,12 +214,12 @@ namespace brick {
       // Construct an array to hold 1st derivatives.
       unsigned int numParameters = theta.size();
       unsigned int numTerms = errorTerms.size();
-      numeric::Array2D<Float64> jacobian(numParameters, numTerms);
+      brick::numeric::Array2D<Float64> jacobian(numParameters, numTerms);
 
       // Compute Jacobian of error terms by divided differences.
       typename SSDFunctor::argument_type thetaPlus(numParameters);
       typename SSDFunctor::argument_type thetaMinus(numParameters);
-      numeric::Array1D<Scalar> derivative(numTerms);
+      brick::numeric::Array1D<Scalar> derivative(numTerms);
       for(unsigned int ii = 0; ii < numParameters; ++ii) {
         thetaPlus[ii] = theta[ii];
         thetaMinus[ii] = theta[ii];
@@ -246,7 +246,7 @@ namespace brick {
       }
 
       // Compute gradient estimate from Jacobian.
-      numeric::Array1D<Float64> errorTermsCopy(numTerms);
+      brick::numeric::Array1D<Float64> errorTermsCopy(numTerms);
       for(unsigned int jj = 0; jj < numTerms; ++jj) {
         errorTermsCopy[jj] = errorTerms[jj];
       }

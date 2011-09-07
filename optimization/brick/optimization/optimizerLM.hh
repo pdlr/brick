@@ -551,9 +551,9 @@ namespace brick {
 
       // Initialize intermediate values used by the minimization.
       vector_type BMatrix(theta.size(), theta.size());
-      Array1D<Float64> deltaX(theta.size());
+      brick::numeric::Array1D<Float64> deltaX(theta.size());
       argument_type xCond(theta.size());
-      Array1D<result_type> errorHistory =
+      brick::numeric::Array1D<result_type> errorHistory =
         zeros(m_maxIterations + 1, type_tag<result_type>());
       Float64 lambda = m_initialLambda;
 

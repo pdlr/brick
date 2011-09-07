@@ -80,7 +80,7 @@ namespace brick {
      */
     template <class ArgumentType>
     void
-    matrixMultiplyArgumentType(const Array2D<double>& matrix0,
+    matrixMultiplyArgumentType(const brick::numeric::Array2D<double>& matrix0,
                                const ArgumentType& vector0,
                                ArgumentType& result);
 
@@ -176,7 +176,7 @@ namespace brick {
 // and an ArgumentType instance.
     template <class ArgumentType>
     void
-    matrixMultiplyArgumentType(const Array2D<double>& matrix0,
+    matrixMultiplyArgumentType(const brick::numeric::Array2D<double>& matrix0,
                                const ArgumentType& vector0,
                                ArgumentType& result)
     {

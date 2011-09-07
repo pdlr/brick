@@ -1,19 +1,8 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
-Revision 2.1
+Revision 1.0
 
-- WARNING: VC++ build files haven't been updated in a while, so if
-  you're building on MS Windows, you'll have to update them, and 
-  maybe do some light porting of the new code.
-- Updated build files for recent versions of GNU autotools.
-- Updated an error message. OptimizerLineSearch.h.
-
-Revision 2.0
-
-- Through version 1.28, dlrOptimization was part of the larger dlr_libs
-  package.  This release makes dlrOptimization into a stand-alone
-  package.  Version 2.0 of dlrOptimization is identical to the version in
-  dlr_libs 1.28.
+- Created brick::optimization by adapting dlrOptimization version 2.1.
 
 **/

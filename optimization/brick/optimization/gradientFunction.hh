@@ -4,7 +4,7 @@
 *
 * Header file declaring GradientFunction class template.
 *
-* Copyright (C) 2003-2007 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2003-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 **********************************************************************

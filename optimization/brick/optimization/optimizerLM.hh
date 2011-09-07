@@ -15,10 +15,10 @@
 
 #include <vector>
 #include <brick/common/types.hh>
+#include <brick/linearAlgebra/linearAlgebra.hh>
+#include <brick/numeric/utilities.hh>
 #include <brick/optimization/optimizer.hh>
 #include <brick/optimization/optimizerLineSearch.hh>
-#include <dlrLinearAlgebra/linearAlgebra.hh>
-#include <dlrNumeric/utilities.hh>
 
 namespace brick {
 
@@ -354,7 +354,7 @@ namespace brick {
 #include <iostream>
 #include <cmath>
 
-#include <dlrNumeric/utilities.hh>
+#include <brick/numeric/utilities.hh>
 #include <brick/optimization/optimizerCommon.hh>
 
 namespace brick {

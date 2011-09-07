@@ -171,8 +171,9 @@ namespace brick {
         m_epsilon(epsilon)
     {
       if(epsilon == 0.0) {
-        BRICK_THROW3(ValueException, "GradientFunctionLM::GradientFunctionLM()",
-                   "Invalid value (0.0) for argument epsilon.");
+        BRICK_THROW(brick::common::ValueException, 
+		    "GradientFunctionLM::GradientFunctionLM()",
+		    "Invalid value (0.0) for argument epsilon.");
       }
     }
 

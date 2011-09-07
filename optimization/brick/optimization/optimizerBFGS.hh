@@ -569,8 +569,9 @@ namespace brick {
     {
       // Check that we have a valid startPoint.
       if(this->m_startPoint.size() == 0) {
-        BRICK_THROW3(StateException, "OptimizerBFGS<Functor>::run()",
-                   "startPoint has not been initialized.");
+        BRICK_THROW(brick::common::StateException,
+		    "OptimizerBFGS<Functor>::run()",
+		    "startPoint has not been initialized.");
       }
     
       // Initialize working location so that we start at the right place.
@@ -670,8 +671,9 @@ namespace brick {
         message << "startPoint has dimensionality " << dimensionality
                 << " but objective function returns gradient with "
                 << "dimensionality " << currentGradient.size() << ".";
-        BRICK_THROW3(ValueException, "OptimizerBFGS<Functor>::doBfgs()",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException,
+		    "OptimizerBFGS<Functor>::doBfgs()",
+		    message.str().c_str());
       }
     
       // Set up inverse hessian estimate.
@@ -780,8 +782,9 @@ namespace brick {
           std::ostringstream message;
           message << "dimensionality of gradient changed mid-stream from "
                   << dimensionality << " to " << currentGradient.size() << ".";
-          BRICK_THROW3(RunTimeException, "OptimizerBFGS<Functor>::doBfgs()",
-                     message.str().c_str());
+          BRICK_THROW(brick::common::RunTimeException,
+		      "OptimizerBFGS<Functor>::doBfgs()",
+		      message.str().c_str());
         }
 
         // And compute change in gradient.  Remember that deltaGradient was
@@ -885,8 +888,9 @@ namespace brick {
           std::ostringstream message;
           message << "Iteration limit of " << this->m_iterationLimit
                   << " exceeded.";
-          BRICK_THROW3(RunTimeException, "OptimizerBFGS<Functor>::doBfgs()",
-                     message.str().c_str());
+          BRICK_THROW(brick::common::RunTimeException, 
+		      "OptimizerBFGS<Functor>::doBfgs()",
+		      message.str().c_str());
         }
       }
     }

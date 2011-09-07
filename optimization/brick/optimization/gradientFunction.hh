@@ -78,8 +78,9 @@ namespace brick {
       GradientFunction(const Functor& functor, Scalar epsilon=1.0e-6) :
         m_functor(functor), m_epsilon(epsilon) {
         if(epsilon == 0.0) {
-          BRICK_THROW3(ValueException, "GradientFunction::GradientFunction()",
-                     "Invalid value (0.0) for argument epsilon.");
+          BRICK_THROW(brick::common::ValueException,
+		      "GradientFunction::GradientFunction()",
+		      "Invalid value (0.0) for argument epsilon.");
         }
       }
 
@@ -241,9 +242,10 @@ namespace brick {
         // difference in arguments turned out to be.
         Scalar delta = thetaPlus[index] - thetaMinus[index];
         if(delta == 0.0) {
-          BRICK_THROW(ValueException, "GradientFunction::gradient()",
-                    "Difference over which gradent is computed rounded "
-                    "to zero.");
+          BRICK_THROW(brick::common::ValueException,
+		      "GradientFunction::gradient()",
+		      "Difference over which gradent is computed rounded "
+		      "to zero.");
         }
         result[index] = (valuePlus - valueMinus) / delta;
 
@@ -342,9 +344,9 @@ namespace brick {
                       << "Result (so far) is " << result << "\n"
                       << "StepBounds are: " << m_stepBounds << "\n"
                       << "Reported error is " << errorEstimateVector;
-              BRICK_THROW(common::ValueException,
-                        "GradientFunctionRidders::gradient()",
-                        message.str().c_str());
+              BRICK_THROW(brick::common::ValueException,
+			  "GradientFunctionRidders::gradient()",
+			  message.str().c_str());
             }
             continue;
           }

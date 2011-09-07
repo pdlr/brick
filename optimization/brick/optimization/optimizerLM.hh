@@ -529,8 +529,9 @@ namespace brick {
     {
       // Check that we have a valid startPoint.
       if(this->m_startPoint.size() == 0) {
-        BRICK_THROW3(StateException, "OptimizerLM<Functor>::run()",
-                   "startPoint has not been initialized.");
+        BRICK_THROW(brick::common::StateException, 
+		    "OptimizerLM<Functor>::run()",
+		    "startPoint has not been initialized.");
       }
     
       // Initialize working location so that we start at the right place.

@@ -19,6 +19,7 @@ TESTS			= \
 	array1DTest \
 	array2DTest \
 	array3DTest \
+	derivativeRiddersTest \
 	index3DTest \
 	solveQuadraticTest \
 	transform2DTest \
@@ -32,6 +33,7 @@ check_PROGRAMS          = \
 	array1DTest \
 	array2DTest \
 	array3DTest \
+	derivativeRiddersTest \
 	index3DTest \
 	solveQuadraticTest \
 	transform2DTest \
@@ -45,6 +47,7 @@ check_PROGRAMS          = \
 array1DTest_SOURCES		= array1DTest.cc arrayTestCommon.hh
 array2DTest_SOURCES		= array2DTest.cc arrayTestCommon.hh
 array3DTest_SOURCES		= array3DTest.cc arrayTestCommon.hh
+derivativeRiddersTest_SOURCES	= derivativeRiddersTest.cc
 index3DTest_SOURCES		= index3DTest.cc
 solveQuadraticTest_SOURCES	= solveQuadraticTest.cc
 transform2DTest_SOURCES		= transform2DTest.cc arrayTestCommon.hh

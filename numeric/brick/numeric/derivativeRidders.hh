@@ -326,7 +326,7 @@ namespace brick {
  *******************************************************************/
 
 #include <limits>
-#include <brick/common/absoluteValue.hh>
+#include <brick/common/mathFunctions.hh>
 
 namespace brick {
 

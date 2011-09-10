@@ -4,7 +4,7 @@
 *
 * Header file declaring OptimizerLineSearch class.
 *
-* Copyright (C) 2003-2007 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2003-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
@@ -13,8 +13,8 @@
 #ifndef BRICK_OPTIMIZATION_OPTIMIZERLINESEARCH_HH
 #define BRICK_OPTIMIZATION_OPTIMIZERLINESEARCH_HH
 
-#include <brick/optimization/optimizer.hh>>
-#include <brick/optimization/optimizerCommon.hh>>
+#include <brick/optimization/optimizer.hh>
+#include <brick/optimization/optimizerCommon.hh>
 
 namespace brick {
 
@@ -232,8 +232,8 @@ namespace brick {
 
 #include <cmath>
 #include <sstream>
-#include <brick/common/exception.hh>>
-#include <brick/optimization/optimizerCommon.hh>>
+#include <brick/common/exception.hh>
+#include <brick/optimization/optimizerCommon.hh>
 
 namespace brick {
 
@@ -351,8 +351,9 @@ namespace brick {
       double initialStepMagnitude =
         std::sqrt(dotArgumentType(initialStep, initialStep));
       if(initialStepMagnitude == 0.0) {
-        BRICK_THROW3(ValueException, "OptimizerLineSearch::setInitialStep()",
-                   "initialStep magnitude is equal to 0.0.");
+        BRICK_THROW(brick::common::ValueException, 
+		    "OptimizerLineSearch::setInitialStep()",
+		    "initialStep magnitude is equal to 0.0.");
       }
 
       // OK, valid initialStep, save it for later.  Since we'll also
@@ -441,17 +442,18 @@ namespace brick {
         message << "Initial search direction: " << initialStep << " "
                 << "is not downhill with respect to initial gradient: "
                 << this->m_startGradient << ".";
-        BRICK_THROW3(StateException, "OptimizerLineSearch::run()",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::StateException, "OptimizerLineSearch::run()",
+		    message.str().c_str());
                    
       }
 
       // Compute smallest allowable step, allowing for numerical issues.
       double scale = contextSensitiveScale(initialStep, this->m_startPoint);
       if(scale == 0.0) {
-        BRICK_THROW3(RunTimeException, "OptimizerLineSearch::run()",
-                   "Invalid initial scale.  "
-                   "Perhaps initialStep is the zero vector.");
+        BRICK_THROW(brick::common::RunTimeException,
+		    "OptimizerLineSearch::run()",
+		    "Invalid initial scale.  "
+		    "Perhaps initialStep is the zero vector.");
       }
       double minimumLambda = this->m_argumentTolerance / scale;
 
@@ -520,15 +522,17 @@ namespace brick {
           // Use result to choose next value of lambda.
           if(ab0 == 0.0) {
             if(ab1 == 0.0) {
-              BRICK_THROW3(RunTimeException, "OptimizerLineSearch::run()",
-                         "Invalid value for internal variable ab1.");
+              BRICK_THROW(brick::common::RunTimeException, 
+			  "OptimizerLineSearch::run()",
+			  "Invalid value for internal variable ab1.");
             }
             lambdaHat = -slope / (2.0 * ab1);
           } else {
             double discriminant = ab1 * ab1 - (3.0 * ab0 * slope);
             if(discriminant < 0.0) {
-              BRICK_THROW3(RunTimeException, "OptimizerLineSearch::run()",
-                         "Roundoff error, discriminant < 0.0");
+              BRICK_THROW(brick::common::RunTimeException,
+			  "OptimizerLineSearch::run()",
+			  "Roundoff error, discriminant < 0.0");
             }
             lambdaHat = (-ab1 + std::sqrt(discriminant)) / (3.0 * ab0);
           }

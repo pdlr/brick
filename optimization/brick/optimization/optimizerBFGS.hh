@@ -4,7 +4,7 @@
 *
 * Header file declaring OptimizerBFGS class.
 *
-* (C) Copyright 2003-2007 David LaRose, dlr@cs.cmu.edu
+* (C) Copyright 2003-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying LICENSE file for details.
 *
 ***************************************************************************
@@ -15,9 +15,9 @@
 
 #include <limits>
 #include <vector>
-#include <brick/common/triple.hh>>
-#include <brick/optimization/optimizer.hh>>
-#include <brick/optimization/optimizerLineSearch.hh>>
+#include <brick/common/triple.hh>
+#include <brick/optimization/optimizer.hh>
+#include <brick/optimization/optimizerLineSearch.hh>
 
 namespace brick {
 
@@ -371,10 +371,10 @@ namespace brick {
 #include <cmath>
 #include <iomanip>
 #include <iostream>
-#include <dlrNumeric/array1D.hh>>
-#include <dlrNumeric/array2D.hh>>
-#include <dlrNumeric/utilities.hh>>
-#include <brick/optimization/optimizerCommon.hh>>
+#include <brick/numeric/array1D.hh>
+#include <brick/numeric/array2D.hh>
+#include <brick/numeric/utilities.hh>
+#include <brick/optimization/optimizerCommon.hh>
 
 namespace brick {
 
@@ -569,8 +569,9 @@ namespace brick {
     {
       // Check that we have a valid startPoint.
       if(this->m_startPoint.size() == 0) {
-        BRICK_THROW3(StateException, "OptimizerBFGS<Functor>::run()",
-                   "startPoint has not been initialized.");
+        BRICK_THROW(brick::common::StateException,
+		    "OptimizerBFGS<Functor>::run()",
+		    "startPoint has not been initialized.");
       }
     
       // Initialize working location so that we start at the right place.
@@ -670,12 +671,13 @@ namespace brick {
         message << "startPoint has dimensionality " << dimensionality
                 << " but objective function returns gradient with "
                 << "dimensionality " << currentGradient.size() << ".";
-        BRICK_THROW3(ValueException, "OptimizerBFGS<Functor>::doBfgs()",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException,
+		    "OptimizerBFGS<Functor>::doBfgs()",
+		    message.str().c_str());
       }
     
       // Set up inverse hessian estimate.
-      Array2D<double> inverseHessian(dimensionality, dimensionality);
+      brick::numeric::Array2D<double> inverseHessian(dimensionality, dimensionality);
       inverseHessian = 0.0;
       for(size_t index = 0; index < dimensionality; ++index) {
         // initialize to identity.
@@ -766,7 +768,7 @@ namespace brick {
         }
 
         // Temporarily save gradient value.
-        Array1D<double> deltaGradient(dimensionality);
+        brick::numeric::Array1D<double> deltaGradient(dimensionality);
         for(size_t index = 0; index < dimensionality; ++index) {
           deltaGradient[index] = -currentGradient[index];
         }
@@ -780,8 +782,9 @@ namespace brick {
           std::ostringstream message;
           message << "dimensionality of gradient changed mid-stream from "
                   << dimensionality << " to " << currentGradient.size() << ".";
-          BRICK_THROW3(RunTimeException, "OptimizerBFGS<Functor>::doBfgs()",
-                     message.str().c_str());
+          BRICK_THROW(brick::common::RunTimeException,
+		      "OptimizerBFGS<Functor>::doBfgs()",
+		      message.str().c_str());
         }
 
         // And compute change in gradient.  Remember that deltaGradient was
@@ -802,7 +805,7 @@ namespace brick {
         }
 
         // Now prepare to update estimate of the inverse hessian.
-        Array1D<double> inverseHessianTimesDeltaGradient =
+        brick::numeric::Array1D<double> inverseHessianTimesDeltaGradient =
           matrixMultiply(inverseHessian, deltaGradient);
         double fac = dotArgumentType(deltaGradient, searchStep);
         if(fac < 0.0) {
@@ -885,8 +888,9 @@ namespace brick {
           std::ostringstream message;
           message << "Iteration limit of " << this->m_iterationLimit
                   << " exceeded.";
-          BRICK_THROW3(RunTimeException, "OptimizerBFGS<Functor>::doBfgs()",
-                     message.str().c_str());
+          BRICK_THROW(brick::common::RunTimeException, 
+		      "OptimizerBFGS<Functor>::doBfgs()",
+		      message.str().c_str());
         }
       }
     }

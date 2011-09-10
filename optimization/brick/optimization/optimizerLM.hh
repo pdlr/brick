@@ -4,7 +4,7 @@
 *
 * Header file declaring OptimizerLM class.
 *
-* (C) Copyright 2003-2007 David LaRose, dlr@cs.cmu.edu
+* (C) Copyright 2003-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying LICENSE file for details.
 *
 ***************************************************************************
@@ -15,10 +15,10 @@
 
 #include <vector>
 #include <brick/common/types.hh>
+#include <brick/linearAlgebra/linearAlgebra.hh>
+#include <brick/numeric/utilities.hh>
 #include <brick/optimization/optimizer.hh>
 #include <brick/optimization/optimizerLineSearch.hh>
-#include <dlrLinearAlgebra/linearAlgebra.hh>
-#include <dlrNumeric/utilities.hh>
 
 namespace brick {
 
@@ -354,7 +354,7 @@ namespace brick {
 #include <iostream>
 #include <cmath>
 
-#include <dlrNumeric/utilities.hh>
+#include <brick/numeric/utilities.hh>
 #include <brick/optimization/optimizerCommon.hh>
 
 namespace brick {
@@ -529,8 +529,9 @@ namespace brick {
     {
       // Check that we have a valid startPoint.
       if(this->m_startPoint.size() == 0) {
-        BRICK_THROW3(StateException, "OptimizerLM<Functor>::run()",
-                   "startPoint has not been initialized.");
+        BRICK_THROW(brick::common::StateException, 
+		    "OptimizerLM<Functor>::run()",
+		    "startPoint has not been initialized.");
       }
     
       // Initialize working location so that we start at the right place.
@@ -546,15 +547,15 @@ namespace brick {
       // derivatives.
       result_type errorValue;
       argument_type dEdX(theta.size());
-      vector_type d2EdX2(theta.size(), theta.size());
+      brick::numeric::Array2D<brick::common::Float64> d2EdX2(theta.size(), theta.size());
 
       // Initialize intermediate values used by the minimization.
-      vector_type BMatrix(theta.size(), theta.size());
-      Array1D<Float64> deltaX(theta.size());
+      brick::numeric::Array2D<brick::common::Float64> BMatrix(theta.size(), theta.size());
+      brick::numeric::Array1D<brick::common::Float64> deltaX(theta.size());
       argument_type xCond(theta.size());
-      Array1D<result_type> errorHistory =
-        zeros(m_maxIterations + 1, type_tag<result_type>());
-      Float64 lambda = m_initialLambda;
+      brick::numeric::Array1D<result_type> errorHistory =
+        brick::numeric::zeros<result_type>(m_maxIterations + 1);
+      brick::common::Float64 lambda = m_initialLambda;
 
       // Get initial value of error function.
       errorValue = this->m_functor(theta);
@@ -585,7 +586,7 @@ namespace brick {
 
           // Solve B * deltaX = dEdX'
           copyArgumentType(dEdX, deltaX);
-          linearSolveInPlace(BMatrix, deltaX);
+	  brick::linearAlgebra::linearSolveInPlace(BMatrix, deltaX);
         
           // We have a new candidate location in the error space.
           for(size_t elementIndex = 0; elementIndex < theta.size();
@@ -636,7 +637,7 @@ namespace brick {
 //       }
     
         // Test termination conditions.
-        Float64 drop =
+        brick::common::Float64 drop =
           (errorHistory[iterationIndex] - errorValue)
           / errorHistory[iterationIndex];
         if(drop < m_minDrop) {

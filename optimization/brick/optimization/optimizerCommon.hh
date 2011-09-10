@@ -4,7 +4,7 @@
 *
 * Header file declaring some utility functions for the Optimizer classes.
 *
-* Copyright (C) 2003-2007 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2003-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
@@ -14,7 +14,7 @@
 #define BRICK_OPTIMIZATION_OPTIMIZERCOMMON_HH
 
 #include <cmath>
-#include <dlrNumeric/array2D.hh>>
+#include <brick/numeric/array2D.hh>
 
 namespace brick {
 
@@ -80,7 +80,7 @@ namespace brick {
      */
     template <class ArgumentType>
     void
-    matrixMultiplyArgumentType(const Array2D<double>& matrix0,
+    matrixMultiplyArgumentType(const brick::numeric::Array2D<double>& matrix0,
                                const ArgumentType& vector0,
                                ArgumentType& result);
 
@@ -106,7 +106,7 @@ namespace brick {
  * if it weren't templated.
  *******************************************************************/
 
-#include <brick/common/exception.hh>>
+#include <brick/common/exception.hh>
 
 namespace brick {
 
@@ -118,8 +118,8 @@ namespace brick {
                           const ArgumentType& point)
     {
       if(vector.size() != point.size()) {
-        BRICK_THROW3(ValueException, "contextSensitiveScale",
-                   "Scaling arguments have different sizes.");
+        BRICK_THROW(brick::common::ValueException, "contextSensitiveScale",
+		    "Scaling arguments have different sizes.");
       }
       double chosenScale = 0.0;
       for(size_t index = 0; index < vector.size(); ++index) {
@@ -161,8 +161,8 @@ namespace brick {
     {
       // Make sure arguments are of the same size
       if(argument0.size() != argument1.size()) {
-        BRICK_THROW3(ValueException, "dotArgumentType()",
-                   "Input arguments have different size.");
+        BRICK_THROW(brick::common::ValueException, "dotArgumentType()",
+		    "Input arguments have different size.");
       }
       // Now compute the dot product.
       double result = 0.0;
@@ -176,7 +176,7 @@ namespace brick {
 // and an ArgumentType instance.
     template <class ArgumentType>
     void
-    matrixMultiplyArgumentType(const Array2D<double>& matrix0,
+    matrixMultiplyArgumentType(const brick::numeric::Array2D<double>& matrix0,
                                const ArgumentType& vector0,
                                ArgumentType& result)
     {
@@ -185,15 +185,17 @@ namespace brick {
         message << "Can't right-multiply a " << matrix0.rows() << " x "
                 << matrix0.columns() << " matrix by a " << vector0.size()
                 << " element vector.";
-        BRICK_THROW3(ValueException, "matrixMultiplyArgumentType(...)",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException,
+		    "matrixMultiplyArgumentType(...)",
+		    message.str().c_str());
       }
       if(result.size() != matrix0.rows()) {
         std::ostringstream message;
         message << "Matrix argument has " << matrix0.rows()
                 << " but result has " << result.size() << " elements.";
-        BRICK_THROW3(ValueException, "matrixMultiplyArgumentType(...)",
-                   message.str().c_str());
+        BRICK_THROW(brick::common::ValueException, 
+		    "matrixMultiplyArgumentType(...)",
+		    message.str().c_str());
       }
       for(size_t row = 0; row < matrix0.rows(); ++row) {
         result[row] = 0.0;

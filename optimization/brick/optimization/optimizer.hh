@@ -4,7 +4,7 @@
 *
 * Header file declaring Optimizer class.
 *
-* Copyright (C) 2003-2007 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2003-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
@@ -209,8 +209,7 @@ namespace brick {
  * if it weren't templated.
  *******************************************************************/
 
-#include <dlrNumeric/array1D.hh>>
-#include <brick/optimization/optimizerCommon.hh>>
+#include <brick/optimization/optimizerCommon.hh>
 
 namespace brick {
 

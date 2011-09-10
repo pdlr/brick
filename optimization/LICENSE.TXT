@@ -1,7 +1,7 @@
 /** @file LICENSE.TXT
-This file describes the license for the dlrOptimization library.
+This file describes the license for the brick::optimization library.
 
-Copyright (C) 2000 - 2007, David LaRose, Pittsburgh, Pennsylvania, USA.
+Copyright (C) 2000 - 2011, David LaRose, Pittsburgh, Pennsylvania, USA.
 All Rights Reserved
 
 This library is free software; you can redistribute it and/or
@@ -22,9 +22,8 @@ David LaRose can be contacted at the following paper and electronic
 mail addresses:
 
   David LaRose
-  National Robotics Engineering Center
-  Ten 40th St
-  Pittsburgh, PA 15201
+  4632 Penn Ave, Apt 2
+  Pittsburgh, PA 15224
 
   dlr@cs.cmu.edu
 

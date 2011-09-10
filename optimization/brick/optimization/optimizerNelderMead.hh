@@ -3,9 +3,8 @@
 * @file brick/optimization/optimizerNelderMead.hh
 * Header file declaring OptimizerNelderMead class.
 *
-* Copyright (C) 2003-2007,2010 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2003-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
-*
 ***************************************************************************
 **/
 
@@ -14,8 +13,8 @@
 
 #include <functional>
 #include <vector>
-#include <brick/optimization/optimizer.h>
-#include <brick/common/exception.h>
+#include <brick/optimization/optimizer.hh>
+#include <brick/common/exception.hh>
 
 namespace brick {
 
@@ -366,7 +365,7 @@ namespace brick {
           message << "Incorrectly Sized Arguments:\n"
                   << " First Argument: " <<inputVector.size()
                   << ", Second Argument: " << indexVector.size() << ".";
-          BRICK_THROW(brick::ValueException, "take()",
+          BRICK_THROW(brick::common::ValueException, "take()",
                     message.str().c_str());
         }
         std::vector<Type> resultVector(inputVector.size());
@@ -375,7 +374,7 @@ namespace brick {
             std::ostringstream message;
             message << "Out of Range Index:"
                     << indexVector[index] << ".";
-            BRICK_THROW(brick::ValueException, "take()",
+            BRICK_THROW(brick::common::ValueException, "take()",
                       message.str().c_str());
           }
           resultVector[index] = inputVector[indexVector[index]];
@@ -546,9 +545,10 @@ namespace brick {
       typename OptimizerNelderMead<Functor>::argument_type& axisSums)
     {
       if(currentPoints.size() == 0) {
-        BRICK_THROW(LogicException, "OptimizerNelderMead::computeAxisSums()",
-                  "Vector Size of Current Points is 0... "
-                  "something's not right.");
+        BRICK_THROW(brick::common::LogicException, 
+		    "OptimizerNelderMead::computeAxisSums()",
+		    "Vector Size of Current Points is 0... "
+		    "something's not right.");
         return;
       }
       copyArgumentType(currentPoints[0], axisSums);
@@ -677,7 +677,7 @@ namespace brick {
     {
       size_t dimension = m_theta0.size();
       if(dimension == 0) {
-        BRICK_THROW(ValueException, "OptimizerNelderMead::run()",
+        BRICK_THROW(brick::common::ValueException, "OptimizerNelderMead::run()",
                   "invalid starting point has zero size.");
       }
       if(m_deltaValueHack) {

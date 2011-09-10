@@ -49,6 +49,7 @@ libraries:
   brick::portability
   brick::numeric
   brick::linearAlgebra
+  brick::geometry
   lapack
   blas
   (and possibly, g2c)
@@ -57,18 +58,18 @@ In order to build the unit tests for this library, you must install
 the brick::test library.
 
 You should be able to get brick::common, brick::portability, 
-brick::numeric, brick::linearAlgebra, and brick::test from the same 
-place you got this library.  Lapack and blas are included with most 
-linux distributions and other unix-ish operating systems, such as OS X.
-Most linux distributions also include optimized versions of lapack and 
-blas named atlas or atlas3.  You can use these instead of the reference
-versions for higherperformance.  Non-free versions of lapack and blas 
-which are optimized for intel CPUs are available for various platforms 
+brick::numeric, brick::linearAlgebra, brick::geometry, and brick::test 
+from the same place you got this library.  Lapack and blas are included 
+with most linux distributions and other unix-ish operating systems, such 
+as OS X.  Most linux distributions also include optimized versions of lapack 
+and blas named atlas or atlas3.  You can use these instead of the reference
+versions for higher performance.  Non-free versions of lapack and blas 
+that are optimized for intel CPUs are available for various platforms 
 from http://www.intel.com.  You may be able to find pre-built lapack
 binaries for your architecture at  http://www.netlib.org/lapack/archives/.
-Libg2c is included as part of the gnu compiler collection.  Depending on 
-your OS distribution, it may be prepackaged for you, in its own package, 
-or bundled with g77.
+The library libg2c may be needed if you compile with g++.Libg2c is included 
+as part of the gnu compiler collection.  Depending on your OS distribution, 
+it may be prepackaged for you, in its own package, or bundled with g77.
 
 @section installation_sec Installation
 

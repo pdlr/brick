@@ -383,7 +383,8 @@ namespace brick {
      * value of the second argument.
      */
     template <class Type>
-    Vector2D<Type> operator+(Vector2D<Type> const& vector0, Type const& scalar0);
+    Vector2D<Type> operator+(Vector2D<Type> const& vector0,
+                             Type const& scalar0);
 
     /** 
      * This operator subtracts a scalar from a Vector2D.
@@ -397,7 +398,8 @@ namespace brick {
      * value of the second argument.
      */
     template <class Type>
-    Vector2D<Type> operator-(Vector2D<Type> const& vector0, Type const& scalar0);
+    Vector2D<Type> operator-(Vector2D<Type> const& vector0,
+                             Type const& scalar0);
 
     /** 
      * This operator multiplies a Vector2D by scalar.
@@ -411,7 +413,8 @@ namespace brick {
      * the value of the second argument.
      */
     template <class Type>
-    Vector2D<Type> operator*(Vector2D<Type> const& vector0, Type const& scalar0);
+    Vector2D<Type> operator*(Vector2D<Type> const& vector0,
+                             Type const& scalar0);
 
     /** 
      * This operator divides a Vector2D by scalar.
@@ -425,7 +428,8 @@ namespace brick {
      * the value of the second argument.
      */
     template <class Type>
-    Vector2D<Type> operator/(Vector2D<Type> const& vector0, Type const& scalar0);
+    Vector2D<Type> operator/(Vector2D<Type> const& vector0,
+                             Type const& scalar0);
 
     /**
      * This operator checks the supplied vectors for equality.
@@ -435,7 +439,8 @@ namespace brick {
      * @return  Result of comparing @p vector0 to @p vector1 for equality.
      */
     template <class Type>
-    bool operator==(Vector2D<Type> const& vector0, Vector2D<Type> const& vector1);
+    bool operator==(Vector2D<Type> const& vector0,
+                    Vector2D<Type> const& vector1);
 
     /**
      * This operator checks the supplied vectors for inequality.
@@ -446,7 +451,8 @@ namespace brick {
      *          inequality.
      */
     template <class Type>
-    bool operator!=(Vector2D<Type> const& vector0, Vector2D<Type> const& vector1);
+    bool operator!=(Vector2D<Type> const& vector0,
+                    Vector2D<Type> const& vector1);
 
 
     /** 
@@ -462,7 +468,8 @@ namespace brick {
      * the Vector2D argument.
      */
     template <class Type>
-    Vector2D<Type> operator+(Type const& scalar0, Vector2D<Type> const& vector0);
+    Vector2D<Type> operator+(Type const& scalar0,
+                             Vector2D<Type> const& vector0);
 
 
     /** 
@@ -478,7 +485,8 @@ namespace brick {
      * of the Vector2D argument.
      */
     template <class Type>
-    Vector2D<Type> operator*(Type const& scalar0, Vector2D<Type> const& vector0);
+    Vector2D<Type> operator*(Type const& scalar0,
+                             Vector2D<Type> const& vector0);
 
   
     /** 
@@ -497,7 +505,8 @@ namespace brick {
      * the write has taken place.
      */
     template <class Type>
-    std::ostream& operator<<(std::ostream& stream, Vector2D<Type> const& vector0);
+    std::ostream& operator<<(std::ostream& stream,
+                             Vector2D<Type> const& vector0);
 
     /** 
      * This function sets the value of a Vector2D instance from a

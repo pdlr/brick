@@ -138,6 +138,7 @@ namespace brick {
     {
       m_x = xCoord;
       m_y = yCoord;
+      return *this;
     }
 
 
@@ -292,14 +293,14 @@ namespace brick {
 
     template <class Type>
     inline Vector2D<Type>
-    operator+(Type scalar0, const Vector2D<Type>& vector0)
+    operator+(Type const& scalar0, const Vector2D<Type>& vector0)
     {
       return vector0 + scalar0;
     }
   
     template <class Type>
     inline Vector2D<Type>
-    operator*(Type scalar0, const Vector2D<Type>& vector0)
+    operator*(Type const& scalar0, const Vector2D<Type>& vector0)
     {
       return vector0 * scalar0;
     }
@@ -339,7 +340,7 @@ namespace brick {
   
     template <class Type>
     Vector2D<Type>
-    operator+(const Vector2D<Type>& vector0, Type scalar)
+    operator+(const Vector2D<Type>& vector0, Type const& scalar)
     {
       return Vector2D<Type>(vector0.x() + scalar,
                             vector0.y() + scalar);
@@ -347,7 +348,7 @@ namespace brick {
 
     template <class Type>
     Vector2D<Type>
-    operator-(const Vector2D<Type>& vector0, Type scalar)
+    operator-(const Vector2D<Type>& vector0, Type const& scalar)
     {
       return Vector2D<Type>(vector0.x() - scalar,
                             vector0.y() - scalar);
@@ -355,7 +356,7 @@ namespace brick {
 
     template <class Type>
     Vector2D<Type>
-    operator*(const Vector2D<Type>& vector0, Type scalar)
+    operator*(const Vector2D<Type>& vector0, Type const& scalar)
     {
       return Vector2D<Type>(vector0.x() * scalar,
                             vector0.y() * scalar);

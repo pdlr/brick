@@ -2,10 +2,6 @@
 # Makefile.am
 #   Process this file with automake to produce Makefile.in.
 #
-# $Revision: 1296 $
-# $Date: 2010-02-10 02:43:38 -0500 (Wed, 10 Feb 2010) $
-#
-
 
 # Set VPATH so we can build in a different directory.
 
@@ -21,15 +17,16 @@ AM_CPPFLAGS		= -I$(top_srcdir)
 # Define the list of header files to install and the location to
 # install them.
 
-dlrOptimizationdir	= $(includedir)/dlrOptimization
-dlrOptimization_HEADERS	= gradientFunction.h \
-			  gradientFunctionLM.h \
-			  optimizer.h \
-			  optimizerBFGS.h \
-			  optimizerCommon.h \
-			  optimizerLM.h \
-			  optimizerLineSearch.h \
-			  optimizerNelderMead.h
+brickOptimizationdir	= $(includedir)/brickOptimization
+brickOptimization_HEADERS = \
+	gradientFunction.h \
+	gradientFunctionLM.h \
+	optimizer.h \
+	optimizerBFGS.h \
+	optimizerCommon.h \
+	optimizerLM.h \
+	optimizerLineSearch.h \
+	optimizerNelderMead.h
 
 
 # Define the library to build.

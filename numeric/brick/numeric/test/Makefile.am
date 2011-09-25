@@ -2,10 +2,6 @@
 # Makefile.am
 #   Process this file with automake to produce Makefile.in.
 #
-# $Revision: 1277 $
-# $Date: 2010-01-15 00:35:26 -0500 (Fri, 15 Jan 2010) $
-#
-
 
 # Set VPATH so we can build in a different directory.
 
@@ -21,6 +17,7 @@ TESTS			= \
 	array3DTest \
 	derivativeRiddersTest \
 	index3DTest \
+	rotationsTest \
 	solveQuadraticTest \
 	transform2DTest \
 	transform3DTest \
@@ -35,6 +32,7 @@ check_PROGRAMS          = \
 	array3DTest \
 	derivativeRiddersTest \
 	index3DTest \
+	rotationsTest \
 	solveQuadraticTest \
 	transform2DTest \
 	transform3DTest \
@@ -49,6 +47,7 @@ array2DTest_SOURCES		= array2DTest.cc arrayTestCommon.hh
 array3DTest_SOURCES		= array3DTest.cc arrayTestCommon.hh
 derivativeRiddersTest_SOURCES	= derivativeRiddersTest.cc
 index3DTest_SOURCES		= index3DTest.cc
+rotationsTest_SOURCES		= rotationsTest.cc
 solveQuadraticTest_SOURCES	= solveQuadraticTest.cc
 transform2DTest_SOURCES		= transform2DTest.cc arrayTestCommon.hh
 transform3DTest_SOURCES		= transform3DTest.cc arrayTestCommon.hh

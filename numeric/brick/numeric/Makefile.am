@@ -2,10 +2,6 @@
 # Makefile.am
 #   Process this file with automake to produce Makefile.in.
 #
-# $Revision: 1277 $
-# $Date: 2010-01-15 00:35:26 -0500 (Fri, 15 Jan 2010) $
-#
-
 
 # Set VPATH so we can build in a different directory.
 
@@ -36,7 +32,12 @@ brickNumeric_HEADERS	= \
 	index2D.hh \
 	index3D.hh \
 	numericTraits.hh \
+	rotations.hh rotations_impl.hh \
+	slice.hh \
 	solveQuadratic.hh solveQuadratic_impl.hh \
+	subArray1D.hh subArray1D_impl.hh \
+	subArray2D.hh subArray2D_impl.hh \
+	quaternion.hh quaternion_impl.hh \
 	transform2D.hh transform2D_impl.hh \
 	transform3D.hh transform3D_impl.hh \
 	transform3DTo2D.hh transform3DTo2D_impl.hh \

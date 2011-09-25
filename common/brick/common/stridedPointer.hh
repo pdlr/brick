@@ -59,8 +59,8 @@ namespace brick {
        * @param stride The StridedPointer instance will be able to
        * access only every stride'th element in the array.
        */
-      StridedPointer(Type* pointer, int stride)
-        : m_pointer(pointer), m_stride(stride) {}
+      StridedPointer(Type* pointer0, int stride)
+        : m_pointer(pointer0), m_stride(stride) {}
 
       
       /** 

@@ -2,10 +2,6 @@
 # Makefile.am
 #   Process this file with automake to produce Makefile.in.
 #
-# $Revision: 1324 $
-# $Date: 2010-03-07 20:26:18 -0500 (Sun, 07 Mar 2010) $
-#
-
 
 # Set VPATH so we can build in a different directory.
 

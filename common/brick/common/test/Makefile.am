@@ -3,7 +3,6 @@
 #   Process this file with automake to produce Makefile.in.
 #
 
-
 # Set VPATH so we can build in a different directory.
 
 srcdir			= @srcdir@

@@ -38,7 +38,7 @@ namespace brick {
      */
     template <class Type>
     Array1D<Type>
-    abs(const Array1D<Type>& array0);
+    abs(Array1D<Type> const& array0);
 
   
     /** 
@@ -55,7 +55,7 @@ namespace brick {
      */
     template <class Type>
     Array2D<Type>
-    abs(const Array2D<Type>& array0);
+    abs(Array2D<Type> const& array0);
 
 
     /**
@@ -69,7 +69,7 @@ namespace brick {
      */
     template <class Type>
     bool
-    allFalse(const Array1D<Type>& array0);
+    allFalse(Array1D<Type> const& array0);
 
   
     /**
@@ -83,7 +83,7 @@ namespace brick {
      */
     template <class Type>
     bool
-    allTrue(const Array1D<Type>& array0);
+    allTrue(Array1D<Type> const& array0);
 
   
     /**
@@ -97,7 +97,7 @@ namespace brick {
      */
     template <class Type>
     inline bool
-    anyFalse(const Array1D<Type>& array0);
+    anyFalse(Array1D<Type> const& array0);
 
   
     /**
@@ -111,7 +111,7 @@ namespace brick {
      */
     template <class Type>
     inline bool
-    anyTrue(const Array1D<Type>& array0);
+    anyTrue(Array1D<Type> const& array0);
 
   
     /** 
@@ -126,7 +126,7 @@ namespace brick {
      */
     template <class Type>
     inline size_t
-    argmax(const Array1D<Type>& array0);
+    argmax(Array1D<Type> const& array0);
 
 
     /** 
@@ -170,7 +170,7 @@ namespace brick {
      */
     template <class Type, class Functor>
     inline size_t
-    argmax(const Array1D<Type>& array0, Functor comparator);
+    argmax(Array1D<Type> const& array0, Functor comparator);
   
 
     /** 
@@ -213,7 +213,7 @@ namespace brick {
      */
     template <class Type>
     inline Index2D
-    argmax2D(const Array2D<Type>& array0);
+    argmax2D(Array2D<Type> const& array0);
 
 
     /** 
@@ -236,7 +236,7 @@ namespace brick {
      */
     template <class Type, class Functor>
     inline Index2D
-    argmax2D(const Array2D<Type>& array0, Functor comparator);
+    argmax2D(Array2D<Type> const& array0, Functor comparator);
   
 
     /** 
@@ -251,7 +251,7 @@ namespace brick {
      */
     template <class Type>
     inline size_t
-    argmin(const Array1D<Type>& array0);
+    argmin(Array1D<Type> const& array0);
 
 
     /** 
@@ -273,7 +273,7 @@ namespace brick {
      */
     template <class Type, class Functor>
     inline size_t
-    argmin(const Array1D<Type>& array0, Functor comparator);
+    argmin(Array1D<Type> const& array0, Functor comparator);
 
 
     /** 
@@ -287,7 +287,7 @@ namespace brick {
      */
     template <class Type>
     inline Index2D
-    argmin2D(const Array2D<Type>& array0);
+    argmin2D(Array2D<Type> const& array0);
 
 
     /** 
@@ -306,7 +306,7 @@ namespace brick {
      */
     template <class Type, class Functor>
     inline Index2D
-    argmin2D(const Array2D<Type>& array0, Functor comparator);
+    argmin2D(Array2D<Type> const& array0, Functor comparator);
 
 
     /** 
@@ -324,7 +324,7 @@ namespace brick {
      */
     template <class Type>
     Array1D<size_t>
-    argsort(const Array1D<Type>& array0);
+    argsort(Array1D<Type> const& array0);
 
   
 //   /** 
@@ -344,7 +344,7 @@ namespace brick {
 //    */
 //   template <class Type, class Functor>
 //   Array1D<size_t>
-//   argsort(const Array1D<Type>& array0, Functor comparator);
+//   argsort(Array1D<Type> const& array0, Functor comparator);
 
   
     /** 
@@ -358,7 +358,7 @@ namespace brick {
      */
     template <class Type>
     Array1D<Type>
-    axisMax(const Array2D<Type>& array0,
+    axisMax(Array2D<Type> const& array0,
             size_t axis) {return axisMaximum(array0, axis);}
 
     /** 
@@ -379,7 +379,7 @@ namespace brick {
      */
     template <class Type>
     inline Array1D<Type>
-    axisMaximum(const Array2D<Type>& array0, size_t axis);
+    axisMaximum(Array2D<Type> const& array0, size_t axis);
 
     /** 
      * This function returns an Array1D in which each element has the
@@ -413,7 +413,7 @@ namespace brick {
      */
     template <class Type, class Functor>
     Array1D<Type>
-    axisMaximum(const Array2D<Type>& array0, size_t axis, Functor comparator);
+    axisMaximum(Array2D<Type> const& array0, size_t axis, Functor comparator);
 
     /** 
      * This function is just an alias for the function axisMinimum().
@@ -426,7 +426,7 @@ namespace brick {
      */
     template <class Type>
     inline Array1D<Type>
-    axisMin(const Array2D<Type>& array0,
+    axisMin(Array2D<Type> const& array0,
             size_t axis) {return axisMinimum(array0, axis);}
   
     /** 
@@ -447,7 +447,7 @@ namespace brick {
      */
     template <class Type>
     inline Array1D<Type>
-    axisMinimum(const Array2D<Type>& array0, size_t axis);
+    axisMinimum(Array2D<Type> const& array0, size_t axis);
 
     /** 
      * This function returns an Array1D in which each element has the
@@ -481,7 +481,7 @@ namespace brick {
      */
     template <class Type, class Functor>
     Array1D<Type>
-    axisMinimum(const Array2D<Type>& array0, size_t axis, Functor comparator);
+    axisMinimum(Array2D<Type> const& array0, size_t axis, Functor comparator);
 
     
     /** 
@@ -514,7 +514,7 @@ namespace brick {
      */
     template <class ResultType, class Type>
     inline Array1D<ResultType>
-    axisSum(const Array2D<Type>& array0, size_t axis);
+    axisSum(Array2D<Type> const& array0, size_t axis);
     
 
     /** 
@@ -555,8 +555,8 @@ namespace brick {
      */
     template <class ResultType, class Type, class Functor>
     Array1D<ResultType>
-    axisSum(const Array2D<Type>& array0, size_t axis,
-            const ResultType& initialValue, Functor adder);
+    axisSum(Array2D<Type> const& array0, size_t axis,
+            ResultType const& initialValue, Functor adder);
 
     
     /**
@@ -621,7 +621,7 @@ namespace brick {
      */
     template <class Type0, class Type1>
     inline Array1D<Type1>
-    compress(const Array1D<Type0>& condition, const Array1D<Type1>& input);
+    compress(Array1D<Type0> const& condition, Array1D<Type1> const& input);
 
     /** 
      * This function behaves in exactly the same way as compress(const
@@ -651,7 +651,7 @@ namespace brick {
      */
     template <class Type0, class Type1>
     Array1D<Type1>
-    compress(const Array1D<Type0>& condition, const Array1D<Type1>& input,
+    compress(Array1D<Type0> const& condition, Array1D<Type1> const& input,
              size_t numTrue);
 
 
@@ -667,7 +667,7 @@ namespace brick {
      */
     template <class Type>
     inline size_t
-    count(const Array1D<Type>& array0);
+    count(Array1D<Type> const& array0);
   
     /** 
      * This function computes the cross product of two Vector3D
@@ -684,7 +684,7 @@ namespace brick {
      */
     template <class Type>
     inline Vector3D<Type>
-    cross(const Vector3D<Type>& vector0, const Vector3D<Type>& vector1);
+    cross(Vector3D<Type> const& vector0, Vector3D<Type> const& vector1);
   
     /** 
      * This function computes the inner product of two input arrays.
@@ -699,7 +699,7 @@ namespace brick {
      */
     template <class Type2, class Type1, class Type0>
     inline Type2
-    dot(const Array1D<Type0>& array0, const Array1D<Type1>& array1);
+    dot(Array1D<Type0> const& array0, Array1D<Type1> const& array1);
 
     
     /** 
@@ -713,7 +713,7 @@ namespace brick {
      */
     template <class Type1, class Type0>
     inline Type1
-    dot(const Vector2D<Type0>& vector0, const Vector2D<Type0>& vector1);
+    dot(Vector2D<Type0> const& vector0, Vector2D<Type0> const& vector1);
 
     
     /** 
@@ -727,7 +727,7 @@ namespace brick {
      */
     template <class Type1, class Type0>
     inline Type1
-    dot(const Vector3D<Type0>& vector0, const Vector3D<Type0>& vector1);
+    dot(Vector3D<Type0> const& vector0, Vector3D<Type0> const& vector1);
 
     
     /** 
@@ -753,7 +753,7 @@ namespace brick {
      */
     template <class Type>
     Array2D<Type>
-    equivalentMatrix(const Array1D<Type>& vector0, size_t rowsInMatrix);
+    equivalentMatrix(Array1D<Type> const& vector0, size_t rowsInMatrix);
   
 
     /** 
@@ -780,7 +780,7 @@ namespace brick {
      */
     template <class Type>
     void
-    getMeanAndCovariance(const Array2D<Type>& sampleArray,
+    getMeanAndCovariance(Array2D<Type> const& sampleArray,
                          Array1D<double>& mean,
                          Array2D<double>& covariance,
                          size_t majorAxis=0);
@@ -816,7 +816,7 @@ namespace brick {
      */
     template <class Type>
     Array1D<Type>
-    ln(const Array1D<Type>& array0);
+    ln(Array1D<Type> const& array0);
   
 
     /** 
@@ -830,7 +830,7 @@ namespace brick {
      */
     template <class Type>
     Array2D<Type>
-    ln(const Array2D<Type>& array0);
+    ln(Array2D<Type> const& array0);
   
 
     /** 
@@ -855,7 +855,7 @@ namespace brick {
      */
     template <class Type>
     Array2D<Type>
-    logicalNot(const Array2D<Type>& array0);
+    logicalNot(Array2D<Type> const& array0);
 
     /** 
      * This function computes the magnitude of its input argument.  That
@@ -868,7 +868,7 @@ namespace brick {
      */  
     template <class Type1, class Type0>
     inline Type1
-    magnitude(const Array1D<Type0>& array0);
+    magnitude(Array1D<Type0> const& array0);
 
     /** 
      * This function computes the magnitude of its input argument.  That
@@ -881,7 +881,7 @@ namespace brick {
      */  
     template <class Type1, class Type0>
     inline Type1
-    magnitude(const Vector2D<Type0>& vector0);
+    magnitude(Vector2D<Type0> const& vector0);
 
     /** 
      * This function computes the magnitude of its input argument.  That
@@ -894,7 +894,7 @@ namespace brick {
      */  
     template <class Type1, class Type0>
     inline Type1
-    magnitude(const Vector3D<Type0>& vector0);
+    magnitude(Vector3D<Type0> const& vector0);
 
   
     /** 
@@ -909,7 +909,7 @@ namespace brick {
      */  
     template <class Type1, class Type0>
     inline Type1
-    magnitudeSquared(const Array1D<Type0>& array0);
+    magnitudeSquared(Array1D<Type0> const& array0);
 
   
     /** 
@@ -924,7 +924,7 @@ namespace brick {
      */  
     template <class Type1, class Type0>
     inline Type1
-    magnitudeSquared(const Vector2D<Type0>& vector0);
+    magnitudeSquared(Vector2D<Type0> const& vector0);
 
   
     /** 
@@ -939,7 +939,7 @@ namespace brick {
      */  
     template <class Type1, class Type0>
     inline Type1
-    magnitudeSquared(const Vector3D<Type0>& vector0);
+    magnitudeSquared(Vector3D<Type0> const& vector0);
   
 
     /** 
@@ -966,8 +966,8 @@ namespace brick {
      */
     template <class Type2, class Type1, class Type0>
     Array1D<Type2>
-    matrixMultiply(const Array1D<Type0>& vector0,
-                   const Array2D<Type1>& matrix0);
+    matrixMultiply(Array1D<Type0> const& vector0,
+                   Array2D<Type1> const& matrix0);
 
 
     /** 
@@ -992,8 +992,8 @@ namespace brick {
      */
     template <class Type2, class Type1, class Type0>
     Array1D<Type2>
-    matrixMultiply(const Array2D<Type0>& matrix0,
-                   const Array1D<Type1>& vector0);
+    matrixMultiply(Array2D<Type0> const& matrix0,
+                   Array1D<Type1> const& vector0);
 
 
     /** 
@@ -1015,8 +1015,8 @@ namespace brick {
      */
     template <class Type2, class Type1, class Type0>
     Array2D<Type2>
-    matrixMultiply(const Array2D<Type0>& matrix0,
-                   const Array2D<Type1>& matrix1);
+    matrixMultiply(Array2D<Type0> const& matrix0,
+                   Array2D<Type1> const& matrix1);
 
 
     // The next function is commented out because some environments use
@@ -1029,13 +1029,13 @@ namespace brick {
     // * This function is an alias for the function maximum(const
     // * Array1D&) below.
     // * 
-    // * @param array0 See documentation for maximum(const Array1D&).
+    // * @param array0 See documentation for maximum(Array1D const&).
     // *
-    // * @return See documentation for maximum(const Array1D&).
+    // * @return See documentation for maximum(Array1D const&).
     // */
     // template <class Type>
     // inline Type
-    // max(const Array1D<Type>& array0) {return maximum(array0);}
+    // max(Array1D<Type> const& array0) {return maximum(array0);}
 
 
     /** 
@@ -1049,7 +1049,7 @@ namespace brick {
      */
     template <class Type>
     inline Type
-    maximum(const Array1D<Type>& array0);
+    maximum(Array1D<Type> const& array0);
 
 
     /** 
@@ -1073,7 +1073,7 @@ namespace brick {
      */
     template <class Type, class Functor>
     Type
-    maximum(const Array1D<Type>& array0, Functor comparator);
+    maximum(Array1D<Type> const& array0, Functor comparator);
 
     
     /** 
@@ -1089,7 +1089,7 @@ namespace brick {
      */
     template <class Type, class Iterator>
     Type
-    mean(const Iterator& beginIter, const Iterator& endIter);
+    mean(Iterator const& beginIter, Iterator const& endIter);
 
     
     /** 
@@ -1104,7 +1104,7 @@ namespace brick {
      */
     template <class Type1, class Type0>
     inline Type1
-    mean(const Array1D<Type0>& array0);
+    mean(Array1D<Type0> const& array0);
   
 
     // The next function is commented out because some environments use
@@ -1117,13 +1117,13 @@ namespace brick {
     // * This function is an alias for the function minimum(const
     // * Array1D&) below.
     // * 
-    // * @param array0 See documentation for minimum(const Array1D&).
+    // * @param array0 See documentation for minimum(Array1D const&).
     // *
-    // * @return See documentation for minimum(const Array1D&).
+    // * @return See documentation for minimum(Array1D const&).
     // */
     // template <class Type>
     // inline Type
-    // min(const Array1D<Type>& array0) {return minimum(array0);}
+    // min(Array1D<Type> const& array0) {return minimum(array0);}
 
 
     /** 
@@ -1137,7 +1137,7 @@ namespace brick {
      */
     template <class Type>
     inline Type
-    minimum(const Array1D<Type>& array0);
+    minimum(Array1D<Type> const& array0);
 
 
     /** 
@@ -1161,7 +1161,7 @@ namespace brick {
      */
     template <class Type, class Functor>
     Type
-    minimum(const Array1D<Type>& array0, Functor comparator);
+    minimum(Array1D<Type> const& array0, Functor comparator);
 
 
     /** 
@@ -1222,8 +1222,8 @@ namespace brick {
      */
     template <class Type2, class Type>
     Type2
-    normalizedCorrelation(const Array1D<Type>& signal0,
-                          const Array1D<Type>& signal1);
+    normalizedCorrelation(Array1D<Type> const& signal0,
+                          Array1D<Type> const& signal1);
 
 
     /** 
@@ -1275,7 +1275,7 @@ namespace brick {
      */
     template <class Type2, class Type0, class Type1>
     Array2D<Type2>
-    outerProduct(const Array1D<Type0>& array0, const Array1D<Type1>& array1);
+    outerProduct(Array1D<Type0> const& array0, Array1D<Type1> const& array1);
 
     
     /** 
@@ -1339,13 +1339,13 @@ namespace brick {
      */
     template <class Type>
     inline Array1D<Type>
-    ravel(Array2D<Type>& inputArray) {return inputArray.ravel();}
+    ravel(Array2D<Type> const& inputArray) {return inputArray.ravel();}
 
 
     /** 
-     * This function takes a const Array2D argument and returns a const
+     * This function takes a Array2D argument and returns a const
      * Array1D instance which references the same data.  It is
-     * equivalent to ravel(Array2D&), but for const arrays.
+     * equivalent to ravel(Array2D const&), but for arrays.
      * 
      * @param inputArray This argument is the Array2D instance from
      * which to take the data.
@@ -1355,7 +1355,7 @@ namespace brick {
      */
     template <class Type>
     inline const Array1D<Type>
-    ravel(const Array2D<Type>& inputArray) {return inputArray.ravel();}
+    ravel(Array2D<Type> const& inputArray) {return inputArray.ravel();}
 
 
     /** 
@@ -1376,7 +1376,7 @@ namespace brick {
      */
     template <class Type0, class Type1>
     Type1
-    rms(const Array1D<Type0>& array0);
+    rms(Array1D<Type0> const& array0);
 
 
     /**
@@ -1422,7 +1422,7 @@ namespace brick {
      */
     template <class Type0, class Type1>
     inline bool
-    shapeMatch(const Array1D<Type0>& array0, const Array1D<Type1>& array1);
+    shapeMatch(Array1D<Type0> const& array0, Array1D<Type1> const& array1);
 
 
     /** 
@@ -1441,7 +1441,7 @@ namespace brick {
      */
     template <class Type0, class Type1>
     inline bool
-    shapeMatch(const Array2D<Type0>& array0, const Array2D<Type1>& array1);
+    shapeMatch(Array2D<Type0> const& array0, Array2D<Type1> const& array1);
 
 
     /** 
@@ -1460,7 +1460,7 @@ namespace brick {
      */
     template <class Type0, class Type1>
     inline bool
-    shapeMatch(const Array3D<Type0>& array0, const Array3D<Type1>& array1);
+    shapeMatch(Array3D<Type0> const& array0, Array3D<Type1> const& array1);
 
 
     /**
@@ -1473,7 +1473,7 @@ namespace brick {
      */
     template <class Type>
     inline Array2D<Type>
-    skewSymmetric(const Array1D<Type>& vector0);
+    skewSymmetric(Array1D<Type> const& vector0);
 
 #if 0
     /** 
@@ -1548,7 +1548,7 @@ namespace brick {
      * with which the computation is carried out.  The computation is
      * performed using the type specified by the second template
      * argument.  This routine eventually calls the function
-     * mean(const Array1D&, ...).  This is a little inefficient, since
+     * mean(Array1D const&, ...).  This is a little inefficient, since
      * you are probably already calling mean(...).  If this redundant
      * computation is not OK, then we should add a class called
      * "SignalMoments" (or something similar) which will compute both
@@ -1563,7 +1563,7 @@ namespace brick {
      */
     template <class Type0, class Type1>
     inline Type1
-    standardDeviation(const Array1D<Type0>& array0);
+    standardDeviation(Array1D<Type0> const& array0);
   
 
     /** 
@@ -1578,7 +1578,7 @@ namespace brick {
      */
     template <class Type2, class Type>
     Type2
-    sum(const Array1D<Type>& array0);
+    sum(Array1D<Type> const& array0);
 
 
     /** 
@@ -1604,9 +1604,9 @@ namespace brick {
      */
     template <class Type2, class Type>
     Type2
-    sum(const Array2D<Type>& array0,
-        const Index2D& upperLeftCorner,
-        const Index2D& lowerRightCorner);
+    sum(Array2D<Type> const& array0,
+        Index2D const& upperLeftCorner,
+        Index2D const& lowerRightCorner);
 
 
     /** 
@@ -1635,8 +1635,8 @@ namespace brick {
      */
     template <class Type, class IntegralType>
     Array1D<Type>
-    take(const Array1D<Type>& dataArray,
-         const Array1D<IntegralType>& indexArray);
+    take(Array1D<Type> const& dataArray,
+         Array1D<IntegralType> const& indexArray);
     
          
     /** 
@@ -1668,8 +1668,8 @@ namespace brick {
      */
     template <class Type, class IntegralType>
     inline Array1D<Type>
-    take(const Array2D<Type>& dataArray,
-         const Array1D<IntegralType>& indexArray);
+    take(Array2D<Type> const& dataArray,
+         Array1D<IntegralType> const& indexArray);
     
          
     /** 
@@ -1712,8 +1712,8 @@ namespace brick {
      */
     template <class Type, class IntegralType>
     Array2D<Type>
-    take(const Array2D<Type>& dataArray,
-         const Array1D<IntegralType>& indexArray,
+    take(Array2D<Type> const& dataArray,
+         Array1D<IntegralType> const& indexArray,
          unsigned int axis);
     
          
@@ -1723,7 +1723,7 @@ namespace brick {
      * the computation is carried out.  The computation is performed
      * using the type specified by the second argument to the variance()
      * function call.  This routine eventually calls the function
-     * mean(const Array1D&, ...).  This is a little inefficient, since
+     * mean(Array1D const&, ...).  This is a little inefficient, since
      * you are probably already calling mean(...).  If this redundant
      * computation is not OK, then we should add a class called
      * "SignalMoments" (or something similar) which will compute both
@@ -1741,7 +1741,7 @@ namespace brick {
      */
     template <class Type0, class Type1>
     inline Type1
-    variance(const Array1D<Type0>& array0);
+    variance(Array1D<Type0> const& array0);
 
     
     /** 

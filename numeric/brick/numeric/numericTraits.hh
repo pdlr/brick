@@ -102,7 +102,7 @@ namespace brick {
     };
 
 
-    // == Specializations of ArithmeticTriats == 
+    // == Specializations of ArithmeticTraits == 
     template <>
     struct ArithmeticTraits<common::Int8, common::Int8> {
       typedef common::Int16 ProductType;

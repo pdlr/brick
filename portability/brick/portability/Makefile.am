@@ -2,10 +2,6 @@
 # Makefile.am
 #   Process this file with automake to produce Makefile.in.
 #
-# $Revision: 975 $
-# $Date: 2007-12-30 01:57:17 -0500 (Sun, 30 Dec 2007) $
-#
-
 
 # Set the include path.
 

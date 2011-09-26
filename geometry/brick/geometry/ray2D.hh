@@ -140,7 +140,7 @@ namespace brick {
     operator<<(std::ostream& stream, Ray2D<Type> const& ray);
     
     
-  } // namespace utilities
+  } // namespace geometry
     
 } // namespace brick
 

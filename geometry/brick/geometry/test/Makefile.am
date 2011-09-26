@@ -3,7 +3,6 @@
 #   Process this file with automake to produce Makefile.in.
 #
 
-
 # Set VPATH so we can build in a different directory.
 
 srcdir			= @srcdir@
@@ -42,13 +41,13 @@ utilities3DTest_SOURCES		= utilities3DTest.cc
 
 # Set the include path.
 
-AM_CPPFLAGS		= -I$(top_srcdir) -DDLR_TEST_USE_AUTOMATIC_MAIN
+AM_CPPFLAGS		= -I$(top_srcdir) -DBRICK_TEST_USE_AUTOMATIC_MAIN
 
 
 # Explicitly set library locations to avoid linking with previously
 # installed versions of the libraries.
 
-AM_LDFLAGS		= -L$(top_builddir)/dlrGeometry
+AM_LDFLAGS		= -L$(top_builddir)/brick/geometry
 
 
 # Specify which libraries are needed to build these tests.

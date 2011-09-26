@@ -19,6 +19,7 @@
 // 
 // #include <brick/geometry/lineSegment2D.hh>
 
+#include <brick/common/expect.hh>
 // #include <brick/numeric/utilities.hh>
 
 namespace brick {
@@ -39,8 +40,8 @@ namespace brick {
     // This constructor initializes the line segment using a pair of points.
     template <class Type>
     LineSegment2D<Type>::
-    LineSegment2D(Vector2D<Type> const& startPoint,
-                  Vector2D<Type> const& endPoint)
+    LineSegment2D(brick::numeric::Vector2D<Type> const& startPoint,
+                  brick::numeric::Vector2D<Type> const& endPoint)
       : m_startPoint(startPoint), m_endPoint(endPoint)
     {
       // Empty.
@@ -82,7 +83,7 @@ namespace brick {
 
     // This member function returns the end point of the line segment.
     template <class Type>
-    Vector2D<Type> const&
+    brick::numeric::Vector2D<Type> const&
     LineSegment2D<Type>::
     getEndPoint() const
     {
@@ -92,7 +93,7 @@ namespace brick {
 
     // This member function returns the start point of the line segment.
     template <class Type>
-    Vector2D<Type> const&
+    brick::numeric::Vector2D<Type> const&
     LineSegment2D<Type>::
     getVertex0() const
     {
@@ -102,7 +103,7 @@ namespace brick {
 
     // This member function returns the end point of the line segment.
     template <class Type>
-    Vector2D<Type> const&
+    brick::numeric::Vector2D<Type> const&
     LineSegment2D<Type>::
     getVertex1() const
     {
@@ -112,7 +113,7 @@ namespace brick {
 
     // This member function returns the start point of the line segment.
     template <class Type>
-    Vector2D<Type> const&
+    brick::numeric::Vector2D<Type> const&
     LineSegment2D<Type>::
     getStartPoint() const {
       return m_startPoint;
@@ -138,8 +139,8 @@ namespace brick {
     template <class Type>
     LineSegment2D<Type>&
     LineSegment2D<Type>::
-    setValue(Vector2D<Type> const& startPoint,
-             Vector2D<Type> const& endPoint)
+    setValue(brick::numeric::Vector2D<Type> const& startPoint,
+             brick::numeric::Vector2D<Type> const& endPoint)
     {
       m_startPoint = startPoint; m_endPoint = endPoint; return *this;
     }
@@ -161,21 +162,18 @@ namespace brick {
       double endPointX;
       double endPointY;
         
-      // Construct an InputStream instance so we can use our
-      // convenience functions.
-      brick::common::InputStream inputStream(
-        stream, brick::common::InputStream::SKIP_WHITESPACE);
-
-      inputStream.expect("LineSegment2D");
-      inputStream.expect("{");
-      inputStream >> startPointX;
-      inputStream.expect(",");
-      inputStream >> startPointY;
-      inputStream.expect(",");
-      inputStream >> endPointX;
-      inputStream.expect(",");
-      inputStream >> endPointY;
-      inputStream.expect("}");
+      brick::common::Expect::FormatFlag flags =
+        brick::common::Expect::SkipWhitespace;
+      stream >> brick::common::Expect("LineSegment2D", flags)
+             >> brick::common::Expect("{", flags)
+             >> startPointX
+             >> brick::common::Expect(",", flags)
+             >> startPointY
+             >> brick::common::Expect(",", flags)
+             >> endPointX
+             >> brick::common::Expect(",", flags)
+             >> endPointY
+             >> brick::common::Expect("}", flags);
 
       // If reading failed, don't change lineSegment.
       if (!stream){
@@ -188,6 +186,7 @@ namespace brick {
     }
     
 
+    template <class Type>
     std::ostream&
     operator<<(std::ostream& stream, const LineSegment2D<Type>& lineSegment)
     {

@@ -20,15 +20,15 @@ namespace brick {
 
   namespace geometry {
     
-    class Ray2DTest : public TestFixture<Ray2DTest> {
+    class Ray2DTest : public brick::test::TestFixture<Ray2DTest> {
 
     public:
 
       Ray2DTest();
       ~Ray2DTest() {}
 
-      void setUp(const std::string& testName) {}
-      void tearDown(const std::string& testName) {}
+      void setUp(const std::string& /* testName */) {}
+      void tearDown(const std::string& /* testName */) {}
 
       // Tests.
       void testConstructor__double__double__double();
@@ -44,7 +44,7 @@ namespace brick {
 
     Ray2DTest::
     Ray2DTest()
-      : TestFixture<Ray2DTest>("Ray2DTest"),
+      : brick::test::TestFixture<Ray2DTest>("Ray2DTest"),
         m_defaultTolerance(1.0E-12)
     {
       BRICK_TEST_REGISTER_MEMBER(testConstructor__double__double__double);
@@ -59,10 +59,10 @@ namespace brick {
       double bb = -2.0;
       double cc = 3.0;
 
-      Ray2D ray2D(aa, bb, cc);
+      Ray2D<double> ray2D(aa, bb, cc);
       for(size_t ii = 0; ii < 10; ++ii) {
-        num::Vector2D testPoint =
-          ray2D.getOrigin() + ii * ray2D.getDirectionVector();
+        num::Vector2D<double> testPoint =
+          ray2D.getOrigin() + (double)ii * ray2D.getDirectionVector();
         double residual = aa * testPoint.x() + bb * testPoint.y() + cc;
         BRICK_TEST_ASSERT(std::fabs(residual) < m_defaultTolerance);
       }

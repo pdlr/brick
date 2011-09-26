@@ -5,6 +5,10 @@
 * Header file declaring some 3D geometric utilities for finding
 * intersects, etc.
 *
+* WARNING: Some of the functions in this file are defined only for
+* Float64 type, and will remain so until the brickLinearAlgebra
+* library is extended to handle types besides Float64.
+*
 * Copyright (C) 2007 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
@@ -19,7 +23,6 @@
 #include <brick/geometry/plane3D.hh>
 #include <brick/geometry/ray3D.hh>
 #include <brick/geometry/triangle3D.hh>
-
 
 namespace brick {
 
@@ -50,17 +53,17 @@ namespace brick {
     
     template <class Type>
     brick::numeric::Vector3D<Type>
-    findIntersect(Ray3D<Type> const& ray, Plane3D const& plane, Type& distance);
+    findIntersect(Ray3D<Type> const& ray, Plane3D<Type> const& plane, Type& distance);
 
 
     template <class Type>
     brick::numeric::Vector3D<Type>
-    findIntersect(Ray3D<Type> const& ray, Plane3D const& plane);
+    findIntersect(Ray3D<Type> const& ray, Plane3D<Type> const& plane);
 
 
     template <class Type>
     brick::numeric::Vector3D<Type>
-    findIntersect(Ray3D<Type> const& ray, Plane3D const& plane,
+    findIntersect(Ray3D<Type> const& ray, Plane3D<Type> const& plane,
                   Type& distance);
 
 
@@ -71,9 +74,9 @@ namespace brick {
 
 
     template <class Type>
-    Plane3D
+    Plane3D<Type>
     operator*(brick::numeric::Transform3D<Type> const& transform,
-              Plane3D const& inputPlane);
+              Plane3D<Type> const& inputPlane);
     
 
     template <class Type>

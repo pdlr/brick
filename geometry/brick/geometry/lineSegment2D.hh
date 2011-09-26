@@ -43,8 +43,8 @@ namespace brick {
        * @param endPoint This argument specifies the end point of the
        * line segment.
        */
-      LineSegment2D(Vector2D<Type> const& startPoint,
-                    Vector2D<Type> const& endPoint);
+      LineSegment2D(brick::numeric::Vector2D<Type> const& startPoint,
+                    brick::numeric::Vector2D<Type> const& endPoint);
 
 
       /** 
@@ -80,7 +80,7 @@ namespace brick {
        * @return The return value is a const reference to Vector2D
        * representing the end point of the line segment.
        */
-      Vector2D<Type> const&
+      brick::numeric::Vector2D<Type> const&
       getEndPoint() const;
 
 
@@ -90,7 +90,7 @@ namespace brick {
        * @return The return value is a const reference to Vector2D
        * representing the start point of the line segment.
        */
-      Vector2D<Type> const&
+      brick::numeric::Vector2D<Type> const&
       getVertex0() const;
 
 
@@ -100,7 +100,7 @@ namespace brick {
        * @return The return value is a const reference to Vector2D
        * representing the end point of the line segment.
        */
-      Vector2D<Type> const&
+      brick::numeric::Vector2D<Type> const&
       getVertex1() const;
 
 
@@ -110,7 +110,7 @@ namespace brick {
        * @return The return value is a const reference to Vector2D
        * representing the start point of the line segment.
        */
-      Vector2D<Type> const&
+      brick::numeric::Vector2D<Type> const&
       getStartPoint() const;
 
 
@@ -146,16 +146,16 @@ namespace brick {
        * change has been applied.
        */
       LineSegment2D<Type>&
-      setValue(Vector2D<Type> const& startPoint,
-               Vector2D<Type> const& endPoint);
+      setValue(brick::numeric::Vector2D<Type> const& startPoint,
+               brick::numeric::Vector2D<Type> const& endPoint);
 
       
    private:
       // Private member functions.
 
       // Private data members.
-      Vector2D<Type> m_startPoint;
-      Vector2D<Type> m_endPoint;
+      brick::numeric::Vector2D<Type> m_startPoint;
+      brick::numeric::Vector2D<Type> m_endPoint;
 
     }; // class LineSegment2D
 
@@ -163,10 +163,12 @@ namespace brick {
     
     /* ======= Non-member functions. ======= */
 
+    template <class Type>
     std::istream&
     operator>>(std::istream& stream, LineSegment2D<Type>& lineSegment);
     
     
+    template <class Type>
     std::ostream&
     operator<<(std::ostream& stream, LineSegment2D<Type> const& lineSegment);
     

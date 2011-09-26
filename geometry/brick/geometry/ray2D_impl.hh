@@ -19,8 +19,6 @@
 // #include <brick/geometry/ray2D.hh>
 #include <brick/numeric/utilities.hh>
 
-namespace dnum = brick::numeric;
-
 namespace brick {
 
   namespace geometry {
@@ -28,6 +26,7 @@ namespace brick {
     // The default constructor initializes to the ray that starts
     // at the origin and points along the X axis.
     template <class Type>
+    Ray2D<Type>::
     Ray2D()
       : m_origin(0.0, 0.0), m_direction(1.0, 0.0)
     {
@@ -46,7 +45,7 @@ namespace brick {
         m_direction(direction)
     {
       if(normalize) {
-        m_direction /= dnum::magnitude(m_direction);
+        m_direction /= brick::numeric::magnitude<Type>(m_direction);
       }
     }
 
@@ -61,7 +60,7 @@ namespace brick {
     {
       Type kk = aa * aa + bb * bb;
       m_origin /= kk;
-      m_direction /= brick::numeric::magnitude(m_direction);
+      m_direction /= brick::numeric::magnitude<Type>(m_direction);
     }
 
     

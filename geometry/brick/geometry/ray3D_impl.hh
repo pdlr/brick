@@ -1,19 +1,23 @@
 /**
 ***************************************************************************
-* @file brick/geometry/ray3D.cc
+* @file brick/geometry/ray3D_impl.hh
 *
-* Source file defining the Ray3D class.
+* Source file defining the Ray3D class template.
 *
-* Copyright (C) 2007 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2007, 2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
 **/
 
-#include <brick/geometry/ray3D.hh>
-#include <brick/numeric/utilities.hh>
+#ifndef BRICK_GEOMETRY_RAY3D_IMPL_HH
+#define BRICK_GEOMETRY_RAY3D_IMPL_HH
 
-namespace dnum = brick::numeric;
+// This file is included by ray3D.hh, and should not be directly included
+// by user code, so no need to include ray3D.hh here.
+// 
+// #include <brick/geometry/ray3D.hh>
+#include <brick/numeric/utilities.hh>
 
 namespace brick {
 
@@ -37,12 +41,12 @@ namespace brick {
     Ray3D<Type>::
     Ray3D(brick::numeric::Vector3D<Type> const& point,
           brick::numeric::Vector3D<Type> const& direction,
-          bool normalize = true)
+          bool normalize)
       : m_origin(point),
         m_direction(direction)
     {
       if(normalize) {
-        m_direction /= dnum::magnitude(m_direction);
+        m_direction /= brick::numeric::magnitude<Type>(m_direction);
       }
     }
 
@@ -57,7 +61,7 @@ namespace brick {
       // Empty.
     }
 
-
+    
     // Destructor.
     template <class Type>
     Ray3D<Type>::
@@ -111,24 +115,13 @@ namespace brick {
     }
 
 
-    // The copy constructor deep copies its argument.
-    template <class Type>
-    Ray3D<Type>::
-    Ray3D(const Ray3D& source)
-      : m_origin(source.m_origin),
-        m_direction(source.m_direction)
-    {
-      // Empty.
-    }
-
-
     /* ======= Non-member functions. ======= */
 
     template <class Type>
     std::ostream&
     operator<<(std::ostream& stream, const Ray3D<Type>& ray)
     {
-      stream << "Ray3D{ "
+      stream << "Ray3D { "
              << ray.getOrigin() << ", "
              << ray.getDirectionVector() << " }";
       return stream;
@@ -137,3 +130,5 @@ namespace brick {
   } // namespace geometry
     
 } // namespace brick
+
+#endif /* #ifndef BRICK_GEOMETRY_RAY3D_IMPL_HH */

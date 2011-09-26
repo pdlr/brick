@@ -31,9 +31,7 @@ namespace brick {
        * The default constructor initializes to a triangle in the X-Y
        * plane.
        */
-      Triangle3D()
-	: m_vertex0(0.0, 0.0, 0.0), m_vertex1(1.0, 0.0, 0.0),
-          m_vertex2(0.0, 1.0, 0.0) {}
+      Triangle3D();
 
     
       /** 
@@ -64,7 +62,7 @@ namespace brick {
       /** 
        * Destructor.
        */
-      ~Triangle3D() {}
+      ~Triangle3D();
 
 
       /** 
@@ -86,7 +84,7 @@ namespace brick {
        * first vertex of the triangle.
        */
       brick::numeric::Vector3D<Type> const&
-      getVertex0() const {return m_vertex0;}
+      getVertex0() const;
       
 
       /** 
@@ -97,7 +95,7 @@ namespace brick {
        * second vertex of the triangle.
        */
       brick::numeric::Vector3D<Type> const&
-      getVertex1() const {return m_vertex1;}
+      getVertex1() const;
       
 
       /** 
@@ -108,7 +106,7 @@ namespace brick {
        * first vertex of the triangle.
        */
       brick::numeric::Vector3D<Type> const&
-      getVertex2() const {return m_vertex2;}
+      getVertex2() const;
       
 
       Triangle3D<Type>&

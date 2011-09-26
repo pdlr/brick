@@ -21,15 +21,15 @@ namespace brick {
 
   namespace geometry {
     
-    class Utilities3DTest : public TestFixture<Utilities3DTest> {
+    class Utilities3DTest : public brick::test::TestFixture<Utilities3DTest> {
 
     public:
 
       Utilities3DTest();
       ~Utilities3DTest() {}
 
-      void setUp(const std::string& testName) {}
-      void tearDown(const std::string& testName) {}
+      void setUp(const std::string& /* testName */) {}
+      void tearDown(const std::string& /* testName */) {}
 
       // Tests.
       void testCheckIntersect__ray__triangle();
@@ -49,7 +49,7 @@ namespace brick {
 
     Utilities3DTest::
     Utilities3DTest()
-      : TestFixture<Utilities3DTest>("Utilities3DTest"),
+      : brick::test::TestFixture<Utilities3DTest>("Utilities3DTest"),
         m_defaultTolerance(1.0E-12)
     {
       BRICK_TEST_REGISTER_MEMBER(testCheckIntersect__ray__triangle);
@@ -64,52 +64,53 @@ namespace brick {
     Utilities3DTest::
     testCheckIntersect__ray__triangle()
     {
-      std::vector<Triangle3D> triangles;
-      triangles.push_back(Triangle3D(Vector3D(-1.0, 3.0, 0.0),
-                                     Vector3D(20.0, 3.0, 0.0),
-                                     Vector3D(2.0, 0.0, 0.0)));
-      triangles.push_back(Triangle3D(Vector3D(20.0, 3.0, 0.0),
-                                     Vector3D(-1.0, 3.0, 0.0),
-                                     Vector3D(2.0, 0.0, 0.0)));
-      triangles.push_back(Triangle3D(Vector3D(2.0, 0.0, 0.0),
-                                     Vector3D(20.0, 3.0, 0.0),
-                                     Vector3D(-1.0, 3.0, 0.0)));
+      std::vector< Triangle3D<double> > triangles;
+      triangles.push_back(Triangle3D<double>(Vector3D<double>(-1.0, 3.0, 0.0),
+                                     Vector3D<double>(20.0, 3.0, 0.0),
+                                     Vector3D<double>(2.0, 0.0, 0.0)));
+      triangles.push_back(Triangle3D<double>(Vector3D<double>(20.0, 3.0, 0.0),
+                                     Vector3D<double>(-1.0, 3.0, 0.0),
+                                     Vector3D<double>(2.0, 0.0, 0.0)));
+      triangles.push_back(Triangle3D<double>(Vector3D<double>(2.0, 0.0, 0.0),
+                                     Vector3D<double>(20.0, 3.0, 0.0),
+                                     Vector3D<double>(-1.0, 3.0, 0.0)));
 
-      std::vector<Vector3D> interiorPoints;
-      interiorPoints.push_back(Vector3D(1.1, 1.0, 0.0));
-      interiorPoints.push_back(Vector3D(0.0, 2.9, 0.0));
-      interiorPoints.push_back(Vector3D(13.9, 2.0, 0.0));
+      std::vector< Vector3D<double> > interiorPoints;
+      interiorPoints.push_back(Vector3D<double>(1.1, 1.0, 0.0));
+      interiorPoints.push_back(Vector3D<double>(0.0, 2.9, 0.0));
+      interiorPoints.push_back(Vector3D<double>(13.9, 2.0, 0.0));
 
-      std::vector<Vector3D> exteriorPoints;
-      exteriorPoints.push_back(Vector3D(0.9, 1.0, 0.0));
-      exteriorPoints.push_back(Vector3D(0.0, 3.1, 0.0));
-      exteriorPoints.push_back(Vector3D(14.1, 2.0, 0.0));
+      std::vector< Vector3D<double> > exteriorPoints;
+      exteriorPoints.push_back(Vector3D<double>(0.9, 1.0, 0.0));
+      exteriorPoints.push_back(Vector3D<double>(0.0, 3.1, 0.0));
+      exteriorPoints.push_back(Vector3D<double>(14.1, 2.0, 0.0));
 
-      std::vector<Vector3D> rayOrigins;
-      rayOrigins.push_back(Vector3D(1.0, 2.0, 10.0));
-      rayOrigins.push_back(Vector3D(1.0, 2.0, -10.0));
-      rayOrigins.push_back(Vector3D(-14.0, 2.0, 2.0));
+      std::vector< Vector3D<double> > rayOrigins;
+      rayOrigins.push_back(Vector3D<double>(1.0, 2.0, 10.0));
+      rayOrigins.push_back(Vector3D<double>(1.0, 2.0, -10.0));
+      rayOrigins.push_back(Vector3D<double>(-14.0, 2.0, 2.0));
       
-      Vector3D intersect;
+      Vector3D<double> intersect;
       for(size_t triangleIndex = 0; triangleIndex < triangles.size();
           ++triangleIndex) {
         for(size_t originIndex = 0; originIndex < rayOrigins.size();
             ++originIndex) {
           for(size_t pointIndex = 0; pointIndex < interiorPoints.size();
               ++pointIndex) {
-            Vector3D direction =
+            Vector3D<double> direction =
               interiorPoints[pointIndex] - rayOrigins[originIndex];
-            Ray3D ray(rayOrigins[originIndex], direction);
+            Ray3D<double> ray(rayOrigins[originIndex], direction);
             BRICK_TEST_ASSERT(
               checkIntersect(ray, triangles[triangleIndex], intersect));
-            double residual = magnitude(intersect - interiorPoints[pointIndex]);
+            double residual = brick::numeric::magnitude<double>(
+              intersect - interiorPoints[pointIndex]);
             BRICK_TEST_ASSERT(residual < m_defaultTolerance);
           }
           for(size_t pointIndex = 0; pointIndex < exteriorPoints.size();
               ++pointIndex) {
-            Vector3D direction =
+            Vector3D<double> direction =
               exteriorPoints[pointIndex] - rayOrigins[originIndex];
-            Ray3D ray(rayOrigins[originIndex], direction);
+            Ray3D<double> ray(rayOrigins[originIndex], direction);
             BRICK_TEST_ASSERT(
               !checkIntersect(ray, triangles[triangleIndex], intersect));
           }
@@ -122,23 +123,25 @@ namespace brick {
     Utilities3DTest::
     testFindIntersect__ray__plane__doubleRef()
     {
-      Plane3D plane0(Vector3D(1.0, 0.0, 1.0),
-                     Vector3D(1.0, 1.0, 1.0),
-                     Vector3D(0.0, 0.0, 1.0));
-      Ray3D ray0(Vector3D(4.0, 2.0, 10.0), Vector3D(0.0, 0.0, -1.0));
-      Ray3D ray1(Vector3D(8.0, 33.0, 13.0), Vector3D(-1.0, -5.0, -2.0));
+      Plane3D<double> plane0(Vector3D<double>(1.0, 0.0, 1.0),
+                     Vector3D<double>(1.0, 1.0, 1.0),
+                     Vector3D<double>(0.0, 0.0, 1.0));
+      Ray3D<double> ray0(Vector3D<double>(4.0, 2.0, 10.0),
+                         Vector3D<double>(0.0, 0.0, -1.0));
+      Ray3D<double> ray1(Vector3D<double>(8.0, 33.0, 13.0),
+                         Vector3D<double>(-1.0, -5.0, -2.0));
 
       double distance0;
       double distance1;
-      Vector3D point0 = findIntersect(ray0, plane0, distance0);
-      Vector3D point1 = findIntersect(ray1, plane0, distance1);
+      Vector3D<double> point0 = findIntersect(ray0, plane0, distance0);
+      Vector3D<double> point1 = findIntersect(ray1, plane0, distance1);
 
-      Vector3D referencePoint0(4.0, 2.0, 1.0);
-      Vector3D referencePoint1(2.0, 3.0, 1.0);
+      Vector3D<double> referencePoint0(4.0, 2.0, 1.0);
+      Vector3D<double> referencePoint1(2.0, 3.0, 1.0);
       double referenceDistance0 =
-        magnitude(ray0.getOrigin() - referencePoint0);
+        brick::numeric::magnitude<double>(ray0.getOrigin() - referencePoint0);
       double referenceDistance1 =
-        magnitude(ray1.getOrigin() - referencePoint1);
+        brick::numeric::magnitude<double>(ray1.getOrigin() - referencePoint1);
       
       BRICK_TEST_ASSERT(approximatelyEqual(point0.x(), referencePoint0.x(),
                                          m_defaultTolerance));
@@ -164,16 +167,18 @@ namespace brick {
     Utilities3DTest::
     testFindIntersect__ray3D__ray3D__doubleRef()
     {
-      Ray3D ray0(Vector3D(1.0, 2.0, 10.0), Vector3D(0.0, 0.0, -10.0));
-      Ray3D ray1(Vector3D(2.0, 4.0, -5.0), Vector3D(0.0, -2.0, 0.0));
+      Ray3D<double> ray0(Vector3D<double>(1.0, 2.0, 10.0),
+                         Vector3D<double>(0.0, 0.0, -10.0));
+      Ray3D<double> ray1(Vector3D<double>(2.0, 4.0, -5.0),
+                         Vector3D<double>(0.0, -2.0, 0.0));
 
       double residual;
       double distance0;
       double distance1;
-      Vector3D point0 = findIntersect(
+      Vector3D<double> point0 = findIntersect(
         ray0, ray1, distance0, distance1, residual);
 
-      Vector3D referencePoint0(1.5, 2.0, -5.0);
+      Vector3D<double> referencePoint0(1.5, 2.0, -5.0);
       double referenceDistance0 = 15.0;
       double referenceDistance1 = 2.0;
       double referenceResidual(0.5);
@@ -198,29 +203,33 @@ namespace brick {
     testOperatorTimes__Transform3D__Plane3D()
     {
       // Arbitrary points and transform.
-      Vector3D origin(1.0, 2.0, 3.0);
-      Vector3D endPoint0(2.0, -1.0, 3.0);;
-      Vector3D endPoint1(-2.0, -3.0, 4.0);;
-      Transform3D xf = rollPitchYawToTransform3D(Vector3D(0.2, -0.1, 0.5));
+      Vector3D<double> origin(1.0, 2.0, 3.0);
+      Vector3D<double> endPoint0(2.0, -1.0, 3.0);;
+      Vector3D<double> endPoint1(-2.0, -3.0, 4.0);;
+      Transform3D<double> xf = rollPitchYawToTransform3D(
+        Vector3D<double>(0.2, -0.1, 0.5));
       xf.setValue<0, 3>(2.0);
       xf.setValue<1, 3>(-1.0);
       xf.setValue<2, 3>(-3.0);
 
-      Vector3D newOrigin = xf * origin;
-      Vector3D newEndPoint0 = xf * endPoint0;
-      Vector3D newEndPoint1 = xf * endPoint1;
+      Vector3D<double> newOrigin = xf * origin;
+      Vector3D<double> newEndPoint0 = xf * endPoint0;
+      Vector3D<double> newEndPoint1 = xf * endPoint1;
 
-      Plane3D plane0(origin, endPoint0, endPoint1);
-      Plane3D plane1(newOrigin, newEndPoint0, newEndPoint1);
-      Plane3D plane2 = xf * plane0;
+      Plane3D<double> plane0(origin, endPoint0, endPoint1);
+      Plane3D<double> plane1(newOrigin, newEndPoint0, newEndPoint1);
+      Plane3D<double> plane2 = xf * plane0;
       BRICK_TEST_ASSERT(
-        magnitude(plane2.getOrigin() - plane1.getOrigin())
+        brick::numeric::magnitude<double>(
+          plane2.getOrigin() - plane1.getOrigin())
         < m_defaultTolerance);
       BRICK_TEST_ASSERT(
-        magnitude(plane2.getDirectionVector0() - plane1.getDirectionVector0())
+        brick::numeric::magnitude<double>(
+          plane2.getDirectionVector0() - plane1.getDirectionVector0())
         < m_defaultTolerance);
       BRICK_TEST_ASSERT(
-        magnitude(plane2.getDirectionVector1() - plane1.getDirectionVector1())
+        brick::numeric::magnitude<double>(
+          plane2.getDirectionVector1() - plane1.getDirectionVector1())
         < m_defaultTolerance);
     }
 
@@ -230,24 +239,25 @@ namespace brick {
     testOperatorTimes__Transform3D__Ray3D()
     {
       // Arbitrary points and transform.
-      Vector3D startPoint(1.0, 2.0, 3.0);
-      Vector3D endPoint(2.0, -1.0, 3.0);;
-      Transform3D xf( 1.0, -0.5,  0.2,  3.0,
-                     -0.6,  0.7, -0.7,  4.0,
-                      0.2,  5.0,  2.0, -6.0,
-                      0.1, -0.3,  1.1,  4.0);
+      Vector3D<double> startPoint(1.0, 2.0, 3.0);
+      Vector3D<double> endPoint(2.0, -1.0, 3.0);;
+      Transform3D<double> xf( 1.0, -0.5,  0.2,  3.0,
+                              -0.6,  0.7, -0.7,  4.0,
+                              0.2,  5.0,  2.0, -6.0,
+                              0.1, -0.3,  1.1,  4.0);
 
-      Vector3D newStartPoint = xf * startPoint;
-      Vector3D newEndPoint = xf * endPoint;
+      Vector3D<double> newStartPoint = xf * startPoint;
+      Vector3D<double> newEndPoint = xf * endPoint;
 
-      Ray3D ray0(startPoint, endPoint - startPoint, false);
-      Ray3D ray1(newStartPoint, newEndPoint - newStartPoint, false);
-      Ray3D ray2 = xf * ray0;
+      Ray3D<double> ray0(startPoint, endPoint - startPoint, false);
+      Ray3D<double> ray1(newStartPoint, newEndPoint - newStartPoint, false);
+      Ray3D<double> ray2 = xf * ray0;
       BRICK_TEST_ASSERT(
-        magnitude(ray2.getOrigin() - ray1.getOrigin())
+        brick::numeric::magnitude<double>(ray2.getOrigin() - ray1.getOrigin())
         < m_defaultTolerance);
       BRICK_TEST_ASSERT(
-        magnitude(ray2.getDirectionVector() - ray1.getDirectionVector())
+        brick::numeric::magnitude<double>(
+          ray2.getDirectionVector() - ray1.getDirectionVector())
         < m_defaultTolerance);
     }
 

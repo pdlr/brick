@@ -4,7 +4,7 @@
 *
 * Source file defining tests for dlrGeometry library utilities.
 *
-* Copyright (C) 2009 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2009, 2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
@@ -16,21 +16,19 @@
 #include <brick/geometry/utilities2D.hh>
 #include <brick/test/testFixture.hh>
 
-namespace num = brick::numeric;
-
 namespace brick {
 
   namespace geometry {
     
-    class Utilities2DTest : public TestFixture<Utilities2DTest> {
+    class Utilities2DTest : public brick::test::TestFixture<Utilities2DTest> {
 
     public:
 
       Utilities2DTest();
       ~Utilities2DTest() {}
 
-      void setUp(const std::string& testName) {}
-      void tearDown(const std::string& testName) {}
+      void setUp(const std::string& /* testName */) {}
+      void tearDown(const std::string& /* testName */) {}
 
       // Tests.
       void testCheckIntersect__lineSegment2D__lineSegment2D__vector2DRef();
@@ -43,8 +41,8 @@ namespace brick {
 
       bool isApproximatelyEqual(double val0, double val1,
                                 double tolerance = 1.0E-12);
-      bool isApproximatelyEqual(numeric::Vector2D const& point0,
-                                numeric::Vector2D const& point1,
+      bool isApproximatelyEqual(brick::numeric::Vector2D<double> const& point0,
+                                brick::numeric::Vector2D<double> const& point1,
                                 double tolerance = 1.0E-12);
         
       const double m_defaultTolerance;
@@ -56,7 +54,7 @@ namespace brick {
 
     Utilities2DTest::
     Utilities2DTest()
-      : TestFixture<Utilities2DTest>("Utilities2DTest"),
+      : brick::test::TestFixture<Utilities2DTest>("Utilities2DTest"),
         m_defaultTolerance(1.0E-12)
     {
       BRICK_TEST_REGISTER_MEMBER(
@@ -74,46 +72,46 @@ namespace brick {
     testCheckIntersect__lineSegment2D__lineSegment2D__vector2DRef()
     {
       // Define a few test segments.
-      std::vector<LineSegment2D> testSegments0;
+      std::vector< LineSegment2D<double> > testSegments0;
       testSegments0.push_back(
-        LineSegment2D(Vector2D(1.0, 2.0), Vector2D(7.0, 2.0)));
+        LineSegment2D<double>(brick::numeric::Vector2D<double>(1.0, 2.0), brick::numeric::Vector2D<double>(7.0, 2.0)));
       testSegments0.push_back(
-        LineSegment2D(Vector2D(1.0, 2.0), Vector2D(1.0, 19.0)));
+        LineSegment2D<double>(brick::numeric::Vector2D<double>(1.0, 2.0), brick::numeric::Vector2D<double>(1.0, 19.0)));
       testSegments0.push_back(
-        LineSegment2D(Vector2D(1.0, 2.0), Vector2D(-10.0, 2.0)));
+        LineSegment2D<double>(brick::numeric::Vector2D<double>(1.0, 2.0), brick::numeric::Vector2D<double>(-10.0, 2.0)));
 
       // Define a few more test segments.
-      std::vector<LineSegment2D> testSegments1;
+      std::vector< LineSegment2D<double> > testSegments1;
       testSegments1.push_back(
-        LineSegment2D(Vector2D(3.0, 5.0), Vector2D(9.0, -1.0)));
+        LineSegment2D<double>(brick::numeric::Vector2D<double>(3.0, 5.0), brick::numeric::Vector2D<double>(9.0, -1.0)));
       testSegments1.push_back(
-        LineSegment2D(Vector2D(-3.0, 5.0), Vector2D(3.0, -1.0)));
+        LineSegment2D<double>(brick::numeric::Vector2D<double>(-3.0, 5.0), brick::numeric::Vector2D<double>(3.0, -1.0)));
       testSegments1.push_back(
-        LineSegment2D(Vector2D(-10.0, 15.0), Vector2D(10.0, 15.0)));
+        LineSegment2D<double>(brick::numeric::Vector2D<double>(-10.0, 15.0), brick::numeric::Vector2D<double>(10.0, 15.0)));
 
       // Define intersection points (by inspection).
-      num::Array2D<bool> validityArray(
+      brick::numeric::Array2D<bool> validityArray(
         testSegments0.size(), testSegments1.size());
-      num::Array2D<Vector2D> intersectArray(
+      brick::numeric::Array2D< brick::numeric::Vector2D<double> > intersectArray(
         testSegments0.size(), testSegments1.size());
 
       validityArray(0, 0) = true;
-      intersectArray(0, 0) = Vector2D(6.0, 2.0);
+      intersectArray(0, 0) = brick::numeric::Vector2D<double>(6.0, 2.0);
       validityArray(0, 1) = false;
       validityArray(0, 2) = false;
       validityArray(1, 0) = false;
       validityArray(1, 1) = false;
       validityArray(1, 2) = true;
-      intersectArray(1, 2) = Vector2D(1.0, 15.0);
+      intersectArray(1, 2) = brick::numeric::Vector2D<double>(1.0, 15.0);
       validityArray(2, 0) = false;
       validityArray(2, 1) = true;
-      intersectArray(2, 1) = Vector2D(0.0, 2.0);
+      intersectArray(2, 1) = brick::numeric::Vector2D<double>(0.0, 2.0);
       validityArray(2, 2) = false;
 
       // Now check that the function under test agrees.
       for(unsigned int ii = 0; ii < testSegments0.size(); ++ii) {
         for(unsigned int jj = 0; jj < testSegments1.size(); ++jj) {
-          Vector2D intersect;
+          brick::numeric::Vector2D<double> intersect;
           bool isValid = checkIntersect(
             testSegments0[ii], testSegments1[jj], intersect);
 
@@ -132,48 +130,48 @@ namespace brick {
     testCheckIntersect__ray2D__lineSegment2D__vector2DRef__doubleRef()
     {
       // Define a few test rays.
-      std::vector<Ray2D> testRays;
-      testRays.push_back(Ray2D(Vector2D(1.0, 2.0), Vector2D(1.0, 0.0)));
-      testRays.push_back(Ray2D(Vector2D(1.0, 2.0), Vector2D(0.0, 1.0)));
-      testRays.push_back(Ray2D(Vector2D(1.0, 2.0), Vector2D(-1.0, 0.0)));
+      std::vector< Ray2D<double> > testRays;
+      testRays.push_back(Ray2D<double>(brick::numeric::Vector2D<double>(1.0, 2.0), brick::numeric::Vector2D<double>(1.0, 0.0)));
+      testRays.push_back(Ray2D<double>(brick::numeric::Vector2D<double>(1.0, 2.0), brick::numeric::Vector2D<double>(0.0, 1.0)));
+      testRays.push_back(Ray2D<double>(brick::numeric::Vector2D<double>(1.0, 2.0), brick::numeric::Vector2D<double>(-1.0, 0.0)));
 
       // Define a few test segments.
-      std::vector<LineSegment2D> testSegments;
+      std::vector< LineSegment2D<double> > testSegments;
       testSegments.push_back(
-        LineSegment2D(Vector2D(3.0, 5.0), Vector2D(9.0, -1.0)));
+        LineSegment2D<double>(brick::numeric::Vector2D<double>(3.0, 5.0), brick::numeric::Vector2D<double>(9.0, -1.0)));
       testSegments.push_back(
-        LineSegment2D(Vector2D(-3.0, 5.0), Vector2D(3.0, -1.0)));
+        LineSegment2D<double>(brick::numeric::Vector2D<double>(-3.0, 5.0), brick::numeric::Vector2D<double>(3.0, -1.0)));
       testSegments.push_back(
-        LineSegment2D(Vector2D(-10.0, 15.0), Vector2D(10.0, 15.0)));
+        LineSegment2D<double>(brick::numeric::Vector2D<double>(-10.0, 15.0), brick::numeric::Vector2D<double>(10.0, 15.0)));
 
       // Define intersection points (by inspection).
-      num::Array2D<bool> validityArray(
+      brick::numeric::Array2D<bool> validityArray(
         testRays.size(), testSegments.size());
-      num::Array2D<Vector2D> intersectArray(
+      brick::numeric::Array2D< brick::numeric::Vector2D<double> > intersectArray(
         testRays.size(), testSegments.size());
-      num::Array2D<double> lambdaArray(
+      brick::numeric::Array2D<double> lambdaArray(
         testRays.size(), testSegments.size());
 
       validityArray(0, 0) = true;
-      intersectArray(0, 0) = Vector2D(6.0, 2.0);
+      intersectArray(0, 0) = brick::numeric::Vector2D<double>(6.0, 2.0);
       lambdaArray(0, 0) = 5.0;
       validityArray(0, 1) = false;
       validityArray(0, 2) = false;
       validityArray(1, 0) = false;
       validityArray(1, 1) = false;
       validityArray(1, 2) = true;
-      intersectArray(1, 2) = Vector2D(1.0, 15.0);
+      intersectArray(1, 2) = brick::numeric::Vector2D<double>(1.0, 15.0);
       lambdaArray(1, 2) = 13.0;
       validityArray(2, 0) = false;
       validityArray(2, 1) = true;
-      intersectArray(2, 1) = Vector2D(0.0, 2.0);
+      intersectArray(2, 1) = brick::numeric::Vector2D<double>(0.0, 2.0);
       lambdaArray(2, 1) = 1.0;
       validityArray(2, 2) = false;
 
       // Now check that the function under test agrees.
       for(unsigned int ii = 0; ii < testRays.size(); ++ii) {
         for(unsigned int jj = 0; jj < testSegments.size(); ++jj) {
-          Vector2D intersect;
+          brick::numeric::Vector2D<double> intersect;
           double lambda;
           bool isValid = checkIntersect(
             testRays[ii], testSegments[jj], intersect, lambda);
@@ -197,33 +195,33 @@ namespace brick {
       // Make a 2x2 box centered at 10, 20.  Define it's four corners
       // and the center points of each side.
       double boxSize = 2.0;
-      num::Vector2D centerPoint(10.0, 20.0);
-      num::Vector2D lowerLeft =
-        centerPoint + num::Vector2D(-boxSize / 2.0, -boxSize / 2.0);
-      num::Vector2D upperLeft =
-        centerPoint + num::Vector2D(-boxSize / 2.0, boxSize / 2.0);
-      num::Vector2D upperRight =
-        centerPoint + num::Vector2D(boxSize / 2.0, boxSize / 2.0);
-      num::Vector2D lowerRight =
-        centerPoint + num::Vector2D(boxSize / 2.0, -boxSize / 2.0);
-      num::Vector2D leftPoint =
-        centerPoint + num::Vector2D(-boxSize / 2.0, 0.0);
-      num::Vector2D topPoint =
-        centerPoint + num::Vector2D(0.0, boxSize / 2.0);
-      num::Vector2D rightPoint =
-        centerPoint + num::Vector2D(boxSize / 2.0, 0.0);
-      num::Vector2D bottomPoint =
-        centerPoint + num::Vector2D(0.0, -boxSize / 2.0);
+      brick::numeric::Vector2D<double> centerPoint(10.0, 20.0);
+      brick::numeric::Vector2D<double> lowerLeft =
+        centerPoint + brick::numeric::Vector2D<double>(-boxSize / 2.0, -boxSize / 2.0);
+      brick::numeric::Vector2D<double> upperLeft =
+        centerPoint + brick::numeric::Vector2D<double>(-boxSize / 2.0, boxSize / 2.0);
+      brick::numeric::Vector2D<double> upperRight =
+        centerPoint + brick::numeric::Vector2D<double>(boxSize / 2.0, boxSize / 2.0);
+      brick::numeric::Vector2D<double> lowerRight =
+        centerPoint + brick::numeric::Vector2D<double>(boxSize / 2.0, -boxSize / 2.0);
+      brick::numeric::Vector2D<double> leftPoint =
+        centerPoint + brick::numeric::Vector2D<double>(-boxSize / 2.0, 0.0);
+      brick::numeric::Vector2D<double> topPoint =
+        centerPoint + brick::numeric::Vector2D<double>(0.0, boxSize / 2.0);
+      brick::numeric::Vector2D<double> rightPoint =
+        centerPoint + brick::numeric::Vector2D<double>(boxSize / 2.0, 0.0);
+      brick::numeric::Vector2D<double> bottomPoint =
+        centerPoint + brick::numeric::Vector2D<double>(0.0, -boxSize / 2.0);
 
       // Rays along each edge of the box, pointing clockwise.
-      Ray2D leftEdge(lowerLeft, num::Vector2D(0.0, 1.0));
-      Ray2D topEdge(upperLeft, num::Vector2D(1.0, 0.0));
-      Ray2D rightEdge(upperRight, num::Vector2D(0.0, -1.0));
-      Ray2D bottomEdge(lowerRight, num::Vector2D(-1.0, 0.0));
+      Ray2D<double> leftEdge(lowerLeft, brick::numeric::Vector2D<double>(0.0, 1.0));
+      Ray2D<double> topEdge(upperLeft, brick::numeric::Vector2D<double>(1.0, 0.0));
+      Ray2D<double> rightEdge(upperRight, brick::numeric::Vector2D<double>(0.0, -1.0));
+      Ray2D<double> bottomEdge(lowerRight, brick::numeric::Vector2D<double>(-1.0, 0.0));
       
       // Now find the closest point on each edge to the center.
       // Should be the previously defined center points.
-      num::Vector2D testPoint;
+      brick::numeric::Vector2D<double> testPoint;
       testPoint = findClosestPoint(centerPoint, leftEdge);
       BRICK_TEST_ASSERT(this->isApproximatelyEqual(testPoint, leftPoint));
       testPoint = findClosestPoint(centerPoint, topEdge);
@@ -240,23 +238,23 @@ namespace brick {
     testOperatorTimes__Transform2D__LineSegment2D()
     {
       // Arbitrary points and transform.
-      Vector2D startPoint(1.0, 2.0);
-      Vector2D endPoint(2.0, -1.0);;
-      Transform2D xf( 1.0, -0.5, 3.0,
-                     -0.6,  0.7, 4.0,
-                      0.1, -0.3, 4.0);
+      brick::numeric::Vector2D<double> startPoint(1.0, 2.0);
+      brick::numeric::Vector2D<double> endPoint(2.0, -1.0);;
+      brick::numeric::Transform2D<double> xf( 1.0, -0.5, 3.0,
+                                              -0.6,  0.7, 4.0,
+                                              0.1, -0.3, 4.0);
 
-      Vector2D newStartPoint = xf * startPoint;
-      Vector2D newEndPoint = xf * endPoint;
+      brick::numeric::Vector2D<double> newStartPoint = xf * startPoint;
+      brick::numeric::Vector2D<double> newEndPoint = xf * endPoint;
 
-      LineSegment2D lineSegment0(startPoint, endPoint);
-      LineSegment2D lineSegment1(newStartPoint, newEndPoint);
-      LineSegment2D lineSegment2 = xf * lineSegment0;
+      LineSegment2D<double> lineSegment0(startPoint, endPoint);
+      LineSegment2D<double> lineSegment1(newStartPoint, newEndPoint);
+      LineSegment2D<double> lineSegment2 = xf * lineSegment0;
       BRICK_TEST_ASSERT(
-        magnitude(lineSegment2.getVertex0() - lineSegment1.getVertex0())
+        brick::numeric::magnitude<double>(lineSegment2.getVertex0() - lineSegment1.getVertex0())
         < m_defaultTolerance);
       BRICK_TEST_ASSERT(
-        magnitude(lineSegment2.getVertex1() - lineSegment1.getVertex1())
+        brick::numeric::magnitude<double>(lineSegment2.getVertex1() - lineSegment1.getVertex1())
         < m_defaultTolerance);
     }
 
@@ -266,23 +264,23 @@ namespace brick {
     testOperatorTimes__Transform2D__Ray2D()
     {
       // Arbitrary points and transform.
-      Vector2D startPoint(1.0, 2.0);
-      Vector2D endPoint(2.0, -1.0);;
-      Transform2D xf( 1.0, -0.5, 3.0,
-                     -0.6,  0.7, 4.0,
-                      0.1, -0.3, 4.0);
+      brick::numeric::Vector2D<double> startPoint(1.0, 2.0);
+      brick::numeric::Vector2D<double> endPoint(2.0, -1.0);;
+      brick::numeric::Transform2D<double> xf( 1.0, -0.5, 3.0,
+                                              -0.6,  0.7, 4.0,
+                                              0.1, -0.3, 4.0);
 
-      Vector2D newStartPoint = xf * startPoint;
-      Vector2D newEndPoint = xf * endPoint;
+      brick::numeric::Vector2D<double> newStartPoint = xf * startPoint;
+      brick::numeric::Vector2D<double> newEndPoint = xf * endPoint;
 
-      Ray2D ray0(startPoint, endPoint - startPoint, false);
-      Ray2D ray1(newStartPoint, newEndPoint - newStartPoint, false);
-      Ray2D ray2 = xf * ray0;
+      Ray2D<double> ray0(startPoint, endPoint - startPoint, false);
+      Ray2D<double> ray1(newStartPoint, newEndPoint - newStartPoint, false);
+      Ray2D<double> ray2 = xf * ray0;
       BRICK_TEST_ASSERT(
-        magnitude(ray2.getOrigin() - ray1.getOrigin())
+        brick::numeric::magnitude<double>(ray2.getOrigin() - ray1.getOrigin())
         < m_defaultTolerance);
       BRICK_TEST_ASSERT(
-        magnitude(ray2.getDirectionVector() - ray1.getDirectionVector())
+        brick::numeric::magnitude<double>(ray2.getDirectionVector() - ray1.getDirectionVector())
         < m_defaultTolerance);
     }
 
@@ -299,8 +297,8 @@ namespace brick {
     
     bool
     Utilities2DTest::
-    isApproximatelyEqual(numeric::Vector2D const& point0,
-                         numeric::Vector2D const& point1,
+    isApproximatelyEqual(brick::numeric::Vector2D<double> const& point0,
+                         brick::numeric::Vector2D<double> const& point1,
                          double tolerance)
     {
       return ((std::fabs(point0.x() - point1.x()) < tolerance)

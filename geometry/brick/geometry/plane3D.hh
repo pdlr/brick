@@ -52,16 +52,16 @@ namespace brick {
        * and (point2 - point0) are orthonormal, then you can save some
        * computation by setting this argument to false.
        */
-      Plane3D(Vector3D<Type> const& point0,
-              Vector3D<Type> const& point1,
-              Vector3D<Type> const& point2,
+      Plane3D(brick::numeric::Vector3D<Type> const& point0,
+              brick::numeric::Vector3D<Type> const& point1,
+              brick::numeric::Vector3D<Type> const& point2,
               bool orthonormalize = true);
 
     
       /** 
        * This constructor initializes the plane using a collection of
        * points.  The resulting plane minimizes the sum-of-squares
-       * residual.
+       * residual, considering only a set of "inlier" points.
        * 
        * @param beginIterator This argument points to the first
        * Vector3D instance in the sequence.
@@ -91,7 +91,7 @@ namespace brick {
       /** 
        * Destructor.
        */
-      ~Plane3D() {}
+      ~Plane3D();
 
 
       /** 
@@ -116,7 +116,7 @@ namespace brick {
        * @return The return value is a Vector3D representing the
        * first direction of the pair.
        */
-      Vector3D<Type> const&
+      brick::numeric::Vector3D<Type> const&
       getDirectionVector0() const;
       
 
@@ -131,12 +131,12 @@ namespace brick {
        * @return The return value is a Vector3D representing the
        * second direction of the pair.
        */
-      Vector3D<Type> const&
+      brick::numeric::Vector3D<Type> const&
       getDirectionVector1() const;
 
 
       // xxx
-      Vector3D<Type>
+      brick::numeric::Vector3D<Type>
       getNormal() const;
       
 
@@ -148,13 +148,13 @@ namespace brick {
        * @return The return value is a Vector3D representing the
        * returned point.
        */
-      Vector3D<Type> const&
+      brick::numeric::Vector3D<Type> const&
       getOrigin() const;
 
 
       // xxx Should this be moved to utilities3D.hh?
-      double
-      findDistance(Vector3D<Type> const& point);
+      Type
+      findDistance(brick::numeric::Vector3D<Type> const& point);
         
     private:
       // Private member functions.
@@ -165,9 +165,9 @@ namespace brick {
 
 
       // Private data members.
-      Vector3D<Type> m_origin;
-      Vector3D<Type> m_directionVector0;
-      Vector3D<Type> m_directionVector1;
+      brick::numeric::Vector3D<Type> m_origin;
+      brick::numeric::Vector3D<Type> m_directionVector0;
+      brick::numeric::Vector3D<Type> m_directionVector1;
 
     }; // class Plane3D
 
@@ -175,6 +175,7 @@ namespace brick {
 
     /* ======= Non-member functions. ======= */
 
+    template <class Type>
     std::ostream&
     operator<<(std::ostream& stream, Plane3D<Type> const& plane);
     

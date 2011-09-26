@@ -14,8 +14,8 @@
 #ifndef BRICK_GEOMETRY_UTILITIES3D_IMPL_HH
 #define BRICK_GEOMETRY_UTILITIES3D_IMPL_HH
 
-// This file is included by circle2D.hh, and should not be directly included
-// by user code, so no need to include circle2D.hh here.
+// This file is included by utilities3D.hh, and should not be directly
+// included by user code, so no need to include utilities3D.hh here.
 // 
 // #include <brick/geometry/utilities3D.hh>
 
@@ -24,6 +24,7 @@
 #include <brick/common/types.hh>
 #include <brick/linearAlgebra/linearAlgebra.hh>
 #include <brick/numeric/array2D.hh>
+#include <brick/numeric/utilities.hh>
 
 namespace brick {
 
@@ -83,11 +84,11 @@ namespace brick {
       //    alpha_0, alpha_1, and beta are scalars.
       //
       // We rearrange this equation and solve for alpha_0, alpha_1, and beta.
-      Float64 bufferA[9];
-      Float64 bufferB[3];
+      brick::common::Float64 bufferA[9];
+      brick::common::Float64 bufferB[3];
       
-      Array2D<Float64> AMatrix(3, 3, bufferA);
-      Array1D<Float64> bVector(3, bufferB);
+      brick::numeric::Array2D<brick::common::Float64> AMatrix(3, 3, bufferA);
+      brick::numeric::Array1D<brick::common::Float64> bVector(3, bufferB);
 
       brick::numeric::Vector3D<Type> e_0 =
         triangle.getVertex1() - triangle.getVertex0();
@@ -109,8 +110,8 @@ namespace brick {
       bVector[2] = ray.getOrigin().z() - triangle.getVertex0().z();
 
       try {
-        linearSolveInPlace(AMatrix, bVector);
-      } catch(ValueException const&) {
+        brick::linearAlgebra::linearSolveInPlace(AMatrix, bVector);
+      } catch(brick::common::ValueException const&) {
         // Singular matrix indicates degenerate triangle, or ray
         // parallel to the plane of the triangle.
         return false;
@@ -139,7 +140,7 @@ namespace brick {
       brick::numeric::Vector3D<Type> crossProduct1 =
         brick::numeric::cross(offsetFromVertex1, e_2);
       Type dotProduct =
-        brick::numeric::dot(crossProduct0, crossProduct1);
+        brick::numeric::dot<Type>(crossProduct0, crossProduct1);
       
       if(dotProduct >= 0.0) {
         return false;
@@ -153,7 +154,7 @@ namespace brick {
     
     template <class Type>
     brick::numeric::Vector3D<Type>
-    findIntersect(Ray3D<Type> const& ray, Plane3D const& plane)
+    findIntersect(Ray3D<Type> const& ray, Plane3D<Type> const& plane)
     {
       Type dummy;
       return findIntersect(ray, plane, dummy);
@@ -162,13 +163,13 @@ namespace brick {
     
     template <class Type>
     brick::numeric::Vector3D<Type>
-    findIntersect(Ray3D<Type> const& ray, Plane3D const& plane, Type& distance)
+    findIntersect(Ray3D<Type> const& ray, Plane3D<Type> const& plane, Type& distance)
     {
-      Float64 bufferA[9];
-      Float64 bufferB[3];
+      brick::common::Float64 bufferA[9];
+      brick::common::Float64 bufferB[3];
       
-      Array2D<Type> AMatrix(3, 3, bufferA);
-      Array1D<Type> bVector(3, bufferB);
+      brick::numeric::Array2D<Type> AMatrix(3, 3, bufferA);
+      brick::numeric::Array1D<Type> bVector(3, bufferB);
 
       AMatrix[0] = ray.getDirectionVector().x();
       AMatrix[3] = ray.getDirectionVector().y();
@@ -185,12 +186,12 @@ namespace brick {
       bVector[2] = plane.getOrigin().z() - ray.getOrigin().z();
 
       try {
-        linearSolveInPlace(AMatrix, bVector);
-      } catch(ValueException const&) {
+        brick::linearAlgebra::linearSolveInPlace(AMatrix, bVector);
+      } catch(brick::common::ValueException const&) {
         std::ostringstream message;
         message << "Unable to find intersection of " << ray << " with "
                 << plane << ".  Perhaps the ray is parallel to the plane.";
-        BRICK_THROW(ValueException, "findIntersect()", message.str().c_str());
+        BRICK_THROW(brick::common::ValueException, "findIntersect()", message.str().c_str());
       }
       
       distance = bVector[0];
@@ -203,7 +204,7 @@ namespace brick {
     findIntersect(Ray3D<Type> const& ray0, Ray3D<Type> const& ray1,
                   Type& distance0, Type& distance1, Type& residual)
     {
-      Array2D<Type> AMatrix(3, 2);
+      brick::numeric::Array2D<Type> AMatrix(3, 2);
       AMatrix(0, 0) = ray0.getDirectionVector().x();
       AMatrix(1, 0) = ray0.getDirectionVector().y();
       AMatrix(2, 0) = ray0.getDirectionVector().z();
@@ -211,20 +212,21 @@ namespace brick {
       AMatrix(1, 1) = -ray1.getDirectionVector().y();
       AMatrix(2, 1) = -ray1.getDirectionVector().z();
 
-      Array1D<Type> bVector(3);
+      brick::numeric::Array1D<Type> bVector(3);
       bVector[0] = ray1.getOrigin().x() - ray0.getOrigin().x();
       bVector[1] = ray1.getOrigin().y() - ray0.getOrigin().y();
       bVector[2] = ray1.getOrigin().z() - ray0.getOrigin().z();
 
-      Array2D<Type> APinv;
+      brick::numeric::Array2D<Type> APinv;
       try {
         APinv = linearAlgebra::pseudoinverse(AMatrix);
-      } catch(ValueException ) {
-        BRICK_THROW(ValueException, "findIntersect()",
+      } catch(brick::common::ValueException ) {
+        BRICK_THROW(brick::common::ValueException, "findIntersect()",
                   "Trouble inverting matrix.  "
                   "Input rays must not be parallel. ");
       }
-      Array1D<Type> parameters = matrixMultiply(APinv, bVector);
+      brick::numeric::Array1D<Type> parameters =
+        brick::numeric::matrixMultiply<Type>(APinv, bVector);
 
       distance0 = parameters[0];
       distance1 = parameters[1];
@@ -232,15 +234,15 @@ namespace brick {
         ray0.getOrigin() + distance0 * ray0.getDirectionVector();
       brick::numeric::Vector3D<Type> point1 =
         ray1.getOrigin() + distance1 * ray1.getDirectionVector();
-      residual = magnitude(point1 - point0) / 2.0;
+      residual = brick::numeric::magnitude<Type>(point1 - point0) / 2.0;
       return 0.5 * (point0 + point1);
     }
     
 
     template <class Type>
-    Plane3D
-    operator*(const brick::numeric::Transform3D<Type> const& transform,
-              Plane3D const& inputPlane)
+    Plane3D<Type>
+    operator*(brick::numeric::Transform3D<Type> const& transform,
+              Plane3D<Type> const& inputPlane)
     {
       brick::numeric::Vector3D<Type> newOrigin =
         transform * inputPlane.getOrigin();
@@ -248,7 +250,7 @@ namespace brick {
         transform * (inputPlane.getOrigin() + inputPlane.getDirectionVector0());
       brick::numeric::Vector3D<Type> newEndPoint1 =
         transform * (inputPlane.getOrigin() + inputPlane.getDirectionVector1());
-      return Plane3D(newOrigin, newEndPoint0, newEndPoint1);
+      return Plane3D<Type>(newOrigin, newEndPoint0, newEndPoint1);
     }
 
 

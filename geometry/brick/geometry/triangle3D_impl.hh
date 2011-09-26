@@ -17,6 +17,8 @@
 // by user code, so no need to include circle2D.hh here.
 // 
 // #include <brick/geometry/triangle3D.hh>
+
+#include <brick/common/expect.hh>
 #include <brick/numeric/utilities.hh>
 
 namespace dnum = brick::numeric;
@@ -27,6 +29,7 @@ namespace brick {
     
     // The default constructor initializes to a triangle in the X-Y
     // plane.
+    template <class Type>
     Triangle3D<Type>::
     Triangle3D()
       : m_vertex0(0.0, 0.0, 0.0),
@@ -38,6 +41,7 @@ namespace brick {
 
     
     // This constructor initializes the triangle using three points.
+    template <class Type>
     Triangle3D<Type>::
     Triangle3D(brick::numeric::Vector3D<Type> const& vertex0,
                brick::numeric::Vector3D<Type> const& vertex1,
@@ -51,6 +55,7 @@ namespace brick {
 
     
     // The copy constructor deep copies its argument.
+    template <class Type>
     Triangle3D<Type>::
     Triangle3D(Triangle3D<Type> const& source)
       : m_vertex0(source.m_vertex0),
@@ -62,6 +67,7 @@ namespace brick {
 
 
     // Destructor.
+    template <class Type>
     Triangle3D<Type>::
     ~Triangle3D()
     {
@@ -70,6 +76,7 @@ namespace brick {
 
 
     // The assignment operator deep copies its argument.
+    template <class Type>
     Triangle3D<Type>&
     Triangle3D<Type>::
     operator=(Triangle3D<Type> const& source)
@@ -85,6 +92,7 @@ namespace brick {
 
     // This member function returns the one of the three vertices
     // that define the triangle.
+    template <class Type>
     brick::numeric::Vector3D<Type> const&
     Triangle3D<Type>::
     getVertex0() const
@@ -95,6 +103,7 @@ namespace brick {
 
     // This member function returns the one of the three vertices
     // that define the triangle.
+    template <class Type>
     brick::numeric::Vector3D<Type> const&
     Triangle3D<Type>::
     getVertex1() const
@@ -105,6 +114,7 @@ namespace brick {
 
     // This member function returns the one of the three vertices
     // that define the triangle.
+    template <class Type>
     brick::numeric::Vector3D<Type> const&
     Triangle3D<Type>::
     getVertex2() const
@@ -115,6 +125,7 @@ namespace brick {
 
     /* ======= Non-member functions. ======= */
 
+    template <class Type>
     std::ostream&
     operator<<(std::ostream& stream, Triangle3D<Type> const& triangle)
     {
@@ -126,6 +137,7 @@ namespace brick {
     }
 
 
+    template <class Type>
     std::istream&
     operator>>(std::istream& stream, Triangle3D<Type>& triangle)
     {
@@ -147,19 +159,16 @@ namespace brick {
         brick::numeric::Vector3D<Type> vertex1;
         brick::numeric::Vector3D<Type> vertex2;
         
-        // Construct an InputStream instance so we can use our
-        // convenience functions.
-        brick::common::InputStream inputStream(
-          stream, brick::common::InputStream::SKIP_WHITESPACE);
-
-        inputStream.expect("Triangle3D");
-        inputStream.expect("{");
-        inputStream >> vertex0;
-        inputStream.expect(",");
-        inputStream >> vertex1;
-        inputStream.expect(",");
-        inputStream >> vertex2;
-        inputStream.expect("}");
+        brick::common::Expect::FormatFlag flags =
+          brick::common::Expect::SkipWhitespace;
+        stream >> brick::common::Expect("Triangle3D", flags)
+               >> brick::common::Expect("{", flags)
+               >> vertex0
+               >> brick::common::Expect(",", flags)
+               >> vertex1
+               >> brick::common::Expect(",", flags)
+               >> vertex2
+               >> brick::common::Expect("}");
 
         triangle.setValue(vertex0, vertex1, vertex2);
         

@@ -33,27 +33,29 @@ namespace brick {
 	: m_origin(0.0, 0.0, 0.0), m_directionVector0(1.0, 0.0, 0.0),
           m_directionVector1(0.0, 1.0, 0.0)
     {
-      Empty.
+      // Empty.
     }
 
     
     // This constructor initializes the plane using three points.
     template <class Type>
     Plane3D<Type>::
-    Plane3D(const Vector3D<Type>& point0,
-            const Vector3D<Type>& point1,
-            const Vector3D<Type>& point2,
+    Plane3D(const brick::numeric::Vector3D<Type>& point0,
+            const brick::numeric::Vector3D<Type>& point1,
+            const brick::numeric::Vector3D<Type>& point2,
             bool orthonormalize)
       : m_origin(point0),
         m_directionVector0(point1 - point0),
         m_directionVector1(point2 - point0)
     {
       if(orthonormalize) {
-        m_directionVector0 /= dnum::magnitude(m_directionVector0);
+        m_directionVector0 /=
+          brick::numeric::magnitude<Type>(m_directionVector0);
         m_directionVector1 -=
-          (dnum::dot(m_directionVector1, m_directionVector0)
+          (brick::numeric::dot<Type>(m_directionVector1, m_directionVector0)
            * m_directionVector0);
-        m_directionVector1 /= dnum::magnitude(m_directionVector1);
+        m_directionVector1 /=
+          brick::numeric::magnitude<Type>(m_directionVector1);
       }
     }
 
@@ -71,7 +73,7 @@ namespace brick {
         m_directionVector1(0.0, 1.0, 0.0)
     {
       // Note(xxx): Hasty implementation!  Clean up soon.
-      std::vector< Vector3D<Type> > allPointsVector;
+      std::vector< brick::numeric::Vector3D<Type> > allPointsVector;
       std::copy(beginIterator, endIterator,
                 std::back_inserter(allPointsVector));
 
@@ -79,9 +81,10 @@ namespace brick {
         static_cast<int>(allPointsVector.size() * inlierPercentage + 0.5);
       int numberToIgnore = allPointsVector.size() - numberToInclude;
 
-      Array1D<double> distances(allPointsVector.size());
-      Array1D<size_t> ignoredPoints(numberToIgnore);
-      Array1D< Vector3D<Type> > currentPoints(allPointsVector.size());
+      brick::numeric::Array1D<double> distances(allPointsVector.size());
+      brick::numeric::Array1D<size_t> ignoredPoints(numberToIgnore);
+      brick::numeric::Array1D< brick::numeric::Vector3D<Type> > currentPoints(
+        allPointsVector.size());
       std::copy(allPointsVector.begin(), allPointsVector.end(),
                 currentPoints.begin());
       bool isDone = false;
@@ -93,7 +96,8 @@ namespace brick {
         for(size_t index0 = 0; index0 < allPointsVector.size(); ++index0) {
           distances[index0] = this->findDistance(allPointsVector[index0]);
         }
-        Array1D<size_t> pointIndices = argsort(distances);
+        brick::numeric::Array1D<size_t> pointIndices =
+          brick::numeric::argsort(distances);
         if(static_cast<int>(currentPoints.size()) != numberToInclude) {
           currentPoints.reinit(numberToInclude);
         }
@@ -109,13 +113,15 @@ namespace brick {
             isDone = false;
             break;
           }
+          ++index3;
         }
         // xxx
         if(++iterationCount >= 3) {
           break;
         }
         if(numberToInclude < static_cast<int>(allPointsVector.size())) {
-          ignoredPoints = subArray(pointIndices, Slice(numberToInclude, 0));
+          ignoredPoints = subArray(
+            pointIndices, brick::numeric::Slice(numberToInclude, 0));
         } else {
           ignoredPoints.clear();
         }
@@ -162,7 +168,7 @@ namespace brick {
     // This member function returns one of a pair of orthonormal
     // direction vectors that span the plane.
     template <class Type>
-    Vector3D<Type> const&
+    brick::numeric::Vector3D<Type> const&
     Plane3D<Type>::
     getDirectionVector0() const
     {
@@ -173,7 +179,7 @@ namespace brick {
     // This member function returns one of a pair of orthonormal
     // direction vectors that span the plane.
     template <class Type>
-    Vector3D<Type> const&
+    brick::numeric::Vector3D<Type> const&
     Plane3D<Type>::
     getDirectionVector1() const
     {
@@ -183,11 +189,11 @@ namespace brick {
 
     // xxx
     template <class Type>
-    Vector3D<Type>
+    brick::numeric::Vector3D<Type>
     Plane3D<Type>::
     getNormal() const
     {
-      return brick::cross(m_directionVector0, m_directionVector1);
+      return brick::numeric::cross(m_directionVector0, m_directionVector1);
     }
       
 
@@ -195,7 +201,7 @@ namespace brick {
     // points on the plane that could serve as the origin of a 2D
     // coordinate system.
     template <class Type>
-    Vector3D<Type> const&
+    brick::numeric::Vector3D<Type> const&
     Plane3D<Type>::
     getOrigin() const
     {
@@ -206,12 +212,14 @@ namespace brick {
     template <class Type>
     Type
     Plane3D<Type>::
-    findDistance(Vector3D<Type> const& point)
+    findDistance(brick::numeric::Vector3D<Type> const& point)
     {
-      Vector3D<Type> offset = point - m_origin;
-      offset -= dot(offset, m_directionVector0) * m_directionVector0;
-      offset -= dot(offset, m_directionVector1) * m_directionVector1;
-      return magnitude(offset);
+      brick::numeric::Vector3D<Type> offset = point - m_origin;
+      offset -= (brick::numeric::dot<Type>(offset, m_directionVector0)
+                 * m_directionVector0);
+      offset -= (brick::numeric::dot<Type>(offset, m_directionVector1)
+                 * m_directionVector1);
+      return brick::numeric::magnitude<Type>(offset);
     }
         
       
@@ -236,7 +244,7 @@ namespace brick {
       meanPoint /= static_cast<double>(count);
 
       // Get 3x3 covariance matrix.
-      brick::Array2D<double> covarianceMatrix(3, 3);
+      brick::numeric::Array2D<double> covarianceMatrix(3, 3);
       covarianceMatrix = 0.0;
       targetIterator = beginIterator;
       while(targetIterator != endIterator) {
@@ -257,16 +265,16 @@ namespace brick {
       covarianceMatrix /= static_cast<double>(count);
       
       // Solve for best fit plane.
-      brick::Array1D<double> eigenvalues;
-      brick::Array2D<double> eigenvectors;
+      brick::numeric::Array1D<double> eigenvalues;
+      brick::numeric::Array2D<double> eigenvectors;
       brick::linearAlgebra::eigenvectorsSymmetric(
         covarianceMatrix, eigenvalues, eigenvectors);
       brick::numeric::Vector3D<Type> direction0(
         eigenvectors(0, 0), eigenvectors(1, 0), eigenvectors(2, 0));
       brick::numeric::Vector3D<Type> direction1(
         eigenvectors(0, 1), eigenvectors(1, 1), eigenvectors(2, 1));
-      direction0 /= brick::magnitude(direction0);
-      direction1 /= brick::magnitude(direction1);
+      direction0 /= brick::numeric::magnitude<Type>(direction0);
+      direction1 /= brick::numeric::magnitude<Type>(direction1);
 
       m_origin = meanPoint;
       m_directionVector0 = direction0;

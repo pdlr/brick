@@ -119,16 +119,17 @@ namespace brick {
 
     /* ======= Non-member functions. ======= */
 
+    template <class Type>
     std::ostream&
     operator<<(std::ostream& stream, Ray3D<Type> const& ray);
     
     
-  } // namespace utilities
+  } // namespace geometry
     
 } // namespace brick
 
 
 // Include definitions of inline and template functions.
-#include <brick/geometry/ray2D_impl.hh>
+#include <brick/geometry/ray3D_impl.hh>
     
 #endif /* #ifndef BRICK_GEOMETRY_RAY3D_HH */

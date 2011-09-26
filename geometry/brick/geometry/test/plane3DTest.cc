@@ -4,7 +4,7 @@
 *
 * Source file defining tests for the Plane3D class.
 *
-* Copyright (C) 2007 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2007,2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
@@ -15,20 +15,19 @@
 #include <brick/numeric/utilities.hh>
 #include <brick/test/testFixture.hh>
 
-
 namespace brick {
 
   namespace geometry {
     
-    class Plane3DTest : public TestFixture<Plane3DTest> {
+    class Plane3DTest : public brick::test::TestFixture<Plane3DTest> {
 
     public:
 
       Plane3DTest();
       ~Plane3DTest() {}
 
-      void setUp(const std::string& testName) {}
-      void tearDown(const std::string& testName) {}
+      void setUp(const std::string& /* testName */) {}
+      void tearDown(const std::string& /* testName */) {}
 
       // Tests.
       void testConstructor__iterator__iterator();
@@ -44,7 +43,7 @@ namespace brick {
 
     Plane3DTest::
     Plane3DTest()
-      : TestFixture<Plane3DTest>("Plane3DTest"),
+      : brick::test::TestFixture<Plane3DTest>("Plane3DTest"),
         m_defaultTolerance(1.0E-12)
     {
       BRICK_TEST_REGISTER_MEMBER(testConstructor__iterator__iterator);
@@ -55,18 +54,19 @@ namespace brick {
     Plane3DTest::
     testConstructor__iterator__iterator()
     {
-      Array1D<Vector3D> pointArray("[Vector3D(-1.0, -1.0, 1.0),"
-                                   " Vector3D(-1.0,  0.0, 1.0),"
-                                   " Vector3D(-1.0,  1.0, 1.0),"
-                                   " Vector3D( 0.0, -1.0, 1.0),"
-                                   " Vector3D( 0.0,  0.0, 1.0),"
-                                   " Vector3D( 0.0,  1.0, 1.0),"
-                                   " Vector3D( 0.0,  1.0, 2.0)," // Outlier.
-                                   " Vector3D( 1.0, -1.0, 1.0),"
-                                   " Vector3D( 1.0,  0.0, 1.0),"
-                                   " Vector3D( 1.0,  1.0, 1.0)]");
+      brick::numeric::Array1D< brick::numeric::Vector3D<double> > pointArray(
+        "[Vector3D(-1.0, -1.0, 1.0),"
+        " Vector3D(-1.0,  0.0, 1.0),"
+        " Vector3D(-1.0,  1.0, 1.0),"
+        " Vector3D( 0.0, -1.0, 1.0),"
+        " Vector3D( 0.0,  0.0, 1.0),"
+        " Vector3D( 0.0,  1.0, 1.0),"
+        " Vector3D( 0.0,  1.0, 2.0)," // Outlier.
+        " Vector3D( 1.0, -1.0, 1.0),"
+        " Vector3D( 1.0,  0.0, 1.0),"
+        " Vector3D( 1.0,  1.0, 1.0)]");
 
-      Plane3D plane0(pointArray.begin(), pointArray.end(), 0.9);
+      Plane3D<double> plane0(pointArray.begin(), pointArray.end(), 0.9);
       BRICK_TEST_ASSERT(
         approximatelyEqual(plane0.getOrigin().z(), 1.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(
@@ -77,7 +77,8 @@ namespace brick {
                            m_defaultTolerance));
       BRICK_TEST_ASSERT(
         approximatelyEqual(
-          dot(plane0.getDirectionVector0(), plane0.getDirectionVector1()),
+          brick::numeric::dot<double>(
+            plane0.getDirectionVector0(), plane0.getDirectionVector1()),
           0.0, m_defaultTolerance));
     }
   

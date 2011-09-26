@@ -20,15 +20,15 @@ namespace brick {
 
   namespace geometry {
     
-    class Triangle3DTest : public TestFixture<Triangle3DTest> {
+    class Triangle3DTest : public brick::test::TestFixture<Triangle3DTest> {
 
     public:
 
       Triangle3DTest();
       ~Triangle3DTest() {}
 
-      void setUp(const std::string& testName) {}
-      void tearDown(const std::string& testName) {}
+      void setUp(const std::string& /* testName */) {}
+      void tearDown(const std::string& /* testName */) {}
 
       // Tests.
 
@@ -43,7 +43,7 @@ namespace brick {
 
     Triangle3DTest::
     Triangle3DTest()
-      : TestFixture<Triangle3DTest>("Triangle3DTest"),
+      : brick::test::TestFixture<Triangle3DTest>("Triangle3DTest"),
         m_defaultTolerance(1.0E-12)
     {
       // Empty.

@@ -227,7 +227,7 @@ namespace brick {
                      Ray2D<Type> const& ray)
     {
       brick::numeric::Vector2D<Type> v1 = point - ray.getOrigin();
-      double kk = dot(v1, ray.getDirectionVector());
+      double kk = brick::numeric::dot<Type>(v1, ray.getDirectionVector());
       return ray.getOrigin() + kk * ray.getDirectionVector();
     }
 

@@ -8,3 +8,10 @@
   referenceCount.
 
 - Make Array2D support row alignment.  Watch out for STL algos, though.
+
+- Update documentation of ArrayND to describe rowStep.
+
+- Add SubArray2D tests for non-contiguous 2D arrays.
+
+- Add row alignmnent to SubArray2D.
+

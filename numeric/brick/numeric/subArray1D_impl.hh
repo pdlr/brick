@@ -65,14 +65,12 @@ namespace brick {
       }
 
       // Now compute sizes (yuck).
-      this->m_size = ((this->m_stop - this->m_start)
-                      / this->m_stride); // integer division
-      // Member m_size is unsigned, so this is always true.
-      //
-      // if(this->m_size < 0) {
-      if(1) {
+      int intSize = ((this->m_stop - this->m_start)
+                     / this->m_stride); // integer division
+      if(intSize < 0) {
         this->m_size = 0; 
       } else {
+        this->m_size = intSize;
         // Can't think of a better way to do this.
         if(common::absoluteValue(static_cast<int>(this->m_size)
                                  * this->m_stride)

@@ -82,11 +82,12 @@ namespace brick {
       }
 
       // Now compute sizes (yuck).
-      this->m_rows = ((this->m_stopRow - this->m_startRow)
+      int intRows = ((this->m_stopRow - this->m_startRow)
                       / this->m_rowStride); // integer division
-      if(this->m_rows < 0) {
+      if(intRows < 0) {
         this->m_rows = 0; 
       } else {
+        this->m_rows = intRows;
         // Can't think of a better way to do this.
         if(brick::common::absoluteValue(
              static_cast<int>(this->m_rows) * this->m_rowStride)
@@ -95,11 +96,12 @@ namespace brick {
           ++this->m_rows;
         }
       }
-      this->m_columns = ((this->m_stopColumn - this->m_startColumn)
-                         / this->m_columnStride); // integer division
-      if(this->m_columns < 0) {
+      int intColumns = ((this->m_stopColumn - this->m_startColumn)
+                        / this->m_columnStride); // integer division
+      if(intColumns < 0) {
         this->m_columns = 0; 
       } else {
+        this->m_columns = intColumns;
         // Can't think of a better way to do this.
         if(brick::common::absoluteValue(
              static_cast<int>(this->m_columns) * this->m_columnStride)

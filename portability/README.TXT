@@ -69,7 +69,7 @@ If you're using the source files from mercurial, you need to add a step:
 Of course, you may want to specify an installation directory:
 
 @code
-> [get source from cvs and run ./bootstrap, or unpack tarball]
+> [get source from mercurial and run ./bootstrap, or unpack tarball]
 > ./configure --prefix=/home/jfisher/software
 > make
 > make install
@@ -78,7 +78,7 @@ Of course, you may want to specify an installation directory:
 Or some compiler options:
 
 @code
-> [get source from cvs and run ./bootstrap, or unpack tarball]
+> [get source from mercurial and run ./bootstrap, or unpack tarball]
 > env CXXFLAGS="-g -Wall" ./configure \
     --prefix=/home/jfisher/software
 > make

@@ -50,9 +50,6 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
 
 
-dnl Checks for library functions.
-
-
 dnl Other stuff.
 AC_SUBST(ac_aux_dir)
 

@@ -28,6 +28,7 @@ brickNumeric_HEADERS	= \
 	array2D.hh array2D_impl.hh \
 	array3D.hh array3D_impl.hh \
 	derivativeRidders.hh \
+	extremumRecorder.hh \
 	functional.hh \
 	index2D.hh \
 	index3D.hh \

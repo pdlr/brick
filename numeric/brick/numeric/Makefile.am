@@ -31,6 +31,8 @@ brickNumeric_HEADERS	= \
 	functional.hh \
 	index2D.hh \
 	index3D.hh \
+	maxRecorder.hh \
+	minRecorder.hh \
 	numericTraits.hh \
 	rotations.hh rotations_impl.hh \
 	slice.hh \

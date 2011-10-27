@@ -4,7 +4,7 @@ dnl
 dnl Call this autoconf macro to check whether the brickLinearAlgebra library
 dnl development files are installed on your system.
 
-AC_DEFUN([BRICK_HAVE_BRICK_LINEARALGEBRA],
+AC_DEFUN([BRICK_HAVE_BRICKLINEARALGEBRA],
     [BRICK_SAVED_CPPFLAGS="${CPPFLAGS}"
      CPPFLAGS="${CPPFLAGS} -I${includedir} -I${prefix}/include"
      AC_CHECK_HEADER(brick/linearAlgebra/linearAlgebra.hh, 

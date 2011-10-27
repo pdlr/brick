@@ -4,7 +4,7 @@ dnl
 dnl Call this autoconf macro to check whether the brick::portability library
 dnl development files are installed on your system.
 
-AC_DEFUN([BRICK_HAVE_BRICK_PORTABILITY],
+AC_DEFUN([BRICK_HAVE_BRICKPORTABILITY],
     [BRICK_SAVED_CPPFLAGS="${CPPFLAGS}"
      CPPFLAGS="${CPPFLAGS} -I${includedir} -I${prefix}/include"
      AC_CHECK_HEADER(brick/portability/timeUtilities.hh, 

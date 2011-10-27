@@ -38,8 +38,8 @@ ACX_LAPACK([],
             lapack is installed.  If it is, and this test still fails, try
             modifying the CPPFLAGS and LDFLAGS environment variable so that 
             the compiler can more easily find this the required files.])])
-BRICK_HAVE_BRICK_COMMON
-BRICK_HAVE_BRICK_PORTABILITY
+BRICK_HAVE_BRICKCOMMON
+BRICK_HAVE_BRICKPORTABILITY
 
 dnl Checks for header files.
 AC_HEADER_STDC

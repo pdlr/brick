@@ -33,7 +33,7 @@ AC_LANG([C++])
 
 
 dnl Checks for libraries.
-BRICK_HAVE_BRICK_COMMON
+BRICK_HAVE_BRICKCOMMON
 
 
 dnl Checks for header files.

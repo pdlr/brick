@@ -9,7 +9,7 @@ dnl
 
 dnl Initialization.
 AC_INIT(brickcomputervision, 1.0)
-AC_CONFIG_SRCDIR(brick/computervision/Makefile.am)
+AC_CONFIG_SRCDIR(brick/computerVision/Makefile.am)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS(config.h)
@@ -38,11 +38,11 @@ ACX_LAPACK([],
             lapack is installed.  If it is, and this test still fails, try
             modifying the CPPFLAGS and LDFLAGS environment variable so that 
             the compiler can more easily find this the required files.])])
-BRICK_HAVE_BRICK_COMMON
-BRICK_HAVE_BRICK_PORTABILITY
-BRICK_HAVE_BRICK_NUMERIC
-BRICK_HAVE_BRICK_LINEARALGEBRA
-BRICK_HAVE_BRICK_GEOMETRY
+BRICK_HAVE_BRICKCOMMON
+BRICK_HAVE_BRICKPORTABILITY
+BRICK_HAVE_BRICKNUMERIC
+BRICK_HAVE_BRICKLINEARALGEBRA
+BRICK_HAVE_BRICKGEOMETRY
 
 
 dnl Checks for header files.

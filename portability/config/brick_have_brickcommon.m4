@@ -1,10 +1,10 @@
 dnl
-dnl BRICK_HAVE_BRICK_COMMON()
+dnl BRICK_HAVE_BRICKCOMMON()
 dnl
 dnl Call this autoconf macro to check whether the brick::common library
 dnl development files are installed on your system.
 
-AC_DEFUN([BRICK_HAVE_BRICK_COMMON],
+AC_DEFUN([BRICK_HAVE_BRICKCOMMON],
     [BRICK_SAVED_CPPFLAGS="${CPPFLAGS}"
      CPPFLAGS="${CPPFLAGS} -I${includedir} -I${prefix}/include"
      AC_CHECK_HEADER(brick/common/types.hh, 

@@ -2,13 +2,11 @@
 ***************************************************************************
 * @file dlrComputerVision/ransac.h
 *
-* Header file declaring an implementation of the RANSAC algorithm.
+* Header file defining helper functions for implementing Fischler's
+* and Bolles's RANSAC algorithm.
 *
-* Copyright (C) 2008 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2008, 2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
-*
-* $Revision: $
-* $Date: $
 ***************************************************************************
 */
 
@@ -27,18 +25,20 @@ namespace dlr {
     template <class InIter, class OutIter, Functor>
     void
     ransacGetConsensusSet(
-      InIter inBegin, inIter InEnd, OutIter outBegin, Functor functor)
+      InIter inBegin, InIter inEnd, OutIter outBegin, Functor functor)
     {
-      while(inBegin != ineEnd) {
-        if(functor(*inBegin)) {
-          *outBegin = *inBegin;
-        }
+      // while(inBegin != ineEnd) {
+      //   if(functor(*inBegin)) {
+      //     *outBegin = *inBegin;
+      //   }
+      // }
+      std::copy_if(inBegin, inEnd, outBegin, functor);
     }
 
     
     template <class Type, class Functor>
     brick::numeric::Array2D<Type>
-    ransacGetConsensusSetByRow(
+    ransacGetConsensusSetRows(
       brick::numeric::Array2D<Type> const& candidates,
       Functor& functor)
     {
@@ -125,17 +125,46 @@ namespace dlr {
     
     
     template <class Type>
-    brick::numeric::Array1D<Type>
+    brick::numeric::Array2D<Type>
     ransacSelectRows(brick::numeric::Array2D<Type> const& sampleArray,
                      unsigned int numberOfSamplesRequired,
                      brick::random::PseudoRandom& pseudoRandom)
     {
       brick::numeric::Array1D<Type> result(numberOfSamplesRequired,
                                            sampleArray.columns());
+      brick::numeric::Array2D<Type> shuffleBuffer(sampleArray.rows(),
+                                                  sampleArray.columns());
+      brick::numeric::Array1D<bool> indicators(sampleArray.rows());
+      indicators = false;
+
+      // Select each sample in turn.  We will sample without replacement.
       for(unsigned int ii = 0; ii < numberOfSamplesRequired; ++ii) {
+        // Easy enough: choose from among the remaining samples.
         unsigned int selectedRowIndex = pseudoRandom.getUniformInt(
-          0, sampleArray.rows())
-        result.getRow(ii).copy(sampleArray.getRow(selectedRowIndex));
+          ii, sampleArray.rows());
+        // Copy from the input array, unless this row has already been
+        // selected.
+        if(indicators[selectedRowIndex]) {
+          // This row _has_ already been selected.  Fortunately, last
+          // time it was selected, we had the forsight to copy an
+          // un-selected row into shufflebuffer.  Use that one
+          // instead.
+          result.getRow(ii).copy(shuffleBuffer.getRow(selectedRowIndex));
+        } else {
+          // This row _has not_ already been selected.  Carry on.
+          result.getRow(ii).copy(sampleArray.getRow(selectedRowIndex));
+        }
+
+        // The row that was just selected might get selected again
+        // later, so we remove it from circulation by copying a
+        // not-selected row into its place in shuffleBuffer.  We do
+        // this unless selectedRow == ii, in which case the lower
+        // bound of the getUniformInt() call above prevents
+        // reselection of the row, so we do nothing.
+        if(selectedRow != ii) {
+          shuffleBuffer.getRow(selectedRowIndex).copy(sampleArray.getRow(ii));
+          indicators[selectedRowIndex] = true;
+        }
       }
       return result;
     }

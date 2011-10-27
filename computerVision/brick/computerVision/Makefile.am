@@ -25,7 +25,7 @@ AM_CPPFLAGS		= -I$(top_srcdir)
 brickComputerVisiondir		= $(includedir)/brick/computerVision
 brickComputerVision_HEADERS	= \
 	randomSampleSelector.hh randomSampleSelector_impl.hh\
-	ransac.hh
+	ransac.hh ransac_impl.hh
 
 stillToComeHeaders		= \
 	calibrationTools.h \

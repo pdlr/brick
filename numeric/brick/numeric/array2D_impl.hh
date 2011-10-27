@@ -2,7 +2,7 @@
 ***************************************************************************
 * @file brick/numeric/array2D.hh
 *
-* Header file declaring Array2D class.
+* Header file defining Array2D class template.
 *
 * Copyright (C) 2001-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.

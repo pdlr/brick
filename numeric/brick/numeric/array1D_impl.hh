@@ -2,7 +2,7 @@
 ***************************************************************************
 * @file brick/numeric/array1D.hh
 *
-* Header file declaring Array1D class.
+* Header file defining Array1D class template.
 *
 * Copyright (C) 2001-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.

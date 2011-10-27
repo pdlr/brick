@@ -81,6 +81,30 @@ namespace brick {
 
     
       /** 
+       * This method finds the optimum of the current Functor, if
+       * necessary, and returns the Functor value at that point.  Note
+       * that you must have specified an objective function (Functor)
+       * before calling this method.
+       *
+       * @return The Functor value at it's optimum.
+       */
+      result_type
+      getOptimalValue();
+
+    
+      /** 
+       * This method finds the optimum of the current Functor, if
+       * necessary, and returns the Functor argument which produces that
+       * optimum.  Note that you must have specified an objective
+       * function (Functor) before calling this method.
+       *
+       * @return The Functor arguments which produce the optimal value.
+       */
+      argument_type
+      getOptimum();
+
+    
+      /** 
        * This method returns a copy of the Functor instance used for
        * optimization.
        * 
@@ -101,27 +125,23 @@ namespace brick {
 
     
       /** 
-       * This method finds the optimum of the current Functor, if
-       * necessary, and returns the Functor value at that point.  Note
-       * that you must have specified an objective function (Functor)
-       * before calling this method.
+       * This member function is an alias for member function
+       * getOptimalValue().
        *
        * @return The Functor value at it's optimum.
        */
       result_type
-      optimalValue();
+      optimalValue() {return this->getOptimalValue();}
 
     
       /** 
-       * This method finds the optimum of the current Functor, if
-       * necessary, and returns the Functor argument which produces that
-       * optimum.  Note that you must have specified an objective
-       * function (Functor) before calling this method.
+       * This member function is an alias for member function
+       * getOptimum().
        *
        * @return The Functor arguments which produce the optimal value.
        */
       argument_type
-      optimum();
+      optimum() {return this->getOptimum();}
 
     
       /** 
@@ -249,6 +269,7 @@ namespace brick {
       copyArgumentType(source.m_optimum, m_optimum);
     }
 
+
     // Destructor.
     template <class Functor>
     Optimizer<Functor>::
@@ -256,6 +277,38 @@ namespace brick {
     {
       // Empty
     }
+
+
+    // Find the optimum of the current Functor, if necessary, and
+    // return the Functor value at that point.
+    template <class Functor>
+    typename Optimizer<Functor>::result_type
+    Optimizer<Functor>::
+    getOptimalValue()
+    {
+      if(m_needsOptimization==true) {
+        std::pair<argument_type, result_type> optimum_optimalValue = this->run();
+        this->setOptimum(
+          optimum_optimalValue.first, optimum_optimalValue.second, false);
+      }
+      return m_optimalValue;
+    }
+
+    // Find the optimum of the current Functor, if necessary, and
+    // return the Functor argument which produces that optimum.
+    template <class Functor>
+    typename Optimizer<Functor>::argument_type
+    Optimizer<Functor>::
+    getOptimum()
+    {
+      if(m_needsOptimization==true) {
+        std::pair<argument_type, result_type> optimum_optimalValue = this->run();
+        this->setOptimum(
+          optimum_optimalValue.first, optimum_optimalValue.second, false);
+      }
+      return m_optimum;
+    }
+
 
     // Assignment operator.
     template <class Functor>
@@ -271,35 +324,6 @@ namespace brick {
       return *this;
     }
 
-    // Find the optimum of the current Functor, if necessary, and
-    // return the Functor value at that point.
-    template <class Functor>
-    typename Optimizer<Functor>::result_type
-    Optimizer<Functor>::
-    optimalValue()
-    {
-      if(m_needsOptimization==true) {
-        std::pair<argument_type, result_type> optimum_optimalValue = this->run();
-        this->setOptimum(
-          optimum_optimalValue.first, optimum_optimalValue.second, false);
-      }
-      return m_optimalValue;
-    }
-
-    // Find the optimum of the current Functor, if necessary, and
-    // return the Functor argument which produces that optimum.
-    template <class Functor>
-    typename Optimizer<Functor>::argument_type
-    Optimizer<Functor>::
-    optimum()
-    {
-      if(m_needsOptimization==true) {
-        std::pair<argument_type, result_type> optimum_optimalValue = this->run();
-        this->setOptimum(
-          optimum_optimalValue.first, optimum_optimalValue.second, false);
-      }
-      return m_optimum;
-    }
 
     // Specify the Functor instance to use for the optimization.
     template <class Functor>

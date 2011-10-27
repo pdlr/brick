@@ -7,9 +7,9 @@ dnl development files are installed on your system.
 AC_DEFUN([BRICK_HAVE_BRICKNUMERIC],
     [BRICK_SAVED_CPPFLAGS="${CPPFLAGS}"
      CPPFLAGS="${CPPFLAGS} -I${includedir} -I${prefix}/include"
-     AC_CHECK_HEADER(brick/numeric/index2D.hh, 
+     AC_CHECK_HEADER(brick/numeric/index2D.hhh, 
          [],
-         [AC_MSG_ERROR([Unable to find brick/numeric/index2D.hh.  Please
+         [AC_MSG_ERROR([Unable to find brick/numeric/index2D.hhh.  Please
               check that the brick::numeric utility library is installed.
               If it is, and this test still fails, try modifying the CPPFLAGS
               environment variable so that the compiler can more easily find
@@ -19,7 +19,7 @@ AC_DEFUN([BRICK_HAVE_BRICKNUMERIC],
      BRICK_SAVED_LIBS="${LIBS}"
      LDFLAGS="${LDFLAGS} -L${libdir} -L${prefix}/lib"
      LIBS="-lbrickNumeric -lbrickPortability -lbrickCommon"
-     AC_TRY_LINK([#include <brick/numeric/index2D.hh>],
+     AC_TRY_LINK([#include <brick/numeric/index2D.hhh>],
          [brick::numeric::Index2D dummy();],
          [AC_MSG_RESULT([yes])],
          [AC_MSG_ERROR([Unable to build a test program against libbrickNumeric.

@@ -9,7 +9,7 @@ dnl
 
 dnl Initialization.
 AC_INIT(brickoptimization, 1.0)
-AC_CONFIG_SRCDIR(optimization/Makefile.am)
+AC_CONFIG_SRCDIR(brick/optimization/Makefile.am)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADERS(config.h)
@@ -50,6 +50,7 @@ AC_HEADER_STDC
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 AC_C_CONST
+
 
 dnl Other stuff.
 AC_SUBST(ac_aux_dir)

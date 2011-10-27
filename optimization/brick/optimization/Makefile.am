@@ -17,16 +17,16 @@ AM_CPPFLAGS		= -I$(top_srcdir)
 # Define the list of header files to install and the location to
 # install them.
 
-brickOptimizationdir	= $(includedir)/brickOptimization
+brickOptimizationdir	= $(includedir)/brick/optimization
 brickOptimization_HEADERS = \
-	gradientFunction.h \
-	gradientFunctionLM.h \
-	optimizer.h \
-	optimizerBFGS.h \
-	optimizerCommon.h \
-	optimizerLM.h \
-	optimizerLineSearch.h \
-	optimizerNelderMead.h
+	gradientFunction.hh \
+	gradientFunctionLM.hh \
+	optimizer.hh \
+	optimizerBFGS.hh \
+	optimizerCommon.hh \
+	optimizerLM.hh \
+	optimizerLineSearch.hh \
+	optimizerNelderMead.hh
 
 
 # Define the library to build.

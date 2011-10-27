@@ -51,8 +51,11 @@ namespace brick {
         : ExtremumRecorder< Type, Payload, std::less<Type> >(
             minValue, payload, std::less<Type>()) {}
 
-      // Member function test() is inherited from ExtremumRecorder.
+
+      // Member function test(), and its alias evaluate(), are
+      // inherited from ExtremumRecorder.
       //
+      // bool evaluate(const Type& value, const Payload& payload);
       // bool test(const Type& value, const Payload& payload);
 
       

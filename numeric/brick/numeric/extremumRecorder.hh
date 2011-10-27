@@ -45,6 +45,26 @@ namespace brick {
         : m_extremeValue(maxValue), m_payload(payload), m_functor(functor) {}
 
 
+      
+      /** 
+       * This member function is an alias for member function test().
+       * 
+       * @param value This argument will be compared to the saved
+       * extreme value using the saved functor, and then copied into
+       * the saved maximum if the functor returns true.
+       * 
+       * @param payload This argument is copied into the saved payload
+       * if and only if the saved extreme value was updated.
+       * 
+       * @return The return value is true if the saved extreme value
+       * was updated, false otherwise.
+       */
+      bool
+      evaluate(const Type& value, const Payload& payload) {
+        return this->test(value, payload);
+      }
+
+
       /** 
        * This member function compares its first argument with the
        * saved extreme value, and updates the saved extremeValue (and

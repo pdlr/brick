@@ -54,8 +54,10 @@ namespace brick {
             maxValue, payload, std::greater<Type>()) {}
 
       
-      // Member function test() is inherited from ExtremumRecorder.
+      // Member function test(), and its alias evaluate(), are
+      // inherited from ExtremumRecorder.
       //
+      // bool evaluate(const Type& value, const Payload& payload);
       // bool test(const Type& value, const Payload& payload);
 
       

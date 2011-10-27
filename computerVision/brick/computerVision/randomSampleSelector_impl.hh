@@ -39,7 +39,7 @@ namespace brick {
     // This member function returns a SampleSequenceType instance
     // containing the entire population passed to the constructor.
     template <class Sample>
-    RandomSampleSelector<Sample>::SampleSequenceType
+    typename RandomSampleSelector<Sample>::SampleSequenceType
     RandomSampleSelector<Sample>::
     getPool()
     {

@@ -15,7 +15,7 @@
 #define BRICK_COMPUTERVISION_RANDOMSAMPLESELECTOR_HH
 
 #include <vector>
-#include <brick/random/pseudoRandom.h>
+#include <brick/random/pseudoRandom.hh>
 
 namespace brick {
 
@@ -55,7 +55,8 @@ namespace brick {
 
       /** 
        * The constructor specifies the full population of samples from
-       * which to randomly select.
+       * which to randomly select.  The input sequence will be copied
+       * to internal storage.
        * 
        * @param beginIter This argument and the next specify a
        * sequence from which to copy the sample population.
@@ -149,54 +150,5 @@ namespace brick {
 } // namespace brick
 
 #include <brick/computerVision/randomSampleSelector_impl.hh>
-
-/* ============ Definitions of inline & template functions ============ */
-
-
-namespace brick {
-
-  namespace computerVision {
-
-    template <class Sample>
-    typename RandomSampleSelector<Sample>::SampleSequenceType
-    RandomSampleSelector<Sample>::
-    getRandomSample(size_t sampleSize)
-    {
-      for(size_t ii = 0; ii < sampleSize; ++ii) {
-        int jj = m_pseudoRandom.uniformInt(ii, m_sampleVector.size());
-        std::swap(m_sampleVector[ii], m_sampleVector[jj]);
-      }
-      return std::make_pair(
-        m_sampleVector.begin(), m_sampleVector.begin() + sampleSize);
-    }
-
-    
-    template <class Sample>
-    template<class IterType>
-    typename RandomSampleSelector<Sample>::SampleSequenceType
-    RandomSampleSelector<Sample>::
-    getSubset(IterType beginIter, IterType endIter)
-    {
-      typedef typename std::vector<SampleType>::iterator SampleIter;
-
-      SampleIter poolIter = m_sampleVector.begin();
-      SampleIter candidateIter = m_sampleVector.begin();
-      while(beginIter != endIter && candidateIter != m_sampleVector.end()) {
-        if(*beginIter) {
-          if(candidateIter != poolIter) {
-            std::swap(*poolIter, *candidateIter);
-          }
-          ++poolIter;
-        }
-        ++beginIter;
-        ++candidateIter;
-      }
-      return std::make_pair(m_sampleVector.begin(), poolIter);
-    }
-
-    
-  } // namespace computerVision
-  
-} // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_RANDOMSAMPLESELECTOR_HH */

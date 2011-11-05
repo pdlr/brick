@@ -14,6 +14,7 @@
 #define BRICK_OPTIMIZATION_GRADIENTFUNCTIONLM_HH
 
 #include <functional>
+#include <brick/numeric/utilities.hh>
 
 namespace brick {
 
@@ -73,7 +74,7 @@ namespace brick {
      **   myResult = optimizer.optimum();
      ** @endcode
      **/
-    template <class SSDFunctor, class Scalar = common::Float64>
+    template <class SSDFunctor, class Scalar = brick::common::Float64>
     class GradientFunctionLM
       : public std::unary_function<typename SSDFunctor::argument_type, Scalar>
     {
@@ -140,8 +141,8 @@ namespace brick {
       void
       computeGradientAndHessian(
         typename SSDFunctor::argument_type const& theta,
-        brick::numeric::Array1D<common::Float64>& dEdX,
-        brick::numeric::Array2D<common::Float64>& d2EdX2);
+        brick::numeric::Array1D<brick::common::Float64>& dEdX,
+        brick::numeric::Array2D<brick::common::Float64>& d2EdX2);
       
     private:
       SSDFunctor m_functor;
@@ -202,8 +203,8 @@ namespace brick {
     GradientFunctionLM<SSDFunctor, Scalar>::
     computeGradientAndHessian(
       typename SSDFunctor::argument_type const& theta,
-      brick::numeric::Array1D<common::Float64>& dEdX,
-      brick::numeric::Array2D<common::Float64>& d2EdX2)
+      brick::numeric::Array1D<brick::common::Float64>& dEdX,
+      brick::numeric::Array2D<brick::common::Float64>& d2EdX2)
     {
       // Note(xxx): Move all of these Array?D constructors out of this
       // function so as to no to gobs of extra new/delete cycles.
@@ -214,7 +215,7 @@ namespace brick {
       // Construct an array to hold 1st derivatives.
       unsigned int numParameters = theta.size();
       unsigned int numTerms = errorTerms.size();
-      brick::numeric::Array2D<Float64> jacobian(numParameters, numTerms);
+      brick::numeric::Array2D<brick::common::Float64> jacobian(numParameters, numTerms);
 
       // Compute Jacobian of error terms by divided differences.
       typename SSDFunctor::argument_type thetaPlus(numParameters);
@@ -246,15 +247,15 @@ namespace brick {
       }
 
       // Compute gradient estimate from Jacobian.
-      brick::numeric::Array1D<Float64> errorTermsCopy(numTerms);
+      brick::numeric::Array1D<brick::common::Float64> errorTermsCopy(numTerms);
       for(unsigned int jj = 0; jj < numTerms; ++jj) {
         errorTermsCopy[jj] = errorTerms[jj];
       }
-      dEdX = numeric::matrixMultiply(jacobian, errorTerms);
+      dEdX = brick::numeric::matrixMultiply<double>(jacobian, errorTerms);
       dEdX *= 2.0;
       
       // Compute Hession estimate.
-      d2EdX2 = numeric::matrixMultiply(jacobian, jacobian.transpose());
+      d2EdX2 = brick::numeric::matrixMultiply<double>(jacobian, jacobian.transpose());
       d2EdX2 *= 2.0;
     }
     

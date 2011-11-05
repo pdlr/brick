@@ -1098,6 +1098,8 @@ namespace brick {
 
 } // namespace brick
 
+// Include file containing definitions of inline and template
+// functions.
 #include <brick/numeric/array1D_impl.hh>
 
 #endif /* #ifdef BRICK_NUMERIC_ARRAY1D_HH */

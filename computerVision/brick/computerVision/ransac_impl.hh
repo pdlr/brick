@@ -10,29 +10,34 @@
 ***************************************************************************
 */
 
-#include <algorithm>
-#include <cmath>
-#include <functional>
-#include <iostream>
-#include <dlrCommon/exception.h>
-#include <dlrComputerVision/randomSampleSelector.h>
-#include <dlrNumeric/maxRecorder.h>
+#ifndef BRICK_COMPUTERVISION_RANSAC_IMPL_HH
+#define BRICK_COMPUTERVISION_RANSAC_IMPL_HH
 
-namespace dlr {
+// This file is included by ransac.hh, and should not be directly included
+// by user code, so no need to include ransac.hh here.
+// 
+// #include <brick/computerVision/ransac.hh>
+
+#include <cmath>
+#include <brick/common/exception.hh>
+
+
+namespace brick {
 
   namespace computerVision {
 
-    template <class InIter, class OutIter, Functor>
+    template <class InIter, class OutIter, class Functor>
     void
     ransacGetConsensusSet(
       InIter inBegin, InIter inEnd, OutIter outBegin, Functor functor)
     {
-      // while(inBegin != ineEnd) {
-      //   if(functor(*inBegin)) {
-      //     *outBegin = *inBegin;
-      //   }
-      // }
-      std::copy_if(inBegin, inEnd, outBegin, functor);
+      while(inBegin != inEnd) {
+        if(functor(*inBegin)) {
+          *outBegin = *inBegin;
+          ++inBegin;
+          ++outBegin;
+        }
+      }
     }
 
     
@@ -43,8 +48,10 @@ namespace dlr {
       Functor& functor)
     {
       brick::numeric::Array1D<bool> indicatorArray(candidates.rows());
+      unsigned int count = 0;
       for(unsigned int ii = 0; ii < candidates.rows(); ++ii) {
-        if(functor(candidates[ii])) {
+        brick::numeric::Array1D<Type> currentRow = candidates.getRow(ii);
+        if(functor(currentRow)) {
           indicatorArray[ii] = true;
           ++count;
         } else {
@@ -63,20 +70,19 @@ namespace dlr {
     }
 
     
-    template <class InIterator, class OutIterator, 
-    unsigned int
-    ransacGetConsensusSetByThreshold(
     unsigned int
     ransacGetRequiredIterations(unsigned int sampleSize,
                                 double requiredConfidence,
                                 double inlierProbability)
     {
       if((requiredConfidence < 0.0) || (requiredConfidence >= 1.0)) {
-        DLR_THROW(common::ValueException, "ransacGetRequiredIterations()",
+        BRICK_THROW(brick::common::ValueException,
+                  "ransacGetRequiredIterations()",
                   "Probability value requiredConfidence is out of range.");
       }
       if((inlierProbability < 0.0) || (inlierProbability >= 1.0)) {
-        DLR_THROW(common::ValueException, "ransacGetRequiredIterations()",
+        BRICK_THROW(brick::common::ValueException,
+                  "ransacGetRequiredIterations()",
                   "Probability value inlierProbability is out of range.");
       }
 
@@ -101,10 +107,10 @@ namespace dlr {
 
     template <class Type>
     brick::numeric::Array2D<Type>
-    ransacSelectRows(brick::numeric::Array1D<Type> const& sampleArray,
+    ransacSelectRows(brick::numeric::Array2D<Type> const& sampleArray,
                      unsigned int numberOfSamplesRequired)
     {
-      brick::random::PseudoRandom pseudoRandom();
+      brick::random::PseudoRandom pseudoRandom;
       return ransacSelectRows(sampleArray, numberOfSamplesRequired,
                               pseudoRandom);
     }
@@ -130,7 +136,7 @@ namespace dlr {
                      unsigned int numberOfSamplesRequired,
                      brick::random::PseudoRandom& pseudoRandom)
     {
-      brick::numeric::Array1D<Type> result(numberOfSamplesRequired,
+      brick::numeric::Array2D<Type> result(numberOfSamplesRequired,
                                            sampleArray.columns());
       brick::numeric::Array2D<Type> shuffleBuffer(sampleArray.rows(),
                                                   sampleArray.columns());
@@ -140,7 +146,7 @@ namespace dlr {
       // Select each sample in turn.  We will sample without replacement.
       for(unsigned int ii = 0; ii < numberOfSamplesRequired; ++ii) {
         // Easy enough: choose from among the remaining samples.
-        unsigned int selectedRowIndex = pseudoRandom.getUniformInt(
+        unsigned int selectedRowIndex = pseudoRandom.uniformInt(
           ii, sampleArray.rows());
         // Copy from the input array, unless this row has already been
         // selected.
@@ -159,9 +165,9 @@ namespace dlr {
         // later, so we remove it from circulation by copying a
         // not-selected row into its place in shuffleBuffer.  We do
         // this unless selectedRow == ii, in which case the lower
-        // bound of the getUniformInt() call above prevents
+        // bound of the uniformInt() call above prevents
         // reselection of the row, so we do nothing.
-        if(selectedRow != ii) {
+        if(selectedRowIndex != ii) {
           shuffleBuffer.getRow(selectedRowIndex).copy(sampleArray.getRow(ii));
           indicators[selectedRowIndex] = true;
         }
@@ -171,5 +177,6 @@ namespace dlr {
     
   } // namespace computerVision
   
-} // namespace dlr
+} // namespace brick
 
+#endif /* #ifndef BRICK_COMPUTERVISION_RANSAC_IMPL_HH */

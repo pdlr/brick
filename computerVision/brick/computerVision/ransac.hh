@@ -10,11 +10,10 @@
 ***************************************************************************
 */
 
-#include <algorithm>
-#include <cmath>
-#include <functional>
-#include <iostream>
-#include <brick/common/exception.hh>
+#ifndef BRICK_COMPUTERVISION_RANSAC_HH
+#define BRICK_COMPUTERVISION_RANSAC_HH
+
+#include <brick/numeric/array1D.hh>
 #include <brick/numeric/array2D.hh>
 #include <brick/random/pseudoRandom.hh>
 
@@ -55,7 +54,7 @@ namespace brick {
 
     
     template <class Type>
-    brick::numeric::Array1D<Type>
+    brick::numeric::Array2D<Type>
     ransacSelectRows(brick::numeric::Array2D<Type> const& sampleArray,
                      unsigned int numberOfSamplesRequired,
                      brick::random::PseudoRandom& pseudoRandom);
@@ -66,3 +65,9 @@ namespace brick {
   
 } // namespace brick
 
+
+// Include file containing definitions of inline and template
+// functions.
+#include <brick/computerVision/ransac_impl.hh>
+
+#endif /* #ifndef BRICK_COMPUTERVISION_RANSAC_HH */

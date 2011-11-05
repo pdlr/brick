@@ -4,17 +4,12 @@ import os
 import string
 import sys
 
-
-if __name__ == '__main__':
-
+def brickify(inputFileName, outputFileName):
   # Make sure we can read the input
-  inputFileName = sys.argv[1]
   inputFile = open(inputFileName)
-  # inputLines = inputFile.readlines()
   inputFile.close()
 
   # Make sure we can open the output file.
-  outputFileName = sys.argv[2]
   outputFile = open(outputFileName, 'w')
   outputFile.close()
 
@@ -93,6 +88,10 @@ if __name__ == '__main__':
               + "< %s > %s" % (outputFileName, tempFileName))
     os.system("cp %s %s" % (tempFileName, outputFileName))
   # end if
+# end def
 
+
+if __name__ == '__main__':
+  brickify(sys.argv[1], sys.argv[2])
 # end if
 

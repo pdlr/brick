@@ -182,7 +182,7 @@ namespace brick {
      ** This class takes a scalar-valued N-Dimensional function and
      ** wraps it so that you can interact with it as if it took a
      ** scalar argument.  This is useful if you want to compute its
-     ** gradient usig the DerivativeRidders class template.
+     ** gradient using the DerivativeRidders class template.
      **
      ** Template argument Functor is the the type of the functor that
      ** will be adapted.  Template argument Scalar specifies what

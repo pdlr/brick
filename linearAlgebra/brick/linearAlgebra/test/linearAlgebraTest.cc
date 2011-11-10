@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file brick/linearAlgebra/test/linearAlgebraTest.cpp
+* @file brick/linearAlgebra/test/linearAlgebraTest.cc
 * Source file defining linearAlgebraTest class.
 *
 * Copyright (C) 2005-2011 David LaRose, dlr@cs.cmu.edu

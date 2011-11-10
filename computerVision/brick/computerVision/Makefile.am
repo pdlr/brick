@@ -76,7 +76,8 @@ stillToComeHeaders		= \
 
 # Define the library to build.
 lib_LTLIBRARIES		= libbrickComputerVision.la
-libbrickComputerVision_la_SOURCES = 
+libbrickComputerVision_la_SOURCES = \
+	ransac.cc
 
 otherSources =\
 	cameraIntrinsicsPinhole.cpp cameraIntrinsicsPinhole.h \

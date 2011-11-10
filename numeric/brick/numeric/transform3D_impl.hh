@@ -687,7 +687,7 @@ namespace brick {
 
 
     template <>
-    Transform3D<double>
+    inline Transform3D<double>
     operator*(const Transform3D<double>& transform0,
               const Transform3D<double>& transform1)
     {
@@ -763,7 +763,7 @@ namespace brick {
 
 
     template <>
-    Transform3D<float>
+    inline Transform3D<float>
     operator*(const Transform3D<float>& transform0, const Transform3D<float>& transform1)
     {
       float a00 = (transform0.value<0, 0>() * transform1.value<0, 0>()
@@ -885,7 +885,7 @@ namespace brick {
       return stream;
     }
 
-    
+#if 0    
     template <>
     std::ostream&
     operator<<(std::ostream& stream, const Transform3D<double>& transform0)
@@ -934,7 +934,7 @@ namespace brick {
              << transform0.value<3, 3>() << ")";
       return stream;
     }
-    
+#endif /* #if 0 */    
 
     template <class Type>
     std::istream&

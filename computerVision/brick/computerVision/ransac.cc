@@ -18,6 +18,9 @@ namespace brick {
 
   namespace computerVision {
 
+    // Computes how many RANSAC iterations are required to be sure
+    // there's at least one iteration in which the model was estimated
+    // using all inliers.
     unsigned int
     ransacGetRequiredIterations(unsigned int sampleSize,
                                 double requiredConfidence,

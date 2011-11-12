@@ -26,37 +26,51 @@ namespace brick {
 
   namespace computerVision {
 
+    // Selects only those elements of the input sequence that, when
+    // passed as arguments to functor.operator()(), result in a true
+    // return value.
     template <class InIter, class OutIter, class Functor>
-    void
+    unsigned int
     ransacGetConsensusSet(
       InIter inBegin, InIter inEnd, OutIter outBegin, Functor functor)
     {
+      unsigned int count = 0;
       while(inBegin != inEnd) {
         if(functor(*inBegin)) {
           *outBegin = *inBegin;
-          ++inBegin;
           ++outBegin;
+          ++count;
         }
+        ++inBegin;
       }
+      return count;
     }
 
     
+    // This is a convenience function that functions just like
+    // ransacGetConsensusSet, except that the output of the functor
+    // argument is passed to a second functor for evaluation.
     template <class InIter, class OutIter, class Functor, class Criterion>
-    void
+    unsigned int
     ransacGetConsensusSetByComparison(
       InIter inBegin, InIter inEnd, OutIter outBegin, Functor functor,
       Criterion criterion)
     {
+      unsigned int count = 0;
       while(inBegin != inEnd) {
         if(criterion(functor(*inBegin))) {
           *outBegin = *inBegin;
-          ++inBegin;
           ++outBegin;
+          ++count;
         }
+        ++inBegin;
       }
+      return count;
     }
 
-    
+
+    // This functions just like ransacGetConsensusSet, except that the
+    // input and output sequences are replaced by 2D arrays.
     template <class Type, class Functor>
     brick::numeric::Array2D<Type>
     ransacGetConsensusSetRows(
@@ -86,7 +100,10 @@ namespace brick {
       return result;
     }
 
-    
+
+    // This is is a convenience function that functions just like
+    // ransacGetConsensusSetRows, except that the output of the
+    // functor argument is passed to a second functor for evaluation.
     template <class Type, class Functor, class Criterion>
     brick::numeric::Array2D<Type>
     ransacGetConsensusSetRowsByComparison(
@@ -119,6 +136,7 @@ namespace brick {
       return result;
     }
 
+
     
     template <class Type>
     brick::numeric::Array2D<Type>
@@ -131,6 +149,9 @@ namespace brick {
     }
     
 
+    // This function is just like ransacSelectRows, except that a
+    // third argument allows the calling context to control the
+    // pseudo-random sequence.
     template <class Type>
     brick::numeric::Array2D<Type>
     ransacSelectRows(brick::numeric::Array2D<Type> const& sampleArray,
@@ -145,6 +166,9 @@ namespace brick {
     }
     
     
+    // This function is just like ransacSelectRows, except that a
+    // third argument allows the calling context to control the
+    // pseudo-random sequence.
     template <class Type>
     brick::numeric::Array2D<Type>
     ransacSelectRows(brick::numeric::Array2D<Type> const& sampleArray,

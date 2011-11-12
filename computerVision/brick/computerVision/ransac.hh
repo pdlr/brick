@@ -27,11 +27,26 @@ namespace brick {
       InIter inBegin, InIter inEnd, OutIter outBegin, Functor functor);
 
     
+    template <class InIter, class OutIter, class Functor, class Criterion>
+    void
+    ransacGetConsensusSetByComparison(
+      InIter inBegin, InIter inEnd, OutIter outBegin, Functor functor,
+      Criterion criterion);
+
+    
     template <class Type, class Functor>
     brick::numeric::Array2D<Type>
     ransacGetConsensusSetRows(
       brick::numeric::Array2D<Type> const& candidates,
-      Functor& functor);
+      Functor functor);
+
+    
+    template <class Type, class Functor, class Criterion>
+    brick::numeric::Array2D<Type>
+    ransacGetConsensusSetRowsByComparison(
+      brick::numeric::Array2D<Type> const& candidates,
+      Functor functor,
+      Criterion criterion);
 
     
     unsigned int

@@ -41,11 +41,27 @@ namespace brick {
     }
 
     
+    template <class InIter, class OutIter, class Functor, class Criterion>
+    void
+    ransacGetConsensusSetByComparison(
+      InIter inBegin, InIter inEnd, OutIter outBegin, Functor functor,
+      Criterion criterion)
+    {
+      while(inBegin != inEnd) {
+        if(criterion(functor(*inBegin))) {
+          *outBegin = *inBegin;
+          ++inBegin;
+          ++outBegin;
+        }
+      }
+    }
+
+    
     template <class Type, class Functor>
     brick::numeric::Array2D<Type>
     ransacGetConsensusSetRows(
       brick::numeric::Array2D<Type> const& candidates,
-      Functor& functor)
+      Functor functor)
     {
       brick::numeric::Array1D<bool> indicatorArray(candidates.rows());
       unsigned int count = 0;
@@ -64,6 +80,40 @@ namespace brick {
       for(unsigned int ii = 0; ii < candidates.rows(); ++ii) {
         if(indicatorArray[ii]) {
           result.getRow(outputRow).copy(candidates.getRow(ii));
+          ++outputRow;
+        }
+      }
+      return result;
+    }
+
+    
+    template <class Type, class Functor, class Criterion>
+    brick::numeric::Array2D<Type>
+    ransacGetConsensusSetRowsByComparison(
+      brick::numeric::Array2D<Type> const& candidates,
+      Functor functor,
+      Criterion criterion)
+    {
+      // TBD: implement this by composing criterion and functor, then
+      // calling ransacGetConsensusSet().
+      brick::numeric::Array1D<bool> indicatorArray(candidates.rows());
+      unsigned int count = 0;
+      for(unsigned int ii = 0; ii < candidates.rows(); ++ii) {
+        brick::numeric::Array1D<Type> currentRow = candidates.getRow(ii);
+        if(criterion(functor(currentRow))) {
+          indicatorArray[ii] = true;
+          ++count;
+        } else {
+          indicatorArray[ii] = false;
+        }
+      }
+
+      brick::numeric::Array2D<Type> result(count, candidates.columns());
+      unsigned int outputRow = 0;
+      for(unsigned int ii = 0; ii < candidates.rows(); ++ii) {
+        if(indicatorArray[ii]) {
+          result.getRow(outputRow).copy(candidates.getRow(ii));
+          ++outputRow;
         }
       }
       return result;

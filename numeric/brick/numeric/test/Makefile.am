@@ -15,12 +15,17 @@ TESTS			= \
 	array1DTest \
 	array2DTest \
 	array3DTest \
+	arrayNDTest \
+	convolve1DTest \
+	convolve2DTest \
+	convolveNDTest \
 	derivativeRiddersTest \
 	index3DTest \
 	maxRecorderTest \
 	minRecorderTest \
 	rotationsTest \
 	solveQuadraticTest \
+	stencil2DTest \
 	transform2DTest \
 	transform3DTest \
 	utilitiesTest
@@ -32,12 +37,17 @@ check_PROGRAMS          = \
 	array1DTest \
 	array2DTest \
 	array3DTest \
+	arrayNDTest \
+	convolve1DTest \
+	convolve2DTest \
+	convolveNDTest \
 	derivativeRiddersTest \
 	index3DTest \
 	maxRecorderTest \
 	minRecorderTest \
 	rotationsTest \
 	solveQuadraticTest \
+	stencil2DTest \
 	transform2DTest \
 	transform3DTest \
 	utilitiesTest
@@ -49,12 +59,17 @@ check_PROGRAMS          = \
 array1DTest_SOURCES		= array1DTest.cc arrayTestCommon.hh
 array2DTest_SOURCES		= array2DTest.cc arrayTestCommon.hh
 array3DTest_SOURCES		= array3DTest.cc arrayTestCommon.hh
+arrayNDTest_SOURCES		= arrayNDTest.cc arrayTestCommon.hh
+convolve1DTest_SOURCES		= convolve1DTest.cc
+convolve2DTest_SOURCES		= convolve2DTest.cc
+convolveNDTest_SOURCES		= convolveNDTest.cc
 derivativeRiddersTest_SOURCES	= derivativeRiddersTest.cc
 index3DTest_SOURCES		= index3DTest.cc
 maxRecorderTest_SOURCES		= maxRecorderTest.cc
 minRecorderTest_SOURCES		= minRecorderTest.cc
 rotationsTest_SOURCES		= rotationsTest.cc
 solveQuadraticTest_SOURCES	= solveQuadraticTest.cc
+stencil2DTest_SOURCES		= stencil2DTest.cc
 transform2DTest_SOURCES		= transform2DTest.cc arrayTestCommon.hh
 transform3DTest_SOURCES		= transform3DTest.cc arrayTestCommon.hh
 utilitiesTest_SOURCES		= utilitiesTest.cc

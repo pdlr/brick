@@ -27,6 +27,11 @@ brickNumeric_HEADERS	= \
 	array1D.hh array1D_impl.hh \
 	array2D.hh array2D_impl.hh \
 	array3D.hh array3D_impl.hh \
+	arrayND.hh arrayND_impl.hh \
+	convolutionStrategy.hh \
+	convolve1D.hh convolve1D_impl.hh \
+	convolve2D.hh convolve2D_impl.hh \
+	convolveND.hh convolveND_impl.hh \
 	derivativeRidders.hh \
 	extremumRecorder.hh \
 	functional.hh \
@@ -38,6 +43,7 @@ brickNumeric_HEADERS	= \
 	rotations.hh rotations_impl.hh \
 	slice.hh \
 	solveQuadratic.hh solveQuadratic_impl.hh \
+	stencil2D.hh stencil2D_impl.hh \
 	subArray1D.hh subArray1D_impl.hh \
 	subArray2D.hh subArray2D_impl.hh \
 	quaternion.hh quaternion_impl.hh \

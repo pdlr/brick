@@ -84,12 +84,23 @@ namespace brick {
 
       /** 
        * Constructs a "arrayRows x arrayColumns" element array.
+       *
+       * WARNING: The rowStep argument is newly added, and much of the
+       * brick source code assumes that rows are contiguous.  If you
+       * set it to anything other than the default, be on the lookout
+       * for bugs.
        * 
        * @param arrayRows Number of rows in the array after successful
        * construction.
        *
        * @param arrayColumns Number of columns in the array after successful
        * construction.
+       *
+       * @param rowStep Number of elements between the start of
+       * consecutive rows in the array.  Setting this argument to zero
+       * has the same effect as setting it ot the same value as
+       * arrayColumns.  This argument is useful for creating arrays
+       * with rows aligned on, for example, 16 byte boundaries.
        */
       Array2D(size_t arrayRows, size_t arrayColumns,
               size_t rowStep = 0);
@@ -105,8 +116,19 @@ namespace brick {
        * Where "#" indicates text that can be converted to the element
        * type of the array using the stream input operator.
        * 
+       * WARNING: The rowStep argument is newly added, and much of the
+       * brick source code assumes that rows are contiguous.  If you
+       * set it to anything other than the default, be on the lookout
+       * for bugs.
+       * 
        * @param inputString The argument specifies the string from which
        * the array will be constructed.
+       * 
+       * @param rowStep Number of elements between the start of
+       * consecutive rows in the array.  Setting this argument to zero
+       * has the same effect as setting it ot the same value as
+       * arrayColumns.  This argument is useful for creating arrays
+       * with rows aligned on, for example, 16 byte boundaries.
        */
       explicit
       Array2D(const std::string& inputString,
@@ -128,6 +150,11 @@ namespace brick {
        * delete dataPtr when done.  The elements of the Array are
        * organized in row-major order.
        * 
+       * WARNING: The rowStep argument is newly added, and much of the
+       * brick source code assumes that rows are contiguous.  If you
+       * set it to anything other than the default, be on the lookout
+       * for bugs.
+       * 
        * @param arrayRows Number of rows in the array after successful
        * construction.
        *
@@ -136,6 +163,12 @@ namespace brick {
        *
        * @param dataPtr A C-style array of Type into which the newly
        * constructed Array2D should index.
+       * 
+       * @param rowStep Number of elements between the start of
+       * consecutive rows in the array.  Setting this argument to zero
+       * has the same effect as setting it ot the same value as
+       * arrayColumns.  This argument is useful for creating arrays
+       * with rows aligned on, for example, 16 byte boundaries.
        */
       Array2D(size_t arrayRows, size_t arrayColumns, Type* const dataPtr,
               size_t rowStep = 0);
@@ -175,6 +208,11 @@ namespace brick {
        * reference their data without being friend classes.  Caveat
        * emptor.
        * 
+       * WARNING: The rowStep argument is newly added, and much of the
+       * brick source code assumes that rows are contiguous.  If you
+       * set it to anything other than the default, be on the lookout
+       * for bugs.
+       * 
        * @param arrayRows This argument specifies the number of rows in the
        * array.
        * 
@@ -183,6 +221,12 @@ namespace brick {
        * 
        * @param dataPtr This argument is a C-style array containing the
        * data to which the new Array2D instance should refer.
+       * 
+       * @param rowStep Number of elements between the start of
+       * consecutive rows in the array.  Setting this argument to zero
+       * has the same effect as setting it ot the same value as
+       * arrayColumns.  This argument is useful for creating arrays
+       * with rows aligned on, for example, 16 byte boundaries.
        * 
        * @param referenceCount ReferenceCount instance indicating
        * the number of Array classes currently using dataPtr.

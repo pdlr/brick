@@ -15,35 +15,46 @@ VPATH			= @srcdir@
 
 # Additional files which should be included in the distribution.
 
-# EXTRA_DIST              = connectedComponentsTestImage0.pgm \
-# 			  dilateErodeTestImage0.pgm \
-# 			  dilatedTestImage0.pgm \
-# 			  edgeTestImage0.pgm \
-# 			  erodedTestImage0.pgm \
-# 			  testImagePGM0.pgm \
-# 			  testImagePGM1.pgm \
-# 			  testImagePGM2.pgm \
-# 			  testImagePGM3.pgm \
-# 			  testImagePPM0.ppm \
-# 			  testImagePPM1.ppm
+EXTRA_DIST              = \
+	connectedComponentsTestImage0.pgm \
+	dilateErodeTestImage0.pgm \
+	dilatedTestImage0.pgm \
+	edgeTestImage0.pgm \
+	erodedTestImage0.pgm \
+	testImagePGM0.pgm \
+	testImagePGM1.pgm \
+	testImagePPM0.ppm \
+	testImagePPM1.ppm
 
 
 # Specify which tests should be run.
 
 TESTS = \
-	ransacTest
+	colorspaceConverterTest \
+	imageFilterTest \
+	imagePyramidTest \
+	ransacTest \
+	utilitiesTest
 
 
 # Specify which tests should be build from source.
 
 check_PROGRAMS = \
-	ransacTest
+	colorspaceConverterTest \
+	imageFilterTest \
+	imagePyramidTest \
+	ransacTest \
+	utilitiesTest
 
 
 # For each test which should be built from source, specify which 
 # source files.
 
+colorspaceConverterTest_SOURCES	= colorspaceConverterTest.cc
+imageFilterTest_SOURCES		= imageFilterTest.cc
+imagePyramidTest_SOURCES	= imagePyramidTest.cc
 ransacTest_SOURCES		= ransacTest.cc
+utilitiesTest_SOURCES		= utilitiesTest.cc
 
 
 # Set the include path and specify where to look for data files.

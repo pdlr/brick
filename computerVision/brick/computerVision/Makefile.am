@@ -24,8 +24,23 @@ AM_CPPFLAGS		= -I$(top_srcdir)
 
 brickComputerVisiondir		= $(includedir)/brick/computerVision
 brickComputerVision_HEADERS	= \
-	randomSampleSelector.hh randomSampleSelector_impl.hh\
-	ransac.hh ransac_impl.hh
+	colorspaceConverter.hh colorspaceConverter_impl.hh \
+	image.hh \
+	imageFilter.hh imageFilter_impl.hh \
+	imageIO.hh imageIO_impl.hh \
+	imageFormat.hh \
+	imageFormatTraits.hh \
+	imagePyramid.hh imagePyramid_impl.hh \
+	kernel.hh kernel_impl.hh \
+	kernels.hh kernels_impl.hh \
+	pixelBGRA.hh \
+	pixelHSV.hh \
+	pixelRGB.hh \
+	pixelRGBA.hh \
+	pixelYIQ.hh \
+	randomSampleSelector.hh randomSampleSelector_impl.hh \
+	ransac.hh ransac_impl.hh \
+	utilities.hh utilities_impl.hh
 
 stillToComeHeaders		= \
 	calibrationTools.h \
@@ -35,7 +50,6 @@ stillToComeHeaders		= \
 	cameraIntrinsicsPinhole.h \
 	cameraIntrinsicsPlumbBob.h \
 	canny.h \
-	colorspaceConverter.h \
 	connectedComponents.h \
 	dilate.h \
 	disjointSet.h \
@@ -43,41 +57,29 @@ stillToComeHeaders		= \
 	erode.h \
 	extendedKalmanFilter.h \
 	featureAssociation.h \
-	filter.h \
 	fivePointAlgorithm.h \
 	fourierTransformer.h \
 	getEuclideanDistance.h \
 	histogramEqualize.h \
-	image.h \
-	imageFormat.h \
-	imageFormatTraits.h \
-	imageIO.h \
 	imageWarper.h \
 	kdTree.h \
-	kernel.h \
-	kernels.h \
 	nChooseKSampleSelector.h \
 	naiveSnake.h \
 	nonMaximumSuppress.h \
 	opticalFlow.h \
-	pixelBGRA.h \
-	pixelHSV.h \
-	pixelRGB.h \
-	pixelRGBA.h \
-	pixelYIQ.h \
 	quadMap.h \
 	registerPoints3D.h \
 	segmenterFelzenszwalb.h \
 	sobel.h \
 	stereoRectify.h \
-	threePointAlgorithm.h \
-	utilities.h
+	threePointAlgorithm.h
 
 
 # Define the library to build.
 lib_LTLIBRARIES		= libbrickComputerVision.la
 libbrickComputerVision_la_SOURCES = \
-	ransac.cc
+	imageIO.cc imageIO.hh \
+	ransac.cc ransack.hh
 
 otherSources =\
 	cameraIntrinsicsPinhole.cpp cameraIntrinsicsPinhole.h \
@@ -87,7 +89,6 @@ otherSources =\
 	fivePointAlgorithm.cpp fivePointAlgorithm.h \
 	fourierTransformer.cpp fourierTransformer.h \
 	histogramEqualize.cpp histogramEqualize.h \
-	imageIO.cpp imageIO.h \
 	naiveSnake.cpp naiveSnake.h \
 	segmenterFelzenszwalb.cpp segmenterFelzenszwalb.h \
 	stereoRectify.cpp stereoRectify.h

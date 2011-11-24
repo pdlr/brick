@@ -1339,7 +1339,7 @@ namespace brick {
      */
     template <class Type>
     inline Array1D<Type>
-    ravel(Array2D<Type> const& inputArray) {return inputArray.ravel();}
+    ravel(Array2D<Type>& inputArray) {return inputArray.ravel();}
 
 
     /** 

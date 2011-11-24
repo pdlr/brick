@@ -149,6 +149,9 @@ namespace brick {
   
 } // namespace brick
 
+
+// Include file containing definitions of inline and template
+// functions.
 #include <brick/computerVision/randomSampleSelector_impl.hh>
 
 #endif /* #ifndef BRICK_COMPUTERVISION_RANDOMSAMPLESELECTOR_HH */

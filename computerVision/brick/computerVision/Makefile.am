@@ -29,7 +29,7 @@ brickComputerVision_HEADERS	= \
 	imageFilter.hh imageFilter_impl.hh \
 	imageIO.hh imageIO_impl.hh \
 	imageFormat.hh \
-	imageFormatTraits.hh \
+	imageFormatTraits.hh imageFormatTraits_impl.hh \
 	imagePyramid.hh imagePyramid_impl.hh \
 	kernel.hh kernel_impl.hh \
 	kernels.hh kernels_impl.hh \

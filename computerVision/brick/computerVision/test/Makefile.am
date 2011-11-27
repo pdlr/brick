@@ -33,6 +33,7 @@ TESTS = \
 	colorspaceConverterTest \
 	imageFilterTest \
 	imagePyramidTest \
+	keypointSelectorLepetitTest \
 	ransacTest \
 	utilitiesTest
 
@@ -43,6 +44,7 @@ check_PROGRAMS = \
 	colorspaceConverterTest \
 	imageFilterTest \
 	imagePyramidTest \
+	keypointSelectorLepetitTest \
 	ransacTest \
 	utilitiesTest
 
@@ -53,6 +55,7 @@ check_PROGRAMS = \
 colorspaceConverterTest_SOURCES	= colorspaceConverterTest.cc
 imageFilterTest_SOURCES		= imageFilterTest.cc
 imagePyramidTest_SOURCES	= imagePyramidTest.cc
+keypointSelectorLepetitTest_SOURCES	= keypointSelectorLepetitTest.cc
 ransacTest_SOURCES		= ransacTest.cc
 utilitiesTest_SOURCES		= utilitiesTest.cc
 

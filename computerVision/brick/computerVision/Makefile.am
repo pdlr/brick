@@ -33,6 +33,7 @@ brickComputerVision_HEADERS	= \
 	imagePyramid.hh imagePyramid_impl.hh \
 	kernel.hh kernel_impl.hh \
 	kernels.hh kernels_impl.hh \
+	keypointSelectorLepetit.hh keypointSelectorLepetit_impl.hh \
 	pixelBGRA.hh \
 	pixelHSV.hh \
 	pixelRGB.hh \
@@ -79,6 +80,7 @@ stillToComeHeaders		= \
 lib_LTLIBRARIES		= libbrickComputerVision.la
 libbrickComputerVision_la_SOURCES = \
 	imageIO.cc imageIO.hh \
+	keypointSelectorLepetit.cc keypointSelectorLepetit.hh \
 	ransac.cc ransack.hh
 
 otherSources =\

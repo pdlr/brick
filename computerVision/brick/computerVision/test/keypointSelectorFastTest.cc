@@ -12,6 +12,8 @@
 
 #include <brick/computerVision/imageIO.hh>
 #include <brick/computerVision/keypointSelectorFast.hh>
+#include <brick/computerVision/utilities.hh>
+
 #include <brick/computerVision/test/testImages.hh>
 #include <brick/random/pseudoRandom.hh>
 #include <brick/test/testFixture.hh>
@@ -39,7 +41,7 @@ namespace brick {
       void testKeypointSelectorFast();
 
       // Legacy functions.
-      void exerciseKeypointSelectorFast();
+      void exerciseKeypointSelectorFast(std::string const& fileName);
         
     private:
 
@@ -122,9 +124,16 @@ namespace brick {
 
     void
     KeypointSelectorFastTest::
-    exerciseKeypointSelectorFast()
+    exerciseKeypointSelectorFast(std::string const& fileName)
     {
-      Image<GRAY8> inputImage = readPGM8(getTestImageFileNamePGM0());
+      Image<GRAY8> inputImage;
+      if(utilities::splitExtension(fileName).second == ".pgm") {
+        inputImage = readPGM8(fileName);    
+      } else {
+        Image<RGB8> colorImage = readPPM8(fileName);
+        inputImage = convertColorspace<GRAY8>(colorImage);
+      }
+
       KeypointSelectorFast selector;
       double time0 = utilities::getCurrentTime();
       selector.setImage(inputImage);
@@ -133,6 +142,10 @@ namespace brick {
                 << inputImage.rows() << "x" << inputImage.columns()
                 << " gray image." << std::endl;
       std::cout << "Threshold: " << selector.getThreshold() << std::endl;
+      time0 = utilities::getCurrentTime();
+      selector.setImage(inputImage);
+      time1 = utilities::getCurrentTime();
+      std::cout << "2nd ET: " << time1 - time0 << std::endl;
 
       std::vector<KeypointFast> keypoints = selector.getKeypoints();
       std::cout << "Num keypoints: " << keypoints.size() << std::endl;

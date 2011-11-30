@@ -136,6 +136,14 @@ namespace brick {
 
     void
     KeypointSelectorFast::
+    setThreshold(brick::common::Int16 threshold)
+    {
+      m_threshold = threshold;
+    }
+    
+    
+    void
+    KeypointSelectorFast::
     checkAndRepairRegionOfInterest(Image<GRAY8> const& inImage,
                                    unsigned int pixelMeasurementRadius,
                                    unsigned int& startRow,

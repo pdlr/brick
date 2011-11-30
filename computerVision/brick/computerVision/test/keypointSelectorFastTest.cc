@@ -13,6 +13,7 @@
 #include <brick/computerVision/imageIO.hh>
 #include <brick/computerVision/keypointSelectorFast.hh>
 #include <brick/computerVision/test/testImages.hh>
+#include <brick/random/pseudoRandom.hh>
 #include <brick/test/testFixture.hh>
 
 #include <brick/utilities/timeUtilities.hh>
@@ -37,6 +38,9 @@ namespace brick {
       // Tests.
       void testKeypointSelectorFast();
 
+      // Legacy functions.
+      void exerciseKeypointSelectorFast();
+        
     private:
 
       double m_defaultTolerance;
@@ -58,6 +62,67 @@ namespace brick {
     void
     KeypointSelectorFastTest::
     testKeypointSelectorFast()
+    {
+      // Pick a few arbitrary spots for keypoints.
+      const unsigned int numberOfPoints = 4;
+      numeric::Index2D points[numberOfPoints];
+      points[0] = numeric::Index2D(10, 12);
+      points[1] = numeric::Index2D(12, 57);
+      points[2] = numeric::Index2D(23, 12);
+      points[3] = numeric::Index2D(77, 67);
+
+      // Create an image that's lots of below-threshold noise.
+      Image<GRAY8> inputImage(100, 120);
+      inputImage = 128;
+      random::PseudoRandom prandom(0);
+      for(unsigned int ii = 0; ii < inputImage.size(); ++ii) {
+        inputImage[ii] += prandom.uniformInt(-5, 5);
+      }
+
+      // Now manually add four features of varying types.
+      int bressenhamRows[16] = {-3, -3, -2, -1,  0,  1,  2,  3,
+                                 3,  3,  2,  1,  0, -1, -2, -3};
+      int bressenhamColumns[16] = {0,  1,  2,  3,  3,  3,  2,  1,
+                                   0, -1, -2, -3, -3, -3, -2, -1};
+      inputImage(points[0].getRow(), points[0].getColumn()) -= 40;
+      inputImage(points[1].getRow(), points[1].getColumn()) += 40;
+      inputImage(points[2].getRow(), points[2].getColumn()) -= 20;
+      for(unsigned int ii = 14; ii < 14 + 16; ++ii) {
+        unsigned int jj = ii % 16;
+        inputImage(points[2].getRow() - bressenhamRows[jj],
+                   points[2].getColumn() - bressenhamColumns[jj]) += 20;
+      }
+      inputImage(points[3].getRow(), points[3].getColumn()) += 20;
+      for(unsigned int ii = 5; ii < 5 + 16; ++ii) {
+        unsigned int jj = ii % 16;
+        inputImage(points[3].getRow() - bressenhamRows[jj],
+                   points[3].getColumn() - bressenhamColumns[jj]) -= 20;
+      }
+
+      // Make sure the detector picks up these four features in raster
+      // order.
+      KeypointSelectorFast selector;
+      selector.setThreshold(29);
+      selector.setImage(inputImage);
+      std::vector<KeypointFast> keypoints = selector.getKeypoints();
+      BRICK_TEST_ASSERT(keypoints.size() == numberOfPoints);
+      for(unsigned int ii = 0; ii < numberOfPoints; ++ii) {
+        BRICK_TEST_ASSERT(keypoints[ii].row == points[ii].getRow());
+        BRICK_TEST_ASSERT(keypoints[ii].column == points[ii].getColumn());
+        BRICK_TEST_ASSERT(keypoints[ii].isPositive == ((ii % 2) != 0));
+        for(unsigned int jj = 0; jj < 16; ++jj) {
+          common::UnsignedInt8 pixelValue = 
+            inputImage(points[ii].getRow() + bressenhamRows[jj],
+                       points[ii].getColumn() + bressenhamColumns[jj]);
+          BRICK_TEST_ASSERT(keypoints[ii].featureVector[jj] == pixelValue);
+        }
+      }
+    }
+
+
+    void
+    KeypointSelectorFastTest::
+    exerciseKeypointSelectorFast()
     {
       Image<GRAY8> inputImage = readPGM8(getTestImageFileNamePGM0());
       KeypointSelectorFast selector;

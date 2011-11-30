@@ -71,6 +71,11 @@ namespace brick {
         unsigned int stopRow = std::numeric_limits<unsigned int>::max(),
         unsigned int stopColumn = std::numeric_limits<unsigned int>::max());
 
+
+      void
+      setThreshold(brick::common::Int16 threshold);
+
+      
     private:
 
       void

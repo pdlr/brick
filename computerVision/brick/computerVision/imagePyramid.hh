@@ -64,7 +64,9 @@ namespace brick {
        * pyramid to generate as many levels as possible.
        * 
        * @param isBandPass Setting this argument to true enables the
-       * Laplacian of Guassian approximation.
+       * Laplacian of Guassian approximation.  Note that the final
+       * (smallest) image of the pyramid will simply be low-pass
+       * filtered, not LoG.
        */
       ImagePyramid(Image<Format> const& inputImage,
                    double scaleFactorPerLevel = 2.0,

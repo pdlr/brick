@@ -81,7 +81,7 @@ namespace brick {
       // If levels is set to zero, 
       if(0 == levels) {
         // Filter kernel may extend up to 6 sigma in any direction.
-        double minimumImageSize = 12 * sigma;
+        double minimumImageSize = std::ceil(12 * sigma);
 
         // How many pyramid levels?  Well, enough that we get close to
         // minimumImageSize, but no smaller.  This implies that

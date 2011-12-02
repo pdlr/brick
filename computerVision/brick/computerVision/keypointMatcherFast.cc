@@ -11,6 +11,8 @@
 ***************************************************************************
 */
 
+#include <numeric>
+#include <brick/common/mathFunctions.hh>
 #include <brick/computerVision/keypointMatcherFast.hh>
 
 namespace brick {
@@ -20,14 +22,14 @@ namespace brick {
     // Default constructor.
     KeypointMatcherFast::
     KeypointMatcherFast()
-      : m_keypointMap()
+      : m_keypointMapNegative(),
+        m_keypointMapPositive()
     {
       // Empty.
     }
 
       
     // Destructor.
-    virtual
     KeypointMatcherFast::
     ~KeypointMatcherFast()
     {
@@ -36,79 +38,25 @@ namespace brick {
 
 
     bool
+    KeypointMatcherFast::
     matchKeypoint(KeypointFast const& query, KeypointFast& bestMatch) const
     {
-      // Start by finding the keypoint who's feature vector mean is
-      // closest to that of the query point.  This is a good starting
-      // point for a linear search.
-      typedef std::map<double, KeypointFast>::const_iterator MapIterator;
-      featureVectorMean = this->computeFeatureVectorMean(query);
-      MapIterator startIter = m_keypointMap.lower_bound(featureVectorMean);
-      
-      // Now search forward until we know for sure we're not going to
-      // find a better match.  We'll know we've gone far enough when
-      // the difference in feature vector means is big enough to
-      // guarantee that the new SSD between feature vectors is larger
-      // than our best so far.
-      common::Int64 bestSSD = std::numeric_limits<common::Int64>::max();
-      MapIterator currentIter = startIter;
-      while(currentIter != m_keypointMap.end()) {
-        double differenceInMeans = featureVectorMean - currentIter->first;
-        double boundOnNewSSD = (differenceInMeans * differenceInMeans
-                                * KeypointFast::numberOfFeatures);
-        if(boundOnNewSSD >= bestSSDSoFar) {
-          break;
-        }
-        double newSSD = this->computeSSD(query, *currentIter);
-        if(newSSD < bestSSDSoFar) {
-          bestSSDSoFar = newSSD;
-          bestMatch = *currentIter;
-        }
-        ++currentIter;
+      if(query.isPositive) {
+        return this->matchKeypoint(query, bestMatch,
+                                   this->m_keypointMapPositive);
       }
-
-      // Do the search again, but this time go backward, toward the
-      // beginning of the map.
-      currentIter = startIter;
-      while(currentIter != m_keypointMap.begin()) {
-        double differenceInMeans = featureVectorMean - currentIter->first;
-        double boundOnNewSSD = (differenceInMeans * differenceInMeans
-                                * KeypointFast::numberOfFeatures);
-        if(boundOnNewSSD >= bestSSDSoFar) {
-          break;
-        }
-        double newSSD = this->computeSSD(query, *currentIter);
-        if(newSSD < bestSSDSoFar) {
-          bestSSDSoFar = newSSD;
-          bestMatch = *currentIter;
-        }
-        --currentIter;
-      }
-      return true;
-    }
-
-
-    template <class Iter>
-    void
-    KeypointMatcherFast::
-    setKeypoints(Iter sequenceBegin, Iter sequenceEnd)
-    {
-      m_keypointMap.clear();
-      while(sequenceBegin != sequenceEnd) {
-        double featureVectorMean = this->computerFeatureVectorMean(
-          *sequenceBegin);
-        m_keypointMap.insert(std::make_pair(featureVectorMean, *sequenceBegin));
-      }
+      return this->matchKeypoint(query, bestMatch,
+                                 this->m_keypointMapNegative);
     }
 
 
     double
     KeypointMatcherFast::
-    computeFeatureVectorMean(KeypointFast const& keypoint)
+    computeFeatureVectorMean(KeypointFast const& keypoint) const
     {
       return std::accumulate(
-        &(sequenceBegin->featureVector[0]),
-        &(sequenceBegin->featureVector[0]) + KeypointFast::numberOfFeatures,
+        &(keypoint.featureVector[0]),
+        &(keypoint.featureVector[0]) + KeypointFast::numberOfFeatures,
         double(0.0)) / KeypointFast::numberOfFeatures;
     }
 
@@ -116,6 +64,7 @@ namespace brick {
     double
     KeypointMatcherFast::
     computeSSD(KeypointFast const& keypoint0, KeypointFast const& keypoint1)
+      const
     {
       double ssd = 0.0;
       for(unsigned int ii = 0; ii < KeypointFast::numberOfFeatures; ++ii) {
@@ -125,9 +74,67 @@ namespace brick {
       }
       return ssd;
     }
-    
+
+
+    bool
+    KeypointMatcherFast::
+    matchKeypoint(KeypointFast const& query, KeypointFast& bestMatch,
+                  std::map<double, KeypointFast> const& keypointMap) const
+    {
+      // Start by finding the keypoint who's feature vector mean is
+      // closest to that of the query point.  This is a good starting
+      // point for a linear search.
+      typedef std::map<double, KeypointFast>::const_iterator MapIterator;
+      double featureVectorMean = this->computeFeatureVectorMean(query);
+      MapIterator startIter = keypointMap.lower_bound(featureVectorMean);
+      if(startIter == keypointMap.end()) {
+        return false;
+      }
+      
+      // Now search forward until we know for sure we're not going to
+      // find a better match.  We'll know we've gone far enough when
+      // the difference in feature vector means is big enough to
+      // guarantee that the new SSD between feature vectors is larger
+      // than our best so far.
+      common::Int64 bestSSDSoFar = std::numeric_limits<common::Int64>::max();
+      MapIterator currentIter = startIter;
+      while(currentIter != keypointMap.end()) {
+        double differenceInMeans = common::absoluteValue(
+          featureVectorMean - currentIter->first);
+        double boundOnNewSSD = (differenceInMeans * differenceInMeans
+                                * KeypointFast::numberOfFeatures);
+        if(boundOnNewSSD >= bestSSDSoFar) {
+          break;
+        }
+        double newSSD = this->computeSSD(query, currentIter->second);
+        if(newSSD < bestSSDSoFar) {
+          bestSSDSoFar = newSSD;
+          bestMatch = currentIter->second;
+        }
+        ++currentIter;
+      }
+
+      // Do the search again, but this time go backward, toward the
+      // beginning of the map.
+      currentIter = startIter;
+      while(currentIter != keypointMap.begin()) {
+        --currentIter;
+        double differenceInMeans = common::absoluteValue(
+          featureVectorMean - currentIter->first);
+        double boundOnNewSSD = (differenceInMeans * differenceInMeans
+                                * KeypointFast::numberOfFeatures);
+        if(boundOnNewSSD >= bestSSDSoFar) {
+          break;
+        }
+        double newSSD = this->computeSSD(query, currentIter->second);
+        if(newSSD < bestSSDSoFar) {
+          bestSSDSoFar = newSSD;
+          bestMatch = currentIter->second;
+        }
+      } 
+      return true;
+    }
+
   } // namespace computerVision
   
 } // namespace brick
-
-#endif /* #ifndef BRICK_COMPUTERVISION_KEYPOINTMATCHERFAST_HH */

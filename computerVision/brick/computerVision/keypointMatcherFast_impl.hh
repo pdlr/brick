@@ -23,7 +23,26 @@ namespace brick {
 
   namespace computerVision {
 
-    // Currently empty, but code will go here as we optimize.
+    template <class Iter>
+    void
+    KeypointMatcherFast::
+    setKeypoints(Iter sequenceBegin, Iter sequenceEnd)
+    {
+      m_keypointMapNegative.clear();
+      m_keypointMapPositive.clear();
+      while(sequenceBegin != sequenceEnd) {
+        double featureVectorMean = this->computeFeatureVectorMean(
+          *sequenceBegin);
+        if(sequenceBegin->isPositive) {
+          m_keypointMapPositive.insert(
+            std::make_pair(featureVectorMean, *sequenceBegin));          
+        } else {
+          m_keypointMapNegative.insert(
+            std::make_pair(featureVectorMean, *sequenceBegin));
+        }
+        ++sequenceBegin;
+      }
+    }
 
     // ============== Private member functions below this line ==============
 

@@ -28,6 +28,8 @@ namespace brick {
       int column;
       brick::common::UnsignedInt8 featureVector[16];
       bool isPositive;
+
+      static const unsigned int numberOfFeatures = 16;
     };
     
 
@@ -97,7 +99,7 @@ namespace brick {
        * @return The return value is vector of KeypointFast instances.
        */
       std::vector<KeypointFast>
-      getKeypoints();
+      getKeypoints() const;
 
 
       /** 
@@ -107,7 +109,7 @@ namespace brick {
        * @return The threshold value.
        */
       brick::common::Int16
-      getThreshold();
+      getThreshold() const;
 
 
       /** 
@@ -160,13 +162,13 @@ namespace brick {
                                      unsigned int& startRow,
                                      unsigned int& startColumn,
                                      unsigned int& stopRow,
-                                     unsigned int& stopColumn);
+                                     unsigned int& stopColumn) const;
 
       // Find the highest threshold value that would still allow this
       // particular pixel to pass and be selected as a keypoint.
       brick::common::Int16
       measurePixelThreshold(Image<GRAY8> const& image,
-                            unsigned int row, unsigned int column);
+                            unsigned int row, unsigned int column) const;
       
 
       // Check to see if a specific pixel should be selected as a keypoint.
@@ -174,7 +176,7 @@ namespace brick {
       testPixel(Image<GRAY8> const& image,
                 unsigned int row, unsigned int column,
                 const common::Int16 threshold,
-                KeypointFast& keypoint);
+                KeypointFast& keypoint) const;
 
 
       // This is called by testPixel to do the heavy lifting.
@@ -184,7 +186,7 @@ namespace brick {
                        const brick::common::Int16 testValue,
                        const brick::common::Int16 threshold,
                        KeypointFast& keypoint,
-                       bool isPositive);
+                       bool isPositive) const;
 
       /* ======== Data members ========= */
       std::vector<KeypointFast> m_keypointVector;

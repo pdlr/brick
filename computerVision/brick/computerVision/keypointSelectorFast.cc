@@ -83,7 +83,7 @@ namespace brick {
     
     std::vector<KeypointFast>
     KeypointSelectorFast::
-    getKeypoints()
+    getKeypoints() const
     {
       return m_keypointVector;
     }
@@ -91,7 +91,7 @@ namespace brick {
 
     brick::common::Int16
     KeypointSelectorFast::
-    getThreshold()
+    getThreshold() const
     {
       return m_threshold;
     }
@@ -149,7 +149,7 @@ namespace brick {
                                    unsigned int& startRow,
                                    unsigned int& startColumn,
                                    unsigned int& stopRow,
-                                   unsigned int& stopColumn)
+                                   unsigned int& stopColumn) const
     {
       // The FAST feature detector uses a Bresenham circle of radius
       // 3, so this means we need to stay at least 3 pixels away from
@@ -168,7 +168,7 @@ namespace brick {
     common::Int16
     KeypointSelectorFast::
     measurePixelThreshold(Image<GRAY8> const& image,
-                          unsigned int row, unsigned int column)
+                          unsigned int row, unsigned int column) const
     {
       common::Int16 testValue = static_cast<common::Int16>(image(row, column));
 
@@ -276,7 +276,7 @@ namespace brick {
     testPixel(Image<GRAY8> const& image,
               unsigned int row, unsigned int column,
               const common::Int16 threshold,
-              KeypointFast& keypoint)
+              KeypointFast& keypoint) const
     {
       common::Int16 testValue = image(row, column);
 
@@ -324,7 +324,7 @@ namespace brick {
                      const common::Int16 testValue,
                      const common::Int16 threshold,
                      KeypointFast& keypoint,
-                     bool isPositive)
+                     bool isPositive) const
     {
       // Slow, but clear, implementation for now.
       keypoint.isPositive = isPositive;
@@ -372,5 +372,3 @@ namespace brick {
   } // namespace brick
 
 } // namespace computerVision
-
-    

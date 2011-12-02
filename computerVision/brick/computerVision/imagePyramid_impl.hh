@@ -33,7 +33,10 @@ namespace brick {
                  double scaleFactorPerLevel,
                  unsigned int levels,
                  bool isBandPass)
-      : m_pyramid()
+      : m_borderSizeLeftRight(-1),
+        m_borderSizeTopBottom(-1),
+        m_pyramid(),
+        m_scaleFactorPerLevel(scaleFactorPerLevel)
     {
       if(scaleFactorPerLevel < 1.0) {
         std::ostringstream message;
@@ -104,9 +107,12 @@ namespace brick {
         levels = std::max(levels, static_cast<unsigned int>(0));
       }
 
-      Image<Format> currentImage = inputImage.copy();
-
+      // The next two lines use integer division.
+      m_borderSizeLeftRight = filterKernel.getColumns() / 2; 
+      m_borderSizeTopBottom = filterKernel.getRows() / 2;
+      
       // Start off the pyramid.
+      Image<Format> currentImage = inputImage.copy();
       m_pyramid.push_back(currentImage);
       --levels;
       
@@ -122,7 +128,61 @@ namespace brick {
       }
     }
 
+
+    // This member function accepts pixel coordinates at one level
+    // of the image and returns the matching coordinates in any
+    // other level.
+    template <ImageFormat Format, ImageFormat InternalFormat, class KernelType>
+    brick::numeric::Index2D
+    ImagePyramid<Format, InternalFormat, KernelType>::
+    convertImageCoordinates(brick::numeric::Index2D const& inCoords,
+                            unsigned int fromLevel,
+                            unsigned int toLevel)
+    {
+      double row = inCoords.getRow();
+      double column = inCoords.getColumn();
+      while(fromLevel > toLevel) {
+        row *= m_scaleFactorPerLevel;
+        column *= m_scaleFactorPerLevel;
+        --fromLevel;
+      }
+      while(fromLevel < toLevel) {
+        row /= m_scaleFactorPerLevel;
+        column /= m_scaleFactorPerLevel;
+      }
+      return brick::numeric::Index2D(static_cast<unsigned int>(row),
+                                     static_cast<unsigned int>(column));
+    }
+
       
+    template <ImageFormat Format, ImageFormat InternalFormat, class KernelType>
+    unsigned int
+    ImagePyramid<Format, InternalFormat, KernelType>::
+    getBorderSizeLeftRight()
+    {
+      if(m_borderSizeLeftRight < 0) {
+        BRICK_THROW(brick::common::StateException,
+                    "ImagePyramid::getBorderSizeLeftRight()",
+                    "Border size has not been set yet.");
+      }
+      return static_cast<unsigned int>(m_borderSizeLeftRight);
+    }
+
+
+    template <ImageFormat Format, ImageFormat InternalFormat, class KernelType>
+    unsigned int
+    ImagePyramid<Format, InternalFormat, KernelType>::
+    getBorderSizeTopBottom()
+    {
+      if(m_borderSizeTopBottom < 0) {
+        BRICK_THROW(brick::common::StateException,
+                    "ImagePyramid::getBorderSizeLeftRight()",
+                    "Border size has not been set yet.");
+      }
+      return static_cast<unsigned int>(m_borderSizeTopBottom);
+    }
+
+
     template <ImageFormat Format, ImageFormat InternalFormat, class KernelType>
     Image<Format>&
     ImagePyramid<Format, InternalFormat, KernelType>::

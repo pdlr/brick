@@ -19,9 +19,9 @@
 // #include <brick/numeric/utilites.hh>
 
 
-// #include <cmath>
-// #include <sstream>
-// #include <numeric>
+#include <cmath>
+#include <sstream>
+#include <numeric>
 
 namespace brick {
 

@@ -157,11 +157,13 @@ namespace brick {
       startRow = std::max(
         startRow, static_cast<unsigned int>(pixelMeasurementRadius));
       stopRow = std::min(
-        stopRow, inImage.rows() - pixelMeasurementRadius);
+        stopRow,
+        static_cast<unsigned int>(inImage.rows() - pixelMeasurementRadius));
       startColumn = std::max(
         startColumn, static_cast<unsigned int>(pixelMeasurementRadius));
       stopColumn = std::min(
-        stopColumn, inImage.columns() - pixelMeasurementRadius);
+        stopColumn,
+        static_cast<unsigned int>(inImage.columns() - pixelMeasurementRadius));
     }
 
 

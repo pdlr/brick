@@ -138,6 +138,52 @@ namespace brick {
 
 
     
+    // Randomly (or rather, pseudo-randomly) selects elements of the
+    // input sequence for use in RANSAC estimation.
+    template <class Type>
+    std::vector<Type>
+    ransacSelectElements(std::vector<Type> const& inputSequence,
+                         unsigned int numberOfSamplesRequired)
+    {
+      brick::random::PseudoRandom pseudoRandom;
+      std::vector<Type> result(numberOfSamplesRequired);
+      std::vector<Type> shuffleBuffer(inputSequence.size());
+      std::vector<bool> indicators(inputSequence.size(), false);
+
+      // Select each sample in turn.  We will sample without replacement.
+      for(unsigned int ii = 0; ii < numberOfSamplesRequired; ++ii) {
+        // Easy enough: choose from among the remaining samples.
+        unsigned int selectedIndex = pseudoRandom.uniformInt(
+          ii, inputSequence.size());
+
+        // Copy from the input sequence, unless this row has already been
+        // selected.
+        if(indicators[selectedIndex]) {
+          // This row _has_ already been selected.  Fortunately, last
+          // time it was selected, we had the forsight to copy an
+          // un-selected row into shufflebuffer.  Use that one
+          // instead.
+          result[ii] = shuffleBuffer[selectedIndex];
+        } else {
+          // This row _has not_ already been selected.  Carry on.
+          result[ii] = inputSequence[selectedIndex];
+        }
+
+        // The row that was just selected might get selected again
+        // later, so we remove it from circulation by copying a
+        // not-selected row into its place in shuffleBuffer.  We do
+        // this unless selected == ii, in which case the lower
+        // bound of the uniformInt() call above prevents
+        // reselection of the row, so we do nothing.
+        if(selectedIndex != ii) {
+          shuffleBuffer[selectedIndex] = inputSequence[ii];
+          indicators[selectedIndex] = true;
+        }
+      }
+      return result;
+    }
+    
+    
     template <class Type>
     brick::numeric::Array2D<Type>
     ransacSelectRows(brick::numeric::Array2D<Type> const& sampleArray,

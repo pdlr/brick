@@ -164,6 +164,17 @@ namespace brick {
       stopColumn = std::min(
         stopColumn,
         static_cast<unsigned int>(inImage.columns() - pixelMeasurementRadius));
+
+      // Of course, all of the above will be broken if there aren't
+      // enough rows or columns in the image.
+      if(inImage.rows() <= pixelMeasurementRadius) {
+        startRow = 0;
+        stopRow = 0;
+      }
+      if(inImage.columns() <= pixelMeasurementRadius) {
+        startColumn = 0;
+        stopColumn = 0;
+      }
     }
 
 

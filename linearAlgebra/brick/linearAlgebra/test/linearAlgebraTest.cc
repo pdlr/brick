@@ -577,7 +577,8 @@ namespace brick {
         
         // Check that rMatrix is upper triangular with non-negative diagonal.
         BRICK_TEST_ASSERT(this->isUpperTriangular(rMatrix));
-        for(size_t ii; ii < std::min(rMatrix.rows(), rMatrix.columns()); ++ii) {
+        for(size_t ii = 0; ii < std::min(rMatrix.rows(), rMatrix.columns());
+            ++ii) {
           BRICK_TEST_ASSERT(rMatrix(ii, ii) >= 0.0);
         }
         

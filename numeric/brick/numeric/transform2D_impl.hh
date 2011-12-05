@@ -479,7 +479,7 @@ namespace brick {
 
     
     template <>
-    Transform2D<double>
+    inline Transform2D<double>
     operator*(Transform2D<double> const& transform0,
               Transform2D<double> const& transform1)
     {
@@ -517,7 +517,7 @@ namespace brick {
 
 
     template <>
-    Transform2D<float>
+    inline Transform2D<float>
     operator*(Transform2D<float> const& transform0,
               Transform2D<float> const& transform1)
     {

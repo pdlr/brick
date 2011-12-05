@@ -14,7 +14,9 @@
 #ifndef BRICK_COMPUTERVISION_IMAGEPYRAMID_HH
 #define BRICK_COMPUTERVISION_IMAGEPYRAMID_HH
 
+#include <brick/computerVision/image.hh>
 #include <brick/numeric/vector2D.hh>
+#include <brick/numeric/index2D.hh>
 
 namespace brick {
 

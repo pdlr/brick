@@ -40,9 +40,10 @@ namespace brick {
      * triangular matrix.
      */
     void
-    choleskyFactorization(brick::numeric::Array2D<brick::common::Float64> const& inputArray,
-                          brick::numeric::Array2D<brick::common::Float64>& kArray,
-                          bool isUpperTriangular = true);
+    choleskyFactorization(
+      brick::numeric::Array2D<brick::common::Float64> const& inputArray,
+      brick::numeric::Array2D<brick::common::Float64>& kArray,
+      bool isUpperTriangular = true);
 
     
     /** 
@@ -71,7 +72,8 @@ namespace brick {
      * containing the eigenvalues, sorted into descending order.
      */
     brick::numeric::Array1D<brick::common::Float64>
-    eigenvaluesSymmetric(brick::numeric::Array2D<brick::common::Float64> const& inputArray);
+    eigenvaluesSymmetric(
+      brick::numeric::Array2D<brick::common::Float64> const& inputArray);
 
 
     /** 
@@ -98,9 +100,10 @@ namespace brick {
      * eigenvalues.
      */
     void
-    eigenvectors(brick::numeric::Array2D<brick::common::Float64> const& inputArray,
-                 brick::numeric::Array1D< std::complex<brick::common::Float64> >& eigenvalues,
-                 brick::numeric::Array2D< std::complex<brick::common::Float64> >& eigenvectors,
+    eigenvectors(
+      brick::numeric::Array2D<brick::common::Float64> const& inputArray,
+      brick::numeric::Array1D< std::complex<brick::common::Float64> >& eigenvalues,
+      brick::numeric::Array2D< std::complex<brick::common::Float64> >& eigenvectors,
                  bool isSortRequired = false);
 
     
@@ -125,9 +128,10 @@ namespace brick {
      * eigenvalue, and so on.
      */
     void
-    eigenvectorsSymmetric(brick::numeric::Array2D<brick::common::Float64> const& inputArray,
-                          brick::numeric::Array1D<brick::common::Float64>& eigenvalues,
-                          brick::numeric::Array2D<brick::common::Float64>& eigenvectors);
+    eigenvectorsSymmetric(
+      brick::numeric::Array2D<brick::common::Float64> const& inputArray,
+      brick::numeric::Array1D<brick::common::Float64>& eigenvalues,
+      brick::numeric::Array2D<brick::common::Float64>& eigenvectors);
 
   
     /** 

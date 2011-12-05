@@ -364,7 +364,7 @@ namespace brick {
 
     template <class Type>
     Vector2D<Type>
-    operator/(const Vector2D<Type>& vector0, Type scalar)
+    operator/(const Vector2D<Type>& vector0, Type const& scalar)
     {
       return Vector2D<Type>(vector0.x() / scalar,
                             vector0.y() / scalar);

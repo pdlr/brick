@@ -16,6 +16,7 @@
 
 #include <brick/computerVision/colorspaceConverter.hh>
 #include <brick/computerVision/image.hh>
+#include <brick/numeric/transform2D.hh>
 
 namespace brick {
 
@@ -206,6 +207,34 @@ namespace brick {
     dissociateColorComponents(Image<FORMAT>& inputImage);
 
 
+    /** 
+     * Return the transform that, in the least-squares sense, most
+     * nearly transforms each point in fromPoints to the corresponding
+     * point in toPoints.  All of the iterator arguments must come
+     * from sequences of numeric::Vector2D<Type>.  This function
+     * currently only works with Type set to Float64 (double).
+     * 
+     * @param toPointsBegin This argument and the next define a
+     * sequence of Vector2D<Type> to which fromPoints correspond.
+     * 
+     * @param toPointsEnd This argument and the previous define a
+     * sequence of Vector2D<Type> to which fromPoints correspond.
+     * 
+     * @param fromPointsBegin This argument begins a sequence of
+     * Vector2D<Type> that we imagine can be mapped onto toPoints by
+     * an affine transform.  This sequence must have at least the same
+     * number of elements as toPoints.
+     * 
+     * @return The return value is the affine transform that most
+     * nearly transforms each element of fromPoints to the
+     * corresponding element of toPoints.
+     */
+    template <class Type, class Iter0, class Iter1>
+    brick::numeric::Transform2D<Type>
+    estimateAffineTransform(Iter0 toPointsBegin, Iter0 toPointsEnd,
+                            Iter1 fromPointsBegin);
+
+    
     /**
      * This function subsamples its input to create a new, smaller
      * image.  The number of rows in the resulting image is the

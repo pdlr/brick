@@ -19,6 +19,8 @@
 // 
 // #include <brick/computerVision/utilities.hh>
 
+#include <brick/linearAlgebra/linearAlgebra.hh>
+
 namespace brick {
 
   namespace computerVision {
@@ -391,6 +393,85 @@ namespace brick {
     }
 
   
+    // Return the transform that, in the least-squares sense, most
+    // nearly transforms each point in fromPoints to the corresponding
+    // point in toPoints.
+    template <class Type, class Iter0, class Iter1>
+    brick::numeric::Transform2D<Type>
+    estimateAffineTransform(Iter0 toPointsBegin, Iter0 toPointsEnd,
+                            Iter1 fromPointsBegin)
+    {
+      // Affine transforms can be expressed in matrix form as:
+      //
+      //       | a, b, c |
+      //   T = | c, d, e |
+      //       | 0, 0, 1 |
+      //
+      // So that (using homogeneous coordinates), the point (x, y)
+      // gets transformed to (u, v) like this:
+      //
+      //   | u |       | x |
+      //   | v | = T * | y |
+      //   | 1 |       | 1 |
+      //
+      // Rearranging this, we have:
+      //
+      //   | x, y, 1, 0, 0, 0 |   | a |   | u |
+      //   | 0, 0, 0, x, y, 1 | * | b | = | v |
+      //                          | c |
+      //                          | d |
+      //                          | e | 
+      //                          | f | 
+      //
+      // Given more than one (x, y) to (u, v) correspondence, we
+      // combine all of the simultaneous equations into one big linear
+      // regression, and solve for the unknowns a through f.
+      //
+      //       | a |
+      //   A * | b | = B
+      //       | c |
+      //       | d |
+      //       | e | 
+      //       | f |
+      // 
+      unsigned int numberOfPoints = toPointsEnd - toPointsBegin;
+      if(numberOfPoints < 3) {
+        BRICK_THROW(brick::common::ValueException, "estimateAffineTransform()",
+                    "Input sequences must have at least three elements.");
+      }
+        
+      numeric::Array2D<brick::common::Float64> AMatrix(numberOfPoints * 2, 6);
+      numeric::Array1D<brick::common::Float64> BVector(numberOfPoints * 2);
+
+      // Zero out AMatrix to start with, then populate it.
+      AMatrix = brick::common::Float64(0);
+      unsigned int rowNumber = 0;
+      while(toPointsBegin != toPointsEnd) {
+        AMatrix(rowNumber, 0) = fromPointsBegin->getX();
+        AMatrix(rowNumber, 1) = fromPointsBegin->getY();
+        AMatrix(rowNumber, 2) = 1;
+        BVector[rowNumber] = toPointsBegin->getX();
+        ++rowNumber;
+        AMatrix(rowNumber, 3) = fromPointsBegin->getX();
+        AMatrix(rowNumber, 4) = fromPointsBegin->getY();
+        AMatrix(rowNumber, 5) = 1;
+        BVector[rowNumber] = toPointsBegin->getY();
+        ++rowNumber;
+        ++toPointsBegin;
+        ++fromPointsBegin;
+      }
+
+      // Solve for the transform.
+      brick::numeric::Array1D<brick::common::Float64> result =
+        brick::linearAlgebra::linearLeastSquares(AMatrix, BVector);
+      return brick::numeric::Transform2D<brick::common::Float64>(
+        result[0], result[1], result[2], 
+        result[3], result[4], result[5],
+        brick::common::Float64(0), brick::common::Float64(0),
+        brick::common::Float64(1));
+    }
+
+    
     // This function subsamples its input to create a new, smaller
     // image.
     template<ImageFormat Format>

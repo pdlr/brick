@@ -15,6 +15,8 @@
 #include <brick/computerVision/image.hh>
 #include <brick/computerVision/imageIO.hh>
 #include <brick/computerVision/utilities.hh>
+#include <brick/numeric/transform2D.hh>
+#include <brick/numeric/vector2D.hh>
 #include <brick/test/testFixture.hh>
 
 
@@ -36,6 +38,7 @@ namespace brick {
       void testAssociateColorComponents();
       void testConvertColorspace();
       void testDissociateColorComponents();
+      void testEstimateAffineTransform();
       void testSubsample();
       void testSupersample();
       void testToArray();
@@ -54,6 +57,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testAssociateColorComponents);
       BRICK_TEST_REGISTER_MEMBER(testConvertColorspace);
       BRICK_TEST_REGISTER_MEMBER(testDissociateColorComponents);
+      BRICK_TEST_REGISTER_MEMBER(testEstimateAffineTransform);
       BRICK_TEST_REGISTER_MEMBER(testSupersample);
       BRICK_TEST_REGISTER_MEMBER(testSubsample);
       BRICK_TEST_REGISTER_MEMBER(testToArray);
@@ -151,6 +155,44 @@ namespace brick {
     }
   
 
+    void
+    UtilitiesTest::
+    testEstimateAffineTransform()
+    {
+      const unsigned int numberOfPoints = 4;
+      const common::Float64 defaultTolerance = 1.0E-8;
+      
+      std::vector< numeric::Vector2D<common::Float64> > fromPoints(
+        numberOfPoints);
+      std::vector< numeric::Vector2D<common::Float64> > toPoints(
+        numberOfPoints);
+      numeric::Transform2D<common::Float64> nominalTransform(2.0, -1.0, 3.0,
+                                                             -4.0, 5.0, 6.0,
+                                                             0.0, 0.0, 1.0);
+      fromPoints[0] = numeric::Vector2D<common::Float64>(1.0, 4.0);
+      fromPoints[1] = numeric::Vector2D<common::Float64>(-1.0, 2.0);
+      fromPoints[2] = numeric::Vector2D<common::Float64>(-1.0, -3.0);
+      fromPoints[3] = numeric::Vector2D<common::Float64>(2.0, 1.0);
+      for(unsigned int ii = 0; ii < numberOfPoints; ++ii) {
+        toPoints[ii] = nominalTransform * fromPoints[ii];
+      }
+
+      // Solve for thetransform, and make sure we came close to the
+      // right answer.
+      numeric::Transform2D<common::Float64> result =
+        estimateAffineTransform<common::Float64>(
+          toPoints.begin(), toPoints.end(), fromPoints.begin());
+      for(unsigned int row = 0; row < 3; ++row) {
+        for(unsigned int column = 0; column < 3; ++column) {
+          BRICK_TEST_ASSERT(
+            approximatelyEqual(
+              result(row, column), nominalTransform(row, column),
+              defaultTolerance));
+        }
+      }
+    }
+
+    
     void
     UtilitiesTest::
     testSubsample()

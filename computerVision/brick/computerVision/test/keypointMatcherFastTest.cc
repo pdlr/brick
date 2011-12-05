@@ -83,7 +83,7 @@ namespace brick {
                 &(keypoints[0]) + numberOfKeypoints / 2);
       for(unsigned int ii = numberOfKeypoints / 2; ii < numberOfKeypoints;
           ++ii) {
-        keypoints[0].isPositive = false;
+        keypoints[ii].isPositive = false;
       }
       
       // Make a set of keypoints for which we'll find matches among
@@ -111,7 +111,8 @@ namespace brick {
       // Create and sanity-check a matcher to be tested.
       KeypointMatcherFast matcher;
       KeypointFast matchingPoint;
-      BRICK_TEST_ASSERT(matcher.find(queryPoints[0], matchingPoint) == false);
+      BRICK_TEST_ASSERT(matcher.matchKeypoint(queryPoints[0], matchingPoint)
+                        == false);
 
       // Now let the keypoint matcher organize the input points.
       std::random_shuffle(&(keypoints[0]),

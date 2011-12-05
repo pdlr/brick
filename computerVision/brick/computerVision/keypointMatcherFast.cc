@@ -81,15 +81,17 @@ namespace brick {
     matchKeypoint(KeypointFast const& query, KeypointFast& bestMatch,
                   std::map<double, KeypointFast> const& keypointMap) const
     {
+      // Sanity check.
+      if(keypointMap.empty()) {
+        return false;
+      }
+      
       // Start by finding the keypoint who's feature vector mean is
       // closest to that of the query point.  This is a good starting
       // point for a linear search.
       typedef std::map<double, KeypointFast>::const_iterator MapIterator;
       double featureVectorMean = this->computeFeatureVectorMean(query);
       MapIterator startIter = keypointMap.lower_bound(featureVectorMean);
-      if(startIter == keypointMap.end()) {
-        return false;
-      }
       
       // Now search forward until we know for sure we're not going to
       // find a better match.  We'll know we've gone far enough when

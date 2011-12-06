@@ -83,7 +83,7 @@ libbrickComputerVision_la_SOURCES = \
 	imageIO.cc imageIO.hh \
 	keypointMatcherFast.cc keypointMatcherFast.hh \
 	keypointSelectorFast.cc keypointSelectorFast.hh \
-	ransac.cc ransack.hh
+	ransac.cc ransac.hh
 
 otherSources =\
 	cameraIntrinsicsPinhole.cpp cameraIntrinsicsPinhole.h \

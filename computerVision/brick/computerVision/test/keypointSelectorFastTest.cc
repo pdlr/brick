@@ -14,7 +14,6 @@
 #include <brick/computerVision/keypointSelectorFast.hh>
 #include <brick/computerVision/utilities.hh>
 
-#include <brick/computerVision/test/testImages.hh>
 #include <brick/random/pseudoRandom.hh>
 #include <brick/test/testFixture.hh>
 

@@ -55,12 +55,12 @@ check_PROGRAMS = \
 # source files.
 
 colorspaceConverterTest_SOURCES	= colorspaceConverterTest.cc
-imageFilterTest_SOURCES		= imageFilterTest.cc
-imagePyramidTest_SOURCES	= imagePyramidTest.cc
+imageFilterTest_SOURCES		= imageFilterTest.cc testImages.hh
+imagePyramidTest_SOURCES	= imagePyramidTest.cc testImages.hh
 keypointMatcherFastTest_SOURCES	= keypointMatcherFastTest.cc
 keypointSelectorFastTest_SOURCES	= keypointSelectorFastTest.cc
 ransacTest_SOURCES		= ransacTest.cc
-utilitiesTest_SOURCES		= utilitiesTest.cc
+utilitiesTest_SOURCES		= utilitiesTest.cc testImages.hh
 
 
 # Set the include path and specify where to look for data files.

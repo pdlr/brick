@@ -30,7 +30,8 @@ brickGeometry_HEADERS	= \
 	ray2D.hh ray2D_impl.hh \
 	ray3D.hh ray3D_impl.hh \
 	triangle3D.hh triangle3D_impl.hh \
-	utilities2D.hh utilities3D.hh
+	utilities2D.hh utilities2D_impl.hh \
+	utilities3D.hh utilities3D_impl.hh
 
 
 # Define the library to build.

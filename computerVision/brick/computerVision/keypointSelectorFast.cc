@@ -107,6 +107,9 @@ namespace brick {
     {
       const unsigned int pixelMeasurementRadius = 3;
 
+      // Discard last image's keypoints.
+      m_keypointVector.clear();
+      
       // Make sure the passed-in image bounds are legal.
       this->checkAndRepairRegionOfInterest(
         inImage, pixelMeasurementRadius, startRow, startColumn,

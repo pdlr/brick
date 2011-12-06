@@ -21,9 +21,10 @@ def prepareDistribution(packageName, sourceDir, version):
   # likely to forget whether he should specify packages as
   # "brickcommon" or "common," so we standardize the "brick" part
   # here.
-  packageNameLC = packageName.lower().replace('brick', '')
+  packageNameLC = packageName.replace('brick', '')
+  packageNameLC = packageNameLC[0].lower() + packageNameLC[1:]
   brickPackageNameLC = 'brick' + packageNameLC
-  brickPackageNameMC = 'brick' + packageName[0].upper() + packageName[1:]
+  brickPackageNameMC = 'brick' + packageNameLC[0].upper() + packageNameLC[1:]
 
   # We need a civilized version of the revision number to use as a tag
   # in the VCS.
@@ -71,8 +72,8 @@ def prepareDistribution(packageName, sourceDir, version):
   os.chdir(TEMPDIR)
   
   errorNumber += 1
-  if os.system(TAR + ' -zxvf %s/%s-"%s".tar.gz' 
-               % (sourceDir, brickPackageNameLC, version)) != 0:
+  if os.system(TAR + ' -zxvf %s/%s/%s-"%s".tar.gz' 
+               % (sourceDir, packageNameLC, brickPackageNameLC, version)) != 0:
     return errorNumber
   # end if
 
@@ -92,7 +93,7 @@ def prepareDistribution(packageName, sourceDir, version):
   
   errorNumber += 1
   if os.system(TAR + ' -zcvf %s/%s-"%s"_htmlDoc.tgz html'
-               % (sourceDir, packageNameLC, version)) != 0:
+               % (sourceDir, brickPackageNameLC, version)) != 0:
     return errorNumber
   # end if
 
@@ -119,6 +120,12 @@ def prepareDistribution(packageName, sourceDir, version):
   # end if
 
   os.chdir(sourceDir)
+
+  errorNumber += 1
+  if os.system('mv "%s/%s-%s".* .' 
+               % (packageNameLC, brickPackageNameLC, version)) != 0:
+    return errorNumber
+  # end if
 
   errorNumber += 1
   if os.system('hg tag -f "%s"' % revisionTag) != 0:

@@ -903,9 +903,12 @@ namespace brick {
           continue;
         }
         if(rArray(ii, ii) < 0.0) {
-          rArray *= -1.0;
-          qArray *= -1.0;
-          break;
+          for(size_t jj = 0; jj < inputArray.columns(); ++jj) {
+            rArray(ii, jj) *= -1.0;
+          }
+          for(size_t jj = 0; jj < qArray.rows(); ++jj) {
+            qArray(jj, ii) *= -1.0;
+          }
         }
       }
     }

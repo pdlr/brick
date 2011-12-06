@@ -83,7 +83,8 @@ namespace brick {
       std::cout << "ET: " << time1 - time0 << " to build a pyramid for a "
                 << inputImageGray.rows() << "x" << inputImageGray.columns()
                 << " gray image." << std::endl;
-      
+
+#if 0
       for(unsigned int ii = 0; ii < pyramidGray.getNumberOfLevels(); ++ii) {
         Image<GRAY_FLOAT32> currentImage = pyramidGray.getLevel(ii);
         std::ostringstream fileNameStream;
@@ -92,6 +93,7 @@ namespace brick {
                  currentImage.rows(), currentImage.columns(),
                  true);
       }
+#endif
       
       Image<RGB8> inputImageRGB = readPPM8(getTestImageFileNamePPM0());
       // Image<RGB8> inputImageRGB2 = readPPM8(getTestImageFileNamePPM0());

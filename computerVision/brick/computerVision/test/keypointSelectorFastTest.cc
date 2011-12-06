@@ -17,6 +17,7 @@
 #include <brick/random/pseudoRandom.hh>
 #include <brick/test/testFixture.hh>
 
+#include <brick/utilities/path.hh>
 #include <brick/utilities/timeUtilities.hh>
 
 namespace brick {

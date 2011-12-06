@@ -4,8 +4,6 @@ import os
 import string
 import sys
 
-import pdb
-
 GREP = '/bin/grep'
 MAKE = '/usr/bin/make'
 MV = '/bin/mv'
@@ -21,10 +19,11 @@ def prepareDistribution(packageName, sourceDir, version):
   # likely to forget whether he should specify packages as
   # "brickcommon" or "common," so we standardize the "brick" part
   # here.
-  packageNameLC = packageName.replace('brick', '')
-  packageNameLC = packageNameLC[0].lower() + packageNameLC[1:]
+  packageNameMC = packageName.replace('brick', '')
+  packageNameMC = packageNameMC[0].lower() + packageNameMC[1:]
+  packageNameLC = packageNameMC.lower()
   brickPackageNameLC = 'brick' + packageNameLC
-  brickPackageNameMC = 'brick' + packageNameLC[0].upper() + packageNameLC[1:]
+  brickPackageNameMC = 'brick' + packageNameMC[0].upper() + packageNameMC[1:]
 
   # We need a civilized version of the revision number to use as a tag
   # in the VCS.
@@ -32,7 +31,7 @@ def prepareDistribution(packageName, sourceDir, version):
                  (brickPackageNameMC, string.replace(version, '.', '_')))
 
   # On with the show.
-  os.chdir(os.path.join(sourceDir, packageNameLC))
+  os.chdir(os.path.join(sourceDir, packageNameMC))
 
   errorNumber = 1
 
@@ -73,7 +72,7 @@ def prepareDistribution(packageName, sourceDir, version):
   
   errorNumber += 1
   if os.system(TAR + ' -zxvf %s/%s/%s-"%s".tar.gz' 
-               % (sourceDir, packageNameLC, brickPackageNameLC, version)) != 0:
+               % (sourceDir, packageNameMC, brickPackageNameLC, version)) != 0:
     return errorNumber
   # end if
 
@@ -123,7 +122,7 @@ def prepareDistribution(packageName, sourceDir, version):
 
   errorNumber += 1
   if os.system('mv "%s/%s-%s".* .' 
-               % (packageNameLC, brickPackageNameLC, version)) != 0:
+               % (packageNameMC, brickPackageNameLC, version)) != 0:
     return errorNumber
   # end if
 
@@ -147,7 +146,6 @@ if __name__ == '__main__':
   version = sys.argv[2]
   sourceDir = os.path.realpath(os.curdir)
 
-  pdb.set_trace()
   returnCode = prepareDistribution(packageName, sourceDir, version)
   sys.exit(returnCode)
 # end if

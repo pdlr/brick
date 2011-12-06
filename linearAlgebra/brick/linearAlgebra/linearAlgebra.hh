@@ -288,12 +288,12 @@ namespace brick {
      * @param inputArray This argument is the matrix to be factored.
      * 
      * @param qArray This argument will be filled in with the
-     * orthogonal matrix Q.  If the qArray is already MxM, its
+     * orthogonal matrix Q.  If qArray is already MxM, its
      * contents will be overwritten.  If qArray is not MxM, it will be
      * resized (i.e., new memory will be allocated).
      * 
      * @param rArray This argument will be filled in with the
-     * upper trapezoidal matrix R.  If the rArray is already MxN, its
+     * upper trapezoidal matrix R.  If rArray is already MxN, its
      * contents will be overwritten.  If rArray is not MxN, it will be
      * resized (i.e., new memory will be allocated).
      */

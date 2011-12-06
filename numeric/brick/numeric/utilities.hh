@@ -1089,7 +1089,7 @@ namespace brick {
      */
     template <class Type, class Iterator>
     Type
-    mean(Iterator const& beginIter, Iterator const& endIter);
+    mean(Iterator beginIter, Iterator endIter);
 
     
     /** 

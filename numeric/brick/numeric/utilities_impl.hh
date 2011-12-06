@@ -1017,14 +1017,17 @@ namespace brick {
     // the elements of input sequence.
     template <class Type, class Iterator>
     Type
-    mean(Iterator const& beginIter, Iterator const& endIter)
+    mean(Iterator beginIter, Iterator endIter)
     {
-      Type meanValue;
+      Type meanValue = 0;
       size_t count = 0;
       while(beginIter != endIter) {
         meanValue += *beginIter;
         ++count;
         ++beginIter;
+      }
+      if(count == 0) {
+        count = 1;
       }
       return meanValue / count;
     }

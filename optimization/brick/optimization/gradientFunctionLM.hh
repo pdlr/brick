@@ -14,7 +14,9 @@
 #define BRICK_OPTIMIZATION_GRADIENTFUNCTIONLM_HH
 
 #include <functional>
-#include <brick/numeric/utilities.hh>
+#include <brick/numeric/array1D.hh>
+#include <brick/numeric/array2D.hh>
+
 
 namespace brick {
 
@@ -160,6 +162,8 @@ namespace brick {
  * if it weren't templated.
  *******************************************************************/
 
+#include <brick/numeric/utilities.hh>
+
 namespace brick {
 
   namespace optimization {
@@ -207,7 +211,7 @@ namespace brick {
       brick::numeric::Array2D<brick::common::Float64>& d2EdX2)
     {
       // Note(xxx): Move all of these Array?D constructors out of this
-      // function so as to no to gobs of extra new/delete cycles.
+      // function so as to not do gobs of extra new/delete cycles.
       
       // Get oriented.
       typename SSDFunctor::result_type errorTerms = this->m_functor(theta);
@@ -255,7 +259,8 @@ namespace brick {
       dEdX *= 2.0;
       
       // Compute Hession estimate.
-      d2EdX2 = brick::numeric::matrixMultiply<double>(jacobian, jacobian.transpose());
+      d2EdX2 = brick::numeric::matrixMultiply<double>(
+        jacobian, jacobian.transpose());
       d2EdX2 *= 2.0;
     }
     

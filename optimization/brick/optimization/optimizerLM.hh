@@ -57,7 +57,8 @@ namespace brick {
        * This constructor specifies the specific Functor instance to
        * use.  Using this constructor exclusively avoids the danger of
        * calling optimalValue() or optimum() before a Functor instance
-       * has been specified.
+       * has been specified, and also allows you to use Functors that
+       * don't have default constructors.
        *
        * @param functor A copy of this argument will be stored
        * internally for use in optimization.

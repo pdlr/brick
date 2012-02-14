@@ -24,6 +24,10 @@ AM_CPPFLAGS		= -I$(top_srcdir)
 
 brickComputerVisiondir		= $(includedir)/brick/computerVision
 brickComputerVision_HEADERS	= \
+	cameraIntrinsics.hh \
+	cameraIntrinsicsDistorted.hh \
+	cameraIntrinsicsPinhole.hh \
+	cameraIntrinsicsPlumbBob.hh cameraIntrinsicsPlumbBob_impl.hh \
 	colorspaceConverter.hh colorspaceConverter_impl.hh \
 	image.hh \
 	imageFilter.hh imageFilter_impl.hh \
@@ -47,10 +51,6 @@ brickComputerVision_HEADERS	= \
 stillToComeHeaders		= \
 	calibrationTools.h \
 	calibrationToolsRobust.h \
-	cameraIntrinsics.h \
-	cameraIntrinsicsDistorted.h \
-	cameraIntrinsicsPinhole.h \
-	cameraIntrinsicsPlumbBob.h \
 	canny.h \
 	connectedComponents.h \
 	dilate.h \
@@ -80,14 +80,15 @@ stillToComeHeaders		= \
 # Define the library to build.
 lib_LTLIBRARIES		= libbrickComputerVision.la
 libbrickComputerVision_la_SOURCES = \
+	cameraIntrinsicsPinhole.cc cameraIntrinsicsPinhole.hh \
+	cameraIntrinsicsPlumbBob.cc cameraIntrinsicsPlumbBob.hh \
+	cameraIntrinsicsPlumbBob_impl.hh \
 	imageIO.cc imageIO.hh \
 	keypointMatcherFast.cc keypointMatcherFast.hh \
 	keypointSelectorFast.cc keypointSelectorFast.hh \
 	ransac.cc ransac.hh
 
 otherSources =\
-	cameraIntrinsicsPinhole.cpp cameraIntrinsicsPinhole.h \
-	cameraIntrinsicsPlumbBob.cpp cameraIntrinsicsPlumbBob.h \
 	eightPointAlgorithm.cpp eightPointAlgorithm.h \
 	extendedKalmanFilter.cpp extendedKalmanFilter.h \
 	fivePointAlgorithm.cpp fivePointAlgorithm.h \

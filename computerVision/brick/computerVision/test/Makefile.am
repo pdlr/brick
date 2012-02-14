@@ -30,6 +30,8 @@ EXTRA_DIST              = \
 # Specify which tests should be run.
 
 TESTS = \
+	cameraIntrinsicsPinholeTest \
+	cameraIntrinsicsPlumbBobTest \
 	colorspaceConverterTest \
 	imageFilterTest \
 	imagePyramidTest \
@@ -41,6 +43,8 @@ TESTS = \
 # Specify which tests should be build from source.
 
 check_PROGRAMS = \
+	cameraIntrinsicsPinholeTest \
+	cameraIntrinsicsPlumbBobTest \
 	colorspaceConverterTest \
 	imageFilterTest \
 	imagePyramidTest \
@@ -52,6 +56,8 @@ check_PROGRAMS = \
 # For each test which should be built from source, specify which 
 # source files.
 
+cameraIntrinsicsPinholeTest_SOURCES	= cameraIntrinsicsPinholeTest.cc
+cameraIntrinsicsPlumbBobTest_SOURCES	= cameraIntrinsicsPlumbBobTest.cc
 colorspaceConverterTest_SOURCES	= colorspaceConverterTest.cc
 imageFilterTest_SOURCES		= imageFilterTest.cc testImages.hh
 imagePyramidTest_SOURCES	= imagePyramidTest.cc testImages.hh

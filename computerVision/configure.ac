@@ -8,7 +8,7 @@ dnl
 
 
 dnl Initialization.
-AC_INIT(brickcomputervision, 1.0)
+AC_INIT(brickcomputervision, 1.1)
 AC_CONFIG_SRCDIR(brick/computerVision/Makefile.am)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR([m4])

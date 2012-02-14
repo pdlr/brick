@@ -319,8 +319,9 @@ namespace brick {
        * specified Functor to an optimum, and the corresponding optimal
        * Functor value, and the corresponding gradient.
        */
-      Triple<typename Functor::argument_type, typename Functor::result_type,
-             typename Functor::argument_type>
+      brick::common::Triple<typename Functor::argument_type,
+                            typename Functor::result_type,
+                            typename Functor::argument_type>
       doBfgs(const argument_type& theta,
              const result_type& startValue,
              const argument_type& startGradient,
@@ -589,7 +590,7 @@ namespace brick {
       size_t functionCallCount;
       size_t gradientCallCount;
       size_t iterationCount;
-      Triple<argument_type, result_type, argument_type>
+      brick::common::Triple<argument_type, result_type, argument_type>
         optimum_optimalValue_gradient =
         this->doBfgs(theta, startValue, startGradient, functionCallCount,
                      gradientCallCount, iterationCount);
@@ -618,8 +619,9 @@ namespace brick {
     }
     
     template <class Functor>
-    Triple<typename Functor::argument_type, typename Functor::result_type,
-           typename Functor::argument_type>
+    brick::common::Triple<typename Functor::argument_type,
+                          typename Functor::result_type,
+                          typename Functor::argument_type>
     OptimizerBFGS<Functor>::
     doBfgs(const argument_type& theta,
            const result_type& startValue,
@@ -641,7 +643,8 @@ namespace brick {
       if(currentValue <= this->m_minimumFunctionValue) {
         argument_type mutableGradient(theta.size());
         copyArgumentType(startGradient, mutableGradient);
-        return makeTriple(thetaLocal, currentValue, mutableGradient);
+        return brick::common::makeTriple(
+          thetaLocal, currentValue, mutableGradient);
       }
       
       // Of course, we should only copy startGradient if it's actually
@@ -662,7 +665,8 @@ namespace brick {
           std::cout << "\nTerminating OptimizerBFGS::doBfgs() with "
                     << "zero gradient" << std::endl;
         }
-        return makeTriple(thetaLocal, currentValue, currentGradient);
+        return brick::common::makeTriple(
+          thetaLocal, currentValue, currentGradient);
       }
     
       // Check that gradient dimension is correct.
@@ -747,7 +751,8 @@ namespace brick {
 
           // Gradient at thetaLocal has not been computed yet.  Return
           // empty gradient.
-          return makeTriple(thetaLocal, currentValue, argument_type());
+          return brick::common::makeTriple(
+            thetaLocal, currentValue, argument_type());
         }
 
         // Test for "insufficient parameter change" convergence.
@@ -764,7 +769,8 @@ namespace brick {
 
           // Gradient at thetaLocal has not been computed yet.  Return
           // empty gradient.
-          return makeTriple(thetaLocal, currentValue, argument_type());
+          return brick::common::makeTriple(
+            thetaLocal, currentValue, argument_type());
         }
 
         // Temporarily save gradient value.
@@ -801,12 +807,14 @@ namespace brick {
             std::cout << "\nTerminating OptimizerBFGS::doBfgs() with "
                       << "small gradient." << std::endl;
           }
-          return makeTriple(thetaLocal, currentValue, currentGradient);
+          return brick::common::makeTriple(
+            thetaLocal, currentValue, currentGradient);
         }
 
         // Now prepare to update estimate of the inverse hessian.
-        brick::numeric::Array1D<double> inverseHessianTimesDeltaGradient =
-          matrixMultiply(inverseHessian, deltaGradient);
+        argument_type inverseHessianTimesDeltaGradient(dimensionality);
+        matrixMultiplyArgumentType(inverseHessian, deltaGradient,
+                                   inverseHessianTimesDeltaGradient);
         double fac = dotArgumentType(deltaGradient, searchStep);
         if(fac < 0.0) {
           fac = 0.0;

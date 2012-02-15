@@ -35,6 +35,22 @@ namespace brick {
 
     
     /** 
+     * This function template takes the place of std::atan2(),
+     * std::atan2f(), std::atan2l(), etc., hopefully enabling generic
+     * code.
+     * 
+     * @param yy This argument proportional to sin(theta).
+     * 
+     * @param xx This argument proportional to cos(theta).
+     * 
+     * @return The return value is the principal of the arc tangent of
+     * (yy/xx).
+     */
+    template <class Type>
+    inline Type arcTangent2(Type yy, Type xx);
+
+
+    /** 
      * This function template takes the place of std::cos(),
      * std::cosf(), std::cosl(), etc., hopefully enabling generic
      * code.
@@ -134,10 +150,28 @@ namespace brick {
 
     
     template <class Type>
+    inline Type arcTangent2(Type yy, Type xx) {
+      return static_cast<Type>(
+        std::atan2(static_cast<double>(yy), static_cast<double>(xx)));
+    }
+
+
+    /* ======== Need to figure out how to test for atan2f()  ======== */
+    /* ======== and atan2l() availability                    ======== */
+    // template <>
+    // inline float arcTangent2(float arg) {return std::atan2f(yy, xx);}
+    //
+    // template <>
+    // inline long double arcTangent2(long double) {
+    //   return std::atan2l(yy, xx);
+    // }
+
+
+    template <class Type>
     inline Type cosine(Type arg) {
       return static_cast<Type>(std::cos(static_cast<double>(arg)));
     }
-    
+
     /* ======== Need to figure out how to test for cosf()  ======== */
     /* ======== and cosl() availability                    ======== */
     // template<>

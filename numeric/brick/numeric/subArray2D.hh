@@ -365,6 +365,6 @@ namespace brick {
 
 } // namespace brick
 
-#include <brick/numeric/subArray1D_impl.hh>
+#include <brick/numeric/subArray2D_impl.hh>
 
 #endif /* #ifdef BRICK_NUMERIC_SUBARRAY2D_HH */

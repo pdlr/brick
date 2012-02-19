@@ -21,6 +21,7 @@ TESTS			= \
 	convolveNDTest \
 	derivativeRiddersTest \
 	index3DTest \
+	geometry2DTest \
 	maxRecorderTest \
 	minRecorderTest \
 	rotationsTest \
@@ -43,6 +44,7 @@ check_PROGRAMS          = \
 	convolveNDTest \
 	derivativeRiddersTest \
 	index3DTest \
+	geometry2DTest \
 	maxRecorderTest \
 	minRecorderTest \
 	rotationsTest \
@@ -65,6 +67,7 @@ convolve2DTest_SOURCES		= convolve2DTest.cc
 convolveNDTest_SOURCES		= convolveNDTest.cc
 derivativeRiddersTest_SOURCES	= derivativeRiddersTest.cc
 index3DTest_SOURCES		= index3DTest.cc
+geometry2DTest_SOURCES		= geometry2DTest.cc
 maxRecorderTest_SOURCES		= maxRecorderTest.cc
 minRecorderTest_SOURCES		= minRecorderTest.cc
 rotationsTest_SOURCES		= rotationsTest.cc

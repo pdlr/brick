@@ -38,6 +38,7 @@ brickNumeric_HEADERS	= \
 	functional.hh \
 	index2D.hh \
 	index3D.hh \
+	geometry2D.hh geometry2D_impl.hh \
 	maxRecorder.hh \
 	minRecorder.hh \
 	numericTraits.hh \

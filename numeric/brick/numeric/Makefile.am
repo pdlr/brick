@@ -48,6 +48,7 @@ brickNumeric_HEADERS	= \
 	stencil2D.hh stencil2D_impl.hh \
 	subArray1D.hh subArray1D_impl.hh \
 	subArray2D.hh subArray2D_impl.hh \
+	subpixelInterpolate.hh subpixelInterpolate_impl.hh \
 	quaternion.hh quaternion_impl.hh \
 	transform2D.hh transform2D_impl.hh \
 	transform3D.hh transform3D_impl.hh \

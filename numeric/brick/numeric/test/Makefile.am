@@ -27,6 +27,7 @@ TESTS			= \
 	rotationsTest \
 	solveQuadraticTest \
 	stencil2DTest \
+	subpixelInterpolateTest \
 	transform2DTest \
 	transform3DTest \
 	utilitiesTest
@@ -50,6 +51,7 @@ check_PROGRAMS          = \
 	rotationsTest \
 	solveQuadraticTest \
 	stencil2DTest \
+	subpixelInterpolateTest	\
 	transform2DTest \
 	transform3DTest \
 	utilitiesTest
@@ -73,6 +75,7 @@ minRecorderTest_SOURCES		= minRecorderTest.cc
 rotationsTest_SOURCES		= rotationsTest.cc
 solveQuadraticTest_SOURCES	= solveQuadraticTest.cc
 stencil2DTest_SOURCES		= stencil2DTest.cc
+subpixelInterpolateTest_SOURCES	= subpixelInterpolateTest.cc
 transform2DTest_SOURCES		= transform2DTest.cc arrayTestCommon.hh
 transform3DTest_SOURCES		= transform3DTest.cc arrayTestCommon.hh
 utilitiesTest_SOURCES		= utilitiesTest.cc

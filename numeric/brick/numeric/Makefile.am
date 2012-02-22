@@ -42,6 +42,7 @@ brickNumeric_HEADERS	= \
 	maxRecorder.hh \
 	minRecorder.hh \
 	numericTraits.hh \
+	polynomial.hh polynomial_impl.hh \
 	rotations.hh rotations_impl.hh \
 	slice.hh \
 	solveQuadratic.hh solveQuadratic_impl.hh \

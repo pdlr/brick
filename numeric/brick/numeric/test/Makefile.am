@@ -24,6 +24,7 @@ TESTS			= \
 	geometry2DTest \
 	maxRecorderTest \
 	minRecorderTest \
+	polynomialTest \
 	rotationsTest \
 	solveQuadraticTest \
 	stencil2DTest \
@@ -48,6 +49,7 @@ check_PROGRAMS          = \
 	geometry2DTest \
 	maxRecorderTest \
 	minRecorderTest \
+	polynomialTest \
 	rotationsTest \
 	solveQuadraticTest \
 	stencil2DTest \
@@ -72,6 +74,7 @@ index3DTest_SOURCES		= index3DTest.cc
 geometry2DTest_SOURCES		= geometry2DTest.cc
 maxRecorderTest_SOURCES		= maxRecorderTest.cc
 minRecorderTest_SOURCES		= minRecorderTest.cc
+polynomialTest_SOURCES		= polynomialTest.cc
 rotationsTest_SOURCES		= rotationsTest.cc
 solveQuadraticTest_SOURCES	= solveQuadraticTest.cc
 stencil2DTest_SOURCES		= stencil2DTest.cc

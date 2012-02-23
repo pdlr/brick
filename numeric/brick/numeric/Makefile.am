@@ -41,6 +41,7 @@ brickNumeric_HEADERS	= \
 	geometry2D.hh geometry2D_impl.hh \
 	maxRecorder.hh \
 	minRecorder.hh \
+	normalizedCorrelator.hh normalizedCorrelator_impl.hh \
 	numericTraits.hh \
 	polynomial.hh polynomial_impl.hh \
 	rotations.hh rotations_impl.hh \

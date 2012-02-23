@@ -24,6 +24,7 @@ TESTS			= \
 	geometry2DTest \
 	maxRecorderTest \
 	minRecorderTest \
+	normalizedCorrelatorTest \
 	polynomialTest \
 	rotationsTest \
 	solveCubicTest \
@@ -51,6 +52,7 @@ check_PROGRAMS          = \
 	geometry2DTest \
 	maxRecorderTest \
 	minRecorderTest \
+	normalizedCorrelatorTest \
 	polynomialTest \
 	rotationsTest \
 	solveCubicTest \
@@ -78,6 +80,7 @@ index3DTest_SOURCES		= index3DTest.cc
 geometry2DTest_SOURCES		= geometry2DTest.cc
 maxRecorderTest_SOURCES		= maxRecorderTest.cc
 minRecorderTest_SOURCES		= minRecorderTest.cc
+normalizedCorrelatorTest_SOURCES = normalizedCorrelatorTest.cc
 polynomialTest_SOURCES		= polynomialTest.cc
 rotationsTest_SOURCES		= rotationsTest.cc
 solveCubicTest_SOURCES		= solveCubicTest.cc

@@ -26,7 +26,9 @@ TESTS			= \
 	minRecorderTest \
 	polynomialTest \
 	rotationsTest \
+	solveCubicTest \
 	solveQuadraticTest \
+	solveQuarticTest \
 	stencil2DTest \
 	subpixelInterpolateTest \
 	transform2DTest \
@@ -51,7 +53,9 @@ check_PROGRAMS          = \
 	minRecorderTest \
 	polynomialTest \
 	rotationsTest \
+	solveCubicTest \
 	solveQuadraticTest \
+	solveQuarticTest \
 	stencil2DTest \
 	subpixelInterpolateTest	\
 	transform2DTest \
@@ -76,7 +80,9 @@ maxRecorderTest_SOURCES		= maxRecorderTest.cc
 minRecorderTest_SOURCES		= minRecorderTest.cc
 polynomialTest_SOURCES		= polynomialTest.cc
 rotationsTest_SOURCES		= rotationsTest.cc
+solveCubicTest_SOURCES		= solveCubicTest.cc
 solveQuadraticTest_SOURCES	= solveQuadraticTest.cc
+solveQuarticTest_SOURCES	= solveQuarticTest.cc
 stencil2DTest_SOURCES		= stencil2DTest.cc
 subpixelInterpolateTest_SOURCES	= subpixelInterpolateTest.cc
 transform2DTest_SOURCES		= transform2DTest.cc arrayTestCommon.hh

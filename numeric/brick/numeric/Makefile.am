@@ -33,7 +33,7 @@ brickNumeric_HEADERS	= \
 	convolve1D.hh convolve1D_impl.hh \
 	convolve2D.hh convolve2D_impl.hh \
 	convolveND.hh convolveND_impl.hh \
-	derivativeRidders.hh \
+	derivativeRidders.hh derivativeRidders_impl.hh \
 	extremumRecorder.hh \
 	functional.hh \
 	index2D.hh \

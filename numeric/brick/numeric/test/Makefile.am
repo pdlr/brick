@@ -27,6 +27,7 @@ TESTS			= \
 	normalizedCorrelatorTest \
 	polynomialTest \
 	rotationsTest \
+	sampledFunctionsTest \
 	solveCubicTest \
 	solveQuadraticTest \
 	solveQuarticTest \
@@ -55,6 +56,7 @@ check_PROGRAMS          = \
 	normalizedCorrelatorTest \
 	polynomialTest \
 	rotationsTest \
+	sampledFunctionsTest \
 	solveCubicTest \
 	solveQuadraticTest \
 	solveQuarticTest \
@@ -83,6 +85,7 @@ minRecorderTest_SOURCES		= minRecorderTest.cc
 normalizedCorrelatorTest_SOURCES = normalizedCorrelatorTest.cc
 polynomialTest_SOURCES		= polynomialTest.cc
 rotationsTest_SOURCES		= rotationsTest.cc
+sampledFunctionsTest_SOURCES	= sampledFunctionsTest.cc
 solveCubicTest_SOURCES		= solveCubicTest.cc
 solveQuadraticTest_SOURCES	= solveQuadraticTest.cc
 solveQuarticTest_SOURCES	= solveQuarticTest.cc

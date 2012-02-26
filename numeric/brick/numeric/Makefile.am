@@ -46,6 +46,7 @@ brickNumeric_HEADERS	= \
 	polynomial.hh polynomial_impl.hh \
 	rotations.hh rotations_impl.hh \
 	slice.hh \
+	sampledFunctions.hh sampledFunctions_impl.hh \
 	solveCubic.hh solveCubic_impl.hh \
 	solveQuadratic.hh solveQuadratic_impl.hh \
 	solveQuartic.hh solveQuartic_impl.hh \

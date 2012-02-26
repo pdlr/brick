@@ -16,6 +16,7 @@ TESTS			= \
 	array2DTest \
 	array3DTest \
 	arrayNDTest \
+	bSplineTest \
 	convolve1DTest \
 	convolve2DTest \
 	convolveNDTest \
@@ -45,6 +46,7 @@ check_PROGRAMS          = \
 	array2DTest \
 	array3DTest \
 	arrayNDTest \
+	bSplineTest \
 	convolve1DTest \
 	convolve2DTest \
 	convolveNDTest \
@@ -74,6 +76,7 @@ array1DTest_SOURCES		= array1DTest.cc arrayTestCommon.hh
 array2DTest_SOURCES		= array2DTest.cc arrayTestCommon.hh
 array3DTest_SOURCES		= array3DTest.cc arrayTestCommon.hh
 arrayNDTest_SOURCES		= arrayNDTest.cc arrayTestCommon.hh
+bSplineTest_SOURCES		= bSplineTest.cc
 convolve1DTest_SOURCES		= convolve1DTest.cc
 convolve2DTest_SOURCES		= convolve2DTest.cc
 convolveNDTest_SOURCES		= convolveNDTest.cc

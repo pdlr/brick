@@ -29,6 +29,7 @@ brickNumeric_HEADERS	= \
 	array3D.hh array3D_impl.hh \
 	arrayND.hh arrayND_impl.hh \
 	bilinearInterpolator.hh bilinearInterpolator_impl.hh \
+	bSpline.hh bSpline_impl.hh \
 	convolutionStrategy.hh \
 	convolve1D.hh convolve1D_impl.hh \
 	convolve2D.hh convolve2D_impl.hh \

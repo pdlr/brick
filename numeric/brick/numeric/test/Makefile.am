@@ -22,6 +22,7 @@ TESTS			= \
 	convolve2DTest \
 	convolveNDTest \
 	derivativeRiddersTest \
+	ieeeFloat32Test \
 	index3DTest \
 	geometry2DTest \
 	maxRecorderTest \
@@ -53,6 +54,7 @@ check_PROGRAMS          = \
 	convolve2DTest \
 	convolveNDTest \
 	derivativeRiddersTest \
+	ieeeFloat32Test \
 	index3DTest \
 	geometry2DTest \
 	maxRecorderTest \
@@ -84,6 +86,7 @@ convolve1DTest_SOURCES		= convolve1DTest.cc
 convolve2DTest_SOURCES		= convolve2DTest.cc
 convolveNDTest_SOURCES		= convolveNDTest.cc
 derivativeRiddersTest_SOURCES	= derivativeRiddersTest.cc
+ieeeFloat32Test_SOURCES		= ieeeFloat32Test.cc
 index3DTest_SOURCES		= index3DTest.cc
 geometry2DTest_SOURCES		= geometry2DTest.cc
 maxRecorderTest_SOURCES		= maxRecorderTest.cc

@@ -38,6 +38,7 @@ brickNumeric_HEADERS	= \
 	derivativeRidders.hh derivativeRidders_impl.hh \
 	extremumRecorder.hh \
 	functional.hh \
+	ieeeFloat32.hh \
 	index2D.hh \
 	index3D.hh \
 	geometry2D.hh geometry2D_impl.hh \
@@ -52,6 +53,7 @@ brickNumeric_HEADERS	= \
 	solveCubic.hh solveCubic_impl.hh \
 	solveQuadratic.hh solveQuadratic_impl.hh \
 	solveQuartic.hh solveQuartic_impl.hh \
+	staticArray1D.hh staticArray1D_impl.hh \
 	stencil2D.hh stencil2D_impl.hh \
 	subArray1D.hh subArray1D_impl.hh \
 	subArray2D.hh subArray2D_impl.hh \
@@ -69,6 +71,7 @@ brickNumeric_HEADERS	= \
 
 lib_LTLIBRARIES		= libbrickNumeric.la
 libbrickNumeric_la_SOURCES = \
+	ieeeFloat32.cc \
 	index2D.cc \
 	index3D.cc
 

@@ -44,11 +44,13 @@ namespace brick {
       Array1D<double> basisCoefficients(4);
 
       // // The following basis functions are copied from Lee,
-      // // Wolberg, and Shin, "Scattered Data Interpolation with Multilevel B-Splines, IEEE Transactions on Visualization and Computer Graphics, Vol 3, 228-244, 1997.  We present them here without further
-      
-      // // justification, although we suspect you could them recursively
-      // // using a 2D version of the procedure used in
-      // // BSpline::computeBasisFunction() from file bSpline.h.
+      // // Wolberg, and Shin, "Scattered Data Interpolation with
+      // // Multilevel B-Splines, IEEE Transactions on Visualization and
+      // // Computer Graphics, Vol 3, 228-244, 1997.  We present them
+      // // here without further justification, although we suspect
+      // // you could derive them recursively using a 2D version of
+      // // the procedure used in BSpline::computeBasisFunction() from
+      // // file bSpline.hh.
       
       // First cubic spline basis component is
       // B(s) = (1 - s)**3 / 6.

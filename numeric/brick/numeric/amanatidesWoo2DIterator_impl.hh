@@ -27,14 +27,14 @@ namespace brick {
     // The class constructor is initialized with all of the internal
     // variables of the voxel traversal algorithm, plus the starting
     // value of the ray parameter.
-    template<class ARRAY2D>
-    AmanatidesWoo2DIterator<ARRAY2D>::
+    template <class ARRAY2D, class FLOAT_TYPE>
+    AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE>::
     AmanatidesWoo2DIterator(ARRAY2D& data,
                             int startU, int startV,
                             int stepU, int stepV,
-                            double tMaxU, double tMaxV,
-                            double tDeltaU, double tDeltaV,
-                            double tStart)
+                            FLOAT_TYPE tMaxU, FLOAT_TYPE tMaxV,
+                            FLOAT_TYPE tDeltaU, FLOAT_TYPE tDeltaV,
+                            FLOAT_TYPE tStart)
       : m_data(data),
         m_inBounds(true),
         m_stepU(stepU),
@@ -58,8 +58,8 @@ namespace brick {
     }
 
     // Copy constructor.
-    template<class ARRAY2D>
-    AmanatidesWoo2DIterator<ARRAY2D>::
+    template<class ARRAY2D, class FLOAT_TYPE>
+    AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE>::
     AmanatidesWoo2DIterator(const AmanatidesWoo2DIterator& source)
       : m_data(source.m_data),
         m_inBounds(source.m_inBounds),
@@ -80,9 +80,9 @@ namespace brick {
 
     // This operator returns a reference to the Array2D element at the
     // current pixel.
-    template<class ARRAY2D>
+    template<class ARRAY2D, class FLOAT_TYPE>
     inline typename ARRAY2D::value_type& // element_type?
-    AmanatidesWoo2DIterator<ARRAY2D>::
+    AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE>::
     operator*()
     {
       return m_data(m_V, m_U);
@@ -90,9 +90,9 @@ namespace brick {
 
     // This operator returns a pointer to the Array2D element at the
     // current pixel.
-    template<class ARRAY2D>
+    template<class ARRAY2D, class FLOAT_TYPE>
     inline typename ARRAY2D::value_type* // element_type?
-    AmanatidesWoo2DIterator<ARRAY2D>::
+    AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE>::
     operator->()
     {
       return &(this->operator*());
@@ -100,9 +100,9 @@ namespace brick {
 
     // The pre-increment operator increments the iterator so that it
     // points to the next pixel along the path.
-    template<class ARRAY2D>
-    inline AmanatidesWoo2DIterator<ARRAY2D>&
-    AmanatidesWoo2DIterator<ARRAY2D>::
+    template<class ARRAY2D, class FLOAT_TYPE>
+    inline AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE>&
+    AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE>::
     operator++()
     {
       if(m_tMaxU < m_tMaxV) {
@@ -126,21 +126,21 @@ namespace brick {
     // The post-increment operator increments the iterator so that it
     // points to the next pixel along the path.  It differs from the
     // pre-increment operator in its return value.
-    template<class ARRAY2D>
-    inline AmanatidesWoo2DIterator<ARRAY2D>
-    AmanatidesWoo2DIterator<ARRAY2D>::
+    template<class ARRAY2D, class FLOAT_TYPE>
+    inline AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE>
+    AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE>::
     operator++(int)
     {
-      AmanatidesWoo2DIterator<ARRAY2D> thisCopy(*this);
+      AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE> thisCopy(*this);
       ++this;
       return thisCopy;
     }
 
     // This is the assignment operator.  It copies the value of its
     // argument into *this.
-    template<class ARRAY2D>
-    AmanatidesWoo2DIterator<ARRAY2D>&
-    AmanatidesWoo2DIterator<ARRAY2D>::
+    template<class ARRAY2D, class FLOAT_TYPE>
+    AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE>&
+    AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE>::
     operator=(const AmanatidesWoo2DIterator& source)
     {
       m_data = source.m_data;
@@ -161,9 +161,9 @@ namespace brick {
 
     // The equality operator returns true if *this currently
     // references the same pixel as the argument.
-    template<class ARRAY2D>
+    template<class ARRAY2D, class FLOAT_TYPE>
     inline bool
-    AmanatidesWoo2DIterator<ARRAY2D>::
+    AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE>::
     operator==(const AmanatidesWoo2DIterator& other)
     {
       // Return true if both refer to valid pixels or if both refer to
@@ -173,9 +173,9 @@ namespace brick {
 
     // The inequality operator returns true if *this currently
     // references the a different pixel than the argument.
-    template<class ARRAY2D>
+    template<class ARRAY2D, class FLOAT_TYPE>
     inline bool
-    AmanatidesWoo2DIterator<ARRAY2D>::
+    AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE>::
     operator!=(const AmanatidesWoo2DIterator& other)
     {
       return !(this->operator==(other));

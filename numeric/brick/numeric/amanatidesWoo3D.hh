@@ -78,7 +78,7 @@ namespace brick {
      **
      **   }
      **/
-    template <class ARRAY3D>
+    template <class ARRAY3D, class FLOAT_TYPE = double>
     class AmanatidesWoo3D {
     public:
       /* ================== Public typedefs ================== */
@@ -133,9 +133,9 @@ namespace brick {
        * negative values of t.
        */
       AmanatidesWoo3D(ARRAY3D& data,
-                      const Transform3D<double>& voxelTworld,
-                      const Vector3D<double>& rayOrigin,
-                      const Vector3D<double>& rayDirection,
+                      const Transform3D<FLOAT_TYPE>& voxelTworld,
+                      const Vector3D<FLOAT_TYPE>& rayOrigin,
+                      const Vector3D<FLOAT_TYPE>& rayDirection,
                       bool downstreamOnly=true);
 
     
@@ -240,12 +240,12 @@ namespace brick {
        * direction of the ray to be traced, expressed in voxel
        * coordinates.
        * @param m_data This parameter is a reference the voxel array.
-       * @return The return value is a std::pair<double, double> in
+       * @return The return value is a std::pair<FLOAT_TYPE, FLOAT_TYPE> in
        * which the first value is tEntry and the second value is tExit.
        */
-      std::pair<double, double>
-      findEntryAndExitPoints(const Vector3D<double>& rayOriginVoxel,
-                             const Vector3D<double>& rayDirectionVoxel,
+      std::pair<FLOAT_TYPE, FLOAT_TYPE>
+      findEntryAndExitPoints(const Vector3D<FLOAT_TYPE>& rayOriginVoxel,
+                             const Vector3D<FLOAT_TYPE>& rayDirectionVoxel,
                              const ARRAY3D& data);
 
       /** 
@@ -259,12 +259,12 @@ namespace brick {
        * @param defaultValue 
        * @return 
        */
-      double
-      findIntersection(const Vector3D<double>& rayOrigin,
-                       const Vector3D<double>& rayDirection,
-                       const Vector3D<double>& bVector,
-                       double cConstant,
-                       double defaultValue);
+      FLOAT_TYPE
+      findIntersection(const Vector3D<FLOAT_TYPE>& rayOrigin,
+                       const Vector3D<FLOAT_TYPE>& rayDirection,
+                       const Vector3D<FLOAT_TYPE>& bVector,
+                       FLOAT_TYPE cConstant,
+                       FLOAT_TYPE defaultValue);
 
       /// This data member is a reference the array over which to
       /// iterate.
@@ -299,30 +299,30 @@ namespace brick {
     
       /// This data member indicates what increment of ray parameter t
       /// moves us exactly 1 voxel in the U direction.
-      double m_tDeltaU;
+      FLOAT_TYPE m_tDeltaU;
 
       /// This data member indicates what increment of ray parameter t
       /// moves us exactly 1 voxel in the V direction.
-      double m_tDeltaV;
+      FLOAT_TYPE m_tDeltaV;
     
       /// This data member indicates what increment of ray parameter t
       /// moves us exactly 1 voxel in the W direction.
-      double m_tDeltaW;
+      FLOAT_TYPE m_tDeltaW;
     
       /// This data member indicates the value of ray parameter t at
       /// which the ray first enters a voxel with U coordinate not equal
       /// to m_initialU.
-      double m_tMaxU;
+      FLOAT_TYPE m_tMaxU;
 
       /// This data member indicates the value of ray parameter t at
       /// which the ray first enters a voxel with V coordinate not equal
       /// to m_initialV.
-      double m_tMaxV;
+      FLOAT_TYPE m_tMaxV;
 
       /// This data member indicates the value of ray parameter t at
       /// which the ray first enters a voxel with W coordinate not equal
       /// to m_initialW.
-      double m_tMaxW;
+      FLOAT_TYPE m_tMaxW;
 
       /// This data member indicates the value of ray parameter t at
       /// which we start following the ray.  It frequently corresponds
@@ -330,7 +330,7 @@ namespace brick {
       /// may also be set to zero if the ray origin is within the
       /// voxelated space and constructor argument downstreamOnly was
       /// set to true.
-      double m_tStart;
+      FLOAT_TYPE m_tStart;
 
       /// This data member indicates whether the portion of the ray we
       /// care about actually intersects the specified voxel array.

@@ -32,7 +32,7 @@ namespace brick {
      ** traversal algorithm of Amanatides and Woo, please refer to
      ** [ref].
      **/
-    template <class ARRAY2D>
+    template <class ARRAY2D, class FLOAT_TYPE = double>
     class AmanatidesWoo2DIterator
       : public std::iterator<std::forward_iterator_tag,
                              typename ARRAY2D::value_type>
@@ -80,9 +80,9 @@ namespace brick {
       AmanatidesWoo2DIterator(ARRAY2D& data,
                               int startU, int startV,
                               int stepU, int stepV,
-                              double tMaxU, double tMaxV,
-                              double tDeltaU, double tDeltaV,
-                              double tStart);
+                              FLOAT_TYPE tMaxU, FLOAT_TYPE tMaxV,
+                              FLOAT_TYPE tDeltaU, FLOAT_TYPE tDeltaV,
+                              FLOAT_TYPE tStart);
 
       /** 
        * Copy constructor.
@@ -106,7 +106,7 @@ namespace brick {
        * @return The return value is the value of t at which the ray
        * passes into the current pixel.
        */
-      double
+      FLOAT_TYPE
       tEntry() {return m_tEntry;}
 
       /** 
@@ -114,12 +114,12 @@ namespace brick {
        * followed passes out of the current pixel.  In other words, the
        * value t such that (rayOrigin + t * rayDirection) is the point
        * of exit from the current pixel.  Invoking this method carries a
-       * computational cost of 1 double precision float comparison.
+       * computational cost of 1 FLOAT_TYPE comparison.
        * 
        * @return The return value is the value of t at which the ray
        * passes out of the current pixel.
        */
-      double
+      FLOAT_TYPE
       tExit() {return std::min(m_tMaxU, m_tMaxV);}
 
       /** 
@@ -247,11 +247,11 @@ namespace brick {
       bool m_inBounds;
       int m_stepU;
       int m_stepV;
-      double m_tDeltaU;
-      double m_tDeltaV;
-      double m_tEntry;
-      double m_tMaxU;
-      double m_tMaxV;
+      FLOAT_TYPE m_tDeltaU;
+      FLOAT_TYPE m_tDeltaV;
+      FLOAT_TYPE m_tEntry;
+      FLOAT_TYPE m_tMaxU;
+      FLOAT_TYPE m_tMaxV;
       int m_U;
       int m_uLimit;
       int m_V;

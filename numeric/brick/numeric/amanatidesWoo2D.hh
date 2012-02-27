@@ -74,7 +74,7 @@ namespace brick {
      **
      **   }
      **/
-    template <class ARRAY2D>
+    template <class ARRAY2D, class FLOAT_TYPE = double>
     class AmanatidesWoo2D {
     public:
       /* ================== Public typedefs ================== */
@@ -129,9 +129,9 @@ namespace brick {
        * negative values of t.
        */
       AmanatidesWoo2D(ARRAY2D& data,
-                      const Transform2D<double>& pixelTworld,
-                      const Vector2D<double>& rayOrigin,
-                      const Vector2D<double>& rayDirection,
+                      const Transform2D<FLOAT_TYPE>& pixelTworld,
+                      const Vector2D<FLOAT_TYPE>& rayOrigin,
+                      const Vector2D<FLOAT_TYPE>& rayDirection,
                       bool downstreamOnly=true);
 
     
@@ -236,12 +236,12 @@ namespace brick {
        * direction of the ray to be traced, expressed in pixel
        * coordinates.
        * @param m_data This parameter is a reference the pixel array.
-       * @return The return value is a std::pair<double, double> in
+       * @return The return value is a std::pair<FLOAT_TYPE, FLOAT_TYPE> in
        * which the first value is tEntry and the second value is tExit.
        */
-      std::pair<double, double>
-      findEntryAndExitPoints(const Vector2D<double>& rayOriginPixel,
-                             const Vector2D<double>& rayDirectionPixel,
+      std::pair<FLOAT_TYPE, FLOAT_TYPE>
+      findEntryAndExitPoints(const Vector2D<FLOAT_TYPE>& rayOriginPixel,
+                             const Vector2D<FLOAT_TYPE>& rayDirectionPixel,
                              const ARRAY2D& data);
 
       /** 
@@ -255,12 +255,12 @@ namespace brick {
        * @param defaultValue 
        * @return 
        */
-      double
-      findIntersection(const Vector2D<double>& rayOrigin,
-                       const Vector2D<double>& rayDirection,
-                       const Vector2D<double>& bVector,
-                       double cConstant,
-                       double defaultValue);
+      FLOAT_TYPE
+      findIntersection(const Vector2D<FLOAT_TYPE>& rayOrigin,
+                       const Vector2D<FLOAT_TYPE>& rayDirection,
+                       const Vector2D<FLOAT_TYPE>& bVector,
+                       FLOAT_TYPE cConstant,
+                       FLOAT_TYPE defaultValue);
 
       /// This data member is a reference the array over which to
       /// iterate.
@@ -286,21 +286,21 @@ namespace brick {
     
       /// This data member indicates what increment of ray parameter t
       /// moves us exactly 1 pixel in the U direction.
-      double m_tDeltaU;
+      FLOAT_TYPE m_tDeltaU;
 
       /// This data member indicates what increment of ray parameter t
       /// moves us exactly 1 pixel in the V direction.
-      double m_tDeltaV;
+      FLOAT_TYPE m_tDeltaV;
     
       /// This data member indicates the value of ray parameter t at
       /// which the ray first enters a pixel with U coordinate not equal
       /// to m_initialU.
-      double m_tMaxU;
+      FLOAT_TYPE m_tMaxU;
 
       /// This data member indicates the value of ray parameter t at
       /// which the ray first enters a pixel with V coordinate not equal
       /// to m_initialV.
-      double m_tMaxV;
+      FLOAT_TYPE m_tMaxV;
 
       /// This data member indicates the value of ray parameter t at
       /// which we start following the ray.  It frequently corresponds
@@ -308,7 +308,7 @@ namespace brick {
       /// may also be set to zero if the ray origin is within the
       /// pixelated space and constructor argument downstreamOnly was
       /// set to true.
-      double m_tStart;
+      FLOAT_TYPE m_tStart;
 
       /// This data member indicates whether the portion of the ray we
       /// care about actually intersects the specified pixel array.

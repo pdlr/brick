@@ -24,12 +24,12 @@ namespace brick {
 
   namespace numeric {
     
-    template <class ARRAY2D>
-    AmanatidesWoo2D<ARRAY2D>::
+    template <class ARRAY2D, class FLOAT_TYPE>
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::
     AmanatidesWoo2D(ARRAY2D& data,
-                    const Transform2D<double>& pixelTworld,
-                    const Vector2D<double>& rayOrigin,
-                    const Vector2D<double>& rayDirection,
+                    const Transform2D<FLOAT_TYPE>& pixelTworld,
+                    const Vector2D<FLOAT_TYPE>& rayOrigin,
+                    const Vector2D<FLOAT_TYPE>& rayDirection,
                     bool downstreamOnly)
       : m_data(data),
         m_initialU(-1),  // Initialize to illegal values.  These will be 
@@ -46,8 +46,8 @@ namespace brick {
         m_validIntersection(true)    
     {
       // First convert everything into pixel coordinates.
-      Vector2D<double> rayOriginPixel = pixelTworld * rayOrigin;
-      Vector2D<double> rayDirectionPixel =
+      Vector2D<FLOAT_TYPE> rayOriginPixel = pixelTworld * rayOrigin;
+      Vector2D<FLOAT_TYPE> rayDirectionPixel =
         (pixelTworld * (rayOrigin + rayDirection)) - rayOriginPixel;
 
       // Now find points entry and exit from the CT volume.  These are
@@ -55,7 +55,7 @@ namespace brick {
       // (rayOriginPixel + tEntry * rayDirectionPixel) is the entry
       // point and (rayOriginPixel + tExit * rayDirectionPixel) is the
       // exit point.
-      std::pair<double, double> tEntry_tExit =
+      std::pair<FLOAT_TYPE, FLOAT_TYPE> tEntry_tExit =
         this->findEntryAndExitPoints(rayOriginPixel, rayDirectionPixel, m_data);
 
       // Sometimes we want to disallow any pixels which are "behind" the
@@ -75,7 +75,7 @@ namespace brick {
       }
 
       // Now make the point of entry explicit.
-      Vector2D<double> entryPoint =
+      Vector2D<FLOAT_TYPE> entryPoint =
         rayOriginPixel + tEntry_tExit.first * rayDirectionPixel;
 
       // Correct for rounding error which sometimes makes entryPoint
@@ -135,8 +135,8 @@ namespace brick {
                               / rayDirectionPixel.x());
       } else { // rayDirectionPixel.x() == 0.0;
         m_stepU = 0;
-        m_tDeltaU = std::numeric_limits<double>::max();
-        m_tMaxU = std::numeric_limits<double>::max();
+        m_tDeltaU = std::numeric_limits<FLOAT_TYPE>::max();
+        m_tMaxU = std::numeric_limits<FLOAT_TYPE>::max();
       }
       if(rayDirectionPixel.y() > 0.0) {
         m_stepV = 1;
@@ -150,15 +150,15 @@ namespace brick {
                               / rayDirectionPixel.y());
       } else { // rayDirectionPixel.y() == 0.0;
         m_stepV = 0;
-        m_tDeltaV = std::numeric_limits<double>::max();
-        m_tMaxV = std::numeric_limits<double>::max();
+        m_tDeltaV = std::numeric_limits<FLOAT_TYPE>::max();
+        m_tMaxV = std::numeric_limits<FLOAT_TYPE>::max();
       }
     }
 
 
     // The copy constructor deep copies its argument.
-    template <class ARRAY2D>
-    AmanatidesWoo2D<ARRAY2D>::
+    template <class ARRAY2D, class FLOAT_TYPE>
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::
     AmanatidesWoo2D(const AmanatidesWoo2D& source)
       : m_data(source.m_data),
         m_initialU(source.m_initialU),
@@ -175,45 +175,45 @@ namespace brick {
       // Empty
     }
 
-    template <class ARRAY2D>
-    AmanatidesWoo2D<ARRAY2D>::
+    template <class ARRAY2D, class FLOAT_TYPE>
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::
     ~AmanatidesWoo2D() {};
 
-    template <class ARRAY2D>
-    typename AmanatidesWoo2D<ARRAY2D>::iterator
-    AmanatidesWoo2D<ARRAY2D>::
+    template <class ARRAY2D, class FLOAT_TYPE>
+    typename AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::iterator
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::
     begin()
     {
-      return AmanatidesWoo2DIterator<ARRAY2D>(
+      return AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE>(
         m_data, m_initialU, m_initialV, m_stepU, m_stepV, m_tMaxU, m_tMaxV,
         m_tDeltaU, m_tDeltaV, m_tStart);
     }
 
-    template <class ARRAY2D>
-    typename AmanatidesWoo2D<ARRAY2D>::iterator
-    AmanatidesWoo2D<ARRAY2D>::
+    template <class ARRAY2D, class FLOAT_TYPE>
+    typename AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::iterator
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::
     end()
     {
-      // AmanatidesWoo2DIterator<ARRAY2D>::operator==(...) considers all
+      // AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE>::operator==(...) considers all
       // iterators with illegal pixel coordinates to be equal, so all we
       // have to do here is return an iterator which references an
       // illegal pixel.
-      return AmanatidesWoo2DIterator<ARRAY2D>(
+      return AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE>(
         m_data, -1, -1, m_stepU, m_stepV, m_tMaxU, m_tMaxV,
         m_tDeltaU, m_tDeltaV, m_tStart);
     }
 
-    template <class ARRAY2D>
+    template <class ARRAY2D, class FLOAT_TYPE>
     inline bool
-    AmanatidesWoo2D<ARRAY2D>::
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::
     validIntersection()
     {
       return m_validIntersection;
     }
 
-    template <class ARRAY2D>
-    AmanatidesWoo2D<ARRAY2D>&
-    AmanatidesWoo2D<ARRAY2D>::
+    template <class ARRAY2D, class FLOAT_TYPE>
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>&
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::
     operator=(const AmanatidesWoo2D& source)
     {
       m_data = source.m_data;
@@ -230,11 +230,11 @@ namespace brick {
       return *this;
     }
     
-    template <class ARRAY2D>
-    std::pair<double, double>
-    AmanatidesWoo2D<ARRAY2D>::
-    findEntryAndExitPoints(const Vector2D<double>& rayOriginPixel,
-                           const Vector2D<double>& rayDirectionPixel,
+    template <class ARRAY2D, class FLOAT_TYPE>
+    std::pair<FLOAT_TYPE, FLOAT_TYPE>
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::
+    findEntryAndExitPoints(const Vector2D<FLOAT_TYPE>& rayOriginPixel,
+                           const Vector2D<FLOAT_TYPE>& rayDirectionPixel,
                            const ARRAY2D& data)
     {
       // First find intersection with each boundary line.
@@ -242,54 +242,54 @@ namespace brick {
       // ... Find the intersection with the line U = 0, or else a really
       // small number if rayDirection is parallel to the rows of the
       // array.
-      double tIntersectU0 = findIntersection(
-        rayOriginPixel, rayDirectionPixel, Vector2D<double>(1.0, 0.0), 0.0,
-        -std::numeric_limits<double>::max());
+      FLOAT_TYPE tIntersectU0 = findIntersection(
+        rayOriginPixel, rayDirectionPixel, Vector2D<FLOAT_TYPE>(1.0, 0.0), 0.0,
+        -std::numeric_limits<FLOAT_TYPE>::max());
 
       // ... Find the intersection with the line U = data.columns(),
       // or else a really big number if rayDirection is parallel to the
       // rows of the array.
-      double tIntersectU1 = findIntersection(
-        rayOriginPixel, rayDirectionPixel, Vector2D<double>(1.0, 0.0), data.columns(),
-        std::numeric_limits<double>::max());
+      FLOAT_TYPE tIntersectU1 = findIntersection(
+        rayOriginPixel, rayDirectionPixel, Vector2D<FLOAT_TYPE>(1.0, 0.0), data.columns(),
+        std::numeric_limits<FLOAT_TYPE>::max());
 
       // ... Find the intersection with the line V = 0, or else a really
       // small number if rayDirection is parallel to the columns of the
       // array.
-      double tIntersectV0 = findIntersection(
-        rayOriginPixel, rayDirectionPixel, Vector2D<double>(0.0, 1.0), 0.0,
-        -std::numeric_limits<double>::max());
+      FLOAT_TYPE tIntersectV0 = findIntersection(
+        rayOriginPixel, rayDirectionPixel, Vector2D<FLOAT_TYPE>(0.0, 1.0), 0.0,
+        -std::numeric_limits<FLOAT_TYPE>::max());
     
       // ... Find the intersection with the line V = data.rows(), or
       // else a really big number if rayDirection is parallel to the
       // columns of the array.
-      double tIntersectV1 = findIntersection(
-        rayOriginPixel, rayDirectionPixel, Vector2D<double>(0.0, 1.0), data.rows(),
-        std::numeric_limits<double>::max());
+      FLOAT_TYPE tIntersectV1 = findIntersection(
+        rayOriginPixel, rayDirectionPixel, Vector2D<FLOAT_TYPE>(0.0, 1.0), data.rows(),
+        std::numeric_limits<FLOAT_TYPE>::max());
 
       // Now find the closer and farther of each pair of intersections.
-      double tMinU = std::min(tIntersectU0, tIntersectU1);
-      double tMinV = std::min(tIntersectV0, tIntersectV1);
-      double tMaxU = std::max(tIntersectU0, tIntersectU1);
-      double tMaxV = std::max(tIntersectV0, tIntersectV1);
+      FLOAT_TYPE tMinU = std::min(tIntersectU0, tIntersectU1);
+      FLOAT_TYPE tMinV = std::min(tIntersectV0, tIntersectV1);
+      FLOAT_TYPE tMaxU = std::max(tIntersectU0, tIntersectU1);
+      FLOAT_TYPE tMaxV = std::max(tIntersectV0, tIntersectV1);
 
       // Compute closest point which could possibly intersect with the volume.
-      double tEntry = std::max(tMinU, tMinV);
+      FLOAT_TYPE tEntry = std::max(tMinU, tMinV);
       // Compute farthest point which could possibly intersect with the volume.
-      double tExit = std::min(tMaxU, tMaxV);
+      FLOAT_TYPE tExit = std::min(tMaxU, tMaxV);
 
       // Return our findings.
       return std::make_pair(tEntry, tExit);
     }
 
-    template <class ARRAY2D>
-    double
-    AmanatidesWoo2D<ARRAY2D>::
-    findIntersection(const Vector2D<double>& rayOrigin,
-                     const Vector2D<double>& rayDirection,
-                     const Vector2D<double>& bVector,
-                     double cConstant,
-                     double defaultValue)
+    template <class ARRAY2D, class FLOAT_TYPE>
+    FLOAT_TYPE
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::
+    findIntersection(const Vector2D<FLOAT_TYPE>& rayOrigin,
+                     const Vector2D<FLOAT_TYPE>& rayDirection,
+                     const Vector2D<FLOAT_TYPE>& bVector,
+                     FLOAT_TYPE cConstant,
+                     FLOAT_TYPE defaultValue)
     {
       // bVector and cConstant describe the desired plane:
       //   dot(x, bVector) = cConstant.
@@ -303,12 +303,12 @@ namespace brick {
       // Solving for t, we have:
       //   t = (cConstant - dot(rayOrigin, bVector))
       //        / dot(rayDirection, bVector).
-      double denominator = dot<double>(rayDirection, bVector);
+      FLOAT_TYPE denominator = dot<FLOAT_TYPE>(rayDirection, bVector);
       if(denominator == 0.0) {
         return defaultValue;
       }
       // else
-      return (cConstant - dot<double>(rayOrigin, bVector)) / denominator;
+      return (cConstant - dot<FLOAT_TYPE>(rayOrigin, bVector)) / denominator;
     }      
 
   } // namespace numeric

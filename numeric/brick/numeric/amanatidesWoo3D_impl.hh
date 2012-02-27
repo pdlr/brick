@@ -24,12 +24,12 @@ namespace brick {
 
   namespace numeric {
     
-    template <class ARRAY3D>
-    AmanatidesWoo3D<ARRAY3D>::
+    template <class ARRAY3D, class FLOAT_TYPE>
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::
     AmanatidesWoo3D(ARRAY3D& data,
-                    const Transform3D<double>& voxelTworld,
-                    const Vector3D<double>& rayOrigin,
-                    const Vector3D<double>& rayDirection,
+                    const Transform3D<FLOAT_TYPE>& voxelTworld,
+                    const Vector3D<FLOAT_TYPE>& rayOrigin,
+                    const Vector3D<FLOAT_TYPE>& rayDirection,
                     bool downstreamOnly)
       : m_data(data),
         m_initialU(-1),  // Initialize to illegal values.  These will be 
@@ -49,8 +49,8 @@ namespace brick {
         m_validIntersection(true)    
     {
       // First convert everything into voxel coordinates.
-      Vector3D<double> rayOriginVoxel = voxelTworld * rayOrigin;
-      Vector3D<double> rayDirectionVoxel =
+      Vector3D<FLOAT_TYPE> rayOriginVoxel = voxelTworld * rayOrigin;
+      Vector3D<FLOAT_TYPE> rayDirectionVoxel =
         (voxelTworld * (rayOrigin + rayDirection)) - rayOriginVoxel;
 
       // Now find points entry and exit from the CT volume.  These are
@@ -58,7 +58,7 @@ namespace brick {
       // (rayOriginVoxel + tEntry * rayDirectionVoxel) is the entry
       // point and (rayOriginVoxel + tExit * rayDirectionVoxel) is the
       // exit point.
-      std::pair<double, double> tEntry_tExit =
+      std::pair<FLOAT_TYPE, FLOAT_TYPE> tEntry_tExit =
         this->findEntryAndExitPoints(rayOriginVoxel, rayDirectionVoxel, m_data);
 
       // Sometimes we want to disallow any voxels which are "behind" the
@@ -78,7 +78,7 @@ namespace brick {
       }
 
       // Now make the point of entry explicit.
-      Vector3D<double> entryPoint =
+      Vector3D<FLOAT_TYPE> entryPoint =
         rayOriginVoxel + tEntry_tExit.first * rayDirectionVoxel;
 
       // Correct for rounding error which sometimes makes entryPoint
@@ -146,8 +146,8 @@ namespace brick {
                               / rayDirectionVoxel.x());
       } else { // rayDirectionVoxel.x() == 0.0;
         m_stepU = 0;
-        m_tDeltaU = std::numeric_limits<double>::max();
-        m_tMaxU = std::numeric_limits<double>::max();
+        m_tDeltaU = std::numeric_limits<FLOAT_TYPE>::max();
+        m_tMaxU = std::numeric_limits<FLOAT_TYPE>::max();
       }
       if(rayDirectionVoxel.y() > 0.0) {
         m_stepV = 1;
@@ -161,8 +161,8 @@ namespace brick {
                               / rayDirectionVoxel.y());
       } else { // rayDirectionVoxel.y() == 0.0;
         m_stepV = 0;
-        m_tDeltaV = std::numeric_limits<double>::max();
-        m_tMaxV = std::numeric_limits<double>::max();
+        m_tDeltaV = std::numeric_limits<FLOAT_TYPE>::max();
+        m_tMaxV = std::numeric_limits<FLOAT_TYPE>::max();
       }
       if(rayDirectionVoxel.z() > 0.0) {
         m_stepW = 1;
@@ -176,13 +176,13 @@ namespace brick {
                               / rayDirectionVoxel.z());
       } else { // rayDirectionVoxel.z() == 0.0;
         m_stepW = 0;
-        m_tDeltaW = std::numeric_limits<double>::max();
-        m_tMaxW = std::numeric_limits<double>::max();
+        m_tDeltaW = std::numeric_limits<FLOAT_TYPE>::max();
+        m_tMaxW = std::numeric_limits<FLOAT_TYPE>::max();
       }
     }
     
-    template <class ARRAY3D>
-    AmanatidesWoo3D<ARRAY3D>::
+    template <class ARRAY3D, class FLOAT_TYPE>
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::
     AmanatidesWoo3D(const AmanatidesWoo3D& source)
       : m_data(source.m_data),
         m_initialU(source.m_initialU),
@@ -203,45 +203,45 @@ namespace brick {
       // Empty
     }
 
-    template <class ARRAY3D>
-    AmanatidesWoo3D<ARRAY3D>::
+    template <class ARRAY3D, class FLOAT_TYPE>
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::
     ~AmanatidesWoo3D() {};
 
-    template <class ARRAY3D>
-    typename AmanatidesWoo3D<ARRAY3D>::iterator
-    AmanatidesWoo3D<ARRAY3D>::
+    template <class ARRAY3D, class FLOAT_TYPE>
+    typename AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::iterator
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::
     begin()
     {
-      return AmanatidesWoo3DIterator<ARRAY3D>(
+      return AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE>(
         m_data, m_initialU, m_initialV, m_initialW, m_stepU, m_stepV, m_stepW,
         m_tMaxU, m_tMaxV, m_tMaxW, m_tDeltaU, m_tDeltaV, m_tDeltaW, m_tStart);
     }
 
-    template <class ARRAY3D>
-    typename AmanatidesWoo3D<ARRAY3D>::iterator
-    AmanatidesWoo3D<ARRAY3D>::
+    template <class ARRAY3D, class FLOAT_TYPE>
+    typename AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::iterator
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::
     end()
     {
-      // AmanatidesWoo3DIterator<ARRAY3D>::operator==(...) considers all
+      // AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE>::operator==(...) considers all
       // iterators with illegal voxel coordinates to be equal, so all we
       // have to do here is return an iterator which references an
       // illegal voxel.
-      return AmanatidesWoo3DIterator<ARRAY3D>(
+      return AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE>(
         m_data, -1, -1, -1, m_stepU, m_stepV, m_stepW,
         m_tMaxU, m_tMaxV, m_tMaxW, m_tDeltaU, m_tDeltaV, m_tDeltaW, m_tStart);
     }
 
-    template <class ARRAY3D>
+    template <class ARRAY3D, class FLOAT_TYPE>
     inline bool
-    AmanatidesWoo3D<ARRAY3D>::
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::
     validIntersection()
     {
       return m_validIntersection;
     }
 
-    template <class ARRAY3D>
-    AmanatidesWoo3D<ARRAY3D>&
-    AmanatidesWoo3D<ARRAY3D>::
+    template <class ARRAY3D, class FLOAT_TYPE>
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>&
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::
     operator=(const AmanatidesWoo3D& source)
     {
       m_data = source.m_data;
@@ -262,79 +262,79 @@ namespace brick {
       return *this;
     }
     
-    template <class ARRAY3D>
-    std::pair<double, double>
-    AmanatidesWoo3D<ARRAY3D>::
-    findEntryAndExitPoints(const Vector3D<double>& rayOriginVoxel,
-                           const Vector3D<double>& rayDirectionVoxel,
+    template <class ARRAY3D, class FLOAT_TYPE>
+    std::pair<FLOAT_TYPE, FLOAT_TYPE>
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::
+    findEntryAndExitPoints(const Vector3D<FLOAT_TYPE>& rayOriginVoxel,
+                           const Vector3D<FLOAT_TYPE>& rayDirectionVoxel,
                            const ARRAY3D& data)
     {
       // First find intersection with each boundary line.
 
       // ... Find the intersection with the plane U = 0, or else a
       // really small number if rayDirection is parallel to the U axis.
-      double tIntersectU0 = findIntersection(
-        rayOriginVoxel, rayDirectionVoxel, Vector3D<double>(1.0, 0.0, 0.0),
-        0.0, -std::numeric_limits<double>::max());
+      FLOAT_TYPE tIntersectU0 = findIntersection(
+        rayOriginVoxel, rayDirectionVoxel, Vector3D<FLOAT_TYPE>(1.0, 0.0, 0.0),
+        0.0, -std::numeric_limits<FLOAT_TYPE>::max());
     
       // ... Find the intersection with the plane U = data.shape()[2],
       // or else a really big number if rayDirection is parallel to the
       // U axis.
-      double tIntersectU1 = findIntersection(
-        rayOriginVoxel, rayDirectionVoxel, Vector3D<double>(1.0, 0.0, 0.0),
-        data.shape()[2], std::numeric_limits<double>::max());
+      FLOAT_TYPE tIntersectU1 = findIntersection(
+        rayOriginVoxel, rayDirectionVoxel, Vector3D<FLOAT_TYPE>(1.0, 0.0, 0.0),
+        data.shape()[2], std::numeric_limits<FLOAT_TYPE>::max());
     
       // ... Find the intersection with the plane V = 0, or else a
       // really small number if rayDirection is parallel to the V axis.
-      double tIntersectV0 = findIntersection(
-        rayOriginVoxel, rayDirectionVoxel, Vector3D<double>(0.0, 1.0, 0.0),
-        0.0, -std::numeric_limits<double>::max());
+      FLOAT_TYPE tIntersectV0 = findIntersection(
+        rayOriginVoxel, rayDirectionVoxel, Vector3D<FLOAT_TYPE>(0.0, 1.0, 0.0),
+        0.0, -std::numeric_limits<FLOAT_TYPE>::max());
     
       // ... Find the intersection with the plane V = data.shape()[1],
       // or else a really big number if rayDirection is parallel to the
       // V axis.
-      double tIntersectV1 = findIntersection(
-        rayOriginVoxel, rayDirectionVoxel, Vector3D<double>(0.0, 1.0, 0.0),
-        data.shape()[1], std::numeric_limits<double>::max());
+      FLOAT_TYPE tIntersectV1 = findIntersection(
+        rayOriginVoxel, rayDirectionVoxel, Vector3D<FLOAT_TYPE>(0.0, 1.0, 0.0),
+        data.shape()[1], std::numeric_limits<FLOAT_TYPE>::max());
     
       // ... Find the intersection with the plane W = 0, or else a
       // really small number if rayDirection is parallel to the W axis.
-      double tIntersectW0 = findIntersection(
-        rayOriginVoxel, rayDirectionVoxel, Vector3D<double>(0.0, 0.0, 1.0),
-        0.0, -std::numeric_limits<double>::max());
+      FLOAT_TYPE tIntersectW0 = findIntersection(
+        rayOriginVoxel, rayDirectionVoxel, Vector3D<FLOAT_TYPE>(0.0, 0.0, 1.0),
+        0.0, -std::numeric_limits<FLOAT_TYPE>::max());
     
       // ... Find the intersection with the plane W = data.shape()[0],
       // or else a really big number if rayDirection is parallel to the
       // W axis.
-      double tIntersectW1 = findIntersection(
-        rayOriginVoxel, rayDirectionVoxel, Vector3D<double>(0.0, 0.0, 1.0),
-        data.shape()[0], std::numeric_limits<double>::max());
+      FLOAT_TYPE tIntersectW1 = findIntersection(
+        rayOriginVoxel, rayDirectionVoxel, Vector3D<FLOAT_TYPE>(0.0, 0.0, 1.0),
+        data.shape()[0], std::numeric_limits<FLOAT_TYPE>::max());
 
       // Now find the closer and farther of each pair of intersections.
-      double tMinU = std::min(tIntersectU0, tIntersectU1);
-      double tMinV = std::min(tIntersectV0, tIntersectV1);
-      double tMinW = std::min(tIntersectW0, tIntersectW1);
-      double tMaxU = std::max(tIntersectU0, tIntersectU1);
-      double tMaxV = std::max(tIntersectV0, tIntersectV1);
-      double tMaxW = std::max(tIntersectW0, tIntersectW1);
+      FLOAT_TYPE tMinU = std::min(tIntersectU0, tIntersectU1);
+      FLOAT_TYPE tMinV = std::min(tIntersectV0, tIntersectV1);
+      FLOAT_TYPE tMinW = std::min(tIntersectW0, tIntersectW1);
+      FLOAT_TYPE tMaxU = std::max(tIntersectU0, tIntersectU1);
+      FLOAT_TYPE tMaxV = std::max(tIntersectV0, tIntersectV1);
+      FLOAT_TYPE tMaxW = std::max(tIntersectW0, tIntersectW1);
 
       // Compute closest point which could possibly intersect with the volume.
-      double tEntry = std::max(tMinU, std::max(tMinV, tMinW));
+      FLOAT_TYPE tEntry = std::max(tMinU, std::max(tMinV, tMinW));
       // Compute farthest point which could possibly intersect with the volume.
-      double tExit = std::min(tMaxU, std::min(tMaxV, tMaxW));
+      FLOAT_TYPE tExit = std::min(tMaxU, std::min(tMaxV, tMaxW));
 
       // Return our findings.
       return std::make_pair(tEntry, tExit);
     }
 
-    template <class ARRAY3D>
-    double
-    AmanatidesWoo3D<ARRAY3D>::
-    findIntersection(const Vector3D<double>& rayOrigin,
-                     const Vector3D<double>& rayDirection,
-                     const Vector3D<double>& bVector,
-                     double cConstant,
-                     double defaultValue)
+    template <class ARRAY3D, class FLOAT_TYPE>
+    FLOAT_TYPE
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::
+    findIntersection(const Vector3D<FLOAT_TYPE>& rayOrigin,
+                     const Vector3D<FLOAT_TYPE>& rayDirection,
+                     const Vector3D<FLOAT_TYPE>& bVector,
+                     FLOAT_TYPE cConstant,
+                     FLOAT_TYPE defaultValue)
     {
       // bVector and cConstant describe the desired plane:
       //   dot(x, bVector) = cConstant.
@@ -348,12 +348,12 @@ namespace brick {
       // Solving for alpha, we have:
       //   alpha = (cConstant - dot(rayOrigin, bVector))
       //            / dot(rayDirection, bVector).
-      double denominator = dot<double>(rayDirection, bVector);
+      FLOAT_TYPE denominator = dot<FLOAT_TYPE>(rayDirection, bVector);
       if(denominator == 0.0) {
         return defaultValue;
       }
       // else
-      return (cConstant - dot<double>(rayOrigin, bVector)) / denominator;
+      return (cConstant - dot<FLOAT_TYPE>(rayOrigin, bVector)) / denominator;
     }      
 
   } // namespace numeric

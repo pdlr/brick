@@ -24,6 +24,10 @@ AM_CPPFLAGS		= -I$(top_srcdir)
 
 brickNumericdir		= $(includedir)/brick/numeric
 brickNumeric_HEADERS	= \
+	amanatidesWoo2D.hh amanatidesWoo2D_impl.hh \
+	amanatidesWoo2DIterator.hh amanatidesWoo2DIterator_impl.hh \
+	amanatidesWoo3D.hh amanatidesWoo3D_impl.hh \
+	amanatidesWoo3DIterator.hh amanatidesWoo3DIterator_impl.hh \
 	array1D.hh array1D_impl.hh \
 	array2D.hh array2D_impl.hh \
 	array3D.hh array3D_impl.hh \

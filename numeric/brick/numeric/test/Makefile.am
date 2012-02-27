@@ -12,6 +12,8 @@ VPATH			= @srcdir@
 # Specify which tests should be run.
 
 TESTS			= \
+	amanatidesWoo2DTest \
+	amanatidesWoo3DTest \
 	array1DTest \
 	array2DTest \
 	array3DTest \
@@ -44,6 +46,8 @@ TESTS			= \
 # Specify which tests should be build from source.
 
 check_PROGRAMS          = \
+	amanatidesWoo2DTest \
+	amanatidesWoo3DTest \
 	array1DTest \
 	array2DTest \
 	array3DTest \
@@ -76,6 +80,8 @@ check_PROGRAMS          = \
 # For each test which should be built from source, specify which 
 # source files.
 
+amanatidesWoo2DTest_SOURCES	= amanatidesWoo2DTest.cc
+amanatidesWoo3DTest_SOURCES	= amanatidesWoo3DTest.cc
 array1DTest_SOURCES		= array1DTest.cc arrayTestCommon.hh
 array2DTest_SOURCES		= array2DTest.cc arrayTestCommon.hh
 array3DTest_SOURCES		= array3DTest.cc arrayTestCommon.hh

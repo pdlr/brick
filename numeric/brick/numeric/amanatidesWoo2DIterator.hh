@@ -32,7 +32,7 @@ namespace brick {
      ** traversal algorithm of Amanatides and Woo, please refer to
      ** [ref].
      **/
-    template <class ARRAY2D, class FLOAT_TYPE = double>
+    template <class ARRAY2D, class FLOAT_TYPE = double, class INT_TYPE = int>
     class AmanatidesWoo2DIterator
       : public std::iterator<std::forward_iterator_tag,
                              typename ARRAY2D::value_type>
@@ -78,8 +78,8 @@ namespace brick {
        * parameter 't' at the very beginning point of the iteration.
        */
       AmanatidesWoo2DIterator(ARRAY2D& data,
-                              int startU, int startV,
-                              int stepU, int stepV,
+                              INT_TYPE startU, INT_TYPE startV,
+                              INT_TYPE stepU, INT_TYPE stepV,
                               FLOAT_TYPE tMaxU, FLOAT_TYPE tMaxV,
                               FLOAT_TYPE tDeltaU, FLOAT_TYPE tDeltaV,
                               FLOAT_TYPE tStart);
@@ -123,25 +123,21 @@ namespace brick {
       tExit() {return std::min(m_tMaxU, m_tMaxV);}
 
       /** 
-       * This method returns the U coordinate of the current pixel.  The
-       * return value is int rather than size_t so that negative (out of
-       * bounds) coordinates can be returned.
+       * This method returns the U coordinate of the current pixel.
        * 
        * @return The return value is the U coordinate of the current
        * pixel.
        */
-      int
+      INT_TYPE
       U() {return m_U;}
 
       /** 
-       * This method returns the V coordinate of the current pixel.  The
-       * return value is int rather than size_t so that negative (out of
-       * bounds) coordinates can be returned.
+       * This method returns the V coordinate of the current pixel.
        * 
        * @return The return value is the V coordinate of the current
        * pixel.
        */
-      int
+      INT_TYPE
       V() {return m_V;}
 
       /** 
@@ -245,17 +241,17 @@ namespace brick {
     private:
       ARRAY2D& m_data;
       bool m_inBounds;
-      int m_stepU;
-      int m_stepV;
+      INT_TYPE m_stepU;
+      INT_TYPE m_stepV;
       FLOAT_TYPE m_tDeltaU;
       FLOAT_TYPE m_tDeltaV;
       FLOAT_TYPE m_tEntry;
       FLOAT_TYPE m_tMaxU;
       FLOAT_TYPE m_tMaxV;
-      int m_U;
-      int m_uLimit;
-      int m_V;
-      int m_vLimit;
+      INT_TYPE m_U;
+      INT_TYPE m_uLimit;
+      INT_TYPE m_V;
+      INT_TYPE m_vLimit;
     };
 
   } // namespace numeric

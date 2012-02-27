@@ -32,7 +32,7 @@ namespace brick {
      ** traversal algorithm of Amanatides and Woo, please refer to
      ** [ref].
      **/
-    template <class ARRAY3D, class FLOAT_TYPE = double>
+    template <class ARRAY3D, class FLOAT_TYPE = double, class INT_TYPE = int>
     class AmanatidesWoo3DIterator
       : public std::iterator<std::forward_iterator_tag,
                              typename ARRAY3D::value_type>
@@ -93,8 +93,8 @@ namespace brick {
        * parameter 't' at the very beginning point of the iteration.
        */
       AmanatidesWoo3DIterator(ARRAY3D& data,
-                              int startU, int startV, int startW,
-                              int stepU, int stepV, int stepW,
+                              INT_TYPE startU, INT_TYPE startV, INT_TYPE startW,
+                              INT_TYPE stepU, INT_TYPE stepV, INT_TYPE stepW,
                               FLOAT_TYPE tMaxU, FLOAT_TYPE tMaxV, FLOAT_TYPE tMaxW,
                               FLOAT_TYPE tDeltaU, FLOAT_TYPE tDeltaV, FLOAT_TYPE tDeltaW,
                               FLOAT_TYPE tStart);
@@ -138,36 +138,30 @@ namespace brick {
       tExit() {return std::min(m_tMaxU, std::min(m_tMaxV, m_tMaxW));}
 
       /** 
-       * This method returns the U coordinate of the current voxel.  The
-       * return value is int rather than size_t so that negative (out of
-       * bounds) coordinates can be returned.
+       * This method returns the U coordinate of the current voxel.
        * 
        * @return The return value is the U coordinate of the current
        * voxel.
        */
-      int
+      INT_TYPE
       U() {return m_U;}
 
       /** 
-       * This method returns the V coordinate of the current voxel.  The
-       * return value is int rather than size_t so that negative (out of
-       * bounds) coordinates can be returned.
+       * This method returns the V coordinate of the current voxel.
        * 
        * @return The return value is the V coordinate of the current
        * voxel.
        */
-      int
+      INT_TYPE
       V() {return m_V;}
 
       /** 
-       * This method returns the W coordinate of the current voxel.  The
-       * return value is int rather than size_t so that negative (out of
-       * bounds) coordinates can be returned.
+       * This method returns the W coordinate of the current voxel.
        * 
        * @return The return value is the W coordinate of the current
        * voxel.
        */
-      int
+      INT_TYPE
       W() {return m_W;}
 
       /** 
@@ -271,9 +265,9 @@ namespace brick {
     private:
       ARRAY3D& m_data;
       bool m_inBounds;
-      int m_stepU;
-      int m_stepV;
-      int m_stepW;
+      INT_TYPE m_stepU;
+      INT_TYPE m_stepV;
+      INT_TYPE m_stepW;
       FLOAT_TYPE m_tDeltaU;
       FLOAT_TYPE m_tDeltaV;
       FLOAT_TYPE m_tDeltaW;
@@ -281,12 +275,12 @@ namespace brick {
       FLOAT_TYPE m_tMaxU;
       FLOAT_TYPE m_tMaxV;
       FLOAT_TYPE m_tMaxW;
-      int m_U;
-      int m_uLimit;
-      int m_V;
-      int m_vLimit;
-      int m_W;
-      int m_wLimit;
+      INT_TYPE m_U;
+      INT_TYPE m_uLimit;
+      INT_TYPE m_V;
+      INT_TYPE m_vLimit;
+      INT_TYPE m_W;
+      INT_TYPE m_wLimit;
     };
 
   } // namespace numeric

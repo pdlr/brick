@@ -24,8 +24,8 @@ namespace brick {
 
   namespace numeric {
     
-    template <class ARRAY3D, class FLOAT_TYPE>
-    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::
+    template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     AmanatidesWoo3D(ARRAY3D& data,
                     const Transform3D<FLOAT_TYPE>& voxelTworld,
                     const Vector3D<FLOAT_TYPE>& rayOrigin,
@@ -98,9 +98,9 @@ namespace brick {
 
       // Since we've already converted to voxel coords, finding the
       // first voxel on the path is trivial.
-      m_initialU = static_cast<int>(entryPoint.x());
-      m_initialV = static_cast<int>(entryPoint.y());
-      m_initialW = static_cast<int>(entryPoint.z());
+      m_initialU = static_cast<INT_TYPE>(entryPoint.x());
+      m_initialV = static_cast<INT_TYPE>(entryPoint.y());
+      m_initialW = static_cast<INT_TYPE>(entryPoint.z());
 
       // There's an similar case to the one handled by the rounding
       // error test above.  Member function findEntryAndExitPoints()
@@ -108,21 +108,21 @@ namespace brick {
       // coordinates, respectively.  This means that it's very possible
       // for m_initialU to be equal to m_data.columns(), which will
       // cause an out-of-bounds index. Correct for this now.
-      if(m_initialU == static_cast<int>(m_data.shape()[2])) {
+      if(m_initialU == static_cast<INT_TYPE>(m_data.shape()[2])) {
         --m_initialU;
       }
-      if(m_initialV == static_cast<int>(m_data.shape()[1])) {
+      if(m_initialV == static_cast<INT_TYPE>(m_data.shape()[1])) {
         --m_initialV;
       }
-      if(m_initialW == static_cast<int>(m_data.shape()[0])) {
+      if(m_initialW == static_cast<INT_TYPE>(m_data.shape()[0])) {
         --m_initialW;
       }
 
       // Sanity check.  This sometimes fails if the ray is parallel to
       // one axis of the data array.
-      if((m_initialU >= static_cast<int>(m_data.shape()[2]))
-         || (m_initialV >= static_cast<int>(m_data.shape()[1]))
-         || (m_initialW >= static_cast<int>(m_data.shape()[0]))) {
+      if((m_initialU >= static_cast<INT_TYPE>(m_data.shape()[2]))
+         || (m_initialV >= static_cast<INT_TYPE>(m_data.shape()[1]))
+         || (m_initialW >= static_cast<INT_TYPE>(m_data.shape()[0]))) {
         m_validIntersection = false;
         return;
       }
@@ -181,8 +181,8 @@ namespace brick {
       }
     }
     
-    template <class ARRAY3D, class FLOAT_TYPE>
-    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::
+    template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     AmanatidesWoo3D(const AmanatidesWoo3D& source)
       : m_data(source.m_data),
         m_initialU(source.m_initialU),
@@ -203,45 +203,45 @@ namespace brick {
       // Empty
     }
 
-    template <class ARRAY3D, class FLOAT_TYPE>
-    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::
+    template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     ~AmanatidesWoo3D() {};
 
-    template <class ARRAY3D, class FLOAT_TYPE>
-    typename AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::iterator
-    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::
+    template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
+    typename AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE, INT_TYPE>::iterator
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     begin()
     {
-      return AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE>(
+      return AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE, INT_TYPE>(
         m_data, m_initialU, m_initialV, m_initialW, m_stepU, m_stepV, m_stepW,
         m_tMaxU, m_tMaxV, m_tMaxW, m_tDeltaU, m_tDeltaV, m_tDeltaW, m_tStart);
     }
 
-    template <class ARRAY3D, class FLOAT_TYPE>
-    typename AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::iterator
-    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::
+    template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
+    typename AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE, INT_TYPE>::iterator
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     end()
     {
-      // AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE>::operator==(...) considers all
+      // AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE, INT_TYPE>::operator==(...) considers all
       // iterators with illegal voxel coordinates to be equal, so all we
       // have to do here is return an iterator which references an
       // illegal voxel.
-      return AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE>(
+      return AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE, INT_TYPE>(
         m_data, -1, -1, -1, m_stepU, m_stepV, m_stepW,
         m_tMaxU, m_tMaxV, m_tMaxW, m_tDeltaU, m_tDeltaV, m_tDeltaW, m_tStart);
     }
 
-    template <class ARRAY3D, class FLOAT_TYPE>
+    template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
     inline bool
-    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     validIntersection()
     {
       return m_validIntersection;
     }
 
-    template <class ARRAY3D, class FLOAT_TYPE>
-    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>&
-    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::
+    template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE, INT_TYPE>&
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     operator=(const AmanatidesWoo3D& source)
     {
       m_data = source.m_data;
@@ -262,9 +262,9 @@ namespace brick {
       return *this;
     }
     
-    template <class ARRAY3D, class FLOAT_TYPE>
+    template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
     std::pair<FLOAT_TYPE, FLOAT_TYPE>
-    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     findEntryAndExitPoints(const Vector3D<FLOAT_TYPE>& rayOriginVoxel,
                            const Vector3D<FLOAT_TYPE>& rayDirectionVoxel,
                            const ARRAY3D& data)
@@ -327,9 +327,9 @@ namespace brick {
       return std::make_pair(tEntry, tExit);
     }
 
-    template <class ARRAY3D, class FLOAT_TYPE>
+    template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
     FLOAT_TYPE
-    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE>::
+    AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     findIntersection(const Vector3D<FLOAT_TYPE>& rayOrigin,
                      const Vector3D<FLOAT_TYPE>& rayDirection,
                      const Vector3D<FLOAT_TYPE>& bVector,

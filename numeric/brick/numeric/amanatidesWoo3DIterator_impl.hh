@@ -30,11 +30,11 @@ namespace brick {
     // The class constructor is initialized with all of the internal
     // variables of the voxel traversal algorithm, plus the starting
     // value of the ray parameter.
-    template <class ARRAY3D, class FLOAT_TYPE>
-    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE>::
+    template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
+    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     AmanatidesWoo3DIterator(ARRAY3D& data,
-                            int startU, int startV, int startW,
-                            int stepU, int stepV, int stepW,
+                            INT_TYPE startU, INT_TYPE startV, INT_TYPE startW,
+                            INT_TYPE stepU, INT_TYPE stepV, INT_TYPE stepW,
                             FLOAT_TYPE tMaxU, FLOAT_TYPE tMaxV, FLOAT_TYPE tMaxW,
                             FLOAT_TYPE tDeltaU, FLOAT_TYPE tDeltaV, FLOAT_TYPE tDeltaW,
                             FLOAT_TYPE tStart)
@@ -51,25 +51,25 @@ namespace brick {
         m_tMaxV(tMaxV),
         m_tMaxW(tMaxW),
         m_U(startU),
-        m_uLimit(stepU > 0 ? static_cast<int>(data.shape()[2]) : -1),
+        m_uLimit(stepU > 0 ? static_cast<INT_TYPE>(data.shape()[2]) : -1),
         m_V(startV),
-        m_vLimit(stepV > 0 ? static_cast<int>(data.shape()[1]) : -1),
+        m_vLimit(stepV > 0 ? static_cast<INT_TYPE>(data.shape()[1]) : -1),
         m_W(startW),
-        m_wLimit(stepW > 0 ? static_cast<int>(data.shape()[0]) : -1)
+        m_wLimit(stepW > 0 ? static_cast<INT_TYPE>(data.shape()[0]) : -1)
     {
       if((m_U < 0)
          || (m_V < 0)
          || (m_W < 0)
-         || (m_U >= static_cast<int>(data.shape()[2]))
-         || (m_V >= static_cast<int>(data.shape()[1]))
-         || (m_W >= static_cast<int>(data.shape()[0]))) {
+         || (m_U >= static_cast<INT_TYPE>(data.shape()[2]))
+         || (m_V >= static_cast<INT_TYPE>(data.shape()[1]))
+         || (m_W >= static_cast<INT_TYPE>(data.shape()[0]))) {
         m_inBounds = false;      
       }
     }
 
     // Copy constructor.
-    template <class ARRAY3D, class FLOAT_TYPE>
-    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE>::
+    template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
+    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     AmanatidesWoo3DIterator(const AmanatidesWoo3DIterator& source)
       : m_data(source.m_data),
         m_inBounds(source.m_inBounds),
@@ -95,9 +95,9 @@ namespace brick {
 
     // This operator returns a reference to the Array3D element at the
     // current voxel.
-    template <class ARRAY3D, class FLOAT_TYPE>
+    template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
     inline typename ARRAY3D::value_type& // element_type?
-    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE>::
+    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     operator*()
     {
       return m_data(m_W, m_V, m_U);
@@ -105,9 +105,9 @@ namespace brick {
 
     // This operator returns a pointer to the Array3D element at the
     // current voxel.
-    template <class ARRAY3D, class FLOAT_TYPE>
+    template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
     inline typename ARRAY3D::value_type* // element_type?
-    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE>::
+    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     operator->()
     {
       return &(this->operator*());
@@ -115,9 +115,9 @@ namespace brick {
 
     // The pre-increment operator increments the iterator so that it
     // points to the next voxel along the path.
-    template <class ARRAY3D, class FLOAT_TYPE>
-    inline AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE>&
-    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE>::
+    template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
+    inline AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE, INT_TYPE>&
+    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     operator++()
     {
       if(m_tMaxU < m_tMaxV) {
@@ -159,21 +159,21 @@ namespace brick {
     // The post-increment operator increments the iterator so that it
     // points to the next voxel along the path.  It differs from the
     // pre-increment operator in its return value.
-    template <class ARRAY3D, class FLOAT_TYPE>
-    inline AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE>
-    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE>::
+    template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
+    inline AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE, INT_TYPE>
+    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     operator++(int)
     {
-      AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE> thisCopy(*this);
+      AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE, INT_TYPE> thisCopy(*this);
       ++this;
       return thisCopy;
     }
 
     // This is the assignment operator.  It copies the value of its
     // argument into *this.
-    template <class ARRAY3D, class FLOAT_TYPE>
-    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE>&
-    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE>::
+    template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
+    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE, INT_TYPE>&
+    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     operator=(const AmanatidesWoo3DIterator& source)
     {
       m_data = source.m_data;
@@ -199,9 +199,9 @@ namespace brick {
 
     // The equality operator returns true if *this currently
     // references the same voxel as the argument.
-    template <class ARRAY3D, class FLOAT_TYPE>
+    template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
     inline bool
-    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE>::
+    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     operator==(const AmanatidesWoo3DIterator& other)
     {
       // Return true if both refer to valid voxels or if both refer to
@@ -211,9 +211,9 @@ namespace brick {
 
     // The inequality operator returns true if *this currently
     // references the a different voxel than the argument.
-    template <class ARRAY3D, class FLOAT_TYPE>
+    template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
     inline bool
-    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE>::
+    AmanatidesWoo3DIterator<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     operator!=(const AmanatidesWoo3DIterator& other)
     {
       return !(this->operator==(other));

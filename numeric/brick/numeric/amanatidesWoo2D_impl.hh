@@ -24,8 +24,8 @@ namespace brick {
 
   namespace numeric {
     
-    template <class ARRAY2D, class FLOAT_TYPE>
-    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::
+    template <class ARRAY2D, class FLOAT_TYPE, class INT_TYPE>
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE, INT_TYPE>::
     AmanatidesWoo2D(ARRAY2D& data,
                     const Transform2D<FLOAT_TYPE>& pixelTworld,
                     const Vector2D<FLOAT_TYPE>& rayOrigin,
@@ -92,8 +92,8 @@ namespace brick {
 
       // Since we've already converted to pixel coords, finding the
       // first pixel on the path is trivial.
-      m_initialU = static_cast<int>(entryPoint.x());
-      m_initialV = static_cast<int>(entryPoint.y());
+      m_initialU = static_cast<INT_TYPE>(entryPoint.x());
+      m_initialV = static_cast<INT_TYPE>(entryPoint.y());
 
       // There's an similar case to the one handled by the rounding
       // error test above.  Member function findEntryAndExitPoints()
@@ -101,17 +101,17 @@ namespace brick {
       // and V coordinates, respectively.  This means that it's very
       // possible for m_initialU to be equal to m_data.columns(), which
       // will cause an out-of-bounds index. Correct for this now.
-      if(m_initialU == static_cast<int>(m_data.columns())) {
+      if(m_initialU == static_cast<INT_TYPE>(m_data.columns())) {
         --m_initialU;
       }
-      if(m_initialV == static_cast<int>(m_data.rows())) {
+      if(m_initialV == static_cast<INT_TYPE>(m_data.rows())) {
         --m_initialV;
       }
 
       // Sanity check.  This sometimes fails if the ray is parallel to
       // one axis of the data array.
-      if((m_initialU >= static_cast<int>(m_data.columns()))
-         || (m_initialV >= static_cast<int>(m_data.rows()))) {
+      if((m_initialU >= static_cast<INT_TYPE>(m_data.columns()))
+         || (m_initialV >= static_cast<INT_TYPE>(m_data.rows()))) {
         m_validIntersection = false;
         return;
       }
@@ -157,8 +157,8 @@ namespace brick {
 
 
     // The copy constructor deep copies its argument.
-    template <class ARRAY2D, class FLOAT_TYPE>
-    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::
+    template <class ARRAY2D, class FLOAT_TYPE, class INT_TYPE>
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE, INT_TYPE>::
     AmanatidesWoo2D(const AmanatidesWoo2D& source)
       : m_data(source.m_data),
         m_initialU(source.m_initialU),
@@ -175,45 +175,45 @@ namespace brick {
       // Empty
     }
 
-    template <class ARRAY2D, class FLOAT_TYPE>
-    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::
+    template <class ARRAY2D, class FLOAT_TYPE, class INT_TYPE>
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE, INT_TYPE>::
     ~AmanatidesWoo2D() {};
 
-    template <class ARRAY2D, class FLOAT_TYPE>
-    typename AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::iterator
-    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::
+    template <class ARRAY2D, class FLOAT_TYPE, class INT_TYPE>
+    typename AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE, INT_TYPE>::iterator
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE, INT_TYPE>::
     begin()
     {
-      return AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE>(
+      return AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE, INT_TYPE>(
         m_data, m_initialU, m_initialV, m_stepU, m_stepV, m_tMaxU, m_tMaxV,
         m_tDeltaU, m_tDeltaV, m_tStart);
     }
 
-    template <class ARRAY2D, class FLOAT_TYPE>
-    typename AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::iterator
-    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::
+    template <class ARRAY2D, class FLOAT_TYPE, class INT_TYPE>
+    typename AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE, INT_TYPE>::iterator
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE, INT_TYPE>::
     end()
     {
-      // AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE>::operator==(...) considers all
+      // AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE, INT_TYPE>::operator==(...) considers all
       // iterators with illegal pixel coordinates to be equal, so all we
       // have to do here is return an iterator which references an
       // illegal pixel.
-      return AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE>(
+      return AmanatidesWoo2DIterator<ARRAY2D, FLOAT_TYPE, INT_TYPE>(
         m_data, -1, -1, m_stepU, m_stepV, m_tMaxU, m_tMaxV,
         m_tDeltaU, m_tDeltaV, m_tStart);
     }
 
-    template <class ARRAY2D, class FLOAT_TYPE>
+    template <class ARRAY2D, class FLOAT_TYPE, class INT_TYPE>
     inline bool
-    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE, INT_TYPE>::
     validIntersection()
     {
       return m_validIntersection;
     }
 
-    template <class ARRAY2D, class FLOAT_TYPE>
-    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>&
-    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::
+    template <class ARRAY2D, class FLOAT_TYPE, class INT_TYPE>
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE, INT_TYPE>&
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE, INT_TYPE>::
     operator=(const AmanatidesWoo2D& source)
     {
       m_data = source.m_data;
@@ -230,9 +230,9 @@ namespace brick {
       return *this;
     }
     
-    template <class ARRAY2D, class FLOAT_TYPE>
+    template <class ARRAY2D, class FLOAT_TYPE, class INT_TYPE>
     std::pair<FLOAT_TYPE, FLOAT_TYPE>
-    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE, INT_TYPE>::
     findEntryAndExitPoints(const Vector2D<FLOAT_TYPE>& rayOriginPixel,
                            const Vector2D<FLOAT_TYPE>& rayDirectionPixel,
                            const ARRAY2D& data)
@@ -282,9 +282,9 @@ namespace brick {
       return std::make_pair(tEntry, tExit);
     }
 
-    template <class ARRAY2D, class FLOAT_TYPE>
+    template <class ARRAY2D, class FLOAT_TYPE, class INT_TYPE>
     FLOAT_TYPE
-    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE>::
+    AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE, INT_TYPE>::
     findIntersection(const Vector2D<FLOAT_TYPE>& rayOrigin,
                      const Vector2D<FLOAT_TYPE>& rayDirection,
                      const Vector2D<FLOAT_TYPE>& bVector,

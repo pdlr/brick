@@ -74,7 +74,7 @@ namespace brick {
      **
      **   }
      **/
-    template <class ARRAY2D, class FLOAT_TYPE = double>
+    template <class ARRAY2D, class FLOAT_TYPE = double, class INT_TYPE = int>
     class AmanatidesWoo2D {
     public:
       /* ================== Public typedefs ================== */
@@ -268,21 +268,21 @@ namespace brick {
 
       /// This data member indicates the U coordinate of the first pixel
       /// along the path.
-      int m_initialU;
+      INT_TYPE m_initialU;
 
       /// This data member indicates the V coordinate of the first pixel
       /// along the path.
-      int m_initialV;
+      INT_TYPE m_initialV;
 
       /// This data member indicates whether the U coordinate will be
       /// increasing (m_stepU == 1) or decreasing (m_stepU == -1) as we
       /// travel along the ray path.
-      int m_stepU;
+      INT_TYPE m_stepU;
 
       /// This data member indicates whether the V coordinate will be
       /// increasing (m_stepV == 1) or decreasing (m_stepV == -1) as we
       /// travel along the ray path.
-      int m_stepV;
+      INT_TYPE m_stepV;
     
       /// This data member indicates what increment of ray parameter t
       /// moves us exactly 1 pixel in the U direction.

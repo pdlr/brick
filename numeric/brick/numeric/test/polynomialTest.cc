@@ -181,7 +181,7 @@ namespace brick {
         BRICK_TEST_ASSERT(
           approximatelyEqual(polynomial(xValue), referenceValue, 1.0E-11));
       }
-#endif BRICK_NUMERIC_POLYNOMIAL_TEMPLATED_CONSTRUCTORS 
+#endif /* BRICK_NUMERIC_POLYNOMIAL_TEMPLATED_CONSTRUCTORS */
     }
     
   

@@ -37,6 +37,8 @@ TESTS = \
 	imagePyramidTest \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
+	registerPoints3DTest \
+	threePointAlgorithmTest \
 	utilitiesTest
 
 
@@ -50,6 +52,8 @@ check_PROGRAMS = \
 	imagePyramidTest \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
+	registerPoints3DTest \
+	threePointAlgorithmTest \
 	utilitiesTest
 
 
@@ -64,6 +68,8 @@ imagePyramidTest_SOURCES	= imagePyramidTest.cc testImages.hh
 keypointMatcherFastTest_SOURCES	= keypointMatcherFastTest.cc
 keypointSelectorFastTest_SOURCES	= keypointSelectorFastTest.cc
 # ransacTest_SOURCES		= ransacTest.cc
+registerPoints3DTest_SOURCES	= registerPoints3DTest.cc
+threePointAlgorithmTest_SOURCES	= threePointAlgorithmTest.cc
 utilitiesTest_SOURCES		= utilitiesTest.cc testImages.hh
 
 

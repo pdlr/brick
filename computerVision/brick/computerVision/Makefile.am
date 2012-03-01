@@ -46,6 +46,8 @@ brickComputerVision_HEADERS	= \
 	pixelYIQ.hh \
 	randomSampleSelector.hh randomSampleSelector_impl.hh \
 	ransac.hh ransac_impl.hh \
+	registerPoints3D.hh registerPoints3D_impl.hh \
+	threePointAlgorithm.hh threePointAlgorithm_impl.hh \
 	utilities.hh utilities_impl.hh
 
 stillToComeHeaders		= \
@@ -70,11 +72,9 @@ stillToComeHeaders		= \
 	nonMaximumSuppress.h \
 	opticalFlow.h \
 	quadMap.h \
-	registerPoints3D.h \
 	segmenterFelzenszwalb.h \
 	sobel.h \
-	stereoRectify.h \
-	threePointAlgorithm.h
+	stereoRectify.h
 
 
 # Define the library to build.

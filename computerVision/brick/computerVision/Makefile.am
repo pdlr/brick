@@ -29,6 +29,7 @@ brickComputerVision_HEADERS	= \
 	cameraIntrinsicsPinhole.hh \
 	cameraIntrinsicsPlumbBob.hh cameraIntrinsicsPlumbBob_impl.hh \
 	colorspaceConverter.hh colorspaceConverter_impl.hh \
+	fivePointAlgorithm.hh fivePointAlgorithm_impl.hh \
 	image.hh \
 	imageFilter.hh imageFilter_impl.hh \
 	imageIO.hh imageIO_impl.hh \
@@ -61,7 +62,6 @@ stillToComeHeaders		= \
 	erode.h \
 	extendedKalmanFilter.h \
 	featureAssociation.h \
-	fivePointAlgorithm.h \
 	fourierTransformer.h \
 	getEuclideanDistance.h \
 	histogramEqualize.h \
@@ -91,7 +91,6 @@ libbrickComputerVision_la_SOURCES = \
 otherSources =\
 	eightPointAlgorithm.cpp eightPointAlgorithm.h \
 	extendedKalmanFilter.cpp extendedKalmanFilter.h \
-	fivePointAlgorithm.cpp fivePointAlgorithm.h \
 	fourierTransformer.cpp fourierTransformer.h \
 	histogramEqualize.cpp histogramEqualize.h \
 	naiveSnake.cpp naiveSnake.h \

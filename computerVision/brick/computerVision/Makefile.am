@@ -29,6 +29,7 @@ brickComputerVision_HEADERS	= \
 	cameraIntrinsicsPinhole.hh \
 	cameraIntrinsicsPlumbBob.hh cameraIntrinsicsPlumbBob_impl.hh \
 	colorspaceConverter.hh colorspaceConverter_impl.hh \
+	eightPointAlgorithm.hh eightPointAlgorithm_impl.hh \
 	fivePointAlgorithm.hh fivePointAlgorithm_impl.hh \
 	image.hh \
 	imageFilter.hh imageFilter_impl.hh \
@@ -58,7 +59,6 @@ stillToComeHeaders		= \
 	connectedComponents.h \
 	dilate.h \
 	disjointSet.h \
-	eightPointAlgorithm.h \
 	erode.h \
 	extendedKalmanFilter.h \
 	featureAssociation.h \
@@ -89,7 +89,6 @@ libbrickComputerVision_la_SOURCES = \
 	ransac.cc ransac.hh
 
 otherSources =\
-	eightPointAlgorithm.cpp eightPointAlgorithm.h \
 	extendedKalmanFilter.cpp extendedKalmanFilter.h \
 	fourierTransformer.cpp fourierTransformer.h \
 	histogramEqualize.cpp histogramEqualize.h \

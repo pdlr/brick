@@ -33,6 +33,7 @@ TESTS = \
 	cameraIntrinsicsPinholeTest \
 	cameraIntrinsicsPlumbBobTest \
 	colorspaceConverterTest \
+	eightPointAlgorithmTest \
 	fivePointAlgorithmTest \
 	imageFilterTest \
 	imagePyramidTest \
@@ -49,6 +50,7 @@ check_PROGRAMS = \
 	cameraIntrinsicsPinholeTest \
 	cameraIntrinsicsPlumbBobTest \
 	colorspaceConverterTest \
+	eightPointAlgorithmTest \
 	fivePointAlgorithmTest \
 	imageFilterTest \
 	imagePyramidTest \
@@ -65,6 +67,7 @@ check_PROGRAMS = \
 cameraIntrinsicsPinholeTest_SOURCES	= cameraIntrinsicsPinholeTest.cc
 cameraIntrinsicsPlumbBobTest_SOURCES	= cameraIntrinsicsPlumbBobTest.cc
 colorspaceConverterTest_SOURCES	= colorspaceConverterTest.cc
+eightPointAlgorithmTest_SOURCES	= eightPointAlgorithmTest.cc
 fivePointAlgorithmTest_SOURCES	= fivePointAlgorithmTest.cc
 imageFilterTest_SOURCES		= imageFilterTest.cc testImages.hh
 imagePyramidTest_SOURCES	= imagePyramidTest.cc testImages.hh

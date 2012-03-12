@@ -26,7 +26,7 @@ brickComputerVisiondir		= $(includedir)/brick/computerVision
 brickComputerVision_HEADERS	= \
 	cameraIntrinsics.hh \
 	cameraIntrinsicsDistorted.hh \
-	cameraIntrinsicsPinhole.hh \
+	cameraIntrinsicsPinhole.hh cameraIntrinsicsPinhole_impl.hh \
 	cameraIntrinsicsPlumbBob.hh cameraIntrinsicsPlumbBob_impl.hh \
 	colorspaceConverter.hh colorspaceConverter_impl.hh \
 	eightPointAlgorithm.hh eightPointAlgorithm_impl.hh \
@@ -80,7 +80,6 @@ stillToComeHeaders		= \
 # Define the library to build.
 lib_LTLIBRARIES		= libbrickComputerVision.la
 libbrickComputerVision_la_SOURCES = \
-	cameraIntrinsicsPinhole.cc cameraIntrinsicsPinhole.hh \
 	cameraIntrinsicsPlumbBob.cc cameraIntrinsicsPlumbBob.hh \
 	cameraIntrinsicsPlumbBob_impl.hh \
 	imageIO.cc imageIO.hh \

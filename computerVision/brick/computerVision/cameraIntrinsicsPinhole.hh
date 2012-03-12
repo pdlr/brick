@@ -60,7 +60,8 @@ namespace brick {
      ** at the top left of the display, with the U axis pointing to
      ** the right and the V axis pointing down.
      **/
-    class CameraIntrinsicsPinhole : public CameraIntrinsics {
+    template <class FloatType = double>
+    class CameraIntrinsicsPinhole : public CameraIntrinsics<FloatType> {
     public:
 
       /** 
@@ -111,13 +112,13 @@ namespace brick {
        * position in pixel coordinates at which the Z axis passes
        * through the image plane.
        */
-      CameraIntrinsicsPinhole(size_t numPixelsX,
-                              size_t numPixelsY,
-                              double focalLength,
-                              double pixelSizeX,
-                              double pixelSizeY,
-                              double centerU,
-                              double centerV);
+      CameraIntrinsicsPinhole(unsigned int numPixelsX,
+                              unsigned int numPixelsY,
+                              FloatType focalLength,
+                              FloatType pixelSizeX,
+                              FloatType pixelSizeY,
+                              FloatType centerU,
+                              FloatType centerV);
 
 
       /** 
@@ -135,7 +136,7 @@ namespace brick {
        * coordinate) at which the optical axis intersects the image
        * plane.
        */
-      double
+      FloatType
       getCenterU() const {return m_centerU;}
           
 
@@ -147,7 +148,7 @@ namespace brick {
        * coordinate) at which the optical axis intersects the image
        * plane.
        */
-      double
+      FloatType
       getCenterV() const {return m_centerV;}
           
 
@@ -157,7 +158,7 @@ namespace brick {
        * 
        * @return The return value is the originally specified focal length.
        */
-      double
+      FloatType
       getFocalLength() const {return m_focalLength;}
           
 
@@ -167,7 +168,7 @@ namespace brick {
        * 
        * @return The return value is focalLength / xPixelSize.
        */
-      double
+      FloatType
       getKx() const {return m_kX;}
           
 
@@ -177,7 +178,7 @@ namespace brick {
        * 
        * @return The return value is focalLength / yPixelSize.
        */
-      double
+      FloatType
       getKy() const {return m_kY;}
           
 
@@ -188,7 +189,7 @@ namespace brick {
        * @return The return value is the number of pixels in the X
        * direction.
        */
-      size_t
+      unsigned int
       getNumPixelsX() const {return m_numPixelsX;}
           
 
@@ -199,7 +200,7 @@ namespace brick {
        * @return The return value is the number of pixels in the Y
        * direction.
        */
-      size_t
+      unsigned int
       getNumPixelsY() const {return m_numPixelsY;}
           
 
@@ -210,7 +211,7 @@ namespace brick {
        * @return The return value is the size of each pixel in the X
        * direction.
        */
-      double
+      FloatType
       getPixelSizeX() const {return m_focalLength / m_kX;}
           
 
@@ -221,7 +222,7 @@ namespace brick {
        * @return The return value is the size of each pixel in the Y
        * direction.
        */
-      double
+      FloatType
       getPixelSizeY() const {return m_focalLength / m_kY;}
           
 
@@ -233,7 +234,7 @@ namespace brick {
        * 
        * @return The return value is the relevant projection matrix.
        */
-      brick::numeric::Array2D<double>
+      brick::numeric::Array2D<FloatType>
       getProjectionMatrix() const;
 
       
@@ -246,8 +247,8 @@ namespace brick {
        * @return The return value gives the point in pixel coordinates
        * to which the input point will project.
        */
-      virtual brick::numeric::Vector2D<double>
-      project(const brick::numeric::Vector3D<double>& point) const;
+      virtual brick::numeric::Vector2D<FloatType>
+      project(const brick::numeric::Vector3D<FloatType>& point) const;
 
 
       /** 
@@ -281,8 +282,8 @@ namespace brick {
        * @return The return value is the ray in 3D camera coordinates
        * corresponding to the input 2D point.
        */
-      virtual brick::geometry::Ray3D<double>
-      reverseProject(const brick::numeric::Vector2D<double>& pixelPosition,
+      virtual brick::geometry::Ray3D<FloatType>
+      reverseProject(const brick::numeric::Vector2D<FloatType>& pixelPosition,
                      bool normalize = true) const;
 
 
@@ -293,7 +294,7 @@ namespace brick {
        * @param numPixelsX The width of the image.
        */
       virtual void
-      setNumPixelsX(size_t numPixelsX) {m_numPixelsX = numPixelsX;}
+      setNumPixelsX(unsigned int numPixelsX) {m_numPixelsX = numPixelsX;}
 
 
       /** 
@@ -303,7 +304,7 @@ namespace brick {
        * @param numPixelsX The height of the image.
        */
       virtual void
-      setNumPixelsY(size_t numPixelsY) {m_numPixelsY = numPixelsY;}
+      setNumPixelsY(unsigned int numPixelsY) {m_numPixelsY = numPixelsY;}
 
       
       /** 
@@ -322,13 +323,13 @@ namespace brick {
       
     protected:
 
-      double m_centerU;
-      double m_centerV;
-      double m_focalLength;
-      double m_kX;
-      double m_kY;
-      size_t m_numPixelsX;
-      size_t m_numPixelsY;
+      FloatType m_centerU;
+      FloatType m_centerV;
+      FloatType m_focalLength;
+      FloatType m_kX;
+      FloatType m_kY;
+      unsigned int m_numPixelsX;
+      unsigned int m_numPixelsY;
 
     };
 
@@ -349,9 +350,10 @@ namespace brick {
      * @return The return value is a reference to the input stream after
      * the write has taken place.
      */
+    template <class FloatType>
     inline std::ostream&
     operator<<(std::ostream& stream,
-               const CameraIntrinsicsPinhole& intrinsics)
+               const CameraIntrinsicsPinhole<FloatType>& intrinsics)
     {
       return intrinsics.writeToStream(stream);
     }
@@ -371,9 +373,10 @@ namespace brick {
      * @return The return value is a reference to the input stream after
      * the read has taken place.
      */
+    template <class FloatType>
     inline std::istream&
     operator>>(std::istream& stream,
-               CameraIntrinsicsPinhole& intrinsics)
+               CameraIntrinsicsPinhole<FloatType>& intrinsics)
     {
       return intrinsics.readFromStream(stream);
     }
@@ -382,5 +385,10 @@ namespace brick {
   } // namespace computerVision
   
 } // namespace brick
+
+
+// Include file containing definitions of inline and template
+// functions.
+#include <brick/computerVision/cameraIntrinsicsPinhole_impl.hh>
 
 #endif /* #ifndef BRICK_COMPUTERVISION_CAMERAINTRINSICSPINHOLE_HH */

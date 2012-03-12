@@ -26,6 +26,7 @@ namespace brick {
     namespace privateCode {
 
       // Forward declaration of class to help with reverse projection.
+      template <class FloatType>
       class PlumbBobObjective;
 
     } // namespace privateCode;
@@ -63,10 +64,13 @@ namespace brick {
      ** [1] D.C. Brown, Decentering Distortion of Lenses.  Photometric
      ** Engineering, pp. 444-462, Vol. 32, No. 3, 1966.
      **/
-    class CameraIntrinsicsPlumbBob : public CameraIntrinsicsDistorted {
+    template <class FloatType>
+    class CameraIntrinsicsPlumbBob
+      : public CameraIntrinsicsDistorted<FloatType> {
+
       // This class is defined externally so that it can be more
       // easily unit tested.
-      friend class privateCode::PlumbBobObjective;
+      friend class privateCode::PlumbBobObjective<FloatType>;
       
     public:
 
@@ -142,18 +146,18 @@ namespace brick {
        * second term of the tangential distortion model.  It
        * corresponds to kc(4) in the matlab representation.
        */
-      CameraIntrinsicsPlumbBob(size_t numPixelsX,
-                               size_t numPixelsY,
-                               double focalLengthX,
-                               double focalLengthY,
-                               double centerU,
-                               double centerV,
-                               double skewCoefficient,
-                               double radialCoefficient0,
-                               double radialCoefficient1,
-                               double radialCoefficient2,
-                               double tangentialCoefficient0,
-                               double tangentialCoefficient1);
+      CameraIntrinsicsPlumbBob(unsigned int numPixelsX,
+                               unsigned int numPixelsY,
+                               FloatType focalLengthX,
+                               FloatType focalLengthY,
+                               FloatType centerU,
+                               FloatType centerV,
+                               FloatType skewCoefficient,
+                               FloatType radialCoefficient0,
+                               FloatType radialCoefficient1,
+                               FloatType radialCoefficient2,
+                               FloatType tangentialCoefficient0,
+                               FloatType tangentialCoefficient1);
 
 
       /** 
@@ -194,7 +198,7 @@ namespace brick {
        * 
        * @return The return value is the requested parameter.
        */
-      double
+      FloatType
       getCenterU() const {return m_centerU;}
 
 
@@ -205,7 +209,7 @@ namespace brick {
        * 
        * @return The return value is the requested parameter.
        */
-      double
+      FloatType
       getCenterV() const {return m_centerV;}
 
 
@@ -216,7 +220,7 @@ namespace brick {
        * 
        * @return The return value is the requested parameter.
        */
-      double
+      FloatType
       getFocalLengthX() const {return m_kX;}
 
 
@@ -227,7 +231,7 @@ namespace brick {
        * 
        * @return The return value is the requested parameter.
        */
-      double
+      FloatType
       getFocalLengthY() const {return m_kY;}
 
 
@@ -246,7 +250,7 @@ namespace brick {
        * disallowed (by this->allow*()), then they are omitted from
        * the return vector.
        */
-      virtual ParameterVectorType
+      virtual typename CameraIntrinsicsPlumbBob<FloatType>::ParameterVectorType
       getFreeParameters() const;
       
 
@@ -258,7 +262,7 @@ namespace brick {
        * @return The return value is a vector of free parameters
        * suitable for passing to setFreeParameters().
        */
-      virtual ParameterVectorType
+      virtual typename CameraIntrinsicsPlumbBob<FloatType>::ParameterVectorType
       getNominalFreeParameters() const;
       
       
@@ -269,7 +273,7 @@ namespace brick {
        * @return The return value is the number of pixels in each
        * image row.
        */
-      virtual size_t
+      virtual unsigned int
       getNumPixelsX() const {return m_numPixelsX;}
 
 
@@ -280,7 +284,7 @@ namespace brick {
        * @return The return value is the number of pixels in each
        * image column.
        */
-      virtual size_t
+      virtual unsigned int
       getNumPixelsY() const {return m_numPixelsY;}
 
       
@@ -291,7 +295,7 @@ namespace brick {
        * 
        * @return The return value is the requested parameter.
        */
-      double
+      FloatType
       getRadialCoefficient0() const {return m_radialCoefficient0;}
 
 
@@ -302,7 +306,7 @@ namespace brick {
        * 
        * @return The return value is the requested parameter.
        */
-      double
+      FloatType
       getRadialCoefficient1() const {return m_radialCoefficient1;}
 
 
@@ -313,7 +317,7 @@ namespace brick {
        * 
        * @return The return value is the requested parameter.
        */
-      double
+      FloatType
       getRadialCoefficient2() const {return m_radialCoefficient2;}
 
 
@@ -324,7 +328,7 @@ namespace brick {
        * 
        * @return The return value is the requested parameter.
        */
-      double
+      FloatType
       getSkewCoefficient() const {return m_skewCoefficient;}
 
 
@@ -335,7 +339,7 @@ namespace brick {
        * 
        * @return The return value is the requested parameter.
        */
-      double
+      FloatType
       getTangentialCoefficient0() const {return m_tangentialCoefficient0;}
 
 
@@ -346,7 +350,7 @@ namespace brick {
        * 
        * @return The return value is the requested parameter.
        */
-      double
+      FloatType
       getTangentialCoefficient1() const {return m_tangentialCoefficient1;}
 
       
@@ -359,8 +363,8 @@ namespace brick {
        * @return The return value gives the point in pixel coordinates
        * to which the input point will project.
        */
-      virtual brick::numeric::Vector2D<double>
-      project(const brick::numeric::Vector3D<double>& point) const;
+      virtual brick::numeric::Vector2D<FloatType>
+      project(const brick::numeric::Vector3D<FloatType>& point) const;
 
 
       /** 
@@ -382,8 +386,8 @@ namespace brick {
        * infinitely many points that lie on the ray projecting to the
        * 2D image point that corresponds to the input argument.
        */
-      inline virtual numeric::Vector3D<double>
-      projectThroughDistortion(numeric::Vector3D<double> const& point) const;
+      inline virtual numeric::Vector3D<FloatType>
+      projectThroughDistortion(numeric::Vector3D<FloatType> const& point) const;
       
 
       /** 
@@ -420,8 +424,8 @@ namespace brick {
        * @return The return value is the ray in 3D camera coordinates
        * corresponding to the input 2D point.
        */
-      virtual brick::geometry::Ray3D<double>
-      reverseProject(const brick::numeric::Vector2D<double>& pixelPosition,
+      virtual brick::geometry::Ray3D<FloatType>
+      reverseProject(const brick::numeric::Vector2D<FloatType>& pixelPosition,
                      bool normalize = true) const;
 
 
@@ -458,12 +462,12 @@ namespace brick {
        * through the image plane.
        */
       virtual void
-      setDependentParameters(size_t numPixelsX,
-                             size_t numPixelsY,
-                             double focalLengthX,
-                             double focalLengthY,
-                             double centerU,
-                             double centerV) {
+      setDependentParameters(unsigned int numPixelsX,
+                             unsigned int numPixelsY,
+                             FloatType focalLengthX,
+                             FloatType focalLengthY,
+                             FloatType centerU,
+                             FloatType centerV) {
         m_numPixelsX = numPixelsX;
         m_numPixelsY = numPixelsY;
         m_kX = focalLengthX;
@@ -490,7 +494,9 @@ namespace brick {
        * vector.
        */
       virtual void
-      setFreeParameters(ParameterVectorType const& parameterVector);
+      setFreeParameters(
+        typename CameraIntrinsicsPlumbBob<FloatType>::ParameterVectorType
+        const& parameterVector);
   
 
       /** 
@@ -500,7 +506,7 @@ namespace brick {
        * @param numPixelsX The width of the image.
        */
       virtual void
-      setNumPixelsX(size_t numPixelsX) {m_numPixelsX = numPixelsX;}
+      setNumPixelsX(unsigned int numPixelsX) {m_numPixelsX = numPixelsX;}
 
 
       /** 
@@ -510,7 +516,7 @@ namespace brick {
        * @param numPixelsX The height of the image.
        */
       virtual void
-      setNumPixelsY(size_t numPixelsY) {m_numPixelsY = numPixelsY;}
+      setNumPixelsY(unsigned int numPixelsY) {m_numPixelsY = numPixelsY;}
       
       
       /** 
@@ -532,29 +538,29 @@ namespace brick {
       // Protected member function used during iterative approximation
       // in CameraIntrinsicsPlumbBob::reverseProject().
       void
-      projectWithPartialDerivatives(double xNorm,
-                                    double yNorm,
-                                    double& uValue,
-                                    double& vValue,
-                                    double& dUdX,
-                                    double& dUdY,
-                                    double& dVdX,
-                                    double& dVdY) const;
+      projectWithPartialDerivatives(FloatType xNorm,
+                                    FloatType yNorm,
+                                    FloatType& uValue,
+                                    FloatType& vValue,
+                                    FloatType& dUdX,
+                                    FloatType& dUdY,
+                                    FloatType& dVdX,
+                                    FloatType& dVdY) const;
 
       bool m_allowSixthOrderRadial;
       bool m_allowSkew;
-      double m_centerU;
-      double m_centerV;
-      double m_kX;
-      double m_kY;
-      size_t m_numPixelsX;
-      size_t m_numPixelsY;
-      double m_radialCoefficient0;
-      double m_radialCoefficient1;
-      double m_radialCoefficient2;
-      double m_skewCoefficient;
-      double m_tangentialCoefficient0;
-      double m_tangentialCoefficient1;
+      FloatType m_centerU;
+      FloatType m_centerV;
+      FloatType m_kX;
+      FloatType m_kY;
+      unsigned int m_numPixelsX;
+      unsigned int m_numPixelsY;
+      FloatType m_radialCoefficient0;
+      FloatType m_radialCoefficient1;
+      FloatType m_radialCoefficient2;
+      FloatType m_skewCoefficient;
+      FloatType m_tangentialCoefficient0;
+      FloatType m_tangentialCoefficient1;
     };
 
 
@@ -574,9 +580,10 @@ namespace brick {
      * @return The return value is a reference to the input stream after
      * the write has taken place.
      */
+    template <class FloatType>
     inline std::ostream&
     operator<<(std::ostream& stream,
-               const CameraIntrinsicsPlumbBob& intrinsics)
+               const CameraIntrinsicsPlumbBob<FloatType>& intrinsics)
     {
       return intrinsics.writeToStream(stream);
     }
@@ -597,9 +604,10 @@ namespace brick {
      * @return The return value is a reference to the input stream after
      * the read has taken place.
      */
+    template <class FloatType>
     inline std::istream&
     operator>>(std::istream& stream,
-               CameraIntrinsicsPlumbBob& intrinsics)
+               CameraIntrinsicsPlumbBob<FloatType>& intrinsics)
     {
       return intrinsics.readFromStream(stream);
     }

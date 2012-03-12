@@ -80,7 +80,6 @@ stillToComeHeaders		= \
 # Define the library to build.
 lib_LTLIBRARIES		= libbrickComputerVision.la
 libbrickComputerVision_la_SOURCES = \
-	cameraIntrinsicsPlumbBob.cc cameraIntrinsicsPlumbBob.hh \
 	cameraIntrinsicsPlumbBob_impl.hh \
 	imageIO.cc imageIO.hh \
 	keypointMatcherFast.cc keypointMatcherFast.hh \

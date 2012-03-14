@@ -38,6 +38,8 @@ namespace brick {
     /// @cond privateCode
     namespace privateCode {
 
+      // Private routine to generate the element selection array
+      // proposed in Horn's paper.
       template <class FloatType>
       inline const Array2D<FloatType>&
       getHornNCoefficientMatrix()
@@ -63,6 +65,8 @@ namespace brick {
       }
 
 
+      // Private routine containing code that is common to all flavors
+      // of estimateTransform3D().
       template <class FloatType>
       brick::numeric::Transform3D<FloatType>
       estimateTransformFromZeroMeanPointArrays(

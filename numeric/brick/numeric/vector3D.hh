@@ -551,7 +551,8 @@ namespace brick {
 } // namespace brick
 
 
-// Definitions of inline and template functions.
+// Include file containing definitions of inline and template
+// functions.
 #include <brick/numeric/vector3D_impl.hh>
 
 #endif /* #ifndef BRICK_NUMERIC_VECTOR3D_HH */

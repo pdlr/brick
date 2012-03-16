@@ -299,6 +299,8 @@ namespace brick {
 }; // namespace brick
 
 
-#include <transform3DTo2D_impl.hh>
+// Include file containing definitions of inline and template
+// functions.
+#include <brick/numeric/transform3DTo2D_impl.hh>
 
 #endif /* #ifndef BRICK_NUMERIC_TRANSFORM3DTO2D_HH */

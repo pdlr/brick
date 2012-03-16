@@ -404,6 +404,8 @@ namespace brick {
 
 } // namespace brick
 
+// Include file containing definitions of inline and template
+// functions.
 #include <brick/numeric/transform3D_impl.hh>
 
 #endif /* #ifndef BRICK_NUMERIC_TRANSFORM3D_HH */

@@ -18,6 +18,8 @@
 // 
 // #include <brick/numeric/transform3DTo2D.hh>
 
+#include <brick/common/expect.hh>
+
 namespace brick {
 
   namespace numeric {
@@ -60,8 +62,9 @@ namespace brick {
         std::ostringstream message;
         message << "Can't create a Transform3DTo2D from a " << source.rows()
                 << " x " << source.columns() << "Array2D<Type> instance.";
-        BRICK_THROW(ValueException, "Transform3DTo2D::Transform3DTo2D()",
-                  message.str().c_str());
+        BRICK_THROW(brick::common::ValueException,
+                    "Transform3DTo2D::Transform3DTo2D()",
+                    message.str().c_str());
       }
       m_00 = source(0); m_01 = source(1); m_02 = source(2); m_03 = source(3);
       m_10 = source(4); m_11 = source(5); m_12 = source(6); m_13 = source(7);
@@ -159,9 +162,10 @@ namespace brick {
       }
       std::ostringstream message;
       message << "Indices (" << ROW << ", " << COLUMN << ") are out of bounds.";
-      BRICK_THROW(IndexException, "Transform3DTo2D::value<size_t, size_t>()",
-                message.str().c_str());
-      return 0.0; // Dummy return to keep the compiler happy.
+      BRICK_THROW(brick::common::IndexException,
+                  "Transform3DTo2D::value<size_t, size_t>()",
+                  message.str().c_str());
+      return m_23; // Dummy return to keep the compiler happy.
     }
 
     
@@ -207,7 +211,8 @@ namespace brick {
       }
       std::ostringstream message;
       message << "Indices (" << row << ", " << column << ") are out of bounds.";
-      BRICK_THROW(IndexException, "Transform3DTo2D::operator()(size_t, size_t)",
+      BRICK_THROW(brick::common::IndexException,
+                  "Transform3DTo2D::operator()(size_t, size_t)",
                   message.str().c_str());
       return m_23; // Dummy return to keep the compiler happy.
     }
@@ -216,11 +221,11 @@ namespace brick {
     // This operator takes a point and applies the coordinate
     // transform, returning the result.
     template <class Type>
-    Vector2D
+    Vector2D<Type>
     Transform3DTo2D<Type>::
-    operator*(const Vector3D& vector0) const
+    operator*(const Vector3D<Type>& vector0) const
     {
-      return Vector2D(
+      return Vector2D<Type>(
         m_00 * vector0.x() + m_01 * vector0.y() + m_02 * vector0.z() + m_03,
         m_10 * vector0.x() + m_11 * vector0.y() + m_12 * vector0.z() + m_13,
         m_20 * vector0.x() + m_21 * vector0.y() + m_22 * vector0.z() + m_23);
@@ -253,7 +258,7 @@ namespace brick {
     template <class Type>
     Transform3DTo2D<Type>
     operator*(Transform3DTo2D<Type> const& transform0,
-              Transform3D const& transform1)
+              Transform3D<Type> const& transform1)
     {
       // We'd rather use the templated getValue() member here, as it's
       // faster than operator()(), but for some reason the compiler is
@@ -368,7 +373,7 @@ namespace brick {
     template <>
     Transform3DTo2D<double>
     operator*(Transform3DTo2D<double> const& transform0,
-              Transform3D const& transform1)
+              Transform3D<double> const& transform1)
     {
       double a00 = (transform0.value<0, 0>() * transform1.value<0, 0>()
                     + transform0.value<0, 1>() * transform1.value<1, 0>()
@@ -427,7 +432,7 @@ namespace brick {
     template <>
     Transform3DTo2D<float>
     operator*(Transform3DTo2D<float> const& transform0,
-              Transform3D const& transform1)
+              Transform3D<float> const& transform1)
     {
       float a00 = (transform0.value<0, 0>() * transform1.value<0, 0>()
                     + transform0.value<0, 1>() * transform1.value<1, 0>()
@@ -487,6 +492,7 @@ namespace brick {
     std::ostream&
     operator<<(std::ostream& stream, const Transform3DTo2D<Type>& transform0)
     {
+#if 0  /* There appears to be a bug in the template version of operator()(). */
       stream << "Transform3DTo2D("
              << transform0.value<0, 0>() << ", "
              << transform0.value<0, 1>() << ", "
@@ -500,6 +506,21 @@ namespace brick {
              << transform0.value<2, 1>() << ", "
              << transform0.value<2, 2>() << ", "
              << transform0.value<2, 3>() << ")";
+#else /* #if 0 */
+      stream << "Transform3DTo2D("
+             << transform0(0, 0) << ", "
+             << transform0(0, 1) << ", "
+             << transform0(0, 2) << ", "
+             << transform0(0, 3) << ",\n"
+             << transform0(1, 0) << ", "
+             << transform0(1, 1) << ", "
+             << transform0(1, 2) << ", "
+             << transform0(1, 3) << ",\n"
+             << transform0(2, 0) << ", "
+             << transform0(2, 1) << ", "
+             << transform0(2, 2) << ", "
+             << transform0(2, 3) << ")";
+#endif /* #if 0 ... #else */
       return stream;
     }
 
@@ -522,31 +543,29 @@ namespace brick {
 
       // Now on with the show.
       try{
-        // Construct an InputStream instance so we can use our
-        // convenience functions.
-        InputStream inputStream(stream);
+        common::Expect::FormatFlag flags = common::Expect::SkipWhitespace;
 
-        // Advance to the next relevant character.
-        inputStream.skipWhiteSpace();
+        // Skip any preceding whitespace.
+        stream >> common::Expect("", flags);
       
-        // Read the header.
-        inputStream.expect("Transform3DTo2D(");
+        // Read the "Transform3DTo2D(" part.
+        stream >> common::Expect("Transform3D(", flags);
 
         // Read all the data except the last element.
         std::vector<Type> inputValues(12);
         for(size_t index = 0; index < (inputValues.size() - 1); ++index) {
           // Read the value.
-          inputStream >> inputValues[index];
+          stream >> inputValues[index];
 
           // Read punctuation before the next value.
-          inputStream.expect(",");
+          stream >> common::Expect(",", flags);
         }
 
         // Read the final value.
-        inputStream >> inputValues[inputValues.size() - 1];
+        stream >> inputValues[inputValues.size() - 1];
 
         // Read the closing parenthesis.
-        inputStream.expect(")");
+        stream >> common::Expect(")", flags);
 
         // And update the transform.
         transform0.setTransform(inputValues[0], inputValues[1],

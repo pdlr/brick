@@ -24,6 +24,7 @@ AM_CPPFLAGS		= -I$(top_srcdir)
 
 brickComputerVisiondir		= $(includedir)/brick/computerVision
 brickComputerVision_HEADERS	= \
+	calibrationTools.hh calibrationTools_impl.hh \
 	cameraIntrinsics.hh \
 	cameraIntrinsicsDistorted.hh \
 	cameraIntrinsicsPinhole.hh cameraIntrinsicsPinhole_impl.hh \
@@ -49,11 +50,11 @@ brickComputerVision_HEADERS	= \
 	randomSampleSelector.hh randomSampleSelector_impl.hh \
 	ransac.hh ransac_impl.hh \
 	registerPoints3D.hh registerPoints3D_impl.hh \
+	stereoRectify.hh stereoRectify_impl.hh \
 	threePointAlgorithm.hh threePointAlgorithm_impl.hh \
 	utilities.hh utilities_impl.hh
 
 stillToComeHeaders		= \
-	calibrationTools.h \
 	calibrationToolsRobust.h \
 	canny.h \
 	connectedComponents.h \
@@ -73,8 +74,7 @@ stillToComeHeaders		= \
 	opticalFlow.h \
 	quadMap.h \
 	segmenterFelzenszwalb.h \
-	sobel.h \
-	stereoRectify.h
+	sobel.h
 
 
 # Define the library to build.

@@ -38,6 +38,8 @@ namespace brick {
     /// @cond privateCode
     namespace privateCode {
 
+      // Private routine to generate the element selection array
+      // proposed in Horn's paper.
       template <class FloatType>
       inline const Array2D<FloatType>&
       getHornNCoefficientMatrix()
@@ -62,6 +64,62 @@ namespace brick {
         return NCoefficients;
       }
 
+
+      // Private routine containing code that is common to all flavors
+      // of estimateTransform3D().
+      template <class FloatType>
+      brick::numeric::Transform3D<FloatType>
+      estimateTransformFromZeroMeanPointArrays(
+        Array2D<FloatType> const& translatedFromPoints,
+        Array2D<FloatType> const& translatedToPoints,
+        Vector3D<FloatType> const& fromMean,
+        Vector3D<FloatType> const& toMean)
+      {
+        // Compute the (not quite) covariance matrix between the two point
+        // clouds.  This is a  3x3 matrix.
+        Array2D<FloatType> matrixM = matrixMultiply<FloatType>(
+          translatedFromPoints.transpose(), translatedToPoints);
+
+        // Select elements as describe by Horn.  The member function
+        // ravel() simply returns a flattened (1D) array referencing the
+        // elements of the Array2D instance in row-major order.
+        Array1D<FloatType> vectorN = matrixMultiply<FloatType>(
+          privateCode::getHornNCoefficientMatrix<FloatType>(), matrixM.ravel());
+        Array2D<FloatType> matrixN(
+          4, 4, vectorN.data(), vectorN.getReferenceCount());
+
+        // Find the largest eigenvector of matrixN.  This is a unit
+        // quaternion describing the best fit rotation.
+        Array1D<brick::common::Float64> eValues;
+        Array2D<brick::common::Float64> eVectors;
+
+        // // Note(xxx): Need to implement more versions of
+        // // eigenvectorsSymmetric()!
+        // 
+        // Array2D<Float64> tempArray(matrixN.rows(), matrixN.columns());
+        // tempArray.copy(matrixN);
+        // eigenvectorsSymmetric(matrixN, eValues, eVectors);
+        brick::linearAlgebra::eigenvectorsSymmetric(matrixN, eValues, eVectors);
+
+        // The function argmax returns the index of the largest element of
+        // eValues.
+        size_t index0 = argmax(eValues);
+        Quaternion<FloatType> q0(static_cast<FloatType>(eVectors(0, index0)),
+                                 static_cast<FloatType>(eVectors(1, index0)),
+                                 static_cast<FloatType>(eVectors(2, index0)),
+                                 static_cast<FloatType>(eVectors(3, index0)));
+
+        // Convert the unit quaternion to a rotation matrix.
+        brick::numeric::Transform3D<FloatType> xf = quaternionToTransform3D(q0);
+
+        // And add in best fit translation.
+        Vector3D<FloatType> bestFitTranslation = toMean - xf * fromMean;
+        xf.setValue(0, 3, bestFitTranslation.x());
+        xf.setValue(1, 3, bestFitTranslation.y());
+        xf.setValue(2, 3, bestFitTranslation.z());
+        return xf;
+      }        
+      
     } // namespace privateCode
     /// @endcond
   
@@ -146,49 +204,98 @@ namespace brick {
         ++flagsIter;
       }
 
-      // Compute the (not quite) covariance matrix between the two point
-      // clouds.  This is a  3x3 matrix.
-      Array2D<FloatType> matrixM = matrixMultiply<FloatType>(
-        translatedFromPoints.transpose(), translatedToPoints);
+      // Now that the input matrices are constructed, dispatch to a
+      // subroutine for the actual transform estimation.
+      return privateCode::estimateTransformFromZeroMeanPointArrays(
+        translatedFromPoints, translatedToPoints, fromMean, toMean);
+    }
+  
 
-      // Select elements as describe by Horn.  The member function
-      // ravel() simply returns a flattened (1D) array referencing the
-      // elements of the Array2D instance in row-major order.
-      Array1D<FloatType> vectorN = matrixMultiply<FloatType>(
-        privateCode::getHornNCoefficientMatrix<FloatType>(), matrixM.ravel());
-      Array2D<FloatType> matrixN(
-        4, 4, vectorN.data(), vectorN.getReferenceCount());
+    template <class FloatType, class InIter0, class InIter1, class InIter2>
+    brick::numeric::Transform3D<FloatType>
+    registerPoints3D(InIter0 fromPointsBegin, InIter0 fromPointsEnd,
+                     InIter1 toPointsBegin, InIter2 weightsBegin,
+                     bool /* dummy */)
+    {
+      // Compute the mean of each point cloud, so we can translate its
+      // center to the origin.
+      InIter0 fromIter = fromPointsBegin;
+      InIter1 toIter = toPointsBegin;
+      InIter2 weightsIter = weightsBegin;
+      Vector3D<FloatType> fromMean(0.0, 0.0, 0.0);
+      Vector3D<FloatType> toMean(0.0, 0.0, 0.0);
+      FloatType totalWeight = 0.0;
+      unsigned int count = 0;
+      while(fromIter != fromPointsEnd) {
+        FloatType weight = *weightsIter;
+        fromMean += weight * (*fromIter);
+        toMean += weight * (*toIter);
+        totalWeight += weight;
+        ++count;
+        ++fromIter;
+        ++toIter;
+        ++weightsIter;
+      }
+      if((count == 0) || (totalWeight == 0.0)) {
+        BRICK_THROW(brick::common::ValueException, "registerPoints3D()",
+                  "No weighted points to register!");
+      }
+      fromMean /= totalWeight;
+      toMean /= totalWeight;
 
-      // Find the largest eigenvector of matrixN.  This is a unit
-      // quaternion describing the best fit rotation.
-      Array1D<brick::common::Float64> eValues;
-      Array2D<brick::common::Float64> eVectors;
+      // Now translate each point cloud so that its center of mass is at
+      // the origin.  We'll use these translated point clouds to compute
+      // the best fit rotation.  We use Nx3 arrays to represent these
+      // translated ponits so that we'll be able to conveniently do
+      // linear algebra later.
+      fromIter = fromPointsBegin;
+      toIter = toPointsBegin;
+      weightsIter = weightsBegin;
+      Array2D<FloatType> translatedFromPoints(count, 3);
+      Array2D<FloatType> translatedToPoints(count, 3);
+      size_t arrayIndex = 0;
+      while(fromIter != fromPointsEnd) {
+        FloatType weight = *weightsIter;
+        Vector3D<FloatType>& fromPoint = *fromIter;
+        Vector3D<FloatType>& toPoint = *toIter;
+        
+        // Copy the first element in the current row.  We know that,
+        // later on, the thing we care about is the matrix product of
+        // translatedFromPoints.transpose() and translatedToPoints.
+        // This means that, after subtracting out the mean, we can
+        // multiply fromPoint and toPoint by the square root of the
+        // weight.  Equivalently, we can multiply only one of
+        // fromPoint and toPoint by weight, and achieve the same
+        // effect without doing a sqrt operation.
+        translatedFromPoints[arrayIndex] =
+          weight * (fromPoint.x() - fromMean.x());
+        translatedToPoints[arrayIndex] = toPoint.x() - toMean.x();
+        
+        // Advance to next element in the current row.
+        ++arrayIndex;
+        translatedFromPoints[arrayIndex] = 
+          weight * (fromPoint.y() - fromMean.y());
+        translatedToPoints[arrayIndex] = toPoint.y() - toMean.y();
+        
+        // Advance to next element in the current row.
+        ++arrayIndex;
+        translatedFromPoints[arrayIndex] =
+          weight * (fromPoint.z() - fromMean.z());
+        translatedToPoints[arrayIndex] = toPoint.z() - toMean.z();
+        
+        // Wrap around to next row.
+        ++arrayIndex;
 
-      // // Note(xxx): Need to implement more versions of
-      // // eigenvectorsSymmetric()!
-      // 
-      // Array2D<Float64> tempArray(matrixN.rows(), matrixN.columns());
-      // tempArray.copy(matrixN);
-      // eigenvectorsSymmetric(matrixN, eValues, eVectors);
-      brick::linearAlgebra::eigenvectorsSymmetric(matrixN, eValues, eVectors);
+        // Advance to next point.
+        ++fromIter;
+        ++toIter;
+        ++weightsIter;
+      }
 
-      // The function argmax returns the index of the largest element of
-      // eValues.
-      size_t index0 = argmax(eValues);
-      Quaternion<FloatType> q0(static_cast<FloatType>(eVectors(0, index0)),
-                               static_cast<FloatType>(eVectors(1, index0)),
-                               static_cast<FloatType>(eVectors(2, index0)),
-                               static_cast<FloatType>(eVectors(3, index0)));
-
-      // Convert the unit quaternion to a rotation matrix.
-      brick::numeric::Transform3D<FloatType> xf = quaternionToTransform3D(q0);
-
-      // And add in best fit translation.
-      Vector3D<FloatType> bestFitTranslation = toMean - xf * fromMean;
-      xf.setValue(0, 3, bestFitTranslation.x());
-      xf.setValue(1, 3, bestFitTranslation.y());
-      xf.setValue(2, 3, bestFitTranslation.z());
-      return xf;
+      // Now that the input matrices are constructed, dispatch to a
+      // subroutine for the actual transform estimation.
+      return privateCode::estimateTransformFromZeroMeanPointArrays(
+        translatedFromPoints, translatedToPoints, fromMean, toMean);
     }
   
 

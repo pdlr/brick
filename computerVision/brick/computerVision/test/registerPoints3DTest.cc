@@ -36,6 +36,7 @@ namespace brick {
       // Tests.
       void testRegisterPoints3D__In__In__In();
       void testRegisterPoints3D__In__In__In__In();
+      void testRegisterPoints3D__In__In__In__In__bool();
       void testRegisterPoints3D__In__In__In__Out__double__double__size_t();
     
     private:
@@ -81,6 +82,7 @@ namespace brick {
     {
       BRICK_TEST_REGISTER_MEMBER(testRegisterPoints3D__In__In__In);
       BRICK_TEST_REGISTER_MEMBER(testRegisterPoints3D__In__In__In__In);
+      BRICK_TEST_REGISTER_MEMBER(testRegisterPoints3D__In__In__In__In__bool);
       BRICK_TEST_REGISTER_MEMBER(
         testRegisterPoints3D__In__In__In__Out__double__double__size_t);
 
@@ -164,6 +166,45 @@ namespace brick {
         !this->isApproximatelySameTransform(recoveredXf, m_referenceXf));
     }
 
+
+    void
+    RegisterPoints3DTest::
+    testRegisterPoints3D__In__In__In__In__bool()
+    {
+      // Construct a weight vector for input points.
+      std::vector<double> weightsVector(m_fromPoints.size(), 2.0);
+      weightsVector[3] = 6.0;
+      weightsVector[5] = 0.0;
+      weightsVector[6] = 0.0;
+
+      // Construct an input point sequence that mimics the effect of
+      // our weight vector by replicating and removing points.  By
+      // making two additional copies of point 3, we increase it's
+      // weight to three times that of the other points.  By
+      // overwriting points 5 and 6, we lower their weights to zero.
+      // This matches the weights we set up above.  We would expect
+      // that registering these two new sequences (with no weighting)
+      // would return the same transform as registering the original
+      // sequences and using the weights.
+      std::vector< Vector3D<double> > unweightedFromPoints(m_fromPoints);
+      std::vector< Vector3D<double> > unweightedToPoints(m_toPoints2);
+      unweightedFromPoints[5] = unweightedFromPoints[3];
+      unweightedFromPoints[6] = unweightedFromPoints[3];
+      unweightedToPoints[5] = unweightedToPoints[3];
+      unweightedToPoints[6] = unweightedToPoints[3];
+        
+      // Make sure we get matching results using the weighted and
+      // unweighted input sequences.
+      Transform3D<double> weightedXf = registerPoints3D<double>(
+        m_fromPoints.begin(), m_fromPoints.end(), m_toPoints2.begin(),
+        weightsVector.begin(), true);
+      Transform3D<double> unweightedXf = registerPoints3D<double>(
+        unweightedFromPoints.begin(), unweightedFromPoints.end(),
+        unweightedToPoints.begin());
+      BRICK_TEST_ASSERT(
+        this->isApproximatelySameTransform(weightedXf, unweightedXf));
+    }
+    
   
     void
     RegisterPoints3DTest::

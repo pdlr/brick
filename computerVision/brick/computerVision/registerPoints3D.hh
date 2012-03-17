@@ -106,6 +106,55 @@ namespace brick {
 
 
     /**
+     * This function works just like the three-argument form of
+     * registerPoints3D(), except that points can be weighted,
+     * indicating how much influence they should have on the resulting
+     * solution.
+     *
+     * @param fromPointsBegin This iterator, along with fromPointsEnd,
+     * defines one of the two sets of points to be registered.  The
+     * type of (*fromPointsBegin) must be Vector3D<FloatType>.  The
+     * returned Transform3D<FloatType> instance will take points in
+     * the range specified by this iterator pair and transform them so
+     * that they match the corresponding elements of the "to" range as
+     * closely as possible in the least-squares sense.
+     * 
+     * @param fromPointsEnd See the documentation for argument
+     * fromPointsBegin.
+     * 
+     * @param toPointsBegin This argument defines the beginning of one
+     * of the two sets of points to be registered.  The returned
+     * Transform3D<FloatType> instance will take points in the range
+     * specified by arguments fromPointsBegin and fromPointsEnd, and
+     * transform them so that they match as closely as possible (in
+     * the least squares sense) the corresponding elements of the
+     * range starting from toPointsBegin and extending (fromPointsEnd
+     * - fromPointsBegin) elements.
+     *
+     * @param weightsBegin This argument defines the beginning of a
+     * sequence of FloatType values indicating the weight to be given
+     * to each point.  That is, weightsBegin is an iterator which must
+     * dereference to FloatType, and the sequence from flagsBegin to
+     * flagsBegin + (fromPointsEnd - fromPointsBegin) must be valid.
+     * The influence of each point on the result of the registration
+     * will be proportional to its weight.
+     *
+     * @param dummy This argument distambiguates the weighted version
+     * of registerPoints3D from the version that accepts boolean
+     * flags.
+     * 
+     * @return The return value is a Transform3D<FloatType> instance
+     * that takes into account the input points and their weights.
+     */
+    template <class FloatType, class InIter0, class InIter1, class InIter2>
+    brick::numeric::Transform3D<FloatType>
+    registerPoints3D(InIter0 fromPointsBegin, InIter0 fromPointsEnd,
+                     InIter1 toPointsBegin, InIter2 weightsBegin,
+                     bool dummy);
+
+
+
+    /**
      * This function calls the four-argument form of registerPoints3D()
      * repeatedly while trying to identify and ignore outliers.
      * Iteration terminates when a call to the four-argument form of

@@ -41,10 +41,12 @@ namespace brick {
      **   corner of the next-to-leftmost pixel in the top row is at
      **   pixel coordinates (1, 0).
      **/
-    template <class FloatType = double>
+    template <class Float_type = double>
     class CameraIntrinsics {
     public:
 
+      typedef Float_type FloatType;
+      
       /** 
        * The default constructor currently does nothing.
        */

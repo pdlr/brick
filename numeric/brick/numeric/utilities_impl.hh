@@ -55,7 +55,7 @@ namespace brick {
          * @return This function throws an exception, and so does not return.
          */
         inline Type operator()(Type const& input) {
-          BRICK_THROW(common::NotImplementedException,
+          BRICK_THROW(brick::common::NotImplementedException,
                      "absFunctor<Type>::operator()(Type const&)",
                      "absFunctor must be specialized for each type.");
           return static_cast<Type>(0);
@@ -465,7 +465,7 @@ namespace brick {
       default:
         std::ostringstream message;
         message << "Axis " << axis << " is invalid for an Array2D.";
-        BRICK_THROW(common::IndexException, "axisMaximum(Array2D const&, size_t, ...)",
+        BRICK_THROW(brick::common::IndexException, "axisMaximum(Array2D const&, size_t, ...)",
                    message.str().c_str());
         break;
       }
@@ -525,7 +525,7 @@ namespace brick {
       default:
         std::ostringstream message;
         message << "Axis " << axis << " is invalid for an Array2D.";
-        BRICK_THROW(common::IndexException,
+        BRICK_THROW(brick::common::IndexException,
                     "axisMinimum(Array2D const&, size_t, ...)",
                    message.str().c_str());
         break;
@@ -582,7 +582,7 @@ namespace brick {
       default:
         std::ostringstream message;
         message << "Axis " << axis << " is invalid for an Array2D.";
-        BRICK_THROW(common::IndexException, "axisSum(Array2D const&, size_t, ...)",
+        BRICK_THROW(brick::common::IndexException, "axisSum(Array2D const&, size_t, ...)",
                    message.str().c_str());
         break;
       }
@@ -634,7 +634,7 @@ namespace brick {
         message << "Condition and input arguments must have the same "
                 << "size, but condition has size = " << condition.size()
                 << ", while input has size = " << input.size() << ".";
-        BRICK_THROW(common::ValueException,
+        BRICK_THROW(brick::common::ValueException,
                    "compress(Array1D const&, Array1D const&, size_t)",
                    message.str().c_str());
       }
@@ -705,7 +705,7 @@ namespace brick {
                 << "but array0.size() == " << array0.size()
                 << " and array1.size() == " << array1.size() << "."
                 << std::endl;
-        BRICK_THROW(common::ValueException, "dot()", message.str().c_str());
+        BRICK_THROW(brick::common::ValueException, "dot()", message.str().c_str());
       }
       return std::inner_product(array0.begin(), array0.end(), array1.begin(),
                                 static_cast<Type2>(0));
@@ -917,7 +917,7 @@ namespace brick {
         message << "Can't left-multiply a "
                 << matrix0.rows() << " x " << matrix0.columns()
                 << " matrix by a " << vector0.size() << " element vector\n";
-        BRICK_THROW(common::ValueException, "matrixMultiply()",
+        BRICK_THROW(brick::common::ValueException, "matrixMultiply()",
                     message.str().c_str());
       }
       Array1D<Type2> result = zeros<Type2>(matrix0.columns());
@@ -946,7 +946,7 @@ namespace brick {
         message << "matrixMultiply() -- can't right-multiply a "
                 << matrix0.rows() << " x " << matrix0.columns()
                 << " matrix by a " << vector0.size() << " element vector\n";
-        BRICK_THROW(common::ValueException, "matrixMultiply()", message.str().c_str());
+        BRICK_THROW(brick::common::ValueException, "matrixMultiply()", message.str().c_str());
       }
       Array1D<Type2> result(matrix0.rows());
       for(size_t row = 0; row < matrix0.rows(); ++row) {
@@ -971,7 +971,7 @@ namespace brick {
                 << " matrix by a "
                 << matrix0.rows() << " x " << matrix0.columns()
                 << " matrix\n";
-        BRICK_THROW(common::ValueException, "matrixMultiply()", message.str().c_str());
+        BRICK_THROW(brick::common::ValueException, "matrixMultiply()", message.str().c_str());
       }
       Array2D<Type2> result = zeros<Type2>(matrix0.rows(), matrix1.columns());
       for(size_t resultRow = 0; resultRow < result.rows(); ++resultRow) {
@@ -1006,7 +1006,7 @@ namespace brick {
     maximum(Array1D<Type> const& array0, Functor comparator)
     {
       if(array0.size() == 0) {
-        BRICK_THROW(common::ValueException, "maximum()",
+        BRICK_THROW(brick::common::ValueException, "maximum()",
                    "Can't find the maximum element of an empty array.");
       }
       return *std::max_element(array0.begin(), array0.end(), comparator);
@@ -1159,10 +1159,86 @@ namespace brick {
           }
         }
       }
-
     }
   
                     
+    // This function estimates the mean and variance of a sequence of
+    // scalar values.
+    template <class Iter, class Type>
+    void
+    getMeanAndVariance(Iter beginIter, Iter endIter,
+                       Type& mean, Type& variance)
+    {
+      Type sumOfElements = 0;
+      Type sumOfSquaredElements = 0;
+      unsigned int numberOfElements = 0;
+
+      while(beginIter != endIter) {
+        Type elementValue = *beginIter;
+        sumOfElements += elementValue;
+        sumOfSquaredElements += elementValue * elementValue;
+        ++numberOfElements;
+        ++beginIter;
+      }
+
+      // Here we use the unbiased estimator for variance:
+      //
+      //   var = sum_i((x_i - mu)^2) / (N - 1),
+      //
+      // where sum_i() is summation over i, x_i is the i^th element of
+      // the sequence, ^2 dentoes raising to the power of two, and mu
+      // is the estimated mean of the sequence.  Multiplying (x_i -
+      // mu)^2 out, and separating terms, we get
+      //
+      //   var = ((1 / (N - 1)) * sum_i(x_i * x_i)
+      //         - 2 * (mu / (N - 1)) * sum_i(x_i)
+      //         + (N / (N - 1)) * mu^2.
+      //
+      // Recognizing that sum_i(x_i) is N * mu, and combining terms,
+      // we get
+      // 
+      //   var = (1 / (N - 1)) * sum_i(x_i * x_i)
+      //         - (N / (N - 1)) * mu * mu,
+      //
+      //   var = (sum_i(x_i * x_i) - N * mu * mu) / (N - 1)
+      // 
+      // which is implemented below, except that we replace N * mu
+      // with sum_i(x_i), because we've already computed that.
+      if(numberOfElements > 2) {
+        mean = sumOfElements / numberOfElements;
+        variance = ((sumOfSquaredElements - sumOfElements * mean)
+                    / (numberOfElements - 1));
+      }
+    }
+
+    
+    // This function estimates the mean and variance of a sequence of
+    // scalar values, discarding values that appear to be outliers.
+    template <class Iter, class Type>
+    void
+    getMeanAndVarianceRobust(Iter beginIter, Iter endIter,
+                             double requiredConfidence,
+                             double inlierProportion,
+                             Type& mean, Type& variance)
+    {
+      // Check arguments.
+      if((requiredConfidence < 0.0) || (requiredConfidence >= 1.0)) {
+        BRICK_THROW(brick::common::ValueException,
+                  "getMeanAndVarianceRobust()",
+                  "Probability value requiredConfidence is out of range.");
+      }
+      if(inlierProportion > 1.0) {inlierProportion = 1.0;}
+      if(inlierProportion <= 0.0) {
+        BRICK_THROW(brick::common::ValueException, "getMeanAndVarianceRobust()",
+                    "Inlier proportion must be greater than 0.");
+      }
+      // Warning(xxx): Not implemented.
+      BRICK_THROW(brick::common::NotImplementedException,
+                  "getMeanAndVarianceRobust()",
+                  "This function still needs to be written!");
+    }
+
+    
     // This function returns a copy of the smallest element in the input
     // Array1D instance.
     template <class Type>
@@ -1170,7 +1246,7 @@ namespace brick {
     minimum(Array1D<Type> const& array0)
     {
       if(array0.size() == 0) {
-        BRICK_THROW(common::ValueException, "minimum()",
+        BRICK_THROW(brick::common::ValueException, "minimum()",
                    "Can't find the minimum element of an empty array.");
       }
       return minimum(array0, std::less<Type>());
@@ -1202,11 +1278,11 @@ namespace brick {
         }
         double resultPrime = objectiveFunction.derivative(argument);
         if(resultPrime == 0.0) {
-          BRICK_THROW(common::ValueException, "newtonRaphson()", "Zero derivative.");
+          BRICK_THROW(brick::common::ValueException, "newtonRaphson()", "Zero derivative.");
         }
         argument = argument - (result / resultPrime);
       }
-      BRICK_THROW(common::ValueException, "newtonRaphson()",
+      BRICK_THROW(brick::common::ValueException, "newtonRaphson()",
                 "Root finding failed to converge.");
       return 0.0;  // keep compiler happy
     }
@@ -1220,7 +1296,7 @@ namespace brick {
                           Array1D<Type> const& signal1)
     {
       if(signal0.size() != signal1.size()) {
-        BRICK_THROW(common::ValueException, "normalizedCorrelation()",
+        BRICK_THROW(brick::common::ValueException, "normalizedCorrelation()",
                   "Input arrays must have the same size.");
       }
       Type2 oneOverN =
@@ -1302,7 +1378,7 @@ namespace brick {
     range(Type start, Type stop, Type stride)
     {
       if(stride == 0) {
-        BRICK_THROW(common::ValueException, "range(Type, Type, Type)",
+        BRICK_THROW(brick::common::ValueException, "range(Type, Type, Type)",
                    "Argument \"stride\" must not be equal to 0.");
       }
       int length = static_cast<int>((stop - start) / stride);
@@ -1397,7 +1473,8 @@ namespace brick {
         std::ostringstream message;
         message << "Argument must have exactly 3 elements, but instead has "
                 << vector0.size() << "elements.";
-        BRICK_THROW(common::ValueException, "skewSymmetric()", message.str().c_str());
+        BRICK_THROW(brick::common::ValueException, "skewSymmetric()",
+                    message.str().c_str());
       }
       Array2D<Type> returnVal(3, 3);
       returnVal(0, 0) = 0;

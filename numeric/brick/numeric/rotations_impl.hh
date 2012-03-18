@@ -5,7 +5,7 @@
 * Source file declaring functions which convert between different
 * representations of 3D rotation.
 *
-* Copyright (C) 2005-2011 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2005-2012 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
@@ -401,7 +401,7 @@ namespace brick {
       }
 
       // Now see about normalizing the unit quaternion.
-      Type axisMagnitudeSquared = dot(axis0, axis0);
+      Type axisMagnitudeSquared = dot<Type>(axis0, axis0);
       if(approximatelyEqual(axisMagnitudeSquared,
                             Type(0.0), l_getRotationsEpsilon<Type>())) {
         // Hmm, we still have a very small axis.  Assume this means that

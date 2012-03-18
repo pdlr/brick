@@ -30,6 +30,7 @@ EXTRA_DIST              = \
 # Specify which tests should be run.
 
 TESTS = \
+	calibrationToolsTest \
 	cameraIntrinsicsPinholeTest \
 	cameraIntrinsicsPlumbBobTest \
 	colorspaceConverterTest \
@@ -40,6 +41,7 @@ TESTS = \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
 	registerPoints3DTest \
+	stereoRectifyTest \
 	threePointAlgorithmTest \
 	utilitiesTest
 
@@ -47,6 +49,7 @@ TESTS = \
 # Specify which tests should be build from source.
 
 check_PROGRAMS = \
+	calibrationToolsTest \
 	cameraIntrinsicsPinholeTest \
 	cameraIntrinsicsPlumbBobTest \
 	colorspaceConverterTest \
@@ -57,6 +60,7 @@ check_PROGRAMS = \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
 	registerPoints3DTest \
+	stereoRectifyTest \
 	threePointAlgorithmTest \
 	utilitiesTest
 
@@ -64,6 +68,7 @@ check_PROGRAMS = \
 # For each test which should be built from source, specify which 
 # source files.
 
+calibrationToolsTest_SOURCES	= calibrationToolsTest.cc
 cameraIntrinsicsPinholeTest_SOURCES	= cameraIntrinsicsPinholeTest.cc
 cameraIntrinsicsPlumbBobTest_SOURCES	= cameraIntrinsicsPlumbBobTest.cc
 colorspaceConverterTest_SOURCES	= colorspaceConverterTest.cc
@@ -75,6 +80,7 @@ keypointMatcherFastTest_SOURCES	= keypointMatcherFastTest.cc
 keypointSelectorFastTest_SOURCES	= keypointSelectorFastTest.cc
 # ransacTest_SOURCES		= ransacTest.cc
 registerPoints3DTest_SOURCES	= registerPoints3DTest.cc
+stereoRectifyTest_SOURCES	= stereoRectifyTest.cc
 threePointAlgorithmTest_SOURCES	= threePointAlgorithmTest.cc
 utilitiesTest_SOURCES		= utilitiesTest.cc testImages.hh
 

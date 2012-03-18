@@ -117,7 +117,7 @@ namespace brick {
      * 
      * @param fileName This argument ...
      * 
-     * @param commentString This argument ...
+     * @param commentString This argument is currently ignored.
      * 
      * @return The return value ...
      */
@@ -133,7 +133,7 @@ namespace brick {
      * 
      * @param outputImage This argument ...
      * 
-     * @param comment This argument ...
+     * @param comment This argument is currently ignored.
      */
     void
     writePNG8(const std::string& fileName,

@@ -543,7 +543,7 @@ namespace brick {
 
     Image<GRAY8>
     readPNG8(const std::string& fileName,
-             std::string& commentString)
+             std::string& /* commentString */)
     {
       // This code is heavily in debt to example.c from the libpng 1.2.1
       // distribition, which carries the following header comment:
@@ -678,7 +678,7 @@ namespace brick {
     void
     writePNG8(const std::string& fileName,
               const Image<GRAY8>& outputImage,
-              const std::string& comment)
+              const std::string& /* comment */)
     {
       // This code is heavily in debt to example.c from the libpng 1.2.1
       // distribition, which carries the following header comment:

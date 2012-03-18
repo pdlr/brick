@@ -170,7 +170,9 @@ namespace brick {
        * @param zCoord The homogeneous Z coordinate.
        * @param alpha Scale factor.
        */
-      inline void setValue(Type const& xCoord, Type const& yCoord, Type const& zCoord,
+      inline void setValue(Type const& xCoord,
+                           Type const& yCoord,
+                           Type const& zCoord,
                            Type const& alpha);
 
       

@@ -2,7 +2,8 @@
 ***************************************************************************
 * @file brick/numeric/vector3D_impl.hh
 *
-* Source file defining Vector3D class template.
+* Header file defining inline and template functions declared in
+* vector3D.hh.
 *
 * Copyright (C) 2000-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.

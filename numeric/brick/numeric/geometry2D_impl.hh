@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file brick/numeric/geometry2D.cc
+* @file brick/numeric/geometry2D_impl.hh
 *
 * Source file file declaring useful functions for dlrNumeric.
 *

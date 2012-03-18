@@ -30,7 +30,7 @@ namespace brick {
     /** 
      * This function causes the program to suspend execution for at
      * least as many seconds as specified by its argument.  The
-     * resolution of the timer is implimentation dependent, will
+     * resolution of the timer is implementation dependent, but will
      * always be some small fraction of a second.
      */
     using portability::portableSleep;

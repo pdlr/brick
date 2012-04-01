@@ -150,7 +150,7 @@ namespace brick {
          * that was made when the payload was specified.
          */
         const Type&
-        getPayload();
+        getPayload() const;
         
 
         /** 

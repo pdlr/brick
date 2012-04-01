@@ -24,11 +24,17 @@ AM_CPPFLAGS		= -I$(top_srcdir)
 
 brickNumericdir		= $(includedir)/brick/numeric
 brickNumeric_HEADERS	= \
+	amanatidesWoo2D.hh amanatidesWoo2D_impl.hh \
+	amanatidesWoo2DIterator.hh amanatidesWoo2DIterator_impl.hh \
+	amanatidesWoo3D.hh amanatidesWoo3D_impl.hh \
+	amanatidesWoo3DIterator.hh amanatidesWoo3DIterator_impl.hh \
 	array1D.hh array1D_impl.hh \
 	array2D.hh array2D_impl.hh \
 	array3D.hh array3D_impl.hh \
 	arrayND.hh arrayND_impl.hh \
 	bilinearInterpolator.hh bilinearInterpolator_impl.hh \
+	boxIntegrator2D.hh boxIntegrator2D_impl.hh \
+	bSpline.hh bSpline_impl.hh \
 	convolutionStrategy.hh \
 	convolve1D.hh convolve1D_impl.hh \
 	convolve2D.hh convolve2D_impl.hh \
@@ -36,6 +42,7 @@ brickNumeric_HEADERS	= \
 	derivativeRidders.hh derivativeRidders_impl.hh \
 	extremumRecorder.hh \
 	functional.hh \
+	ieeeFloat32.hh \
 	index2D.hh \
 	index3D.hh \
 	geometry2D.hh geometry2D_impl.hh \
@@ -46,9 +53,11 @@ brickNumeric_HEADERS	= \
 	polynomial.hh polynomial_impl.hh \
 	rotations.hh rotations_impl.hh \
 	slice.hh \
+	sampledFunctions.hh sampledFunctions_impl.hh \
 	solveCubic.hh solveCubic_impl.hh \
 	solveQuadratic.hh solveQuadratic_impl.hh \
 	solveQuartic.hh solveQuartic_impl.hh \
+	staticArray1D.hh staticArray1D_impl.hh \
 	stencil2D.hh stencil2D_impl.hh \
 	subArray1D.hh subArray1D_impl.hh \
 	subArray2D.hh subArray2D_impl.hh \
@@ -66,6 +75,7 @@ brickNumeric_HEADERS	= \
 
 lib_LTLIBRARIES		= libbrickNumeric.la
 libbrickNumeric_la_SOURCES = \
+	ieeeFloat32.cc \
 	index2D.cc \
 	index3D.cc
 

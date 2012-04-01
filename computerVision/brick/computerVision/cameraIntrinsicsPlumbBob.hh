@@ -363,6 +363,25 @@ namespace brick {
       project(const brick::numeric::Vector3D<double>& point) const;
 
 
+      /** 
+       * This member function takes a point in camera coordinates, and
+       * returns an "undistorted" version of that 3D point.  The
+       * undistorted point is not guaranteed to be similar to the
+       * input point at all, but will project through the idealized
+       * pinhole parameters associated with *this in such a way that
+       * its projection is coincident with the projection of the input
+       * point.  This member function is generally not useful for user
+       * code.  It is provided here to help with camera calibration
+       * algorithms.
+       * 
+       * @param point This argument is the point to be projected,
+       * represented in world coordinates.
+       * 
+       * @return The return value is represented in a fictional
+       * undistorted 3D world coordinate system, and is one of the
+       * infinitely many points that lie on the ray projecting to the
+       * 2D image point that corresponds to the input argument.
+       */
       inline virtual numeric::Vector3D<double>
       projectThroughDistortion(numeric::Vector3D<double> const& point) const;
       

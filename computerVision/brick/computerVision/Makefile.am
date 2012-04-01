@@ -29,7 +29,7 @@ brickComputerVision_HEADERS	= \
 	cameraIntrinsicsPinhole.hh \
 	cameraIntrinsicsPlumbBob.hh cameraIntrinsicsPlumbBob_impl.hh \
 	colorspaceConverter.hh colorspaceConverter_impl.hh \
-	disjointSet.h disjointSet_impl.h \
+	disjointSet.hh disjointSet_impl.hh \
 	image.hh \
 	imageFilter.hh imageFilter_impl.hh \
 	imageIO.hh imageIO_impl.hh \
@@ -47,6 +47,7 @@ brickComputerVision_HEADERS	= \
 	pixelYIQ.hh \
 	randomSampleSelector.hh randomSampleSelector_impl.hh \
 	ransac.hh ransac_impl.hh \
+	segmenterFelzenszwalb.hh segmenterFelzenszwalb_impl.hh \
 	utilities.hh utilities_impl.hh
 
 stillToComeHeaders		= \
@@ -71,7 +72,6 @@ stillToComeHeaders		= \
 	opticalFlow.h \
 	quadMap.h \
 	registerPoints3D.h \
-	segmenterFelzenszwalb.h \
 	sobel.h \
 	stereoRectify.h \
 	threePointAlgorithm.h

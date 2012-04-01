@@ -37,6 +37,7 @@ TESTS = \
 	imagePyramidTest \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
+	segmenterFelzenszwalbTest
 	utilitiesTest
 
 
@@ -50,6 +51,7 @@ check_PROGRAMS = \
 	imagePyramidTest \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
+	segmenterFelzenszwalbTest
 	utilitiesTest
 
 
@@ -64,6 +66,7 @@ imagePyramidTest_SOURCES	= imagePyramidTest.cc testImages.hh
 keypointMatcherFastTest_SOURCES	= keypointMatcherFastTest.cc
 keypointSelectorFastTest_SOURCES	= keypointSelectorFastTest.cc
 # ransacTest_SOURCES		= ransacTest.cc
+segmenterFelzenszwalbTest_SOURCES	= segmenterFelzenszwalbTest.cc
 utilitiesTest_SOURCES		= utilitiesTest.cc testImages.hh
 
 

@@ -12,6 +12,7 @@
 */
 
 #include <numeric>
+#include <brick/common/constants.hh>
 #include <brick/common/mathFunctions.hh>
 #include <brick/computerVision/keypointMatcherFast.hh>
 
@@ -21,8 +22,9 @@ namespace brick {
 
     // Default constructor.
     KeypointMatcherFast::
-    KeypointMatcherFast()
-      : m_keypointMapNegative(),
+    KeypointMatcherFast(double expectedRotation)
+      : m_expectedRotation(expectedRotation),
+       m_keypointMapNegative(),
         m_keypointMapPositive()
     {
       // Empty.
@@ -76,6 +78,94 @@ namespace brick {
     }
 
 
+    double
+    KeypointMatcherFast::
+    computeSSDRotationInvariant(KeypointFast const& keypoint0,
+                                KeypointFast const& keypoint1,
+                                double expectedRotation) const
+    {
+      // We add 1.0 here, rather than adding 0.5, as in the standard
+      // float-to-int conversion, because we want to round up.  This
+      // is just like calling ceil().
+      const unsigned int angleInSamples = std::min(
+        static_cast<unsigned int>(
+          expectedRotation / common::constants::twoPi
+          * KeypointFast::numberOfFeatures) + 1.0,
+        static_cast<double>(KeypointFast::numberOfFeatures - 1));
+      
+      // Inefficient for now...  Compute SSD at each rotation.
+      double minimumSsd = std::numeric_limits<double>::max();
+
+      // For "negative" rotations.
+      for(unsigned int ii = 1; ii <= angleInSamples; ++ii) {
+        double ssd0 = 0.0;
+
+        // Account for "wrap" at the beginning of the feature vector,
+        // where the first few features of keypoint0 match up with the
+        // last few features of keypoint1.
+        for(unsigned int jj = 0; jj < ii; ++jj) {
+          unsigned int wrappedIndex = KeypointFast::numberOfFeatures - ii;
+          double difference = (keypoint1.featureVector[wrappedIndex + jj]
+                               - keypoint0.featureVector[jj]);
+          ssd0 += difference * difference;
+        }
+
+        // Account for the rest of the feature vector (the "unwrapped" part).
+        for(unsigned int jj = ii; jj < KeypointFast::numberOfFeatures; ++jj) {
+          double difference = (keypoint1.featureVector[jj - ii]
+                               - keypoint0.featureVector[jj]);
+          ssd0 += difference * difference;
+        }
+
+        if(ssd0 < minimumSsd) {
+          minimumSsd = ssd0;
+        }
+      }
+
+      // For zero rotation.
+      {
+        double ssd0 = 0.0;
+        for(unsigned int jj = 0; jj < KeypointFast::numberOfFeatures; ++jj) {
+          double difference = (keypoint1.featureVector[jj]
+                               - keypoint0.featureVector[jj]);
+          ssd0 += difference * difference;
+        }
+        if(ssd0 < minimumSsd) {
+          minimumSsd = ssd0;
+        }
+      }
+
+      // For positive rotation.
+      for(unsigned int ii = 1; ii <= angleInSamples; ++ii) {
+
+        double ssd0 = 0.0;
+
+        // Account for "wrap" at the beginning of the feature vector,
+        // where the first few features of keypoint1 match up with the
+        // last few features of keypoint0.
+        for(unsigned int jj = 0; jj < ii; ++jj) {
+          unsigned int wrappedIndex = KeypointFast::numberOfFeatures - ii;
+          double difference = (keypoint0.featureVector[wrappedIndex + jj]
+                               - keypoint1.featureVector[jj]);
+          ssd0 += difference * difference;
+        }
+
+        // Account for the rest of the feature vector (the "unwrapped" part).
+        for(unsigned int jj = ii; jj < KeypointFast::numberOfFeatures; ++jj) {
+          double difference = (keypoint0.featureVector[jj - ii]
+                               - keypoint1.featureVector[jj]);
+          ssd0 += difference * difference;
+        }
+
+        if(ssd0 < minimumSsd) {
+          minimumSsd = ssd0;
+        }
+      }
+
+      return minimumSsd;
+    }
+
+
     bool
     KeypointMatcherFast::
     matchKeypoint(KeypointFast const& query, KeypointFast& bestMatch,
@@ -108,7 +198,8 @@ namespace brick {
         if(boundOnNewSSD >= bestSSDSoFar) {
           break;
         }
-        double newSSD = this->computeSSD(query, currentIter->second);
+        double newSSD = this->computeSSDRotationInvariant(
+          query, currentIter->second, m_expectedRotation);
         if(newSSD < bestSSDSoFar) {
           bestSSDSoFar = newSSD;
           bestMatch = currentIter->second;
@@ -128,7 +219,8 @@ namespace brick {
         if(boundOnNewSSD >= bestSSDSoFar) {
           break;
         }
-        double newSSD = this->computeSSD(query, currentIter->second);
+        double newSSD = this->computeSSDRotationInvariant(
+          query, currentIter->second, m_expectedRotation);
         if(newSSD < bestSSDSoFar) {
           bestSSDSoFar = newSSD;
           bestMatch = currentIter->second;

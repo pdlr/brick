@@ -1,11 +1,11 @@
 /**
 ***************************************************************************
-* @file segmenterFelzenszwalbTest.cpp
+* @file brick/computerVision/test/segmenterFelzenszwalbTest.cc
 *
-* Source file defining tests for routines defined in
+* Source file defining tests for routines declared in
 * brick/computerVision/segmenterFelzenszwalb.hh.
 *
-* Copyright (C) 2006 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2008,2012 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
@@ -57,7 +57,7 @@ namespace brick {
     SegmenterFelzenszwalbTest::
     testSegmenterFelzenszwalb()
     {
-      SegmenterFelzenszwalb<EdgeDefaultFunctor> segmenter(200, 0.8, 20);
+      SegmenterFelzenszwalb<EdgeDefaultFunctor<double>, double> segmenter(200, 0.8, 20);
       Image<GRAY8> inputImage0 = readPGM8(getTestImageFileNamePGM0());
       segmenter.segment(inputImage0);
       brick::numeric::Array2D<brick::common::UnsignedInt32> labelArray =

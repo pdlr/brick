@@ -95,7 +95,6 @@ otherSources =\
 	fourierTransformer.cpp fourierTransformer.h \
 	histogramEqualize.cpp histogramEqualize.h \
 	naiveSnake.cpp naiveSnake.h \
-	segmenterFelzenszwalb.cpp segmenterFelzenszwalb.h \
 	stereoRectify.cpp stereoRectify.h
 
 # List the files that need to be cleaned.

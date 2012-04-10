@@ -30,6 +30,7 @@ brickComputerVision_HEADERS	= \
 	cameraIntrinsicsPlumbBob.hh cameraIntrinsicsPlumbBob_impl.hh \
 	colorspaceConverter.hh colorspaceConverter_impl.hh \
 	disjointSet.hh disjointSet_impl.hh \
+	erode.hh erode_impl.hh \
 	image.hh \
 	imageFilter.hh imageFilter_impl.hh \
 	imageIO.hh imageIO_impl.hh \
@@ -57,7 +58,6 @@ stillToComeHeaders		= \
 	connectedComponents.h \
 	dilate.h \
 	eightPointAlgorithm.h \
-	erode.h \
 	extendedKalmanFilter.h \
 	featureAssociation.h \
 	fivePointAlgorithm.h \

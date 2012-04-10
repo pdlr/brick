@@ -30,7 +30,9 @@ brickComputerVision_HEADERS	= \
 	cameraIntrinsicsPinhole.hh cameraIntrinsicsPinhole_impl.hh \
 	cameraIntrinsicsPlumbBob.hh cameraIntrinsicsPlumbBob_impl.hh \
 	colorspaceConverter.hh colorspaceConverter_impl.hh \
+	disjointSet.hh disjointSet_impl.hh \
 	eightPointAlgorithm.hh eightPointAlgorithm_impl.hh \
+	erode.hh erode_impl.hh \
 	fivePointAlgorithm.hh fivePointAlgorithm_impl.hh \
 	image.hh \
 	imageFilter.hh imageFilter_impl.hh \
@@ -50,6 +52,7 @@ brickComputerVision_HEADERS	= \
 	randomSampleSelector.hh randomSampleSelector_impl.hh \
 	ransac.hh ransac_impl.hh \
 	registerPoints3D.hh registerPoints3D_impl.hh \
+	segmenterFelzenszwalb.hh segmenterFelzenszwalb_impl.hh \
 	stereoRectify.hh stereoRectify_impl.hh \
 	threePointAlgorithm.hh threePointAlgorithm_impl.hh \
 	utilities.hh utilities_impl.hh
@@ -59,8 +62,6 @@ stillToComeHeaders		= \
 	canny.h \
 	connectedComponents.h \
 	dilate.h \
-	disjointSet.h \
-	erode.h \
 	extendedKalmanFilter.h \
 	featureAssociation.h \
 	fourierTransformer.h \
@@ -73,7 +74,6 @@ stillToComeHeaders		= \
 	nonMaximumSuppress.h \
 	opticalFlow.h \
 	quadMap.h \
-	segmenterFelzenszwalb.h \
 	sobel.h
 
 
@@ -91,7 +91,6 @@ otherSources =\
 	fourierTransformer.cpp fourierTransformer.h \
 	histogramEqualize.cpp histogramEqualize.h \
 	naiveSnake.cpp naiveSnake.h \
-	segmenterFelzenszwalb.cpp segmenterFelzenszwalb.h \
 	stereoRectify.cpp stereoRectify.h
 
 # List the files that need to be cleaned.

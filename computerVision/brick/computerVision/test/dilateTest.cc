@@ -75,7 +75,7 @@ namespace brick {
       // Make sure 3x3 dilation matches the hardcoded routine tested
       // above.
       Image<GRAY8> referenceImage = dilate<GRAY8>(inputImage);
-      Image<GRAY8> dilatedImage = dilate<GRAY8>(inputImage, 1);
+      Image<GRAY8> dilatedImage = dilateUsingBoxIntegrator<GRAY8>(inputImage, 3, 3);
       BRICK_TEST_ASSERT(dilatedImage.rows() == referenceImage.rows());
       BRICK_TEST_ASSERT(dilatedImage.columns() == referenceImage.columns());
       for(size_t index0 = 0; index0 < dilatedImage.size(); ++index0) {
@@ -84,7 +84,7 @@ namespace brick {
 
       // Use the hardcoded routine again to test 5x5 dilation.
       Image<GRAY8> referenceImage2 = dilate<GRAY8>(referenceImage);
-      Image<GRAY8> dilatedImage2 = dilate<GRAY8>(inputImage, 2);
+      Image<GRAY8> dilatedImage2 = dilateUsingBoxIntegrator<GRAY8>(inputImage, 5, 5);
       BRICK_TEST_ASSERT(dilatedImage2.rows() == referenceImage2.rows());
       BRICK_TEST_ASSERT(dilatedImage2.columns() == referenceImage2.columns());
       for(size_t index0 = 0; index0 < dilatedImage2.size(); ++index0) {
@@ -96,7 +96,7 @@ namespace brick {
       // sparser image.
       Image<GRAY8> inputImage3 = erode<GRAY8>(inputImage);
       Image<GRAY8> referenceImage3 = dilate<GRAY8>(dilate<GRAY8>(inputImage3));
-      Image<GRAY8> dilatedImage3 = dilate<GRAY8>(inputImage3, 2);
+      Image<GRAY8> dilatedImage3 = dilateUsingBoxIntegrator<GRAY8>(inputImage3, 5, 5);
       BRICK_TEST_ASSERT(dilatedImage3.rows() == referenceImage3.rows());
       BRICK_TEST_ASSERT(dilatedImage3.columns() == referenceImage3.columns());
       for(size_t index0 = 0; index0 < dilatedImage3.size(); ++index0) {

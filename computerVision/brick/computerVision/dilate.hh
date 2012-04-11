@@ -23,13 +23,6 @@ namespace brick {
     Image<FORMAT>
     dilate(const Image<FORMAT>& inputImage);
 
-
-    template<ImageFormat FORMAT>
-    Image<FORMAT>
-    dilate(const Image<FORMAT>& inputImage,
-           unsigned int windowWidth,
-           unsigned int windowHeight);
-
     
     template<ImageFormat FORMAT>
     Image<FORMAT>

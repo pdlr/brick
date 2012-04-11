@@ -45,7 +45,7 @@ public:
   
 private:
 
-  CameraIntrinsicsPlumbBob
+  CameraIntrinsicsPlumbBob<double>
   getIntrinsicsInstance();
   
   double m_defaultTolerance;
@@ -53,8 +53,8 @@ private:
   double m_reconstructionTolerance;
   double m_reverseProjectionTolerance;
 
-  const size_t m_numPixelsX;
-  const size_t m_numPixelsY;
+  const unsigned int m_numPixelsX;
+  const unsigned int m_numPixelsY;
   const double m_focalLengthX;
   const double m_focalLengthY;
   const double m_centerU;
@@ -106,13 +106,13 @@ CameraIntrinsicsPlumbBobTest::
 testPlumbBobObjectiveApplicationOperator()
 {
   // Arbitrary camera params.
-  CameraIntrinsicsPlumbBob intrinsics = this->getIntrinsicsInstance();
+  CameraIntrinsicsPlumbBob<double> intrinsics = this->getIntrinsicsInstance();
 
   for(double yCoord = -1.0; yCoord < 1.0; yCoord += 0.1) {
     for(double xCoord = -1.0; xCoord < 1.0; xCoord += 0.1) {
       Vector3D<double> cameraCoord(xCoord, yCoord, 1.0);
       Vector2D<double> pixelCoord = intrinsics.project(cameraCoord);
-      brick::computerVision::privateCode::PlumbBobObjective objective(
+      brick::computerVision::privateCode::PlumbBobObjective<double> objective(
         intrinsics, pixelCoord);
 
       Array1D<double> theta(2);
@@ -149,13 +149,13 @@ CameraIntrinsicsPlumbBobTest::
 testPlumbBobObjectiveGradient()
 {
   // Arbitrary camera params.
-  CameraIntrinsicsPlumbBob intrinsics = this->getIntrinsicsInstance();
+  CameraIntrinsicsPlumbBob<double> intrinsics = this->getIntrinsicsInstance();
 
   for(double yCoord = -1.0; yCoord < 1.0; yCoord += 0.1) {
     for(double xCoord = -1.0; xCoord < 1.0; xCoord += 0.1) {
       Vector3D<double> cameraCoord(xCoord, yCoord, 1.0);
       Vector2D<double> pixelCoord = intrinsics.project(cameraCoord);
-      brick::computerVision::privateCode::PlumbBobObjective objective(
+      brick::computerVision::privateCode::PlumbBobObjective<double> objective(
         intrinsics, pixelCoord);
 
       Array1D<double> theta(2);
@@ -170,10 +170,12 @@ testPlumbBobObjectiveGradient()
 
   Vector2D<double> pixelCoord = intrinsics.project(
     Vector3D<double>(1.0, -1.0, 1.0));
-  brick::computerVision::privateCode::PlumbBobObjective objective(
-    intrinsics, pixelCoord);
-  GradientFunction<brick::computerVision::privateCode::PlumbBobObjective>
-    refObjective(objective);
+
+  typedef brick::computerVision::privateCode::PlumbBobObjective<double>
+    Objective;
+
+  Objective objective(intrinsics, pixelCoord);
+  GradientFunction<Objective> refObjective(objective);
 
   for(double yCoord = -1.0; yCoord < 1.0; yCoord += 0.1) {
     for(double xCoord = -1.0; xCoord < 1.0; xCoord += 0.1) {
@@ -217,7 +219,7 @@ CameraIntrinsicsPlumbBobTest::
 testProject()
 {
   // Arbitrary camera params.
-  CameraIntrinsicsPlumbBob intrinsics = this->getIntrinsicsInstance();
+  CameraIntrinsicsPlumbBob<double> intrinsics = this->getIntrinsicsInstance();
 
   for(double zCoord = 1.0; zCoord < 10.0; zCoord += 0.7) {
     for(double yCoord = -1.0; yCoord < 1.0; yCoord += 0.1) {
@@ -276,7 +278,7 @@ testReverseProject()
   // has its own independent test.
 
   // Arbitrary camera params.
-  CameraIntrinsicsPlumbBob intrinsics = this->getIntrinsicsInstance();
+  CameraIntrinsicsPlumbBob<double> intrinsics = this->getIntrinsicsInstance();
 
   for(double vCoord = 0.0; vCoord < m_numPixelsY; vCoord += 10.2) {
     for(double uCoord = 0.0; uCoord < m_numPixelsX; uCoord += 10.2) {
@@ -297,8 +299,8 @@ void
 CameraIntrinsicsPlumbBobTest::
 testStreamOperators()
 {
-  CameraIntrinsicsPlumbBob refIntrinsics = this->getIntrinsicsInstance();
-  CameraIntrinsicsPlumbBob testIntrinsics;
+  CameraIntrinsicsPlumbBob<double> refIntrinsics = this->getIntrinsicsInstance();
+  CameraIntrinsicsPlumbBob<double> testIntrinsics;
   
   std::ostringstream outputStream;
   outputStream << refIntrinsics;
@@ -341,12 +343,12 @@ testStreamOperators()
                                      m_reconstructionTolerance));
 }
 
-CameraIntrinsicsPlumbBob
+CameraIntrinsicsPlumbBob<double>
 CameraIntrinsicsPlumbBobTest::
 getIntrinsicsInstance()
 {
   // Arbitrary camera params.
-  CameraIntrinsicsPlumbBob intrinsics(
+  CameraIntrinsicsPlumbBob<double> intrinsics(
     m_numPixelsX, m_numPixelsY, m_focalLengthX, m_focalLengthY,
     m_centerU, m_centerV, m_skewCoefficient, m_radialCoefficient0,
     m_radialCoefficient1, m_radialCoefficient2,

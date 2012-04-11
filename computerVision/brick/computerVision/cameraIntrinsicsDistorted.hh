@@ -34,10 +34,11 @@ namespace brick {
      ** estimate distorted camera intrinsics by optimizing over only
      ** the free parameters.
      **/
-    class CameraIntrinsicsDistorted : public CameraIntrinsics {
+    template <class FloatType = double>
+    class CameraIntrinsicsDistorted : public CameraIntrinsics<FloatType> {
     public:
 
-      typedef numeric::Array1D<double> ParameterVectorType;
+      typedef numeric::Array1D<FloatType> ParameterVectorType;
 
       
       /** 
@@ -65,8 +66,8 @@ namespace brick {
       setFreeParameters(ParameterVectorType const& parameterVector) = 0;
 
       
-      virtual numeric::Vector3D<double>
-      projectThroughDistortion(numeric::Vector3D<double> const& inputPoint)
+      virtual numeric::Vector3D<FloatType>
+      projectThroughDistortion(numeric::Vector3D<FloatType> const& inputPoint)
         const = 0;
 
     protected:

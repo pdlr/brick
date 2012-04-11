@@ -22,9 +22,9 @@ namespace brick {
     /**
      ** The IEEEFloat32 class is for manipulating 32-bit IEEE floating
      ** point numbers.  This class is useful if, for example, you need
-     ** to figure out * what specific pattern of bits represents the
-     ** number 1.347 in 32 bit * IEEE floating point format, and you're
-     ** not sure that your machine * uses IEEE floating point
+     ** to figure out what specific pattern of bits represents the
+     ** number 1.347 in 32 bit IEEE floating point format, and you're
+     ** not sure that your machine uses IEEE floating point
      ** representation.
      **
      ** The 32-bit IEEE floating point format is one sign bit (s),

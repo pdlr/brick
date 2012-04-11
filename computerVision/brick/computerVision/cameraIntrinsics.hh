@@ -41,9 +41,12 @@ namespace brick {
      **   corner of the next-to-leftmost pixel in the top row is at
      **   pixel coordinates (1, 0).
      **/
+    template <class Float_type = double>
     class CameraIntrinsics {
     public:
 
+      typedef Float_type FloatType;
+      
       /** 
        * The default constructor currently does nothing.
        */
@@ -66,8 +69,8 @@ namespace brick {
        * 
        * @return The return value is the resulting pixel coordinate.
        */
-      virtual brick::numeric::Vector2D<double>
-      project(const brick::numeric::Vector3D<double>& point) const = 0;
+      virtual brick::numeric::Vector2D<FloatType>
+      project(const brick::numeric::Vector3D<FloatType>& point) const = 0;
 
 
       /** 
@@ -83,7 +86,7 @@ namespace brick {
        * 
        * @return The return value is the resulting ray.
        */
-      virtual inline geometry::Ray3D<double>
+      virtual inline geometry::Ray3D<FloatType>
       reverseProject(const brick::numeric::Index2D& pixelPosition,
                      bool normalize = true) const;
 
@@ -101,8 +104,8 @@ namespace brick {
        * 
        * @return The return value is the resulting ray.
        */
-      virtual geometry::Ray3D<double>
-      reverseProject(const brick::numeric::Vector2D<double>& pixelPosition,
+      virtual geometry::Ray3D<FloatType>
+      reverseProject(const brick::numeric::Vector2D<FloatType>& pixelPosition,
                      bool normalize = true) const = 0;
 
 
@@ -127,14 +130,15 @@ namespace brick {
     // This function returns a ray in 3D camera coordinates starting
     // at the camera focus, and passing through the center of the
     // specified pixel.
-    inline brick::geometry::Ray3D<double>
-    CameraIntrinsics::
+    template <class FloatType>
+    inline brick::geometry::Ray3D<FloatType>
+    CameraIntrinsics<FloatType>::
     reverseProject(const brick::numeric::Index2D& pixelPosition,
                    bool normalize) const
     {
       return this->reverseProject(
-        brick::numeric::Vector2D<double>(pixelPosition.getColumn() + 0.5,
-                                         pixelPosition.getRow() + 0.5),
+        brick::numeric::Vector2D<FloatType>(pixelPosition.getColumn() + 0.5,
+                                            pixelPosition.getRow() + 0.5),
         normalize);
     }
 

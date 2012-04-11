@@ -26,7 +26,7 @@ namespace brick {
     
     /**
      ** This class implements the Fast Voxel Traversal Algorithm of
-     ** Amanatides and Woo [Ref] for 3D arrays.  The algorithm is for
+     ** Amanatides and Woo [1] for 3D arrays.  The algorithm is for
      ** efficient ray tracing through regular grids.  For convenience,
      ** there are two coordinate systems associated with this class:
      **
@@ -60,23 +60,21 @@ namespace brick {
      ** AmanatidesWoo3D::begin() returns an iterator which references
      ** subsequent voxels along the line, and will become equal (==) to
      ** the iterator returned by AmanatidesWoo3D::end() when the line
-     ** passes out of the 3D array.  Here's an example usage, which will
-     ** probably format terribly in the Doxygen-generated doc:
+     ** passes out of the 3D array.  Here's example usage:
      **
+     ** @code
      **   typedef AmanatidesWoo3D< Array3D<int> >::iterator awIterator;
-     **
      **   AmanatidesWoo3D< Array3D<int> > rayTracer(
      **     myArray3D, rayOrigin, rayDirection, false);
-     **
      **   awIterator iterator0 = rayTracer.begin(); 
-     **
      **   awIterator iterator1 = rayTracer.end();
-     **
      **   for(; iterator0 != iterator1; ++iterator0) {
-     **
      **     *iterator0 = 0;
-     **
      **   }
+     ** @endcode
+     ** 
+     ** [1] John Amanatides and Andrew Woo, "A Fast Voxel Traversal
+     ** Algorithm for Ray Tracing", Eurographics ’87, 1987, pp 3-10.
      **/
     template <class ARRAY3D, class FLOAT_TYPE = double, class INT_TYPE = int>
     class AmanatidesWoo3D {

@@ -785,7 +785,72 @@ namespace brick {
                          Array2D<double>& covariance,
                          size_t majorAxis=0);
   
-                     
+
+    /** 
+     * This function estimates the mean and variance of a sequence of
+     * scalar values.
+     *
+     * Template argument Iter is the type of iterator used to pass in
+     * the sequence of scalars.
+     * 
+     * Template argument Type defines the numeric type that will be
+     * used during computation of the mean and variance.
+     * 
+     * @param beginIter This iterator, and the next, define sequence
+     * of scalars.
+     * 
+     * @param endIter This iterator, and the previous, define sequence
+     * of scalars.
+     * 
+     * @param mean The estimated mean vector is returned by reference
+     * using this argument.
+     * 
+     * @param variance The estimated variance is returned by reference
+     * using this argument.
+     */
+    template <class Iter, class Type>
+    void
+    getMeanAndVariance(Iter beginIter, Iter endIter,
+                       Type& mean, Type& variance);
+
+
+#if 0 /* Not implemented yet. */
+    /** 
+     * This function is not currently implemented.  If it were, it
+     * would estimate the mean and variance of a sequence of scalar
+     * values, discarding values that appear to be outliers.
+     *
+     * Template argument Iter is the type of iterator used to pass in
+     * the sequence of scalars.
+     * 
+     * Template argument Type defines the numeric type that will be
+     * used during computation of the mean and variance.
+     * 
+     * @param beginIter This iterator, and the next, define sequence
+     * of scalars.
+     * 
+     * @param endIter This iterator, and the previous, define sequence
+     * of scalars.
+     * 
+     * @param inlierProportion Ths argument indicates what proportion
+     * of the input values are expected to be inliers.  Setting this
+     * to 1.0 (or greater) means that all input values are expected to
+     * be valid.  Setting this to 0.0 (or a negative number) indicates
+     * that no input values are expected to be valid, and is an error.
+     *
+     * @param mean The estimated mean vector is returned by reference
+     * using this argument.
+     * 
+     * @param variance The estimated variance is returned by reference
+     * using this argument.
+     */
+    template <class Iter, class Type>
+    void
+    getMeanAndVarianceRobust(Iter beginIter, Iter endIter,
+                             Type& mean, Type& variance);
+#endif /* #if 0 */
+
+    
     /** 
      * This function returns an Array2D instance with the specified
      * shape in which the elements on the diagonal are set to 1, and all

@@ -24,13 +24,16 @@ AM_CPPFLAGS		= -I$(top_srcdir)
 
 brickComputerVisiondir		= $(includedir)/brick/computerVision
 brickComputerVision_HEADERS	= \
+	calibrationTools.hh calibrationTools_impl.hh \
 	cameraIntrinsics.hh \
 	cameraIntrinsicsDistorted.hh \
-	cameraIntrinsicsPinhole.hh \
+	cameraIntrinsicsPinhole.hh cameraIntrinsicsPinhole_impl.hh \
 	cameraIntrinsicsPlumbBob.hh cameraIntrinsicsPlumbBob_impl.hh \
 	colorspaceConverter.hh colorspaceConverter_impl.hh \
 	disjointSet.hh disjointSet_impl.hh \
+	eightPointAlgorithm.hh eightPointAlgorithm_impl.hh \
 	erode.hh erode_impl.hh \
+	fivePointAlgorithm.hh fivePointAlgorithm_impl.hh \
 	image.hh \
 	imageFilter.hh imageFilter_impl.hh \
 	imageIO.hh imageIO_impl.hh \
@@ -48,19 +51,19 @@ brickComputerVision_HEADERS	= \
 	pixelYIQ.hh \
 	randomSampleSelector.hh randomSampleSelector_impl.hh \
 	ransac.hh ransac_impl.hh \
+	registerPoints3D.hh registerPoints3D_impl.hh \
 	segmenterFelzenszwalb.hh segmenterFelzenszwalb_impl.hh \
+	stereoRectify.hh stereoRectify_impl.hh \
+	threePointAlgorithm.hh threePointAlgorithm_impl.hh \
 	utilities.hh utilities_impl.hh
 
 stillToComeHeaders		= \
-	calibrationTools.h \
 	calibrationToolsRobust.h \
 	canny.h \
 	connectedComponents.h \
 	dilate.h \
-	eightPointAlgorithm.h \
 	extendedKalmanFilter.h \
 	featureAssociation.h \
-	fivePointAlgorithm.h \
 	fourierTransformer.h \
 	getEuclideanDistance.h \
 	histogramEqualize.h \
@@ -71,17 +74,12 @@ stillToComeHeaders		= \
 	nonMaximumSuppress.h \
 	opticalFlow.h \
 	quadMap.h \
-	registerPoints3D.h \
-	sobel.h \
-	stereoRectify.h \
-	threePointAlgorithm.h
+	sobel.h
 
 
 # Define the library to build.
 lib_LTLIBRARIES		= libbrickComputerVision.la
 libbrickComputerVision_la_SOURCES = \
-	cameraIntrinsicsPinhole.cc cameraIntrinsicsPinhole.hh \
-	cameraIntrinsicsPlumbBob.cc cameraIntrinsicsPlumbBob.hh \
 	cameraIntrinsicsPlumbBob_impl.hh \
 	imageIO.cc imageIO.hh \
 	keypointMatcherFast.cc keypointMatcherFast.hh \
@@ -89,9 +87,7 @@ libbrickComputerVision_la_SOURCES = \
 	ransac.cc ransac.hh
 
 otherSources =\
-	eightPointAlgorithm.cpp eightPointAlgorithm.h \
 	extendedKalmanFilter.cpp extendedKalmanFilter.h \
-	fivePointAlgorithm.cpp fivePointAlgorithm.h \
 	fourierTransformer.cpp fourierTransformer.h \
 	histogramEqualize.cpp histogramEqualize.h \
 	naiveSnake.cpp naiveSnake.h \

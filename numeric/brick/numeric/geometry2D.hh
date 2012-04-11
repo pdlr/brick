@@ -24,7 +24,7 @@ namespace brick {
      * distance between each of those points and the point to be
      * recovered.  That is, it answers the question "what point is at
      * range0 from point0 and also at range1 from point1?"  Note that
-     * there may be two points which satisfy this constraint, or there
+     * there may be two points that satisfy this constraint, or there
      * may be none if the sum of range0 and range1 is less than the
      * distance between point0 and point1.
      * 

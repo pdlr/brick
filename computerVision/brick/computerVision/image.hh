@@ -31,6 +31,41 @@ namespace brick {
      ** RGB8, YUV420, etc.  Please see the ImageFormat enum for legal
      ** values.  Please see the ImageFormatTraits class template for the
      ** characteristics of the available image formats.
+     **
+     ** Here are some examples of how you might use this class.
+     **
+     ** @code
+     **   // Create an image of 480 rows and 640 columns.  The
+     **   // resulting image will be reference counted, and will
+     **   // manage its own memory allocation/deallocation.
+     **   Image<RGB8> image0(480, 640);
+     **
+     **   // Set every pixel to red.
+     **   image0 = PixelRGB8(255, 0, 0);
+     **
+     **   // Shallow copy the image.  The copy remains valid even
+     **   // after image0 is destroyed.
+     **   Image<RGB8> image1 = image0;
+     **
+     **   // Deep copy the image.
+     **   Image<RGB8> image2 = image0.copy();
+     **
+     **   // Copy a region of the image.
+     **   const unsigned int startRow = 10;
+     **   const unsigned int startColum = 20;
+     **   const unsigned int stopRow = 10;
+     **   const unsigned int stopColum = 20;
+     **   for(unsigned int rr = startRow; rr < stopRow; ++rr) {
+     **     for(unsigned int cc = startColumn; cc < stopColumn; ++cc) {
+     **       image2(rr, cc) = image1(rr, cc);
+     **     }
+     **   }
+     **
+     **   // Convert to a different format.
+     **   Image<GRAY16> grayImage0 = convertColorspace<GRAY16>(image0);
+     ** @endcode
+     **
+     ** More examples TBD.
      **/
     template <ImageFormat FORMAT>
     class Image

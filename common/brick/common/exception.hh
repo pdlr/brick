@@ -99,7 +99,7 @@
  * class, you might use it like this:
  *
  * @code
- * BRICK_DECLARE_EXCEPTION_TYPE(ParseException, brick::IOException);
+ * BRICK_DECLARE_EXCEPTION_TYPE(ParseException, brick::common::IOException);
  * BRICK_DECLARE_EXCEPTION_TYPE(SyntaxException, ParseException);
  * BRICK_DECLARE_EXCEPTION_TYPE(MissingArgumentException, ParseException);
  * @endcode

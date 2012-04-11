@@ -77,7 +77,7 @@ testAccessorFunctions()
   double pixelSizeY = 0.002;
   double centerU = 100.0;
   double centerV = 125.0;
-  CameraIntrinsicsPinhole intrinsics(
+  CameraIntrinsicsPinhole<double> intrinsics(
     numPixelsX, numPixelsY, focalLength, pixelSizeX, pixelSizeY,
     centerU, centerV);
 
@@ -129,8 +129,8 @@ testGetProjectionMatrix()
   double pixelSizeY = 0.002;
   double centerU = 100.0;
   double centerV = 125.0;
-  CameraIntrinsicsPinhole intrinsics(numPixelsX, numPixelsY,
-                                     0.03, 0.001, 0.002, 100, 125);
+  CameraIntrinsicsPinhole<double> intrinsics(numPixelsX, numPixelsY,
+                                             0.03, 0.001, 0.002, 100, 125);
   Array2D<double> projectionMatrix = intrinsics.getProjectionMatrix();
 
   for(double zCoord = 1.0; zCoord < 10.0; zCoord += 0.7) {
@@ -176,7 +176,7 @@ testProject()
   double pixelSizeY = 0.002;
   double centerU = 100.0;
   double centerV = 125.0;
-  CameraIntrinsicsPinhole intrinsics(
+  CameraIntrinsicsPinhole<double> intrinsics(
     numPixelsX, numPixelsY, focalLength, pixelSizeX, pixelSizeY,
     centerU, centerV);
 
@@ -209,7 +209,7 @@ testReverseProject()
   // Arbitrary camera params.
   size_t numPixelsX = 320;
   size_t numPixelsY = 240;
-  CameraIntrinsicsPinhole intrinsics(numPixelsX, numPixelsY,
+  CameraIntrinsicsPinhole<double> intrinsics(numPixelsX, numPixelsY,
                                      0.03, 0.001, 0.002, 100, 125);
 
   for(double vCoord = 0.0; vCoord < numPixelsY; vCoord += 1.2) {

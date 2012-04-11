@@ -15,6 +15,7 @@
 #include <brick/computerVision/erode.hh>
 #include <brick/computerVision/imageIO.hh>
 #include <brick/test/testFixture.hh>
+#include <brick/utilities/timeUtilities.hh>
 
 
 namespace brick {
@@ -102,6 +103,29 @@ namespace brick {
       for(size_t index0 = 0; index0 < dilatedImage3.size(); ++index0) {
         BRICK_TEST_ASSERT(dilatedImage3[index0] == referenceImage3[index0]);
       }
+
+#if 0
+      // Now evaluate execution speed.
+      const unsigned int numIterations = 100;
+
+      brick::utilities::Timer timer0;
+      for(unsigned int iteration = 0; iteration < numIterations; ++iteration) {
+        dilatedImage = dilate<GRAY8>(inputImage);
+      }
+      double elapsedTimeThreshold = timer0.reset();
+      for(unsigned int iteration = 0; iteration < numIterations; ++iteration) {
+        dilatedImage = dilateUsingBoxIntegrator<GRAY8>(inputImage);
+      }
+      double elapsedTime = timer0.reset();
+      try {
+        BRICK_TEST_ASSERT(elapsedTime < elapsedTimeThreshold);
+      } catch(...) {
+        std::cout << "elapsedTime = " << elapsedTime
+                  << ", elapsedTimeThreshold = " << elapsedTimeThreshold
+                  << "." << std::endl;
+        throw;
+      }
+#endif
       
     }
 

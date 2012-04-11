@@ -27,8 +27,8 @@ namespace brick {
     template<ImageFormat FORMAT>
     Image<FORMAT>
     dilateUsingBoxIntegrator(const Image<FORMAT>& inputImage,
-                             unsigned int windowWidth,
-                             unsigned int windowHeight);
+                             unsigned int windowWidth = 3,
+                             unsigned int windowHeight = 3);
     
   } // namespace computerVision
     

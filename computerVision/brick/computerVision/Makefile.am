@@ -25,6 +25,7 @@ AM_CPPFLAGS		= -I$(top_srcdir)
 brickComputerVisiondir		= $(includedir)/brick/computerVision
 brickComputerVision_HEADERS	= \
 	calibrationTools.hh calibrationTools_impl.hh \
+	calibrationToolsRobust.hh calibrationToolsRobust_impl.hh \
 	cameraIntrinsics.hh \
 	cameraIntrinsicsDistorted.hh \
 	cameraIntrinsicsPinhole.hh cameraIntrinsicsPinhole_impl.hh \
@@ -58,7 +59,6 @@ brickComputerVision_HEADERS	= \
 	utilities.hh utilities_impl.hh
 
 stillToComeHeaders		= \
-	calibrationToolsRobust.h \
 	canny.h \
 	connectedComponents.h \
 	dilate.h \

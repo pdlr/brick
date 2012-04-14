@@ -31,6 +31,7 @@ EXTRA_DIST              = \
 
 TESTS = \
 	calibrationToolsTest \
+	calibrationToolsRobustTest \
 	cameraIntrinsicsPinholeTest \
 	cameraIntrinsicsPlumbBobTest \
 	colorspaceConverterTest \
@@ -52,6 +53,7 @@ TESTS = \
 
 check_PROGRAMS = \
 	calibrationToolsTest \
+	calibrationToolsRobustTest \
 	cameraIntrinsicsPinholeTest \
 	cameraIntrinsicsPlumbBobTest \
 	colorspaceConverterTest \
@@ -73,6 +75,7 @@ check_PROGRAMS = \
 # source files.
 
 calibrationToolsTest_SOURCES	= calibrationToolsTest.cc
+calibrationToolsRobustTest_SOURCES	= calibrationToolsRobustTest.cc
 cameraIntrinsicsPinholeTest_SOURCES	= cameraIntrinsicsPinholeTest.cc
 cameraIntrinsicsPlumbBobTest_SOURCES	= cameraIntrinsicsPlumbBobTest.cc
 colorspaceConverterTest_SOURCES	= colorspaceConverterTest.cc

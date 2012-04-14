@@ -40,6 +40,7 @@ TESTS = \
 	fivePointAlgorithmTest \
 	imageFilterTest \
 	imagePyramidTest \
+	kdTreeTest \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
 	registerPoints3DTest \
@@ -62,10 +63,11 @@ check_PROGRAMS = \
 	fivePointAlgorithmTest \
 	imageFilterTest \
 	imagePyramidTest \
+	kdTreeTest \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
 	registerPoints3DTest \
-	segmenterFelzenszwalbTest
+	segmenterFelzenszwalbTest \
 	stereoRectifyTest \
 	threePointAlgorithmTest \
 	utilitiesTest
@@ -84,6 +86,7 @@ erodeTest_SOURCES		= erodeTest.cc
 fivePointAlgorithmTest_SOURCES	= fivePointAlgorithmTest.cc
 imageFilterTest_SOURCES		= imageFilterTest.cc testImages.hh
 imagePyramidTest_SOURCES	= imagePyramidTest.cc testImages.hh
+kdTreeTest_SOURCES		= kdTreeTest.cc
 keypointMatcherFastTest_SOURCES	= keypointMatcherFastTest.cc
 keypointSelectorFastTest_SOURCES	= keypointSelectorFastTest.cc
 # ransacTest_SOURCES		= ransacTest.cc

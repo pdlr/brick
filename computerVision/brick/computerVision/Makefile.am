@@ -41,6 +41,7 @@ brickComputerVision_HEADERS	= \
 	imageFormat.hh \
 	imageFormatTraits.hh imageFormatTraits_impl.hh \
 	imagePyramid.hh imagePyramid_impl.hh \
+	kdTree.hh kdTree_impl.hh \
 	kernel.hh kernel_impl.hh \
 	kernels.hh kernels_impl.hh \
 	keypointMatcherFast.hh keypointMatcherFast_impl.hh \
@@ -68,7 +69,6 @@ stillToComeHeaders		= \
 	getEuclideanDistance.h \
 	histogramEqualize.h \
 	imageWarper.h \
-	kdTree.h \
 	nChooseKSampleSelector.h \
 	naiveSnake.h \
 	nonMaximumSuppress.h \

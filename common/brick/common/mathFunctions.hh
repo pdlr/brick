@@ -63,7 +63,7 @@ namespace brick {
     template <class Type>
     inline Type cosine(Type arg);
 
-
+    
     /** 
      * This function template takes the place of std::sin(),
      * std::sinf(), std::sinl(), etc., hopefully enabling generic
@@ -78,6 +78,25 @@ namespace brick {
     inline Type sine(Type arg);
 
 
+    /** 
+     * This function template takes the place of std::modf(),
+     * std::modff(), std::modfl(), etc., hopefully enabling generic
+     * code.
+     * 
+     * @param arg This argument is the value to be split into integer
+     * and fractional parts.
+     * 
+     * @param integerPart This argument returns the integer part of
+     * the argument.
+     * 
+     * @param fractionalPart This argument returns the fractional part
+     * of the argument.
+     */
+    template <class Type>
+    inline void splitFraction(Type arg, Type& integerPart,
+                              Type& fractionalPart);
+
+    
     /** 
      * This function template takes the place of std::sqrt(),
      * std::sqrtf(), std::sqrtl(), etc., hopefully enabling generic
@@ -194,6 +213,42 @@ namespace brick {
     // template<>
     // inline long double sine(long double arg) {return std::sinl(arg);}
 
+
+    template <class Type>
+    inline void splitFraction(Type arg, Type& integerPart,
+                              Type& fractionalPart)
+    {
+      double integerDouble;
+      fractionalPart = static_cast<Type>(std::modf(static_cast<double>(arg),
+                                                   &integerDouble));
+      integerPart = static_cast<Type>(integerDouble);
+    }
+
+
+    template <>
+    inline void splitFraction(double arg, double& integerPart,
+                              double& fractionalPart)
+    {
+      fractionalPart = std::modf(arg, &integerPart);
+    }
+
+  
+    /* ======== Need to figure out how to test for modff() ======== */
+    /* ======== and modfl availability                     ======== */
+    // template <>
+    // inline void splitFraction(float arg, float& integerPart,
+    //                           float& fractionalPart)
+    // {
+    //   fractionalPart = std::modff(arg, &fractionalPart);
+    // }
+    // 
+    // template <>
+    // inline void splitFraction(long double arg, long double& integerPart,
+    //                           long double& fractionalPart)
+    // {
+    //   fractionalPart = std::modfl(arg, &fractionalPart);
+    // }
+    
 
     template <class Type>
     inline Type squareRoot(Type arg) {

@@ -35,6 +35,7 @@ TESTS = \
 	cameraIntrinsicsPinholeTest \
 	cameraIntrinsicsPlumbBobTest \
 	colorspaceConverterTest \
+	connectedComponentsTest \
 	dilateTest \
 	eightPointAlgorithmTest \
 	erodeTest \
@@ -60,6 +61,7 @@ check_PROGRAMS = \
 	cameraIntrinsicsPinholeTest \
 	cameraIntrinsicsPlumbBobTest \
 	colorspaceConverterTest \
+	connectedComponentsTest \
 	dilateTest \
 	eightPointAlgorithmTest \
 	erodeTest \
@@ -85,9 +87,10 @@ calibrationToolsRobustTest_SOURCES	= calibrationToolsRobustTest.cc
 cameraIntrinsicsPinholeTest_SOURCES	= cameraIntrinsicsPinholeTest.cc
 cameraIntrinsicsPlumbBobTest_SOURCES	= cameraIntrinsicsPlumbBobTest.cc
 colorspaceConverterTest_SOURCES	= colorspaceConverterTest.cc
-dilateTest_SOURCES		= dilateTest.cc
-fivePointAlgorithmTest_SOURCES	= fivePointAlgorithmTest.cceightPointAlgorithmTest_SOURCES	= eightPointAlgorithmTest.cc
-erodeTest_SOURCES		= erodeTest.cc
+connectedComponentsTest_SOURCES	= connectedComponentsTest.cc testImages.hh
+dilateTest_SOURCES		= dilateTest.cc testImages.hh
+eightPointAlgorithmTest_SOURCES	= eightPointAlgorithmTest.cc
+erodeTest_SOURCES		= erodeTest.cc testImages.hh
 fivePointAlgorithmTest_SOURCES	= fivePointAlgorithmTest.cc
 imageFilterTest_SOURCES		= imageFilterTest.cc testImages.hh
 imagePyramidTest_SOURCES	= imagePyramidTest.cc testImages.hh
@@ -97,7 +100,7 @@ keypointMatcherFastTest_SOURCES	= keypointMatcherFastTest.cc
 keypointSelectorFastTest_SOURCES	= keypointSelectorFastTest.cc
 # ransacTest_SOURCES		= ransacTest.cc
 registerPoints3DTest_SOURCES	= registerPoints3DTest.cc
-segmenterFelzenszwalbTest_SOURCES	= segmenterFelzenszwalbTest.cc
+segmenterFelzenszwalbTest_SOURCES	= segmenterFelzenszwalbTest.cc testImages.hh
 stereoRectifyTest_SOURCES	= stereoRectifyTest.cc
 threePointAlgorithmTest_SOURCES	= threePointAlgorithmTest.cc
 utilitiesTest_SOURCES		= utilitiesTest.cc testImages.hh

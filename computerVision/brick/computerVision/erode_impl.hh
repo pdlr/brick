@@ -25,8 +25,7 @@ namespace brick {
 
   namespace computerVision {
 
-    // Anonymous namespace for functor that will support
-    // erodeUsingBoxIntegrator().
+    // Private functor that will support erodeUsingBoxIntegrator().
     namespace privateCode {
 
       template <class Type>

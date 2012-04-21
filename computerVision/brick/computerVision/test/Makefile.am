@@ -35,6 +35,7 @@ TESTS = \
 	cameraIntrinsicsPinholeTest \
 	cameraIntrinsicsPlumbBobTest \
 	colorspaceConverterTest \
+	dilateTest \
 	eightPointAlgorithmTest \
 	erodeTest \
 	fivePointAlgorithmTest \
@@ -59,6 +60,7 @@ check_PROGRAMS = \
 	cameraIntrinsicsPinholeTest \
 	cameraIntrinsicsPlumbBobTest \
 	colorspaceConverterTest \
+	dilateTest \
 	eightPointAlgorithmTest \
 	erodeTest \
 	fivePointAlgorithmTest \
@@ -83,7 +85,8 @@ calibrationToolsRobustTest_SOURCES	= calibrationToolsRobustTest.cc
 cameraIntrinsicsPinholeTest_SOURCES	= cameraIntrinsicsPinholeTest.cc
 cameraIntrinsicsPlumbBobTest_SOURCES	= cameraIntrinsicsPlumbBobTest.cc
 colorspaceConverterTest_SOURCES	= colorspaceConverterTest.cc
-eightPointAlgorithmTest_SOURCES	= eightPointAlgorithmTest.cc
+dilateTest_SOURCES		= dilateTest.cc
+fivePointAlgorithmTest_SOURCES	= fivePointAlgorithmTest.cceightPointAlgorithmTest_SOURCES	= eightPointAlgorithmTest.cc
 erodeTest_SOURCES		= erodeTest.cc
 fivePointAlgorithmTest_SOURCES	= fivePointAlgorithmTest.cc
 imageFilterTest_SOURCES		= imageFilterTest.cc testImages.hh

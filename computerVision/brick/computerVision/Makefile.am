@@ -31,6 +31,7 @@ brickComputerVision_HEADERS	= \
 	cameraIntrinsicsPinhole.hh cameraIntrinsicsPinhole_impl.hh \
 	cameraIntrinsicsPlumbBob.hh cameraIntrinsicsPlumbBob_impl.hh \
 	colorspaceConverter.hh colorspaceConverter_impl.hh \
+	dilate.hh dilate_impl.hh \
 	disjointSet.hh disjointSet_impl.hh \
 	eightPointAlgorithm.hh eightPointAlgorithm_impl.hh \
 	erode.hh erode_impl.hh \
@@ -63,7 +64,6 @@ brickComputerVision_HEADERS	= \
 stillToComeHeaders		= \
 	canny.h \
 	connectedComponents.h \
-	dilate.h \
 	extendedKalmanFilter.h \
 	featureAssociation.h \
 	fourierTransformer.h \

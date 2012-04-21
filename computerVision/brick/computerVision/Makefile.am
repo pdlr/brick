@@ -40,7 +40,7 @@ brickComputerVision_HEADERS	= \
 	featureAssociation.hh featureAssociation_impl.hh \
 	fivePointAlgorithm.hh fivePointAlgorithm_impl.hh \
 	getEuclideanDistance.hh getEuclideanDistance_impl.hh \
-	histogramEqualize.h \
+	histogramEqualize.hh \
 	image.hh \
 	imageFilter.hh imageFilter_impl.hh \
 	imageIO.hh imageIO_impl.hh \
@@ -54,6 +54,7 @@ brickComputerVision_HEADERS	= \
 	keypointMatcherFast.hh keypointMatcherFast_impl.hh \
 	keypointSelectorFast.hh keypointSelectorFast_impl.hh \
 	naiveSnake.hh naiveSnake_impl.hh \
+	nChooseKSampleSelector.hh nChooseKSampleSelector_impl.hh \
 	pixelBGRA.hh \
 	pixelHSV.hh \
 	pixelRGB.hh \
@@ -68,7 +69,6 @@ brickComputerVision_HEADERS	= \
 	utilities.hh utilities_impl.hh
 
 stillToComeHeaders		= \
-	nChooseKSampleSelector.h \
 	opticalFlow.h \
 	quadMap.h
 
@@ -78,7 +78,7 @@ lib_LTLIBRARIES		= libbrickComputerVision.la
 libbrickComputerVision_la_SOURCES = \
 	cameraIntrinsicsPlumbBob_impl.hh \
 	imageIO.cc imageIO.hh \
-	histogramEqualize.cc histogramEqualize.h \
+	histogramEqualize.cc histogramEqualize.hh \
 	keypointMatcherFast.cc keypointMatcherFast.hh \
 	keypointSelectorFast.cc keypointSelectorFast.hh \
 	ransac.cc ransac.hh

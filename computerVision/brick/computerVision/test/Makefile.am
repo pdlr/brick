@@ -42,12 +42,15 @@ TESTS = \
 	extendedKalmanFilterTest \
 	featureAssociationTest \
 	fivePointAlgorithmTest \
+	getEuclideanDistanceTest \
 	imageFilterTest \
 	imagePyramidTest \
 	imageWarperTest \
 	kdTreeTest \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
+	naiveSnakeTest \
+	nChooseKSampleSelectorTest \
 	registerPoints3DTest \
 	segmenterFelzenszwalbTest \
 	stereoRectifyTest \
@@ -70,12 +73,15 @@ check_PROGRAMS = \
 	extendedKalmanFilterTest \
 	featureAssociationTest \
 	fivePointAlgorithmTest \
+	getEuclideanDistanceTest \
 	imageFilterTest \
 	imagePyramidTest \
 	imageWarperTest \
 	kdTreeTest \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
+	naiveSnakeTest \
+	nChooseKSampleSelectorTest \
 	registerPoints3DTest \
 	segmenterFelzenszwalbTest \
 	stereoRectifyTest \
@@ -98,12 +104,15 @@ erodeTest_SOURCES		= erodeTest.cc testImages.hh
 extendedKalmanFilterTest_SOURCES	= extendedKalmanFilterTest.cc
 featureAssociationTest_SOURCES	= featureAssociationTest.cc
 fivePointAlgorithmTest_SOURCES	= fivePointAlgorithmTest.cc
+getEuclideanDistanceTest_SOURCES	= getEuclideanDistanceTest.cc
 imageFilterTest_SOURCES		= imageFilterTest.cc testImages.hh
 imagePyramidTest_SOURCES	= imagePyramidTest.cc testImages.hh
 imageWarperTest_SOURCES		= imageWarperTest.cc
 kdTreeTest_SOURCES		= kdTreeTest.cc
 keypointMatcherFastTest_SOURCES	= keypointMatcherFastTest.cc
 keypointSelectorFastTest_SOURCES	= keypointSelectorFastTest.cc
+naiveSnakeTest_SOURCES		= naiveSnakeTest.cc
+nChooseKSampleSelectorTest_SOURCES	= nChooseKSampleSelectorTest.cc
 # ransacTest_SOURCES		= ransacTest.cc
 registerPoints3DTest_SOURCES	= registerPoints3DTest.cc
 segmenterFelzenszwalbTest_SOURCES	= segmenterFelzenszwalbTest.cc testImages.hh

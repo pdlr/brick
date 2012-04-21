@@ -40,6 +40,7 @@ TESTS = \
 	fivePointAlgorithmTest \
 	imageFilterTest \
 	imagePyramidTest \
+	imageWarperTest \
 	kdTreeTest \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
@@ -63,6 +64,7 @@ check_PROGRAMS = \
 	fivePointAlgorithmTest \
 	imageFilterTest \
 	imagePyramidTest \
+	imageWarperTest \
 	kdTreeTest \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
@@ -86,6 +88,7 @@ erodeTest_SOURCES		= erodeTest.cc
 fivePointAlgorithmTest_SOURCES	= fivePointAlgorithmTest.cc
 imageFilterTest_SOURCES		= imageFilterTest.cc testImages.hh
 imagePyramidTest_SOURCES	= imagePyramidTest.cc testImages.hh
+imageWarperTest_SOURCES		= imageWarperTest.cc
 kdTreeTest_SOURCES		= kdTreeTest.cc
 keypointMatcherFastTest_SOURCES	= keypointMatcherFastTest.cc
 keypointSelectorFastTest_SOURCES	= keypointSelectorFastTest.cc

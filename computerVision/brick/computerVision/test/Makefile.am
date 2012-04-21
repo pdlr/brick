@@ -39,6 +39,7 @@ TESTS = \
 	dilateTest \
 	eightPointAlgorithmTest \
 	erodeTest \
+	extendedKalmanFilterTest \
 	fivePointAlgorithmTest \
 	imageFilterTest \
 	imagePyramidTest \
@@ -65,6 +66,7 @@ check_PROGRAMS = \
 	dilateTest \
 	eightPointAlgorithmTest \
 	erodeTest \
+	extendedKalmanFilterTest \
 	fivePointAlgorithmTest \
 	imageFilterTest \
 	imagePyramidTest \
@@ -91,6 +93,7 @@ connectedComponentsTest_SOURCES	= connectedComponentsTest.cc testImages.hh
 dilateTest_SOURCES		= dilateTest.cc testImages.hh
 eightPointAlgorithmTest_SOURCES	= eightPointAlgorithmTest.cc
 erodeTest_SOURCES		= erodeTest.cc testImages.hh
+extendedKalmanFilterTest_SOURCES	= extendedKalmanFilterTest.cc
 fivePointAlgorithmTest_SOURCES	= fivePointAlgorithmTest.cc
 imageFilterTest_SOURCES		= imageFilterTest.cc testImages.hh
 imagePyramidTest_SOURCES	= imagePyramidTest.cc testImages.hh

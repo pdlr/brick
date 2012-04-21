@@ -36,6 +36,7 @@ brickComputerVision_HEADERS	= \
 	disjointSet.hh disjointSet_impl.hh \
 	eightPointAlgorithm.hh eightPointAlgorithm_impl.hh \
 	erode.hh erode_impl.hh \
+	extendedKalmanFilter.hh extendedKalmanFilter_impl.hh \
 	fivePointAlgorithm.hh fivePointAlgorithm_impl.hh \
 	image.hh \
 	imageFilter.hh imageFilter_impl.hh \
@@ -64,7 +65,6 @@ brickComputerVision_HEADERS	= \
 
 stillToComeHeaders		= \
 	canny.h \
-	extendedKalmanFilter.h \
 	featureAssociation.h \
 	fourierTransformer.h \
 	getEuclideanDistance.h \

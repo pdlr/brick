@@ -39,6 +39,8 @@ brickComputerVision_HEADERS	= \
 	extendedKalmanFilter.hh extendedKalmanFilter_impl.hh \
 	featureAssociation.hh featureAssociation_impl.hh \
 	fivePointAlgorithm.hh fivePointAlgorithm_impl.hh \
+	getEuclideanDistance.hh getEuclideanDistance_impl.hh \
+	histogramEqualize.h \
 	image.hh \
 	imageFilter.hh imageFilter_impl.hh \
 	imageIO.hh imageIO_impl.hh \
@@ -51,6 +53,7 @@ brickComputerVision_HEADERS	= \
 	kernels.hh kernels_impl.hh \
 	keypointMatcherFast.hh keypointMatcherFast_impl.hh \
 	keypointSelectorFast.hh keypointSelectorFast_impl.hh \
+	naiveSnake.hh naiveSnake_impl.hh \
 	pixelBGRA.hh \
 	pixelHSV.hh \
 	pixelRGB.hh \
@@ -65,16 +68,9 @@ brickComputerVision_HEADERS	= \
 	utilities.hh utilities_impl.hh
 
 stillToComeHeaders		= \
-	canny.h \
-	fourierTransformer.h \
-	getEuclideanDistance.h \
-	histogramEqualize.h \
 	nChooseKSampleSelector.h \
-	naiveSnake.h \
-	nonMaximumSuppress.h \
 	opticalFlow.h \
-	quadMap.h \
-	sobel.h
+	quadMap.h
 
 
 # Define the library to build.
@@ -82,16 +78,11 @@ lib_LTLIBRARIES		= libbrickComputerVision.la
 libbrickComputerVision_la_SOURCES = \
 	cameraIntrinsicsPlumbBob_impl.hh \
 	imageIO.cc imageIO.hh \
+	histogramEqualize.cc histogramEqualize.h \
 	keypointMatcherFast.cc keypointMatcherFast.hh \
 	keypointSelectorFast.cc keypointSelectorFast.hh \
 	ransac.cc ransac.hh
 
-otherSources =\
-	extendedKalmanFilter.cpp extendedKalmanFilter.h \
-	fourierTransformer.cpp fourierTransformer.h \
-	histogramEqualize.cpp histogramEqualize.h \
-	naiveSnake.cpp naiveSnake.h \
-	stereoRectify.cpp stereoRectify.h
 
 # List the files that need to be cleaned.
 

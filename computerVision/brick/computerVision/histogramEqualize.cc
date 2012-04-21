@@ -27,7 +27,7 @@ namespace brick {
         std::ostringstream message;
         message << "Currently, we can only equalize images with "
                 << std::numeric_limits<int>::max() << " or fewer pixels.";
-        BRICK_THROW(ValueException, "histogramEqualize()", message.str().c_str());
+        BRICK_THROW(common::ValueException, "histogramEqualize()", message.str().c_str());
       }
 
       numeric::Array1D<unsigned int> histogram(
@@ -58,7 +58,7 @@ namespace brick {
       double scaleFactor = 256.0 / (inputImage.size() + 1);
       for(size_t pixelIndex = 0; pixelIndex < inputImage.size(); ++pixelIndex) {
         outputImage[pixelIndex] =
-          static_cast<Int8>(scaleFactor * cdf[inputImage[pixelIndex]]);
+          static_cast<common::Int8>(scaleFactor * cdf[inputImage[pixelIndex]]);
       }
       return outputImage;
     }

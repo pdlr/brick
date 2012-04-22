@@ -34,6 +34,7 @@ TESTS = \
 	calibrationToolsRobustTest \
 	cameraIntrinsicsPinholeTest \
 	cameraIntrinsicsPlumbBobTest \
+	cannyTest \
 	colorspaceConverterTest \
 	eightPointAlgorithmTest \
 	erodeTest \
@@ -44,8 +45,10 @@ TESTS = \
 	kdTreeTest \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
+	nonMaximumSuppressTest \
 	registerPoints3DTest \
 	segmenterFelzenszwalbTest \
+	sobelTest \
 	stereoRectifyTest \
 	threePointAlgorithmTest \
 	utilitiesTest
@@ -58,6 +61,7 @@ check_PROGRAMS = \
 	calibrationToolsRobustTest \
 	cameraIntrinsicsPinholeTest \
 	cameraIntrinsicsPlumbBobTest \
+	cannyTest \
 	colorspaceConverterTest \
 	eightPointAlgorithmTest \
 	erodeTest \
@@ -68,8 +72,10 @@ check_PROGRAMS = \
 	kdTreeTest \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
+	nonMaximumSuppressTest \
 	registerPoints3DTest \
 	segmenterFelzenszwalbTest \
+	sobelTest \
 	stereoRectifyTest \
 	threePointAlgorithmTest \
 	utilitiesTest
@@ -82,6 +88,7 @@ calibrationToolsTest_SOURCES	= calibrationToolsTest.cc
 calibrationToolsRobustTest_SOURCES	= calibrationToolsRobustTest.cc
 cameraIntrinsicsPinholeTest_SOURCES	= cameraIntrinsicsPinholeTest.cc
 cameraIntrinsicsPlumbBobTest_SOURCES	= cameraIntrinsicsPlumbBobTest.cc
+cannyTest_SOURCES		= cannyTest.cc
 colorspaceConverterTest_SOURCES	= colorspaceConverterTest.cc
 eightPointAlgorithmTest_SOURCES	= eightPointAlgorithmTest.cc
 erodeTest_SOURCES		= erodeTest.cc
@@ -92,9 +99,11 @@ imageWarperTest_SOURCES		= imageWarperTest.cc
 kdTreeTest_SOURCES		= kdTreeTest.cc
 keypointMatcherFastTest_SOURCES	= keypointMatcherFastTest.cc
 keypointSelectorFastTest_SOURCES	= keypointSelectorFastTest.cc
+nonMaximumSuppressTest_SOURCES	= nonMaximumSuppressTest.cc
 # ransacTest_SOURCES		= ransacTest.cc
 registerPoints3DTest_SOURCES	= registerPoints3DTest.cc
 segmenterFelzenszwalbTest_SOURCES	= segmenterFelzenszwalbTest.cc
+sobelTest_SOURCES		= sobelTest.cc
 stereoRectifyTest_SOURCES	= stereoRectifyTest.cc
 threePointAlgorithmTest_SOURCES	= threePointAlgorithmTest.cc
 utilitiesTest_SOURCES		= utilitiesTest.cc testImages.hh

@@ -30,6 +30,7 @@ brickComputerVision_HEADERS	= \
 	cameraIntrinsicsDistorted.hh \
 	cameraIntrinsicsPinhole.hh cameraIntrinsicsPinhole_impl.hh \
 	cameraIntrinsicsPlumbBob.hh cameraIntrinsicsPlumbBob_impl.hh \
+	canny.hh canny_impl.hh \
 	colorspaceConverter.hh colorspaceConverter_impl.hh \
 	disjointSet.hh disjointSet_impl.hh \
 	eightPointAlgorithm.hh eightPointAlgorithm_impl.hh \
@@ -47,6 +48,7 @@ brickComputerVision_HEADERS	= \
 	kernels.hh kernels_impl.hh \
 	keypointMatcherFast.hh keypointMatcherFast_impl.hh \
 	keypointSelectorFast.hh keypointSelectorFast_impl.hh \
+	nonMaximumSuppress.hh nonMaximumSuppress_impl.hh \
 	pixelBGRA.hh \
 	pixelHSV.hh \
 	pixelRGB.hh \
@@ -56,12 +58,12 @@ brickComputerVision_HEADERS	= \
 	ransac.hh ransac_impl.hh \
 	registerPoints3D.hh registerPoints3D_impl.hh \
 	segmenterFelzenszwalb.hh segmenterFelzenszwalb_impl.hh \
+	sobel.hh sobel_impl.hh \
 	stereoRectify.hh stereoRectify_impl.hh \
 	threePointAlgorithm.hh threePointAlgorithm_impl.hh \
 	utilities.hh utilities_impl.hh
 
 stillToComeHeaders		= \
-	canny.h \
 	connectedComponents.h \
 	dilate.h \
 	extendedKalmanFilter.h \
@@ -71,10 +73,8 @@ stillToComeHeaders		= \
 	histogramEqualize.h \
 	nChooseKSampleSelector.h \
 	naiveSnake.h \
-	nonMaximumSuppress.h \
 	opticalFlow.h \
-	quadMap.h \
-	sobel.h
+	quadMap.h
 
 
 # Define the library to build.

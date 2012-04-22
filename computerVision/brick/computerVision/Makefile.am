@@ -32,10 +32,16 @@ brickComputerVision_HEADERS	= \
 	cameraIntrinsicsPlumbBob.hh cameraIntrinsicsPlumbBob_impl.hh \
 	canny.hh canny_impl.hh \
 	colorspaceConverter.hh colorspaceConverter_impl.hh \
+	connectedComponents.hh connectedComponents_impl.hh \
+	dilate.hh dilate_impl.hh \
 	disjointSet.hh disjointSet_impl.hh \
 	eightPointAlgorithm.hh eightPointAlgorithm_impl.hh \
 	erode.hh erode_impl.hh \
+	extendedKalmanFilter.hh extendedKalmanFilter_impl.hh \
+	featureAssociation.hh featureAssociation_impl.hh \
 	fivePointAlgorithm.hh fivePointAlgorithm_impl.hh \
+	getEuclideanDistance.hh getEuclideanDistance_impl.hh \
+	histogramEqualize.hh \
 	image.hh \
 	imageFilter.hh imageFilter_impl.hh \
 	imageIO.hh imageIO_impl.hh \
@@ -48,7 +54,9 @@ brickComputerVision_HEADERS	= \
 	kernels.hh kernels_impl.hh \
 	keypointMatcherFast.hh keypointMatcherFast_impl.hh \
 	keypointSelectorFast.hh keypointSelectorFast_impl.hh \
+	naiveSnake.hh naiveSnake_impl.hh \
 	nonMaximumSuppress.hh nonMaximumSuppress_impl.hh \
+	nChooseKSampleSelector.hh nChooseKSampleSelector_impl.hh \
 	pixelBGRA.hh \
 	pixelHSV.hh \
 	pixelRGB.hh \
@@ -64,15 +72,6 @@ brickComputerVision_HEADERS	= \
 	utilities.hh utilities_impl.hh
 
 stillToComeHeaders		= \
-	connectedComponents.h \
-	dilate.h \
-	extendedKalmanFilter.h \
-	featureAssociation.h \
-	fourierTransformer.h \
-	getEuclideanDistance.h \
-	histogramEqualize.h \
-	nChooseKSampleSelector.h \
-	naiveSnake.h \
 	opticalFlow.h \
 	quadMap.h
 
@@ -82,16 +81,11 @@ lib_LTLIBRARIES		= libbrickComputerVision.la
 libbrickComputerVision_la_SOURCES = \
 	cameraIntrinsicsPlumbBob_impl.hh \
 	imageIO.cc imageIO.hh \
+	histogramEqualize.cc histogramEqualize.hh \
 	keypointMatcherFast.cc keypointMatcherFast.hh \
 	keypointSelectorFast.cc keypointSelectorFast.hh \
 	ransac.cc ransac.hh
 
-otherSources =\
-	extendedKalmanFilter.cpp extendedKalmanFilter.h \
-	fourierTransformer.cpp fourierTransformer.h \
-	histogramEqualize.cpp histogramEqualize.h \
-	naiveSnake.cpp naiveSnake.h \
-	stereoRectify.cpp stereoRectify.h
 
 # List the files that need to be cleaned.
 

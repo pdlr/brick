@@ -36,15 +36,22 @@ TESTS = \
 	cameraIntrinsicsPlumbBobTest \
 	cannyTest \
 	colorspaceConverterTest \
+	connectedComponentsTest \
+	dilateTest \
 	eightPointAlgorithmTest \
 	erodeTest \
+	extendedKalmanFilterTest \
+	featureAssociationTest \
 	fivePointAlgorithmTest \
+	getEuclideanDistanceTest \
 	imageFilterTest \
 	imagePyramidTest \
 	imageWarperTest \
 	kdTreeTest \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
+	naiveSnakeTest \
+	nChooseKSampleSelectorTest \
 	nonMaximumSuppressTest \
 	registerPoints3DTest \
 	segmenterFelzenszwalbTest \
@@ -63,15 +70,22 @@ check_PROGRAMS = \
 	cameraIntrinsicsPlumbBobTest \
 	cannyTest \
 	colorspaceConverterTest \
+	connectedComponentsTest \
+	dilateTest \
 	eightPointAlgorithmTest \
 	erodeTest \
+	extendedKalmanFilterTest \
+	featureAssociationTest \
 	fivePointAlgorithmTest \
+	getEuclideanDistanceTest \
 	imageFilterTest \
 	imagePyramidTest \
 	imageWarperTest \
 	kdTreeTest \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
+	naiveSnakeTest \
+	nChooseKSampleSelectorTest \
 	nonMaximumSuppressTest \
 	registerPoints3DTest \
 	segmenterFelzenszwalbTest \
@@ -90,19 +104,26 @@ cameraIntrinsicsPinholeTest_SOURCES	= cameraIntrinsicsPinholeTest.cc
 cameraIntrinsicsPlumbBobTest_SOURCES	= cameraIntrinsicsPlumbBobTest.cc
 cannyTest_SOURCES		= cannyTest.cc
 colorspaceConverterTest_SOURCES	= colorspaceConverterTest.cc
+connectedComponentsTest_SOURCES	= connectedComponentsTest.cc testImages.hh
+dilateTest_SOURCES		= dilateTest.cc testImages.hh
 eightPointAlgorithmTest_SOURCES	= eightPointAlgorithmTest.cc
-erodeTest_SOURCES		= erodeTest.cc
+erodeTest_SOURCES		= erodeTest.cc testImages.hh
+extendedKalmanFilterTest_SOURCES	= extendedKalmanFilterTest.cc
+featureAssociationTest_SOURCES	= featureAssociationTest.cc
 fivePointAlgorithmTest_SOURCES	= fivePointAlgorithmTest.cc
+getEuclideanDistanceTest_SOURCES	= getEuclideanDistanceTest.cc
 imageFilterTest_SOURCES		= imageFilterTest.cc testImages.hh
 imagePyramidTest_SOURCES	= imagePyramidTest.cc testImages.hh
 imageWarperTest_SOURCES		= imageWarperTest.cc
 kdTreeTest_SOURCES		= kdTreeTest.cc
 keypointMatcherFastTest_SOURCES	= keypointMatcherFastTest.cc
 keypointSelectorFastTest_SOURCES	= keypointSelectorFastTest.cc
+naiveSnakeTest_SOURCES		= naiveSnakeTest.cc
+nChooseKSampleSelectorTest_SOURCES	= nChooseKSampleSelectorTest.cc
 nonMaximumSuppressTest_SOURCES	= nonMaximumSuppressTest.cc
 # ransacTest_SOURCES		= ransacTest.cc
 registerPoints3DTest_SOURCES	= registerPoints3DTest.cc
-segmenterFelzenszwalbTest_SOURCES	= segmenterFelzenszwalbTest.cc
+segmenterFelzenszwalbTest_SOURCES	= segmenterFelzenszwalbTest.cc testImages.hh
 sobelTest_SOURCES		= sobelTest.cc
 stereoRectifyTest_SOURCES	= stereoRectifyTest.cc
 threePointAlgorithmTest_SOURCES	= threePointAlgorithmTest.cc

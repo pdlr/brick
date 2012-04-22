@@ -100,7 +100,7 @@ namespace brick {
                   << "." << std::endl;
         throw;
       }
-#endif /* #if BRICK_CV_ERODEBOXINTEGRATE */
+#endif
     }
 
   } // namespace computerVision

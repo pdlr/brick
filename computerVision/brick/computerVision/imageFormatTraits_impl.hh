@@ -13,10 +13,11 @@
 #ifndef BRICK_COMPUTERVISION_IMAGEFORMATTRAITS_IMPL_HH
 #define BRICK_COMPUTERVISION_IMAGEFORMATTRAITS_IMPL_HH
 
-// This file is included by imagePyramid.hh, and should not be directly included
-// by user code, so no need to include imagePyramid.hh here.
+// This file is included by imageFormatTraits.hh, and should not be
+// directly included by user code, so no need to include
+// imageFormatTraits.hh here.
 // 
-// #include <brick/computerVision/imagePyramid.hh>
+// #include <brick/computerVision/imageFormatTraits.hh>
 
 #include <stdlib.h>
 #include <brick/common/types.hh>
@@ -218,6 +219,69 @@ namespace brick {
       typedef brick::common::UnsignedInt8 ComponentType;
       static size_t getNumberOfComponents() {return 4;}
       static bool isIntegral() {return true;}
+    };
+
+
+    template <>
+    class ImageFormatIdentifierGray<bool> {
+    public:
+      static ImageFormat const Format = GRAY1;
+    };
+
+
+    template <>
+    class ImageFormatIdentifierGray<brick::common::UnsignedInt8> {
+    public:
+      static ImageFormat const Format = GRAY8;
+    };
+
+
+    template <>
+    class ImageFormatIdentifierGray<brick::common::UnsignedInt16> {
+    public:
+      static ImageFormat const Format = GRAY16;
+    };
+
+
+    template <>
+    class ImageFormatIdentifierGray<brick::common::UnsignedInt32> {
+    public:
+      static ImageFormat const Format = GRAY32;
+    };
+
+
+    template <>
+    class ImageFormatIdentifierGray<brick::common::UnsignedInt64> {
+    public:
+      static ImageFormat const Format = GRAY64;
+    };
+
+
+    template <>
+    class ImageFormatIdentifierGray<brick::common::Int16> {
+    public:
+      static ImageFormat const Format = GRAY_SIGNED16;
+    };
+    
+
+    template <>
+    class ImageFormatIdentifierGray<brick::common::Int32> {
+    public:
+      static ImageFormat const Format = GRAY_SIGNED32;
+    };
+    
+
+    template <>
+    class ImageFormatIdentifierGray<brick::common::Float32> {
+    public:
+      static ImageFormat const Format = GRAY_FLOAT32;
+    };
+    
+
+    template <>
+    class ImageFormatIdentifierGray<brick::common::Float64> {
+    public:
+      static ImageFormat const Format = GRAY_FLOAT64;
     };
     
   } // namespace computerVision

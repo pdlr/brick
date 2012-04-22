@@ -42,7 +42,8 @@ namespace brick {
       YIQ_FLOAT64,
       BGRA8,
       RGBA8,
-      YUV420
+      YUV420,
+      NO_FORMAT
     };
 
   } // namespace computerVision

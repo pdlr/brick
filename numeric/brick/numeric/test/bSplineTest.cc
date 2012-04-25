@@ -33,6 +33,9 @@ namespace brick {
       void testConstructor__size_t__bool();
       void testConstructor__size_t__bool__2();
 
+      // Regression tests.
+      void testKratzerFailure();
+      
     private:
 
       double
@@ -64,6 +67,7 @@ namespace brick {
       // Register all tests.
       BRICK_TEST_REGISTER_MEMBER(testConstructor__size_t__bool);
       BRICK_TEST_REGISTER_MEMBER(testConstructor__size_t__bool__2);
+      BRICK_TEST_REGISTER_MEMBER(testKratzerFailure);
     }
 
 
@@ -144,6 +148,83 @@ namespace brick {
       }
     }
 
+
+    void
+    BSplineTest::
+    testNonperiodicSpline()
+    {
+      BSpline<double> zoomInterp(3, false);
+
+      // Build spline lookup table.
+      {
+        BSpline<double>& spline = zoomInterp;
+
+        std::vector<double> controlPoints(36, 0.0);
+        std::vector<size_t> knotMultiplicities(36, 0);
+
+        // spline.setNumberOfNodes(36, false);
+        spline.setNumberOfNodes(36);
+
+        for(int32_t ii=0; ii < 36; ++ii) {
+          if(0 == ii || 35 == ii) {
+            knotMultiplicities[ii] = 2;
+          } else {
+            knotMultiplicities[ii] = 1;
+          }
+        }              
+
+        // spline.setKnotMultiplicities(knotMultiplicities);
+
+        // Sony block zoom position from FCB-EX1020_TM.pdf, page 55
+        controlPoints[0]  = 0.0;
+        controlPoints[1]  = 5743.0;
+        controlPoints[2]  = 8176.0;
+        controlPoints[3]  = 9597.0;
+        controlPoints[4]  = 10560.0;
+        controlPoints[5]  = 11266.0;
+        controlPoints[6]  = 11819.0;
+        controlPoints[7]  = 12270.0;
+        controlPoints[8]  = 12650.0;
+        controlPoints[9]  = 12978.0;
+        controlPoints[10] = 13268.0;
+        controlPoints[11] = 13529.0;
+        controlPoints[12] = 13768.0;
+        controlPoints[13] = 13988.0;
+        controlPoints[14] = 14195.0;
+        controlPoints[15] = 14195.0;
+        controlPoints[16] = 14576.0;
+        controlPoints[17] = 14752.0;
+        controlPoints[18] = 14921.0;
+        controlPoints[19] = 15080.0;
+        controlPoints[20] = 15231.0;
+        controlPoints[21] = 15372.0;
+        controlPoints[22] = 15502.0;
+        controlPoints[23] = 15622.0;
+        controlPoints[24] = 15731.0;
+        controlPoints[25] = 15828.0;
+        controlPoints[26] = 15916.0;
+        controlPoints[27] = 15996.0;
+        controlPoints[28] = 16066.0;
+        controlPoints[29] = 16128.0;
+        controlPoints[30] = 16184.0;
+        controlPoints[31] = 16232.0;
+        controlPoints[32] = 16276.0;
+        controlPoints[33] = 16317.0;
+        controlPoints[34] = 16351.0;
+        controlPoints[35] = 16384.0;
+
+        spline.setControlPoints(controlPoints);
+
+        //
+        // Test
+
+        std::cout << "Zoom 0 : " << spline(0.0) << std::endl;
+        std::cout << "Zoom 16: " << spline(16.0) << std::endl;
+        std::cout << "Zoom 35: " << spline(34.0) << std::endl;
+        std::cout << "Zoom 16.5: " << spline(16.5) << std::endl;
+      }
+    }
+  
 
     double
     BSplineTest::

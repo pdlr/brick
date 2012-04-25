@@ -52,7 +52,15 @@ namespace brick {
     template <class TypeIn, class TypeOut>
     inline void
     BilinearInterpolator<TypeIn, TypeOut>::
-    checkBounds(double row, double column) const
+    checkBounds(double
+#ifdef BRICK_NUMERIC_CHECKBOUNDS
+                row
+#endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
+                , double
+#ifdef BRICK_NUMERIC_CHECKBOUNDS
+                column
+#endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
+      ) const
     {
 #ifdef BRICK_NUMERIC_CHECKBOUNDS
       int row0 = static_cast<int>(row);
@@ -71,7 +79,7 @@ namespace brick {
         BRICK_THROW(IndexException, "BilinearInterpolator::checkBounds()",
                   message.str().c_str());
       }
-#endif
+#endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
     }
 
   } // namespace numeric

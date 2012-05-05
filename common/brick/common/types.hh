@@ -97,6 +97,12 @@ namespace brick {
     typedef privateCode::LocalTypeStruct::UnsignedInt32 UnsignedInt32;
     typedef privateCode::LocalTypeStruct::UnsignedInt64 UnsignedInt64;
 
+    // Shorter type names for more convenient use.
+    typedef privateCode::LocalTypeStruct::UnsignedInt8 UInt8;
+    typedef privateCode::LocalTypeStruct::UnsignedInt16 UInt16;
+    typedef privateCode::LocalTypeStruct::UnsignedInt32 UInt32;
+    typedef privateCode::LocalTypeStruct::UnsignedInt64 UInt64;
+
   } // namespace common
     
 }  // namespace brick

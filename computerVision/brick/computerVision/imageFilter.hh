@@ -119,18 +119,19 @@ namespace brick {
      * This function low-pass filters an image of integer-valued
      * pixels using a binomial approximation to a seperable Gaussian
      * kernel.  This is typically much faster than filtering using a
-     * floating point kernel.  Passing an image with floating point
-     * pixels to this function is an error. Argument
-     * "convolutionStrategy" indicates what to do with the edges of
-     * the filtered image (where the filter kernel only partially
-     * overlaps the input image).  Currently filterBinomial2D() only
-     * supports BRICK_CONVOLVE_PAD_RESULT.
+     * floating point kernel.  The returned image is the same size as
+     * the input image, and regions of the returned image for which
+     * the convolution result is not valid (because the convolution
+     * kernel extends off the edge of the image) will be initialized
+     * to fillValue.
      * 
+     * @param inputImage This argument is the Image to be filtered.
+     *
      * @param rowSigma This argument specifies the desired filter
      * sigma.  It will be rounded to the nearest supported sigma value
-     * (currently, 0.5 pixels, 1.0 pixels, 1.5 pixels).  Specifying a
-     * sigma value more than 0.5 pixels away from the closest
-     * supported value is an error.
+     * (currently, 0.707, 1.0, 1.22, corresponding to filter sizes of
+     * 3, 5, and 7 pixels, respectively) Specifying a sigma value that
+     * doesn't round easily to one of these is an error.
      * 
      * @param columnSigma This argument specifies the desired filter
      * sigma.  It will be rounded to the nearest supported sigma value
@@ -138,24 +139,61 @@ namespace brick {
      * sigma value more than 0.5 pixels away from the closest
      * supported value is an error.
      * 
-     * @param image This argument is the Image to be filtered.
-     *
      * @param fillValue This argument specifies the value with which
      * image edges should be padded.
-     * 
-     * @param convolutionStrategy This argument specifies how to handle the
-     * edges of the image.  Please see the dlrNumeric documentation
-     * for more information.
      * 
      * @return The return value is a filtered copy of image.
      */
     template<ImageFormat OutputFormat, ImageFormat ImageFormat>
-    Image<OutputFormat> filterBinomial2D(
+    Image<OutputFormat>
+    filterBinomial2D(
+      const Image<ImageFormat>& inputImage,
       double rowSigma, double columnSigma,
-      const Image<ImageFormat>& image,
-      const typename ImageFormatTraits<OutputFormat>::PixelType fillValue
-      = typename ImageFormatTraits<OutputFormat>::PixelType(),
-      ConvolutionStrategy convolutionStrategy = BRICK_CONVOLVE_PAD_RESULT);
+      typename ImageFormatTraits<OutputFormat>::PixelType const fillValue
+      = typename ImageFormatTraits<OutputFormat>::PixelType());
+
+
+    /** 
+     * This function low-pass filters an image of integer-valued
+     * pixels using a binomial approximation to a seperable Gaussian
+     * kernel, returning the result through the pre-allocated
+     * outputImage argument.  It is an error if the size of the output
+     * image differs from the input image.  In other respects, this
+     * function is identical to the four-argument version of
+     * filterBinomial2D().
+     * 
+     * @param inputImage The result of the filtering will be returned
+     * through this argument, which must have the same number of rows
+     * and columns as inputImage.
+     *
+     * @param inputImage This argument is the Image to be filtered.
+     *
+     * @param rowSigma This argument specifies the desired filter
+     * sigma.  It will be rounded to the nearest supported sigma value
+     * (currently, 0.707, 1.0, 1.22, corresponding to filter sizes of
+     * 3, 5, and 7 pixels, respectively) Specifying a sigma value that
+     * doesn't round easily to one of these is an error.
+     * 
+     * @param columnSigma This argument specifies the desired filter
+     * sigma.  It will be rounded to the nearest supported sigma value
+     * (currently, 0.5 pixels, 1.0 pixels, 1.5 pixels).  Specifying a
+     * sigma value more than 0.5 pixels away from the closest
+     * supported value is an error.
+     * 
+     * @param fillValue This argument specifies the value with which
+     * image edges should be padded.
+     * 
+     * @return The return value is a filtered copy of image.
+     */
+    template<ImageFormat OutputFormat, ImageFormat ImageFormat>
+    void
+    filterBinomial2D(
+      Image<OutputFormat>& outputImage,
+      const Image<ImageFormat>& inputImage,
+      double rowSigma, double columnSigma,
+      typename ImageFormatTraits<OutputFormat>::PixelType const fillValue
+      = typename ImageFormatTraits<OutputFormat>::PixelType());
+    
 
   } // namespace computerVision
   

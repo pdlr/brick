@@ -42,9 +42,10 @@ namespace brick {
       void testFilter2D_nonSeparable();
       void testFilter2D_separable_i();
       void testFilter2D_separable();
-
-      // XXX Temporary tests.
-      void testBinomialRowFiltering();
+      void testFilterBinomial2D();
+      
+      // Saved code (not currently used).
+      void timeBinomialFilters();
 
     private:
 
@@ -74,9 +75,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testFilter2D_nonSeparable);
       BRICK_TEST_REGISTER_MEMBER(testFilter2D_separable_i);
       BRICK_TEST_REGISTER_MEMBER(testFilter2D_separable);
-
-      // xxx
-      BRICK_TEST_REGISTER_MEMBER(testBinomialRowFiltering);
+      BRICK_TEST_REGISTER_MEMBER(testFilterBinomial2D);
     }
 
 
@@ -230,7 +229,50 @@ namespace brick {
 
     void
     FilterTest::
-    testBinomialRowFiltering()
+    testFilterBinomial2D()
+    {
+      Image<GRAY8> inputImage = readPGM8(getTestImageFileNamePGM0());
+    
+      numeric::Array1D<common::UInt16> kernelRow121("[1, 2, 1]");
+      numeric::Array1D<common::UInt16> kernelRow14641("[1, 4, 6, 4, 1]");
+      numeric::Array1D<common::UInt16> kernelRow121("[1, 2, 1]");
+
+      kernelRow /= numeric::sum<double>(kernelRow);
+      kernelColumn /= numeric::sum<double>(kernelColumn);
+      Kernel<double> kernel0(kernelRow, kernelColumn);
+
+      numeric::Array2D<double> referenceKernelArray(
+        kernelColumn.size(), kernelRow.size());
+      for(size_t rowIndex = 0; rowIndex < referenceKernelArray.rows();
+          ++rowIndex) {
+        for(size_t columnIndex = 0; columnIndex < referenceKernelArray.columns();
+            ++columnIndex) {
+          referenceKernelArray(rowIndex, columnIndex) =
+            kernelColumn[rowIndex] * kernelRow[columnIndex];
+        }
+      }
+
+      // Note(xxx): Need to make this not require explicit template
+      // parameters.
+      Image<GRAY_FLOAT64> resultImage =
+        computerVision::filter2D<
+	GRAY_FLOAT64, GRAY_FLOAT64, double>(
+          kernel0, inputImage0, static_cast<common::Float64>(0));
+      Image<GRAY_FLOAT64> referenceImage = localFilter2D(
+        referenceKernelArray, inputImage0);
+
+      double tolerance = 1.0E-12;
+      for(size_t index0 = 0; index0 < resultImage.size(); ++index0) {
+        BRICK_TEST_ASSERT(
+          approximatelyEqual(
+            resultImage[index0], referenceImage[index0], tolerance));
+      }
+    }
+
+    
+    void
+    FilterTest::
+    timeBinomialFilters()
     {
       Image<GRAY8> inputImage = readPGM8(getTestImageFileNamePGM0());
       Image<GRAY16> image16bit = convertColorspace<GRAY16>(inputImage);
@@ -249,10 +291,25 @@ namespace brick {
       Image<GRAY16> outputImage121;
       time0 = utilities::getCurrentTime();
       for(unsigned int ii = 0; ii < 100; ++ii) {
+        outputImage121 = privateCode::filterRows121(image16bit, 1, 0);
+      }
+      time1 = utilities::getCurrentTime();
+      std::cout << "121 x 2 ET: " << time1 - time0 << std::endl;
+
+      time0 = utilities::getCurrentTime();
+      for(unsigned int ii = 0; ii < 100; ++ii) {
         outputImage121 = privateCode::filterRows121(image16bit, 2, 0);
       }
       time1 = utilities::getCurrentTime();
       std::cout << "121 x 2 ET: " << time1 - time0 << std::endl;
+      
+      Image<GRAY16> outputImage121By3;
+      time0 = utilities::getCurrentTime();
+      for(unsigned int ii = 0; ii < 100; ++ii) {
+        outputImage121By3 = privateCode::filterRows121(image16bit, 3, 0);
+      }
+      time1 = utilities::getCurrentTime();
+      std::cout << "121 x 3 ET: " << time1 - time0 << std::endl;
       
       Image<GRAY16> outputImage14641;
       time0 = utilities::getCurrentTime();

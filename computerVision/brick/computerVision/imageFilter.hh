@@ -154,11 +154,12 @@ namespace brick {
      * filter, 4 for the 5 element filter, and 6 for the 7 element
      * filter.
      */
-    template<ImageFormat OutputFormat, ImageFormat ImageFormat>
+    template<class IntermediateType, ImageFormat OutputFormat,
+             ImageFormat InputFormat>
     void
     filterColumnsBinomial(
       Image<OutputFormat>& outputImage,
-      const Image<ImageFormat>& inputImage,
+      const Image<InputFormat>& inputImage,
       double sigma,
       typename ImageFormatTraits<OutputFormat>::PixelType const fillValue
       = typename ImageFormatTraits<OutputFormat>::PixelType(),
@@ -210,11 +211,12 @@ namespace brick {
      * filter, 4 for the 5 element filter, and 6 for the 7 element
      * filter.
      */
-    template<ImageFormat OutputFormat, ImageFormat ImageFormat>
+    template<class IntermediateType,
+             ImageFormat OutputFormat, ImageFormat InputFormat>
     void
     filterRowsBinomial(
       Image<OutputFormat>& outputImage,
-      const Image<ImageFormat>& inputImage,
+      const Image<InputFormat>& inputImage,
       double sigma,
       typename ImageFormatTraits<OutputFormat>::PixelType const fillValue
       = typename ImageFormatTraits<OutputFormat>::PixelType(),

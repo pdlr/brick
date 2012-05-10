@@ -378,7 +378,8 @@ namespace brick {
 
     namespace privateCode {
 
-      template <ImageFormat OutputFormat, ImageFormat InputFormat>
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
       void
       filterRows121(
         Image<OutputFormat>& outImage,
@@ -386,7 +387,8 @@ namespace brick {
         typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
         int const finalShift = -2);
 
-      template <ImageFormat OutputFormat, ImageFormat InputFormat>
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
       void
       filterColumns121(
         Image<OutputFormat>& outImage,
@@ -394,7 +396,8 @@ namespace brick {
         typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
         int const finalShift = -2);
       
-      template <ImageFormat OutputFormat, ImageFormat InputFormat>
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
       void
       filterRows14641(
         Image<OutputFormat>& outImage,
@@ -402,7 +405,8 @@ namespace brick {
         typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
         int const finalShift = -4);
 
-      template <ImageFormat OutputFormat, ImageFormat InputFormat>
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
       void
       filterColumns14641(
         Image<OutputFormat>& outImage,
@@ -410,7 +414,8 @@ namespace brick {
         typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
         int const finalShift = -4);
       
-      template <ImageFormat OutputFormat, ImageFormat InputFormat>
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
       void
       filterColumns1_6_15_20_15_6_1(
         Image<OutputFormat>& outImage,
@@ -418,7 +423,8 @@ namespace brick {
         typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
         int const finalShift = -6);
 
-      template <ImageFormat OutputFormat, ImageFormat InputFormat>
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
       void
       filterRows1_6_15_20_15_6_1(
         Image<OutputFormat>& outImage,
@@ -504,11 +510,12 @@ namespace brick {
     // This function low-pass filters each column of an image with
     // integer-valued pixels using a binomial approximation to a
     // Gaussian kernel.
-    template<ImageFormat OutputFormat, ImageFormat ImageFormat>
+    template<class IntermediateType, ImageFormat OutputFormat,
+             ImageFormat InputFormat>
     void
     filterColumnsBinomial(
       Image<OutputFormat>& outputImage,
-      const Image<ImageFormat>& inputImage,
+      const Image<InputFormat>& inputImage,
       double sigma,
       typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
       int finalShift)
@@ -545,20 +552,20 @@ namespace brick {
       case 2:
       case 3:
         if(-1 == finalShift) {finalShift = 2;}
-        privateCode::filterColumns121(outputImage, inputImage,
-                                      fillValue, finalShift);
+        privateCode::filterColumns121<IntermediateType>(
+          outputImage, inputImage, fillValue, finalShift);
         break;
       case 4:
       case 5:
         if(-1 == finalShift) {finalShift = 4;}
-        privateCode::filterColumns14641(outputImage, inputImage,
-                                        fillValue, finalShift);
+        privateCode::filterColumns14641<IntermediateType>(
+          outputImage, inputImage, fillValue, finalShift);
         break;
       case 6:
       case 7:
         if(-1 == finalShift) {finalShift = 6;}
-        privateCode::filterColumns1_6_15_20_15_6_1(outputImage, inputImage,
-                                                   fillValue, finalShift);
+        privateCode::filterColumns1_6_15_20_15_6_1<IntermediateType>(
+          outputImage, inputImage, fillValue, finalShift);
         break;
       default:
         BRICK_THROW(brick::common::LogicException, "filterClumnsBinomial()",
@@ -570,11 +577,12 @@ namespace brick {
     // This function low-pass filters each row of an image with
     // integer-valued pixels using a binomial approximation to a
     // Gaussian kernel.
-    template<ImageFormat OutputFormat, ImageFormat ImageFormat>
+    template<class IntermediateType, ImageFormat OutputFormat,
+             ImageFormat InputFormat>
     void
     filterRowsBinomial(
       Image<OutputFormat>& outputImage,
-      const Image<ImageFormat>& inputImage,
+      const Image<InputFormat>& inputImage,
       double sigma,
       typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
       int finalShift)
@@ -611,20 +619,20 @@ namespace brick {
       case 2:
       case 3:
         if(-1 == finalShift) {finalShift = 2;}
-        privateCode::filterRows121(outputImage, inputImage,
-                                   fillValue, finalShift);
+        privateCode::filterRows121<IntermediateType>(
+          outputImage, inputImage, fillValue, finalShift);
         break;
       case 4:
       case 5:
         if(-1 == finalShift) {finalShift = 4;}
-        privateCode::filterRows14641(outputImage, inputImage,
-                                     fillValue, finalShift);
+        privateCode::filterRows14641<IntermediateType>(
+          outputImage, inputImage, fillValue, finalShift);
         break;
       case 6:
       case 7:
         if(-1 == finalShift) {finalShift = 6;}
-        privateCode::filterRows1_6_15_20_15_6_1(outputImage, inputImage,
-                                                fillValue, finalShift);
+        privateCode::filterRows1_6_15_20_15_6_1<IntermediateType>(
+          outputImage, inputImage, fillValue, finalShift);
         break;
       default:
         BRICK_THROW(brick::common::LogicException, "filterClumnsBinomial()",
@@ -645,7 +653,8 @@ namespace brick {
 
     namespace privateCode {
 
-      template <ImageFormat OutputFormat, ImageFormat InputFormat>
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
       void
       filterColumns121(
         Image<OutputFormat>& outImage,
@@ -685,9 +694,10 @@ namespace brick {
           OutElementType* outPtr = &(outImage(row, 0));
           for(unsigned int index = 0; index < numColumns; ++index) {
             outPtr[index] = static_cast<OutElementType>(
-              (inPtr[index - inRowStep]
-               + (inPtr[index] << 1)
-               + inPtr[index + inRowStep]) >> finalShift);
+              (static_cast<IntermediateType>(inPtr[index - inRowStep])
+               + static_cast<IntermediateType>(inPtr[index] << 1)
+               + static_cast<IntermediateType>(inPtr[index + inRowStep]))
+              >> finalShift);
           }
         }
 
@@ -699,7 +709,8 @@ namespace brick {
       }
 
 
-      template <ImageFormat OutputFormat, ImageFormat InputFormat>
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
       void
       filterColumns14641(
         Image<OutputFormat>& outImage,
@@ -742,11 +753,12 @@ namespace brick {
           OutElementType* outPtr = &(outImage(row, 0));
           for(unsigned int index = 0; index < numColumns; ++index) {
             outPtr[index] = static_cast<OutElementType>(
-              (inPtr[index - twoInRowStep]
-               + (inPtr[index - inRowStep] << 2)
-               + (inPtr[index] * 6)
-               + (inPtr[index + inRowStep] << 2)
-               + inPtr[index + twoInRowStep]) >> finalShift);
+              (static_cast<IntermediateType>(inPtr[index - twoInRowStep])
+               + static_cast<IntermediateType>(inPtr[index - inRowStep] << 2)
+               + (static_cast<IntermediateType>(inPtr[index]) * 6)
+               + static_cast<IntermediateType>(inPtr[index + inRowStep] << 2)
+               + static_cast<IntermediateType>(inPtr[index + twoInRowStep]))
+              >> finalShift);
           }
         }
 
@@ -759,7 +771,8 @@ namespace brick {
       }
 
       
-      template <ImageFormat OutputFormat, ImageFormat InputFormat>
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
       void
       filterColumns1_6_15_20_15_6_1(
         Image<OutputFormat>& outImage,
@@ -804,11 +817,17 @@ namespace brick {
             inImage.data(row, 0));
           OutElementType* outPtr = &(outImage(row, 0));
           for(unsigned int index = 0; index < numColumns; ++index) {
-            outPtr[index] = static_cast<OutElementType>((
-              inPtr[index - threeInRowStep] + inPtr[index + threeInRowStep]
-              + (inPtr[index - twoInRowStep] + inPtr[index + twoInRowStep]) * 6
-              + (inPtr[index - inRowStep] + inPtr[index + inRowStep]) * 15
-              + (inPtr[index] * 20)) >> finalShift);
+            outPtr[index] = static_cast<OutElementType>(
+              ((static_cast<IntermediateType>(inPtr[index - threeInRowStep])
+                + static_cast<IntermediateType>(inPtr[index + threeInRowStep]))
+               + ((static_cast<IntermediateType>(inPtr[index - twoInRowStep])
+                   + static_cast<IntermediateType>(inPtr[index + twoInRowStep]))
+                  * 6)
+               + ((static_cast<IntermediateType>(inPtr[index - inRowStep])
+                   + static_cast<IntermediateType>(inPtr[index + inRowStep]))
+                  * 15)
+               + (static_cast<IntermediateType>(inPtr[index]) * 20))
+              >> finalShift);
           }
         }
 
@@ -822,7 +841,8 @@ namespace brick {
       }
 
 
-      template <ImageFormat OutputFormat, ImageFormat InputFormat>
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
       void
       filterRows121(
         Image<OutputFormat>& outImage,
@@ -852,16 +872,18 @@ namespace brick {
           outPtr[0] = fillValue;
           for(unsigned int column = 1; column < stopColumn; ++column) {
             outPtr[column] = static_cast<OutElementType>(
-              (inPtr[column - 1]
-               + (inPtr[column] << 1)
-               + inPtr[column + 1]) >> finalShift);
+              (static_cast<IntermediateType>(inPtr[column - 1])
+               + static_cast<IntermediateType>(inPtr[column] << 1)
+               + static_cast<IntermediateType>(inPtr[column + 1]))
+              >> finalShift);
           }
           outPtr[stopColumn] = fillValue;
         }
       }
 
       
-      template <ImageFormat OutputFormat, ImageFormat InputFormat>
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
       void
       filterRows14641(
         Image<OutputFormat>& outImage,
@@ -893,11 +915,12 @@ namespace brick {
           outPtr[1] = fillValue;
           for(unsigned int column = 2; column < stopColumn; ++column) {
             outPtr[column] = static_cast<OutElementType>(
-              (inPtr[column - 2]
-               + (inPtr[column - 1] << 2)
-               + (inPtr[column] * 6)
-               + (inPtr[column + 1] << 2)
-               + inPtr[column + 2]) >> finalShift);
+              (static_cast<IntermediateType>(inPtr[column - 2])
+               + static_cast<IntermediateType>(inPtr[column - 1] << 2)
+               + (static_cast<IntermediateType>(inPtr[column]) * 6)
+               + static_cast<IntermediateType>(inPtr[column + 1] << 2)
+               + static_cast<IntermediateType>(inPtr[column + 2]))
+              >> finalShift);
           }
           outPtr[stopColumn] = fillValue;
           outPtr[stopColumn + 11] = fillValue;
@@ -905,7 +928,8 @@ namespace brick {
       }
 
 
-      template <ImageFormat OutputFormat, ImageFormat InputFormat>
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
       void
       filterRows1_6_15_20_15_6_1(
         Image<OutputFormat>& outImage,
@@ -938,10 +962,16 @@ namespace brick {
           outPtr[2] = fillValue;
           for(unsigned int column = 2; column < stopColumn; ++column) {
             outPtr[column] = static_cast<OutElementType>(
-              (inPtr[column - 3] + inPtr[column + 3]
-               + ((inPtr[column - 2] + inPtr[column + 2]) * 6)
-               + ((inPtr[column - 1] + inPtr[column + 1]) * 15)
-               + (inPtr[column] * 20)) >> finalShift);
+              ((static_cast<IntermediateType>(inPtr[column - 3])
+                + static_cast<IntermediateType>(inPtr[column + 3]))
+               + ((static_cast<IntermediateType>(inPtr[column - 2])
+                   + static_cast<IntermediateType>(inPtr[column + 2]))
+                  * 6)
+               + ((static_cast<IntermediateType>(inPtr[column - 1])
+                   + static_cast<IntermediateType>(inPtr[column + 1]))
+                  * 15)
+               + (static_cast<IntermediateType>(inPtr[column]) * 20)
+                ) >> finalShift);
           }
           outPtr[stopColumn] = fillValue;
           outPtr[stopColumn + 1] = fillValue;

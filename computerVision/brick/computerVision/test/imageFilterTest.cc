@@ -140,8 +140,18 @@ namespace brick {
 
       BRICK_TEST_ASSERT(resultImage.rows() == referenceImage.rows());
       BRICK_TEST_ASSERT(resultImage.columns() == referenceImage.columns());
+
+      for(unsigned int ii = 0; ii < resultImage.rows(); ++ii) {
+        for(unsigned int jj = 0; jj < resultImage.columns(); ++jj) {
+          if(resultImage(ii, jj) != referenceImage(ii, jj)) {
+            std::cout << "(" << ii << ", " << jj << ") "
+                      << int(resultImage(ii, jj)) << " vs. "
+                      << int(referenceImage(ii, jj)) << std::endl;
+          }
+        }
+      }
       BRICK_TEST_ASSERT(std::equal(resultImage.begin(), resultImage.end(),
-                                 referenceImage.begin()));
+                                   referenceImage.begin()));
     }
 
 
@@ -249,7 +259,7 @@ namespace brick {
       // Test [1, 2, 1] filter.
       Kernel<common::UInt16> kernel0(kernelRow, kernelColumn121);
       Image<GRAY16> resultImage(inputImage.rows(), inputImage.columns());
-      computerVision::filterColumnsBinomial(
+      computerVision::filterColumnsBinomial<common::UInt16>(
         resultImage, inputImage, 0.707, common::UInt16(0), 0);
       Image<GRAY16> referenceImage = localFilter2D(
         referenceKernelArray, inputImage);
@@ -280,7 +290,7 @@ namespace brick {
       // Test [1, 2, 1] filter.
       Kernel<common::UInt16> kernel0(kernelRow121, kernelColumn);
       Image<GRAY16> resultImage(inputImage.rows(), inputImage.columns());
-      computerVision::filterRowsBinomial(
+      computerVision::filterRowsBinomial<common::UInt16>(
         resultImage, inputImage, 0.707, common::UInt16(0), 0);
       Image<GRAY16> referenceImage = localFilter2D(
         referenceKernelArray, inputImage);

@@ -187,11 +187,11 @@ namespace brick {
        */
       virtual
       void
-      setOptimum(const typename Functor::argument_type& optimum,
-                 const typename Functor::result_type& optimalValue,
+      setOptimum(const typename Functor::argument_type& optimumArg,
+                 const typename Functor::result_type& optimalValueArg,
                  bool needsFurtherOptimization) {
-        m_optimum = optimum;
-        m_optimalValue = optimalValue;
+        m_optimum = optimumArg;
+        m_optimalValue = optimalValueArg;
         m_needsOptimization = needsFurtherOptimization;
       }
     

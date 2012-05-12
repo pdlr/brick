@@ -39,18 +39,26 @@ namespace brick {
       void testQuaternionToRollPitchYaw();
       void testQuaternionToTransform3D();
 
+      void testRodriguesToTransform3D();
+
       void testRollPitchYawToAxisAngle();
       void testRollPitchYawToQuaternion();
       void testRollPitchYawToTransform3D();
 
       void testTransform3DToAxisAngle();
       void testTransform3DToQuaternion();
+      void testTransform3DToRodrigues();
       void testTransform3DToRollPitchYaw();
 
     private:
 
-      void assertSimilar(Transform3D<double> const& xf0, Transform3D<double> const& xf1) const;
+      void assertSimilar(Transform3D<double> const& xf0,
+                         Transform3D<double> const& xf1) const;
 
+      void assertSimilar(Vector3D<double> const& v0,
+                         Vector3D<double> const& v1) const;
+
+      
       double m_defaultTolerance;
     
     }; // class RotationsTest
@@ -74,12 +82,15 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testQuaternionToRollPitchYaw);
       BRICK_TEST_REGISTER_MEMBER(testQuaternionToTransform3D);
 
+      BRICK_TEST_REGISTER_MEMBER(testRodriguesToTransform3D);
+      
       BRICK_TEST_REGISTER_MEMBER(testRollPitchYawToAxisAngle);
       BRICK_TEST_REGISTER_MEMBER(testRollPitchYawToQuaternion);
       BRICK_TEST_REGISTER_MEMBER(testRollPitchYawToTransform3D);
 
       BRICK_TEST_REGISTER_MEMBER(testTransform3DToAxisAngle);
       BRICK_TEST_REGISTER_MEMBER(testTransform3DToQuaternion);
+      BRICK_TEST_REGISTER_MEMBER(testTransform3DToRodrigues);
       BRICK_TEST_REGISTER_MEMBER(testTransform3DToRollPitchYaw);
     }
 
@@ -173,6 +184,25 @@ namespace brick {
   
     void
     RotationsTest::
+    testRodriguesToTransform3D()
+    {
+      // We test by comparison to the (presumably known good)
+      // angleAxis routine.
+      for(double theta = -3.0; theta < 3.0; theta += 0.6) {
+        Vector3D<double> direction(1.0, 0.5, 2.5);
+        direction = direction / magnitude<double>(direction);
+        Vector3D<double> rodrigues = theta * direction;
+
+        Transform3D<double> xf0 = rodriguesToTransform3D(rodrigues);
+        Transform3D<double> xf1 = angleAxisToTransform3D(theta, direction);
+
+        this->assertSimilar(xf0, xf1);
+      }
+    }
+
+    
+    void
+    RotationsTest::
     testRollPitchYawToAxisAngle()
     {
 
@@ -213,6 +243,25 @@ namespace brick {
   
     void
     RotationsTest::
+    testTransform3DToRodrigues()
+    {
+      // We test by comparison to the (previously tested) inverse function.
+      for(double theta = -3.0; theta < 3.0; theta += 0.6) {
+        Vector3D<double> direction(1.0, 0.5, 2.5);
+        direction = direction / magnitude<double>(direction);
+        Vector3D<double> rodrigues = theta * direction;
+
+        Transform3D<double> xf0 = rodriguesToTransform3D(rodrigues);
+        Vector3D<double> recoveredRodrigues = transform3DToRodrigues(xf0);
+
+        this->assertSimilar(recoveredRodrigues, rodrigues);
+      }
+
+    }
+
+  
+    void
+    RotationsTest::
     testTransform3DToRollPitchYaw()
     {
 
@@ -221,7 +270,8 @@ namespace brick {
 
     void
     RotationsTest::
-    assertSimilar(Transform3D<double> const& xf0, Transform3D<double> const& xf1) const
+    assertSimilar(Transform3D<double> const& xf0,
+                  Transform3D<double> const& xf1) const
     {
       for(size_t ii = 0; ii < 4; ++ii) {
         for(size_t jj = 0; jj < 4; ++jj) {
@@ -231,6 +281,17 @@ namespace brick {
       }
     }
 
+
+    void
+    RotationsTest::
+    assertSimilar(Vector3D<double> const& v0,
+                  Vector3D<double> const& v1) const
+    {
+      BRICK_TEST_ASSERT(approximatelyEqual(v0.x(), v1.x(), m_defaultTolerance));
+      BRICK_TEST_ASSERT(approximatelyEqual(v0.y(), v1.y(), m_defaultTolerance));
+      BRICK_TEST_ASSERT(approximatelyEqual(v0.z(), v1.z(), m_defaultTolerance));
+    }
+    
   } // namespace numeric
   
 } // namespace brick

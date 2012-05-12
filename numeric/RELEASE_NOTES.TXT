@@ -1,8 +1,15 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.1
+
+- Added all remaining symbols from dlrNumeric.
+
 Revision 1.0
 
 - Created brick::numeric by adapting dlrNumeric version 2.3a4.
+  WARNING: Several types (Vector2D, Vector3D, Transform2D, ...)
+           now have additional template parameters.  This will
+           make porting dlrNumeric code a little annoying.
 
 **/

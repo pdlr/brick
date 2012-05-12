@@ -5,7 +5,7 @@
 * Source file declaring functions which convert between different
 * representations of 3D rotation.
 *
-* Copyright (C) 2005-2011 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2005-2012 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
@@ -106,7 +106,7 @@ namespace brick {
 
       // Axis is not known to be unit length, so we have more work to do.
       Vector3D<Type> axisCopy = axis;
-      Type axisMagnitude = magnitude(axis);
+      Type axisMagnitude = magnitude<Type>(axis);
       if(axisMagnitude != 0.0) {
         axisCopy /= axisMagnitude;
       } else {
@@ -206,10 +206,53 @@ namespace brick {
       return Transform3D<Type>(1 - jj - kk, ij - sk, ik + sj, 0.0,
                          ij + sk, 1 - ii - kk, jk - si, 0.0,
                          ik - sj, jk + si, 1 - ii - jj, 0.0,
-                         0.0, 0.0, 0.0, 1);
+                         0.0, 0.0, 0.0, 1.0);
     }
 
   
+    // This function converts a rotation from Rodrigues representation
+    // to Transform3D representation.
+    template <class Type>
+    Transform3D<Type>
+    rodriguesToTransform3D(Vector3D<Type> const& rodrigues)
+    {
+      // The length of the input vector encodes the size of the
+      // rotation.
+      Type theta = magnitude<Type>(rodrigues);
+
+      // The input vector points along the axis of rotation.
+      // Normalize it to unit length.  Note that there's not error
+      // checking here.  It's the responsibility of the calling
+      // context not to pass in a vector that's short enough to break
+      // this math.
+      Vector3D<Type> direction = rodrigues / theta;
+      Type cosTheta = brick::common::cosine(theta);
+      Type sinTheta = brick::common::sine(theta);
+      Type oneMinusCT = 1.0 - cosTheta;
+
+      // The rest of this code simply implements
+      // angleAxisToTransform3D(), albeit in a different way.
+      Type omcxx = oneMinusCT * direction.x() * direction.x();
+      Type omcxy = oneMinusCT * direction.x() * direction.y();
+      Type omcxz = oneMinusCT * direction.x() * direction.z();
+      Type omcyy = oneMinusCT * direction.y() * direction.y();
+      Type omcyz = oneMinusCT * direction.y() * direction.z();
+      Type omczz = oneMinusCT * direction.z() * direction.z();
+        
+      return Transform3D<Type>(
+        omcxx + cosTheta, omcxy - sinTheta * direction.z(),
+        omcxz + sinTheta * direction.y(), 0.0,
+
+        omcxy + sinTheta * direction.z(), omcyy + cosTheta,
+        omcyz - sinTheta * direction.x(), 0.0,
+        
+        omcxz - sinTheta * direction.y(), omcyz + sinTheta * direction.x(),
+        omczz + cosTheta, 0.0,
+
+        0.0, 0.0, 0.0, 1.0);
+    }
+
+    
     template <class Type>
     std::pair< Type, Vector3D<Type> >
     rollPitchYawToAngleAxis(const Vector3D<Type>& rollPitchYaw)
@@ -358,7 +401,7 @@ namespace brick {
       }
 
       // Now see about normalizing the unit quaternion.
-      Type axisMagnitudeSquared = dot(axis0, axis0);
+      Type axisMagnitudeSquared = dot<Type>(axis0, axis0);
       if(approximatelyEqual(axisMagnitudeSquared,
                             Type(0.0), l_getRotationsEpsilon<Type>())) {
         // Hmm, we still have a very small axis.  Assume this means that
@@ -375,6 +418,27 @@ namespace brick {
       return Quaternion<Type>( sValue, axis0.x(), axis0.y(), axis0.z());
     }
 
+
+    // This function converts a rotation from Transform3D representation
+    // to Rodrigues representation.
+    template <class Type>
+    Vector3D<Type>
+    transform3DToRodrigues(const Transform3D<Type>& transform3D)
+    {
+      // These follow directly from the definition of
+      // rodriguesToTransform3D().
+      Type twoCosThetaPlusOne =
+        transform3D(0, 0) + transform3D(1, 1) + transform3D(2, 2);
+      Type cosTheta = (twoCosThetaPlusOne - Type(1.0)) / Type(2.0);
+      Vector3D<Type> direction(transform3D(2, 1) - transform3D(1, 2),
+                               transform3D(0, 2) - transform3D(2, 0),
+                               transform3D(1, 0) - transform3D(0, 1));
+      Type dirMagnitude = magnitude<Type>(direction);
+      Type sinTheta = dirMagnitude / 2.0;
+      Type theta = common::arcTangent2(sinTheta, cosTheta);
+      return direction * (theta / dirMagnitude);
+    }
+    
   
     template <class Type>
     Vector3D<Type>

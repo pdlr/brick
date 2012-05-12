@@ -67,10 +67,6 @@ namespace brick {
         Type const& a00, Type const& a01, Type const& a02, Type const& a03,
         Type const& a10, Type const& a11, Type const& a12, Type const& a13,
         Type const& a20, Type const& a21, Type const& a22, Type const& a23);
-        : m_00(a00), m_01(a01), m_02(a02), m_03(a03),
-          m_10(a10), m_11(a11), m_12(a12), m_13(a13),
-          m_20(a20), m_21(a21), m_22(a22), m_23(a23) {
-      }
 
       
       /** 
@@ -171,19 +167,19 @@ namespace brick {
       operator()(size_t row, size_t column) const;
 
       /** 
-       * Applies the coordinate transformation to a Vector3D point and
-       * returns the result. 
+       * Applies the coordinate transformation to a Vector3D<Type>
+       * point and returns the result.
        * 
        * @param vector0 The point to be transformed.
        * @return The result of transforming vector0.
        */
-      Vector2D
-      operator*(const Vector3D& vector0) const;
+      Vector2D<Type>
+      operator*(const Vector3D<Type>& vector0) const;
 
       /** 
        * The assignment operator simply duplicates its argument.
        * 
-       * @param source This is the Transform3D instance to be copied.
+       * @param source This is the Transform3DTo2D instance to be copied.
        * @return A reference to *this.
        */
       Transform3DTo2D<Type>&
@@ -206,7 +202,7 @@ namespace brick {
      **/
     template <class Type>
     class Transform3DTo2DFunctor
-      : public std::unary_function<Vector3D, Vector2D> {
+      : public std::unary_function< Vector3D<Type>, Vector2D<Type> > {
 
     public:
 
@@ -226,8 +222,8 @@ namespace brick {
        * 
        *  @return The transformed vector.
        */
-      inline Vector2D
-      operator()(const Vector3D& vec) const {return m_transform * vec;}
+      inline Vector2D<Type>
+      operator()(const Vector3D<Type>& vec) const {return m_transform * vec;}
     
     private:
       Transform3DTo2D<Type> m_transform;
@@ -237,12 +233,13 @@ namespace brick {
     /* ================ Non member functions below ================ */
 
     /** 
-     * This operator composes a Transform3DTo2D instance with a Transform3D
-     * instance.  The resulting Transform3DTo2D instance the equation:
+     * This operator composes a Transform3DTo2D instance with a
+     * Transform3D instance.  The resulting Transform3DTo2D instance
+     * satisfies the equation:
      *
      *  (transform0 * transform1) * v0 = transform0 * (transform1 * v0),
      *
-     * where v0 is a Vector3D instance.
+     * where v0 is a Vector3D<Type> instance.
      * 
      * @param transform0 This is the Transform3DTo2D instance to be
      * composed.
@@ -299,6 +296,8 @@ namespace brick {
 }; // namespace brick
 
 
-#include <transform3DTo2D_impl.hh>
+// Include file containing definitions of inline and template
+// functions.
+#include <brick/numeric/transform3DTo2D_impl.hh>
 
 #endif /* #ifndef BRICK_NUMERIC_TRANSFORM3DTO2D_HH */

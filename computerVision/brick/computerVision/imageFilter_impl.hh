@@ -19,6 +19,7 @@
 // #include <brick/computerVision/imageFilter.hh>
 
 // #include <cmath>
+#include <brick/computerVision/utilities.hh>
 #include <brick/numeric/convolve2D.hh>
 // #include <brick/numeric/functional.hh>
 
@@ -375,9 +376,67 @@ namespace brick {
 
 #endif    
 
+    namespace privateCode {
+
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
+      void
+      filterRows121(
+        Image<OutputFormat>& outImage,
+        Image<InputFormat> const& inImage,
+        typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
+        int const finalShift = -2);
+
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
+      void
+      filterColumns121(
+        Image<OutputFormat>& outImage,
+        Image<InputFormat> const& inImage,
+        typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
+        int const finalShift = -2);
+      
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
+      void
+      filterRows14641(
+        Image<OutputFormat>& outImage,
+        Image<InputFormat> const& inImage,
+        typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
+        int const finalShift = -4);
+
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
+      void
+      filterColumns14641(
+        Image<OutputFormat>& outImage,
+        Image<InputFormat> const& inImage,
+        typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
+        int const finalShift = -4);
+      
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
+      void
+      filterColumns1_6_15_20_15_6_1(
+        Image<OutputFormat>& outImage,
+        Image<InputFormat> const& inImage,
+        typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
+        int const finalShift = -6);
+
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
+      void
+      filterRows1_6_15_20_15_6_1(
+        Image<OutputFormat>& outImage,
+        Image<InputFormat> const& inImage,
+        typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
+        int const finalShift = -6);
+      
+    } // namespace privateCode
+
+    
     // This function filters an image with the given kernel.
     template<ImageFormat OutputFormat,
-	     ImageFormat IntermediateFormat,
              ImageFormat ImageFormat,
              class KernelType>
     Image<OutputFormat>
@@ -388,8 +447,7 @@ namespace brick {
       ConvolutionStrategy convolutionStrategy)
     {
       Image<OutputFormat> returnImage(image.rows(), image.columns());
-      // filter2D<IntermediateFormat>(
-      filter2D<OutputFormat, IntermediateFormat, ImageFormat, KernelType>(
+      filter2D<OutputFormat, ImageFormat, KernelType>(
 	returnImage, kernel, image, fillValue, convolutionStrategy);
       return returnImage;
     }
@@ -398,7 +456,6 @@ namespace brick {
     // This function filters an image with the given kernel, placing
     // the result into a pre-constructed Image instance.
     template<ImageFormat OutputFormat,
-	     ImageFormat IntermediateFormat,
              ImageFormat ImageFormat,
              class KernelType>
     void
@@ -416,8 +473,6 @@ namespace brick {
       }
       typedef typename ImageFormatTraits<OutputFormat>::PixelType
 	OutputPixelType;
-      typedef typename ImageFormatTraits<IntermediateFormat>::PixelType
-	IntermediatePixelType;
       
       if(kernel.isSeparable()) {
 	brick::numeric::Array1D<KernelType> kernelRowComponent =
@@ -429,21 +484,21 @@ namespace brick {
 	brick::numeric::Array2D<KernelType> columnKernel(
 	  kernelColumnComponent.size(), 1, kernelColumnComponent.data());
 	
-	Image<IntermediateFormat> intermediateImage =
-	  numeric::correlate2D<IntermediatePixelType, IntermediatePixelType>(
+	Image<OutputFormat> intermediateImage =
+	  numeric::correlate2D<OutputPixelType, OutputPixelType>(
 	    rowKernel, image,
 	    numeric::BRICK_CONVOLVE_PAD_RESULT,
 	    numeric::BRICK_CONVOLVE_ROI_SAME,
 	    fillValue);
 	outputImage =
-	  numeric::correlate2D<OutputPixelType, IntermediatePixelType>(
+	  numeric::correlate2D<OutputPixelType, OutputPixelType>(
 	    columnKernel, intermediateImage,
 	    numeric::BRICK_CONVOLVE_PAD_RESULT,
 	    numeric::BRICK_CONVOLVE_ROI_SAME,
 	    fillValue);
       } else {
         outputImage =
-	  numeric::correlate2D<OutputPixelType, IntermediatePixelType>(
+	  numeric::correlate2D<OutputPixelType, OutputPixelType>(
 	  kernel.getArray2D(), image,
 	  numeric::BRICK_CONVOLVE_PAD_RESULT,
 	  numeric::BRICK_CONVOLVE_ROI_SAME,
@@ -451,9 +506,624 @@ namespace brick {
       }
     }
 
+
+    // This function low-pass filters each column of an image with
+    // integer-valued pixels using a binomial approximation to a
+    // Gaussian kernel.
+    template<class IntermediateType, ImageFormat OutputFormat,
+             ImageFormat InputFormat>
+    void
+    filterColumnsBinomial(
+      Image<OutputFormat>& outputImage,
+      const Image<InputFormat>& inputImage,
+      double sigma,
+      typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
+      int finalShift)
+    {
+      // Make sure outputImage is appropriately sized.
+      if(outputImage.rows() != inputImage.rows()
+         || outputImage.columns() != inputImage.columns()) {
+        BRICK_THROW(brick::common::ValueException, "filterColumnsBinomial()",
+                    "Arguments outputImage and inputImage must have "
+                    "the same shape.");
+      }
+
+      // Make sure filter sizes are supported.
+      if(sigma < 0.0 || sigma > 1.25) {
+        BRICK_THROW(brick::common::NotImplementedException,
+                    "filterColumnsBinomial()",
+                    "Argument sigma must be between 0.0 and 1.25, inclusive");
+      }
+
+      // We will dispatch to custom routines for each kernel size.
+      // First figure out which routine to call for each pass.  The
+      // three element filter has variance 0.5, the 5 element filter
+      // has variance 1.0, and the 7 element filter has variance 1.5.
+      // This works out to filter size == 4 * variance + 1.
+      unsigned int filterSize = static_cast<unsigned int>(
+        4.0 * sigma * sigma + 1.5);
+
+      // Now do the actual filtering.
+      switch(filterSize) {
+      case 0:
+        outputImage.copy(inputImage);
+        break;
+      case 1:
+      case 2:
+      case 3:
+        if(-1 == finalShift) {finalShift = 2;}
+        privateCode::filterColumns121<IntermediateType>(
+          outputImage, inputImage, fillValue, finalShift);
+        break;
+      case 4:
+      case 5:
+        if(-1 == finalShift) {finalShift = 4;}
+        privateCode::filterColumns14641<IntermediateType>(
+          outputImage, inputImage, fillValue, finalShift);
+        break;
+      case 6:
+      case 7:
+        if(-1 == finalShift) {finalShift = 6;}
+        privateCode::filterColumns1_6_15_20_15_6_1<IntermediateType>(
+          outputImage, inputImage, fillValue, finalShift);
+        break;
+      default:
+        BRICK_THROW(brick::common::LogicException, "filterClumnsBinomial()",
+                    "Math error in computing filter kernel size.");
+      }
+    }
+
+
+    // This function low-pass filters each row of an image with
+    // integer-valued pixels using a binomial approximation to a
+    // Gaussian kernel.
+    template<class IntermediateType, ImageFormat OutputFormat,
+             ImageFormat InputFormat>
+    void
+    filterRowsBinomial(
+      Image<OutputFormat>& outputImage,
+      const Image<InputFormat>& inputImage,
+      double sigma,
+      typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
+      int finalShift)
+    {
+      // Make sure outputImage is appropriately sized.
+      if(outputImage.rows() != inputImage.rows()
+         || outputImage.columns() != inputImage.columns()) {
+        BRICK_THROW(brick::common::ValueException, "filterRowsBinomial()",
+                    "Arguments outputImage and inputImage must have "
+                    "the same shape.");
+      }
+
+      // Make sure filter sizes are supported.
+      if(sigma < 0.0 || sigma > 1.25) {
+        BRICK_THROW(brick::common::NotImplementedException,
+                    "filterColumnsBinomial()",
+                    "Argument sigma must be between 0.0 and 1.25, inclusive");
+      }
+
+      // We will dispatch to custom routines for each kernel size.
+      // First figure out which routine to call for each pass.  The
+      // three element filter has variance 0.5, the 5 element filter
+      // has variance 1.0, and the 7 element filter has variance 1.5.
+      // This works out to filter size == 4 * variance + 1.
+      unsigned int filterSize = static_cast<unsigned int>(
+        4.0 * sigma * sigma + 1.5);
+
+      // Now do the actual filtering.
+      switch(filterSize) {
+      case 0:
+        outputImage.copy(inputImage);
+        break;
+      case 1:
+      case 2:
+      case 3:
+        if(-1 == finalShift) {finalShift = 2;}
+        privateCode::filterRows121<IntermediateType>(
+          outputImage, inputImage, fillValue, finalShift);
+        break;
+      case 4:
+      case 5:
+        if(-1 == finalShift) {finalShift = 4;}
+        privateCode::filterRows14641<IntermediateType>(
+          outputImage, inputImage, fillValue, finalShift);
+        break;
+      case 6:
+      case 7:
+        if(-1 == finalShift) {finalShift = 6;}
+        privateCode::filterRows1_6_15_20_15_6_1<IntermediateType>(
+          outputImage, inputImage, fillValue, finalShift);
+        break;
+      default:
+        BRICK_THROW(brick::common::LogicException, "filterClumnsBinomial()",
+                    "Math error in computing filter kernel size.");
+      }
+    }
+
+  } // namespace computerVision
+
+} // namespace brick
+    
+
+// Definitions of local symbols below.
+
+namespace brick {
+
+  namespace computerVision {
+
+    namespace privateCode {
+
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
+      void
+      filterColumns121(
+        Image<OutputFormat>& outImage,
+        Image<InputFormat> const& inImage,
+        typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
+        int const finalShift)
+      {
+        typedef typename ImageFormatTraits<InputFormat>::PixelType
+          InElementType;
+        typedef typename ImageFormatTraits<OutputFormat>::PixelType
+          OutElementType;
+
+        // Make sure outImage is appropriately sized.
+        if(outImage.rows() != inImage.rows()
+           || outImage.columns() != inImage.columns()) {
+          BRICK_THROW(brick::common::ValueException, "filterColumns121()",
+                      "Arguments outImage and inImage must have "
+                      "the same shape.");
+        }
+
+        // Get all our dimensions straight.
+        unsigned int const stopRow = inImage.rows() - 1;
+        unsigned int const numColumns = inImage.columns();
+        unsigned int const inRowStep = inImage.getRowStep();
+
+        // Fill pixels for which we won't have valid results.
+        OutElementType* outPtr0 = const_cast<OutElementType*>(
+          outImage.data(0, 0));
+        for(unsigned int index = 0; index < numColumns; ++index) {
+          outPtr0[index] = fillValue;
+        }
+        
+        // Now convolve, but do it row-wise to minimize cache misses.
+        for(unsigned int row = 1; row < stopRow; ++row) {
+          InElementType* inPtr = const_cast<InElementType*>(
+            inImage.data(row, 0));
+          OutElementType* outPtr = &(outImage(row, 0));
+          for(unsigned int index = 0; index < numColumns; ++index) {
+            outPtr[index] = static_cast<OutElementType>(
+              (static_cast<IntermediateType>(inPtr[index - inRowStep])
+               + static_cast<IntermediateType>(inPtr[index] << 1)
+               + static_cast<IntermediateType>(inPtr[index + inRowStep]))
+              >> finalShift);
+          }
+        }
+
+        // Fill pixels for which we won't have valid results.
+        outPtr0 = const_cast<OutElementType*>(outImage.data(stopRow, 0));
+        for(unsigned int index = 0; index < numColumns; ++index) {
+          outPtr0[index] = fillValue;
+        }
+      }
+
+
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
+      void
+      filterColumns14641(
+        Image<OutputFormat>& outImage,
+        Image<InputFormat> const& inImage,
+        typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
+        int const finalShift)
+      {
+        typedef typename ImageFormatTraits<InputFormat>::PixelType
+          InElementType;
+        typedef typename ImageFormatTraits<OutputFormat>::PixelType
+          OutElementType;
+
+        // Make sure outImage is appropriately sized.
+        if(outImage.rows() != inImage.rows()
+           || outImage.columns() != inImage.columns()) {
+          BRICK_THROW(brick::common::ValueException, "filterColumns121()",
+                      "Arguments outImage and inImage must have "
+                      "the same shape.");
+        }
+
+        // Get all our dimensions straight.
+        unsigned int const stopRow = inImage.rows() - 2;
+        unsigned int const numColumns = inImage.columns();
+        unsigned int const inRowStep = inImage.getRowStep();
+        unsigned int const twoInRowStep = inRowStep * 2;
+        unsigned int const outRowStep = outImage.getRowStep();
+
+        // Fill pixels for which we won't have valid results.
+        OutElementType* outPtr0 = const_cast<OutElementType*>(
+          outImage.data(0, 0));
+        for(unsigned int index = 0; index < numColumns; ++index) {
+          outPtr0[index] = fillValue;
+          outPtr0[index + outRowStep] = fillValue;
+        }
+        
+        // Now convolve, but do it row-wise to minimize cache misses.
+        for(unsigned int row = 2; row < stopRow; ++row) {
+          InElementType* inPtr = const_cast<InElementType*>(
+            inImage.data(row, 0));
+          OutElementType* outPtr = &(outImage(row, 0));
+          for(unsigned int index = 0; index < numColumns; ++index) {
+            outPtr[index] = static_cast<OutElementType>(
+              (static_cast<IntermediateType>(inPtr[index - twoInRowStep])
+               + static_cast<IntermediateType>(inPtr[index - inRowStep] << 2)
+               + (static_cast<IntermediateType>(inPtr[index]) * 6)
+               + static_cast<IntermediateType>(inPtr[index + inRowStep] << 2)
+               + static_cast<IntermediateType>(inPtr[index + twoInRowStep]))
+              >> finalShift);
+          }
+        }
+
+        // Fill pixels for which we won't have valid results.
+        outPtr0 = const_cast<OutElementType*>(outImage.data(stopRow, 0));
+        for(unsigned int index = 0; index < numColumns; ++index) {
+          outPtr0[index] = fillValue;
+          outPtr0[index + outRowStep] = fillValue;
+        }
+      }
+
+      
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
+      void
+      filterColumns1_6_15_20_15_6_1(
+        Image<OutputFormat>& outImage,
+        Image<InputFormat> const& inImage,
+        typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
+        int const finalShift)
+      {
+        typedef typename ImageFormatTraits<InputFormat>::PixelType
+          InElementType;
+        typedef typename ImageFormatTraits<OutputFormat>::PixelType
+          OutElementType;
+
+        // Make sure outImage is appropriately sized.
+        if(outImage.rows() != inImage.rows()
+           || outImage.columns() != inImage.columns()) {
+          BRICK_THROW(brick::common::ValueException, "filterColumns121()",
+                      "Arguments outImage and inImage must have "
+                      "the same shape.");
+        }
+
+        // Get all our dimensions straight.
+        unsigned int const stopRow = inImage.rows() - 3;
+        unsigned int const numColumns = inImage.columns();
+        unsigned int const inRowStep = inImage.getRowStep();
+        unsigned int const twoInRowStep = inRowStep * 2;
+        unsigned int const threeInRowStep = inRowStep * 3;
+        unsigned int const outRowStep = outImage.getRowStep();
+        unsigned int const twoOutRowStep = outRowStep * 2;
+        
+        // Fill pixels for which we won't have valid results.
+        OutElementType* outPtr0 = const_cast<OutElementType*>(
+          outImage.data(0, 0));
+        for(unsigned int index = 0; index < numColumns; ++index) {
+          outPtr0[index] = fillValue;
+          outPtr0[index + outRowStep] = fillValue;
+          outPtr0[index + twoOutRowStep] = fillValue;
+        }
+        
+        // Now convolve, but do it row-wise to minimize cache misses.
+        for(unsigned int row = 3; row < stopRow; ++row) {
+          InElementType* inPtr = const_cast<InElementType*>(
+            inImage.data(row, 0));
+          OutElementType* outPtr = &(outImage(row, 0));
+          for(unsigned int index = 0; index < numColumns; ++index) {
+            outPtr[index] = static_cast<OutElementType>(
+              ((static_cast<IntermediateType>(inPtr[index - threeInRowStep])
+                + static_cast<IntermediateType>(inPtr[index + threeInRowStep]))
+               + ((static_cast<IntermediateType>(inPtr[index - twoInRowStep])
+                   + static_cast<IntermediateType>(inPtr[index + twoInRowStep]))
+                  * 6)
+               + ((static_cast<IntermediateType>(inPtr[index - inRowStep])
+                   + static_cast<IntermediateType>(inPtr[index + inRowStep]))
+                  * 15)
+               + (static_cast<IntermediateType>(inPtr[index]) * 20))
+              >> finalShift);
+          }
+        }
+
+        // Fill pixels for which we won't have valid results.
+        outPtr0 = const_cast<OutElementType*>(outImage.data(stopRow, 0));
+        for(unsigned int index = 0; index < numColumns; ++index) {
+          outPtr0[index] = fillValue;
+          outPtr0[index + outRowStep] = fillValue;
+          outPtr0[index + twoOutRowStep] = fillValue;
+        }
+      }
+
+
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
+      void
+      filterRows121(
+        Image<OutputFormat>& outImage,
+        Image<InputFormat> const& inImage,
+        typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
+        int const finalShift)
+      {
+        typedef typename ImageFormatTraits<InputFormat>::PixelType
+          InElementType;
+        typedef typename ImageFormatTraits<OutputFormat>::PixelType
+          OutElementType;
+
+        // Make sure outImage is appropriately sized.
+        if(outImage.rows() != inImage.rows()
+           || outImage.columns() != inImage.columns()) {
+          BRICK_THROW(brick::common::ValueException, "filterRows121()",
+                      "Arguments outImage and inImage must have "
+                      "the same shape.");
+        }
+        
+        // Now convolve each row in turn.
+        unsigned int stopColumn = inImage.columns() - 1;
+        for(unsigned int row = 0; row < inImage.rows(); ++row) {
+          InElementType* inPtr = const_cast<InElementType*>(
+            inImage.data(row, 0));
+          OutElementType* outPtr = outImage.data(row, 0);
+          outPtr[0] = fillValue;
+          for(unsigned int column = 1; column < stopColumn; ++column) {
+            outPtr[column] = static_cast<OutElementType>(
+              (static_cast<IntermediateType>(inPtr[column - 1])
+               + static_cast<IntermediateType>(inPtr[column] << 1)
+               + static_cast<IntermediateType>(inPtr[column + 1]))
+              >> finalShift);
+          }
+          outPtr[stopColumn] = fillValue;
+        }
+      }
+
+      
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
+      void
+      filterRows14641(
+        Image<OutputFormat>& outImage,
+        Image<InputFormat> const& inImage,
+        typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
+        int const finalShift)
+      {
+        typedef typename ImageFormatTraits<InputFormat>::PixelType
+          InElementType;
+        typedef typename ImageFormatTraits<OutputFormat>::PixelType
+          OutElementType;
+
+        // Make sure outImage is appropriately sized.
+        if(outImage.rows() != inImage.rows()
+           || outImage.columns() != inImage.columns()) {
+          BRICK_THROW(brick::common::ValueException, "filterRows14641()",
+                      "Arguments outImage and inImage must have "
+                      "the same shape.");
+        }
+
+        // Now convolve each row in turn.
+        unsigned int stopColumn = inImage.columns() - 2;
+        for(unsigned int row = 0; row < inImage.rows(); ++row) {
+          InElementType* inPtr = const_cast<InElementType*>(
+            inImage.data(row, 0));
+          OutElementType* outPtr = outImage.data(row, 0);
+
+          outPtr[0] = fillValue;
+          outPtr[1] = fillValue;
+          for(unsigned int column = 2; column < stopColumn; ++column) {
+            outPtr[column] = static_cast<OutElementType>(
+              (static_cast<IntermediateType>(inPtr[column - 2])
+               + static_cast<IntermediateType>(inPtr[column - 1] << 2)
+               + (static_cast<IntermediateType>(inPtr[column]) * 6)
+               + static_cast<IntermediateType>(inPtr[column + 1] << 2)
+               + static_cast<IntermediateType>(inPtr[column + 2]))
+              >> finalShift);
+          }
+          outPtr[stopColumn] = fillValue;
+          outPtr[stopColumn + 11] = fillValue;
+        }
+      }
+
+
+      template <class IntermediateType, ImageFormat OutputFormat,
+                ImageFormat InputFormat>
+      void
+      filterRows1_6_15_20_15_6_1(
+        Image<OutputFormat>& outImage,
+        Image<InputFormat> const& inImage,
+        typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
+        int const finalShift)
+      {
+        typedef typename ImageFormatTraits<InputFormat>::PixelType
+          InElementType;
+        typedef typename ImageFormatTraits<OutputFormat>::PixelType
+          OutElementType;
+
+        // Make sure outImage is appropriately sized.
+        if(outImage.rows() != inImage.rows()
+           || outImage.columns() != inImage.columns()) {
+          BRICK_THROW(brick::common::ValueException, "filterRows14641()",
+                      "Arguments outImage and inImage must have "
+                      "the same shape.");
+        }
+
+        // Now convolve each row in turn.
+        unsigned int stopColumn = inImage.columns() - 3;
+        for(unsigned int row = 0; row < inImage.rows(); ++row) {
+          InElementType* inPtr = const_cast<InElementType*>(
+            inImage.data(row, 0));
+          OutElementType* outPtr = outImage.data(row, 0);
+
+          outPtr[0] = fillValue;
+          outPtr[1] = fillValue;
+          outPtr[2] = fillValue;
+          for(unsigned int column = 2; column < stopColumn; ++column) {
+            outPtr[column] = static_cast<OutElementType>(
+              ((static_cast<IntermediateType>(inPtr[column - 3])
+                + static_cast<IntermediateType>(inPtr[column + 3]))
+               + ((static_cast<IntermediateType>(inPtr[column - 2])
+                   + static_cast<IntermediateType>(inPtr[column + 2]))
+                  * 6)
+               + ((static_cast<IntermediateType>(inPtr[column - 1])
+                   + static_cast<IntermediateType>(inPtr[column + 1]))
+                  * 15)
+               + (static_cast<IntermediateType>(inPtr[column]) * 20)
+                ) >> finalShift);
+          }
+          outPtr[stopColumn] = fillValue;
+          outPtr[stopColumn + 1] = fillValue;
+          outPtr[stopColumn + 2] = fillValue;
+        }
+
+      }
+      
+    } // namespace privateCode
+    
   } // namespace computerVision
   
 } // namespace brick
 
+
+// Test routines we're keeping around in case we want to borrow from
+// them later.
+namespace {
+
+  template <brick::computerVision::ImageFormat Format>
+  brick::computerVision::Image<Format> 
+  filterColumns121_simple(
+    brick::computerVision::Image<Format> const& inImage,
+    typename brick::computerVision::ImageFormatTraits<Format>::PixelType const /* fillValue */,
+    int finalShift)
+  {
+    typedef typename brick::computerVision::ImageFormatTraits<Format>::PixelType ElementType;
+
+    // Allocate space for output.
+    brick::computerVision::Image<Format> resultImage(inImage.rows(), inImage.columns());
+
+    // Now convolve each column in turn.
+    if(finalShift < 0) {finalShift = 2;}
+    for(unsigned int column = 0; column < inImage.columns(); ++column) {
+      ElementType* inColumnStart = const_cast<ElementType*>(
+        inImage.data(0, column));
+      ElementType* outColumnStart = &(resultImage(0, column));
+      ElementType* inPtr = inColumnStart;
+      ElementType* outPtr = outColumnStart;
+      const int numColumns = inImage.columns();
+      unsigned int stopIndex = (inImage.rows() - 1) * numColumns;
+      for(unsigned int index = numColumns; index < stopIndex;
+          index += numColumns) {
+        outPtr[index] = (inPtr[index - numColumns]
+                         + (inPtr[index] << 1)
+                         + inPtr[index + numColumns]) >> finalShift;
+      }
+    }
+    return resultImage;
+  }
+
+
+  template <brick::computerVision::ImageFormat Format>
+  brick::computerVision::Image<Format> 
+  filterRows121_multipass(
+    brick::computerVision::Image<Format> const& inImage,
+    unsigned int numberOfPasses,
+    typename brick::computerVision::ImageFormatTraits<Format>::PixelType const fillValue,
+    int finalShift)
+  {
+    typedef typename brick::computerVision::ImageFormatTraits<Format>::PixelType ElementType;
+
+    // Temporary storage for multi-pass filtering.  This is a
+    // wasted allocation if we are only doing a single pass.
+    brick::numeric::Array1D<typename brick::computerVision::ImageFormatTraits<Format>::PixelType>
+      intermediateRow(inImage.columns());
+
+    // Allocate space for output.
+    brick::computerVision::Image<Format> resultImage(inImage.rows(), inImage.columns());
+
+    // Now convolve each row in turn.
+    if(finalShift < 0) {
+      finalShift = 2 * numberOfPasses;
+    }
+    for(unsigned int row = 0; row < inImage.rows(); ++row) {
+
+      // Build up by repeatedly convolving with [1, 2, 1].
+      ElementType* inRowStart = const_cast<ElementType*>(
+        inImage.data(row, 0));
+      ElementType* outRowStart = &(resultImage(row, 0));
+      for(unsigned int pass = 0; pass < numberOfPasses; ++pass) {
+        ElementType* inPtr = inRowStart;
+        ElementType* outPtr = outRowStart;
+        unsigned int stopColumn = inImage.columns() - (pass + 1);
+        for(unsigned int column = pass + 1; column < stopColumn; ++column) {
+          outPtr[column] =
+            inPtr[column - 1] + (inPtr[column] << 1) + inPtr[column + 1];
+        }
+
+        // Ping pong back and forth between the two images on
+        // alternate passes.
+        if(pass == 0) {
+          inRowStart = outRowStart;
+          outRowStart = &(intermediateRow[0]);
+        } else {
+          std::swap(inRowStart, outRowStart);
+        }
+      }
+
+      // xxx Wrong!
+      if(finalShift > 0) {
+        ElementType* finalRow = &(resultImage(row, 0));
+        unsigned int stopColumn = inImage.columns() - numberOfPasses;
+        for(unsigned int column = 0; column < numberOfPasses; ++column) {
+          finalRow[column] = fillValue;
+        }
+        for(unsigned int column = numberOfPasses; column < stopColumn;
+            ++column) {
+          finalRow[column] = inRowStart[column] >> finalShift;
+        }
+        for(unsigned int column = stopColumn; column < inImage.columns();
+            ++column) {
+          finalRow[column] = fillValue;
+        }
+      }
+    }
+    return resultImage;
+  }
+
+
+  template <brick::computerVision::ImageFormat Format>
+  brick::computerVision::Image<Format> 
+  filter_1_6_15_20_15_6_1(brick::computerVision::Image<Format> const& inImage,
+                          const unsigned int stepSize,
+                          const unsigned int startRow,
+                          const unsigned int stopRow,
+                          const unsigned int startColumn,
+                          const unsigned int stopColumn)
+  {
+    typedef typename brick::computerVision::ImageFormatTraits<Format>::PixelType ElementType;
+
+    // Allocate space for output.
+    brick::computerVision::Image<Format> resultImage(inImage.rows(), inImage.columns());
+
+    // Now convolve each row in turn.
+    const unsigned int stepSizeX2 = 2 * stepSize;
+    const unsigned int stepSizeX3 = 3 * stepSize;
+    for(unsigned int row = startRow; row < stopRow; ++row) {
+      ElementType const* inPtr = inImage.getData(row, 0);
+      ElementType* outPtr = resultImage.getData(row, 0);
+      for(unsigned int column = startColumn; column < stopColumn;
+          ++column) {
+        outPtr[column] = (
+          inPtr[column - stepSizeX3] + inPtr[column + stepSizeX3]
+          + (inPtr[column - stepSizeX2] + inPtr[column + stepSizeX2]) * 6
+          + (inPtr[column - stepSize] + inPtr[column + stepSize]) * 15
+          + (inPtr[column] * 20)) >> 6;
+      }
+    }
+    return resultImage;
+  }
+  
+} // namespace
 
 #endif /* #ifndef BRICK_COMPUTERVISION_IMAGEFILTER_IMPL_HH */

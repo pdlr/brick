@@ -2,7 +2,7 @@
 ***************************************************************************
 * @file brick/numeric/solveQuadratic.hh
 *
-* Header file declaring a function templates for solving quadratic
+* Header file declaring a function template for solving quadratic
 * polynomial equations of a single variable.
 *
 * Copyright (C) 2001-2011 David LaRose, dlr@cs.cmu.edu
@@ -119,6 +119,8 @@ namespace brick {
 
 } // namespace brick
 
+// Include file containing definitions of inline and template
+// functions.
 #include <brick/numeric/solveQuadratic_impl.hh>
 
-#endif /* #ifndef BRICK_NUMERIC_UTILITIES_HH */
+#endif /* #ifndef BRICK_NUMERIC_SOLVEQUADRATIC_HH */

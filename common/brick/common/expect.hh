@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file brick/common/inputStream.hh
+* @file brick/common/expect.hh
 *
 * Header file declaring convenience functions and classes for working
 * with input streams.

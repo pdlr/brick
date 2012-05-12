@@ -38,8 +38,18 @@ namespace brick {
 
       /** 
        * Default constructor.
+       * 
+       * @param expectedRotation Set this argument to an angle, in
+       * radians, over which you'd like to search (something like 0.5
+       * is reasonable).  This is not part of Rosten's algorithm, but
+       * we find it useful.  Set to 0.0 if you want traditional,
+       * non-rotation-invariant matching (which is faster).  Note that
+       * the search is over both positive an negative rotations, so
+       * setting expectedRotation to 0.5 will consider rotations of up
+       * to 0.5 radians in either direction.
        */
-      KeypointMatcherFast();
+      explicit
+      KeypointMatcherFast(double expectedRotation = 0.0);
 
       
       /** 
@@ -96,12 +106,22 @@ namespace brick {
       computeSSD(KeypointFast const& keypoint0, KeypointFast const& keypoint1)
         const;
 
+      // Compute the sum of squared difference between the feature
+      // vectors of the two input keypoints.  Considers rotations up
+      // to +/- expectedRotation.  This is not part of Rosten's
+      // original algorithm.
+      double
+      computeSSDRotationInvariant(KeypointFast const& keypoint0,
+                                  KeypointFast const& keypoint1,
+                                  double expectedRotation = 0.5) const;
+
       // Search the specified map of stored keypoints and find the one
       // most similar to the input "query" keypoint.
       bool
       matchKeypoint(KeypointFast const& query, KeypointFast& bestMatch,
                     std::map<double, KeypointFast> const& keypointMap) const;
 
+      double m_expectedRotation;
       std::map<double, KeypointFast> m_keypointMapNegative;
       std::map<double, KeypointFast> m_keypointMapPositive;
     };

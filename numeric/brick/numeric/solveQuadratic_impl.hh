@@ -11,14 +11,14 @@
 ***************************************************************************
 **/
 
+#ifndef BRICK_NUMERIC_SOLVEQUADRATIC_IMPL_HH
+#define BRICK_NUMERIC_SOLVEQUADRATIC_IMPL_HH
+
 // This file is included by solveQuadratic.hh, and should not be
 // directly included by user code, so no need to include
 // solveQuadratic.hh here.
 // 
 // #include <brick/numeric/solveQuadratic.hh>
-
-#ifndef BRICK_NUMERIC_SOLVEQUADRATIC_IMPL_HH
-#define BRICK_NUMERIC_SOLVEQUADRATIC_IMPL_HH
 
 #include <cmath>
 
@@ -104,4 +104,4 @@ namespace brick {
 
 } // namespace brick
 
-#endif /* #ifndef BRICK_NUMERIC_UTILITIES_HH */
+#endif /* #ifndef BRICK_NUMERIC_SOLVEQUADRATIC_IMPL_HH */

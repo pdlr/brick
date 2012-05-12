@@ -41,6 +41,23 @@ namespace brick {
       static bool isIntegral() {return true;}
     };
 
+
+    /**
+     ** This class lets you map from pixel component type and number
+     ** of channels back to the relevant image format.  For example,
+     ** if you needed a single channel image with pixels that are
+     ** UnsignedInt16, you could use
+     ** ImageFormatTraitsIdentifierGray<UnsignedInt16>::Format to see
+     ** that the relevant ImageFormat is GRAY16.
+     **/
+    template <class Type>
+    class ImageFormatIdentifierGray {
+    public:
+      // Default case is not implemented.  Specializations are in
+      // imageFormatTraits_impl.hh.
+      static ImageFormat const Format = NO_FORMAT;
+    };
+    
   } // namespace computerVision
 
 } // namespace brick

@@ -3,7 +3,7 @@
 * @file brick/numeric/quaternion.hh
 * Header file declaring Quaternion class template.
 *
-* (C) Copyright 1996-2007 David LaRose, dlr@cs.cmu.edu
+* (C) Copyright 1996-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

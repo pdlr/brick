@@ -170,7 +170,9 @@ namespace brick {
        * @param zCoord The homogeneous Z coordinate.
        * @param alpha Scale factor.
        */
-      inline void setValue(Type const& xCoord, Type const& yCoord, Type const& zCoord,
+      inline void setValue(Type const& xCoord,
+                           Type const& yCoord,
+                           Type const& zCoord,
                            Type const& alpha);
 
       
@@ -551,7 +553,8 @@ namespace brick {
 } // namespace brick
 
 
-// Definitions of inline and template functions.
+// Include file containing definitions of inline and template
+// functions.
 #include <brick/numeric/vector3D_impl.hh>
 
 #endif /* #ifndef BRICK_NUMERIC_VECTOR3D_HH */

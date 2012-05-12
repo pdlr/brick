@@ -1,6 +1,10 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.1
+
+- Minor update: added arcTangent2() function template.
+
 Revision 1.0
 
 - Created brick::common by adapting dlr::common version 2.3a3.

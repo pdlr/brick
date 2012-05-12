@@ -1,6 +1,11 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.1
+
+- Added classes and functions relating to camera intrinsics from
+  dlrComputerVision version 2.4b3.  Many more still to come.
+
 Revision 1.0
 
 - Created brick::computerVision by adapting dlrComputerVision version 2.4b3.

@@ -53,7 +53,7 @@ namespace brick {
      **     "DEBUG", "-g", "--debug",
      **     "Include debugging symbols in generated object code.");
      **
-     **   // Specify options which require values.
+     **   // Specify options that require values.
      **   optionParser.addOptionWithValue(
      **     "OPTIMIZATION_LEVEL", "-O", "--optimization_level", "0",
      **     "Set optimization level.");

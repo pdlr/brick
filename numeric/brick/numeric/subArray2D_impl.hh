@@ -225,7 +225,11 @@ namespace brick {
     
     template <class Type>
     inline void SubArray2D<Type>::
-    checkArray2DSize(const Array2D<Type>& other) const
+    checkArray2DSize(const Array2D<Type>&
+#ifdef BRICK_NUMERIC_CHECKBOUNDS
+                     other
+#endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
+      ) const
     {
 #ifdef BRICK_NUMERIC_CHECKBOUNDS
       if((m_startRow < 0) || (m_startRow >= static_cast<int>(other.rows()))) {
@@ -279,13 +283,17 @@ namespace brick {
         BRICK_THROW(IndexException, "SubArray2D::checkArray2DSize()",
                   "Invalid column stride: 0\n");
       }
-#endif
+#endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
     }
 
     
     template <class Type>
     inline void SubArray2D<Type>::
-    checkSubArray2DSize(const SubArray2D<Type>& other) const
+    checkSubArray2DSize(const SubArray2D<Type>&
+#ifdef BRICK_NUMERIC_CHECKBOUNDS
+                        other
+#endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
+      ) const
     {
 #ifdef BRICK_NUMERIC_CHECKBOUNDS
       if(other.rows() != this->rows()) {
@@ -302,7 +310,7 @@ namespace brick {
         BRICK_THROW(IndexException, "SubArray2D::checkSubArray2DSize()",
                   message.str().c_str());
       }
-#endif
+#endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
     }
 
     

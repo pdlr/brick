@@ -186,6 +186,43 @@ namespace brick {
         return false;
       }
 
+      // Use the routines from byteOrder.hh to _not_ swap the byte order,
+      // and make sure the result is correct.
+      switchByteOrder(&(workspace16[0]), workspace16.size(),
+                      &(resultSequence16[0]), fromOrder, fromOrder);
+      if(!std::equal(resultSequence16.begin(), resultSequence16.end(),
+                     testSequence16.begin())) {
+        return false;
+      }
+      
+      switchByteOrder(&(workspace32[0]), workspace32.size(),
+                      &(resultSequence32[0]), fromOrder, fromOrder);
+      if(!std::equal(resultSequence32.begin(), resultSequence32.end(),
+                     testSequence32.begin())) {
+        return false;
+      }
+      
+      switchByteOrder(&(workspace64[0]), workspace64.size(),
+                      &(resultSequence64[0]), fromOrder, fromOrder);
+      if(!std::equal(resultSequence64.begin(), resultSequence64.end(),
+                     testSequence64.begin())) {
+        return false;
+      }
+
+      // Make sure the swapping didn't change the original data.
+      if(!std::equal(workspace16.begin(), workspace16.end(),
+                     testSequence16.begin())) {
+        return false;
+      }
+      if(!std::equal(workspace32.begin(), workspace32.end(),
+                     testSequence32.begin())) {
+        return false;
+      }
+      if(!std::equal(workspace64.begin(), workspace64.end(),
+                     testSequence64.begin())) {
+        return false;
+      }
+
       // Now swap the data in place, and make sure it comes out right.
       switchByteOrder(&(workspace16[0]), workspace16.size(),
                       fromOrder, toOrder);

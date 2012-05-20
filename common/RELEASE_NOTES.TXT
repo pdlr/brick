@@ -1,6 +1,13 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.2
+
+- Added shorter names for integral sized types (Int8, UInt8, etc.).
+- Fixed an issue with switchByteOrder() that led to incorrect results when
+  the beginning and ending byte orders were the same, and the result was
+  _not_ being generated in-place.
+
 Revision 1.1
 
 - Minor update: added arcTangent2() function template.

@@ -62,11 +62,11 @@ namespace brick {
       const double requiredClockResolution = 0.001;
       const double testDuration = 1.0;
 
-      double previousTime = getCurrentTime();
+      volatile double previousTime = getCurrentTime();
       double endTime = previousTime + testDuration;
       double updateAccumulator = 0.0;
       unsigned int numberOfUpdates = 0;
-      double currentTime = 0;
+      volatile double currentTime = 0;
       while(currentTime < endTime) {
         currentTime = getCurrentTime();
         BRICK_TEST_ASSERT(currentTime >= previousTime);

@@ -35,9 +35,17 @@ namespace brick {
 
     /**
      ** This class template selects keypoints from an input image
-     ** using Rosten's FAST keypoint detector [1].  Unlike other
+     ** using Rosten's FAST keypoint detector [1,2].  Unlike other
      ** keypoint selectors in this library, it does not use a scale
      ** space, and operates directly on the input image.
+     **
+     ** [1] E. Rosten and T. Drummond, "Fusing points and lines for
+     ** high performance tracking.", IEEE International Conference on
+     ** Computer Vision, Vol 2, pp 1508--1511", 2005.
+     **
+     ** [2] E. Rosten and T. Drummond, "Machine learning for
+     ** high-speed corner detection", European Conference on Computer
+     ** Vision, Vol 1, pp 430-443, 2006.
      **/
     class KeypointSelectorFast {
     public:
@@ -70,11 +78,11 @@ namespace brick {
        * the image region to use during estimation.  Omit it to
        * process the whole image.
        * 
-       * @param startRow This argument specifies the bounding box of
+       * @param stopRow This argument specifies the bounding box of
        * the image region to use during estimation.  Omit it to
        * process the whole image.
        * 
-       * @param startColumn This argument specifies the bounding box of
+       * @param stopColumn This argument specifies the bounding box of
        * the image region to use during estimation.  Omit it to
        * process the whole image.
        * 

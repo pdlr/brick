@@ -238,7 +238,8 @@ namespace brick {
                              ByteOrder toByteOrder)
       {
         if(fromByteOrder == toByteOrder) {
-          std::copy(fromDataPtr, fromDataPtr + numberOfElements, toDataPtr);
+          std::copy(fromDataPtr, fromDataPtr + Size * numberOfElements,
+                    toDataPtr);
           return;
         }
         std::ostringstream message;
@@ -258,10 +259,11 @@ namespace brick {
                                 ByteOrder toByteOrder)
       {
         if(fromByteOrder == toByteOrder) {
-          std::copy(fromDataPtr, fromDataPtr + numberOfElements, toDataPtr);
+          std::copy(fromDataPtr, fromDataPtr + (numberOfElements << 1),
+                    toDataPtr);
           return;
         }
-        const UnsignedInt8* fromEndPtr =  fromDataPtr + numberOfElements * 2;
+        const UnsignedInt8* fromEndPtr =  fromDataPtr + (numberOfElements << 1);
         while(fromDataPtr < fromEndPtr) {
           *toDataPtr = *(fromDataPtr + 1);
           *(toDataPtr + 1) = *(fromDataPtr);
@@ -281,10 +283,11 @@ namespace brick {
                                 ByteOrder toByteOrder)
       {
         if(fromByteOrder == toByteOrder) {
-          std::copy(fromDataPtr, fromDataPtr + numberOfElements, toDataPtr);
+          std::copy(fromDataPtr, fromDataPtr + (numberOfElements << 2),
+                    toDataPtr);
           return;
         }
-        const UnsignedInt8* fromEndPtr = fromDataPtr + numberOfElements * 4;
+        const UnsignedInt8* fromEndPtr = fromDataPtr + (numberOfElements << 2);
         while(fromDataPtr < fromEndPtr) {
           *toDataPtr = *(fromDataPtr + 3);
           *(toDataPtr + 1) = *(fromDataPtr + 2);
@@ -306,10 +309,11 @@ namespace brick {
                                 ByteOrder toByteOrder)
       {
         if(fromByteOrder == toByteOrder) {
-          std::copy(fromDataPtr, fromDataPtr + numberOfElements, toDataPtr);
+          std::copy(fromDataPtr, fromDataPtr + (numberOfElements << 3),
+                    toDataPtr);
           return;
         }
-        const UnsignedInt8* fromEndPtr = fromDataPtr + numberOfElements * 8;
+        const UnsignedInt8* fromEndPtr = fromDataPtr + (numberOfElements << 3);
         while(fromDataPtr < fromEndPtr) {
           *toDataPtr = *(fromDataPtr + 7);
           *(toDataPtr + 1) = *(fromDataPtr + 6);

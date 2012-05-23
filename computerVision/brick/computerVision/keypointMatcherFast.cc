@@ -24,7 +24,7 @@ namespace brick {
     KeypointMatcherFast::
     KeypointMatcherFast(double expectedRotation)
       : m_expectedRotation(expectedRotation),
-       m_keypointMapNegative(),
+        m_keypointMapNegative(),
         m_keypointMapPositive()
     {
       // Empty.
@@ -176,7 +176,7 @@ namespace brick {
         return false;
       }
       
-      // Start by finding the keypoint who's feature vector mean is
+      // Start by finding the keypoint whose feature vector mean is
       // closest to that of the query point.  This is a good starting
       // point for a linear search.
       typedef std::map<double, KeypointFast>::const_iterator MapIterator;

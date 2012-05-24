@@ -21,7 +21,7 @@ AC_DEFUN([BRICK_HAVE_BRICKGEOMETRY],
      LDFLAGS="${LDFLAGS} -L${libdir} -L${prefix}/lib"
      LIBS="-lbrickGeometry -lbrickLinearAlgebra -lbrickNumeric -lbrickPortability -lbrickCommon ${LAPACK_LIBS} ${BLAS_LIBS} ${BRICK_SAVED_LIBS} ${FLIBS}"
      AC_TRY_LINK([#include <brick/geometry/ray3D.hh>],
-         [brick::geometry::Ray3D<double> dummy;],
+         [brick::geometry::Ray3D<double> dummy; dummy = brick::geometry::Ray3D<double>();],
          [AC_MSG_RESULT([yes])],
          [AC_MSG_ERROR([Unable to build a test program against 
           libbrickGeometry.  Please check that the brickGeometry 

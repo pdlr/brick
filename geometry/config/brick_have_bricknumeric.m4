@@ -20,7 +20,7 @@ AC_DEFUN([BRICK_HAVE_BRICKNUMERIC],
      LDFLAGS="${LDFLAGS} -L${libdir} -L${prefix}/lib"
      LIBS="-lbrickNumeric -lbrickPortability -lbrickCommon"
      AC_TRY_LINK([#include <brick/numeric/index2D.hh>],
-         [brick::numeric::Index2D dummy();],
+         [brick::numeric::Index2D dummy; dummy.setValue(0, 0);],
          [AC_MSG_RESULT([yes])],
          [AC_MSG_ERROR([Unable to build a test program against libbrickNumeric.
           Please check that the brick::numeric utility library is installed. 

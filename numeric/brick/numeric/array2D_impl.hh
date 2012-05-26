@@ -117,7 +117,7 @@ namespace brick {
         m_dataPtr(0),        // This will be set in the call to allocate().
         m_referenceCount(0)  // This will be set in the call to allocate().
     {
-      this->allocate(arrayRows, arrayColumns);
+      this->allocate(arrayRows, arrayColumns, rowStep);
     }
 
   
@@ -318,6 +318,41 @@ namespace brick {
     }
 
 
+    // Return an Array2D instance referencing a subset of *this.
+    template <class Type>
+    Array2D<Type>
+    Array2D<Type>::
+    getRegion(Index2D const& corner0, Index2D const& corner1)
+    {
+      if(corner0.getRow()    >= corner1.getRow() ||
+         corner0.getColumn() >= corner1.getColumn()) {
+        BRICK_THROW(common::ValueException, "Array2D::getRegion()",
+                    "Argument corner0 must be above and to the left of "
+                    "corner1.  In other words, corner0.getRow() must return "
+                    "a value smaller than is returned by corner1.getRow(), "
+                    "and corner0.getRow() must return a value smaller than "
+                    "is returned by corner1.getRow().");
+      }
+
+      if(corner0.getRow()    < 0                                 ||
+         corner0.getColumn() < 0                                 ||
+         corner0.getRow()    > static_cast<int>(this->m_rows)    ||
+         corner0.getColumn() > static_cast<int>(this->m_columns) ||
+         corner1.getRow()    < 0                                 ||
+         corner1.getColumn() < 0                                 ||
+         corner1.getRow()    > static_cast<int>(this->m_rows)    ||
+         corner1.getColumn() > static_cast<int>(this->m_columns)) {
+        BRICK_THROW(common::IndexException, "Array2D::getRegion()",
+                    "Arguments corner0 and/or corner1 are out of bounds.");
+      }
+
+      unsigned int regionRows = corner1.getRow() - corner0.getRow();
+      unsigned int regionColumns = corner1.getColumn() - corner0.getColumn();
+      return Array2D<Type>(regionRows, regionColumns, this->getData(corner0),
+                           this->getRowStep());
+    }
+
+    
     template <class Type>
     Array1D<Type> Array2D<Type>::
     getRow(size_t index)

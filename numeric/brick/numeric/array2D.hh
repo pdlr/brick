@@ -19,6 +19,7 @@
 #include <iostream>
 #include <brick/common/exception.hh>
 #include <brick/numeric/array1D.hh>
+#include <brick/numeric/index2D.hh>
 
 namespace brick {
 
@@ -519,9 +520,8 @@ namespace brick {
       }
 
       /** 
-       * Just like
-       * getData(void), which is documented above, but returns a pointer
-       * to the element indexed by (row, column).
+       * Just like getData(void), which is documented above, but
+       * returns a pointer to the element indexed by (row, column).
        * 
        * @param rowIndex The row of the element to which the return value
        * should point.
@@ -538,10 +538,10 @@ namespace brick {
       }
 
       /**
-       * This version
-       * of getData(size_t, size_t) is appropriate for const Array2D, and
-       * returns a pointer-to-const.  @param rowIndex The row of the
-       * element to which the return value should point.
+       * This version of getData(size_t, size_t) is appropriate for
+       * const Array2D, and returns a pointer-to-const.  @param
+       * rowIndex The row of the element to which the return value
+       * should point.
        *
        * @param columnIndex The column of the element to which the return
        * value should point.
@@ -552,6 +552,37 @@ namespace brick {
       getData(size_t rowIndex, size_t columnIndex) const {
         this->checkBounds(rowIndex, columnIndex);
         return m_dataPtr + columnIndex + (rowIndex * m_rowStep);
+      }
+
+      
+      /** 
+       * Just like getData(void), which is documented above, but
+       * returns a pointer to the element indexed by (idx.getRow(),
+       * idx.getColumn()).
+       * 
+       * @param idx The coordinates of the element to which the return
+       * value should point.
+       *
+       * @return Pointer to the selected element of the array.
+       */
+      Type*
+      getData(Index2D const& idx) {
+        return this->getData(idx.getRow(), idx.getColumn());
+      }
+
+
+      /**
+       * This version of getData(Index2D const&) is appropriate for
+       * const Array2D, and returns a pointer-to-const.
+       * 
+       * @param idx The coordinates of the element to which the return
+       * value should point.
+       *
+       * @return Const pointer to the selected element of the array.
+       */
+      const Type*
+      getData(Index2D const& idx) const {
+        return this->getData(idx.getRow(), idx.getColumn());
       }
 
       
@@ -597,6 +628,70 @@ namespace brick {
       common::ReferenceCount const&
       getReferenceCount() const {return m_referenceCount;}
 
+
+      /** 
+       * Return an Array2D instance referencing a subset of *this.
+       * The returned array will reference the same memory, but may
+       * have different start, end, and rowstep.  The returned array
+       * _will not_ be reference counted, so that its contents are
+       * valid only as long as the contents of the original array are
+       * valid.  The operation of this function is illustrated in the
+       * following example:
+       *
+       * @code
+       *   // Create an array in which every element is set to 1.
+       *   Array2D<int>* fullArrayP = new Array2D<int>(10, 20);
+       *   *fullArrayP = 1;
+       *
+       *   // Get an array that refers to a 4x4 subset of fullArray.
+       *   Index2D corner0(5, 10);
+       *   Index2D corner1(9, 14);
+       *   Array2D<int> subRegion = fullArrayP->getRegion(corner0, corner1);
+       *
+       *   // Set just the elements within that subset to 100.
+       *   subRegion = 100;
+       *
+       *   for(unsigned int rr = 0, rr < fullArray.rows(); ++rr) {
+       *     for(unsigned int cc = 0, cc < fullArray.columns(); ++cc) {
+       *       if((rr >= corner0.getRow()) &&
+       *          (rr <  corner1.getRow()) &&
+       *          (cc >= corner0.getColumn()) &&
+       *          (cc <  corner1.getColumn())) {
+       *         std::assert(100 == (*fullArrayP)(rr, cc));
+       *       } else {
+       *         std::assert(1   == (*fullArrayP)(rr, cc));
+       *       }
+       *     }
+       *   }
+       *
+       *   // Contents of *fullArrayP are deleted here.
+       *   delete fullArrayP;
+       *
+       *   // ERROR! The data to which subRegion refers was deleted
+       *   // along with fullArrayP.
+       *   subRegion(2, 3) = 90;
+       * @endCode
+       *     
+       * @param corner0 This argument and the next define the
+       * subregion.  Corner0 is included in the region, but corner1 is
+       * not.  It is an error if corner0 is not above and to the left
+       * of corner1.  It is an error if corner0.getRow() is less than
+       * zero, corner0.getColumn() is less than zero, corner0.getRow()
+       * is greater than this->getRows(), or corner0.getColumn() is
+       * greater than this->getColumns().
+       * 
+       * @param corner1 This argument and the previous define the
+       * subregion.  It is an error if corner1.getRow() is less than
+       * zero, corner1.getColumn() is less than zero, corner1.getRow()
+       * is greater than this->getRows(), or corner1.getColumn() is
+       * greater than this->getColumns().
+       * 
+       * @return The return value is a shallow copy of the selected
+       * region of the original array.
+       */
+      Array2D<Type>
+      getRegion(Index2D const& corner0, Index2D const& corner1);
+      
       
       /**
        * Returns an Array1D<Type> that addresses an entire row of

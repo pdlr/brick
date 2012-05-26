@@ -45,7 +45,7 @@ namespace brick {
                         brick::numeric::Vector2D<FloatType> const& u0,
                         brick::numeric::Vector2D<FloatType> const& u1,
                         brick::numeric::Vector2D<FloatType> const& u2,
-                        CameraIntrinsicsPinhole const& intrinsics,
+                        CameraIntrinsicsPinhole<FloatType> const& intrinsics,
                         IterType p0OutputIter,
                         IterType p1OutputIter,
                         IterType p2OutputIter,
@@ -167,14 +167,15 @@ namespace brick {
 
     template<class FloatType, class InIter3D, class InIter2D>
     brick::numeric::Transform3D<FloatType>
-    threePointAlgorithmRobust(InIter3D worldPointsBegin,
-                              InIter3D worldPointsEnd,
-                              InIter2D imagePointsBegin,
-                              CameraIntrinsicsPinhole const& intrinsics,
-                              size_t iterations,
-                              FloatType inlierProportion,
-                              FloatType& score,
-                              brick::random::PseudoRandom& pRandom)
+    threePointAlgorithmRobust(
+      InIter3D worldPointsBegin,
+      InIter3D worldPointsEnd,
+      InIter2D imagePointsBegin,
+      CameraIntrinsicsPinhole<FloatType> const& intrinsics,
+      size_t iterations,
+      FloatType inlierProportion,
+      FloatType& score,
+      brick::random::PseudoRandom& pRandom)
     {
       // State variables so we'll remember the correct essential
       // matrix once we find it.

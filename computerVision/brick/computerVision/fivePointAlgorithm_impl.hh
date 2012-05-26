@@ -355,7 +355,8 @@ namespace brick {
     {
       // Since we're using calibrated image points, all cameras have
       // the same intrinsics.
-      CameraIntrinsicsPinhole intrinsics(1, 1, 1.0, 1.0, 1.0, 0.0, 0.0);
+      CameraIntrinsicsPinhole<FloatType> intrinsics(
+        1, 1, 1.0, 1.0, 1.0, 0.0, 0.0);
       
       // State variables so we'll remember the correct essential
       // matrices once we find them.

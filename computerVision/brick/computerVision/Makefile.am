@@ -54,6 +54,7 @@ brickComputerVision_HEADERS	= \
 	kernels.hh kernels_impl.hh \
 	keypointMatcherFast.hh keypointMatcherFast_impl.hh \
 	keypointSelectorFast.hh keypointSelectorFast_impl.hh \
+	keypointSelectorHarris.hh keypointSelectorHarris_impl.hh \
 	naiveSnake.hh naiveSnake_impl.hh \
 	nonMaximumSuppress.hh nonMaximumSuppress_impl.hh \
 	nChooseKSampleSelector.hh nChooseKSampleSelector_impl.hh \

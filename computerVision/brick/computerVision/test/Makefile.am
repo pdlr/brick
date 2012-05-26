@@ -50,6 +50,7 @@ TESTS = \
 	kdTreeTest \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
+	keypointSelectorHarrisTest \
 	naiveSnakeTest \
 	nChooseKSampleSelectorTest \
 	nonMaximumSuppressTest \
@@ -84,6 +85,7 @@ check_PROGRAMS = \
 	kdTreeTest \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
+	keypointSelectorHarrisTest \
 	naiveSnakeTest \
 	nChooseKSampleSelectorTest \
 	nonMaximumSuppressTest \
@@ -118,6 +120,7 @@ imageWarperTest_SOURCES		= imageWarperTest.cc
 kdTreeTest_SOURCES		= kdTreeTest.cc
 keypointMatcherFastTest_SOURCES	= keypointMatcherFastTest.cc
 keypointSelectorFastTest_SOURCES	= keypointSelectorFastTest.cc
+keypointSelectorHarrisTest_SOURCES	= keypointSelectorHarrisTest.cc
 naiveSnakeTest_SOURCES		= naiveSnakeTest.cc
 nChooseKSampleSelectorTest_SOURCES	= nChooseKSampleSelectorTest.cc
 nonMaximumSuppressTest_SOURCES	= nonMaximumSuppressTest.cc

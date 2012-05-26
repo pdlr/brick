@@ -1,5 +1,5 @@
 export INSTALLDIR="/var/tmp"
-export COMMONFLAGS="-Wall -Wextra -Wunsafe-loop-optimizations -Wshadow -O2"
+export COMMONFLAGS="-Wall -Wextra -Werror -Wshadow -O2"
 
 export CPPFLAGS="-I$INSTALLDIR/include"
 export LDFLAGS="-L$INSTALLDIR/lib"

@@ -97,7 +97,7 @@ namespace brick {
       double minimumSsd = std::numeric_limits<double>::max();
 
       // For "negative" rotations.
-      for(unsigned int ii = 1; ii <= angleInSamples; ++ii) {
+      for(unsigned int ii = angleInSamples - 1; ii > 0; --ii) {
         double ssd0 = 0.0;
 
         // Account for "wrap" at the beginning of the feature vector,
@@ -136,7 +136,7 @@ namespace brick {
       }
 
       // For positive rotation.
-      for(unsigned int ii = 1; ii <= angleInSamples; ++ii) {
+      for(unsigned int ii = angleInSamples - 1; ii > 0; --ii) {
 
         double ssd0 = 0.0;
 

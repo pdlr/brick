@@ -146,7 +146,7 @@ namespace brick {
       
       void
       computeGradients(
-        Image<GRAY8> const& inImage,
+        Image<GRAY_SIGNED32> const& inImage,
         brick::numeric::Array2D<AccumulatedType>& gradientXX,
         brick::numeric::Array2D<AccumulatedType>& gradientXY,
         brick::numeric::Array2D<AccumulatedType>& gradientYY);

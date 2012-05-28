@@ -11,6 +11,7 @@
 **/
 
 #include <brick/computerVision/imageIO.hh>
+#include <brick/computerVision/kernels.hh>
 #include <brick/computerVision/keypointSelectorHarris.hh>
 #include <brick/computerVision/utilities.hh>
 
@@ -137,7 +138,16 @@ namespace brick {
 
       keypoints.clear();
       double time0 = utilities::getCurrentTime();
+
+      Kernel<double> gaussian =
+        getGaussianKernelBySize<double>(size_t(5), size_t(5));
+      Image<GRAY_FLOAT64> blurredImage = filter2D<GRAY_FLOAT64>(
+        gaussian, inputImage, 0.0);
+      Image<GRAY8> blurredImage8 = convertColorspace<GRAY8>(blurredImage);
+      
       selector.setImage(inputImage);
+      // selector.setImage(blurredImage8);
+      
       // keypoints = selector.getKeypoints();
       selector.getKeypoints(std::back_inserter(keypoints), threshold);
       double time1 = utilities::getCurrentTime();
@@ -180,7 +190,7 @@ namespace brick {
 } // namespace brick
 
 
-#if 0
+#if 1
 
 int main(int argc, char** argv)
 {

@@ -40,11 +40,30 @@ namespace brick {
      * @param columnSigma This argument specifies the standard deviation of
      * the kernel in the X direction.
      * 
+     * @param normalize This argument indicates whether the resulting
+     * gaussian should be normalized so that its integral has known
+     * value.  Note that, as a seperable kernel, row and column
+     * components will be normalized separately, so that the integral
+     * of the effective 2D kernel will be (rowNormalizationTarget *
+     * columnNormalizationTarget).
+     * 
+     * @param rowNormalizationTarget If the row component of the
+     * kernel is normalized, it will be normalize so that its integral
+     * is as close as possible to this value.
+     * 
+     * @param columnNormalizationTarget If the column component of the
+     * kernel is normalized, it will be normalize so that its integral
+     * is as close as possible to this value.
+     * 
      * @return The return value is the kernel itself.
      */
     template<class KERNEL_TYPE>
     Kernel<KERNEL_TYPE>
-    getGaussianKernel(double rowSigma, double columnSigma);
+    getGaussianKernel(double rowSigma, double columnSigma,
+                      bool normalize = true,
+                      KERNEL_TYPE rowNormalizationTarget = 1,
+                      KERNEL_TYPE columnNormalizationTarget = 1);
+                      
 
 
     /** 
@@ -73,13 +92,30 @@ namespace brick {
      * the kernel in the X direction.  If sigma is less than 0.0, then
      * it will be automatically reset columns / 6.0.
      * 
+     * @param normalize This argument indicates whether the resulting
+     * gaussian should be normalized so that its integral has known
+     * value.  Note that, as a seperable kernel, row and column
+     * components will be normalized separately, so that the integral
+     * of the effective 2D kernel will be (rowNormalizationTarget *
+     * columnNormalizationTarget).
+     * 
+     * @param rowNormalizationTarget If the row component of the
+     * kernel is normalized, it will be normalize so that its integral
+     * is as close as possible to this value.
+     * 
+     * @param columnNormalizationTarget If the column component of the
+     * kernel is normalized, it will be normalize so that its integral
+     * is as close as possible to this value.
+     * 
      * @return The return value is the kernel itself.
      */
     template<class KERNEL_TYPE>
     Kernel<KERNEL_TYPE>
-    getGaussianKernel(size_t rows, size_t columns,
-                      double rowSigma=-1.0, double columnSigma=-1.0);
-
+    getGaussianKernelBySize(size_t rows, size_t columns,
+                      double rowSigma=-1.0, double columnSigma=-1.0,
+                      bool normalize = true,
+                      KERNEL_TYPE rowNormalizationTarget = 1,
+                      KERNEL_TYPE columnNormalizationTarget = 1);
 
   } // namespace computerVision
 

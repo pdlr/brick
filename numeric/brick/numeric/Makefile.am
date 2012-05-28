@@ -51,6 +51,7 @@ brickNumeric_HEADERS	= \
 	normalizedCorrelator.hh normalizedCorrelator_impl.hh \
 	numericTraits.hh \
 	polynomial.hh polynomial_impl.hh \
+	quaternion.hh quaternion_impl.hh \
 	rotations.hh rotations_impl.hh \
 	slice.hh \
 	sampledFunctions.hh sampledFunctions_impl.hh \
@@ -62,10 +63,10 @@ brickNumeric_HEADERS	= \
 	subArray1D.hh subArray1D_impl.hh \
 	subArray2D.hh subArray2D_impl.hh \
 	subpixelInterpolate.hh subpixelInterpolate_impl.hh \
-	quaternion.hh quaternion_impl.hh \
 	transform2D.hh transform2D_impl.hh \
 	transform3D.hh transform3D_impl.hh \
 	transform3DTo2D.hh transform3DTo2D_impl.hh \
+	typeConverter.hh \
 	vector2D.hh vector2D_impl.hh \
 	vector3D.hh vector3D_impl.hh \
 	utilities.hh utilities_impl.hh

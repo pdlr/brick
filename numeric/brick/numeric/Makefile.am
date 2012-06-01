@@ -45,6 +45,7 @@ brickNumeric_HEADERS	= \
 	ieeeFloat32.hh \
 	index2D.hh \
 	index3D.hh \
+	filter.hh filter_impl.hh \
 	geometry2D.hh geometry2D_impl.hh \
 	maxRecorder.hh \
 	minRecorder.hh \

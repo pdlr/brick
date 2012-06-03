@@ -1142,6 +1142,44 @@ namespace brick {
 
     
     /** 
+     * This function returns a copy of the largest element in the input
+     * Array2D instance.
+     * 
+     * @param array0 This argument is the input array.
+     *
+     * @return A copy of an element of the input array such that no
+     * other element of the input array is larger.
+     */
+    template <class Type>
+    inline Type
+    maximum(Array2D<Type> const& array0);
+
+
+    /** 
+     * This function returns a copy of the largest element in the input
+     * Array2D instance, where largeness is defined by the return value
+     * of the second argument.
+     * 
+     * NOTE: Read the argument description for comparator carefully.  It
+     * is consistent with the standard library convention, but many
+     * people find it to be counterintuitive.
+     *
+     * @param array0 This argument is the input array.
+     *
+     * @param comparator This argument is a functor which supports the
+     * std::binary_function<Type, Type, bool> interface, and returns
+     * true if its first argument is smaller than its second argument.
+     *
+     * @return A copy of an element of the input array such that no
+     * other element of the input array is larger, where largeness is
+     * defined by comparator.
+     */
+    template <class Type, class Functor>
+    Type
+    maximum(Array2D<Type> const& array0, Functor comparator);
+
+
+    /** 
      * This function computes the average value, or geometric mean, of
      * the elements of its argument.  The computation is performed using
      * the precision specified by NumericTraits<Type>::SumType, but is

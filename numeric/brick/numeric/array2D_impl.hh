@@ -804,6 +804,30 @@ namespace brick {
 
 
     template <class Type>
+    Array2D<Type>&
+    Array2D<Type>::
+    operator<<=(int numberOfBits)
+    {
+      for(unsigned int rr = 0; rr < this->rows(); ++rr) {
+        this->getRow(rr) <<= numberOfBits;
+      }      
+      return *this;
+    }
+
+    
+    template <class Type>
+    Array2D<Type>&
+    Array2D<Type>::
+    operator>>=(int numberOfBits)
+    {
+      for(unsigned int rr = 0; rr < this->rows(); ++rr) {
+        this->getRow(rr) >>= numberOfBits;
+      }      
+      return *this;
+    }
+
+    
+    template <class Type>
     Array2D<Type> Array2D<Type>::
     transpose() const
     {

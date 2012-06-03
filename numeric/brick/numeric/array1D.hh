@@ -698,6 +698,37 @@ namespace brick {
       Array1D<Type>&
       operator/=(const Type arg);
 
+
+      /** 
+       * For integral Types, left-shifts each element of *this by the
+       * specified number of bits.  This is equivalent to multiplying
+       * by 2**numberOfBits.
+       * 
+       * @param numberOfBits This argument specifies how many bits to
+       * shift.
+       *
+       * @return Reference to *this, after the operation has been
+       * completed..
+       */
+      Array1D<Type>&
+      operator<<=(int numberOfBits);
+
+
+      /** 
+       * For integral Types, right-shifts each element of *this by the
+       * specified number of bits.  This is equivalent to dividing by
+       * 2**numberOfBits.
+       * 
+       * @param numberOfBits This argument specifies how many bits to
+       * shift.
+       *
+       * @return Reference to *this, after the operation has been
+       * completed..
+       */
+      Array1D<Type>&
+      operator>>=(int numberOfBits);
+
+      
     private:
       /* ======== Private member functions ======== */
 

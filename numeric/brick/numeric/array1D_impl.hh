@@ -491,6 +491,30 @@ namespace brick {
 
 
     template <class Type>
+    Array1D<Type>&
+    Array1D<Type>::
+    operator<<=(int numberOfBits)
+    {
+      for(int ii = this->size() - 1; ii >= 0; --ii) {
+        this->m_dataPtr[ii] <<= numberOfBits;
+      }      
+      return *this;
+    }
+
+    
+    template <class Type>
+    Array1D<Type>&
+    Array1D<Type>::
+    operator>>=(int numberOfBits)
+    {
+      for(int ii = this->size() - 1; ii >= 0; --ii) {
+        this->m_dataPtr[ii] >>= numberOfBits;
+      }      
+      return *this;
+    }
+
+    
+    template <class Type>
     void Array1D<Type>::
     allocate(size_t arraySize)
     {

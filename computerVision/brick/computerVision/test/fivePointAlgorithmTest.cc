@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file fivePointAlgorithmTest.cpp
+* @file brick/computerVision/fivePointAlgorithmTest.cc
 *
 * Source file defining tests for fivePointAlgorithm().
 *

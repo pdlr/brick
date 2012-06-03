@@ -21,10 +21,11 @@
 
 #include <brick/computerVision/imageFilter.hh>
 #include <brick/numeric/bilinearInterpolator.hh>
+#include <brick/numeric/filter.hh>
 #include <brick/numeric/subpixelInterpolate.hh>
 
 #ifndef BRICK_COMPUTERVISION_HARRIS_PEDANTIC
-#define BRICK_COMPUTERVISION_HARRIS_PEDANTIC 1
+#define BRICK_COMPUTERVISION_HARRIS_PEDANTIC 0
 #endif /* #ifndef BRICK_COMPUTERVISION_HARRIS_PEDANTIC */
 
 #define BRICK_COMPUTERVISION_HARRIS_DEBUG 1
@@ -202,12 +203,34 @@ namespace brick {
     KeypointSelectorHarris<FloatType>::
     setImage(Image<GRAY8> const& inImage)
     {
+      // Start by blurring the image slightly.  This should be
+      // optional in future implementations.  This call makes an
+      // integer valued approximation to a 2D Gaussian kernel,
+      // normalized so that it integrates to approximately 256 * 256 =
+      // 65536.
       Kernel<brick::common::Int32> gaussian = 
         getGaussianKernelBySize<brick::common::Int32>(
           size_t(5), size_t(5), -1.0, -1.0, true, 256, 256);
-      Image<GRAY_SIGNED32> blurredImage = filter2D<GRAY_SIGNED32>(
-        gaussian, inImage, 0.0);
-      blurredImage /= 65536;
+
+      // Here we do the convolution.  Fortunately, 2D Gaussians are
+      // separable, so we can do the row and column convolutions
+      // separately.  In a more cache-coherent implementation, we'd
+      // combine these operations.
+      brick::numeric::Array2D<brick::common::Int32> workspace(
+        inImage.rows(), inImage.columns());
+      workspace = 0;
+      Image<GRAY_SIGNED32> blurredImage(inImage.rows(), inImage.columns());
+      brick::numeric::filterRows(
+        workspace, inImage, gaussian.getRowComponent());
+      brick::numeric::filterColumns(
+        blurredImage, workspace, gaussian.getColumnComponent());
+
+      // The convolution has increased the average value of the image
+      // by a factor of about 65536.  If we proceed without scaling
+      // down, we'll overflow our 32 bit ints!  Fix this here.
+      blurredImage >>= 16;
+
+      // Now compute products of gradients at each pixel.
       this->computeGradients(
         blurredImage, m_gradientXX, m_gradientXY, m_gradientYY);
 

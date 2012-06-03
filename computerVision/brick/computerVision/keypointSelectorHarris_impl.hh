@@ -54,6 +54,8 @@ namespace brick {
         m_gradientXX(),
         m_gradientXY(),
         m_gradientYY(),
+        m_searchRegionCorner0(0, 0),
+        m_searchRegionCorner1(0, 0),
         m_kappa(kappa),
         m_sigma(sigma)
     {
@@ -84,8 +86,15 @@ namespace brick {
     KeypointSelectorHarris<FloatType>::
     getKeypoints(Iter iterator, FloatType /* threshold */) const
     {
+      // Get bounds on the region of valid pixels for this calculation.
+      unsigned int const startRow    = m_searchRegionCorner0.getRow();
+      unsigned int const stopRow     = m_searchRegionCorner1.getRow();
+      unsigned int const startColumn = m_searchRegionCorner0.getColumn();
+      unsigned int const stopColumn  = m_searchRegionCorner1.getColumn();
+
+      // Iterate over all pixels in the valid region.
       unsigned int rowStep = m_harrisIndicators.getRowStep();
-      for(unsigned int row = m_harrisIndicators.rows() - 2; row > 1; --row) {
+      for(unsigned int row = stopRow - 1; row >= startRow; --row) {
         brick::numeric::Array1D<AccumulatedType> xxRow =
           m_gradientXX.getRow(row);
         brick::numeric::Array1D<AccumulatedType> xyRow =
@@ -94,7 +103,7 @@ namespace brick {
           m_gradientYY.getRow(row);
         brick::numeric::Array1D<FloatType> harrisRow =
           m_harrisIndicators.getRow(row);
-        for(unsigned int column = m_harrisIndicators.columns() - 2; column > 1;
+        for(unsigned int column = stopColumn - 1; column >= startColumn;
             --column) {
           FloatType* candidatePtr = &(harrisRow[column]);
           if(// (*candidatePtr > threshold) && 
@@ -136,15 +145,25 @@ namespace brick {
     KeypointSelectorHarris<FloatType>::
     getKeypointsGeneralPosition(Iter iterator) const
     {
+      // Get bounds on the region of valid pixels for this calculation.
+      unsigned int const startRow    = m_searchRegionCorner0.getRow();
+      unsigned int const stopRow     = m_searchRegionCorner1.getRow();
+      unsigned int const startColumn = m_searchRegionCorner0.getColumn();
+      unsigned int const stopColumn  = m_searchRegionCorner1.getColumn();
+
+      // These interpolators will make things easy on us later when
+      // trying to gather information about keypoints in non-integral
+      // positions.
       brick::numeric::BilinearInterpolator<AccumulatedType, FloatType>
         xxInterpolator(m_gradientXX);
       brick::numeric::BilinearInterpolator<AccumulatedType, FloatType>
         xyInterpolator(m_gradientXY);
       brick::numeric::BilinearInterpolator<AccumulatedType, FloatType>
         yyInterpolator(m_gradientYY);
-      
+
+      // Iterate over all pixels in the valid region.
       unsigned int rowStep = m_harrisIndicators.getRowStep();
-      for(unsigned int row = m_harrisIndicators.rows() - 2; row > 1; --row) {
+      for(unsigned int row = stopRow - 1; row >= startRow; --row) {
         brick::numeric::Array1D<AccumulatedType> xxRow =
           m_gradientXX.getRow(row);
         brick::numeric::Array1D<AccumulatedType> xyRow =
@@ -153,7 +172,7 @@ namespace brick {
           m_gradientYY.getRow(row);
         brick::numeric::Array1D<FloatType> harrisRow =
           m_harrisIndicators.getRow(row);
-        for(unsigned int column = m_harrisIndicators.columns() - 2; column > 1;
+        for(unsigned int column = stopColumn - 1; column >= startColumn;
             --column) {
           FloatType* candidatePtr = &(harrisRow[column]);
           if((*candidatePtr > *(candidatePtr + 1))
@@ -198,10 +217,14 @@ namespace brick {
       // optional in future implementations.  This call makes an
       // integer valued approximation to a 2D Gaussian kernel,
       // normalized so that it integrates to approximately 256 * 256 =
-      // 65536.
+      // 65536.  The size of this filter affects the region of the
+      // image for which the Harris corner metric will be valid, so we
+      // update the search region here as well.
       Kernel<brick::common::Int32> gaussian = 
         getGaussianKernelBySize<brick::common::Int32>(
           size_t(5), size_t(5), -1.0, -1.0, true, 256, 256);
+      m_searchRegionCorner0.setValue(2, 2);
+      m_searchRegionCorner1.setValue(inImage.rows() - 2, inImage.columns() - 2);
 
       // Here we do the convolution.  Fortunately, 2D Gaussians are
       // separable, so we can do the row and column convolutions
@@ -221,9 +244,13 @@ namespace brick {
       // down, we'll overflow our 32 bit ints!  Fix this here.
       blurredImage >>= 16;
 
-      // Now compute products of gradients at each pixel.
+      // Now compute products of gradients at each pixel.  Note that
+      // the gradient calculation is not valid at the very edge of the
+      // window (where the gradient filter extends into no-mans-land)
+      // so search region will be reduced slightly by this call.
       this->computeGradients(
-        blurredImage, m_gradientXX, m_gradientXY, m_gradientYY);
+        blurredImage, m_gradientXX, m_gradientXY, m_gradientYY,
+        m_searchRegionCorner0, m_searchRegionCorner1);
 
       // To get rotation independent Harris corners, the integration
       // for each pixel needs to be weighted with a circularly
@@ -236,37 +263,61 @@ namespace brick {
       unsigned int radius = 5;
 
       // Do the weighted integration by means of separable convolution.
-      brick::numeric::filterRows(
-        workspace, m_gradientXX, gaussian.getRowComponent());
-      brick::numeric::filterColumns(
-        m_gradientXX, workspace, gaussian.getColumnComponent());
+      brick::numeric::Array2D<AccumulatedType> proxyArray0;
+      brick::numeric::Array2D<AccumulatedType> proxyArray1;
 
+      // We need these proxies because otherwise g++ complains about
+      // passing an rvalue to initialize non-const reference in the
+      // filter*() calls.
+      proxyArray0 = workspace.getRegion(m_searchRegionCorner0,
+                                        m_searchRegionCorner1);
+      proxyArray1 = m_gradientXX.getRegion(m_searchRegionCorner0,
+                                           m_searchRegionCorner1),
       brick::numeric::filterRows(
-        workspace, m_gradientXY, gaussian.getRowComponent());
+        proxyArray0, proxyArray1, gaussian.getRowComponent());
       brick::numeric::filterColumns(
-        m_gradientXY, workspace, gaussian.getColumnComponent());
+        proxyArray1, proxyArray0, gaussian.getColumnComponent());
 
+      proxyArray1 = m_gradientXY.getRegion(m_searchRegionCorner0,
+                                           m_searchRegionCorner1),
       brick::numeric::filterRows(
-        workspace, m_gradientYY, gaussian.getRowComponent());
+        proxyArray0, proxyArray1, gaussian.getRowComponent());
       brick::numeric::filterColumns(
-        m_gradientYY, workspace, gaussian.getColumnComponent());
+        proxyArray1, proxyArray0, gaussian.getColumnComponent());
 
+      proxyArray1 = m_gradientYY.getRegion(m_searchRegionCorner0,
+                                           m_searchRegionCorner1),
+      brick::numeric::filterRows(
+        proxyArray0, proxyArray1, gaussian.getRowComponent());
+      brick::numeric::filterColumns(
+        proxyArray1, proxyArray0, gaussian.getColumnComponent());
+
+      // The size of this filter affects the region of the image for
+      // which the Harris corner metric will be valid, so we update
+      // the search region here as well.
+      m_searchRegionCorner0.setValue(
+        m_searchRegionCorner0.getRow() + radius,
+        m_searchRegionCorner0.getColumn() + radius);
+      m_searchRegionCorner1.setValue(
+        m_searchRegionCorner1.getRow() - radius,
+        m_searchRegionCorner1.getColumn() - radius);      
+      
       // Again we have to worry about overflow.  Rather than guessing,
       // just search to find the max value, and rescale based on that.
       // Ideally, this search would be done during the convolution
       // above.
-      brick::numeric::Index2D corner0(radius, radius);
-      brick::numeric::Index2D corner1(m_gradientXX.rows() - radius,
-                                      m_gradientXX.columns() - radius);
       brick::common::Int32 maxVal =
         brick::numeric::maximum(
-          m_gradientXX.getRegion(corner0, corner1));
+          m_gradientXX.getRegion(m_searchRegionCorner0,
+                                 m_searchRegionCorner1));
       maxVal = std::max(
         maxVal, brick::numeric::maximum(
-          m_gradientXY.getRegion(corner0, corner1)));
+          m_gradientXY.getRegion(m_searchRegionCorner0,
+                                 m_searchRegionCorner1)));
       maxVal = std::max(
         maxVal, brick::numeric::maximum(
-          m_gradientXY.getRegion(corner0, corner1)));
+          m_gradientYY.getRegion(m_searchRegionCorner0,
+                                 m_searchRegionCorner1)));
       brick::common::Int32 divisor = maxVal / 65535 + 1;
 
       // Rescale each of the images.  The exact rescaling factor
@@ -274,17 +325,19 @@ namespace brick {
       // downstream from here is theoretically scale-independent.  The
       // bigger divisor is, however, the more precision we lose, so we
       // want divisor to be small.
-      m_gradientXX /= divisor;
-      m_gradientXY /= divisor;
-      m_gradientYY /= divisor;
+      m_gradientXX.getRegion(m_searchRegionCorner0, m_searchRegionCorner1)
+        /= divisor;
+      m_gradientXY.getRegion(m_searchRegionCorner0, m_searchRegionCorner1)
+        /= divisor;
+      m_gradientYY.getRegion(m_searchRegionCorner0, m_searchRegionCorner1)
+        /= divisor;
 
       // Compute the Harris indicator for each pixel in the region.
-      this->computeHarrisIndicators(m_gradientXX, m_gradientXY, m_gradientYY,
-                                    m_harrisIndicators);
+      this->computeHarrisIndicators(
+        m_gradientXX, m_gradientXY, m_gradientYY, m_harrisIndicators,
+        m_searchRegionCorner0, m_searchRegionCorner1);
     }
 
-
-    
 
     // ============== Private member functions below this line ==============
 
@@ -295,9 +348,15 @@ namespace brick {
       Image<GRAY_SIGNED32> const& inImage,
       brick::numeric::Array2D<AccumulatedType>& gradientXX,
       brick::numeric::Array2D<AccumulatedType>& gradientXY,
-      brick::numeric::Array2D<AccumulatedType>& gradientYY)
+      brick::numeric::Array2D<AccumulatedType>& gradientYY,
+      brick::numeric::Index2D& corner0,
+      brick::numeric::Index2D& corner1)
     {
-      unsigned int const rowStep = inImage.getRowStep();
+      unsigned int const rowStep     = inImage.getRowStep();
+      unsigned int const startRow    = corner0.getRow();
+      unsigned int const stopRow     = corner1.getRow();
+      unsigned int const startColumn = corner0.getColumn();
+      unsigned int const stopColumn  = corner1.getColumn();
 
       // Adjust array sizes, if necessary.
       if((gradientXX.rows() != inImage.rows())
@@ -314,7 +373,7 @@ namespace brick {
       gradientYY = 0;
 #endif /* #if BRICK_COMPUTERVISION_HARRIS_PEDANTIC */
       
-      for(unsigned int row = inImage.rows() - 2; row > 1; --row) {
+      for(unsigned int row = stopRow - 1; row >= startRow; --row) {
         brick::numeric::Array1D<brick::common::Int32> imageRow =
           inImage.getRow(row);
         brick::numeric::Array1D<AccumulatedType> xxRow =
@@ -323,7 +382,8 @@ namespace brick {
           gradientXY.getRow(row);
         brick::numeric::Array1D<AccumulatedType> yyRow =
           gradientYY.getRow(row);
-        for(unsigned int column = inImage.columns() - 2; column > 1; --column) {
+        for(unsigned int column = stopColumn - 1; column >= startColumn;
+            --column) {
           brick::common::Int32 gradientX =
             (((static_cast<brick::common::Int32>(imageRow[column + 1])
                - static_cast<brick::common::Int32>(imageRow[column - 1])) << 1)
@@ -353,6 +413,11 @@ namespace brick {
           yyRow[column] = (gradientY * gradientY); /* >> 4; */
         }
       }
+
+      // Adjust search region to reflect the fact that the gradient
+      // result is not valid on border pixels.
+      corner0.setValue(startRow + 1, startColumn + 1);
+      corner1.setValue(stopRow  - 1, stopColumn  - 1);
     }
     
     
@@ -363,15 +428,24 @@ namespace brick {
       brick::numeric::Array2D<AccumulatedType> const& gradientXX,
       brick::numeric::Array2D<AccumulatedType> const& gradientXY,
       brick::numeric::Array2D<AccumulatedType> const& gradientYY,
-      brick::numeric::Array2D<FloatType>& harrisIndicators)
+      brick::numeric::Array2D<FloatType>& harrisIndicators,
+      brick::numeric::Index2D const& corner0,
+      brick::numeric::Index2D const& corner1)
     {
+      // Get bounds on the region of valid pixels for this calculation.
+      unsigned int const startRow    = corner0.getRow();
+      unsigned int const stopRow     = corner1.getRow();
+      unsigned int const startColumn = corner0.getColumn();
+      unsigned int const stopColumn  = corner1.getColumn();
+
       // Adjust array size, if necessary.
       if((harrisIndicators.rows() != gradientXX.rows())
          || (harrisIndicators.columns() != gradientXX.columns())) {
         harrisIndicators.reinit(gradientXX.rows(), gradientXX.columns());
       }
 
-      for(unsigned int row = harrisIndicators.rows() - 2; row > 1; --row) {
+      // Iterate over all pixels in the valid region.
+      for(unsigned int row = stopRow - 1; row >= startRow; --row) {
         brick::numeric::Array1D<AccumulatedType> xxRow =
           gradientXX.getRow(row);
         brick::numeric::Array1D<AccumulatedType> xyRow =
@@ -380,7 +454,7 @@ namespace brick {
           gradientYY.getRow(row);
         brick::numeric::Array1D<FloatType> harrisRow =
           harrisIndicators.getRow(row);
-        for(unsigned int column = harrisIndicators.columns() - 2; column > 1;
+        for(unsigned int column = stopColumn - 1; column >= startColumn;
             --column) {
           AccumulatedType determinant = (xxRow[column] * yyRow[column]
                                 - xyRow[column] * xyRow[column]);
@@ -389,7 +463,7 @@ namespace brick {
         }
       }
     }
-    
+      
   } // namespace computerVision
   
 } // namespace brick

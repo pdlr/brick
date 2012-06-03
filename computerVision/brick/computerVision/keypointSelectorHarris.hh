@@ -74,6 +74,11 @@ namespace brick {
 
       /** 
        * Default constructor.
+       * 
+       * @param kappa This argument is the free parameter in the
+       * Harris corner metric computation.
+       * 
+       * @param sigma This argument is currently ignored.
        */
       KeypointSelectorHarris(FloatType kappa = 0.1,
                              FloatType sigma = 1.6);
@@ -89,15 +94,43 @@ namespace brick {
       getKeypoints() const;
 
 
+      /** 
+       * Return the keypoints detected during the most recent call to
+       * member function setImage().
+       * 
+       * @param iterator This argument must be a writable iterator
+       * pointing to KeypoindHarris<brick::common::Int32>.
+       * 
+       * @param threshold Increasing this threshold eliminates weaker
+       * corners from the output.
+       */
       template <class Iter>
       void
       getKeypoints(Iter iterator, FloatType threshold = 0.0) const;
 
 
+      /** 
+       * Return the keypoints detected during the most recent call to
+       * member function setImage(), and use subpixel interpolation to
+       * refine their positions.
+       * 
+       * @return The return value is vector of KeypointHarris instances.
+       */
       std::vector< KeypointHarris<FloatType> >
       getKeypointsGeneralPosition() const;
 
       
+      /** 
+       * Return the keypoints detected during the most recent call to
+       * member function setImage(), and use subpixel interpolation to
+       * refine their positions.
+       * 
+       * @param iterator This argument must be a writable iterator
+       * pointing to KeypoindHarris<FloatType>.
+       * 
+       * @param threshold Increasing this threshold eliminates weaker
+       * corners from the output.
+       */
       template <class Iter>
       void
       getKeypointsGeneralPosition(Iter iterator) const;
@@ -108,37 +141,11 @@ namespace brick {
        * 
        * @param inImage This argument is the image in which to look
        * for keypoints.
-       * 
-       * @param startRow This argument specifies the bounding box of
-       * the image region to use during estimation.  Omit it to
-       * process the whole image.
-       * 
-       * @param startColumn This argument specifies the bounding box of
-       * the image region to use during estimation.  Omit it to
-       * process the whole image.
-       * 
-       * @param stopRow This argument specifies the bounding box of
-       * the image region to use during estimation.  Omit it to
-       * process the whole image.
-       * 
-       * @param stopColumn This argument specifies the bounding box of
-       * the image region to use during estimation.  Omit it to
-       * process the whole image.
        */
       void
       setImage(Image<GRAY8> const& inImage);
 
 
-      // /** 
-      //  * Manually set the internal threshold of the algorithm.  See
-      //  * also member function estimateThreshold().
-      //  * 
-      //  * @param threshold This argument specifies the desired threshold.
-      //  */
-      // void
-      // setThreshold(brick::common::Int16 threshold);
-
-      
     private:
 
       typedef brick::common::Int32 AccumulatedType;
@@ -149,14 +156,19 @@ namespace brick {
         Image<GRAY_SIGNED32> const& inImage,
         brick::numeric::Array2D<AccumulatedType>& gradientXX,
         brick::numeric::Array2D<AccumulatedType>& gradientXY,
-        brick::numeric::Array2D<AccumulatedType>& gradientYY);
+        brick::numeric::Array2D<AccumulatedType>& gradientYY,
+        brick::numeric::Index2D& corner0,
+        brick::numeric::Index2D& corner1);
+        
       
       void
       computeHarrisIndicators(
         brick::numeric::Array2D<AccumulatedType> const& gradientXX,
         brick::numeric::Array2D<AccumulatedType> const& gradientXY,
         brick::numeric::Array2D<AccumulatedType> const& gradientYY,
-        brick::numeric::Array2D<FloatType>& harrisIndicators);
+        brick::numeric::Array2D<FloatType>& harrisIndicators,
+        brick::numeric::Index2D const& corner0,
+        brick::numeric::Index2D const& corner1);
 
       
       /* ======== Data members ========= */
@@ -165,6 +177,15 @@ namespace brick {
       brick::numeric::Array2D<AccumulatedType> m_gradientXY;
       brick::numeric::Array2D<AccumulatedType> m_gradientYY;
 
+      // These two members keep track of what portion of the image has
+      // valid data from which to compute keypoints.  This search
+      // region will dwindle as as an input image is processed because
+      // each successive filter leaves a little more deadspace at the
+      // edges of the image.
+      brick::numeric::Index2D m_searchRegionCorner0;
+      brick::numeric::Index2D m_searchRegionCorner1;
+
+      // Parameters of the algorithm itself.
       FloatType m_kappa;
       FloatType m_sigma;
     };

@@ -28,15 +28,6 @@
 #define BRICK_COMPUTERVISION_HARRIS_PEDANTIC 0
 #endif /* #ifndef BRICK_COMPUTERVISION_HARRIS_PEDANTIC */
 
-#define BRICK_COMPUTERVISION_HARRIS_DEBUG 1
-
-#if BRICK_COMPUTERVISION_HARRIS_DEBUG
-#include <brick/computerVision/sobel.hh>
-#include <brick/computerVision/utilities.hh>
-#include <brick/utilities/timeUtilities.hh>
-#endif
-
-
 namespace brick {
 
   namespace computerVision {
@@ -234,53 +225,58 @@ namespace brick {
       this->computeGradients(
         blurredImage, m_gradientXX, m_gradientXY, m_gradientYY);
 
+      // To get rotation independent Harris corners, the integration
+      // for each pixel needs to be weighted with a circularly
+      // symmetric window.  We'll use another gaussian blur.  Remember
+      // that we're convolving with the squares of gradients.  To
+      // avoid risk of overflow, this kernel is normalized so it
+      // integrates to a smaller value (45 * 45 = 2025).
+      gaussian = getGaussianKernelBySize<brick::common::Int32>(
+        size_t(11), size_t(11), -1.0, -1.0, true, 45, 45);
+      unsigned int radius = 5;
 
-#if 1 
-      Kernel<brick::common::Int32> gaussian2_8 =
-        getGaussianKernelBySize<brick::common::Int32>(
-          size_t(11), size_t(11), -1.0, -1.0, true, 45, 45);
+      // Do the weighted integration by means of separable convolution.
+      brick::numeric::filterRows(
+        workspace, m_gradientXX, gaussian.getRowComponent());
+      brick::numeric::filterColumns(
+        m_gradientXX, workspace, gaussian.getColumnComponent());
 
-      m_gradientXX = filter2D<GRAY_SIGNED32, GRAY_SIGNED32>(
-        gaussian2_8, Image<GRAY_SIGNED32>(m_gradientXX), 0);
-      m_gradientXY = filter2D<GRAY_SIGNED32, GRAY_SIGNED32>(
-        gaussian2_8, Image<GRAY_SIGNED32>(m_gradientXY), 0);
-      m_gradientYY = filter2D<GRAY_SIGNED32, GRAY_SIGNED32>(
-        gaussian2_8, Image<GRAY_SIGNED32>(m_gradientYY), 0);
+      brick::numeric::filterRows(
+        workspace, m_gradientXY, gaussian.getRowComponent());
+      brick::numeric::filterColumns(
+        m_gradientXY, workspace, gaussian.getColumnComponent());
 
+      brick::numeric::filterRows(
+        workspace, m_gradientYY, gaussian.getRowComponent());
+      brick::numeric::filterColumns(
+        m_gradientYY, workspace, gaussian.getColumnComponent());
+
+      // Again we have to worry about overflow.  Rather than guessing,
+      // just search to find the max value, and rescale based on that.
+      // Ideally, this search would be done during the convolution
+      // above.
+      brick::numeric::Index2D corner0(radius, radius);
+      brick::numeric::Index2D corner1(m_gradientXX.rows() - radius,
+                                      m_gradientXX.columns() - radius);
       brick::common::Int32 maxVal =
-        brick::numeric::maximum(m_gradientXX.ravel());
+        brick::numeric::maximum(
+          m_gradientXX.getRegion(corner0, corner1));
       maxVal = std::max(
-        maxVal, brick::numeric::maximum(m_gradientXY.ravel()));
+        maxVal, brick::numeric::maximum(
+          m_gradientXY.getRegion(corner0, corner1)));
       maxVal = std::max(
-        maxVal, brick::numeric::maximum(m_gradientYY.ravel()));
-      std::cout << "========" << maxVal << "========" << std::endl;
+        maxVal, brick::numeric::maximum(
+          m_gradientXY.getRegion(corner0, corner1)));
       brick::common::Int32 divisor = maxVal / 65535 + 1;
+
+      // Rescale each of the images.  The exact rescaling factor
+      // doesn't matter too much here, as all of the processing
+      // downstream from here is theoretically scale-independent.  The
+      // bigger divisor is, however, the more precision we lose, so we
+      // want divisor to be small.
       m_gradientXX /= divisor;
       m_gradientXY /= divisor;
       m_gradientYY /= divisor;
-#else      
-      double t0 = utilities::getCurrentTime();
-
-      // Apply a window function to the products of gradients.
-      Image<GRAY_SIGNED32> xxImage(m_gradientXX);
-      Image<GRAY_SIGNED32> xyImage(m_gradientXY);
-      Image<GRAY_SIGNED32> yyImage(m_gradientYY);
-      Image<GRAY_SIGNED32> workingImage(inImage.rows(), inImage.columns());
-      filterRowsBinomial<brick::common::Int32>(
-        workingImage, xxImage,      this->m_sigma);
-      filterColumnsBinomial<brick::common::Int32>(
-        xxImage,      workingImage, this->m_sigma);
-      filterRowsBinomial<brick::common::Int32>(
-        workingImage, xyImage,      this->m_sigma);
-      filterColumnsBinomial<brick::common::Int32>(
-        xyImage,      workingImage, this->m_sigma);
-      filterRowsBinomial<brick::common::Int32>(
-        workingImage, yyImage,      this->m_sigma);
-      filterColumnsBinomial<brick::common::Int32>(
-        yyImage,      workingImage, this->m_sigma);
-      double t1 = utilities::getCurrentTime();
-      std::cout << "ET: " << t1 - t0 << std::endl;
-#endif
 
       // Compute the Harris indicator for each pixel in the region.
       this->computeHarrisIndicators(m_gradientXX, m_gradientXY, m_gradientYY,

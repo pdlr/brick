@@ -150,7 +150,11 @@ namespace brick {
 
       typedef brick::common::Int32 AccumulatedType;
 
-      
+
+      // Slight misnomer.  This actually computes products of
+      // gradients within the region defined by corner0 and corner1.
+      // Also updates corner0 and corner1 to reflect the region over
+      // which the gradient calculation is valid.
       void
       computeGradients(
         Image<GRAY_SIGNED32> const& inImage,
@@ -160,7 +164,10 @@ namespace brick {
         brick::numeric::Index2D& corner0,
         brick::numeric::Index2D& corner1);
         
-      
+
+      // Give products of gradients, compute the Harris corner
+      // indicator at each pixel within the region defined by corner0
+      // and corner1.
       void
       computeHarrisIndicators(
         brick::numeric::Array2D<AccumulatedType> const& gradientXX,

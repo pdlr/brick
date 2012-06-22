@@ -49,6 +49,7 @@ brickComputerVision_HEADERS	= \
 	imageFormatTraits.hh imageFormatTraits_impl.hh \
 	imagePyramid.hh imagePyramid_impl.hh \
 	imageWarper.hh imageWarper_impl.hh \
+	iterativeClosestPoint.hh iterativeClosestPoint_impl.hh \
 	kdTree.hh kdTree_impl.hh \
 	kernel.hh kernel_impl.hh \
 	kernels.hh kernels_impl.hh \

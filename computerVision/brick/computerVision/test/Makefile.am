@@ -161,7 +161,6 @@ LDADD			= -lbrickComputerVision \
 			  -lbrickTestAutoMain \
 			  -llapack -lblas \
 			  -lpng \
-			  -lfftw3 \
 			  -lm
 
 

@@ -448,8 +448,10 @@ namespace brick {
       const Type piOverTwo = 1.57079632679;
 
       // Start by recovering pitch.
+
       // Type sinePitch = transform3D.value<0, 2>();
-      Type sinePitch = transform3D();
+      Type sinePitch = transform3D(0, 2);
+
       // Type cosinePitch = brick::common::squareRoot(
       //   transform3D.value<0, 0>() * transform3D.value<0, 0>()
       //   + transform3D.value<0, 1>() * transform3D.value<0, 1>());

@@ -100,12 +100,12 @@ namespace brick {
                     tz += (2 * maxTranslation / numTranslations)) {
 
                   // Build a ground truth coordinate transform.
-		  num::Vector3D<double> rollPitchYaw(roll, pitch, yaw);
+                  num::Vector3D<double> rollPitchYaw(roll, pitch, yaw);
                   num::Transform3D<double> observedFromModel =
                     num::rollPitchYawToTransform3D<double>(rollPitchYaw);
-		  observedFromModel.setValue(0, 3, tx);
-		  observedFromModel.setValue(1, 3, ty);
-		  observedFromModel.setValue(2, 3, tz);
+                  observedFromModel.setValue(0, 3, tx);
+                  observedFromModel.setValue(1, 3, ty);
+                  observedFromModel.setValue(2, 3, tz);
                   num::Transform3D<double> modelFromObserved = 
                     observedFromModel.invert();
 
@@ -124,17 +124,17 @@ namespace brick {
                   icp.setModelPoints(modelPoints.begin(), modelPoints.end());
                   modelFromObservedEstimate = icp.registerPoints(
                     observedPoints.begin(), observedPoints.end(),
-		    modelFromObservedEstimate);
-		  observedFromModelEstimate = 
+                    modelFromObservedEstimate);
+                  observedFromModelEstimate = 
                     modelFromObservedEstimate.invert();
 
                   // Verify that we've recovered the correct transform.
                   double txEstimate = observedFromModelEstimate(0, 3);
                   double tyEstimate = observedFromModelEstimate(1, 3);
                   double tzEstimate = observedFromModelEstimate(2, 3);
-		  num::Vector3D<double> rollPitchYawEstimate =
-		    num::transform3DToRollPitchYaw<double>(
-		      observedFromModelEstimate);
+                  num::Vector3D<double> rollPitchYawEstimate =
+                    num::transform3DToRollPitchYaw<double>(
+                      observedFromModelEstimate);
 
                   BRICK_TEST_ASSERT(
                     com::approximatelyEqual(
@@ -147,13 +147,13 @@ namespace brick {
                       tzEstimate, tz, this->m_defaultTolerance));
                   BRICK_TEST_ASSERT(
                     com::approximatelyEqual(rollPitchYawEstimate.x(), roll, 
-					    this->m_defaultTolerance));
+                                            this->m_defaultTolerance));
                   BRICK_TEST_ASSERT(
                     com::approximatelyEqual(rollPitchYawEstimate.y(), pitch, 
-					    this->m_defaultTolerance));
+                                            this->m_defaultTolerance));
                   BRICK_TEST_ASSERT(
                     com::approximatelyEqual(rollPitchYawEstimate.z(), yaw,
-					    this->m_defaultTolerance));
+                                            this->m_defaultTolerance));
                 }
               }
             }

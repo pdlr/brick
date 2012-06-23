@@ -70,7 +70,7 @@ namespace brick {
       registerPoints(
         Iter beginIter, Iter endIter,
         brick::numeric::Transform3D<FloatType> const& modelFromQueryEstimate 
-	= brick::numeric::Transform3D<FloatType>());
+        = brick::numeric::Transform3D<FloatType>());
       
       
       template <class Iter>
@@ -80,7 +80,7 @@ namespace brick {
 
       void
       setInitialTransform(brick::numeric::Transform3D<FloatType> const&
-			  modelFromQueryEstimate);
+                          modelFromQueryEstimate);
 
 
     protected:
@@ -88,20 +88,20 @@ namespace brick {
       brick::numeric::Transform3D<FloatType>
       estimateTransformModelFromQuery(
         std::vector<Type> const& selectedQueryPoints,
-	std::vector<Type> const& matchingModelPoints,
-	std::vector<FloatType> const& weights);
+        std::vector<Type> const& matchingModelPoints,
+        std::vector<FloatType> const& weights);
 
 
       bool
       findMatches(std::vector<Type>& matchingModelPoints,
-		  std::vector<FloatType>& weights,
-		  std::vector<Type> const& queryPoints,
-		  brick::numeric::Transform3D<FloatType> const& modelFromQuery);
+                  std::vector<FloatType>& weights,
+                  std::vector<Type> const& queryPoints,
+                  brick::numeric::Transform3D<FloatType> const& modelFromQuery);
 
 
       void
       selectQueryPoints(std::vector<Type>& selectedQueryPoints,
-			std::vector<Type> const& allQueryPoints);
+                        std::vector<Type> const& allQueryPoints);
 
 
       FloatType                          m_convergenceThreshold;

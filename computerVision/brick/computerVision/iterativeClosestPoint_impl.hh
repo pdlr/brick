@@ -33,8 +33,8 @@ namespace brick {
     IterativeClosestPoint<Dimension, Type, FloatType>::
     IterativeClosestPoint()
       : m_convergenceThreshold(0.1), // TBD: set this and add better term crit.
-	m_distanceThreshold(1.0),    // TBD: set this and add better criterion.
-	m_modelTree()
+        m_distanceThreshold(1.0),    // TBD: set this and add better criterion.
+        m_modelTree()
     {
       // Empty.
     }
@@ -118,10 +118,10 @@ namespace brick {
       std::vector<FloatType> const& weights)
     {
       return registerPoints3D<FloatType>(selectedQueryPoints.begin(),
-					 selectedQueryPoints.end(),
-					 matchingModelPoints.begin(),
-					 weights.begin(),
-					 true);
+                                         selectedQueryPoints.end(),
+                                         matchingModelPoints.begin(),
+                                         weights.begin(),
+                                         true);
     }
 
 
@@ -145,19 +145,19 @@ namespace brick {
 
       for(unsigned int ii = 0; ii < queryPoints.size(); ++ii) {
         FloatType distance;
-	brick::numeric::Vector3D<FloatType> transformedQueryPoint =
-	  modelFromQuery * queryPoints[ii];
+        brick::numeric::Vector3D<FloatType> transformedQueryPoint =
+          modelFromQuery * queryPoints[ii];
         matchingModelPoints[ii] = this->m_modelTree.findNearest(
           transformedQueryPoint, distance);
 
         // Checks of normals, etc., go here.
-	if(distance < this->m_distanceThreshold) {
-	  weights[ii] = 1.0;
-	  rmsError += distance * distance;
-	  ++count;
-	} else {
-	  weights[ii] = 0.0;
-	}
+        if(distance < this->m_distanceThreshold) {
+          weights[ii] = 1.0;
+          rmsError += distance * distance;
+          ++count;
+        } else {
+          weights[ii] = 0.0;
+        }
       }
 
       // std::sort(distances.begin(), distance.end());
@@ -180,9 +180,6 @@ namespace brick {
       selectedQueryPoints = allQueryPoints;
     }
 
-
-    
-    
   } // namespace computerVision
   
 } // namespace brick

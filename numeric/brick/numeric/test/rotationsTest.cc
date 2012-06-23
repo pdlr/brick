@@ -264,7 +264,25 @@ namespace brick {
     RotationsTest::
     testTransform3DToRollPitchYaw()
     {
+      // We test by comparison to the (presumably known good)
+      // rollPitchYawToTransform3D routine, and promise to make a more
+      // comprehensive test later.
+      for(double roll = -1.0; roll < 1.0; ++roll) {
+        for(double pitch = -1.0; pitch < 1.0; ++pitch) {
+          for(double yaw = -1.0; yaw < 1.0; ++yaw) {
+            Transform3D<double> xf0 = rollPitchYawToTransform3D(
+              Vector3D<double>(roll, pitch, yaw));
+            Vector3D<double> recoveredRPY = transform3DToRollPitchYaw(xf0);
 
+            BRICK_TEST_ASSERT(
+              approximatelyEqual(recoveredRPY.x(), roll, m_defaultTolerance));
+            BRICK_TEST_ASSERT(
+              approximatelyEqual(recoveredRPY.y(), pitch, m_defaultTolerance));
+            BRICK_TEST_ASSERT(
+              approximatelyEqual(recoveredRPY.z(), yaw, m_defaultTolerance));
+          }
+        }
+      }
     }
   
 

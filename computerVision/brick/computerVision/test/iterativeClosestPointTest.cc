@@ -64,10 +64,12 @@ namespace brick {
     {
       // Test parameters.
       unsigned int const extent       = 10;
-      double       const maxRotation  = 0.5;  // Radians.
-      unsigned int const numRotations = 5;
-      double       const maxTranslation  = 0.5;
-      unsigned int const numTranslations = 5;
+      // double       const maxRotation  = 0.5;  // Radians.
+      double       const maxRotation  = 0.05;  // Radians.
+      unsigned int const numRotations = 3;
+      // double       const maxTranslation  = 0.5;
+      double       const maxTranslation  = 0.05;
+      unsigned int const numTranslations = 2;
 
       std::vector< num::Vector3D<double> > modelPoints;
 
@@ -101,6 +103,9 @@ namespace brick {
 		  num::Vector3D<double> rollPitchYaw(roll, pitch, yaw);
                   num::Transform3D<double> observedFromModel =
                     num::rollPitchYawToTransform3D<double>(rollPitchYaw);
+		  observedFromModel.setValue(0, 3, tx);
+		  observedFromModel.setValue(1, 3, ty);
+		  observedFromModel.setValue(2, 3, tz);
                   num::Transform3D<double> modelFromObserved = 
                     observedFromModel.invert();
 
@@ -114,19 +119,22 @@ namespace brick {
 
                   // Recover the coordinate transformation by ICP.
                   num::Transform3D<double> modelFromObservedEstimate;
+                  num::Transform3D<double> observedFromModelEstimate;
                   IterativeClosestPoint<3, num::Vector3D<double>, double> icp;
                   icp.setModelPoints(modelPoints.begin(), modelPoints.end());
                   modelFromObservedEstimate = icp.registerPoints(
                     observedPoints.begin(), observedPoints.end(),
 		    modelFromObservedEstimate);
+		  observedFromModelEstimate = 
+                    modelFromObservedEstimate.invert();
 
                   // Verify that we've recovered the correct transform.
-                  double txEstimate = modelFromObservedEstimate(0, 3);
-                  double tyEstimate = modelFromObservedEstimate(1, 3);
-                  double tzEstimate = modelFromObservedEstimate(2, 3);
+                  double txEstimate = observedFromModelEstimate(0, 3);
+                  double tyEstimate = observedFromModelEstimate(1, 3);
+                  double tzEstimate = observedFromModelEstimate(2, 3);
 		  num::Vector3D<double> rollPitchYawEstimate =
 		    num::transform3DToRollPitchYaw<double>(
-		      modelFromObservedEstimate);
+		      observedFromModelEstimate);
 
                   BRICK_TEST_ASSERT(
                     com::approximatelyEqual(

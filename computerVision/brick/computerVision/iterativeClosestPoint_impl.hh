@@ -80,11 +80,13 @@ namespace brick {
       brick::numeric::Transform3D<FloatType> modelFromQuery =
         modelFromQueryEstimate;
 
+      unsigned int count = 0;
+      FloatType rmsError(0);
       bool isConverged = false;
       while(!isConverged) {
         this->selectQueryPoints(selectedQueryPoints, queryPoints);
         isConverged |= this->findMatches(
-          matchingModelPoints, weights, selectedQueryPoints,
+          matchingModelPoints, weights, count, rmsError, selectedQueryPoints,
           modelFromQuery);
         modelFromQuery = this->estimateTransformModelFromQuery(
           selectedQueryPoints, matchingModelPoints, weights);
@@ -130,11 +132,13 @@ namespace brick {
     IterativeClosestPoint<Dimension, Type, FloatType>::
     findMatches(std::vector<Type>& matchingModelPoints,
                 std::vector<FloatType>& weights,
+		unsigned int& count,
+		FloatType& rmsError,
                 std::vector<Type> const& queryPoints,
                 brick::numeric::Transform3D<FloatType> const& modelFromQuery)
     {
-      unsigned int count = 0;
-      double rmsError = 0.0;
+      count = 0;
+      rmsError = FloatType(0);
 
       if(matchingModelPoints.size() != queryPoints.size()) {
         matchingModelPoints.resize(queryPoints.size());

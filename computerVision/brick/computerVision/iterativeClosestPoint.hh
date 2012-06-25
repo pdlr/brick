@@ -95,6 +95,8 @@ namespace brick {
       bool
       findMatches(std::vector<Type>& matchingModelPoints,
                   std::vector<FloatType>& weights,
+		  unsigned int& count,
+		  FloatType& rmsError,
                   std::vector<Type> const& queryPoints,
                   brick::numeric::Transform3D<FloatType> const& modelFromQuery);
 

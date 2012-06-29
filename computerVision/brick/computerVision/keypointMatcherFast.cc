@@ -24,7 +24,7 @@ namespace brick {
     KeypointMatcherFast::
     KeypointMatcherFast(double expectedRotation)
       : m_expectedRotation(expectedRotation),
-       m_keypointMapNegative(),
+        m_keypointMapNegative(),
         m_keypointMapPositive()
     {
       // Empty.
@@ -97,7 +97,7 @@ namespace brick {
       double minimumSsd = std::numeric_limits<double>::max();
 
       // For "negative" rotations.
-      for(unsigned int ii = 1; ii <= angleInSamples; ++ii) {
+      for(unsigned int ii = angleInSamples - 1; ii > 0; --ii) {
         double ssd0 = 0.0;
 
         // Account for "wrap" at the beginning of the feature vector,
@@ -136,7 +136,7 @@ namespace brick {
       }
 
       // For positive rotation.
-      for(unsigned int ii = 1; ii <= angleInSamples; ++ii) {
+      for(unsigned int ii = angleInSamples - 1; ii > 0; --ii) {
 
         double ssd0 = 0.0;
 
@@ -176,7 +176,7 @@ namespace brick {
         return false;
       }
       
-      // Start by finding the keypoint who's feature vector mean is
+      // Start by finding the keypoint whose feature vector mean is
       // closest to that of the query point.  This is a good starting
       // point for a linear search.
       typedef std::map<double, KeypointFast>::const_iterator MapIterator;

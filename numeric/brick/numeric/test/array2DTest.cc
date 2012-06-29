@@ -88,6 +88,7 @@ namespace brick {
       // Tests of member functions.
       void testConstructor__void();
       void testConstructor__size_t__size_t();
+      void testConstructor__size_t__size_t__size_t();
       void testConstructor__string();
       void testConstructor__Array2D();
       void testConstructor__size_t__size_t__TypePtr();
@@ -107,6 +108,7 @@ namespace brick {
       void testDataConst__size_t__size_t();
       void testEnd();
       void testEndConst();
+      void testGetRegion();
       void testRavel();
       void testRavelConst();
       void testReadFromStream();
@@ -175,6 +177,7 @@ namespace brick {
       // Tests of member functions.
       BRICK_TEST_REGISTER_MEMBER(testConstructor__void);
       BRICK_TEST_REGISTER_MEMBER(testConstructor__size_t__size_t);
+      BRICK_TEST_REGISTER_MEMBER(testConstructor__size_t__size_t__size_t);
       BRICK_TEST_REGISTER_MEMBER(testConstructor__string);
       BRICK_TEST_REGISTER_MEMBER(testConstructor__Array2D);
       BRICK_TEST_REGISTER_MEMBER(testConstructor__size_t__size_t__TypePtr);
@@ -194,6 +197,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testDataConst__size_t__size_t);
       BRICK_TEST_REGISTER_MEMBER(testEnd);
       BRICK_TEST_REGISTER_MEMBER(testEndConst);
+      BRICK_TEST_REGISTER_MEMBER(testGetRegion);
       BRICK_TEST_REGISTER_MEMBER(testRavel);
       BRICK_TEST_REGISTER_MEMBER(testRavelConst);
       BRICK_TEST_REGISTER_MEMBER(testReadFromStream);
@@ -340,6 +344,38 @@ namespace brick {
       BRICK_TEST_ASSERT(array0.rows() == m_defaultArrayRows);
       BRICK_TEST_ASSERT(array0.columns() == m_defaultArrayColumns);
       BRICK_TEST_ASSERT(array0.size() == m_defaultArraySize);
+    }
+  
+
+    template <class Type>
+    void
+    Array2DTest<Type>::
+    testConstructor__size_t__size_t__size_t()
+    {
+      // This constructor should initialize to the specified size.
+      Array2D<Type> array0(m_defaultArrayRows, m_defaultArrayColumns,
+                           m_defaultArrayColumns + 2);
+      BRICK_TEST_ASSERT(array0.rows() == m_defaultArrayRows);
+      BRICK_TEST_ASSERT(array0.columns() == m_defaultArrayColumns);
+      BRICK_TEST_ASSERT(array0.size() == m_defaultArraySize);
+
+      array0 = Type(1);
+      array0(1, 2) = Type(2);
+      array0(2, 1) = Type(3);
+      unsigned int rowStep = m_defaultArrayColumns + 2;
+      for(unsigned int rr = 0; rr < m_defaultArrayRows; ++rr) {
+        for(unsigned int cc = 0; cc < m_defaultArrayColumns; ++cc) {
+          BRICK_TEST_ASSERT(
+            &(array0(rr, cc)) == array0.getData() + cc + rr * rowStep);
+          if((1 == rr) && (2 == cc)) {
+            BRICK_TEST_ASSERT(2 == array0(rr, cc))
+          } else if((2 == rr) && (1 == cc)) {
+            BRICK_TEST_ASSERT(3 == array0(rr, cc))
+          } else {
+            BRICK_TEST_ASSERT(1 == array0(rr, cc))
+          }
+        }
+      }
     }
   
 
@@ -705,6 +741,52 @@ namespace brick {
         m_defaultArrayRows, m_defaultArrayColumns, m_fibonacciCArray);
       Type* finalElementPtr = m_fibonacciCArray + m_defaultArraySize;
       BRICK_TEST_ASSERT(&(*(array0.end())) == finalElementPtr);
+    }
+
+
+    template <class Type>
+    void
+    Array2DTest<Type>::
+    testGetRegion()
+    {
+      // Create an array in which every element is set to 1.
+      Array2D<Type> fullArray(10, 20);
+      fullArray = Type(1);
+      
+      // Get an array that refers to a 4x4 subset of fullArray.
+      Index2D corner0(5, 10);
+      Index2D corner1(9, 14);
+      Array2D<Type> subRegion = fullArray.getRegion(corner0, corner1);
+      
+      // Set just the elements within that subset to 100.
+      subRegion = Type(100);
+
+      // And set one more element to 50.
+      subRegion(1, 2) = Type(50);
+
+      // Check that all is as expected.
+      for(unsigned int rr = 0; rr < fullArray.rows(); ++rr) {
+        for(unsigned int cc = 0; cc < fullArray.columns(); ++cc) {
+
+          if((static_cast<int>(rr) == corner0.getRow()    + 1) &&
+             (static_cast<int>(cc) == corner0.getColumn() + 2)) {
+            
+            BRICK_TEST_ASSERT(Type(50) == fullArray(rr, cc));
+            
+          } else if((static_cast<int>(rr) >= corner0.getRow()) &&
+                    (static_cast<int>(rr) <  corner1.getRow()) &&
+                    (static_cast<int>(cc) >= corner0.getColumn()) &&
+                    (static_cast<int>(cc) <  corner1.getColumn())) {
+
+            BRICK_TEST_ASSERT(Type(100) == fullArray(rr, cc));
+
+          } else {
+
+            BRICK_TEST_ASSERT(Type(1) == fullArray(rr, cc));
+
+          }
+        }
+      }
     }
 
 

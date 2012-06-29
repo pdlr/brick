@@ -49,11 +49,13 @@ brickComputerVision_HEADERS	= \
 	imageFormatTraits.hh imageFormatTraits_impl.hh \
 	imagePyramid.hh imagePyramid_impl.hh \
 	imageWarper.hh imageWarper_impl.hh \
+	iterativeClosestPoint.hh iterativeClosestPoint_impl.hh \
 	kdTree.hh kdTree_impl.hh \
 	kernel.hh kernel_impl.hh \
 	kernels.hh kernels_impl.hh \
 	keypointMatcherFast.hh keypointMatcherFast_impl.hh \
 	keypointSelectorFast.hh keypointSelectorFast_impl.hh \
+	keypointSelectorHarris.hh keypointSelectorHarris_impl.hh \
 	naiveSnake.hh naiveSnake_impl.hh \
 	nonMaximumSuppress.hh nonMaximumSuppress_impl.hh \
 	nChooseKSampleSelector.hh nChooseKSampleSelector_impl.hh \

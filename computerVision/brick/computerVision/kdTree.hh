@@ -13,6 +13,7 @@
 #ifndef BRICK_COMPUTERVISION_KDTREE_HH
 #define BRICK_COMPUTERVISION_KDTREE_HH
 
+#include <cstdlib>
 #include <functional>
 #include <vector>
 
@@ -259,6 +260,36 @@ namespace brick {
        */
       virtual
       ~KDTree();
+
+
+      /**
+       * This member function clears a KDTree instance, and then
+       * populates it with the specified sample points.  It has
+       * complexity O(N*log(N)), where N is the number of elements to
+       * be inserted into the tree.
+       * 
+       * Future implementations may add points to the existing tree,
+       * without clearing the tree first, so please explicitly
+       * call the clear() member function prior to adding samples.
+       *
+       * @param beginIter This argument is an iterator pointing to the
+       * beginning of a sequence of Type instances that is to be
+       * inserted into the tree.
+       * 
+       * @param endIter This argument is an interator pointing one
+       * element past the last Type instance in the sequence that is
+       * to be inserted into the tree.
+       */
+      template <class Iter>
+      void
+      addSamples(Iter beginIter, Iter endIter);
+
+
+      /**
+       * This member function removes all samples, leaving an empty tree.
+       */
+      void
+      clear();
 
 
       /** 

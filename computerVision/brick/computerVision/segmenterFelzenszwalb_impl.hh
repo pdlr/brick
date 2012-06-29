@@ -309,8 +309,9 @@ namespace brick {
         smoothedImage = convertColorspace<GRAY_FLOAT32>(inputImage);
       } else {
         Kernel<brick::common::Float32> gaussian =
-          getGaussianKernel<brick::common::Float32>(m_smoothSize, m_smoothSize,
-                                                    m_sigma, m_sigma);
+          getGaussianKernelBySize<brick::common::Float32>(
+            m_smoothSize, m_smoothSize,
+            m_sigma, m_sigma);
         smoothedImage = 
           filter2D<GRAY_FLOAT32, FORMAT>(
             gaussian, inputImage, brick::common::Float32(0));

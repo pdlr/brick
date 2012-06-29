@@ -1013,6 +1013,45 @@ namespace brick {
     }
 
 
+    // This function returns a copy of the largest element in the input
+    // Array2D instance.
+    template <class Type>
+    inline Type
+    maximum(Array2D<Type> const& array0)
+    {
+      return maximum(array0, std::less<Type>());
+    }
+
+
+    // This function returns a copy of the largest element in the input
+    // Array2D instance, where largeness is defined by the return value
+    // of the second argument.
+    template <class Type, class Functor>
+    Type
+    maximum(Array2D<Type> const& array0, Functor comparator)
+    {
+      Type maxElement = 0;
+      
+      if(array0.size() == 0) {
+        BRICK_THROW(brick::common::ValueException, "maximum()",
+                   "Can't find the maximum element of an empty array.");
+      }
+
+      if(array0.isContiguous()) {
+        maxElement = *std::max_element(array0.begin(), array0.end(),
+                                       comparator);
+      } else {
+        for(unsigned int rr = 0; rr < array0.rows(); ++rr) {
+          Type candidate = maximum(array0.getRow(rr), comparator);
+          if(comparator(maxElement, candidate)) {
+            maxElement = candidate;
+          }
+        }
+      }
+      return maxElement;
+    }
+
+
     // This function computes the average value, or geometric mean, of
     // the elements of input sequence.
     template <class Type, class Iterator>

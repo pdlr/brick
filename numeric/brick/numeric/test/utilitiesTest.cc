@@ -58,7 +58,8 @@ namespace brick {
       void testCompress0();
       void testCompress1();
       void testCount();
-      void testGetMeanAndCovariance();    
+      void testGetMeanAndCovariance();
+      void testMaximum();
       void testNormalizedCorrelation();
       void testSum0();
       void testTake_Array1D_Array1D();
@@ -120,7 +121,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testCompress1);
       BRICK_TEST_REGISTER_MEMBER(testCount);
       BRICK_TEST_REGISTER_MEMBER(testGetMeanAndCovariance);
-      BRICK_TEST_REGISTER_MEMBER(testNormalizedCorrelation);
+      BRICK_TEST_REGISTER_MEMBER(testMaximum);
       BRICK_TEST_REGISTER_MEMBER(testSum0);
       BRICK_TEST_REGISTER_MEMBER(testTake_Array1D_Array1D);
       BRICK_TEST_REGISTER_MEMBER(testTake_Array2D_Array1D);
@@ -612,6 +613,45 @@ namespace brick {
           testCovariance, referenceCovariance, m_defaultTolerance));
     }
 
+
+    template <class Type>
+    void
+    UtilitiesTest<Type>::
+    testMaximum()
+    {
+      // Build inputArray..
+      Array2D<double> inputArray(
+        "[[1.0,  4.0,   2.0,  -3.0, 21.0],"
+        " [6.0,  4.0,   7.0,   6.0, -2.0],"
+        " [2.0,  5.0, -10.0,  -3.0, 10.0],"
+        " [20.0, 4.0,   2.0,   3.0, -2.0]]");
+
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(
+          maximum(inputArray.getRegion(Index2D(0, 0), Index2D(3, 4))),
+          7.0, m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(
+          maximum(inputArray.getRegion(Index2D(0, 0), Index2D(3, 5))),
+          21.0, m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(
+          maximum(inputArray.getRegion(Index2D(0, 0), Index2D(4, 4))),
+          20.0, m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(
+          maximum(inputArray.getRegion(Index2D(0, 1), Index2D(4, 4))),
+          7.0, m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(
+          maximum(inputArray.getRegion(Index2D(1, 0), Index2D(4, 4))),
+          20.0, m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(
+          maximum(inputArray.getRegion(Index2D(1, 1), Index2D(4, 5))),
+          10.0, m_defaultTolerance));
+    }
+    
 
     template <class Type>
     void

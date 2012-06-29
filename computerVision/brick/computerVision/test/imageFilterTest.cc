@@ -121,11 +121,11 @@ namespace brick {
     testFilter2D_nonSeparable()
     {
       Image<GRAY8> inputImage0 = readPGM8(getTestImageFileNamePGM0());
-      numeric::Array2D<double> kernelData("[[1.0, 2.0, 1.0],"
-                                 " [2.0, 4.0, 2.0],"
-                                 " [3.0, 5.0, 4.0],"
-                                 " [2.0, 5.0, 1.0],"
-                                 " [0.0, 2.0, 1.0]]");
+      numeric::Array2D<double> kernelData("[[1.00001, 2.02, 1.4],"
+                                 " [2.00006, 4.003, 2.00000001],"
+                                 " [3.8, 5.00008, 4.02],"
+                                 " [2.9, 5.3, 1.0002],"
+                                 " [0.0, 2.0003, 1.004]]");
       kernelData /= numeric::sum<double>(ravel(kernelData));
       Kernel<double> kernel0(kernelData);
       // Note(xxx): Need to make this not require explicit template
@@ -499,10 +499,12 @@ namespace brick {
           for(size_t kernelRow = 0; kernelRow < kernel.rows(); ++kernelRow) {
             for(size_t kernelColumn = 0; kernelColumn < kernel.columns();
                 ++kernelColumn) {
-              dotProduct += (
-                inputImage(imageRow - halfKernelRows + kernelRow,
-                           imageColumn - halfKernelColumns + kernelColumn)
-                * kernel(kernelRow, kernelColumn));
+              unsigned int pixelRow =
+                imageRow - halfKernelRows + kernelRow;
+              unsigned int pixelColumn =
+                imageColumn - halfKernelColumns + kernelColumn;
+              dotProduct += (inputImage(pixelRow, pixelColumn)
+                             * kernel(kernelRow, kernelColumn));
             }
           }
           resultImage(imageRow, imageColumn) =

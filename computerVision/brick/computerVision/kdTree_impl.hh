@@ -47,6 +47,31 @@ namespace brick {
         m_leftChild(0),
         m_rightChild(0)
     {
+      this->addSamples(beginIter, endIter);
+    }
+      
+    
+    // The destructor cleans up any system resources during destruction.
+    template <unsigned int Dimension, class Type, class FloatType>
+    KDTree<Dimension, Type, FloatType>::
+    ~KDTree() 
+    {
+      this->clear();
+    }
+
+
+    // This member function populate a KDTree instance with the
+    // specified sample points.
+    template <unsigned int Dimension, class Type, class FloatType>
+    template <class Iter>
+    void
+    KDTree<Dimension, Type, FloatType>::
+    addSamples(Iter beginIter, Iter endIter)
+    {
+      // It would be nice to do away with this, so that points can be
+      // added in stages, if desired.
+      this->clear();
+
       if(beginIter == endIter) {
         return;
       }
@@ -57,12 +82,14 @@ namespace brick {
       this->construct(pointVector.begin(), pointVector.end(),
                       pointVector.size(), 0);
     }
-      
-    
-    // The destructor cleans up any system resources during destruction.
+
+
+    // This member function removes all samples, leaving an empty tree.
     template <unsigned int Dimension, class Type, class FloatType>
+    void
     KDTree<Dimension, Type, FloatType>::
-    ~KDTree() {
+    clear()
+    {
       if(m_leftChild != 0) {
         delete m_leftChild;
       }

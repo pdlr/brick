@@ -47,9 +47,11 @@ TESTS = \
 	imageFilterTest \
 	imagePyramidTest \
 	imageWarperTest \
+	iterativeClosestPointTest \
 	kdTreeTest \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
+	keypointSelectorHarrisTest \
 	naiveSnakeTest \
 	nChooseKSampleSelectorTest \
 	nonMaximumSuppressTest \
@@ -81,9 +83,11 @@ check_PROGRAMS = \
 	imageFilterTest \
 	imagePyramidTest \
 	imageWarperTest \
+	iterativeClosestPointTest \
 	kdTreeTest \
 	keypointMatcherFastTest \
 	keypointSelectorFastTest \
+	keypointSelectorHarrisTest \
 	naiveSnakeTest \
 	nChooseKSampleSelectorTest \
 	nonMaximumSuppressTest \
@@ -115,9 +119,11 @@ getEuclideanDistanceTest_SOURCES	= getEuclideanDistanceTest.cc
 imageFilterTest_SOURCES		= imageFilterTest.cc testImages.hh
 imagePyramidTest_SOURCES	= imagePyramidTest.cc testImages.hh
 imageWarperTest_SOURCES		= imageWarperTest.cc
+iterativeClosestPointTest_SOURCES	= iterativeClosestPointTest.cc
 kdTreeTest_SOURCES		= kdTreeTest.cc
 keypointMatcherFastTest_SOURCES	= keypointMatcherFastTest.cc
 keypointSelectorFastTest_SOURCES	= keypointSelectorFastTest.cc
+keypointSelectorHarrisTest_SOURCES	= keypointSelectorHarrisTest.cc
 naiveSnakeTest_SOURCES		= naiveSnakeTest.cc
 nChooseKSampleSelectorTest_SOURCES	= nChooseKSampleSelectorTest.cc
 nonMaximumSuppressTest_SOURCES	= nonMaximumSuppressTest.cc
@@ -155,7 +161,6 @@ LDADD			= -lbrickComputerVision \
 			  -lbrickTestAutoMain \
 			  -llapack -lblas \
 			  -lpng \
-			  -lfftw3 \
 			  -lm
 
 

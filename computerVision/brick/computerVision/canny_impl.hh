@@ -188,7 +188,7 @@ namespace brick {
           ImageFormatIdentifierGray<FloatType>::Format>(inputImage);
       } else {
         Kernel<FloatType> gaussian =
-          getGaussianKernel<FloatType>(gaussianSize, gaussianSize);
+          getGaussianKernelBySize<FloatType>(gaussianSize, gaussianSize);
         blurredImage =
           filter2D<ImageFormatIdentifierGray<FloatType>::Format, FORMAT,
                    FloatType>(

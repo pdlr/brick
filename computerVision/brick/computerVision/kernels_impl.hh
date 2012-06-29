@@ -19,6 +19,7 @@
 // #include <brick/computerVision/kernels.hh>
 
 #include <cmath>
+#include <brick/numeric/typeConverter.hh>
 #include <brick/numeric/utilities.hh>
 
 namespace brick {
@@ -30,19 +31,28 @@ namespace brick {
       
       template <class TYPE>
       brick::numeric::Array1D<TYPE>
-      getGaussian1D(size_t size, double sigma, bool normalize=false)
+      getGaussian1D(size_t size, double sigma, bool normalize=false,
+                    TYPE normalizationTarget = 1)
       {
         const double myPi = 3.14159265359;
+        brick::numeric::Array1D<double> buffer(size);
         brick::numeric::Array1D<TYPE> result(size);
         double x = (1.0 - static_cast<double>(size))/2.0;
         double twoSigmaSq = 2.0 * sigma * sigma;
         double k = 1.0 / (std::sqrt(2.0 * myPi) * sigma);
         for(size_t index0 = 0; index0 < size; ++index0) {
-          result[index0] = k * exp(-x * x / twoSigmaSq);
+          buffer[index0] = k * exp(-x * x / twoSigmaSq);
           x += 1.0;
         }
+        
+        double scaleFactor = 1.0;
         if(normalize) {
-          result /= brick::numeric::sum<TYPE>(result);
+          double integral = brick::numeric::sum<double>(buffer);
+          scaleFactor = normalizationTarget / integral;
+        }
+        for(size_t index0 = 0; index0 < size; ++index0) {
+          result[index0] = brick::numeric::convertType<TYPE>(
+            buffer[index0] * scaleFactor);
         }
         return result;
       }
@@ -54,7 +64,10 @@ namespace brick {
     // This function generates and returns a separable Gaussian kernel.
     template<class KERNEL_TYPE>
     Kernel<KERNEL_TYPE>
-    getGaussianKernel(double rowSigma, double columnSigma)
+    getGaussianKernel(double rowSigma, double columnSigma,
+                      bool normalize,
+                      KERNEL_TYPE rowNormalizationTarget,
+                      KERNEL_TYPE columnNormalizationTarget)
     {
       size_t rows = static_cast<size_t>(6.0 * rowSigma + 1.0);
       size_t columns = static_cast<size_t>(6.0 * columnSigma + 1.0);
@@ -65,15 +78,19 @@ namespace brick {
         ++columns;
       }
       return getGaussianKernel<KERNEL_TYPE>(
-        rows, columns, rowSigma, columnSigma);
+        rows, columns, rowSigma, columnSigma, normalize,
+        rowNormalizationTarget, columnNormalizationTarget);
     }
 
     
     // This function generates and returns a separable Gaussian kernel.
     template<class KERNEL_TYPE>
     Kernel<KERNEL_TYPE>
-    getGaussianKernel(size_t rows, size_t columns,
-                      double rowSigma, double columnSigma)
+    getGaussianKernelBySize(size_t rows, size_t columns,
+                            double rowSigma, double columnSigma,
+                            bool normalize,
+                            KERNEL_TYPE rowNormalizationTarget,
+                            KERNEL_TYPE columnNormalizationTarget)
     {
       // Argument checking.
       if(rows == 0 || columns == 0) {
@@ -88,9 +105,11 @@ namespace brick {
       }
 
       brick::numeric::Array1D<KERNEL_TYPE> rowComponent =
-        privateCode::getGaussian1D<KERNEL_TYPE>(columns, columnSigma, true);
+        privateCode::getGaussian1D<KERNEL_TYPE>(
+          columns, columnSigma, normalize, rowNormalizationTarget);
       brick::numeric::Array1D<KERNEL_TYPE> columnComponent =
-        privateCode::getGaussian1D<KERNEL_TYPE>(rows, rowSigma, true);
+        privateCode::getGaussian1D<KERNEL_TYPE>(
+          rows, rowSigma, normalize, columnNormalizationTarget);
       return Kernel<KERNEL_TYPE>(rowComponent, columnComponent);
     }
 

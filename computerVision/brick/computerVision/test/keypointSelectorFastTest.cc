@@ -177,10 +177,13 @@ namespace brick {
 
 #if 0
 
-int main(int argc, char** argv)
+int main(/* int argc, char** argv */)
 {
   brick::computerVision::KeypointSelectorFastTest currentTest;
   bool result = currentTest.run();
+
+  currentTest.exerciseKeypointSelectorFast("testImagePGM0.pgm");
+  
   return (result ? 0 : 1);
 }
 
@@ -189,7 +192,7 @@ int main(int argc, char** argv)
 namespace {
 
   brick::computerVision::KeypointSelectorFastTest currentTest;
-
+  
 }
 
 #endif

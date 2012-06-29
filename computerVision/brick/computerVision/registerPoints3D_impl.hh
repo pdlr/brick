@@ -256,8 +256,8 @@ namespace brick {
       size_t arrayIndex = 0;
       while(fromIter != fromPointsEnd) {
         FloatType weight = *weightsIter;
-        Vector3D<FloatType>& fromPoint = *fromIter;
-        Vector3D<FloatType>& toPoint = *toIter;
+        Vector3D<FloatType> const& fromPoint = *fromIter;
+        Vector3D<FloatType> const& toPoint = *toIter;
         
         // Copy the first element in the current row.  We know that,
         // later on, the thing we care about is the matrix product of

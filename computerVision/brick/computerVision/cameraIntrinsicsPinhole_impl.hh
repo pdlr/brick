@@ -95,7 +95,7 @@ namespace brick {
     project(const brick::numeric::Vector3D<FloatType>& point) const
     {
       return Vector2D<FloatType>(m_kX * point.x() / point.z() + m_centerU,
-                              m_kY * point.y() / point.z() + m_centerV);
+                                 m_kY * point.y() / point.z() + m_centerV);
     }
     
 
@@ -176,8 +176,8 @@ namespace brick {
       return Ray3D<FloatType>(
         Vector3D<FloatType>(0.0, 0.0, 0.0),
         Vector3D<FloatType>((pixelPosition.x() - m_centerU) / m_kX,
-                         (pixelPosition.y() - m_centerV) / m_kY,
-                         1.0), normalize);
+                            (pixelPosition.y() - m_centerV) / m_kY,
+                            1.0), normalize);
     }
 
 

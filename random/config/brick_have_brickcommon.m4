@@ -21,7 +21,7 @@ AC_DEFUN([BRICK_HAVE_BRICKCOMMON],
      LDFLAGS="${LDFLAGS} -L${libdir} -L${prefix}/lib"
      LIBS="-lbrickCommon"
      AC_TRY_LINK([#include <brick/common/types.hh>],
-         [brick::common::Float64 f;],
+         [brick::common::Float64 f = 3.0; f = 2.0*f;],
          [AC_MSG_RESULT([yes])],
          [AC_MSG_ERROR([Unable to build a test program against 
           libbrickCommon.  Please check that the brickCommon utility 

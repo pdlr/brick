@@ -176,6 +176,74 @@ namespace brick {
 
 
       /** 
+       * Returns an image that references only a rectangular region of
+       * interest drawn from *this.  The returned image will reference
+       * the same memory, but may have different start, end, and
+       * rowstep.  The returned image _will not_ be reference counted,
+       * so that its contents are valid only as long as the contents
+       * of the original image are valid.  The operation of this
+       * function is illustrated in the following example:
+       *
+       * @code
+       *   // Create an array in which every pixel is set to 1.
+       *   Image<GRAY8>* fullImageP = new Image<GRAY8>(10, 20);
+       *   *fullImageP = 1;
+       *
+       *   // Get an image that refers to a 4x4 subset of fullImage.
+       *   Index2D corner0(5, 10);
+       *   Index2D corner1(9, 14);
+       *   Image<GRAY8> subRegion = fullImageP->getROI(corner0, corner1);
+       *
+       *   // Set just the pixels within that region of interest to
+           // 100.
+       *   subRegion = 100;
+       *
+       *   for(unsigned int rr = 0, rr < fullImage.rows(); ++rr) {
+       *     for(unsigned int cc = 0, cc < fullImage.columns(); ++cc) {
+       *       if((rr >= corner0.getRow()) &&
+       *          (rr <  corner1.getRow()) &&
+       *          (cc >= corner0.getColumn()) &&
+       *          (cc <  corner1.getColumn())) {
+       *         std::assert(100 == (*fullImageP)(rr, cc));
+       *       } else {
+       *         std::assert(1   == (*fullImageP)(rr, cc));
+       *       }
+       *     }
+       *   }
+       *
+       *   // Contents of *fullImageP are deleted here.
+       *   delete fullImageP;
+       *
+       *   // ERROR! The data to which subRegion refers was deleted
+       *   // along with fullImageP.
+       *   subRegion(2, 3) = 90;
+       * @endCode
+       *     
+       * @param corner0 This argument and the next define the
+       * subregion.  Corner0 is included in the region, but corner1 is
+       * not.  It is an error if corner0 is not above and to the left
+       * of corner1.  It is an error if corner0.getRow() is less than
+       * zero, corner0.getColumn() is less than zero, corner0.getRow()
+       * is greater than this->getRows(), or corner0.getColumn() is
+       * greater than this->getColumns().
+       * 
+       * @param corner1 This argument and the previous define the
+       * subregion.  It is an error if corner1.getRow() is less than
+       * zero, corner1.getColumn() is less than zero, corner1.getRow()
+       * is greater than this->getRows(), or corner1.getColumn() is
+       * greater than this->getColumns().
+       * 
+       * @return The return value is a shallow copy of the selected
+       * region of the original image.
+       */
+      Image<FORMAT>
+      getROI(brick::numeric::Index2D const& corner0,
+             brick::numeric::Index2D const& corner1) {
+        return Image<FORMAT>(this->getRegion(corner0, corner1));
+      }
+      
+
+      /** 
        * This assignment operator copies its argument into each pixel of
        * the image.  It is provided avoid an implicit cast when using
        * the corresponding Array2D operator.

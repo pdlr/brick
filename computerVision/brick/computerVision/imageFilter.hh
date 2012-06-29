@@ -43,7 +43,7 @@ namespace brick {
      * certainly result in pixel overflow.  Using an integer output
      * format will introduce quantification errors in the convolution.
      * If you're low-pass filtering an integer-valued image, consider
-     * using filterBinomial2D() instead.
+     * using filterRowsBinomial() and filterColumnsBinomial() instead.
      * 
      * @param kernel This argument is the Kernel instance with which
      * to filter.
@@ -84,7 +84,7 @@ namespace brick {
      * certainly result in pixel overflow.  Using an integer output
      * format will introduce quantification errors in the convolution.
      * If you're low-pass filtering an integer-valued image, consider
-     * using filterBinomial2D() instead.
+     * using filterRowsBinomial() and filterColumnsBinomial() instead.
      * 
      * @param outputImage This argument is used to return the result.
      * The associated memory is not reallocated unless outputImage has
@@ -134,11 +134,12 @@ namespace brick {
      *
      * @param inputImage This argument is the Image to be filtered.
      *
-     * @param sigma This argument specifies the desired filter
-     * sigma.  It will be rounded to the nearest supported sigma value
-     * (currently, 0.707, 1.0, 1.22, corresponding to filter sizes of
-     * 3, 5, and 7 pixels, respectively) Specifying a sigma value that
-     * doesn't round easily to one of these is an error.
+     * @param sigma This argument specifies the desired filter sigma.
+     * It will be rounded to the nearest supported sigma value
+     * (currently, 0.707, 1.0, 1.22, 1.41, and 1.58, corresponding to
+     * filter sizes of 3, 5, 7, 9, and 11 pixels, respectively).
+     * Specifying a sigma value that doesn't round easily to one of
+     * these is an error.
      * 
      * @param fillValue This argument specifies the value with which
      * image edges should be padded.
@@ -187,9 +188,10 @@ namespace brick {
      *
      * @param rowSigma This argument specifies the desired filter
      * sigma.  It will be rounded to the nearest supported sigma value
-     * (currently, 0.707, 1.0, 1.22, corresponding to filter sizes of
-     * 3, 5, and 7 pixels, respectively) Specifying a sigma value that
-     * doesn't round easily to one of these is an error.
+     * (currently, 0.707, 1.0, 1.22, 1.41, and 1.58, corresponding to
+     * filter sizes of 3, 5, 7, 9, and 11 pixels, respectively).
+     * Specifying a sigma value that doesn't round easily to one of
+     * these is an error.
      * 
      * @param columnSigma This argument specifies the desired filter
      * sigma.  It will be rounded to the nearest supported sigma value

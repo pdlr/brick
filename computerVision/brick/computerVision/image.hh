@@ -15,6 +15,7 @@
 
 #include <brick/computerVision/imageFormatTraits.hh>
 #include <brick/numeric/array2D.hh>
+#include <brick/numeric/index2D.hh>
 
 namespace brick {
 
@@ -195,7 +196,7 @@ namespace brick {
        *   Image<GRAY8> subRegion = fullImageP->getROI(corner0, corner1);
        *
        *   // Set just the pixels within that region of interest to
-           // 100.
+       *   // 100.
        *   subRegion = 100;
        *
        *   for(unsigned int rr = 0, rr < fullImage.rows(); ++rr) {

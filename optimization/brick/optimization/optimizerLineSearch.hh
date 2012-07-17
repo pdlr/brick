@@ -424,11 +424,9 @@ namespace brick {
       // Initialize a few variables.
       argument_type initialStep;
       copyArgumentType(this->m_initialStep, initialStep);
-      double initialStepMagnitude = this->m_initialStepMagnitude;
 
       // Restrict length of initial step.
       if(this->m_initialStepMagnitude > this->m_maximumStepMagnitude) {
-        initialStepMagnitude = this->m_maximumStepMagnitude;
         for(size_t index = 0; index < initialStep.size(); ++index) {
           initialStep[index] *=
             this->m_maximumStepMagnitude / this->m_initialStepMagnitude;

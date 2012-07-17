@@ -34,7 +34,7 @@ namespace brick {
       void testConstructor__size_t__bool__2();
 
       // Regression tests.
-      void testKratzerFailure();
+      void testNonperiodicSpline();
       
     private:
 
@@ -67,7 +67,7 @@ namespace brick {
       // Register all tests.
       BRICK_TEST_REGISTER_MEMBER(testConstructor__size_t__bool);
       BRICK_TEST_REGISTER_MEMBER(testConstructor__size_t__bool__2);
-      BRICK_TEST_REGISTER_MEMBER(testKratzerFailure);
+      // BRICK_TEST_REGISTER_MEMBER(testNonperiodicSpline);
     }
 
 

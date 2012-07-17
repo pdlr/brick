@@ -1,6 +1,24 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.2
+
+- Added implementations of three-point, five-point, and eight-point algorithms.
+- Added FloatType template parameter to camera intrinsics classes.
+- Added a weighted version of registerPoints3D().
+- Added routines for stereo rectification and camera calibration.
+- Added Felzenswalb's superpixels segmentation, and a disjoint set
+  implementation.
+- Added KdTree implementation.
+- Added ImageWarper class to allow transforming images.
+- Added basic morphological and image processing operations.
+- Added extended Kalman filter implementation,
+- Added very basic deformable models class (NaiveSnake).
+- Made some updates to image fltering code.
+- Added Harris corner detector implementation.
+- Added (still incomplete) ICP implementation.
+- A few other minor bugfixes and updates.
+
 Revision 1.1
 
 - Added classes and functions relating to camera intrinsics from

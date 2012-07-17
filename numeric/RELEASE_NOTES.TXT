@@ -1,6 +1,15 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.2
+
+- Fixed compile issues in transform3DTo2D.hh and rotations_impl.hh.
+- Added TypeConverter class to support generic conversion between numeric types.
+- Other minor updates and features.
+- Added, but disabled, a unit test for nonperiodic B-Spline, based on
+  feedback from Eric Kratzer.  This test exercises an issue with the class
+  that has not yet been fixed.
+
 Revision 1.1
 
 - Added all remaining symbols from dlrNumeric.

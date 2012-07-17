@@ -24,7 +24,8 @@ namespace brick {
 
     /**
      ** Warning: The test suite for this class is still incomplete.
-     ** It may contain bugs.
+     ** It may contain bugs.  In particular, the non-periodic
+     ** implementation is known to be broken.
      **
      ** This class template implements a B-spline of arbitrary order.
      ** It is templated on control point type so that you can, for

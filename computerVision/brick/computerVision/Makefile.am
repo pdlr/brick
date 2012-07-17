@@ -66,6 +66,7 @@ brickComputerVision_HEADERS	= \
 	pixelYIQ.hh \
 	randomSampleSelector.hh randomSampleSelector_impl.hh \
 	ransac.hh ransac_impl.hh \
+	ransacClassInterface.hh \
 	registerPoints3D.hh registerPoints3D_impl.hh \
 	segmenterFelzenszwalb.hh segmenterFelzenszwalb_impl.hh \
 	sobel.hh sobel_impl.hh \

@@ -11,9 +11,16 @@
 ***************************************************************************
 **/
 
+#ifndef BRICK_NUMERIC_DEVELOPER
+#define BRICK_NUMERIC_DEVELOPER 0
+#endif /* #ifndef BRICK_NUMERIC_DEVELOPER */
+
 #include <brick/numeric/filter.hh>
 #include <brick/test/testFixture.hh>
+
+#if BRICK_NUMERIC_DEVELOPER
 #include <brick/utilities/timeUtilities.hh>
+#endif /* #if BRICK_NUMERIC_DEVELOPER */
 
 // Anonymous namespace for locally defined functions.
 namespace {
@@ -38,8 +45,11 @@ namespace brick {
       // Tests.
       void testFilterColumns();
       void testFilterRows();
+
+#if BRICK_NUMERIC_DEVELOPER
       void timeFilterColumns();
       void timeFilterRows();
+#endif /* #if BRICK_NUMERIC_DEVELOPER */
       
     private:
 
@@ -78,8 +88,11 @@ namespace brick {
     {
       BRICK_TEST_REGISTER_MEMBER(testFilterColumns);
       BRICK_TEST_REGISTER_MEMBER(testFilterRows);
-      // BRICK_TEST_REGISTER_MEMBER(timeFilterColumns);
-      // BRICK_TEST_REGISTER_MEMBER(timeFilterRows);
+
+#if BRICK_NUMERIC_DEVELOPER
+      BRICK_TEST_REGISTER_MEMBER(timeFilterColumns);
+      BRICK_TEST_REGISTER_MEMBER(timeFilterRows);
+#endif /* #if BRICK_NUMERIC_DEVELOPER */
     }
 
 
@@ -125,6 +138,7 @@ namespace brick {
     }
 
 
+#if BRICK_NUMERIC_DEVELOPER
     void
     FilterTest::
     timeFilterColumns()
@@ -171,6 +185,7 @@ namespace brick {
                   << ii << ": " << (t1 - t0) / iterations << std::endl;
       }
     }
+#endif /* #if BRICK_NUMERIC_DEVELOPER */
 
 
     Array2D<common::Float64>

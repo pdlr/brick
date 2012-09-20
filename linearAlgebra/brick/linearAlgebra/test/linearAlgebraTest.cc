@@ -84,7 +84,7 @@ namespace brick {
 
     LinearAlgebraTest::
     LinearAlgebraTest()
-      : TestFixture<LinearAlgebraTest>("LinearAlgebraTest"),
+      : brick::test::TestFixture<LinearAlgebraTest>("LinearAlgebraTest"),
         m_aMatrices(LinearAlgebraTest::numberOfTestMatrixSets),
         m_bVectors(LinearAlgebraTest::numberOfTestMatrixSets),
         m_inverseMatrices(LinearAlgebraTest::numberOfTestMatrixSets),

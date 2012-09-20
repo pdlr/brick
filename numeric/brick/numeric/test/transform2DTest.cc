@@ -39,7 +39,7 @@ namespace brick {
 
     Transform2DTest::
     Transform2DTest()
-      : TestFixture<Transform2DTest>("Transform2DTest")
+      : brick::test::TestFixture<Transform2DTest>("Transform2DTest")
     {
       // Register all tests.
       BRICK_TEST_REGISTER_MEMBER(testInvert);

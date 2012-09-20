@@ -63,7 +63,7 @@ namespace brick {
 
     SubpixelInterpolateTest::
     SubpixelInterpolateTest()
-      : TestFixture<SubpixelInterpolateTest>("SubpixelInterpolateTest"),
+      : brick::test::TestFixture<SubpixelInterpolateTest>("SubpixelInterpolateTest"),
         m_defaultTolerance(1.0E-10)
     {
       BRICK_TEST_REGISTER_MEMBER(testGetQuadraticCoefficients);

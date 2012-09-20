@@ -39,7 +39,7 @@ namespace brick {
 
     Transform3DTest::
     Transform3DTest()
-      : TestFixture<Transform3DTest>("Transform3DTest")
+      : brick::test::TestFixture<Transform3DTest>("Transform3DTest")
     {
       // Register all tests.
       BRICK_TEST_REGISTER_MEMBER(testInvert);

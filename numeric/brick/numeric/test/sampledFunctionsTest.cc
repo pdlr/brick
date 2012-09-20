@@ -44,7 +44,7 @@ namespace brick {
 
     SampledFunctionsTest::
     SampledFunctionsTest()
-      : TestFixture<SampledFunctionsTest>("SampledFunctionsTest"),
+      : brick::test::TestFixture<SampledFunctionsTest>("SampledFunctionsTest"),
         m_defaultTolerance(1.0E-10)
     {
       // Register all tests.

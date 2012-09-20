@@ -62,7 +62,7 @@ namespace brick {
 
     BSplineTest::
     BSplineTest()
-      : TestFixture<BSplineTest>("BSplineTest")
+      : brick::test::TestFixture<BSplineTest>("BSplineTest")
     {
       // Register all tests.
       BRICK_TEST_REGISTER_MEMBER(testConstructor__size_t__bool);

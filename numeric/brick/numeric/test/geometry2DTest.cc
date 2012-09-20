@@ -41,7 +41,7 @@ namespace brick {
 
     Geometry2DTest::
     Geometry2DTest()
-      : TestFixture<Geometry2DTest>("Geometry2DTest"),
+      : brick::test::TestFixture<Geometry2DTest>("Geometry2DTest"),
         m_defaultTolerance(1.0E-6)
     {
       // Register all tests.

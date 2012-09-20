@@ -55,7 +55,7 @@ namespace brick {
 
     BoxIntegrator2DTest::
     BoxIntegrator2DTest()
-      : TestFixture<BoxIntegrator2DTest>("BoxIntegrator2DTest"),
+      : brick::test::TestFixture<BoxIntegrator2DTest>("BoxIntegrator2DTest"),
         m_defaultTolerance(1.0E-11),
         m_testArray0(),
         m_testArray1()

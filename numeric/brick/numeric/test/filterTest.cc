@@ -83,7 +83,7 @@ namespace brick {
 
     FilterTest::
     FilterTest()
-      : TestFixture<FilterTest>("FilterTest"),
+      : brick::test::TestFixture<FilterTest>("FilterTest"),
         m_defaultTolerance(1.0E-5)
     {
       BRICK_TEST_REGISTER_MEMBER(testFilterColumns);

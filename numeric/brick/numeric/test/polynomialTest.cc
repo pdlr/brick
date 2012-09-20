@@ -59,7 +59,7 @@ namespace brick {
 
     PolynomialTest::
     PolynomialTest()
-      : TestFixture<PolynomialTest>("PolynomialTest")
+      : brick::test::TestFixture<PolynomialTest>("PolynomialTest")
     {
       // Register all tests.
       BRICK_TEST_REGISTER_MEMBER(testConstructor__void);

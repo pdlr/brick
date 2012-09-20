@@ -63,7 +63,7 @@ namespace brick {
 
     Index3DTest::
     Index3DTest()
-      : TestFixture<Index3DTest>("Index3DTest"),
+      : brick::test::TestFixture<Index3DTest>("Index3DTest"),
         m_defaultTolerance(1.0E-10)
     {
       BRICK_TEST_REGISTER_MEMBER(testIndex3D);

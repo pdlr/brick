@@ -46,7 +46,7 @@ namespace brick {
 
     SolveQuadraticTest::
     SolveQuadraticTest()
-      : TestFixture<SolveQuadraticTest>("SolveQuadraticTest"),
+      : brick::test::TestFixture<SolveQuadraticTest>("SolveQuadraticTest"),
         m_defaultTolerance(1.0E-12)
     {
       // Register all tests.

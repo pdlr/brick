@@ -76,7 +76,7 @@ namespace brick {
 
     IEEEFloat32Test::
     IEEEFloat32Test()
-      : TestFixture<IEEEFloat32Test>("IEEEFloat32Test"),
+      : brick::test::TestFixture<IEEEFloat32Test>("IEEEFloat32Test"),
         m_knownFloatVector(),
         m_byte0Map(),
         m_byte1Map(),

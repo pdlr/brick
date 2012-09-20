@@ -76,7 +76,7 @@ namespace brick {
 
     AmanatidesWoo3DTest::
     AmanatidesWoo3DTest()
-      : TestFixture<AmanatidesWoo3DTest>("AmanatidesWoo3DTest"),
+      : brick::test::TestFixture<AmanatidesWoo3DTest>("AmanatidesWoo3DTest"),
         m_directionXYZ0(),
         m_directionXYZ1(),
         m_directionXYZ2(),

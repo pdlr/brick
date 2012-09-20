@@ -49,7 +49,7 @@ namespace brick {
 
     NormalizedCorrelatorTest::
     NormalizedCorrelatorTest()
-      : TestFixture<NormalizedCorrelatorTest>("NormalizedCorrelatorTest"),
+      : brick::test::TestFixture<NormalizedCorrelatorTest>("NormalizedCorrelatorTest"),
         m_defaultTolerance(1.0E-12)
     {
       // Register all tests.

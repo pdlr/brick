@@ -45,7 +45,7 @@ namespace brick {
 
     CannyTest::
     CannyTest()
-      : TestFixture<CannyTest>("CannyTest")
+      : brick::test::TestFixture<CannyTest>("CannyTest")
     {
       BRICK_TEST_REGISTER_MEMBER(testCanny);
     }

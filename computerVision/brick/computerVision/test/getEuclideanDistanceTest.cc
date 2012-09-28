@@ -40,7 +40,7 @@ namespace brick {
 
     GetEuclideanDistanceTest::
     GetEuclideanDistanceTest()
-      : TestFixture<GetEuclideanDistanceTest>("GetEuclideanDistanceTest")
+      : brick::test::TestFixture<GetEuclideanDistanceTest>("GetEuclideanDistanceTest")
     {
       BRICK_TEST_REGISTER_MEMBER(testGetEuclideanDistance);
     }

@@ -44,7 +44,7 @@ namespace brick {
 
     ErodeTest::
     ErodeTest()
-      : TestFixture<ErodeTest>("ErodeTest")
+      : brick::test::TestFixture<ErodeTest>("ErodeTest")
     {
       BRICK_TEST_REGISTER_MEMBER(testErode);
       BRICK_TEST_REGISTER_MEMBER(testErodeUsingBoxIntegrator);

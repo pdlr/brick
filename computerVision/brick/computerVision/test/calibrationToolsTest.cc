@@ -97,7 +97,7 @@ private:
 
 CalibrationToolsTest::
 CalibrationToolsTest()
-  : TestFixture<CalibrationToolsTest>("CalibrationToolsTest"),
+  : brick::test::TestFixture<CalibrationToolsTest>("CalibrationToolsTest"),
     m_defaultTolerance(1.0E-10),
     m_relaxedTolerance(5.0E-5),
     m_stringentTolerance(1.0E-13)

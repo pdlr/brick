@@ -48,7 +48,7 @@ namespace brick {
 
     KeypointSelectorLepetitTest::
     KeypointSelectorLepetitTest()
-      : TestFixture<KeypointSelectorLepetitTest>("KeypointSelectorLepetitTest"),
+      : brick::test::TestFixture<KeypointSelectorLepetitTest>("KeypointSelectorLepetitTest"),
         m_defaultTolerance(1.0E-8)
     {
       BRICK_TEST_REGISTER_MEMBER(testKeypointSelectorLepetit);

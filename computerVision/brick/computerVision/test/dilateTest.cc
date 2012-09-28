@@ -46,7 +46,7 @@ namespace brick {
 
     DilateTest::
     DilateTest()
-      : TestFixture<DilateTest>("DilateTest")
+      : brick::test::TestFixture<DilateTest>("DilateTest")
     {
       BRICK_TEST_REGISTER_MEMBER(testDilate);
       BRICK_TEST_REGISTER_MEMBER(testDilate__radius);

@@ -42,7 +42,7 @@ namespace brick {
 
     ConnectedComponentsTest::
     ConnectedComponentsTest()
-      : TestFixture<ConnectedComponentsTest>("ConnectedComponentsTest")
+      : brick::test::TestFixture<ConnectedComponentsTest>("ConnectedComponentsTest")
     {
       BRICK_TEST_REGISTER_MEMBER(testConnectedComponents);
     }

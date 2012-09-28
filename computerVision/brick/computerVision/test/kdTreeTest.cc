@@ -79,7 +79,7 @@ namespace brick {
 
     KDTreeTest::
     KDTreeTest()
-      : TestFixture<KDTreeTest>("KDTreeTest"),
+      : brick::test::TestFixture<KDTreeTest>("KDTreeTest"),
         m_defaultTolerance(1.0E-10)
     {
       BRICK_TEST_REGISTER_MEMBER(testConstructor);

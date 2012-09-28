@@ -48,7 +48,7 @@ namespace brick {
 
     NChooseKSampleSelectorTest::
     NChooseKSampleSelectorTest()
-      : TestFixture<NChooseKSampleSelectorTest>(
+      : brick::test::TestFixture<NChooseKSampleSelectorTest>(
         "NChooseKSampleSelectorTest")
     {
       BRICK_TEST_REGISTER_MEMBER(testGetNumberOfSamples);

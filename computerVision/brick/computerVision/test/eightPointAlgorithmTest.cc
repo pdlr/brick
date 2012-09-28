@@ -62,7 +62,7 @@ namespace brick {
 
     EightPointAlgorithmTest::
     EightPointAlgorithmTest()
-      : TestFixture<EightPointAlgorithmTest>("EightPointAlgorithmTest"),
+      : brick::test::TestFixture<EightPointAlgorithmTest>("EightPointAlgorithmTest"),
         m_defaultTolerance(1.0E-10)
     {
       BRICK_TEST_REGISTER_MEMBER(testEightPointAlgorithm);

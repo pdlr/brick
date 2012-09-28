@@ -117,7 +117,7 @@ namespace brick {
 
     FivePointAlgorithmTest::
     FivePointAlgorithmTest()
-      : TestFixture<FivePointAlgorithmTest>("FivePointAlgorithmTest"),
+      : brick::test::TestFixture<FivePointAlgorithmTest>("FivePointAlgorithmTest"),
         m_defaultTolerance(1.0E-5)
     {
       BRICK_TEST_REGISTER_MEMBER(testFivePointAlgorithm);

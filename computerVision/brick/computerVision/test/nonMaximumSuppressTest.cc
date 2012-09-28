@@ -42,7 +42,7 @@ namespace brick {
 
     NonMaximumSuppressTest::
     NonMaximumSuppressTest()
-      : TestFixture<NonMaximumSuppressTest>("NonMaximumSuppressTest")
+      : brick::test::TestFixture<NonMaximumSuppressTest>("NonMaximumSuppressTest")
     {
       BRICK_TEST_REGISTER_MEMBER(testNonMaximumSuppress);
     }

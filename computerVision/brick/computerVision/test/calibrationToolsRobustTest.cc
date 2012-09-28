@@ -92,7 +92,7 @@ private:
 
 CalibrationToolsRobustTest::
 CalibrationToolsRobustTest()
-  : TestFixture<CalibrationToolsRobustTest>("CalibrationToolsRobustTest"),
+  : brick::test::TestFixture<CalibrationToolsRobustTest>("CalibrationToolsRobustTest"),
     m_defaultTolerance(1.0E-10),
     m_relaxedTolerance(5.0E-5),
     m_stringentTolerance(1.0E-13)

@@ -77,7 +77,7 @@ namespace brick {
       if(columns % 2 == 0) {
         ++columns;
       }
-      return getGaussianKernel<KERNEL_TYPE>(
+      return getGaussianKernelBySize<KERNEL_TYPE>(
         rows, columns, rowSigma, columnSigma, normalize,
         rowNormalizationTarget, columnNormalizationTarget);
     }

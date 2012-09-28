@@ -43,7 +43,7 @@ namespace brick {
 
     SobelTest::
     SobelTest()
-      : TestFixture<SobelTest>("SobelTest")
+      : brick::test::TestFixture<SobelTest>("SobelTest")
     {
       BRICK_TEST_REGISTER_MEMBER(testSobelX);
       BRICK_TEST_REGISTER_MEMBER(testSobelY);

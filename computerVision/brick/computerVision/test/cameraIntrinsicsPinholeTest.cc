@@ -52,7 +52,7 @@ private:
 
 CameraIntrinsicsPinholeTest::
 CameraIntrinsicsPinholeTest()
-  : TestFixture<CameraIntrinsicsPinholeTest>("CameraIntrinsicsPinholeTest"),
+  : brick::test::TestFixture<CameraIntrinsicsPinholeTest>("CameraIntrinsicsPinholeTest"),
     m_defaultTolerance(1.0E-10),
     m_relaxedTolerance(1.0E-7)
 {

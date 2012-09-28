@@ -67,7 +67,7 @@ namespace brick {
 
     RegisterPoints3DTest::
     RegisterPoints3DTest()
-      : TestFixture<RegisterPoints3DTest>("RegisterPoints3DTest"),
+      : brick::test::TestFixture<RegisterPoints3DTest>("RegisterPoints3DTest"),
         m_defaultTolerance(1.0E-9),
         m_firstOutlier(2),
         m_flagsVector(),

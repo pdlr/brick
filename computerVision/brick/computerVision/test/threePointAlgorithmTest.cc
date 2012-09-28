@@ -43,7 +43,7 @@ namespace brick {
 
       void
       getCameraIntrinsics(
-        std::vector<CameraIntrinsicsPinhole>& intrinsicsVector);
+        std::vector< CameraIntrinsicsPinhole<double> >& intrinsicsVector);
       
       void
       getCameraPoses(std::vector< num::Transform3D<double> >& worldTcamVector);
@@ -65,7 +65,7 @@ namespace brick {
 
     ThreePointAlgorithmTest::
     ThreePointAlgorithmTest()
-      : TestFixture<ThreePointAlgorithmTest>("ThreePointAlgorithmTest"),
+      : brick::test::TestFixture<ThreePointAlgorithmTest>("ThreePointAlgorithmTest"),
         m_defaultTolerance(1.0E-8)
     {
       BRICK_TEST_REGISTER_MEMBER(testThreePointAlgorithm);
@@ -80,7 +80,7 @@ namespace brick {
       std::vector< num::Transform3D<double> > worldTcamVector;
       this->getCameraPoses(worldTcamVector);
 
-      std::vector<CameraIntrinsicsPinhole> intrinsicsVector;
+      std::vector< CameraIntrinsicsPinhole<double> > intrinsicsVector;
       this->getCameraIntrinsics(intrinsicsVector);
 
       std::vector< num::Vector3D<double> > worldPoints;
@@ -109,7 +109,7 @@ namespace brick {
                            &(testPoints_camera[0]), camTworld.getFunctor());
 
             // Project into image.
-            CameraIntrinsicsPinhole intrinsics = intrinsicsVector[camNumber];
+            CameraIntrinsicsPinhole<double> intrinsics = intrinsicsVector[camNumber];
             for(size_t ii = 0; ii < 3; ++ii) {
               testPoints_image[ii] = intrinsics.project(testPoints_camera[ii]);
             }
@@ -184,7 +184,7 @@ namespace brick {
       std::vector< num::Transform3D<double> > worldTcamVector;
       this->getCameraPoses(worldTcamVector);
 
-      std::vector<CameraIntrinsicsPinhole> intrinsicsVector;
+      std::vector< CameraIntrinsicsPinhole<double> > intrinsicsVector;
       this->getCameraIntrinsics(intrinsicsVector);
 
       std::vector< num::Vector3D<double> > worldPoints;
@@ -220,7 +220,7 @@ namespace brick {
                            camTworld.getFunctor());
 
             // Project into image.
-            CameraIntrinsicsPinhole intrinsics = intrinsicsVector[camNumber];
+            CameraIntrinsicsPinhole<double> intrinsics = intrinsicsVector[camNumber];
             for(size_t ii = 0; ii < sampleSize; ++ii) {
               testPoints_image[ii] = intrinsics.project(testPoints_camera[ii]);
             }
@@ -250,18 +250,18 @@ namespace brick {
 
     void
     ThreePointAlgorithmTest::
-    getCameraIntrinsics(std::vector<CameraIntrinsicsPinhole>& intrinsicsVector)
+    getCameraIntrinsics(std::vector< CameraIntrinsicsPinhole<double> >& intrinsicsVector)
     {
       intrinsicsVector.clear();
 
       intrinsicsVector.push_back(
-        CameraIntrinsicsPinhole(320, 240, 0.006, 0.00006, 0.00005, 180, 100));
+        CameraIntrinsicsPinhole<double>(320, 240, 0.006, 0.00006, 0.00005, 180, 100));
 
       intrinsicsVector.push_back(
-        CameraIntrinsicsPinhole(320, 240, 0.004, 0.00002, 0.00001, 150, 150));
+        CameraIntrinsicsPinhole<double>(320, 240, 0.004, 0.00002, 0.00001, 150, 150));
 
       intrinsicsVector.push_back(
-        CameraIntrinsicsPinhole(320, 240, 0.006, 0.0001, 0.00012, 180, 100));
+        CameraIntrinsicsPinhole<double>(320, 240, 0.006, 0.0001, 0.00012, 180, 100));
     }
 
     

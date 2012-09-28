@@ -48,7 +48,7 @@ namespace brick {
 
     ImagePyramidTest::
     ImagePyramidTest()
-      : TestFixture<ImagePyramidTest>("ImagePyramidTest"),
+      : brick::test::TestFixture<ImagePyramidTest>("ImagePyramidTest"),
         m_defaultTolerance(1.0E-8)
     {
       BRICK_TEST_REGISTER_MEMBER(testImagePyramid);

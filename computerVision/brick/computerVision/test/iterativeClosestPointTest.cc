@@ -51,7 +51,7 @@ namespace brick {
 
     IterativeClosestPointTest::
     IterativeClosestPointTest()
-      : TestFixture<IterativeClosestPointTest>("IterativeClosestPointTest"),
+      : brick::test::TestFixture<IterativeClosestPointTest>("IterativeClosestPointTest"),
         m_defaultTolerance(1.0E-10)
     {
       BRICK_TEST_REGISTER_MEMBER(testGetTransform);

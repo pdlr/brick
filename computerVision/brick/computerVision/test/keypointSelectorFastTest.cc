@@ -54,7 +54,7 @@ namespace brick {
 
     KeypointSelectorFastTest::
     KeypointSelectorFastTest()
-      : TestFixture<KeypointSelectorFastTest>("KeypointSelectorFastTest"),
+      : brick::test::TestFixture<KeypointSelectorFastTest>("KeypointSelectorFastTest"),
         m_defaultTolerance(1.0E-8)
     {
       BRICK_TEST_REGISTER_MEMBER(testKeypointSelectorFast);

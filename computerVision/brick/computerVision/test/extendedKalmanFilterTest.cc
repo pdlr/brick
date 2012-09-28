@@ -161,7 +161,7 @@ namespace brick {
 
     ExtendedKalmanFilterTest::
     ExtendedKalmanFilterTest()
-      : TestFixture<ExtendedKalmanFilterTest>("ExtendedKalmanFilterTest"),
+      : brick::test::TestFixture<ExtendedKalmanFilterTest>("ExtendedKalmanFilterTest"),
         m_estimateTolerance(0.1),
         m_whiteNoiseArray(
           "[[-0.34777470766943475, -2.5167002812462926, 0.29152891873455761, "

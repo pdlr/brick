@@ -46,7 +46,7 @@ namespace brick {
 
     StereoRectifyTest::
     StereoRectifyTest()
-      : TestFixture<StereoRectifyTest>("StereoRectifyTest"),
+      : brick::test::TestFixture<StereoRectifyTest>("StereoRectifyTest"),
         m_defaultTolerance(1.0E-10)
     {
       BRICK_TEST_REGISTER_MEMBER(testStereoRectify);

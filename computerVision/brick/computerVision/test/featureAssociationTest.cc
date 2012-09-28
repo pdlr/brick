@@ -64,7 +64,7 @@ namespace brick {
 
     FeatureAssociationTest::
     FeatureAssociationTest()
-      : TestFixture<FeatureAssociationTest>("FeatureAssociationTest")
+      : brick::test::TestFixture<FeatureAssociationTest>("FeatureAssociationTest")
     {
       BRICK_TEST_REGISTER_MEMBER(testFeatureAssociation);
     }

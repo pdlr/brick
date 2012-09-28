@@ -47,7 +47,7 @@ namespace brick {
 
     SegmenterFelzenszwalbTest::
     SegmenterFelzenszwalbTest()
-      : TestFixture<SegmenterFelzenszwalbTest>("SegmenterFelzenszwalbTest")
+      : brick::test::TestFixture<SegmenterFelzenszwalbTest>("SegmenterFelzenszwalbTest")
     {
       BRICK_TEST_REGISTER_MEMBER(testSegmenterFelzenszwalb);
     }

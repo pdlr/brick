@@ -99,7 +99,8 @@ namespace brick {
       typedef brick::numeric::Array2D<size_t>::iterator LabelIterator;
     
       Image<FORMAT_OUT> outputImage(inputImage.rows(), inputImage.columns());
-      brick::numeric::Array2D<size_t> labelImage(inputImage.rows(), inputImage.columns());
+      brick::numeric::Array2D<size_t> labelImage(inputImage.rows(), 
+                                                 inputImage.columns());
       size_t currentLabel = 0;
 
       // This variable will be used to keep track of whether or not the

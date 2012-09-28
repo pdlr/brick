@@ -194,7 +194,7 @@ namespace brick {
 
     RansacTest::
     RansacTest()
-      : TestFixture<RansacTest>("RansacTest"),
+      : brick::test::TestFixture<RansacTest>("RansacTest"),
         m_defaultTolerance(1.0E-8)
     {
       BRICK_TEST_REGISTER_MEMBER(testRansac);

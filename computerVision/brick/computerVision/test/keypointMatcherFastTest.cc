@@ -50,7 +50,7 @@ namespace brick {
 
     KeypointMatcherFastTest::
     KeypointMatcherFastTest()
-      : TestFixture<KeypointMatcherFastTest>("KeypointMatcherFastTest"),
+      : brick::test::TestFixture<KeypointMatcherFastTest>("KeypointMatcherFastTest"),
         m_defaultTolerance(1.0E-8)
     {
       BRICK_TEST_REGISTER_MEMBER(testKeypointMatcherFast);

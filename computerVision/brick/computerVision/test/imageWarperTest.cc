@@ -90,7 +90,7 @@ namespace brick {
 
     ImageWarperTest::
     ImageWarperTest()
-      : TestFixture<ImageWarperTest>("ImageWarperTest"),
+      : brick::test::TestFixture<ImageWarperTest>("ImageWarperTest"),
         m_defaultTolerance(1.0E-10),
         m_defaultFloatTolerance(1.0E-6)
     {

@@ -58,7 +58,7 @@ namespace brick {
 
     KeypointSelectorHarrisTest::
     KeypointSelectorHarrisTest()
-      : TestFixture<KeypointSelectorHarrisTest>("KeypointSelectorHarrisTest"),
+      : brick::test::TestFixture<KeypointSelectorHarrisTest>("KeypointSelectorHarrisTest"),
         m_defaultTolerance(1.0E-8)
     {
       BRICK_TEST_REGISTER_MEMBER(testKeypointSelectorHarris);

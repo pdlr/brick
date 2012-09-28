@@ -72,7 +72,7 @@ private:
 
 CameraIntrinsicsPlumbBobTest::
 CameraIntrinsicsPlumbBobTest()
-  : TestFixture<CameraIntrinsicsPlumbBobTest>("CameraIntrinsicsPlumbBobTest"),
+  : brick::test::TestFixture<CameraIntrinsicsPlumbBobTest>("CameraIntrinsicsPlumbBobTest"),
     m_defaultTolerance(1.0E-10),
     m_gradientTolerance(1.0E-5),
     // xxx

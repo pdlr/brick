@@ -62,7 +62,7 @@ namespace brick {
 
     NaiveSnakeTest::
     NaiveSnakeTest()
-      : TestFixture<NaiveSnakeTest>("NaiveSnakeTest"),
+      : brick::test::TestFixture<NaiveSnakeTest>("NaiveSnakeTest"),
         m_cornerFlags1(),
         m_interestImage0(),
         m_seedPoints0(),

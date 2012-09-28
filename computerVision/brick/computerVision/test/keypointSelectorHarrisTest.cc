@@ -14,6 +14,7 @@
 #include <brick/computerVision/kernels.hh>
 #include <brick/computerVision/keypointSelectorHarris.hh>
 #include <brick/computerVision/utilities.hh>
+#include <brick/computerVision/test/testImages.hh>
 
 #include <brick/random/pseudoRandom.hh>
 #include <brick/test/functors.hh>
@@ -201,8 +202,9 @@ int main(int argc, char** argv)
   if(argc > 1) {
     threshold = brick::utilities::convertString<double>(argv[1]);
   }
-  // currentTest.exerciseKeypointSelectorHarris("testImagePGM0.pgm");
-  currentTest.exerciseKeypointSelectorHarris("rimg.pgm", threshold);
+  currentTest.exerciseKeypointSelectorHarris(
+    brick::getTestImageFileNamePGM0());
+  // currentTest.exerciseKeypointSelectorHarris("rimg.pgm", threshold);
 
   return (result ? 0 : 1);
 }

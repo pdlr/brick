@@ -89,15 +89,15 @@ namespace brick {
       // is just like calling ceil().
       const unsigned int angleInSamples = std::min(
         static_cast<unsigned int>(
-          expectedRotation / common::constants::twoPi
+          std::fabs(expectedRotation) / common::constants::twoPi
           * KeypointFast::numberOfFeatures) + 1.0,
-        static_cast<double>(KeypointFast::numberOfFeatures - 1));
+        KeypointFast::numberOfFeatures / 2.0);
       
       // Inefficient for now...  Compute SSD at each rotation.
       double minimumSsd = std::numeric_limits<double>::max();
 
       // For "negative" rotations.
-      for(unsigned int ii = angleInSamples - 1; ii > 0; --ii) {
+      for(unsigned int ii = angleInSamples; ii > 0; --ii) {
         double ssd0 = 0.0;
 
         // Account for "wrap" at the beginning of the feature vector,
@@ -136,7 +136,7 @@ namespace brick {
       }
 
       // For positive rotation.
-      for(unsigned int ii = angleInSamples - 1; ii > 0; --ii) {
+      for(unsigned int ii = angleInSamples; ii > 0; --ii) {
 
         double ssd0 = 0.0;
 

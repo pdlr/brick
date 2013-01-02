@@ -28,7 +28,13 @@
 #define HAVE_SNPRINTF 1
 #endif
 
-#endif /* #ifdef _WIN32 */
+// Some compilers declare close() in unistd.h, rather than fcntl.h.
+// No big deal, but unistd.h is not portable, so we include it here.
+// Now client code can include standardC.hh and not have to include
+// unistd.h.
+#include <unistd.h>
+
+#endif /* #ifdef _WIN32 ... #else */
 
 
 namespace brick {

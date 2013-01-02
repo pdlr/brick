@@ -14,6 +14,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
+#include <brick/portability/standardC.hh>
 #include <brick/utilities/lockFile.hh>
 #include <brick/utilities/timeUtilities.hh>
 

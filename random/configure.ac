@@ -33,11 +33,7 @@ AC_LANG([C++])
 
 
 dnl Checks for libraries.
-ACX_LAPACK([],
-           [AC_MSG_ERROR([Unable to find lapack libraries.  Please check that 
-            lapack is installed.  If it is, and this test still fails, try
-            modifying the CPPFLAGS and LDFLAGS environment variable so that 
-            the compiler can more easily find this the required files.])])
+BRICK_HAVE_LAPACK
 BRICK_HAVE_BRICKCOMMON
 BRICK_HAVE_BRICKPORTABILITY
 

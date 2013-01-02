@@ -107,7 +107,7 @@ namespace brick {
       // Make sure sub-pixel versions are plausible.
       std::vector< KeypointHarris<double> > keypointsGP =
         selector.getKeypointsGeneralPosition();
-      BRICK_TEST_ASSERT(keypoints.size() == numberOfPoints);
+      BRICK_TEST_ASSERT(keypointsGP.size() == numberOfPoints);
       for(unsigned int ii = 0; ii < numberOfPoints; ++ii) {
         BRICK_TEST_ASSERT(
           brick::test::approximatelyEqual(

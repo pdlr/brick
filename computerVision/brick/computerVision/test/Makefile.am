@@ -50,6 +50,7 @@ TESTS = \
 	iterativeClosestPointTest \
 	kdTreeTest \
 	keypointMatcherFastTest \
+	keypointSelectorBullseyeTest \
 	keypointSelectorFastTest \
 	keypointSelectorHarrisTest \
 	naiveSnakeTest \
@@ -86,6 +87,7 @@ check_PROGRAMS = \
 	iterativeClosestPointTest \
 	kdTreeTest \
 	keypointMatcherFastTest \
+	keypointSelectorBullseyeTest \
 	keypointSelectorFastTest \
 	keypointSelectorHarrisTest \
 	naiveSnakeTest \
@@ -122,6 +124,7 @@ imageWarperTest_SOURCES		= imageWarperTest.cc
 iterativeClosestPointTest_SOURCES	= iterativeClosestPointTest.cc
 kdTreeTest_SOURCES		= kdTreeTest.cc
 keypointMatcherFastTest_SOURCES	= keypointMatcherFastTest.cc
+keypointSelectorBullseyeTest_SOURCES	= keypointSelectorBullseyeTest.cc
 keypointSelectorFastTest_SOURCES	= keypointSelectorFastTest.cc
 keypointSelectorHarrisTest_SOURCES	= keypointSelectorHarrisTest.cc
 naiveSnakeTest_SOURCES		= naiveSnakeTest.cc

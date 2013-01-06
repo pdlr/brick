@@ -23,12 +23,21 @@ namespace brick {
 
   namespace computerVision {
 
+    unsigned int const keypointBullseyeMaxRadius = 64;
+    
     template <class CoordinateType>
     struct KeypointBullseye {
       CoordinateType row;
       CoordinateType column;
       CoordinateType value;
+      unsigned int horizontalScale;
+      unsigned int verticalScale;
 
+      brick::common::UnsignedInt8 leftSpoke[keypointBullseyeMaxRadius];
+      brick::common::UnsignedInt8 rightSpoke[keypointBullseyeMaxRadius];
+      brick::common::UnsignedInt8 topSpoke[keypointBullseyeMaxRadius];
+      brick::common::UnsignedInt8 bottomSpoke[keypointBullseyeMaxRadius];
+      
     private:
 
     public:
@@ -37,7 +46,13 @@ namespace brick {
                      CoordinateType valueArg)
         : row(rowArg),
           column(columnArg),
-          value(valueArg) {}
+          value(valueArg),
+          horizontalScale(0),
+          verticalScale(0),
+          leftSpoke(),
+          rightSpoke(),
+          topSpoke(),
+          bottomSpoke() {}
 
     };
     
@@ -62,8 +77,14 @@ namespace brick {
        * 
        * @param maxNumberOfBullseyes Use this argument to indicate how
        * many bullseye targets you expect to find in the image.
+       *
+       * @param maxRadius Use this argument to indicate the biggest
+       * bullseye you expect to see.  For example, if the biggest
+       * bullseye you expect to see is 20 pixels across, set this to
+       * 10 (because radius is half of diameter).
        */
-      KeypointSelectorBullseye(unsigned int maxNumberOfBullseyes);
+      KeypointSelectorBullseye(unsigned int maxNumberOfBullseyes,
+                               unsigned int maxRadius);
 
 
       /** 
@@ -125,7 +146,11 @@ namespace brick {
        * for keypoints.
        */
       void
-      setImage(Image<GRAY8> const& inImage);
+      setImage(Image<GRAY8> const& inImage,
+               unsigned int startRow,
+               unsigned int startColumn,
+               unsigned int stopRow,
+               unsigned int stopColumn);
 
 
     private:
@@ -133,38 +158,59 @@ namespace brick {
       typedef brick::common::Int32 AccumulatedType;
 
 
+      // Accumulate statistics related to the difference between two
+      // pixel values.
+      void
+      accumulateAsymmetrySums(brick::common::Int32 pixel0,
+                              brick::common::Int32 pixel1,
+                              brick::common::UnsignedInt32& pixelSum,
+                              brick::common::UnsignedInt32& pixelSquaredSum,
+                              brick::common::UnsignedInt32& asymmetrySum);
+
+      
       // Make sure bounding box of processing region is sane.
       void
       checkAndRepairRegionOfInterest(Image<GRAY8> const& inImage,
-                                     unsigned int pixelMeasurementRadius,
+                                     unsigned int radius,
                                      unsigned int& startRow,
                                      unsigned int& startColumn,
                                      unsigned int& stopRow,
                                      unsigned int& stopColumn) const;
 
+      // Estimate how much the target is squished along each axis.  Is
+      // it circular?  Elliptical?
+      void
+      estimateScale(Image<GRAY8> const& image,
+                    unsigned int radius,
+                    unsigned int row, unsigned int column,
+                    KeypointBullseye<brick::common::Int32>& keypoint) const;
+      
+
+      // See if an image location is plausibly the center of a
+      // bullseye by looking for symetry around it.  Note that the
+      // symmetry computation currently just compares up with down and
+      // left with right.
+      FloatType
+      evaluateSymmetry(Image<GRAY8> const& image,
+                       unsigned int radius,
+                       unsigned int row, unsigned int column,
+                       KeypointBullseye<brick::common::UnsignedInt32>& keypoint)
+        const;
+
+      
       // Find the highest threshold value that would still allow this
       // particular pixel to pass and be selected as a keypoint.
       brick::common::Int16
       measurePixelThreshold(Image<GRAY8> const& image,
                             unsigned int row, unsigned int column) const;
+
+
+      // Private data members.
+
+      std::vector< KeypointBullseye<FloatType> > m_keypointVector;
+      brick::common::UnsignedInt32 m_maxNumberOfBullseyes;
+      brick::common::UnsignedInt32 m_maxRadius;
       
-
-      // Check to see if a specific pixel should be selected as a keypoint.
-      bool
-      testPixel(Image<GRAY8> const& image,
-                unsigned int row, unsigned int column,
-                const common::Int16 threshold,
-                KeypointFast& keypoint) const;
-
-
-      // This is called by testPixel to do the heavy lifting.
-      bool
-      testPixelDetails(Image<GRAY8> const& image,
-                       unsigned int row, unsigned int column,
-                       const brick::common::Int16 testValue,
-                       const brick::common::Int16 threshold,
-                       KeypointFast& keypoint,
-                       bool isPositive) const;
 
     };
 

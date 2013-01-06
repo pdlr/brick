@@ -54,6 +54,7 @@ brickComputerVision_HEADERS	= \
 	kernel.hh kernel_impl.hh \
 	kernels.hh kernels_impl.hh \
 	keypointMatcherFast.hh keypointMatcherFast_impl.hh \
+	keypointSelectorBullseye.hh keypointSelectorBullseye_impl.hh \
 	keypointSelectorFast.hh keypointSelectorFast_impl.hh \
 	keypointSelectorHarris.hh keypointSelectorHarris_impl.hh \
 	naiveSnake.hh naiveSnake_impl.hh \
@@ -86,7 +87,11 @@ libbrickComputerVision_la_SOURCES = \
 	imageIO.cc imageIO.hh \
 	histogramEqualize.cc histogramEqualize.hh \
 	keypointMatcherFast.cc keypointMatcherFast.hh \
+	keypointMatcherFast_impl.hh \
+	keypointSelectorBullseye.cc keypointSelectorBullseye.hh \
+	keypointSelectorBullseye_impl.hh \
 	keypointSelectorFast.cc keypointSelectorFast.hh \
+	keypointSelectorFast_impl.hh \
 	ransac.cc ransac.hh
 
 

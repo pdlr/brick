@@ -68,14 +68,14 @@ namespace brick {
     {
       // Load an image with a moderately tricky bullseye in it.
       std::string inputFileName = getBullseyeFileNamePGM0();
-      Image<GRAY8> inputImage = readImagePGM(inputFileName);
+      Image<GRAY8> inputImage = readPGM8(inputFileName);
 
       // Where we expect the keypoint detector to fire.
       // Note(xxx): must be a better way than hardcoding this.
       numeric::Index2D bullseyePosition(54, 59);
       
       // Make sure the detector finds the target.
-      KeypointSelectorBullseye<double> selector;
+      KeypointSelectorBullseye<double> selector(1, 15);
       selector.setImage(inputImage);
       std::vector< KeypointBullseye<int> > keypoints = selector.getKeypoints();
       BRICK_TEST_ASSERT(keypoints.size() == 1);

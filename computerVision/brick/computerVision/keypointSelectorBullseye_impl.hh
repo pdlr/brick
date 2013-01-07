@@ -47,6 +47,16 @@ namespace brick {
     }
 
 
+    // Process an image to find keypoints.
+    template <class FloatType>
+    void
+    KeypointSelectorBullseye<FloatType>::
+    setImage(Image<GRAY8> const& inImage)
+    {
+      this->setImage(inImage, 0, 0, inImage.rows(), inImage.columns());
+    }
+
+    
     template <class FloatType>
     void
     KeypointSelectorBullseye<FloatType>::
@@ -68,19 +78,23 @@ namespace brick {
       // symmetrical aren't bullseyes.  Here we estimate what a normal
       // amount of symmetry is for a non-bullseye pixel, so that we
       // can set the threshold higher than that.
-      this->m_symmetryThreshold = this->estimateSymmetryThreshold();
+      
+      FloatType symmetryThreshold = this->estimateSymmetryThreshold(
+        inImage, m_maxRadius, (inImage.rows() * inImage.columns()) / 1000);
       
       // Test every pixel!
-      KeypointBullseye<brick::common::Int32> keypoint;
       for(unsigned int row = startRow; row < stopRow; ++row) {
         for(unsigned int column = startColumn; column < stopColumn;
             ++column) {
           FloatType symmetry = this->evaluateSymmetry(
-            inImage, row, column, keypoint);
-          if(symmetry > this->m_symmetryThreshold) {
-            FloatType bullseyeMetric = this->evaluateBullseyeMetric(
-              inImage, row, column, keypoint);
-            if(bullseyeMetric > m_keypointVector[0].bullseyeMetric) {
+            inImage, m_maxRadius, row, column);
+          if(symmetry > symmetryThreshold) {
+            KeypointBullseye<brick::common::Int32> keypoint(
+              row, column, symmetry);
+            // FloatType bullseyeMetric = this->evaluateBullseyeMetric(
+            //   inImage, row, column, keypoint);
+            // if(bullseyeMetric > m_keypointVector[0].bullseyeMetric) {
+            if(keypoint.bullseyeMetric > m_keypointVector[0].bullseyeMetric) {
               this->sortedInsert(keypoint, m_keypointVector,
                                  m_maxNumberOfBullseyes);
             }
@@ -219,14 +233,69 @@ namespace brick {
     }
 
 
+    // Figure out what "normal" is for the symmetry measure, and
+    // pick a threshold that's low enough.
+    template <class FloatType>
+    FloatType
+    KeypointSelectorBullseye<FloatType>::
+    estimateSymmetryThreshold(Image<GRAY8> const& inImage,
+                              unsigned int radius,
+                              unsigned int numberOfSamples) const
+    {
+      // Figure out how much to subsample rows and columns when
+      // computing "normal" for the symmetry measure.
+      unsigned int numberOfPixels = inImage.rows() * inImage.columns();
+      FloatType decimationFactor = (static_cast<FloatType>(numberOfPixels)
+                                    / static_cast<FloatType>(numberOfSamples));
+
+      // Of course, if we subsample in both rows and columns, we need
+      // the square root of the number we just calculated.
+      FloatType axisFactor = brick::common::squareRoot(decimationFactor);
+      unsigned int step =
+        static_cast<unsigned int>(axisFactor + FloatType(0.5));
+
+      // Now inspect approximately numberOfSamples pixels:
+      unsigned int count = 0;
+      FloatType symmetrySum = 0;
+      FloatType symmetrySquaredSum = 0;
+      
+      for(unsigned int row = 0; row < inImage.rows(); row += step) {
+        for(unsigned int column = 0; column < inImage.columns();
+            column += step) {
+          FloatType symmetry = this->evaluateSymmetry(
+            inImage, radius, row, column);
+          symmetrySum += symmetry;
+          symmetrySquaredSum += symmetry * symmetry;
+          ++count;
+        }
+      }
+
+      // There is almost no chance that these samples made a Gaussian,
+      // but it's easy to pretend, so for now, we just take the
+      // 1-sigma bound.
+
+      FloatType meanSymmetry = symmetrySum / count;
+      FloatType varianceSymmetry =
+        (symmetrySquaredSum / count) - (meanSymmetry * meanSymmetry);
+
+      // Quick check to avoid discarding all possible targets if the
+      // numbers go wrong.
+      if(meanSymmetry - varianceSymmetry < 0.0) {
+        return meanSymmetry;
+      }
+
+      // All done.  Return our fake 1-sigma threshold.
+      return meanSymmetry - varianceSymmetry;
+      
+    }
+
+
     template <class FloatType>
     FloatType
     KeypointSelectorBullseye<FloatType>::
     evaluateSymmetry(Image<GRAY8> const& image,
                      unsigned int radius,
-                     unsigned int row, unsigned int column,
-                     KeypointBullseye<brick::common::UnsignedInt32>& keypoint)
-      const
+                     unsigned int row, unsigned int column) const
     {
       brick::common::UnsignedInt32 pixelSum = 0;
       brick::common::UnsignedInt32 pixelSquaredSum = 0;
@@ -256,6 +325,49 @@ namespace brick {
       return asymmetry;
     }
 
+
+    template <class FloatType>
+    void
+    KeypointSelectorBullseye<FloatType>::
+    sortedInsert(
+      KeypointBullseye<brick::common::Int32> const& keypoint,
+      std::vector< KeypointBullseye<brick::common::Int32> >& keypointVector,
+      unsigned int maxNumberOfBullseyes)
+    {
+      // Special case: if keypointVector is empty, just add the new point.
+      if(keypointVector.empty()) {
+        keypointVector.push_back(keypoint);
+        return;
+      }
+
+      // Special case: if the new point doesn't make the grade,
+      // discard it... we're done.
+      if(keypoint.value > keypointVector[0].value) {
+        return;
+      }
+
+      // At this point, we know that the new point is going to be
+      // added to the vector, so make room for it by discarding the
+      // worst point we've seen so far (unless keypointVector isn't
+      // full yet; in that case, no need to throw away any keypoint.
+      while(keypointVector.size() >= maxNumberOfBullseyes) {
+        keypointVector.pop_front();
+      }
+
+      // Now add the new point, and bubble-sort it into its rightful
+      // place.  Inserting a point in the middle of a vector is O(n)
+      // anyway, so the bubble sort isn't too much more of a penalty.
+      keypointVector.push_front(keypoint);
+      unsigned int ii = 0;
+      while(ii < keypointVector.size()) {
+        if(keypointVector[ii].value >= keypointVector[ii + 1].value) {
+          break;
+        }
+        std::swap(keypointVector[ii], keypointVector[ii + 1]);
+        ++ii;
+      }
+    }
+    
 
   } // namespace computerVision
   

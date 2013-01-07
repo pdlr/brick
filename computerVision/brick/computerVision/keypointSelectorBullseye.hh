@@ -25,14 +25,15 @@ namespace brick {
 
     unsigned int const keypointBullseyeMaxRadius = 64;
     
-    template <class CoordinateType>
+    template <class CoordinateType, class FloatType = double>
     struct KeypointBullseye {
       CoordinateType row;
       CoordinateType column;
       CoordinateType value;
       unsigned int horizontalScale;
       unsigned int verticalScale;
-
+      FloatType bullseyeMetric;
+      
       brick::common::UnsignedInt8 leftSpoke[keypointBullseyeMaxRadius];
       brick::common::UnsignedInt8 rightSpoke[keypointBullseyeMaxRadius];
       brick::common::UnsignedInt8 topSpoke[keypointBullseyeMaxRadius];
@@ -146,6 +147,28 @@ namespace brick {
        * for keypoints.
        */
       void
+      setImage(Image<GRAY8> const& inImage);
+      
+
+      /** 
+       * Process a region of an image to find keypoints.
+       * 
+       * @param inImage This argument is the image in which to look
+       * for keypoints.
+       * 
+       * @param startRow This argument helps to specify the upper-left
+       * corner of the region to be searched.
+       * 
+       * @param startColumn This argument helps to specify the upper-left
+       * corner of the region to be searched.
+       * 
+       * @param stopRow This argument helps to specify the lower-right
+       * corner of the region to be searched.
+       * 
+       * @param stopColumn This argument  helps to specify the lower-right
+       * corner of the region to be searched.
+       */
+      void
       setImage(Image<GRAY8> const& inImage,
                unsigned int startRow,
                unsigned int startColumn,
@@ -184,18 +207,26 @@ namespace brick {
                     unsigned int radius,
                     unsigned int row, unsigned int column,
                     KeypointBullseye<brick::common::Int32>& keypoint) const;
-      
+
+
+      // Figure out what "normal" is for the symmetry measure, and
+      // pick a threshold that's low enough.  Low enough means that
+      // only interesting pixels have a lower score from
+      // evaluateSymmetry() (where low means "symmetrical").
+      FloatType estimateSymmetryThreshold(
+        Image<GRAY8> const& inImage,
+        unsigned int radius,
+        unsigned int numberOfSamples) const;
+
 
       // See if an image location is plausibly the center of a
       // bullseye by looking for symetry around it.  Note that the
-      // symmetry computation currently just compares up with down and
-      // left with right.
+      // symmetry computation currently just compares up with down,
+      // left with right, opposing diagonals.
       FloatType
       evaluateSymmetry(Image<GRAY8> const& image,
                        unsigned int radius,
-                       unsigned int row, unsigned int column,
-                       KeypointBullseye<brick::common::UnsignedInt32>& keypoint)
-        const;
+                       unsigned int row, unsigned int column) const;
 
       
       // Find the highest threshold value that would still allow this
@@ -205,12 +236,20 @@ namespace brick {
                             unsigned int row, unsigned int column) const;
 
 
-      // Private data members.
+      // Insert the new keypoint into a sorted vector, discarding the
+      // worst point if the addition would make the vector longer than
+      // maxNumberOfBullseyes.
+      void
+      sortedInsert(
+        KeypointBullseye<brick::common::Int32> const& keypoint,
+        std::vector< KeypointBullseye<brick::common::Int32> >& keypointVector,
+        unsigned int maxNumberOfBullseyes);
 
-      std::vector< KeypointBullseye<FloatType> > m_keypointVector;
+    // Private data members.
+
+      std::vector< KeypointBullseye<brick::common::Int32> > m_keypointVector;
       brick::common::UnsignedInt32 m_maxNumberOfBullseyes;
       brick::common::UnsignedInt32 m_maxRadius;
-      
 
     };
 

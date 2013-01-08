@@ -184,11 +184,12 @@ namespace brick {
       // Accumulate statistics related to the difference between two
       // pixel values.
       void
-      accumulateAsymmetrySums(brick::common::Int32 pixel0,
-                              brick::common::Int32 pixel1,
-                              brick::common::UnsignedInt32& pixelSum,
-                              brick::common::UnsignedInt32& pixelSquaredSum,
-                              brick::common::UnsignedInt32& asymmetrySum);
+      accumulateAsymmetrySums(
+        brick::common::Int32 pixel0,
+        brick::common::Int32 pixel1,
+        brick::common::UnsignedInt32& pixelSum,
+        brick::common::UnsignedInt32& pixelSquaredSum,
+        brick::common::UnsignedInt32& asymmetrySum) const;
 
       
       // Make sure bounding box of processing region is sane.

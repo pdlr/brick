@@ -93,11 +93,8 @@ namespace brick {
               row, column, symmetry);
             // FloatType bullseyeMetric = this->evaluateBullseyeMetric(
             //   inImage, row, column, keypoint);
-            // if(bullseyeMetric > m_keypointVector[0].bullseyeMetric) {
-            if(keypoint.bullseyeMetric > m_keypointVector[0].bullseyeMetric) {
-              this->sortedInsert(keypoint, m_keypointVector,
-                                 m_maxNumberOfBullseyes);
-            }
+            this->sortedInsert(keypoint, m_keypointVector,
+                               m_maxNumberOfBullseyes);
           }
         }
       }
@@ -148,7 +145,7 @@ namespace brick {
                             brick::common::Int32 pixel1,
                             brick::common::UnsignedInt32& pixelSum,
                             brick::common::UnsignedInt32& pixelSquaredSum,
-                            brick::common::UnsignedInt32& asymmetrySum)
+                            brick::common::UnsignedInt32& asymmetrySum) const
     {
       pixelSum += pixel0 + pixel1;
       pixelSquaredSum += pixel0 * pixel0 + pixel1 * pixel1;
@@ -321,7 +318,7 @@ namespace brick {
       if(pixelVariance <= 0.0) {
         return 0.0;
       }
-      FloatType asymmetry = (asymmetrySum / (count >> 1)) / pixelVariance;
+      FloatType asymmetry = (asymmetrySum / (count / 2.0)) / pixelVariance;
       return asymmetry;
     }
 
@@ -342,7 +339,8 @@ namespace brick {
 
       // Special case: if the new point doesn't make the grade,
       // discard it... we're done.
-      if(keypoint.value > keypointVector[0].value) {
+      unsigned int vectorSize = keypointVector.size();
+      if(keypoint.value >= keypointVector[vectorSize - 1].value) {
         return;
       }
 
@@ -350,21 +348,21 @@ namespace brick {
       // added to the vector, so make room for it by discarding the
       // worst point we've seen so far (unless keypointVector isn't
       // full yet; in that case, no need to throw away any keypoint.
-      while(keypointVector.size() >= maxNumberOfBullseyes) {
-        keypointVector.pop_front();
+      while(vectorSize >= maxNumberOfBullseyes) {
+        keypointVector.pop_back();
       }
 
       // Now add the new point, and bubble-sort it into its rightful
       // place.  Inserting a point in the middle of a vector is O(n)
       // anyway, so the bubble sort isn't too much more of a penalty.
-      keypointVector.push_front(keypoint);
-      unsigned int ii = 0;
-      while(ii < keypointVector.size()) {
-        if(keypointVector[ii].value >= keypointVector[ii + 1].value) {
+      keypointVector.push_back(keypoint);
+      unsigned int ii = vectorSize - 1;
+      while(ii != 0) {
+        if(keypointVector[ii].value < keypointVector[ii - 1].value) {
           break;
         }
-        std::swap(keypointVector[ii], keypointVector[ii + 1]);
-        ++ii;
+        std::swap(keypointVector[ii], keypointVector[ii - 1]);
+        --ii;
       }
     }
     

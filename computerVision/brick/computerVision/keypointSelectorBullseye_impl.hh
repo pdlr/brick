@@ -22,6 +22,10 @@
 
 #include <brick/common/mathFunctions.hh>
 
+// xxx
+#include <brick/utilities/imageIO.hh>
+
+
 namespace brick {
 
   namespace computerVision {
@@ -78,26 +82,44 @@ namespace brick {
       // symmetrical aren't bullseyes.  Here we estimate what a normal
       // amount of symmetry is for a non-bullseye pixel, so that we
       // can set the threshold higher than that.
-      
+      //
+      // Figure out how many pixels to sample when estimating.
+      unsigned int numberOfPixelsToSample =
+        (stopRow - startRow) * (stopColumn - startColumn) / 1000;
+      numberOfPixelsToSample = std::max(numberOfPixelsToSample,
+                                        static_cast<unsigned int>(100));
+
+      // Do the sampling and estimate the threshold.
       FloatType symmetryThreshold = this->estimateSymmetryThreshold(
-        inImage, m_maxRadius, (inImage.rows() * inImage.columns()) / 1000);
+        inImage, m_maxRadius, startRow, startColumn, stopRow, stopColumn,
+        numberOfPixelsToSample);
       
       // Test every pixel!
+      // xxx
+      Image<GRAY_FLOAT64> outImage(inImage.rows(), inImage.columns());
+      outImage = 0.0;
+      
       for(unsigned int row = startRow; row < stopRow; ++row) {
         for(unsigned int column = startColumn; column < stopColumn;
             ++column) {
           FloatType symmetry = this->evaluateSymmetry(
             inImage, m_maxRadius, row, column);
-          if(symmetry > symmetryThreshold) {
+          if(symmetry < symmetryThreshold) {
             KeypointBullseye<brick::common::Int32> keypoint(
               row, column, symmetry);
             // FloatType bullseyeMetric = this->evaluateBullseyeMetric(
             //   inImage, row, column, keypoint);
             this->sortedInsert(keypoint, m_keypointVector,
                                m_maxNumberOfBullseyes);
+            outImage(row, column) = symmetry;
           }
         }
       }
+
+      // xxx
+      brick::utilities::writePGM("out.pgm", outImage.data(),
+                                 outImage.rows(), outImage.columns(),
+                                 true, true, 16);
     }
 
 
@@ -149,7 +171,8 @@ namespace brick {
     {
       pixelSum += pixel0 + pixel1;
       pixelSquaredSum += pixel0 * pixel0 + pixel1 * pixel1;
-      asymmetrySum += brick::common::absoluteValue(pixel0 - pixel1);
+      brick::common::Int32 difference = pixel1 - pixel0;
+      asymmetrySum += difference * difference;
     }
     
 
@@ -237,11 +260,16 @@ namespace brick {
     KeypointSelectorBullseye<FloatType>::
     estimateSymmetryThreshold(Image<GRAY8> const& inImage,
                               unsigned int radius,
+                              unsigned int startRow,
+                              unsigned int startColumn,
+                              unsigned int stopRow,
+                              unsigned int stopColumn,
                               unsigned int numberOfSamples) const
     {
       // Figure out how much to subsample rows and columns when
       // computing "normal" for the symmetry measure.
-      unsigned int numberOfPixels = inImage.rows() * inImage.columns();
+      unsigned int numberOfPixels = 
+        (stopRow - startRow) * (stopColumn - startColumn);
       FloatType decimationFactor = (static_cast<FloatType>(numberOfPixels)
                                     / static_cast<FloatType>(numberOfSamples));
 
@@ -256,8 +284,8 @@ namespace brick {
       FloatType symmetrySum = 0;
       FloatType symmetrySquaredSum = 0;
       
-      for(unsigned int row = 0; row < inImage.rows(); row += step) {
-        for(unsigned int column = 0; column < inImage.columns();
+      for(unsigned int row = startRow; row < stopRow; row += step) {
+        for(unsigned int column = startColumn; column < stopColumn;
             column += step) {
           FloatType symmetry = this->evaluateSymmetry(
             inImage, radius, row, column);
@@ -297,7 +325,7 @@ namespace brick {
       brick::common::UnsignedInt32 pixelSum = 0;
       brick::common::UnsignedInt32 pixelSquaredSum = 0;
       brick::common::UnsignedInt32 asymmetrySum = 0;
-      for(unsigned int rr = 0; rr < radius; ++rr) {
+      for(unsigned int rr = 1; rr < radius; ++rr) {
         this->accumulateAsymmetrySums(
           image(row - rr, column - rr), image(row + rr, column + rr),
           pixelSum, pixelSquaredSum, asymmetrySum);
@@ -312,11 +340,11 @@ namespace brick {
           pixelSum, pixelSquaredSum, asymmetrySum);
       }
 
-      FloatType count = 8 * radius;
+      FloatType count = 8 * (radius - 1);
       FloatType pixelMean = pixelSum / count;
       FloatType pixelVariance = pixelSquaredSum / count - pixelMean * pixelMean;
       if(pixelVariance <= 0.0) {
-        return 0.0;
+        return std::numeric_limits<FloatType>::max();
       }
       FloatType asymmetry = (asymmetrySum / (count / 2.0)) / pixelVariance;
       return asymmetry;
@@ -338,9 +366,10 @@ namespace brick {
       }
 
       // Special case: if the new point doesn't make the grade,
-      // discard it... we're done.
+      // discard it... we're done with it.
       unsigned int vectorSize = keypointVector.size();
-      if(keypoint.value >= keypointVector[vectorSize - 1].value) {
+      if((vectorSize >= maxNumberOfBullseyes)
+         && (keypoint.value >= keypointVector[vectorSize - 1].value)) {
         return;
       }
 
@@ -350,12 +379,15 @@ namespace brick {
       // full yet; in that case, no need to throw away any keypoint.
       while(vectorSize >= maxNumberOfBullseyes) {
         keypointVector.pop_back();
+        --vectorSize;
       }
 
       // Now add the new point, and bubble-sort it into its rightful
       // place.  Inserting a point in the middle of a vector is O(n)
       // anyway, so the bubble sort isn't too much more of a penalty.
+      // TBD make this stanza clearer.
       keypointVector.push_back(keypoint);
+      ++vectorSize;
       unsigned int ii = vectorSize - 1;
       while(ii != 0) {
         if(keypointVector[ii].value < keypointVector[ii - 1].value) {

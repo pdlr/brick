@@ -29,7 +29,7 @@ namespace brick {
     struct KeypointBullseye {
       CoordinateType row;
       CoordinateType column;
-      CoordinateType value;
+      FloatType value;
       unsigned int horizontalScale;
       unsigned int verticalScale;
       FloatType bullseyeMetric;
@@ -43,8 +43,8 @@ namespace brick {
 
     public:
       KeypointBullseye(CoordinateType rowArg,
-                     CoordinateType columnArg,
-                     CoordinateType valueArg)
+                       CoordinateType columnArg,
+                       FloatType valueArg)
         : row(rowArg),
           column(columnArg),
           value(valueArg),
@@ -217,6 +217,10 @@ namespace brick {
       FloatType estimateSymmetryThreshold(
         Image<GRAY8> const& inImage,
         unsigned int radius,
+        unsigned int startRow,
+        unsigned int startColumn,
+        unsigned int stopRow,
+        unsigned int stopColumn,
         unsigned int numberOfSamples) const;
 
 

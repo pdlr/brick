@@ -72,12 +72,21 @@ namespace brick {
 
       // Where we expect the keypoint detector to fire.
       // Note(xxx): must be a better way than hardcoding this.
-      numeric::Index2D bullseyePosition(54, 59);
+      numeric::Index2D bullseyePosition(59, 54);
       
       // Make sure the detector finds the target.
-      KeypointSelectorBullseye<double> selector(1, 15, 5);
+      KeypointSelectorBullseye<double> selector(10, 15, 5);
       selector.setImage(inputImage);
       std::vector< KeypointBullseye<int> > keypoints = selector.getKeypoints();
+
+      Image<GRAY8> flagImage(inputImage.rows(), inputImage.columns());
+      flagImage = 0;
+      for(unsigned int ii = 0; ii < keypoints.size(); ++ii) {
+        flagImage(keypoints[ii].row, keypoints[ii].column) =
+          (ii + 1) * (255 / keypoints.size());
+      }
+      writePGM8("flag.pgm", flagImage);
+
       BRICK_TEST_ASSERT(keypoints.size() == 1);
       BRICK_TEST_ASSERT(keypoints[0].row == bullseyePosition.getRow());
       BRICK_TEST_ASSERT(keypoints[0].column == bullseyePosition.getColumn());
@@ -94,6 +103,7 @@ namespace brick {
         brick::test::approximatelyEqual(
           keypointsGP[ii].column, (double)bullseyePosition.getColumn(), 0.5));
 #endif
+
     }
 
   } // namespace computerVision

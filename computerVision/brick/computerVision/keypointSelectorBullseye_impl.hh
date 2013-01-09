@@ -392,7 +392,7 @@ namespace brick {
       ++vectorSize;
       unsigned int ii = vectorSize - 1;
       while(ii != 0) {
-        if(keypointVector[ii].value < keypointVector[ii - 1].value) {
+        if(keypointVector[ii].value >= keypointVector[ii - 1].value) {
           break;
         }
         std::swap(keypointVector[ii], keypointVector[ii - 1]);

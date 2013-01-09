@@ -75,7 +75,7 @@ namespace brick {
       numeric::Index2D bullseyePosition(54, 59);
       
       // Make sure the detector finds the target.
-      KeypointSelectorBullseye<double> selector(1, 15);
+      KeypointSelectorBullseye<double> selector(1, 15, 5);
       selector.setImage(inputImage);
       std::vector< KeypointBullseye<int> > keypoints = selector.getKeypoints();
       BRICK_TEST_ASSERT(keypoints.size() == 1);

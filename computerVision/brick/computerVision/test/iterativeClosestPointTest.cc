@@ -52,7 +52,7 @@ namespace brick {
     IterativeClosestPointTest::
     IterativeClosestPointTest()
       : brick::test::TestFixture<IterativeClosestPointTest>("IterativeClosestPointTest"),
-        m_defaultTolerance(1.0E-10)
+        m_defaultTolerance(1.0E-5)
     {
       BRICK_TEST_REGISTER_MEMBER(testGetTransform);
     }
@@ -65,10 +65,10 @@ namespace brick {
       // Test parameters.
       unsigned int const extent       = 10;
       // double       const maxRotation  = 0.5;  // Radians.
-      double       const maxRotation  = 0.05;  // Radians.
+      double       const maxRotation  = 0.1;  // Radians.
       unsigned int const numRotations = 3;
       // double       const maxTranslation  = 0.5;
-      double       const maxTranslation  = 0.05;
+      double       const maxTranslation  = 0.2;
       unsigned int const numTranslations = 2;
 
       std::vector< num::Vector3D<double> > modelPoints;
@@ -99,6 +99,8 @@ namespace brick {
                 for(double tz = -maxTranslation; tz <= maxTranslation; 
                     tz += (2 * maxTranslation / numTranslations)) {
 
+                  std::cout << "." << std::flush;
+                  
                   // Build a ground truth coordinate transform.
                   num::Vector3D<double> rollPitchYaw(roll, pitch, yaw);
                   num::Transform3D<double> observedFromModel =

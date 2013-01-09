@@ -33,10 +33,12 @@ namespace brick {
     template <class FloatType>
     KeypointSelectorBullseye<FloatType>::
     KeypointSelectorBullseye(brick::common::UnsignedInt32 maxNumberOfBullseyes,
-                             brick::common::UnsignedInt32 maxRadius)
+                             brick::common::UnsignedInt32 maxRadius,
+                             brick::common::UnsignedInt32 minRadius)
       : m_keypointVector(),
         m_maxNumberOfBullseyes(maxNumberOfBullseyes),
-        m_maxRadius(maxRadius)
+        m_maxRadius(maxRadius),
+        m_minRadius(minRadius)
     {
       // Empty.
     }
@@ -91,7 +93,7 @@ namespace brick {
 
       // Do the sampling and estimate the threshold.
       FloatType symmetryThreshold = this->estimateSymmetryThreshold(
-        inImage, m_maxRadius, startRow, startColumn, stopRow, stopColumn,
+        inImage, m_minRadius, startRow, startColumn, stopRow, stopColumn,
         numberOfPixelsToSample);
       
       // Test every pixel!
@@ -103,7 +105,7 @@ namespace brick {
         for(unsigned int column = startColumn; column < stopColumn;
             ++column) {
           FloatType symmetry = this->evaluateSymmetry(
-            inImage, m_maxRadius, row, column);
+            inImage, m_minRadius, row, column);
           if(symmetry < symmetryThreshold) {
             KeypointBullseye<brick::common::Int32> keypoint(
               row, column, symmetry);

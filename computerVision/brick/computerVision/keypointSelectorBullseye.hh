@@ -61,7 +61,14 @@ namespace brick {
     /**
      ** This class template looks for bullseye targets in an input
      ** image.  It does not use a scale space, and operates directly
-     ** on the input image.
+     ** on the input image.  Use it like this:
+     **
+     ** @code
+     ** KeypointSelectorBullseye<double> myKeypointSelector(2, 40, 10);
+     ** myKeypointSelector.setImage(myGrayscaleImage);
+     ** std::vector< KeypointBullseye<double> > keypoints
+     **    = myKeypointSelector.getKeypointsGeneralPosition() const;
+     ** @endcode
      **/
     template <class FloatType>
     class KeypointSelectorBullseye {
@@ -79,13 +86,19 @@ namespace brick {
        * @param maxNumberOfBullseyes Use this argument to indicate how
        * many bullseye targets you expect to find in the image.
        *
-       * @param maxRadius Use this argument to indicate the biggest
-       * bullseye you expect to see.  For example, if the biggest
-       * bullseye you expect to see is 20 pixels across, set this to
-       * 10 (because radius is half of diameter).
+       * @param maxRadius Use this argument to indicate the size of
+       * the biggest bullseye you expect to see.  For example, if the
+       * biggest bullseye you expect to see is 20 pixels across, set
+       * this to 10 (because radius is half of diameter).
+       * 
+       * @param minRadius Use this argument to indicate the size of
+       * the smallest bullseye you expect to see.  For example, if the
+       * smallest bullseye you expect to see is 8 pixels across, set
+       * this to 4 (because radius is half of diameter).
        */
       KeypointSelectorBullseye(unsigned int maxNumberOfBullseyes,
-                               unsigned int maxRadius);
+                               unsigned int maxRadius,
+                               unsigned int minRadius);
 
 
       /** 
@@ -255,6 +268,7 @@ namespace brick {
       std::vector< KeypointBullseye<brick::common::Int32> > m_keypointVector;
       brick::common::UnsignedInt32 m_maxNumberOfBullseyes;
       brick::common::UnsignedInt32 m_maxRadius;
+      brick::common::UnsignedInt32 m_minRadius;
 
     };
 

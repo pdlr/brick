@@ -14,6 +14,7 @@
 #define BRICK_GEOMETRY_ELLIPSE2D_HH
 
 #include <iostream>
+#include <brick/numeric/array1D.hh>
 #include <brick/numeric/vector2D.hh>
 
 namespace brick {
@@ -82,6 +83,37 @@ namespace brick {
 
 
       /** 
+       * Estimate ellipse parameters from a series of points on the
+       * ellipse.  After calling this member function, *this will
+       * match the input points as closely as possible.  This member
+       * function currently implements the closed form algorithm of
+       * [1], which is based on Fitzgibbon's formulation [2].  Note
+       * that this algorithm minimizes RMS error in an algebraic
+       * distance of the ellipse parameterization, rather than
+       * minimizaing in Euclidean space, leading to a bias in the
+       * resulting estimate.  If this bothers us, we can implement an
+       * iterative method.
+       *
+       * [1] Halir, R., and Flusser, J., "Numerically Stable Direct
+       * Least Squares Fitting Of Ellipses." 1998.
+       *
+       * [2] Fitzgibbon, A. W., Pilu, M, and Fischer, R. B., "Direct
+       * Least Squares Fitting of Ellipses." Proc. of the 13th
+       * International Conference on Pattern Recognition, pp 253–257,
+       * 1996.
+       *
+       * @param beginIter This argument is an iterator pointing to the
+       * beginning of a sequence of Vector2D<Type> instances.
+       * 
+       * @param endIter This argument is an iterator pointing to the
+       * end of a sequence of Vector2D<Type> instances.
+       */
+      template<class IterType>
+      void
+      estimate(IterType beginIter, IterType endIter);
+
+      
+      /** 
        * This member function returns the geometric center of the ellipse.
        * 
        * @return The return value is the point at the centroid of the
@@ -128,6 +160,15 @@ namespace brick {
     private:
       // Private member functions.
 
+      // Convert from implicit ellipse representation to trigonometric
+      void
+      convertAlgebraicToTrigonometric(
+        brick::numeric::Array1D<Type> const& algebraicParameters,
+        brick::numeric::Vector2D<Type>& origin,
+        brick::numeric::Vector2D<Type>& semimajorAxis,
+        brick::numeric::Vector2D<Type>& semiminorAxis);
+      
+      
       // Private data members.
       brick::numeric::Vector2D<Type> m_origin;
       brick::numeric::Vector2D<Type> m_semimajorAxis;
@@ -139,6 +180,7 @@ namespace brick {
 
     /* ======= Non-member functions. ======= */
 
+    template <class Type>
     std::ostream&
     operator<<(std::ostream& stream, Ellipse2D<Type> const& ellipse);
     

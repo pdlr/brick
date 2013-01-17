@@ -36,6 +36,17 @@ namespace brick {
 
     private:
 
+      // Given an algebraic parameterization of an ellipse and an X
+      // coordinate, find the corresponding Y coordinates (if the X
+      // coordinate is within the range of the ellipse, else return
+      // false).
+      bool
+      solveAlgebraicEllipse(
+        double xx,
+        brick::numeric::Array1D<double> const& algebraicParameters,
+        double& yy0,
+        double& yy1);
+      
       const double m_defaultTolerance;
       
     }; // class Ellipse2DTest
@@ -56,58 +67,54 @@ namespace brick {
     Ellipse2DTest::
     testEstimate()
     {
-      brick::numeric::Array1D<double> algebraicParameters(
+      // Pick some ellipse parameters to recover.
+      brick::numeric::Array1D<double> const algebraicParameters(
         "[3.0, -5.0, 7.0, -52.0, 23.0, 10.0]");
+
+      // Make a wild assumption about where on the X axis, this
+      // ellipse lives.  We'd like a nicer way to do this.
+      double const minimumX = -200.0;
+      double const maximumX = 200.0;
       Ellipse2D<double> ellipse2D;
 
       // Assuming our test polynomial is defined somewhere on x =
-      // [-100, 100], find the valid range by converting to a
-      // single-variable quadratic in y, and looking for x values at
+      // [minimumX, maximumX], find it more precisely by converting to
+      // a single-variable quadratic in y, and looking for x values at
       // which it has real roots.
-      double minimumX = 200.0;
-      double maximumX = -200.0;
+      double minimumXObserved = maximumX;
+      double maximumXObserved = minimumX;
       for(double xx = -100.0; xx < 100.0; xx += 1.0) {
-        double c0 = algebraicParameters[2];
-        double c1 = algebraicParameters[1] * xx + algebraicParameters[4];
-        double c2 = (algebraicParameters[0] * xx * xx
-                     + algebraicParameters[3] * xx
-                     + algebraicParameters[5]);
-        double root0 = 0.0;
-        double root1 = 0.0;
-        bool isReal = brick::numeric::solveQuadratic(c0, c1, c2, root0, root1);
-        if(isReal) {
-          minimumX = std::min(minimumX, xx);
-          maximumX = std::max(maximumX, xx);
+        double yy0 = 0.0;
+        double yy1 = 0.0;
+        if(this->solveAlgebraicEllipse(xx, algebraicParameters, yy0, yy1)) {
+          minimumXObserved = std::min(minimumXObserved, xx);
+          maximumXObserved = std::max(maximumXObserved, xx);
         }
       }
 
-      if(minimumX > 100 || maximumX < -100 || minimumX > maximumX) {
+      if(minimumXObserved >= maximumX
+         || maximumXObserved <= minimumX
+         || minimumXObserved > maximumXObserved) {
         BRICK_THROW(brick::common::LogicException,
                     "Ellipse2DTest::testEstimate()",
-                    "Test ellipse is not inside X range of [-100, 100].");
+                    "Test ellipse is not in the expected X range.");
       }
 
-      double stepSize = (maximumX - minimumX) / 20;
+      double stepSize = (maximumXObserved - minimumXObserved) / 20;
       std::vector< brick::numeric::Vector2D<double> > samplePoints;
-      for(double xx = minimumX; xx < maximumX; xx += stepSize) {
-        double c0 = algebraicParameters[2];
-        double c1 = algebraicParameters[1] * xx + algebraicParameters[4];
-        double c2 = (algebraicParameters[0] * xx * xx
-                     + algebraicParameters[3] * xx
-                     + algebraicParameters[5]);
-        double root0 = 0.0;
-        double root1 = 0.0;
-        bool isReal = brick::numeric::solveQuadratic(c0, c1, c2, root0, root1);
-        if(!isReal) {
+      for(double xx = minimumXObserved; xx < maximumXObserved; xx += stepSize) {
+        double yy0 = 0.0;
+        double yy1 = 0.0;
+        if(!this->solveAlgebraicEllipse(xx, algebraicParameters, yy0, yy1)) {
           BRICK_THROW(brick::common::LogicException,
                       "Ellipse2DTest::testEstimate()",
-                      "Valid xx range appears invalid.");
+                      "Valid xx range is suddenly invalid.");
         }
 
         samplePoints.push_back(
-          brick::numeric::Vector2D<double>(xx, root0));
+          brick::numeric::Vector2D<double>(xx, yy0));
         samplePoints.push_back(
-          brick::numeric::Vector2D<double>(xx, root1));
+          brick::numeric::Vector2D<double>(xx, yy1));
       }
 
       // Recover the ellipse from the sample points.
@@ -134,6 +141,23 @@ namespace brick {
       }
     }
 
+    
+    bool
+    Ellipse2DTest::
+    solveAlgebraicEllipse(
+      double xx,
+      brick::numeric::Array1D<double> const& algebraicParameters,
+      double& yy0,
+      double& yy1)
+    {
+      double c0 = algebraicParameters[2];
+      double c1 = algebraicParameters[1] * xx + algebraicParameters[4];
+      double c2 = (algebraicParameters[0] * xx * xx
+                   + algebraicParameters[3] * xx
+                   + algebraicParameters[5]);
+      return brick::numeric::solveQuadratic(c0, c1, c2, yy0, yy1);
+    }
+    
   } // namespace geometry
 
 } // namespace brick

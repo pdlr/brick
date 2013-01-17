@@ -92,8 +92,7 @@ namespace brick {
     template<class IterType>
     void
     Ellipse2D<Type>::
-    estimate(IterType beginIter, IterType endIter,
-             brick::numeric::Array1D<double>& recoveredX)
+    estimate(IterType beginIter, IterType endIter)
     {
       // This algorithm is based on the ellipse parameterization
       // 
@@ -143,16 +142,6 @@ namespace brick {
       // Right half of the design matrix.
       brick::numeric::Array2D<Type> D2(numberOfPoints, 3);
 
-      // Debugging: full design matrix and constraint matrix.
-      brick::numeric::Array2D<Type> d_D(numberOfPoints, 6);
-      brick::numeric::Array2D<Type> d_C(
-        "[[0.0,  0.0, 2.0, 0.0, 0.0, 0.0],"
-        " [0.0, -1.0, 0.0, 0.0, 0.0, 0.0],"
-        " [2.0,  0.0, 0.0, 0.0, 0.0, 0.0],"
-        " [0.0,  0.0, 0.0, 0.0, 0.0, 0.0],"
-        " [0.0,  0.0, 0.0, 0.0, 0.0, 0.0],"
-        " [0.0,  0.0, 0.0, 0.0, 0.0, 0.0]]");
-      
       // Fill in the design matrix.
       unsigned int rowNumber = 0;
       while(beginIter != endIter) {
@@ -164,51 +153,10 @@ namespace brick {
         D2(rowNumber, 1) = samplePoint.y();
         D2(rowNumber, 2) = Type(1);
 
-        // Debug
-        d_D(rowNumber, 0) = samplePoint.x() * samplePoint.x();
-        d_D(rowNumber, 1) = samplePoint.x() * samplePoint.y();
-        d_D(rowNumber, 2) = samplePoint.y() * samplePoint.y();
-        d_D(rowNumber, 3) = samplePoint.x();
-        d_D(rowNumber, 4) = samplePoint.y();
-        d_D(rowNumber, 5) = Type(1);
-
         ++beginIter;
         ++rowNumber;
       }
 
-
-      // Debug:  The full eigensystem.
-      brick::numeric::Array2D<Type> d_S = brick::numeric::matrixMultiply<Type>(
-        d_D.transpose(), d_D);
-      brick::numeric::Array2D<Type> d_M = brick::numeric::matrixMultiply<Type>(
-        brick::linearAlgebra::inverse(d_S), d_C);
-      brick::numeric::Array1D<Type> d_eigenvalues;
-      brick::numeric::Array2D<Type> d_eigenvectors;
-      brick::linearAlgebra::eigenvectorsSymmetric(
-        d_M, d_eigenvalues, d_eigenvectors);
-
-      std::cout << "D: " << d_D << std::endl;
-      std::cout << "C: " << d_C << std::endl;
-      std::cout << "S: " << d_S << std::endl;
-      std::cout << "M: " << d_M << std::endl;
-      std::cout << "evec: " << d_eigenvectors << std::endl;
-
-      // The eigenvector we want is the one that satisfies the
-      // constraint a^T * C * a > 0.
-      brick::numeric::MaxRecorder<Type, unsigned int> d_maxRecorder;
-      for(unsigned int ii = 0; ii < d_eigenvalues.size(); ++ii) {
-        Type constraintValue =
-          4.0 * d_eigenvectors(0, ii) * d_eigenvectors(2, ii)
-          - d_eigenvectors(1, ii) * d_eigenvectors(1, ii);
-        d_maxRecorder.test(constraintValue, ii);
-      }
-
-      unsigned int d_selectedColumn = d_maxRecorder.getPayload();
-      recoveredX.reinit(d_eigenvectors.rows());
-      for(unsigned int ii = 0; ii < d_eigenvectors.rows(); ++ii) {
-        recoveredX[ii] = d_eigenvectors(ii, d_selectedColumn);
-      }
-      
       // Compute the four quadrants of the scatter matrix.  Actually,
       // the upper right and lower left quadrants are identical, so on
       // three matrices to compute here.
@@ -259,13 +207,13 @@ namespace brick {
       // that there will only ever be one eigenvector with a positive
       // constraint value, although I have not verified this.
       // Assuming it to be true, we simply take the eigenvector with
-      // the largest constraint value.
+      // the largest constraint value.  Another concern, I currently
+      // assume all eigenvalues/eigenvectors are real.
       brick::numeric::MaxRecorder<Type, unsigned int> maxRecorder;
       for(unsigned int ii = 0; ii < eigenvalues.size(); ++ii) {
         Type constraintValue =
           4.0 * eigenvectors(0, ii).real() * eigenvectors(2, ii).real()
           - eigenvectors(1, ii).real() * eigenvectors(1, ii).real();
-        std::cout << "cccccc: " << constraintValue << std::endl;
         maxRecorder.test(constraintValue, ii);
       }
 
@@ -288,17 +236,9 @@ namespace brick {
       std::copy(remainingParameters.begin(), remainingParameters.end(),
                 allParameters.begin() + firstThreeParameters.size());
 
-      for(unsigned int ii = 0; ii < d_eigenvectors.rows(); ++ii) {
-        recoveredX[ii] = allParameters[ii];
-      }
-      
       // Convert into the parameterization we prefer.
       this->convertAlgebraicToTrigonometric(
         allParameters, m_origin, m_semimajorAxis, m_semiminorAxis);
-
-      std::cout << "Origin: " << m_origin << "\n"
-                << "Semimajor: " << m_semimajorAxis << "\n"
-                << "Semiminor: " << m_semiminorAxis << std::endl;
     }
 
 

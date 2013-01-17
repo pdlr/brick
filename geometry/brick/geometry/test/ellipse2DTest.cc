@@ -14,11 +14,6 @@
 #include <brick/geometry/ellipse2D.hh>
 #include <brick/numeric/utilities.hh>
 #include <brick/numeric/solveQuadratic.hh>
-
-// xxx
-#include <iomanip>
-#include <brick/utilities/imageIO.hh>
-
 #include <brick/test/testFixture.hh>
 
 
@@ -51,7 +46,7 @@ namespace brick {
     Ellipse2DTest::
     Ellipse2DTest()
       : brick::test::TestFixture<Ellipse2DTest>("Ellipse2DTest"),
-        m_defaultTolerance(1.0E-12)
+        m_defaultTolerance(1.0E-9)
     {
       BRICK_TEST_REGISTER_MEMBER(testEstimate);
     }
@@ -109,92 +104,34 @@ namespace brick {
                       "Valid xx range appears invalid.");
         }
 
-        // xxx
-        brick::numeric::Array1D<double> dRow(6);
-        dRow[0] = xx * xx;
-        dRow[1] = xx * root0;
-        dRow[2] = root0 * root0;
-        dRow[3] = xx;
-        dRow[4] = root0;
-        dRow[5] = 1.0;
-        std::cout << std::fixed << std::setprecision(12)
-                  << "dRow: " << dRow << "\n"
-                  << "AD0: "
-                  << brick::numeric::dot<double>(dRow, algebraicParameters)
-                  << std::endl;
-        
         samplePoints.push_back(
           brick::numeric::Vector2D<double>(xx, root0));
         samplePoints.push_back(
           brick::numeric::Vector2D<double>(xx, root1));
       }
 
-      brick::numeric::Array1D<double> recoveredX;
-      ellipse2D.estimate(samplePoints.begin(), samplePoints.end(),
-                         recoveredX);
+      // Recover the ellipse from the sample points.
+      ellipse2D.estimate(samplePoints.begin(), samplePoints.end());
 
-      // xxx
-      brick::numeric::Array2D<unsigned char> graph(500, 500);
-      graph = static_cast<unsigned char>(0);
-      for(unsigned int ii = 0; ii < samplePoints.size(); ++ii) {
-        unsigned int row = (samplePoints[ii].y() * 10 + 250.5);
-        unsigned int column = (samplePoints[ii].x() * 10 + 250.5);
-        if(row < graph.rows() && column < graph.columns()) {
-          graph(row, column) = static_cast<unsigned char>(255);
-        }
-      }
-
-#if 1
+      // Verify that points on the ellipse match the parameterization
+      // we started out with.
       for(double angle = 0.0; angle < 6.28; angle += (3.14 / 180.0)) {
         double ct = std::cos(angle);
         double st = std::sin(angle);
         brick::numeric::Vector2D<double> point = (ellipse2D.getOrigin()
                  + ct * ellipse2D.getSemimajorAxis()
                  + st * ellipse2D.getSemiminorAxis());
-        unsigned int row = (point.y() * 10 + 250.5);
-        unsigned int column = (point.x() * 10 + 250.5);
-        if(row < graph.rows() && column < graph.columns()) {
-          graph(row, column) = static_cast<unsigned char>(128);
-        }
-      }
-#else
-      std::cout << "recovered: " << recoveredX << std::endl;
-      for(double xx = minimumX; xx < maximumX; xx += stepSize / 4) {
-        double c0 = recoveredX[2];
-        double c1 = recoveredX[1] * xx + recoveredX[4];
-        double c2 = (recoveredX[0] * xx * xx
-                     + recoveredX[3] * xx
-                     + recoveredX[5]);
-        double root0 = 0.0;
-        double root1 = 0.0;
-        bool isReal = brick::numeric::solveQuadratic(c0, c1, c2, root0, root1);
-        if(!isReal) {
-          // BRICK_THROW(brick::common::LogicException,
-          //             "Ellipse2DTest::testEstimate()",
-          //             "Valid xx range not valid for recoveredX.");
-          std::cout << "(" << xx << ")" << std::flush;
-        } else {
 
-          brick::numeric::Vector2D<double> point0(xx, root0);
-          unsigned int row = (point0.y() * 10 + 250.5);
-          unsigned int column = (point0.x() * 10 + 250.5);
-          if(row < graph.rows() && column < graph.columns()) {
-            graph(row, column) = static_cast<unsigned char>(128);
-          }
-        
-          brick::numeric::Vector2D<double> point1(xx, root1);
-          row = (point1.y() * 10 + 250.5);
-          column = (point1.x() * 10 + 250.5);
-          if(row < graph.rows() && column < graph.columns()) {
-            graph(row, column) = static_cast<unsigned char>(128);
-          }
-        }
-      }
-      std::cout << std::endl;
-#endif      
+        double algebraicDistance = (
+          algebraicParameters[0] * point.x() * point.x()
+          + algebraicParameters[1] * point.x() * point.y()
+          + algebraicParameters[2] * point.y() * point.y()
+          + algebraicParameters[3] * point.x()
+          + algebraicParameters[4] * point.y()
+          + algebraicParameters[5]);
 
-      brick::utilities::writePGM("graph.pgm", graph.data(),
-                                 graph.rows(), graph.columns());
+        BRICK_TEST_ASSERT(algebraicDistance < this->m_defaultTolerance);
+      }
     }
 
   } // namespace geometry

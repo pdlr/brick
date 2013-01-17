@@ -110,8 +110,7 @@ namespace brick {
        */
       template<class IterType>
       void
-      estimate(IterType beginIter, IterType endIter,
-               brick::numeric::Array1D<double>& recoveredX);
+      estimate(IterType beginIter, IterType endIter);
 
       
       /** 

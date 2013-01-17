@@ -29,7 +29,7 @@ namespace brick {
     struct KeypointBullseye {
       CoordinateType row;
       CoordinateType column;
-      FloatType value;
+      FloatType symmetry;
       unsigned int horizontalScale;
       unsigned int verticalScale;
       FloatType bullseyeMetric;
@@ -44,10 +44,10 @@ namespace brick {
     public:
       KeypointBullseye(CoordinateType rowArg,
                        CoordinateType columnArg,
-                       FloatType valueArg)
+                       FloatType symmetryArg)
         : row(rowArg),
           column(columnArg),
-          value(valueArg),
+          symmetry(symmetryArg),
           horizontalScale(0),
           verticalScale(0),
           leftSpoke(),
@@ -223,6 +223,7 @@ namespace brick {
                     KeypointBullseye<brick::common::Int32>& keypoint) const;
 
 
+      
       // Figure out what "normal" is for the symmetry measure, and
       // pick a threshold that's low enough.  Low enough means that
       // only interesting pixels have a lower score from
@@ -237,6 +238,16 @@ namespace brick {
         unsigned int numberOfSamples) const;
 
 
+      // Compute a measure of bullseye-ness that's more expensive --
+      // and more accurate -- than symmetry, and Fill out a KeyPoint
+      // instance with the corresponding information.
+      void evaluateBullseyeMetric(
+        KeypointBullseye<brick::common::Int32>& keypoint,
+        Image<GRAY8> const& inImage,
+        unsigned int minRadius,
+        unsigned int maxRadius);
+
+      
       // See if an image location is plausibly the center of a
       // bullseye by looking for symetry around it.  Note that the
       // symmetry computation currently just compares up with down,

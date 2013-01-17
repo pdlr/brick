@@ -109,8 +109,8 @@ namespace brick {
           if(symmetry < symmetryThreshold) {
             KeypointBullseye<brick::common::Int32> keypoint(
               row, column, symmetry);
-            // FloatType bullseyeMetric = this->evaluateBullseyeMetric(
-            //   inImage, row, column, keypoint);
+            this->evaluateBullseyeMetric(
+              keyPoint, inImage, m_minRadius, m_maxRadius);
             this->sortedInsert(keypoint, m_keypointVector,
                                m_maxNumberOfBullseyes);
             outImage(row, column) = symmetry;
@@ -236,6 +236,7 @@ namespace brick {
           ++count;
           if(count >= this->m_numberOfColorTransitions) {
             keypoint.verticalScale = rr;
+            break;
           }
         }
       }
@@ -249,6 +250,7 @@ namespace brick {
           ++count;
           if(count >= this->m_numberOfColorTransitions) {
             keypoint.horizontalScale = rr;
+            break;
           }
         }
       }
@@ -313,6 +315,96 @@ namespace brick {
 
       // All done.  Return our fake 1-sigma threshold.
       return meanSymmetry - varianceSymmetry;
+      
+    }
+
+
+    template <class FloatType>
+    void
+    KeypointSelectorBullseye<FloatType>::
+    evaluateBullseyeMetric(
+        KeypointBullseye<brick::common::Int32>& keypoint,
+        Image<GRAY8> const& inImage,
+        unsigned int minRadius,
+        unsigned int maxRadius)
+    {
+      // Estimate threshold.
+
+      // Find edges along several major dimensions.
+
+      // --------- Fit ellipses to edges. --------- 
+      //
+
+      // For just one ellipse, here's how we might estimate its
+      // parameters given a bunch of points on its perimeter:
+      //
+      // We know that each point on the ellipse conforms to the equation
+      //
+      //   dot(x_i - x_c, e_0)^2 + dot(x_i - x_c, e_1)^2 = 1.0; 
+      //
+      // Where x_i is the 2D position of the i-th point, x_c is the
+      // center of the ellipse, and e_0 & e_1 are the major and minor
+      // axes of the ellipse.
+      // 
+      // Suppose we knew x_c and y_c.  Then we would have:
+      //
+      //   k_x * (x_i - x_c)^2 + k_y * (y_i - y_c)^2 = 1.0,
+      //   k_x * (x_i - x_c)^2 + k_y * (y_i - y_c)^2 = 1.0,
+      
+      // which we rearrange to isolate the unknowns:
+      //
+      //   k_x * x_i^2 - 2 * k_x * x_i * x_c + k_x * x_c^2
+      //     + k_y * y_i^2 - 2 * k_y * y_i * y_c + k_y * y_c^2
+
+
+      // (x_i - x_c)^2 + (y_i - y_c)^2 = 1/N * Sum((x_i - x_c)^2 + (y_i - y_c)^2)
+
+      // x_i^2 - 2 * x_i * x_c + x_c^2 + y_i^2 - 2 * y_i * y_c + y_c^2 =
+      //   1/N * (Sum(x_i^2) - 2 * Sum(x_i * x_c) + Sum(x_c^2)
+      //          + Sum(y_i^2) - 2 * Sum(y_i * y_c) + Sum(y_c^2))      
+
+      // x_i^2 - 2 * x_i * x_c + y_i^2 - 2 * y_i * y_c =
+      //  1/N * (Sum(x_i^2) - 2 * Sum(x_i * x_c)
+      //         + Sum(y_i^2) - 2 * Sum(y_i * y_c))
+      
+      // x_i^2 - 2 * x_i * x_c + y_i^2 - 2 * y_i * y_c  =
+      //   1/N * Sum(x_i^2) - 2/N * Sum(x_i) * x_c
+      //   + 1/N * Sum(y_i^2) - 2/N * Sum(y_i) * y_c
+      
+      // 2 * (Sum(x_i)/N - x_i) * x_c  + 2 * (Sum(y_i)/N - y_i) * y_c
+      //   = 1/N * Sum(x_i^2) - x_i^2 + 1/N * Sum(y_i^2) - y_i^2
+
+      // So... Ax = b, where A is Nx2, x is 2 elements, and b is Nx1
+
+      // x = pinv(A) * b
+      //
+      // and
+      //
+      // A * pinv(A) * b - b ~= 0
+
+      // pinv(A) = inv(transpose(A) * A) * transpose(A)
+
+      // In transformed ellipse space, A' = A * [[a, 0], [0, b]], and 
+      // we can write b' as B * [a^2, b^2], where B is Nx2.
+
+      // Call the first of these new a,b matrices M_1, and the second M_2.
+
+      // pinv(A') = inv(M_1 * A^T ^ A * M_1) * M_1 * A^T
+      //          = inv(M_1) * pinv(A)
+
+      // So we have
+      //
+      // A' * pinv(A') * b' - b' ~= 0
+      // 
+      // A * M_1 * inv(M_1) * pinv(A) * B * M_2 - B * M2 ~= 0
+      //
+      // A * pinv(A) * B * M_2 - B * M2 ~= 0
+      //
+      // (inv(M_1) * pinv(A) * B - B) * M2 ~= 0
+
+      // This is linear in the elements of M2, and is easily solved.
+      
+      // Return residual.
       
     }
 

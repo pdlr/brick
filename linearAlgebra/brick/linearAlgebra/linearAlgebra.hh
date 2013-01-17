@@ -104,7 +104,7 @@ namespace brick {
       brick::numeric::Array2D<brick::common::Float64> const& inputArray,
       brick::numeric::Array1D< std::complex<brick::common::Float64> >& eigenvalues,
       brick::numeric::Array2D< std::complex<brick::common::Float64> >& eigenvectors,
-                 bool isSortRequired = false);
+      bool isSortRequired = false);
 
     
     /** 

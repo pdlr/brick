@@ -110,7 +110,8 @@ namespace brick {
        */
       template<class IterType>
       void
-      estimate(IterType beginIter, IterType endIter);
+      estimate(IterType beginIter, IterType endIter,
+               brick::numeric::Array1D<double>& recoveredX);
 
       
       /** 
@@ -154,7 +155,7 @@ namespace brick {
        * semiminor axis of the ellipse.
        */
       brick::numeric::Vector2D<Type> const&
-      getSemiminorAxis() const {return m_semimajorAxis;}
+      getSemiminorAxis() const {return m_semiminorAxis;}
       
 
     private:

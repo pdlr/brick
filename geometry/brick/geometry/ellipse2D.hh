@@ -4,7 +4,7 @@
 *
 * Header file declaring the Ellipse2D class template.
 *
-* Copyright (C) 2008-2011 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2008-2013 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
@@ -22,7 +22,7 @@ namespace brick {
   namespace geometry {
     
     /**
-     ** The Ellipse2D class represents a planar ellipse in 2D space.
+     ** The Ellipse2D class represents an ellipse in 2D space.
      **/
     template <class Type>
     class Ellipse2D {
@@ -42,9 +42,9 @@ namespace brick {
        * @param origin This argument specifies the position of the
        * geometric center of the ellipse.
        * 
-       * @param majorAxis This argument represents a vector pointing
+       * @param semimajorAxis This argument represents a vector pointing
        * from the center of the ellipse to one of the two points on
-       * the boundary of the ellipse that is farthest from the center.
+       * the boundary of the ellipse that are farthest from the center.
        * 
        * @param ratio This argument specifies the length of the minor
        * axis as a proportion of the lenth of the major axis.  It must
@@ -106,7 +106,7 @@ namespace brick {
        * beginning of a sequence of Vector2D<Type> instances.
        * 
        * @param endIter This argument is an iterator pointing to the
-       * end of a sequence of Vector2D<Type> instances.
+       * end of the sequence of Vector2D<Type> instances.
        */
       template<class IterType>
       void

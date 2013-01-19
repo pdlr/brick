@@ -4,7 +4,7 @@
 *
 * Source file defining the Ellipse2D class.
 *
-* Copyright (C) 2008 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2008-2013 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
@@ -158,8 +158,8 @@ namespace brick {
       }
 
       // Compute the four quadrants of the scatter matrix.  Actually,
-      // the upper right and lower left quadrants are identical, so on
-      // three matrices to compute here.
+      // the upper right and lower left quadrants are identical, so
+      // only three matrices to compute here.
       brick::numeric::Array2D<Type> D1Transpose = D1.transpose();
       brick::numeric::Array2D<Type> S1 =
         brick::numeric::matrixMultiply<Type>(D1Transpose, D1);
@@ -259,7 +259,7 @@ namespace brick {
       // R. J. Lopez's article includes a derivation, which follows
       // these steps: substitute u = (x - h) and v = (y - k) into the
       // algebraic distance equation.  When h and k are chosen so that
-      // the ellipse is centered at the origin, thn the algebraic
+      // the ellipse is centered at the origin, then the algebraic
       // distance equation will have no coefficients for the linear
       // terms in u and v.  Setting these coefficients to zeros and
       // solving for h and k gives the origin.
@@ -297,6 +297,28 @@ namespace brick {
       Type ff = algebraicParameters[5];
 
       // Compute center of ellipse.
+      Type phi = bb * bb - 4 * aa * cc;
+      origin.setValue((2 * cc * dd - bb * ee) / phi,
+                      (2 * aa * ee - bb * dd) / phi);
+
+      // Compute sine and cosine of ellipse rotation angle.  These
+      // define directions of the major and minor axes of the ellipse.
+      Type CC = brick::common::constants::rootOverTwo;
+      Type SS = brick::common::constants::rootOverTwo;
+      if(aa != cc) {
+        Type aMinusC = aa - cc;
+        Type lambda = (brick::common::absoluteValue(aMinusC)
+                       / brick::common::squareRoot(
+                         bb * bb + aMinusC * aMinusC));
+        CC = brick::common::squareRoot((1.0 + lambda) / 2);
+        SS = brick::common::squareRoot((1.0 - lambda) / 2);
+      }
+
+      // Finally, solve for the scale of the ellipse and recover the
+      // scaled major and minor axes.
+      Type PP = aa * CC * CC + cc * SS * SS + bb * CC * SS;
+      Type QQ = aa * SS * SS + cc * CC * CC - bb * CC * SS;
+      
 #if 0
       brick::numeric::Array2D<Type> AA(3, 3);
       AA(0,0) = 2 * aa;
@@ -316,27 +338,7 @@ namespace brick {
                     - 2 * ff * bb * bb
                     - 2 * cc * dd * dd);
 #endif
-      Type phi = bb * bb - 4 * aa * cc;
       Type rho = gamma / (2 * phi);
-
-      origin.setValue((2 * cc * dd - bb * ee) / phi,
-                      (2 * aa * ee - bb * dd) / phi);
-
-
-      // Compute axes.
-      Type CC = brick::common::constants::rootOverTwo;
-      Type SS = brick::common::constants::rootOverTwo;
-      if(aa != cc) {
-        Type aMinusC = aa - cc;
-        Type lambda = (brick::common::absoluteValue(aMinusC)
-                       / brick::common::squareRoot(
-                         bb * bb + aMinusC * aMinusC));
-        CC = brick::common::squareRoot((1.0 + lambda) / 2);
-        SS = brick::common::squareRoot((1.0 - lambda) / 2);
-      }
-      Type PP = aa * CC * CC + cc * SS * SS + bb * CC * SS;
-      Type QQ = aa * SS * SS + cc * CC * CC - bb * CC * SS;
-      
       Type alpha = brick::common::squareRoot(rho / PP);
       Type beta = brick::common::squareRoot(rho / QQ);
       
@@ -367,4 +369,4 @@ namespace brick {
     
 } // namespace brick
 
-#endif /* #ifndef BRICK_GEOMETRY_CIRCLE2D_IMPL_HH */
+#endif /* #ifndef BRICK_GEOMETRY_ELLIPSE2D_IMPL_HH */

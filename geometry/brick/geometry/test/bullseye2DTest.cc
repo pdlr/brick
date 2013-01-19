@@ -64,7 +64,7 @@ namespace brick {
     Bullseye2DTest::
     Bullseye2DTest()
       : brick::test::TestFixture<Bullseye2DTest>("Bullseye2DTest"),
-        m_defaultTolerance(1.0E-9)
+        m_defaultTolerance(1.0E-7)
     {
       BRICK_TEST_REGISTER_MEMBER(testEstimate);
     }
@@ -74,82 +74,88 @@ namespace brick {
     Bullseye2DTest::
     testEstimate()
     {
-      this->drawGraphs();
-      return;
-      
-      // Pick some bullseye parameters to recover.
-      brick::numeric::Array1D<double> const algebraicParameters(
-        "[3.0, -5.0, 7.0, -52.0, 23.0, 10.0]");
+      // Pick parameters for an arbitrary bullseye.
+      double const majorMinorRatio = 4.0;
+      brick::numeric::Vector2D<double> const origin(31.0, 24.0);
+      brick::numeric::Vector2D<double> const semimajorAxis(1.0, -3.5);
+      brick::numeric::Vector2D<double> const semiminorAxis(
+        -semimajorAxis.y() / majorMinorRatio,
+        semimajorAxis.x() / majorMinorRatio);
+      unsigned int const numberOfRings = 3;
+      double const scales[] = {1.0, 2.3, 6.0};
 
-      // Make a wild assumption about where on the X axis, this
-      // bullseye lives.  We'd like a nicer way to do this.
-      double const minimumX = -200.0;
-      double const maximumX = 200.0;
-      Bullseye2D<double> bullseye2D;
-
-      // Assuming our test polynomial is defined somewhere on x =
-      // [minimumX, maximumX], find it more precisely by converting to
-      // a single-variable quadratic in y, and looking for x values at
-      // which it has real roots.
-      double minimumXObserved = maximumX;
-      double maximumXObserved = minimumX;
-      for(double xx = -100.0; xx < 100.0; xx += 1.0) {
-        double yy0 = 0.0;
-        double yy1 = 0.0;
-        if(this->solveAlgebraicEllipse(xx, algebraicParameters, yy0, yy1)) {
-          minimumXObserved = std::min(minimumXObserved, xx);
-          maximumXObserved = std::max(maximumXObserved, xx);
-        }
-      }
-
-      if(minimumXObserved >= maximumX
-         || maximumXObserved <= minimumX
-         || minimumXObserved > maximumXObserved) {
-        BRICK_THROW(brick::common::LogicException,
-                    "Bullseye2DTest::testEstimate()",
-                    "Test bullseye is not in the expected X range.");
-      }
-
-      double stepSize = (maximumXObserved - minimumXObserved) / 20;
+      // Generate some test points for each ellipse in the bullseye.
+      unsigned int const numberOfPointsPerEllipse = 10;
       std::vector< brick::numeric::Vector2D<double> > samplePoints;
-      for(double xx = minimumXObserved; xx < maximumXObserved; xx += stepSize) {
-        double yy0 = 0.0;
-        double yy1 = 0.0;
-        if(!this->solveAlgebraicEllipse(xx, algebraicParameters, yy0, yy1)) {
-          BRICK_THROW(brick::common::LogicException,
-                      "Bullseye2DTest::testEstimate()",
-                      "Valid xx range is suddenly invalid.");
-        }
-
-        samplePoints.push_back(
-          brick::numeric::Vector2D<double>(xx, yy0));
-        samplePoints.push_back(
-          brick::numeric::Vector2D<double>(xx, yy1));
-      }
-
-      // Recover the bullseye from the sample points.
       std::vector<unsigned int> counts;
+      for(unsigned int ringNumber = 0; ringNumber < numberOfRings;
+          ++ringNumber) {
+        unsigned int count = 0;
+        for(double theta = 0.0; theta < 6.28;
+            theta += 6.28 / numberOfPointsPerEllipse) {
+          double cosineTheta = brick::common::cosine(theta);
+          double sineTheta = brick::common::sine(theta);
+          brick::numeric::Vector2D<double> samplePoint = (
+            origin
+            + scales[ringNumber] * cosineTheta * semimajorAxis
+            + scales[ringNumber] * sineTheta   * semiminorAxis);
+          samplePoints.push_back(samplePoint);
+          ++count;
+        }
+        counts.push_back(count);
+      }
+      
+      // Recover the bullseye from the sample points.
+      Bullseye2D<double> bullseye2D;
       bullseye2D.estimate(samplePoints.begin(), samplePoints.end(),
                           counts.begin(), counts.end());
 
-      // Verify that points on the bullseye match the parameterization
-      // we started out with.
-      for(double angle = 0.0; angle < 6.28; angle += (3.14 / 180.0)) {
-        double ct = std::cos(angle);
-        double st = std::sin(angle);
-        brick::numeric::Vector2D<double> point = (bullseye2D.getOrigin()
-                 + ct * bullseye2D.getSemimajorAxis(0)
-                 + st * bullseye2D.getSemiminorAxis(0));
+      // Verify that the recovered bullseye has the correct center position.
+      brick::numeric::Vector2D<double> recoveredOrigin = bullseye2D.getOrigin();
+      double xError =
+        brick::common::absoluteValue(recoveredOrigin.x() - origin.x());
+      double yError =
+        brick::common::absoluteValue(recoveredOrigin.y() - origin.y());
+      BRICK_TEST_ASSERT(xError < this->m_defaultTolerance);
+      BRICK_TEST_ASSERT(yError < this->m_defaultTolerance);
 
-        double algebraicDistance = (
-          algebraicParameters[0] * point.x() * point.x()
-          + algebraicParameters[1] * point.x() * point.y()
-          + algebraicParameters[2] * point.y() * point.y()
-          + algebraicParameters[3] * point.x()
-          + algebraicParameters[4] * point.y()
-          + algebraicParameters[5]);
+      // Verify correct number of rings.
+      BRICK_TEST_ASSERT(bullseye2D.getNumberOfRings() == numberOfRings);
 
-        BRICK_TEST_ASSERT(algebraicDistance < this->m_defaultTolerance);
+      for(unsigned int ii = 0; ii < numberOfRings; ++ii) {
+        // Verify correct direction for major and minor axes of this
+        // ring.  Recovered major should be perpendicular to minor,
+        // and recovered minor should be perpendicular to major.
+        brick::numeric::Vector2D<double> recoveredSemimajor =
+          bullseye2D.getSemimajorAxis(ii);
+        brick::numeric::Vector2D<double> recoveredSemiminor =
+          bullseye2D.getSemiminorAxis(ii);
+        double projection0 = brick::numeric::dot<double>(
+          recoveredSemimajor, semiminorAxis);
+        double projection1 = brick::numeric::dot<double>(
+          recoveredSemiminor, semimajorAxis);
+        BRICK_TEST_ASSERT(
+          approximatelyEqual(projection0, 0.0, this->m_defaultTolerance));
+        BRICK_TEST_ASSERT(
+          approximatelyEqual(projection1, 0.0, this->m_defaultTolerance));
+
+        // Verify correnct magnitude for major and minor axes of this
+        // ring.
+        double recoveredMajorMagnitude = brick::numeric::magnitude<double>(
+          recoveredSemimajor);
+        double recoveredMinorMagnitude = brick::numeric::magnitude<double>(
+          recoveredSemiminor);
+        
+        double majorMagnitude =
+          brick::numeric::magnitude<double>(semimajorAxis) * scales[ii];
+        double minorMagnitude =
+          brick::numeric::magnitude<double>(semiminorAxis) * scales[ii];
+        BRICK_TEST_ASSERT(
+          approximatelyEqual(recoveredMajorMagnitude, majorMagnitude,
+                             this->m_defaultTolerance));
+        BRICK_TEST_ASSERT(
+          approximatelyEqual(recoveredMinorMagnitude, minorMagnitude,
+                             this->m_defaultTolerance));
       }
     }
 

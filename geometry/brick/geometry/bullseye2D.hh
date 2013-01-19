@@ -107,6 +107,15 @@ namespace brick {
       estimate(PointsIterType pointsBeginIter, PointsIterType pointsEndIter,
                CountsIterType countsBeginIter, CountsIterType countsEndIter);
 
+
+      /** 
+       * Return the number of concentric rings this bullseye has.
+       * 
+       * @return The return value is the number of rings.
+       */
+      unsigned int
+      getNumberOfRings() const {return m_scales.size();}
+
       
       /** 
        * This member function returns the geometric center of the bullseye.
@@ -136,8 +145,10 @@ namespace brick {
        * @return The return value is a vector pointing along the
        * semimajor axis of the specified ring of the bullseye.
        */
-      brick::numeric::Vector2D<Type> const&
-      getSemimajorAxis(unsigned int ringNumber) const {return m_semimajorAxis;}
+      brick::numeric::Vector2D<Type>
+      getSemimajorAxis(unsigned int ringNumber) const {
+        return m_scales[ringNumber] * m_semimajorAxis;
+      }
       
 
       /** 
@@ -158,8 +169,10 @@ namespace brick {
        * @return The return value is a vector pointing along the
        * semiminor axis of the specified ring of the bullseye.
        */
-      brick::numeric::Vector2D<Type> const&
-      getSemiminorAxis(unsigned int ringNumber) const {return m_semiminorAxis;}
+      brick::numeric::Vector2D<Type>
+      getSemiminorAxis(unsigned int ringNumber) const {
+        return m_scales[ringNumber] * m_semiminorAxis;
+      }
       
 
     private:
@@ -171,7 +184,8 @@ namespace brick {
         brick::numeric::Array1D<Type> const& algebraicParameters,
         brick::numeric::Vector2D<Type>& origin,
         brick::numeric::Vector2D<Type>& semimajorAxis,
-        brick::numeric::Vector2D<Type>& semiminorAxis);
+        brick::numeric::Vector2D<Type>& semiminorAxis,
+        std::vector<Type>& scales);
       
       
       // Private data members.

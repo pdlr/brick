@@ -155,25 +155,25 @@ namespace brick {
       brick::numeric::Array2D<Type> D1(numberOfPoints, 3);
 
       // Right half of the design matrix.
-      brick::numeric::Array2D<Type> D2(numberOfPoints, 3 + numberOfRings);
+      brick::numeric::Array2D<Type> D2(numberOfPoints, 2 + numberOfRings);
 
       // Fill in the design matrix.
       unsigned int rowNumber = 0;
       unsigned int ringNumber = 0;
-      unsigned int ringEndIndex = *countsBegin;
+      unsigned int ringEndIndex = *countsBeginIter;
       while(pointsBeginIter != pointsEndIter) {
         // Keep track of which ring this input point belongs to, so we
         // can fill in the design matrix appropritely.
-        if(while rowNumber >= ringEndIndex) {
+        while(rowNumber >= ringEndIndex) {
           ++ringNumber;
-          ++countsBegin;
-          if(!(countsBegin != countsEnd)) {
+          ++countsBeginIter;
+          if(!(countsBeginIter != countsEndIter)) {
             BRICK_THROW(brick::common::IndexException,
                         "Bullseye2D::estimate()",
                         "There are more input points than specified by the "
-                        "countsBegin - countsEnd input sequence.");            
+                        "countsBeginIter - countsEndIter input sequence.");
           }
-          ringEndIndex += *countsBegin;
+          ringEndIndex += *countsBeginIter;
         }
 
         // The first five columns of the design matrix are easy.
@@ -200,7 +200,7 @@ namespace brick {
         BRICK_THROW(brick::common::IndexException,
                     "Bullseye2D::estimate()",
                     "There are fewer input points than specified by the "
-                    "countsBegin - countsEnd input sequence.");            
+                    "countsBeginIter - countsEndIter input sequence.");
       }
       
       // Compute the four quadrants of the scatter matrix.  Actually,
@@ -381,9 +381,9 @@ namespace brick {
       for(unsigned int ringNumber = 0; ringNumber < numberOfRings;
           ++ringNumber) {
         Type gamma = (-2 * aa * ee*ee
-                      + 8 * aa * cc * ff
+                      + 8 * aa * cc * ffVector[ringNumber]
                       + 2 * bb * ee * dd
-                      - 2 * ff * bb * bb
+                      - 2 * ffVector[ringNumber] * bb * bb
                       - 2 * cc * dd * dd);
         Type rho = gamma / (2 * phi);
         alphaVector[ringNumber] = brick::common::squareRoot(rho / PP);

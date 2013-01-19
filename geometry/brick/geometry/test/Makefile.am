@@ -12,6 +12,7 @@ VPATH			= @srcdir@
 # Specify which tests should be run.
 
 TESTS = \
+	bullseye2DTest \
 	ellipse2DTest \
 	plane3DTest \
 	ray2DTest \
@@ -23,6 +24,7 @@ TESTS = \
 # Specify which tests should be build from source.
 
 check_PROGRAMS = \
+	bullseye2DTest \
 	ellipse2DTest \
 	plane3DTest \
 	ray2DTest \
@@ -34,6 +36,7 @@ check_PROGRAMS = \
 # For each test which should be built from source, specify which 
 # source files.
 
+bullseye2DTest_SOURCES		= bullseye2DTest.cc
 ellipse2DTest_SOURCES		= ellipse2DTest.cc
 plane3DTest_SOURCES		= plane3DTest.cc
 ray2DTest_SOURCES		= ray2DTest.cc

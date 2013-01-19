@@ -23,6 +23,7 @@ AM_CPPFLAGS		= -I$(top_srcdir)
 
 brickGeometrydir		= $(includedir)/brick/geometry
 brickGeometry_HEADERS	= \
+	bullseye2D.hh bullseye2D_impl.hh \
 	circle2D.hh circle2D_impl.hh \
 	ellipse2D.hh ellipse2D_impl.hh \
 	lineSegment2D.hh lineSegment2D_impl.hh \

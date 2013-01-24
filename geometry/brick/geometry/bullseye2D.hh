@@ -103,9 +103,10 @@ namespace brick {
        * to the end of the sequence of counts
        */
       template<class PointsIterType, class CountsIterType>
-      void
+      Type
       estimate(PointsIterType pointsBeginIter, PointsIterType pointsEndIter,
-               CountsIterType countsBeginIter, CountsIterType countsEndIter);
+               CountsIterType countsBeginIter, CountsIterType countsEndIter,
+               bool computeResidual = true);
 
 
       /** 

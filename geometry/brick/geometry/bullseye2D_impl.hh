@@ -78,10 +78,11 @@ namespace brick {
     // bullseye.
     template <class Type>
     template<class PointsIterType, class CountsIterType>
-    void
+    Type
     Bullseye2D<Type>::
     estimate(PointsIterType pointsBeginIter, PointsIterType pointsEndIter,
-             CountsIterType countsBeginIter, CountsIterType countsEndIter)
+             CountsIterType countsBeginIter, CountsIterType countsEndIter,
+             bool computeResidual)
     {
       unsigned int const numberOfRings = countsEndIter - countsBeginIter;
       if(numberOfRings == 0) {
@@ -286,6 +287,20 @@ namespace brick {
       this->convertAlgebraicToTrigonometric(
         allParameters, m_origin, m_semimajorAxis, m_semiminorAxis,
         m_scales);
+
+      // Return the algebraic residual.
+      Type residual = static_cast<Type>(0);
+      if(computeResidual) {
+        brick::numeric::Array1D<Type> residualTerm1 =
+          brick::numeric::matrixMultiply<Type>(D1, firstThreeParameters);
+        brick::numeric::Array1D<Type> residualTerm2 =
+          brick::numeric::matrixMultiply<Type>(D2, remainingParameters);
+        brick::numeric::Array1D<Type> residualVector =
+          residualTerm1 + residualTerm2;
+        residual = brick::numeric::dot<Type>(residualVector, residualVector);
+        residual = brick::common::squareRoot(residual);
+      }
+      return residual;
     }
 
 

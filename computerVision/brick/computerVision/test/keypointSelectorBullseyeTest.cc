@@ -111,11 +111,12 @@ namespace brick {
 } // namespace brick
 
 
-#if 0
+#if 1
 
-int main(int argc, char** argv)
+int main()
 {
   brick::computerVision::KeypointSelectorBullseyeTest currentTest;
+  currentTest.testKeypointSelectorBullseye();
   bool result = currentTest.run();
 
   return (result ? 0 : 1);

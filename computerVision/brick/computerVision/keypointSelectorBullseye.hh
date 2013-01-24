@@ -18,6 +18,7 @@
 #include <vector>
 #include <brick/computerVision/image.hh>
 #include <brick/numeric/index2D.hh>
+#include <brick/numeric/vector2D.hh>
 
 namespace brick {
 
@@ -30,31 +31,15 @@ namespace brick {
       CoordinateType row;
       CoordinateType column;
       FloatType symmetry;
-      unsigned int horizontalScale;
-      unsigned int verticalScale;
       FloatType bullseyeMetric;
-      
-      brick::common::UnsignedInt8 leftSpoke[keypointBullseyeMaxRadius];
-      brick::common::UnsignedInt8 rightSpoke[keypointBullseyeMaxRadius];
-      brick::common::UnsignedInt8 topSpoke[keypointBullseyeMaxRadius];
-      brick::common::UnsignedInt8 bottomSpoke[keypointBullseyeMaxRadius];
-      
-    private:
 
-    public:
       KeypointBullseye(CoordinateType rowArg,
                        CoordinateType columnArg,
                        FloatType symmetryArg)
         : row(rowArg),
           column(columnArg),
           symmetry(symmetryArg),
-          horizontalScale(0),
-          verticalScale(0),
-          leftSpoke(),
-          rightSpoke(),
-          topSpoke(),
-          bottomSpoke() {}
-
+          bullseyeMetric(0.0) {}
     };
     
 
@@ -241,10 +226,11 @@ namespace brick {
       // Compute a measure of bullseye-ness that's more expensive --
       // and more accurate -- than symmetry, and Fill out a KeyPoint
       // instance with the corresponding information.
-      void evaluateBullseyeMetric(
+      void
+      evaluateBullseyeMetric(
         KeypointBullseye<brick::common::Int32>& keypoint,
-        Image<GRAY8> const& inImage,
-        unsigned int minRadius,
+        Image<GRAY1> const& edgeImage,
+        // unsigned int minRadius,
         unsigned int maxRadius);
 
       
@@ -276,8 +262,16 @@ namespace brick {
 
     // Private data members.
 
+      std::vector< brick::numeric::Vector2D<FloatType> >
+        m_bullseyePoints;
+      std::vector<unsigned int>
+        m_bullseyeEdgeCounts;
+      std::vector< std::vector< brick::numeric::Vector2D<FloatType> > >
+        m_edgePositions;
+      
       std::vector< KeypointBullseye<brick::common::Int32> > m_keypointVector;
       brick::common::UnsignedInt32 m_maxNumberOfBullseyes;
+      brick::common::UnsignedInt32 m_numberOfTransitions;
       brick::common::UnsignedInt32 m_maxRadius;
       brick::common::UnsignedInt32 m_minRadius;
 

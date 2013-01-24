@@ -21,6 +21,8 @@
 // #include <brick/computerVision/keypointSelectorBullseye.hh>
 
 #include <brick/common/mathFunctions.hh>
+#include <brick/computerVision/canny.hh>
+#include <brick/geometry/bullseye2D.hh>
 
 // xxx
 #include <brick/utilities/imageIO.hh>
@@ -35,8 +37,12 @@ namespace brick {
     KeypointSelectorBullseye(brick::common::UnsignedInt32 maxNumberOfBullseyes,
                              brick::common::UnsignedInt32 maxRadius,
                              brick::common::UnsignedInt32 minRadius)
-      : m_keypointVector(),
+      : m_bullseyePoints(),
+        m_bullseyeEdgeCounts(3), // TBD: make this user set-able.
+        m_edgePositions(3), // TBD: make this user set-able.
+        m_keypointVector(),
         m_maxNumberOfBullseyes(maxNumberOfBullseyes),
+        m_numberOfTransitions(3), // TBD: make this user set-able.
         m_maxRadius(maxRadius),
         m_minRadius(minRadius)
     {
@@ -95,9 +101,18 @@ namespace brick {
       FloatType symmetryThreshold = this->estimateSymmetryThreshold(
         inImage, m_minRadius, startRow, startColumn, stopRow, stopColumn,
         numberOfPixelsToSample);
-      
+
+      // If a pixel has sufficiently good symmetry, it will be tested
+      // with a more expensive bullseye algorithm that needs to know
+      // which pixels are edges.  Compute an edge image here.  For now
+      // we use the expensive Canny algorithm.
+      Image<GRAY1> edgeImage = applyCanny<FloatType>(inImage);
+        
       // Test every pixel!
       // xxx
+      brick::utilities::writePGM("edge.pgm", edgeImage.data(),
+                                 edgeImage.rows(), edgeImage.columns(),
+                                 true);
       Image<GRAY_FLOAT64> outImage(inImage.rows(), inImage.columns());
       outImage = 0.0;
       
@@ -109,8 +124,7 @@ namespace brick {
           if(symmetry < symmetryThreshold) {
             KeypointBullseye<brick::common::Int32> keypoint(
               row, column, symmetry);
-            this->evaluateBullseyeMetric(
-              keyPoint, inImage, m_minRadius, m_maxRadius);
+            this->evaluateBullseyeMetric(keypoint, edgeImage, m_maxRadius);
             this->sortedInsert(keypoint, m_keypointVector,
                                m_maxNumberOfBullseyes);
             outImage(row, column) = symmetry;
@@ -176,8 +190,9 @@ namespace brick {
       brick::common::Int32 difference = pixel1 - pixel0;
       asymmetrySum += difference * difference;
     }
-    
 
+    
+#if 0
     template <class FloatType>
     void
     KeypointSelectorBullseye<FloatType>::
@@ -255,7 +270,8 @@ namespace brick {
         }
       }
     }
-
+#endif /* #if 0 */
+    
 
     // Figure out what "normal" is for the symmetry measure, and
     // pick a threshold that's low enough.
@@ -319,95 +335,127 @@ namespace brick {
     }
 
 
+    // This macro is to avoid duplicating code below.  We use a macro
+    // for now, rather than an inline function, because it lets us
+    // avoid doing the comparison between edgeCount and
+    // m_numberOfTransitions most of the time.  We fantasize that this
+    // will make things faster.  Once everything is working, we'll
+    // switch to using an inline function, notice that it has no
+    // effect on performance, and the world will be a little brighter.
+#define BRICK_CV_TEST_EVALUATE_BREAK \
+    if(edgeImage(row, column)) { \
+      m_edgePositions[edgeCount].push_back( \
+        brick::numeric::Vector2D<FloatType>(column, row));  \
+      if(++edgeCount >= m_numberOfTransitions) { \
+        break; \
+      }  \
+    }
+
     template <class FloatType>
     void
     KeypointSelectorBullseye<FloatType>::
     evaluateBullseyeMetric(
         KeypointBullseye<brick::common::Int32>& keypoint,
-        Image<GRAY8> const& inImage,
-        unsigned int minRadius,
+        Image<GRAY1> const& edgeImage,
+        // unsigned int minRadius,
         unsigned int maxRadius)
     {
-      // Estimate threshold.
-
-      // Find edges along several major dimensions.
-
-      // --------- Fit ellipses to edges. --------- 
-      //
-
-      // For just one ellipse, here's how we might estimate its
-      // parameters given a bunch of points on its perimeter:
-      //
-      // We know that each point on the ellipse conforms to the equation
-      //
-      //   dot(x_i - x_c, e_0)^2 + dot(x_i - x_c, e_1)^2 = 1.0; 
-      //
-      // Where x_i is the 2D position of the i-th point, x_c is the
-      // center of the ellipse, and e_0 & e_1 are the major and minor
-      // axes of the ellipse.
-      // 
-      // Suppose we knew x_c and y_c.  Then we would have:
-      //
-      //   k_x * (x_i - x_c)^2 + k_y * (y_i - y_c)^2 = 1.0,
-      //   k_x * (x_i - x_c)^2 + k_y * (y_i - y_c)^2 = 1.0,
+      // Make sure there's no cruft still left in our pre-allocated
+      // buffers.
+      for(unsigned int ii = 0; ii < m_numberOfTransitions; ++ii) {
+        m_edgePositions[ii].clear();
+      }
       
-      // which we rearrange to isolate the unknowns:
-      //
-      //   k_x * x_i^2 - 2 * k_x * x_i * x_c + k_x * x_c^2
-      //     + k_y * y_i^2 - 2 * k_y * y_i * y_c + k_y * y_c^2
+      // Find nearby edges along several major directions.  In each
+      // direction, put the first-encountered edge in
+      // edgePositions[0], the second in edgePositions[1], and so on.
 
+      // Look left.
+      unsigned int edgeCount = 0;
+      for(unsigned int ii = 1; ii < maxRadius; ++ii) {
+        unsigned int row = keypoint.row;
+        unsigned int column = keypoint.column - ii;
+        BRICK_CV_TEST_EVALUATE_BREAK;
+      }
 
-      // (x_i - x_c)^2 + (y_i - y_c)^2 = 1/N * Sum((x_i - x_c)^2 + (y_i - y_c)^2)
+      // Look right.
+      edgeCount = 0;
+      for(unsigned int ii = 1; ii < maxRadius; ++ii) {
+        unsigned int row = keypoint.row;
+        unsigned int column = keypoint.column + ii;
+        BRICK_CV_TEST_EVALUATE_BREAK;
+      }
 
-      // x_i^2 - 2 * x_i * x_c + x_c^2 + y_i^2 - 2 * y_i * y_c + y_c^2 =
-      //   1/N * (Sum(x_i^2) - 2 * Sum(x_i * x_c) + Sum(x_c^2)
-      //          + Sum(y_i^2) - 2 * Sum(y_i * y_c) + Sum(y_c^2))      
+      // Look up.
+      edgeCount = 0;
+      for(unsigned int ii = 1; ii < maxRadius; ++ii) {
+        unsigned int row = keypoint.row - ii;
+        unsigned int column = keypoint.column;
+        BRICK_CV_TEST_EVALUATE_BREAK;
+      }
 
-      // x_i^2 - 2 * x_i * x_c + y_i^2 - 2 * y_i * y_c =
-      //  1/N * (Sum(x_i^2) - 2 * Sum(x_i * x_c)
-      //         + Sum(y_i^2) - 2 * Sum(y_i * y_c))
+      // Look up and to the left.
+      edgeCount = 0;
+      for(unsigned int ii = 1; ii < maxRadius; ++ii) {
+        unsigned int row = keypoint.row - ii;
+        unsigned int column = keypoint.column - ii;
+        BRICK_CV_TEST_EVALUATE_BREAK;
+      }
+
+      // Look up and to the right.
+      edgeCount = 0;
+      for(unsigned int ii = 1; ii < maxRadius; ++ii) {
+        unsigned int row = keypoint.row - ii;
+        unsigned int column = keypoint.column + ii;
+        BRICK_CV_TEST_EVALUATE_BREAK;
+      }
+
+      // Look down.
+      edgeCount = 0;
+      for(unsigned int ii = 1; ii < maxRadius; ++ii) {
+        unsigned int row = keypoint.row + ii;
+        unsigned int column = keypoint.column;
+        BRICK_CV_TEST_EVALUATE_BREAK;
+      }
+
+      // Look down and to the left.
+      edgeCount = 0;
+      for(unsigned int ii = 1; ii < maxRadius; ++ii) {
+        unsigned int row = keypoint.row + ii;
+        unsigned int column = keypoint.column - ii;
+        BRICK_CV_TEST_EVALUATE_BREAK;
+      }
+
+      // Look down and to the right.
+      edgeCount = 0;
+      for(unsigned int ii = 1; ii < maxRadius; ++ii) {
+        unsigned int row = keypoint.row + ii;
+        unsigned int column = keypoint.column + ii;
+        BRICK_CV_TEST_EVALUATE_BREAK;
+      }
+
+      // If we have a full set of edge points, rearrange them to the
+      // format needed by Bullseye2D.
+      keypoint.bullseyeMetric = std::numeric_limits<FloatType>::max();
+      if(m_bullseyeEdgeCounts[m_numberOfTransitions - 1] != 0) {
+        m_bullseyePoints.clear();
+        for(unsigned int ii = 0; ii < m_numberOfTransitions; ++ii) {
+          std::copy(m_edgePositions[ii].begin(), m_edgePositions[ii].end(),
+                    std::back_inserter(m_bullseyePoints));
+          m_bullseyeEdgeCounts[ii] = m_edgePositions[ii].size();
+        }
       
-      // x_i^2 - 2 * x_i * x_c + y_i^2 - 2 * y_i * y_c  =
-      //   1/N * Sum(x_i^2) - 2/N * Sum(x_i) * x_c
-      //   + 1/N * Sum(y_i^2) - 2/N * Sum(y_i) * y_c
-      
-      // 2 * (Sum(x_i)/N - x_i) * x_c  + 2 * (Sum(y_i)/N - y_i) * y_c
-      //   = 1/N * Sum(x_i^2) - x_i^2 + 1/N * Sum(y_i^2) - y_i^2
-
-      // So... Ax = b, where A is Nx2, x is 2 elements, and b is Nx1
-
-      // x = pinv(A) * b
-      //
-      // and
-      //
-      // A * pinv(A) * b - b ~= 0
-
-      // pinv(A) = inv(transpose(A) * A) * transpose(A)
-
-      // In transformed ellipse space, A' = A * [[a, 0], [0, b]], and 
-      // we can write b' as B * [a^2, b^2], where B is Nx2.
-
-      // Call the first of these new a,b matrices M_1, and the second M_2.
-
-      // pinv(A') = inv(M_1 * A^T ^ A * M_1) * M_1 * A^T
-      //          = inv(M_1) * pinv(A)
-
-      // So we have
-      //
-      // A' * pinv(A') * b' - b' ~= 0
-      // 
-      // A * M_1 * inv(M_1) * pinv(A) * B * M_2 - B * M2 ~= 0
-      //
-      // A * pinv(A) * B * M_2 - B * M2 ~= 0
-      //
-      // (inv(M_1) * pinv(A) * B - B) * M2 ~= 0
-
-      // This is linear in the elements of M2, and is easily solved.
-      
-      // Return residual.
-      
+        // See if the edges look like a bullseye.
+        brick::geometry::Bullseye2D<FloatType> bullseye;
+        FloatType residual = bullseye.estimate(
+          m_bullseyePoints.begin(), m_bullseyePoints.end(),
+          m_bullseyeEdgeCounts.begin(),
+          m_bullseyeEdgeCounts.end());
+        keypoint.bullseyeMetric = residual;
+      }
     }
 
+#undef BRICK_CV_TESTEVALUATE_BREAK
 
     template <class FloatType>
     FloatType
@@ -463,7 +511,8 @@ namespace brick {
       // discard it... we're done with it.
       unsigned int vectorSize = keypointVector.size();
       if((vectorSize >= maxNumberOfBullseyes)
-         && (keypoint.value >= keypointVector[vectorSize - 1].value)) {
+         && (keypoint.bullseyeMetric >=
+             keypointVector[vectorSize - 1].bullseyeMetric)) {
         return;
       }
 
@@ -484,7 +533,8 @@ namespace brick {
       ++vectorSize;
       unsigned int ii = vectorSize - 1;
       while(ii != 0) {
-        if(keypointVector[ii].value >= keypointVector[ii - 1].value) {
+        if(keypointVector[ii].bullseyeMetric
+           >= keypointVector[ii - 1].bullseyeMetric) {
           break;
         }
         std::swap(keypointVector[ii], keypointVector[ii - 1]);

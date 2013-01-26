@@ -234,17 +234,15 @@ namespace brick {
      * Randomly (or rather, pseudo-randomly) selects elements of the
      * input sequence for use in RANSAC estimation.
      * 
-     * @param sampleArray This argument is an array in which each row
-     * represents one observation, or sample, for use in the RANSAC
-     * algorithm.
+     * @param sampleArray This argument is an vector in which each
+     * element represents one observation, or sample, for use in the
+     * RANSAC algorithm.
      * 
      * @param numberOfSamplesRequired This argument indicates how many
-     * rows must be selected and copied.
+     * elements must be selected and copied.
      * 
-     * @return The return value is an Array2D instance containing only
-     * those rows that were selected.  It will always have
-     * numberOfSamplesRequired rows, and the same number of columns as
-     * sampleArray.
+     * @return The return value is a vector containing only those
+     * elements that were selected.
      */
     template <class Type>
     std::vector<Type>

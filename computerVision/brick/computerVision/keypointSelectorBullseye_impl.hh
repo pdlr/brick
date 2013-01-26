@@ -115,6 +115,8 @@ namespace brick {
                                  true);
       Image<GRAY_FLOAT64> outImage(inImage.rows(), inImage.columns());
       outImage = 0.0;
+      Image<GRAY_FLOAT64> bullImage(inImage.rows(), inImage.columns());
+      bullImage = 255.0;
       
       for(unsigned int row = startRow; row < stopRow; ++row) {
         for(unsigned int column = startColumn; column < stopColumn;
@@ -127,6 +129,10 @@ namespace brick {
             this->evaluateBullseyeMetric(keypoint, edgeImage, m_maxRadius);
             this->sortedInsert(keypoint, m_keypointVector,
                                m_maxNumberOfBullseyes);
+            if(keypoint.bullseyeMetric
+               != std::numeric_limits<FloatType>::max()) {
+              bullImage(row, column) = keypoint.bullseyeMetric;
+            }
             outImage(row, column) = symmetry;
           }
         }
@@ -136,6 +142,9 @@ namespace brick {
       brick::utilities::writePGM("out.pgm", outImage.data(),
                                  outImage.rows(), outImage.columns(),
                                  true, true, 16);
+      brick::utilities::writePGM("bull.pgm", bullImage.data(),
+                                 bullImage.rows(), bullImage.columns(),
+                                 true, true, 8);
     }
 
 
@@ -437,7 +446,7 @@ namespace brick {
       // If we have a full set of edge points, rearrange them to the
       // format needed by Bullseye2D.
       keypoint.bullseyeMetric = std::numeric_limits<FloatType>::max();
-      if(m_bullseyeEdgeCounts[m_numberOfTransitions - 1] != 0) {
+      if(m_edgePositions[m_numberOfTransitions - 1].size() != 0) {
         m_bullseyePoints.clear();
         for(unsigned int ii = 0; ii < m_numberOfTransitions; ++ii) {
           std::copy(m_edgePositions[ii].begin(), m_edgePositions[ii].end(),
@@ -445,13 +454,25 @@ namespace brick {
           m_bullseyeEdgeCounts[ii] = m_edgePositions[ii].size();
         }
       
-        // See if the edges look like a bullseye.
-        brick::geometry::Bullseye2D<FloatType> bullseye;
-        FloatType residual = bullseye.estimate(
-          m_bullseyePoints.begin(), m_bullseyePoints.end(),
-          m_bullseyeEdgeCounts.begin(),
-          m_bullseyeEdgeCounts.end());
-        keypoint.bullseyeMetric = residual;
+        // See if the edges look like a bullseye.  We require
+        // numberOfTransitions + 2 points because that's what
+        // Bullseye2D::estimate() needs.
+        if(m_bullseyePoints.size() >= m_numberOfTransitions + 2) {
+          brick::geometry::Bullseye2D<FloatType> bullseye;
+          FloatType residual = bullseye.estimate(
+            m_bullseyePoints.begin(), m_bullseyePoints.end(),
+            m_bullseyeEdgeCounts.begin(),
+            m_bullseyeEdgeCounts.end());
+
+          // If the pixel under consideration isn't at the center of
+          // the bullseye, then this isn't the right pixel.
+          FloatType differenceInX = bullseye.getOrigin().x() - keypoint.column;
+          FloatType differenceInY = bullseye.getOrigin().y() - keypoint.row;
+          if((brick::common::absoluteValue(differenceInX) < 1)
+             && (brick::common::absoluteValue(differenceInY) < 1)) {
+            keypoint.bullseyeMetric = residual;            
+          }
+        }
       }
     }
 

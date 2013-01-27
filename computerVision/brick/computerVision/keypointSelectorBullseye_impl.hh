@@ -22,7 +22,6 @@
 
 #include <brick/common/mathFunctions.hh>
 #include <brick/computerVision/canny.hh>
-#include <brick/geometry/bullseye2D.hh>
 
 // xxx
 #include <brick/utilities/imageIO.hh>
@@ -68,6 +67,24 @@ namespace brick {
       this->setImage(inImage, 0, 0, inImage.rows(), inImage.columns());
     }
 
+
+    void drawBullseye(brick::geometry::Bullseye2D<double> const& bullseye,
+                      Image<GRAY8>& image,
+                      brick::common::UInt8 color)
+    {
+      brick::numeric::Vector2D<double> origin = bullseye.getOrigin();
+      image(origin.y() + 0.5, origin.x() + 0.5) = color;
+
+      for(unsigned int ii = 0; ii < 3; ++ii) {
+        for(double angle = 0.0; angle < 6.28; angle += (3.14  / 180.)) {
+          brick::numeric::Vector2D<double> pp =
+            (origin + std::cos(angle) * bullseye.getSemimajorAxis(ii)
+             + std::sin(angle) * bullseye.getSemiminorAxis(ii));
+          image(pp.y() + 0.5, pp.x() + 0.5) = color;
+        }
+      }
+    }
+    
     
     template <class FloatType>
     void
@@ -107,12 +124,14 @@ namespace brick {
       // which pixels are edges.  Compute an edge image here.  For now
       // we use the expensive Canny algorithm.
       Image<GRAY1> edgeImage = applyCanny<FloatType>(inImage);
-        
+
+      // Debug(xxx):
+      edgeImage(51, 54) = 1;
+      edgeImage(59, 51) = 1;
+      
       // Test every pixel!
+
       // xxx
-      brick::utilities::writePGM("edge.pgm", edgeImage.data(),
-                                 edgeImage.rows(), edgeImage.columns(),
-                                 true);
       Image<GRAY_FLOAT64> outImage(inImage.rows(), inImage.columns());
       outImage = 0.0;
       Image<GRAY_FLOAT64> bullImage(inImage.rows(), inImage.columns());
@@ -126,7 +145,8 @@ namespace brick {
           if(symmetry < symmetryThreshold) {
             KeypointBullseye<brick::common::Int32> keypoint(
               row, column, symmetry);
-            this->evaluateBullseyeMetric(keypoint, edgeImage, m_maxRadius);
+            this->evaluateBullseyeMetric(keypoint, inImage, edgeImage,
+                                         m_maxRadius);
             this->sortedInsert(keypoint, m_keypointVector,
                                m_maxNumberOfBullseyes);
             if(keypoint.bullseyeMetric
@@ -145,6 +165,24 @@ namespace brick {
       brick::utilities::writePGM("bull.pgm", bullImage.data(),
                                  bullImage.rows(), bullImage.columns(),
                                  true, true, 8);
+
+      // xxx
+      Image<GRAY8> edgeImageGray = convertColorspace<GRAY8>(edgeImage);
+      drawBullseye(m_keypointVector[0].bullseye, edgeImageGray, 127);
+      std::cout << "Best bullseye: " << m_keypointVector[0].bullseye.getOrigin()
+                << ", (" << m_keypointVector[0].row << ", "
+                << m_keypointVector[0].column << "), "
+                << m_keypointVector[0].bullseyeMetric << std::endl;
+      brick::utilities::writePGM("edge.pgm", edgeImage.data(),
+                                 edgeImage.rows(), edgeImage.columns(),
+                                 true);
+      brick::utilities::writePGM("edgeWithBull.pgm", edgeImageGray.data(),
+                                 edgeImage.rows(), edgeImage.columns(),
+                                 true);
+      Image<GRAY8> inImageCopy = inImage.copy();
+      drawBullseye(m_keypointVector[0].bullseye, inImageCopy, 127);
+      brick::utilities::writePGM("inWithBull.pgm", inImageCopy.data(),
+                                 edgeImage.rows(), edgeImage.columns());
     }
 
 
@@ -365,6 +403,7 @@ namespace brick {
     KeypointSelectorBullseye<FloatType>::
     evaluateBullseyeMetric(
         KeypointBullseye<brick::common::Int32>& keypoint,
+        Image<GRAY8> const& inImage,
         Image<GRAY1> const& edgeImage,
         // unsigned int minRadius,
         unsigned int maxRadius)
@@ -457,20 +496,27 @@ namespace brick {
         // See if the edges look like a bullseye.  We require
         // numberOfTransitions + 2 points because that's what
         // Bullseye2D::estimate() needs.
-        if(m_bullseyePoints.size() >= m_numberOfTransitions + 2) {
+        // xxx
+        // if(m_bullseyePoints.size() >= m_numberOfTransitions + 2) {
+        if(m_bullseyePoints.size() >= 12) {
           brick::geometry::Bullseye2D<FloatType> bullseye;
-          FloatType residual = bullseye.estimate(
+          // FloatType residual = bullseye.estimate(
+          bullseye.estimate(
             m_bullseyePoints.begin(), m_bullseyePoints.end(),
             m_bullseyeEdgeCounts.begin(),
             m_bullseyeEdgeCounts.end());
 
-          // If the pixel under consideration isn't at the center of
-          // the bullseye, then this isn't the right pixel.
-          FloatType differenceInX = bullseye.getOrigin().x() - keypoint.column;
-          FloatType differenceInY = bullseye.getOrigin().y() - keypoint.row;
-          if((brick::common::absoluteValue(differenceInX) < 1)
-             && (brick::common::absoluteValue(differenceInY) < 1)) {
-            keypoint.bullseyeMetric = residual;            
+          FloatType goodness = 0;
+          if(this->validateBullseye(
+               bullseye, inImage, keypoint.row, keypoint.column,
+               maxRadius, goodness)) {
+            // xxx
+            if(keypoint.row == 58 && keypoint.column == 54) {
+              goodness = 1000000;
+            }
+            // OK, this bullseye passed all the tests, remember it.
+            keypoint.bullseyeMetric = 1.0 / goodness;
+            keypoint.bullseye = bullseye;
           }
         }
       }
@@ -562,7 +608,85 @@ namespace brick {
         --ii;
       }
     }
-    
+
+
+    template <class FloatType>
+    bool
+    KeypointSelectorBullseye<FloatType>::
+    validateBullseye(brick::geometry::Bullseye2D<FloatType> const& bullseye,
+                     Image<GRAY8> const& inImage,
+                     unsigned int row,
+                     unsigned int column,
+                     unsigned int maxRadius,
+                     FloatType& goodness)
+    {
+      // If the pixel under consideration isn't at the center of
+      // the bullseye, then this isn't the right pixel.
+      FloatType differenceInX = bullseye.getOrigin().x() - column;
+      FloatType differenceInY = bullseye.getOrigin().y() - row;
+      if((brick::common::absoluteValue(differenceInX) > 1)
+         || (brick::common::absoluteValue(differenceInY) > 1)) {
+        return false;
+      }
+
+      // Only proceed if bullseye is smaller than maxRadius.
+      brick::numeric::Vector2D<FloatType> semimajorAxis =
+        bullseye.getSemimajorAxis(m_numberOfTransitions - 1);
+      FloatType bullseyeRadiusSquared =
+        brick::numeric::dot<FloatType>(semimajorAxis, semimajorAxis);
+      if(bullseyeRadiusSquared > (maxRadius * maxRadius)) {
+        return false;
+      }
+
+      // Sample the rings of the bullseye.
+      brick::numeric::Vector2D<FloatType> ring1Major = (
+        (bullseye.getSemimajorAxis(0) + bullseye.getSemimajorAxis(1))
+        * FloatType(0.5));
+      brick::numeric::Vector2D<FloatType> ring1Minor = (
+        (bullseye.getSemiminorAxis(0) + bullseye.getSemiminorAxis(1))
+        * FloatType(0.5));
+      brick::numeric::Vector2D<FloatType> ring2Major = (
+        (bullseye.getSemimajorAxis(1) + bullseye.getSemimajorAxis(2))
+        * FloatType(0.5));
+      brick::numeric::Vector2D<FloatType> ring2Minor = (
+        (bullseye.getSemiminorAxis(1) + bullseye.getSemiminorAxis(2))
+        * FloatType(0.5));
+      FloatType ring1Sum = 0.0;
+      FloatType ring1SquaredSum = 0.0;
+      FloatType ring2Sum = 0.0;
+      FloatType ring2SquaredSum = 0.0;
+      unsigned int count = 0;
+      for(FloatType theta = 0.0; theta < brick::common::constants::twoPi;
+          theta += (brick::common::constants::pi / 11)) {
+        FloatType cosineTheta = brick::common::cosine(theta);
+        FloatType sineTheta = brick::common::sine(theta);
+        brick::numeric::Vector2D<FloatType> ring1Position = (
+          cosineTheta * ring1Major + sineTheta * ring1Minor);
+        brick::numeric::Vector2D<FloatType> ring2Position = (
+          cosineTheta * ring2Major + sineTheta * ring2Minor);
+        brick::common::UInt8 ring1Value = inImage(
+          brick::common::UInt32(ring1Position.y() + 0.5),
+          brick::common::UInt32(ring1Position.x() + 0.5));
+        brick::common::UInt8 ring2Value = inImage(
+          brick::common::UInt32(ring2Position.y() + 0.5),
+          brick::common::UInt32(ring2Position.x() + 0.5));
+        ring1Sum += ring1Value;
+        ring2Sum += ring2Value;
+        ring1SquaredSum += ring1Value * ring1Value;
+        ring2SquaredSum += ring2Value * ring2Value;
+        ++count;
+      }
+
+      FloatType ring1Mean = ring1Sum / count;
+      FloatType ring2Mean = ring2Sum / count;
+      FloatType ring1Variance = ring1SquaredSum / count - ring1Mean * ring1Mean;
+      FloatType ring2Variance = ring2SquaredSum / count - ring2Mean * ring2Mean;
+
+      FloatType maximumVariance = std::max(ring1Variance, ring2Variance);
+      goodness = (brick::common::absoluteValue(ring1Mean - ring2Mean)
+                  / maximumVariance);
+      return true;
+    }
 
   } // namespace computerVision
   

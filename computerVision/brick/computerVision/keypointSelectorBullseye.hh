@@ -17,6 +17,7 @@
 #include <limits>
 #include <vector>
 #include <brick/computerVision/image.hh>
+#include <brick/geometry/bullseye2D.hh>
 #include <brick/numeric/index2D.hh>
 #include <brick/numeric/vector2D.hh>
 
@@ -32,6 +33,7 @@ namespace brick {
       CoordinateType column;
       FloatType symmetry;
       FloatType bullseyeMetric;
+      brick::geometry::Bullseye2D<FloatType> bullseye;
 
       KeypointBullseye(CoordinateType rowArg,
                        CoordinateType columnArg,
@@ -39,7 +41,8 @@ namespace brick {
         : row(rowArg),
           column(columnArg),
           symmetry(symmetryArg),
-          bullseyeMetric(0.0) {}
+          bullseyeMetric(0.0),
+          bullseye() {}
     };
     
 
@@ -229,6 +232,7 @@ namespace brick {
       void
       evaluateBullseyeMetric(
         KeypointBullseye<brick::common::Int32>& keypoint,
+        Image<GRAY8> const& inImage,
         Image<GRAY1> const& edgeImage,
         // unsigned int minRadius,
         unsigned int maxRadius);
@@ -260,7 +264,17 @@ namespace brick {
         std::vector< KeypointBullseye<brick::common::Int32> >& keypointVector,
         unsigned int maxNumberOfBullseyes);
 
-    // Private data members.
+
+      bool
+      validateBullseye(brick::geometry::Bullseye2D<FloatType> const& bullseye,
+                       Image<GRAY8> const& inImage,
+                       unsigned int row,
+                       unsigned int column,
+                       unsigned int maxRadius,
+                       FloatType& goodness);
+      
+
+      // Private data members.
 
       std::vector< brick::numeric::Vector2D<FloatType> >
         m_bullseyePoints;

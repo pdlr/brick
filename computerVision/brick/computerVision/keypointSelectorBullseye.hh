@@ -202,6 +202,15 @@ namespace brick {
                                      unsigned int& stopRow,
                                      unsigned int& stopColumn) const;
 
+
+      bool
+      estimateBullseye(
+        brick::geometry::Bullseye2D<FloatType>& bullseye,
+        std::vector< std::vector< brick::numeric::Vector2D<FloatType> > > const&
+          edgePositions,
+        unsigned int numberOfTransitions);
+
+      
       // Estimate how much the target is squished along each axis.  Is
       // it circular?  Elliptical?
       void

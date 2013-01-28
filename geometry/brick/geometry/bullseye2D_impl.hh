@@ -84,6 +84,34 @@ namespace brick {
              CountsIterType countsBeginIter, CountsIterType countsEndIter,
              bool computeResidual)
     {
+      // This line may be O(N), depending on what type of iterator.
+      unsigned int numberOfPoints = pointsEndIter - pointsBeginIter;
+
+      // Do the estimation.
+      brick::numeric::Array1D<Type> residualVector(numberOfPoints);
+      this->estimate(pointsBeginIter, pointsEndIter,
+                     countsBeginIter, countsEndIter,
+                     residualVector.begin(), computeResidual);
+
+      // Compute RMS residual.
+      Type residual = static_cast<Type>(0);
+      residual = brick::numeric::dot<Type>(residualVector, residualVector);
+      residual = brick::common::squareRoot(residual);
+      return residual;
+    }
+
+
+    // This member function duplicates the functionality of the other
+    // estimate() member function, but returns algebraic residuals for
+    // each input point.
+    template <class Type>
+    template<class PointsIterType, class CountsIterType, class ResidualIter>
+    void
+    Bullseye2D<Type>::
+    estimate(PointsIterType pointsBeginIter, PointsIterType pointsEndIter,
+             CountsIterType countsBeginIter, CountsIterType countsEndIter,
+             ResidualIter residualIter, bool computeResidual)
+    {
       unsigned int const numberOfRings = countsEndIter - countsBeginIter;
       if(numberOfRings == 0) {
         BRICK_THROW(brick::common::ValueException,
@@ -288,8 +316,7 @@ namespace brick {
         allParameters, m_origin, m_semimajorAxis, m_semiminorAxis,
         m_scales);
 
-      // Return the algebraic residual.
-      Type residual = static_cast<Type>(0);
+      // Compute the algebraic residuals.
       if(computeResidual) {
         brick::numeric::Array1D<Type> residualTerm1 =
           brick::numeric::matrixMultiply<Type>(D1, firstThreeParameters);
@@ -297,10 +324,8 @@ namespace brick {
           brick::numeric::matrixMultiply<Type>(D2, remainingParameters);
         brick::numeric::Array1D<Type> residualVector =
           residualTerm1 + residualTerm2;
-        residual = brick::numeric::dot<Type>(residualVector, residualVector);
-        residual = brick::common::squareRoot(residual);
+        std::copy(residualVector.begin(), residualVector.end(), residualIter);
       }
-      return residual;
     }
 
 

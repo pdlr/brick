@@ -101,6 +101,12 @@ namespace brick {
        * 
        * @param countsEndIter This argument is an iterator pointing
        * to the end of the sequence of counts
+       * 
+       * @param computeResidual This argument indicates whether or not
+       * an overal residual value should be computed.
+       * 
+       * @return If computeResidual is true, then the return value is
+       * the computed algebraic residual, else the return value is 0.
        */
       template<class PointsIterType, class CountsIterType>
       Type
@@ -108,6 +114,46 @@ namespace brick {
                CountsIterType countsBeginIter, CountsIterType countsEndIter,
                bool computeResidual = true);
 
+
+      /** 
+       * This member function duplicates the functionality of the
+       * other estimate() member function, but returns algebraic
+       * residuals for each input point.
+       *
+       * @param pointsBeginIter This argument is an iterator pointing
+       * to the beginning of a sequence of Vector2D<Type> instances.
+       * Points belonging to the first ring of the bullseye should
+       * preceed points belonging to the second ring.  Points
+       * belonging to the second ring should proceed points belonging
+       * to the third ring, and so forth.
+       * 
+       * @param pointsEndIter This argument is an iterator pointing to the
+       * end of the sequence of Vector2D<Type> instances.
+       * 
+       * @param countsBeginIter This argument is an iterator pointing
+       * to the beginning of a sequence of counts indicating how many
+       * of the input points belong to the first ring of the bullseye,
+       * how many to the second, and so on.  The number of rings in
+       * the bullseye will be updated to match the length of this
+       * sequence.
+       * 
+       * @param countsEndIter This argument is an iterator pointing
+       * to the end of the sequence of counts
+       * 
+       * @param residualIter This argument points to the beginning of
+       * a sequence through which the residual associated with each
+       * input will be returned.
+       *
+       * @param computeResidual Setting this argument to false will
+       * prevent the residual from being computed.  Only worthwhile if
+       * you're _really_ in a hurry.
+       */
+      template<class PointsIterType, class CountsIterType, class ResidualIter>
+      void
+      estimate(PointsIterType pointsBeginIter, PointsIterType pointsEndIter,
+               CountsIterType countsBeginIter, CountsIterType countsEndIter,
+               ResidualIter residualIter, bool computeResidual = true);
+      
 
       /** 
        * Return the number of concentric rings this bullseye has.
@@ -188,7 +234,7 @@ namespace brick {
         brick::numeric::Vector2D<Type>& semiminorAxis,
         std::vector<Type>& scales);
       
-      
+
       // Private data members.
       brick::numeric::Vector2D<Type> m_origin;
       brick::numeric::Vector2D<Type> m_semimajorAxis;

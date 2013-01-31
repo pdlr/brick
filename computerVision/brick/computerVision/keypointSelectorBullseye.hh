@@ -276,7 +276,8 @@ namespace brick {
 
       bool
       validateBullseye(brick::geometry::Bullseye2D<FloatType> const& bullseye,
-                       Image<GRAY8> const& inImage,
+                       // Image<GRAY8> const& inImage,
+                       Image<GRAY1> const& edgeImage,
                        unsigned int row,
                        unsigned int column,
                        unsigned int maxRadius,

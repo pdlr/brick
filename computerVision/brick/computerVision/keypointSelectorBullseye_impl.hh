@@ -27,6 +27,16 @@
 #include <brick/utilities/imageIO.hh>
 
 
+#if 1
+int const hotRow = 58;
+int const hotCol = 54;
+#else
+int const hotRow = 53;
+int const hotCol = 48;
+#endif
+
+#define FORCE_SELECTION 1
+
 namespace brick {
 
   namespace computerVision {
@@ -594,15 +604,20 @@ namespace brick {
 
       // If we have a full set of edge points, find the best-fit bullseye.
       keypoint.bullseyeMetric = std::numeric_limits<FloatType>::max();
+      if(keypoint.row == hotRow && keypoint.column == hotCol) {
+        std::cout << "xxx" << std::endl;
+      }
       brick::geometry::Bullseye2D<FloatType> bullseye;
       if(this->estimateBullseye(
            bullseye, m_edgePositions, m_numberOfTransitions)) {
         FloatType goodness = 0;
         if(this->validateBullseye(
-             bullseye, inImage, keypoint.row, keypoint.column,
+             bullseye,
+             // inImage,
+             edgeImage, keypoint.row, keypoint.column,
              maxRadius, goodness)) {
           // xxx
-          if(keypoint.row == 58 && keypoint.column == 54) {
+          if(keypoint.row == hotRow && keypoint.column == hotCol) {
             Image<RGB8> tempImage = convertColorspace<RGB8>(inImage);
             for(unsigned int jj = 0; jj < m_edgePositions[0].size(); ++jj) {
               tempImage(m_edgePositions[0][jj].y(),
@@ -618,8 +633,9 @@ namespace brick {
             }
             brick::utilities::writePPM("inWithPoints.ppm", (char*)tempImage.data(),
                                        tempImage.rows(), tempImage.columns());
-              
-            // goodness = 1000000;
+#if FORCE_SELECTION
+            goodness = 1000000;
+#endif
           }
           // OK, this bullseye passed all the tests, remember it.
           keypoint.bullseyeMetric = 1.0 / goodness;
@@ -720,7 +736,8 @@ namespace brick {
     bool
     KeypointSelectorBullseye<FloatType>::
     validateBullseye(brick::geometry::Bullseye2D<FloatType> const& bullseye,
-                     Image<GRAY8> const& inImage,
+                     // Image<GRAY8> const& inImage,
+                     Image<GRAY1> const& edgeImage,
                      unsigned int row,
                      unsigned int column,
                      unsigned int maxRadius,
@@ -760,7 +777,93 @@ namespace brick {
           return false;
         }
       }
-      
+
+      // We compute a measure of how well the bullseye explains the
+      // image based on how well the edges in the region match with
+      // the rings of the bullseye.
+      unsigned int kk = m_numberOfTransitions - 1;
+      unsigned int xRadius =
+        brick::common::absoluteValue(bullseye.getSemimajorAxis(kk).x())
+        + brick::common::absoluteValue(bullseye.getSemiminorAxis(kk).x());
+      unsigned int yRadius = 
+        brick::common::absoluteValue(bullseye.getSemimajorAxis(kk).y())
+        + brick::common::absoluteValue(bullseye.getSemiminorAxis(kk).y());
+      xRadius = std::min(xRadius, maxRadius);
+      yRadius = std::min(yRadius, maxRadius);
+      unsigned int minRow = row - yRadius;
+      unsigned int maxRow = row + yRadius;
+      unsigned int minColumn = column - xRadius;
+      unsigned int maxColumn = column + xRadius;
+      unsigned int inBoundsCount = 0;
+      unsigned int onRingCount = 0;
+      for(unsigned int rr = minRow; rr < maxRow; ++rr) {
+        for(unsigned int cc = minColumn; cc < maxColumn; ++cc) {
+          if(edgeImage(rr, cc)) {
+            // There's an edge here!  Figure out if it lies on one of
+            // the rings of the bullseye.
+            brick::numeric::Vector2D<FloatType> vectorToEdge =
+              brick::numeric::Vector2D<FloatType>(cc, rr)
+              - bullseye.getOrigin();
+
+            // Note(xxx): badly need to refactor this.  Get this stuff
+            // out of the inner loop!
+            for(unsigned int ii = 0; ii < m_numberOfTransitions; ++ii) {
+              brick::numeric::Vector2D<FloatType> major =
+                bullseye.getSemimajorAxis(ii);
+              brick::numeric::Vector2D<FloatType> minor =
+                bullseye.getSemiminorAxis(ii);
+              FloatType distance0 = (brick::numeric::dot<FloatType>(vectorToEdge, major)
+                                / brick::numeric::dot<FloatType>(major, major));
+              FloatType distance1 = (brick::numeric::dot<FloatType>(vectorToEdge, minor)
+                                / brick::numeric::dot<FloatType>(minor, minor));
+              FloatType normalizedRadius = 
+                brick::common::squareRoot(distance0 * distance0
+                                          + distance1 * distance1);
+
+              FloatType majorLength = brick::common::squareRoot(
+                brick::numeric::dot<FloatType>(major, major));
+              FloatType tolerance =
+                (std::max(FloatType(1.0), FloatType(0.1 * majorLength))
+                 / majorLength);
+
+              if(normalizedRadius < (1.0 - tolerance)) {
+                ++inBoundsCount;
+                break;
+              }
+              if(normalizedRadius < (1.0 + tolerance)) {
+                ++onRingCount;
+                ++inBoundsCount;
+                break;
+              }
+            }
+          }
+        }
+      }
+
+      // Now we know how many edge pixels are on/off the ellipse,
+      // compare that with how many we expected.
+      FloatType edgeLengths = 0;
+      for(unsigned int ii = 0; ii < m_numberOfTransitions; ++ii) {
+        FloatType majorLength =
+          brick::numeric::magnitude<FloatType>(bullseye.getSemimajorAxis(ii));
+        FloatType minorLength =
+          brick::numeric::magnitude<FloatType>(bullseye.getSemiminorAxis(ii));
+        FloatType approxCircumference =
+          FloatType(brick::common::constants::pi) *(
+            FloatType(3) * (majorLength + minorLength)
+            - brick::common::squareRoot((3 * majorLength + minorLength)
+                                        * (majorLength + 3 * minorLength)));
+        edgeLengths += approxCircumference;
+      }
+      goodness = 0.0;
+      if(2 * onRingCount > inBoundsCount) {
+        goodness = (2 * onRingCount - inBoundsCount) / edgeLengths;
+      }
+      return true;
+    }
+
+#if 0
+    {
       // Sample the rings of the bullseye.
       brick::numeric::Vector2D<FloatType> origin = bullseye.getOrigin();
       brick::numeric::Vector2D<FloatType> ring1Major = (
@@ -831,6 +934,7 @@ namespace brick {
                   / maximumVariance);
       return true;
     }
+#endif
 
   } // namespace computerVision
   

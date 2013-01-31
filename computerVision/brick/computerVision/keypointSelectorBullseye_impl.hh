@@ -27,15 +27,15 @@
 #include <brick/utilities/imageIO.hh>
 
 
-#if 1
+#if 0
 int const hotRow = 58;
 int const hotCol = 54;
 #else
-int const hotRow = 53;
-int const hotCol = 48;
+int const hotRow = 119;
+int const hotCol = 240;
 #endif
 
-#define FORCE_SELECTION 1
+#define FORCE_SELECTION 0
 
 namespace brick {
 
@@ -133,7 +133,10 @@ namespace brick {
       // with a more expensive bullseye algorithm that needs to know
       // which pixels are edges.  Compute an edge image here.  For now
       // we use the expensive Canny algorithm.
-      Image<GRAY1> edgeImage = applyCanny<FloatType>(inImage);
+      brick::numeric::Array2D<FloatType> gradientX;
+      brick::numeric::Array2D<FloatType> gradientY;
+      Image<GRAY1> edgeImage = applyCanny<FloatType>(
+        inImage, gradientX, gradientY);
 
       // Debug(xxx):
       edgeImage(51, 54) = 1;
@@ -159,7 +162,7 @@ namespace brick {
             KeypointBullseye<brick::common::Int32> keypoint(
               row, column, symmetry);
             this->evaluateBullseyeMetric(keypoint, inImage, edgeImage,
-                                         m_maxRadius);
+                                         gradientX, gradientY, m_maxRadius);
             this->sortedInsert(keypoint, m_keypointVector,
                                m_maxNumberOfBullseyes);
             if(keypoint.bullseyeMetric
@@ -525,6 +528,8 @@ namespace brick {
         KeypointBullseye<brick::common::Int32>& keypoint,
         Image<GRAY8> const& inImage,
         Image<GRAY1> const& edgeImage,
+        brick::numeric::Array2D<FloatType> const& gradientX,
+        brick::numeric::Array2D<FloatType> const& gradientY,
         // unsigned int minRadius,
         unsigned int maxRadius)
     {
@@ -614,7 +619,8 @@ namespace brick {
         if(this->validateBullseye(
              bullseye,
              // inImage,
-             edgeImage, keypoint.row, keypoint.column,
+             edgeImage, gradientX, gradientY,
+             keypoint.row, keypoint.column,
              maxRadius, goodness)) {
           // xxx
           if(keypoint.row == hotRow && keypoint.column == hotCol) {
@@ -738,6 +744,8 @@ namespace brick {
     validateBullseye(brick::geometry::Bullseye2D<FloatType> const& bullseye,
                      // Image<GRAY8> const& inImage,
                      Image<GRAY1> const& edgeImage,
+                     brick::numeric::Array2D<FloatType> const& gradientX,
+                     brick::numeric::Array2D<FloatType> const& gradientY,
                      unsigned int row,
                      unsigned int column,
                      unsigned int maxRadius,
@@ -795,7 +803,7 @@ namespace brick {
       unsigned int minColumn = column - xRadius;
       unsigned int maxColumn = column + xRadius;
       unsigned int inBoundsCount = 0;
-      unsigned int onRingCount = 0;
+      FloatType onRingCount = 0.0;  // FloatType [sic]
       for(unsigned int rr = minRow; rr < maxRow; ++rr) {
         for(unsigned int cc = minColumn; cc < maxColumn; ++cc) {
           if(edgeImage(rr, cc)) {
@@ -812,14 +820,33 @@ namespace brick {
                 bullseye.getSemimajorAxis(ii);
               brick::numeric::Vector2D<FloatType> minor =
                 bullseye.getSemiminorAxis(ii);
+
+              // Points on the ellipse can be parameterized cos(theta)
+              // * majorAxis + sin(theta) * minorAxis.  Major and
+              // minor axes are orthogonal.  This means that the dot
+              // product of a point on the ellipse with the major axis
+              // gives cos(theat) * magnitudeSquared(majorAxis).  Here
+              // we divide by magnitudeSquared(majorAxis) to get a
+              // distance metric that -- for points on the ellipse --
+              // is proportional to cos(theta).  Similarly for minor
+              // axis & sin(theta).
               FloatType distance0 = (brick::numeric::dot<FloatType>(vectorToEdge, major)
                                 / brick::numeric::dot<FloatType>(major, major));
               FloatType distance1 = (brick::numeric::dot<FloatType>(vectorToEdge, minor)
                                 / brick::numeric::dot<FloatType>(minor, minor));
+
+              // For points on the ellipse, sin^2 + cos^2 = 1.  For
+              // points inside the ellipse this number will be less
+              // than 1, for points outside it will be greater than 1.
               FloatType normalizedRadius = 
                 brick::common::squareRoot(distance0 * distance0
                                           + distance1 * distance1);
 
+              // We'll deem edge points to be on the ellipse if
+              // they're within within 10% of major axis length,
+              // assuming that's more than 1 pixel.  If major axis is
+              // less than 10 pixels long, then force the threshold to
+              // be 1 pixel.
               FloatType majorLength = brick::common::squareRoot(
                 brick::numeric::dot<FloatType>(major, major));
               FloatType tolerance =
@@ -827,12 +854,40 @@ namespace brick {
                  / majorLength);
 
               if(normalizedRadius < (1.0 - tolerance)) {
+                // Edge is inside of this ring, but too far inside to
+                // lie on the ring itself.  In any event, it's within
+                // the perimeter of the bullseye.
                 ++inBoundsCount;
                 break;
               }
               if(normalizedRadius < (1.0 + tolerance)) {
-                ++onRingCount;
+                // Looks like this edge lies on the ring, so it's
+                // certainly within the perimeter of the bullseye.
                 ++inBoundsCount;
+
+                // Before saying this edge is on the ring, make sure
+                // its orientation is consistent with that of the
+                // ring.  Remember that for points on the ring,
+                // distance0 is equal to cos(theta) and distance1 is
+                // equal to sin(theta).  Here we just differentiate by
+                // theta to find the edge direction.
+                brick::numeric::Vector2D<FloatType> nominalEdgeDirection =
+                  distance1 * major - distance0 * minor;
+                nominalEdgeDirection /= brick::numeric::magnitude<FloatType>(
+                  nominalEdgeDirection);
+
+                // Actual edge direction can be inferred from image gradients.
+                brick::numeric::Vector2D<FloatType> actualEdgeDirection(
+                  -gradientY(rr, cc), gradientX(rr, cc));
+                actualEdgeDirection /= brick::numeric::magnitude<FloatType>(
+                  actualEdgeDirection);
+
+                // Only count this edge pixel to the extent that it's
+                // consistent with the expected orientation.
+                onRingCount += brick::common::absoluteValue(
+                  brick::numeric::dot<FloatType>(
+                    actualEdgeDirection, nominalEdgeDirection));
+                
                 break;
               }
             }

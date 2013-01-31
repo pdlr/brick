@@ -243,6 +243,8 @@ namespace brick {
         KeypointBullseye<brick::common::Int32>& keypoint,
         Image<GRAY8> const& inImage,
         Image<GRAY1> const& edgeImage,
+        brick::numeric::Array2D<FloatType> const& gradientX,
+        brick::numeric::Array2D<FloatType> const& gradientY,
         // unsigned int minRadius,
         unsigned int maxRadius);
 
@@ -278,6 +280,8 @@ namespace brick {
       validateBullseye(brick::geometry::Bullseye2D<FloatType> const& bullseye,
                        // Image<GRAY8> const& inImage,
                        Image<GRAY1> const& edgeImage,
+                       brick::numeric::Array2D<FloatType> const& gradientX,
+                       brick::numeric::Array2D<FloatType> const& gradientY,
                        unsigned int row,
                        unsigned int column,
                        unsigned int maxRadius,

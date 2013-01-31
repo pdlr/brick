@@ -145,11 +145,30 @@ namespace brick {
     /// @endcond
 
     
-    // This function applies the canny edge operator in the X
-    // direction.
+    // This function applies the canny edge operator.
     template <class FloatType, ImageFormat FORMAT>
     Image<GRAY1>
     applyCanny(const Image<FORMAT>& inputImage,
+               unsigned int gaussianSize,
+               FloatType upperThreshold,
+               FloatType lowerThreshold,
+               FloatType autoUpperThresholdFactor,
+               FloatType autoLowerThresholdFactor)
+    {
+      brick::numeric::Array2D<FloatType> gradientX;
+      brick::numeric::Array2D<FloatType> gradientY;
+      return applyCanny(inputImage, gradientX, gradientY, gaussianSize,
+                        upperThreshold, lowerThreshold,
+                        autoUpperThresholdFactor, autoLowerThresholdFactor);
+    }
+
+
+    // This function applies the canny edge operator.
+    template <class FloatType, ImageFormat FORMAT>
+    Image<GRAY1>
+    applyCanny(const Image<FORMAT>& inputImage,
+               brick::numeric::Array2D<FloatType>& gradientX,
+               brick::numeric::Array2D<FloatType>& gradientY,
                unsigned int gaussianSize,
                FloatType upperThreshold,
                FloatType lowerThreshold,
@@ -204,6 +223,11 @@ namespace brick {
       Image<ImageFormatIdentifierGray<FloatType>::Format> gradMagnitude(
           gradX.rows(), gradX.columns());
 
+      // Communicate gradients to the calling context.
+      gradientX = gradX;
+      gradientY = gradY;
+
+      // Continue with Canny algorithm.
       if(lowerThreshold > 0.0 && upperThreshold > 0.0) {
         // Discard values less than the lower threshold.
         for(size_t index0 = 0; index0 < gradX.size(); ++index0) {

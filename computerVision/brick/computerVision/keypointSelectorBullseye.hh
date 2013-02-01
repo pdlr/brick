@@ -208,11 +208,7 @@ namespace brick {
         brick::geometry::Bullseye2D<FloatType>& bullseye,
         std::vector< std::vector< brick::numeric::Vector2D<FloatType> > > const&
           edgePositions,
-        unsigned int numberOfTransitions,
-      Image<GRAY8> const& inImage,
-      unsigned int eRow,
-      unsigned int eColumn
-      );
+        unsigned int numberOfTransitions);
 
       
       // Estimate how much the target is squished along each axis.  Is
@@ -245,7 +241,6 @@ namespace brick {
       void
       evaluateBullseyeMetric(
         KeypointBullseye<brick::common::Int32>& keypoint,
-        Image<GRAY8> const& inImage,
         Image<GRAY1> const& edgeImage,
         brick::numeric::Array2D<FloatType> const& gradientX,
         brick::numeric::Array2D<FloatType> const& gradientY,

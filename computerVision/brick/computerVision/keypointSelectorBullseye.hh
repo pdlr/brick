@@ -245,6 +245,49 @@ namespace brick {
                         unsigned int row, unsigned int column,
                         FloatType& asymmetry) const;
 
+
+      inline bool
+      testAndRecordEdges(
+        Image<GRAY1> const& edgeImage,
+        int const& row,
+        int const& column,
+        std::vector< std::vector< brick::numeric::Vector2D<FloatType> > >&
+        edgePositions,
+        unsigned int& edgeCount,
+        brick::common::UnsignedInt32 const& numberOfTransitions)
+      {
+        if(edgeImage(row, column)) {
+          edgePositions[edgeCount].push_back(
+            brick::numeric::Vector2D<FloatType>(column, row));
+          return (++edgeCount >= numberOfTransitions);
+        }
+        return false;
+      }
+        
+
+      inline bool
+      testAndRecordEdgesDiagonal(
+        Image<GRAY1> const& edgeImage,
+        int const& row,
+        int const& column,
+        int const& d0,
+        int const& d1,
+        std::vector< std::vector< brick::numeric::Vector2D<FloatType> > >&
+        edgePositions,
+        unsigned int& edgeCount,
+        brick::common::UnsignedInt32 const& numberOfTransitions)
+      {
+        if(edgeImage(row, column)
+           || (edgeImage(row + d0, column)
+               && edgeImage(row, column + d1)
+               && (!edgeImage(row + d0, column + d1)))) {
+          edgePositions[edgeCount].push_back(
+            brick::numeric::Vector2D<FloatType>(column, row));
+          return (++edgeCount >= numberOfTransitions);
+        }
+        return false;
+      }
+
       
       // Compute a measure of bullseye-ness that's more expensive --
       // and more accurate -- than asymmetry, and Fill out a KeyPoint

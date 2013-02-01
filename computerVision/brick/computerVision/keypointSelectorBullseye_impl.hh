@@ -499,35 +499,6 @@ namespace brick {
       
     }
 
-
-    // This macro is to avoid duplicating code below.  We use a macro
-    // for now, rather than an inline function, because it lets us
-    // avoid doing the comparison between edgeCount and
-    // m_numberOfTransitions most of the time.  We fantasize that this
-    // will make things faster.  Once everything is working, we'll
-    // switch to using an inline function, notice that it has no
-    // effect on performance, and the world will be a little brighter.
-#define BRICK_CV_TEST_EVALUATE_BREAK \
-    if(edgeImage(row, column)) { \
-      m_edgePositions[edgeCount].push_back( \
-        brick::numeric::Vector2D<FloatType>(column, row)); \
-      if(++edgeCount >= m_numberOfTransitions) { \
-        break; \
-      }  \
-    }
-
-#define BRICK_CV_TEST_EVALUATE_BREAK_DIAGONAL(d0, d1) \
-    if(edgeImage(row, column)  \
-       || (edgeImage(row + d0, column) \
-           && edgeImage(row, column + d1) \
-           && (!edgeImage(row + d0, column + d1)))) { \
-      m_edgePositions[edgeCount].push_back( \
-        brick::numeric::Vector2D<FloatType>(column, row)); \
-      if(++edgeCount >= m_numberOfTransitions) { \
-        break; \
-      }  \
-    }
-    
     
     template <class FloatType>
     void
@@ -553,66 +524,82 @@ namespace brick {
       // Look left.
       unsigned int edgeCount = 0;
       for(unsigned int ii = 1; ii < maxRadius; ++ii) {
-        unsigned int row = keypoint.row;
-        unsigned int column = keypoint.column - ii;
-        BRICK_CV_TEST_EVALUATE_BREAK;
+        if(testAndRecordEdges(
+             edgeImage, keypoint.row, keypoint.column - ii, m_edgePositions,
+             edgeCount, m_numberOfTransitions)) {
+          break;
+        }
       }
 
       // Look right.
       edgeCount = 0;
       for(unsigned int ii = 1; ii < maxRadius; ++ii) {
-        unsigned int row = keypoint.row;
-        unsigned int column = keypoint.column + ii;
-        BRICK_CV_TEST_EVALUATE_BREAK;
+        if(testAndRecordEdges(
+             edgeImage, keypoint.row, keypoint.column + ii, m_edgePositions,
+             edgeCount, m_numberOfTransitions)) {
+          break;
+        }
       }
 
       // Look up.
       edgeCount = 0;
       for(unsigned int ii = 1; ii < maxRadius; ++ii) {
-        unsigned int row = keypoint.row - ii;
-        unsigned int column = keypoint.column;
-        BRICK_CV_TEST_EVALUATE_BREAK;
+        if(testAndRecordEdges(
+             edgeImage, keypoint.row - ii, keypoint.column, m_edgePositions,
+             edgeCount, m_numberOfTransitions)) {
+          break;
+        }
       }
 
       // Look up and to the left.
       edgeCount = 0;
       for(unsigned int ii = 1; ii < maxRadius; ++ii) {
-        unsigned int row = keypoint.row - ii;
-        unsigned int column = keypoint.column - ii;
-        BRICK_CV_TEST_EVALUATE_BREAK_DIAGONAL(-1, -1);
+        if(testAndRecordEdgesDiagonal(
+             edgeImage, keypoint.row - ii, keypoint.column - ii, -1, -1,
+             m_edgePositions, edgeCount, m_numberOfTransitions)) {
+          break;
+        }
       }
 
       // Look up and to the right.
       edgeCount = 0;
       for(unsigned int ii = 1; ii < maxRadius; ++ii) {
-        unsigned int row = keypoint.row - ii;
-        unsigned int column = keypoint.column + ii;
-        BRICK_CV_TEST_EVALUATE_BREAK_DIAGONAL(-1, 1);
+        if(testAndRecordEdgesDiagonal(
+             edgeImage, keypoint.row - ii, keypoint.column + ii, -1, 1,
+             m_edgePositions, edgeCount, m_numberOfTransitions)) {
+          break;
+        }
       }
       
       // Look down.
       edgeCount = 0;
       for(unsigned int ii = 1; ii < maxRadius; ++ii) {
-        unsigned int row = keypoint.row + ii;
-        unsigned int column = keypoint.column;
-        BRICK_CV_TEST_EVALUATE_BREAK;
+        if(testAndRecordEdges(
+             edgeImage, keypoint.row + ii, keypoint.column, m_edgePositions,
+             edgeCount, m_numberOfTransitions)) {
+          break;
+        }
       }
 
 
       // Look down and to the left.
       edgeCount = 0;
       for(unsigned int ii = 1; ii < maxRadius; ++ii) {
-        unsigned int row = keypoint.row + ii;
-        unsigned int column = keypoint.column - ii;
-        BRICK_CV_TEST_EVALUATE_BREAK_DIAGONAL(1, -1);
+        if(testAndRecordEdgesDiagonal(
+             edgeImage, keypoint.row + ii, keypoint.column - ii, 1, -1,
+             m_edgePositions, edgeCount, m_numberOfTransitions)) {
+          break;
+        }
       }
 
       // Look down and to the right.
       edgeCount = 0;
       for(unsigned int ii = 1; ii < maxRadius; ++ii) {
-        unsigned int row = keypoint.row + ii;
-        unsigned int column = keypoint.column + ii;
-        BRICK_CV_TEST_EVALUATE_BREAK_DIAGONAL(1, 1);
+        if(testAndRecordEdgesDiagonal(
+             edgeImage, keypoint.row + ii, keypoint.column + ii, 1, 1,
+             m_edgePositions, edgeCount, m_numberOfTransitions)) {
+          break;
+        }
       }
       
       // If we have a full set of edge points, find the best-fit bullseye.

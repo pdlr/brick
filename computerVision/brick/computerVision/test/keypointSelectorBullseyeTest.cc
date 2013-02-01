@@ -75,7 +75,7 @@ namespace brick {
       numeric::Index2D bullseyePosition(59, 54);
       
       // Make sure the detector finds the target.
-      KeypointSelectorBullseye<double> selector(10, 15, 5);
+      KeypointSelectorBullseye<double> selector(1, 15, 5);
       selector.setImage(inputImage);
       std::vector< KeypointBullseye<int> > keypoints = selector.getKeypoints();
 
@@ -85,11 +85,15 @@ namespace brick {
         flagImage(keypoints[ii].row, keypoints[ii].column) =
           (ii + 1) * (255 / keypoints.size());
       }
-      writePGM8("flag.pgm", flagImage);
+      // writePGM8("flag.pgm", flagImage);
 
       BRICK_TEST_ASSERT(keypoints.size() == 1);
-      BRICK_TEST_ASSERT(keypoints[0].row == bullseyePosition.getRow());
-      BRICK_TEST_ASSERT(keypoints[0].column == bullseyePosition.getColumn());
+      BRICK_TEST_ASSERT(
+        brick::test::approximatelyEqual(
+          keypoints[0].row, bullseyePosition.getRow(), 1));
+      BRICK_TEST_ASSERT(
+        brick::test::approximatelyEqual(
+          keypoints[0].column, bullseyePosition.getColumn(), 1));
 
 #if 0
       // Make sure sub-pixel version is plausible.
@@ -111,12 +115,12 @@ namespace brick {
 } // namespace brick
 
 
-#if 1
+#if 0
 
 int main()
 {
   brick::computerVision::KeypointSelectorBullseyeTest currentTest;
-  currentTest.testKeypointSelectorBullseye();
+  // currentTest.testKeypointSelectorBullseye();
   bool result = currentTest.run();
 
   return (result ? 0 : 1);

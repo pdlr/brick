@@ -102,9 +102,9 @@ namespace brick {
         inImage, m_maxRadius, startRow, startColumn, stopRow, stopColumn);
 
       // We're going to prune most of the image pixels using a
-      // threshold based on local symmetry.  Things that aren't
+      // threshold based on local asymmetry.  Things that aren't
       // symmetrical aren't bullseyes.  Here we estimate what a normal
-      // amount of symmetry is for a non-bullseye pixel, so that we
+      // amount of asymmetry is for a non-bullseye pixel, so that we
       // can set the threshold higher than that.
       //
       // Figure out how many pixels to sample when estimating.
@@ -114,7 +114,7 @@ namespace brick {
                                         static_cast<unsigned int>(100));
 
       // Do the sampling and estimate the threshold.
-      FloatType symmetryThreshold = this->estimateSymmetryThreshold(
+      FloatType asymmetryThreshold = this->estimateAsymmetryThreshold(
         inImage, m_minRadius, startRow, startColumn, stopRow, stopColumn,
         numberOfPixelsToSample);
 
@@ -128,21 +128,31 @@ namespace brick {
         inImage, gradientX, gradientY);
 
       // Test every pixel!
+      unsigned int totalPixels = 0;
+      unsigned int testedPixels = 0;
       for(unsigned int row = startRow; row < stopRow; ++row) {
         for(unsigned int column = startColumn; column < stopColumn;
             ++column) {
-          FloatType symmetry = this->evaluateSymmetry(
-            inImage, m_minRadius, row, column);
-          if(symmetry < symmetryThreshold) {
-            KeypointBullseye<brick::common::Int32> keypoint(
-              row, column, symmetry);
-            this->evaluateBullseyeMetric(keypoint, edgeImage,
-                                         gradientX, gradientY, m_maxRadius);
-            this->sortedInsert(keypoint, m_keypointVector,
-                               m_maxNumberOfBullseyes);
+          FloatType asymmetry = 0;
+          if(this->evaluateAsymmetry(
+               inImage, m_minRadius, row, column, asymmetry)) {
+            if(asymmetry < asymmetryThreshold) {
+              KeypointBullseye<brick::common::Int32> keypoint(
+                row, column, asymmetry);
+              this->evaluateBullseyeMetric(keypoint, edgeImage,
+                                           gradientX, gradientY, m_maxRadius);
+              this->sortedInsert(keypoint, m_keypointVector,
+                                 m_maxNumberOfBullseyes);
+              ++testedPixels;
+            }
           }
+          ++totalPixels;
         }
       }
+
+      std::cout << "Tested " << testedPixels
+                << " (" << (100.0 * testedPixels) / totalPixels << "%) of "
+                << totalPixels << " pixels." << std::endl;
     }
 
 
@@ -415,12 +425,12 @@ namespace brick {
 #endif /* #if 0 */
     
 
-    // Figure out what "normal" is for the symmetry measure, and
+    // Figure out what "normal" is for the asymmetry measure, and
     // pick a threshold that's low enough.
     template <class FloatType>
     FloatType
     KeypointSelectorBullseye<FloatType>::
-    estimateSymmetryThreshold(Image<GRAY8> const& inImage,
+    estimateAsymmetryThreshold(Image<GRAY8> const& inImage,
                               unsigned int radius,
                               unsigned int startRow,
                               unsigned int startColumn,
@@ -429,7 +439,7 @@ namespace brick {
                               unsigned int numberOfSamples) const
     {
       // Figure out how much to subsample rows and columns when
-      // computing "normal" for the symmetry measure.
+      // computing "normal" for the asymmetry measure.
       unsigned int numberOfPixels = 
         (stopRow - startRow) * (stopColumn - startColumn);
       FloatType decimationFactor = (static_cast<FloatType>(numberOfPixels)
@@ -443,36 +453,49 @@ namespace brick {
 
       // Now inspect approximately numberOfSamples pixels:
       unsigned int count = 0;
-      FloatType symmetrySum = 0;
-      FloatType symmetrySquaredSum = 0;
+      FloatType asymmetrySum = 0;
+      FloatType asymmetrySquaredSum = 0;
       
       for(unsigned int row = startRow; row < stopRow; row += step) {
         for(unsigned int column = startColumn; column < stopColumn;
             column += step) {
-          FloatType symmetry = this->evaluateSymmetry(
-            inImage, radius, row, column);
-          symmetrySum += symmetry;
-          symmetrySquaredSum += symmetry * symmetry;
-          ++count;
+          FloatType asymmetry = 0;
+          if(this->evaluateAsymmetry(inImage, radius, row, column, asymmetry)) {
+            asymmetrySum += asymmetry;
+            asymmetrySquaredSum += asymmetry * asymmetry;
+            ++count;
+          }
         }
       }
 
+      // Protect against cases where we didn't find any valid patches
+      // (perhaps a blank image).
+      if(count == 0) {
+        BRICK_THROW(brick::common::ValueException,
+                    "KeypointSelectorBullseye::evaluateAsymmetryThreshold()",
+                    "Found no valid patches to sample.");
+      }
+      
       // There is almost no chance that these samples made a Gaussian,
       // but it's easy to pretend, so for now, we just take the
-      // 1-sigma bound.
-
-      FloatType meanSymmetry = symmetrySum / count;
-      FloatType varianceSymmetry =
-        (symmetrySquaredSum / count) - (meanSymmetry * meanSymmetry);
+      // 2-sigma bound.
+      
+      FloatType meanAsymmetry = asymmetrySum / count;
+      FloatType varianceAsymmetry =
+        (asymmetrySquaredSum / count) - (meanAsymmetry * meanAsymmetry);
 
       // Quick check to avoid discarding all possible targets if the
       // numbers go wrong.
-      if(meanSymmetry - varianceSymmetry < 0.0) {
-        return meanSymmetry;
+      if(meanAsymmetry - 2 * varianceAsymmetry < 0.0) {
+        std::cout << "KeypointSelectorBullseye::estimateAsymmetryThreshold() -- "
+                  << "Warning: asymmetry model is broken." << std::endl;
+        return meanAsymmetry;
       }
 
       // All done.  Return our fake 1-sigma threshold.
-      return meanSymmetry - varianceSymmetry;
+      std::cout << meanAsymmetry << ", " << varianceAsymmetry << ", "
+                << meanAsymmetry - 2 * varianceAsymmetry << std::endl;
+      return meanAsymmetry - 2 * varianceAsymmetry;
       
     }
 
@@ -615,11 +638,12 @@ namespace brick {
 #undef BRICK_CV_TESTEVALUATE_BREAK
 
     template <class FloatType>
-    FloatType
+    bool
     KeypointSelectorBullseye<FloatType>::
-    evaluateSymmetry(Image<GRAY8> const& image,
+    evaluateAsymmetry(Image<GRAY8> const& image,
                      unsigned int radius,
-                     unsigned int row, unsigned int column) const
+                     unsigned int row, unsigned int column,
+                     FloatType& asymmetry) const
     {
       brick::common::UnsignedInt32 pixelSum = 0;
       brick::common::UnsignedInt32 pixelSquaredSum = 0;
@@ -642,11 +666,14 @@ namespace brick {
       FloatType count = 8 * (radius - 1);
       FloatType pixelMean = pixelSum / count;
       FloatType pixelVariance = pixelSquaredSum / count - pixelMean * pixelMean;
-      if(pixelVariance <= 0.0) {
-        return std::numeric_limits<FloatType>::max();
+
+      // Avoid numerical issues on blank regions of the image, which
+      // are never bullseyes.
+      if(pixelVariance < 1.0) {
+        return false;
       }
-      FloatType asymmetry = (asymmetrySum / (count / 2.0)) / pixelVariance;
-      return asymmetry;
+      asymmetry = (asymmetrySum / (count / 2.0)) / pixelVariance;
+      return true;
     }
 
 

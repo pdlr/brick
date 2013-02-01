@@ -24,6 +24,8 @@
 #include <brick/utilities/stringManipulation.hh>
 #include <brick/utilities/timeUtilities.hh>
 
+#include <brick/numeric/subArray2D.hh>
+
 namespace brick {
 
   namespace computerVision {
@@ -43,7 +45,8 @@ namespace brick {
 
       // Tests.
       void testKeypointSelectorBullseye();
-
+      void testExecutionTime();
+      
     private:
 
       double m_defaultTolerance;
@@ -59,6 +62,7 @@ namespace brick {
         m_defaultTolerance(1.0E-8)
     {
       BRICK_TEST_REGISTER_MEMBER(testKeypointSelectorBullseye);
+      BRICK_TEST_REGISTER_MEMBER(testExecutionTime);
     }
 
 
@@ -110,6 +114,37 @@ namespace brick {
 
     }
 
+    void
+    KeypointSelectorBullseyeTest::
+    testExecutionTime()
+    {
+      
+      // Load an image with a moderately tricky bullseye in it.
+      std::string inputFileName = getBullseyeFileNamePGM0();
+      Image<GRAY8> inputImage = readPGM8(inputFileName);
+
+      unsigned int const scale = 8;
+      Image<GRAY8> bigImage(inputImage.rows() * scale,
+                            inputImage.columns() * scale);
+      for(unsigned int ii = 0; ii < scale; ++ii) {
+        numeric::subArray(bigImage,
+                          numeric::Slice(ii * inputImage.rows(),
+                                         (ii + 1) * inputImage.rows()),
+                          numeric::Slice(ii * inputImage.columns(),
+                                         (ii + 1) * inputImage.columns())) =
+          numeric::subArray(inputImage);
+      }
+
+      writePGM8("big.pgm", bigImage);
+      
+      // Make sure the detector finds the target.
+      KeypointSelectorBullseye<double> selector(1, 15, 5);
+      std::cout << "Start!" << std::endl;
+      selector.setImage(bigImage);
+      std::vector< KeypointBullseye<int> > keypoints = selector.getKeypoints();
+      std::cout << "Stop!" << std::endl;
+    }
+    
   } // namespace computerVision
 
 } // namespace brick

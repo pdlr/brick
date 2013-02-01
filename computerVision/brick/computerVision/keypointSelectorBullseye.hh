@@ -31,16 +31,16 @@ namespace brick {
     struct KeypointBullseye {
       CoordinateType row;
       CoordinateType column;
-      FloatType symmetry;
+      FloatType asymmetry;
       FloatType bullseyeMetric;
       brick::geometry::Bullseye2D<FloatType> bullseye;
 
       KeypointBullseye(CoordinateType rowArg,
                        CoordinateType columnArg,
-                       FloatType symmetryArg)
+                       FloatType asymmetryArg)
         : row(rowArg),
           column(columnArg),
-          symmetry(symmetryArg),
+          asymmetry(asymmetryArg),
           bullseyeMetric(0.0),
           bullseye() {}
     };
@@ -221,11 +221,11 @@ namespace brick {
 
 
       
-      // Figure out what "normal" is for the symmetry measure, and
+      // Figure out what "normal" is for the asymmetry measure, and
       // pick a threshold that's low enough.  Low enough means that
       // only interesting pixels have a lower score from
-      // evaluateSymmetry() (where low means "symmetrical").
-      FloatType estimateSymmetryThreshold(
+      // evaluateAsymmetry() (where low means "symmetrical").
+      FloatType estimateAsymmetryThreshold(
         Image<GRAY8> const& inImage,
         unsigned int radius,
         unsigned int startRow,
@@ -235,8 +235,19 @@ namespace brick {
         unsigned int numberOfSamples) const;
 
 
+      // See if an image location is plausibly the center of a
+      // bullseye by looking for symetry around it.  Note that the
+      // symmetry computation currently just compares up with down,
+      // left with right, opposing diagonals.
+      bool
+      evaluateAsymmetry(Image<GRAY8> const& image,
+                        unsigned int radius,
+                        unsigned int row, unsigned int column,
+                        FloatType& asymmetry) const;
+
+      
       // Compute a measure of bullseye-ness that's more expensive --
-      // and more accurate -- than symmetry, and Fill out a KeyPoint
+      // and more accurate -- than asymmetry, and Fill out a KeyPoint
       // instance with the corresponding information.
       void
       evaluateBullseyeMetric(
@@ -246,16 +257,6 @@ namespace brick {
         brick::numeric::Array2D<FloatType> const& gradientY,
         // unsigned int minRadius,
         unsigned int maxRadius);
-
-      
-      // See if an image location is plausibly the center of a
-      // bullseye by looking for symetry around it.  Note that the
-      // symmetry computation currently just compares up with down,
-      // left with right, opposing diagonals.
-      FloatType
-      evaluateSymmetry(Image<GRAY8> const& image,
-                       unsigned int radius,
-                       unsigned int row, unsigned int column) const;
 
       
       // Find the highest threshold value that would still allow this

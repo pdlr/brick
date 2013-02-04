@@ -1,6 +1,17 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.2
+
+- Updates to build files.
+- Minor change to LockFile source allows building under recent g++ versions.
+
+Revision 1.1
+
+- Updated timeUtilitiesTest.cc to avoid failing due to register precision
+  issues.
+- Minor change to LockFile source allows building under recent g++ versions.
+
 Revision 1.0
 
 - Created brick::utilities by adapting dlrUtilities version 2.3.

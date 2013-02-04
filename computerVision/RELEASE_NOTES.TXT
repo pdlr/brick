@@ -1,6 +1,13 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.3
+
+- Updated build files.
+- Added very slow KeypointSelectorBulleye class (to be improved later).
+- Fixed failing KeypointMatcherFast unit test.
+- Fixed failing KeypointSelectorHarris unit test.
+
 Revision 1.2
 
 - Added implementations of three-point, five-point, and eight-point algorithms.

@@ -1,6 +1,10 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.1
+
+- Updated configure scripts to remove dependence on gfortran.
+
 Revision 1.0
 
 - Created brick::linearAlgebra by adapting dlrLinearAlgebra version 2.2.

@@ -11,6 +11,7 @@ RM = '/bin/rm'
 TAR = '/bin/tar'
 ZIP = '/usr/bin/zip'
 TEMPDIR = '/var/tmp/brickBuild'
+INSTALLDIR = '/var/tmp'
 
 def prepareDistribution(packageName, sourceDir, version):
 
@@ -53,12 +54,12 @@ def prepareDistribution(packageName, sourceDir, version):
   # end if
 
   errorNumber += 1
-  if os.system('./configure') != 0:
+  if os.system('export CPPFLAGS="-I%s/include" && export LDFLAGS="-L%s/lib" && ./configure --prefix=%s' % (INSTALLDIR, INSTALLDIR, INSTALLDIR)) != 0:
     return errorNumber
   # end if
 
   errorNumber += 1
-  if os.system(MAKE + ' distcheck') != 0:
+  if os.system('export CPPFLAGS="-I%s/include" && export LDFLAGS="-L%s/lib" && %s distcheck' % (INSTALLDIR, INSTALLDIR, MAKE)) != 0:
     return errorNumber
   # end if
   
@@ -79,12 +80,12 @@ def prepareDistribution(packageName, sourceDir, version):
   os.chdir('%s-%s' % (brickPackageNameLC, version))
   
   errorNumber += 1
-  if os.system('./configure') != 0:
+  if os.system('export CPPFLAGS="-I%s/include" && export LDFLAGS="-L%s/lib" && ./configure' % (INSTALLDIR, INSTALLDIR)) != 0:
     return errorNumber
   # end if
   
   errorNumber += 1
-  if os.system(MAKE + ' apidoc') != 0:
+  if os.system('export CPPFLAGS="-I%s/include" && export LDFLAGS="-L%s/lib" && %s apidoc' % (INSTALLDIR, INSTALLDIR, MAKE)) != 0:
     return errorNumber
   # end if
   

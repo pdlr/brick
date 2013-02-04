@@ -1,6 +1,11 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.1
+
+- Updated portability/standardC.hh to include unistd.h, allowing lockFile.cc 
+  to compile under gcc 4.7.2.
+
 Revision 1.0
 
 - Created brick::portability by adapting dlrPortability version 2.2.

@@ -15,6 +15,7 @@
 #include <brick/linearAlgebra/linearAlgebra.hh>
 #include <brick/numeric/utilities.hh>
 
+#include <brick/test/functors.hh>
 #include <brick/test/testFixture.hh>
 
 namespace brick {
@@ -32,6 +33,7 @@ namespace brick {
       void tearDown(const std::string& /* testName */) {}
 
       void testCholeskyFactorization();
+      void testDeterminant();
       void testEigenvaluesSymmetric();
       void testEigenvectors();
       void testEigenvectorsSymmetric();
@@ -66,6 +68,7 @@ namespace brick {
       std::vector< numeric::Array1D< std::complex<common::Float64> > > m_squareEigenvalues;
       std::vector< numeric::Array2D< std::complex<common::Float64> > > m_squareEigenvectors;
       std::vector< numeric::Array2D<common::Float64> > m_squareMatrices;
+      std::vector< common::Float64 > m_squareMatrixDeterminants;
       std::vector< numeric::Array1D<common::Float64> > m_squareXVectors;
       std::vector< numeric::Array1D<common::Float64> > m_symmetricEigenvalues;
       std::vector< numeric::Array2D<common::Float64> > m_symmetricEigenvectors;
@@ -76,7 +79,9 @@ namespace brick {
       std::vector< numeric::Array2D<common::Float64> > m_uMatrices;
       std::vector< numeric::Array2D<common::Float64> > m_vtMatrices;
       std::vector< numeric::Array1D<common::Float64> > m_xVectors;
-    
+
+      common::Float64 m_defaultTolerance;
+      
     }; // class LinearAlgebraTest
 
 
@@ -92,6 +97,7 @@ namespace brick {
         m_squareEigenvalues(LinearAlgebraTest::numberOfTestMatrixSets),
         m_squareEigenvectors(LinearAlgebraTest::numberOfTestMatrixSets),
         m_squareMatrices(LinearAlgebraTest::numberOfTestMatrixSets),
+        m_squareMatrixDeterminants(LinearAlgebraTest::numberOfTestMatrixSets),
         m_squareXVectors(LinearAlgebraTest::numberOfTestMatrixSets),
         m_symmetricEigenvalues(LinearAlgebraTest::numberOfTestMatrixSets),
         m_symmetricEigenvectors(LinearAlgebraTest::numberOfTestMatrixSets),
@@ -101,7 +107,8 @@ namespace brick {
         m_testMatrices(LinearAlgebraTest::numberOfTestMatrixSets),
         m_uMatrices(LinearAlgebraTest::numberOfTestMatrixSets),
         m_vtMatrices(LinearAlgebraTest::numberOfTestMatrixSets),
-        m_xVectors(LinearAlgebraTest::numberOfTestMatrixSets)      
+        m_xVectors(LinearAlgebraTest::numberOfTestMatrixSets),
+        m_defaultTolerance(1.0E-8)
     {
       // Register all tests.
       BRICK_TEST_REGISTER_MEMBER(testCholeskyFactorization);
@@ -189,7 +196,10 @@ namespace brick {
         " [ 9.,  8.,  7.,  6.],"
         " [ 0.,  0.,  0.,  1.]]");
 
+      m_squareMatrixDeterminants[0] = 21.0;
 
+      m_squareMatrixDeterminants[1] = -15.0;
+      
       m_squareXVectors[0] = numeric::Array1D<common::Float64>(
         "[-5.66666667, 6., -1.]");
 
@@ -343,6 +353,38 @@ namespace brick {
         BRICK_TEST_ASSERT(this->isUpperTriangular(kMatrix.transpose()));
         BRICK_TEST_ASSERT(this->approximatelyEqual(kkT, aMatrix));
       }
+    }
+
+
+    void
+    LinearAlgebraTest::
+    testDeterminant()
+    {
+      // Compute determinants for each test matrix and see that they
+      // match expectations.
+      for(size_t index0 = 0;
+          index0 < LinearAlgebraTest::numberOfTestMatrixSets;
+          ++index0) {
+
+        common::Float64 computedDeterminant =
+          determinant(m_squareMatrices[index0]);
+        common::Float64 referenceDeterminant =
+          m_squareMatrixDeterminants[index0];
+        
+        // Check that results are correct.
+        BRICK_TEST_ASSERT(
+          brick::test::approximatelyEqual(
+            computedDeterminant, referenceDeterminant, m_defaultTolerance));
+      }
+
+      // Finally, make sure we're OK with singular matrices.
+      numeric::Array2D<common::Float64> singularMatrix("[[1.0, 2.0, 3.0],"
+                                                       " [4.0, 8.0, 12.0],"
+                                                       " [-1.0, 8.0, -3.0]]");
+      common::Float64 computedDeterminant = determinant(singularMatrix);
+      BRICK_TEST_ASSERT(
+        brick::test::approximatelyEqual(
+          computedDeterminant, 0.0, m_defaultTolerance));
     }
 
 

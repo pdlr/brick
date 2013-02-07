@@ -342,13 +342,14 @@ namespace brick {
         return;
       }
 
-      size_t startIndex = 0;
-      size_t stopIndex = snake.size();
+      // Note(xxx): Figure out what these were for.
+      // size_t startIndex = 0;
+      // size_t stopIndex = snake.size();
       if(!m_isClosed) {
         betaVector[0] = 0.0;
         betaVector[snake.size() - 1] = 0.0;
-        startIndex = 1;
-        stopIndex = snake.size() - 1;
+        // startIndex = 1;
+        // stopIndex = snake.size() - 1;
       }
       
       for(size_t snakeIndex = 1; snakeIndex < snake.size() - 1; ++snakeIndex) {

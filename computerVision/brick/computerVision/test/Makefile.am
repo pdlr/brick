@@ -16,6 +16,7 @@ VPATH			= @srcdir@
 # Additional files which should be included in the distribution.
 
 EXTRA_DIST              = \
+	bullseyeTestImage0.pgm \
 	connectedComponentsTestImage0.pgm \
 	dilateErodeTestImage0.pgm \
 	dilatedTestImage0.pgm \

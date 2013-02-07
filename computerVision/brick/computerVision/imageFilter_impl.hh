@@ -744,7 +744,7 @@ namespace brick {
         // Get all our dimensions straight.
         unsigned int const stopRow = inImage.rows() - 1;
         unsigned int const numColumns = inImage.columns();
-        unsigned int const inRowStep = inImage.getRowStep();
+        int const inRowStep = inImage.getRowStep();
 
         // Fill pixels for which we won't have valid results.
         OutElementType* outPtr0 = const_cast<OutElementType*>(
@@ -758,7 +758,7 @@ namespace brick {
           InElementType* inPtr = const_cast<InElementType*>(
             inImage.data(row, 0));
           OutElementType* outPtr = &(outImage(row, 0));
-          for(unsigned int index = 0; index < numColumns; ++index) {
+          for(int index = 0; index < static_cast<int>(numColumns); ++index) {
             outPtr[index] = static_cast<OutElementType>(
               (static_cast<IntermediateType>(inPtr[index - inRowStep])
                + static_cast<IntermediateType>(inPtr[index] << 1)
@@ -800,9 +800,9 @@ namespace brick {
         // Get all our dimensions straight.
         unsigned int const stopRow = inImage.rows() - 2;
         unsigned int const numColumns = inImage.columns();
-        unsigned int const inRowStep = inImage.getRowStep();
-        unsigned int const twoInRowStep = inRowStep * 2;
-        unsigned int const outRowStep = outImage.getRowStep();
+        int const inRowStep = inImage.getRowStep();
+        int const twoInRowStep = inRowStep * 2;
+        int const outRowStep = outImage.getRowStep();
 
         // Fill pixels for which we won't have valid results.
         OutElementType* outPtr0 = const_cast<OutElementType*>(
@@ -817,7 +817,7 @@ namespace brick {
           InElementType* inPtr = const_cast<InElementType*>(
             inImage.data(row, 0));
           OutElementType* outPtr = &(outImage(row, 0));
-          for(unsigned int index = 0; index < numColumns; ++index) {
+          for(int index = 0; index < static_cast<int>(numColumns); ++index) {
             outPtr[index] = static_cast<OutElementType>(
               (static_cast<IntermediateType>(inPtr[index - twoInRowStep])
                + static_cast<IntermediateType>(inPtr[index - inRowStep] << 2)
@@ -862,11 +862,11 @@ namespace brick {
         // Get all our dimensions straight.
         unsigned int const stopRow = inImage.rows() - 3;
         unsigned int const numColumns = inImage.columns();
-        unsigned int const inRowStep = inImage.getRowStep();
-        unsigned int const twoInRowStep = inRowStep * 2;
-        unsigned int const threeInRowStep = inRowStep * 3;
-        unsigned int const outRowStep = outImage.getRowStep();
-        unsigned int const twoOutRowStep = outRowStep * 2;
+        int const inRowStep = inImage.getRowStep();
+        int const twoInRowStep = inRowStep * 2;
+        int const threeInRowStep = inRowStep * 3;
+        int const outRowStep = outImage.getRowStep();
+        int const twoOutRowStep = outRowStep * 2;
         
         // Fill pixels for which we won't have valid results.
         OutElementType* outPtr0 = const_cast<OutElementType*>(
@@ -882,7 +882,7 @@ namespace brick {
           InElementType* inPtr = const_cast<InElementType*>(
             inImage.data(row, 0));
           OutElementType* outPtr = &(outImage(row, 0));
-          for(unsigned int index = 0; index < numColumns; ++index) {
+          for(int index = 0; index < static_cast<int>(numColumns); ++index) {
             outPtr[index] = static_cast<OutElementType>(
               ((static_cast<IntermediateType>(inPtr[index - threeInRowStep])
                 + static_cast<IntermediateType>(inPtr[index + threeInRowStep]))
@@ -932,13 +932,13 @@ namespace brick {
         // Get all our dimensions straight.
         unsigned int const stopRow = inImage.rows() - 4;
         unsigned int const numColumns = inImage.columns();
-        unsigned int const inRowStep = inImage.getRowStep();
-        unsigned int const twoInRowStep = inRowStep * 2;
-        unsigned int const threeInRowStep = inRowStep * 3;
-        unsigned int const fourInRowStep = inRowStep * 4;
-        unsigned int const outRowStep = outImage.getRowStep();
-        unsigned int const twoOutRowStep = outRowStep * 2;
-        unsigned int const threeOutRowStep = outRowStep * 3;
+        int const inRowStep = inImage.getRowStep();
+        int const twoInRowStep = inRowStep * 2;
+        int const threeInRowStep = inRowStep * 3;
+        int const fourInRowStep = inRowStep * 4;
+        int const outRowStep = outImage.getRowStep();
+        int const twoOutRowStep = outRowStep * 2;
+        int const threeOutRowStep = outRowStep * 3;
         
         // Fill pixels for which we won't have valid results.
         OutElementType* outPtr0 = const_cast<OutElementType*>(
@@ -955,7 +955,7 @@ namespace brick {
           InElementType* inPtr = const_cast<InElementType*>(
             inImage.data(row, 0));
           OutElementType* outPtr = &(outImage(row, 0));
-          for(unsigned int index = 0; index < numColumns; ++index) {
+          for(int index = 0; index < static_cast<int>(numColumns); ++index) {
             outPtr[index] = static_cast<OutElementType>(
               ((static_cast<IntermediateType>(inPtr[index - fourInRowStep])
                 + static_cast<IntermediateType>(inPtr[index + fourInRowStep]))
@@ -1009,15 +1009,15 @@ namespace brick {
         // Get all our dimensions straight.
         unsigned int const stopRow = inImage.rows() - 5;
         unsigned int const numColumns = inImage.columns();
-        unsigned int const inRowStep = inImage.getRowStep();
-        unsigned int const twoInRowStep = inRowStep * 2;
-        unsigned int const threeInRowStep = inRowStep * 3;
-        unsigned int const fourInRowStep = inRowStep * 4;
-        unsigned int const fiveInRowStep = inRowStep * 5;
-        unsigned int const outRowStep = outImage.getRowStep();
-        unsigned int const twoOutRowStep = outRowStep * 2;
-        unsigned int const threeOutRowStep = outRowStep * 3;
-        unsigned int const fourOutRowStep = outRowStep * 4;
+        int const inRowStep = inImage.getRowStep();
+        int const twoInRowStep = inRowStep * 2;
+        int const threeInRowStep = inRowStep * 3;
+        int const fourInRowStep = inRowStep * 4;
+        int const fiveInRowStep = inRowStep * 5;
+        int const outRowStep = outImage.getRowStep();
+        int const twoOutRowStep = outRowStep * 2;
+        int const threeOutRowStep = outRowStep * 3;
+        int const fourOutRowStep = outRowStep * 4;
         
         // Fill pixels for which we won't have valid results.
         OutElementType* outPtr0 = const_cast<OutElementType*>(
@@ -1035,7 +1035,7 @@ namespace brick {
           InElementType* inPtr = const_cast<InElementType*>(
             inImage.data(row, 0));
           OutElementType* outPtr = &(outImage(row, 0));
-          for(unsigned int index = 0; index < numColumns; ++index) {
+          for(int index = 0; index < static_cast<int>(numColumns); ++index) {
             outPtr[index] = static_cast<OutElementType>(
               ((static_cast<IntermediateType>(inPtr[index - fiveInRowStep])
                 + static_cast<IntermediateType>(inPtr[index + fiveInRowStep]))

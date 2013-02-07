@@ -130,7 +130,7 @@ namespace brick {
       dgetrf_(&M, &N, AColumnMajor.data(), &LDA, IPIV.data(), &info);
 
       // Check for errors.
-      if(info != 0L) {
+      if(info < 0L) {
         std::ostringstream message;
         message << "Call to dgetrf_ returns " << info
                 << ".  Something is wrong.";

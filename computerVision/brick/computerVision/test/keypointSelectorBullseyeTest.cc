@@ -62,7 +62,7 @@ namespace brick {
         m_defaultTolerance(1.0E-8)
     {
       BRICK_TEST_REGISTER_MEMBER(testKeypointSelectorBullseye);
-      BRICK_TEST_REGISTER_MEMBER(testExecutionTime);
+      // BRICK_TEST_REGISTER_MEMBER(testExecutionTime);
     }
 
 

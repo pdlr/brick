@@ -26,22 +26,22 @@ namespace {
   // whether things are approximately equal without digging too deeply
   // into numerical issues.  Ultimately, these functions should be
   // removed, and brick::numeric::NumericTraits<> should be extended
-  // to provide a better version of this functionality.
+  // to provide a better version of this functionality.  
+  // The default case is undefined so we'll get a compile error if we
+  // try to use l_getRotationsEpsilon() with any type for which we haven't
+  // picked an epsilon.
   template <class Type>
-  Type l_getRotationsEpsilon() {
-    BRICK_THROW(brick::common::NotImplementedException,
-                "getRotationsEpsilon()",
-                "Rotation conversions are not implemented for this scalar "
-                "type.");
-    return Type(0.0);
-  }
+  Type l_getRotationsEpsilon();
 
   template <>
-  brick::common::Float64 l_getRotationsEpsilon<brick::common::Float64>() {
+  inline brick::common::Float64
+  l_getRotationsEpsilon<brick::common::Float64>() {
     return 1.0E-10;
   }
+  
   template <>
-  brick::common::Float32 l_getRotationsEpsilon<brick::common::Float32>() {
+  inline brick::common::Float32
+  l_getRotationsEpsilon<brick::common::Float32>() {
     return 1.0E-5;
   }
   

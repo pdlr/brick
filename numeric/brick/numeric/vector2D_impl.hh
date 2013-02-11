@@ -152,6 +152,7 @@ namespace brick {
       m_x = xCoord;
       m_y = yCoord;
       this->normalize(alpha);
+      return *this;
     }
 
 

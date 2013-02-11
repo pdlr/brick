@@ -527,9 +527,12 @@ namespace brick {
     projectThroughDistortion(const brick::numeric::Vector3D<FloatType>& point)
       const
     {
-      // The Vector2D constructor will divide by point.z(), which is will
-      // throw if point.z() == 0.0.
-      brick::numeric::Vector2D<FloatType> normalizedPoint(point.x(), point.y(), point.z());
+      // The if clause here is to avoid Vector2D throwing an exception
+      // if point.z() == 0.
+      brick::numeric::Vector2D<FloatType> normalizedPoint;
+      if(point.z() != 0.0) {
+        normalizedPoint.setValue(point.x(), point.y(), point.z());
+      }
     
       FloatType xSquared = normalizedPoint.x() * normalizedPoint.x();
       FloatType ySquared = normalizedPoint.y() * normalizedPoint.y();

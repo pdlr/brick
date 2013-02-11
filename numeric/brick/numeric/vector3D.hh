@@ -122,9 +122,24 @@ namespace brick {
        * @param yCoord The desired Y coordinate.
        * @param zCoord The desired Z coordinate.
        */
-      inline void
+      inline Vector3D<Type> const&
       setValue(Type const& xCoord, Type const& yCoord, Type const& zCoord);
 
+
+      /** 
+       * Explicitly sets 3D homogeneous coordinates.
+       * 
+       * @param xCoord The homogeneous X coordinate.
+       * @param yCoord The homogeneous Y coordinate.
+       * @param zCoord The homogeneous Z coordinate.
+       * @param alpha Scale factor.
+       */
+      inline Vector3D<Type> const&
+      setValue(Type const& xCoord,
+               Type const& yCoord,
+               Type const& zCoord,
+               Type const& alpha);
+      
 
       /** 
        * This member function sets the X component of the Vector2D.
@@ -160,21 +175,6 @@ namespace brick {
        */
       inline Type const&
       setZ(Type const& newZ) {m_z = newZ; return m_z;}
-
-
-      /** 
-       * Explicitly sets 3D homogeneous coordinates.
-       * 
-       * @param xCoord The homogeneous X coordinate.
-       * @param yCoord The homogeneous Y coordinate.
-       * @param zCoord The homogeneous Z coordinate.
-       * @param alpha Scale factor.
-       */
-      inline void setValue(Type const& xCoord,
-                           Type const& yCoord,
-                           Type const& zCoord,
-                           Type const& alpha);
-
       
 #if 0
       /** 

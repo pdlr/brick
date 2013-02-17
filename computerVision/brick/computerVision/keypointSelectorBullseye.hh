@@ -55,7 +55,7 @@ namespace brick {
      ** KeypointSelectorBullseye<double> myKeypointSelector(2, 40, 10);
      ** myKeypointSelector.setImage(myGrayscaleImage);
      ** std::vector< KeypointBullseye<double> > keypoints
-     **    = myKeypointSelector.getKeypointsGeneralPosition() const;
+     **    = myKeypointSelector.getKeypointsGeneralPosition();
      ** @endcode
      **/
     template <class FloatType>

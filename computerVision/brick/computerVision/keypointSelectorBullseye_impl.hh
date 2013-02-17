@@ -67,22 +67,25 @@ namespace brick {
     }
 
 
-    void drawBullseye(brick::geometry::Bullseye2D<double> const& bullseye,
+#if 0
+    template <class FloatType>
+    void drawBullseye(brick::geometry::Bullseye2D<FloatType> const& bullseye,
                       Image<GRAY8>& image,
                       brick::common::UInt8 color)
     {
-      brick::numeric::Vector2D<double> origin = bullseye.getOrigin();
+      brick::numeric::Vector2D<FloatType> origin = bullseye.getOrigin();
       image(origin.y() + 0.5, origin.x() + 0.5) = color;
 
       for(unsigned int ii = 0; ii < 3; ++ii) {
-        for(double angle = 0.0; angle < 6.28; angle += (3.14  / 180.)) {
-          brick::numeric::Vector2D<double> pp =
+        for(FloatType angle = 0.0; angle < 6.28; angle += (3.14  / 180.)) {
+          brick::numeric::Vector2D<FloatType> pp =
             (origin + std::cos(angle) * bullseye.getSemimajorAxis(ii)
              + std::sin(angle) * bullseye.getSemiminorAxis(ii));
           image(pp.y() + 0.5, pp.x() + 0.5) = color;
         }
       }
     }
+#endif
     
     
     template <class FloatType>
@@ -249,10 +252,15 @@ namespace brick {
       
       // See if the edges look like a bullseye.
       brick::numeric::Array1D<FloatType> residuals(m_bullseyePoints.size());
-      bullseye.estimate(
-        m_bullseyePoints.begin(), m_bullseyePoints.end(),
-        m_bullseyeEdgeCounts.begin(), m_bullseyeEdgeCounts.end(),
-        residuals.begin());
+      try {
+        bullseye.estimate(
+          m_bullseyePoints.begin(), m_bullseyePoints.end(),
+          m_bullseyeEdgeCounts.begin(), m_bullseyeEdgeCounts.end(),
+          residuals.begin());
+      } catch(brick::common::ValueException) {
+        // Input points weren't good enough to define a bullseye.
+        return false;
+      }
 
       // Here we do some poor-man's robust statistics.  Assuming that
       // the preponderance of the input points lie on the bullseye,

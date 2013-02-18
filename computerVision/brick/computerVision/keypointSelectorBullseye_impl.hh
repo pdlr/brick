@@ -816,15 +816,16 @@ namespace brick {
       // this is not a bullseye.
       std::vector<brick::common::UInt8> spoke(radius);
       unsigned int failedSpokeCount = 0;
-      brick::common::UInt8 darkColor = inImage(keypoint.row, keypoint.column);
-      brick::common::UInt8 lightColor = darkColor;
+      keypoint.darkColor = inImage(keypoint.row, keypoint.column);
+      keypoint.lightColor = keypoint.darkColor;
 
       // Look right.
       for(unsigned int ii = 0; ii < radius; ++ii) {
         spoke[ii] = inImage(keypoint.row, keypoint.column + ii);
       }
-      if(!this->countTransitions(spoke, m_numberOfTransitions,
-                                 m_minDynamicRange, darkColor, lightColor)) {
+      if(!this->countTransitions(
+           spoke, m_numberOfTransitions, m_minDynamicRange,
+           keypoint.darkColor, keypoint.lightColor)) {
         if(++failedSpokeCount >= 2) {
           return false;
         }
@@ -834,8 +835,9 @@ namespace brick {
       for(unsigned int ii = 0; ii < radius; ++ii) {
         spoke[ii] = inImage(keypoint.row, keypoint.column - ii);
       }
-      if(!this->countTransitions(spoke, m_numberOfTransitions,
-                                 m_minDynamicRange, darkColor, lightColor)) {
+      if(!this->countTransitions(
+           spoke, m_numberOfTransitions, m_minDynamicRange,
+           keypoint.darkColor, keypoint.lightColor)) {
         if(++failedSpokeCount >= 2) {
           return false;
         }
@@ -845,8 +847,9 @@ namespace brick {
       for(unsigned int ii = 0; ii < radius; ++ii) {
         spoke[ii] = inImage(keypoint.row + ii, keypoint.column);
       }
-      if(!this->countTransitions(spoke, m_numberOfTransitions,
-                                 m_minDynamicRange, darkColor, lightColor)) {
+      if(!this->countTransitions(
+           spoke, m_numberOfTransitions, m_minDynamicRange,
+           keypoint.darkColor, keypoint.lightColor)) {
         if(++failedSpokeCount >= 2) {
           return false;
         }
@@ -856,8 +859,9 @@ namespace brick {
       for(unsigned int ii = 0; ii < radius; ++ii) {
         spoke[ii] = inImage(keypoint.row - ii, keypoint.column);
       }
-      if(!this->countTransitions(spoke, m_numberOfTransitions,
-                                 m_minDynamicRange, darkColor, lightColor)) {
+      if(!this->countTransitions(
+           spoke, m_numberOfTransitions, m_minDynamicRange,
+           keypoint.darkColor, keypoint.lightColor)) {
         if(++failedSpokeCount >= 2) {
           return false;
         }

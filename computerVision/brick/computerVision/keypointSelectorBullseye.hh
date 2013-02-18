@@ -33,6 +33,8 @@ namespace brick {
       CoordinateType column;
       FloatType asymmetry;
       FloatType bullseyeMetric;
+      brick::common::UInt8 darkColor;
+      brick::common::UInt8 lightColor;
       brick::geometry::Bullseye2D<FloatType> bullseye;
 
       KeypointBullseye(CoordinateType rowArg,
@@ -41,6 +43,8 @@ namespace brick {
           column(columnArg),
           asymmetry(0.0),
           bullseyeMetric(0.0),
+          darkColor(0),
+          lightColor(0),
           bullseye() {}
     };
     

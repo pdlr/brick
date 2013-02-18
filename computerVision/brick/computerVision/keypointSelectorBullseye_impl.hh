@@ -42,9 +42,13 @@ namespace brick {
         m_maxNumberOfBullseyes(maxNumberOfBullseyes),
         m_numberOfTransitions(3), // TBD: make this user set-able.
         m_maxRadius(maxRadius),
-        m_minRadius(minRadius)
+        m_minRadius(minRadius),
+        m_minDynamicRange(10)
     {
-      // Empty.
+      // Don't crash if the user confuses the min & max arguments.
+      if(m_minRadius > m_maxRadius) {
+        std::swap(m_minRadius, m_maxRadius);
+      }
     }
 
 
@@ -135,21 +139,31 @@ namespace brick {
       unsigned int testedPixels = 0;
       for(unsigned int row = startRow; row < stopRow; ++row) {
         for(unsigned int column = startColumn; column < stopColumn;
-            ++column) {
-          FloatType asymmetry = 0;
-          if(this->evaluateAsymmetry(
-               inImage, m_minRadius, row, column, asymmetry)) {
-            if(asymmetry < asymmetryThreshold) {
-              KeypointBullseye<brick::common::Int32> keypoint(
-                row, column, asymmetry);
-              this->evaluateBullseyeMetric(keypoint, edgeImage,
-                                           gradientX, gradientY, m_maxRadius);
-              this->sortedInsert(keypoint, m_keypointVector,
-                                 m_maxNumberOfBullseyes);
-              ++testedPixels;
-            }
+            ++column, ++totalPixels) {
+          KeypointBullseye<brick::common::Int32> keypoint(row, column);
+          if(!this->evaluateAsymmetry(
+               inImage, m_minRadius, row, column, keypoint.asymmetry)) {
+            continue;
           }
-          ++totalPixels;
+          if(keypoint.asymmetry >= asymmetryThreshold) {
+            continue;
+          }
+
+          // OK, we've passed the first test, but
+          // evaluateBullseyeMetric() is still too expensive.  Make
+          // absolutely sure this could be a bullseye before
+          // proceeding.
+          if(!this->isPlausibleBullseye(keypoint, inImage, m_maxRadius)) {
+            continue;
+          }
+
+          // All prescreening passes.  Go ahead with the expensive
+          // bullseye evaluation.
+          this->evaluateBullseyeMetric(keypoint, edgeImage,
+                                       gradientX, gradientY, m_maxRadius);
+          this->sortedInsert(keypoint, m_keypointVector,
+                             m_maxNumberOfBullseyes);
+          ++testedPixels;
         }
       }
 
@@ -211,6 +225,121 @@ namespace brick {
       asymmetrySum += difference * difference;
     }
 
+
+    template <class FloatType>
+    bool
+    KeypointSelectorBullseye<FloatType>::
+    countTransitions(std::vector<brick::common::UInt8> const& spoke,
+                     unsigned int numberOfTransitions,
+                     brick::common::UInt8 minDynamicRange,
+                     brick::common::UInt8& darkColor,
+                     brick::common::UInt8& lightColor)
+    {
+      unsigned int const numberOfColorOutliers = 1;
+      brick::common::Int16 const pixelMin =
+        std::numeric_limits<brick::common::UInt8>::min();
+      brick::common::Int16 const pixelMax =
+        std::numeric_limits<brick::common::UInt8>::max();
+
+      // Local variables for tracking the color of the bullseye,
+      // ignoring color outliers, and for maintaining a threshold
+      // (with hysteresis) between light and dark.
+      brick::common::UInt8 darkColorBuffer[numberOfColorOutliers + 1];
+      brick::common::UInt8 lightColorBuffer[numberOfColorOutliers + 1];
+      brick::common::Int16 threshold = 0;
+      bool isDark = true;
+      bool isColorUpdated = true;
+
+      // Maintain a count of how many color transitions we've seen, so
+      // we'll know when to claim success.
+      unsigned int transitionCount = 0;
+      
+      // Initialize our accumulation buffers to best guess light and
+      // dark colors so far.
+      for(unsigned int ii = 0; ii <= numberOfColorOutliers; ++ii) {
+        darkColorBuffer[ii] = darkColor;
+        lightColorBuffer[ii] = lightColor;
+      }
+      
+      // Look at each value in the input array.
+      for(unsigned int ii = 0; ii < spoke.size(); ++ii) {
+        brick::common::UInt8 currentColor = spoke[ii];
+        
+        // Update our tracking of light and dark.
+        if(currentColor < darkColorBuffer[numberOfColorOutliers]) {
+          darkColorBuffer[numberOfColorOutliers] = currentColor;
+          for(unsigned int jj = numberOfColorOutliers; jj > 0; --jj) {
+            if(darkColorBuffer[jj] < darkColorBuffer[jj - 1]) {
+              std::swap(darkColorBuffer[jj], darkColorBuffer[jj - 1]);
+            } else {
+              break;
+            }
+          }
+          isColorUpdated = true;
+        }
+        if(currentColor > lightColorBuffer[numberOfColorOutliers]) {
+          lightColorBuffer[numberOfColorOutliers] = currentColor;
+          for(unsigned int jj = numberOfColorOutliers; jj > 0; --jj) {
+            if(lightColorBuffer[jj] > lightColorBuffer[jj - 1]) {
+              std::swap(lightColorBuffer[jj], lightColorBuffer[jj - 1]);
+            } else {
+              break;
+            }
+          }
+          isColorUpdated = true;
+        }
+
+        // If we've changed our idea of what black or white is, then
+        // we need to adjust our idea of where the transition between
+        // black and white happens.
+        if(isColorUpdated) {
+          threshold = (darkColorBuffer[numberOfColorOutliers] / 2
+                       + lightColorBuffer[numberOfColorOutliers] / 2);
+
+          // Add some hysteresis.
+          if(isDark) {
+            threshold += minDynamicRange / 2;
+          } else {
+            threshold -= minDynamicRange / 2;
+          }
+
+          // And make sure our threshold isn't out of bounds.
+          threshold = std::min(threshold, pixelMax);
+          threshold = std::max(threshold, pixelMin);
+          isColorUpdated = false;
+        }
+
+        // Now see if the next pixel constitutes a transition from
+        // light to dark or dark to light, and 
+        if(isDark) {
+          if(currentColor > threshold) {
+            isDark = false;
+            isColorUpdated = true; // Force recomputation of threshold.
+            ++transitionCount;
+          }
+        } else {
+          if(currentColor < threshold) {
+            isDark = true;
+            isColorUpdated = true; // Force recomputation of threshold.
+            ++transitionCount;
+          }
+        }
+
+        // If we've found enough transitions, then success!
+        if(transitionCount >= numberOfTransitions) {
+          darkColor = darkColorBuffer[numberOfColorOutliers];
+          lightColor = lightColorBuffer[numberOfColorOutliers];
+          return true;
+        }
+      }
+
+      // If we get here, then we didn't find the requisite number of
+      // transitions.
+      darkColor = darkColorBuffer[numberOfColorOutliers];
+      lightColor = lightColorBuffer[numberOfColorOutliers];
+      return false;
+    }
+    
 
     template <class FloatType>
     bool
@@ -501,8 +630,8 @@ namespace brick {
       }
 
       // All done.  Return our fake 1-sigma threshold.
-      std::cout << meanAsymmetry << ", " << varianceAsymmetry << ", "
-                << meanAsymmetry - 2 * varianceAsymmetry << std::endl;
+      // std::cout << meanAsymmetry << ", " << varianceAsymmetry << ", "
+      //           << meanAsymmetry - 2 * varianceAsymmetry << std::endl;
       return meanAsymmetry - 2 * varianceAsymmetry;
       
     }
@@ -668,6 +797,74 @@ namespace brick {
         return false;
       }
       asymmetry = (asymmetrySum / (count / 2.0)) / pixelVariance;
+      return true;
+    }
+
+
+    template <class FloatType>
+    bool
+    KeypointSelectorBullseye<FloatType>::
+    isPlausibleBullseye(KeypointBullseye<brick::common::Int32>& keypoint,
+                        Image<GRAY8> const& inImage,
+                        unsigned int radius)
+    {
+      // Figure out what light and dark mean in the neighborhood of
+      // this potential bullseye.  Meanwhile, make sure that in each
+      // of the major directions the image has a dark-light-dark-light
+      // pattern, as if it were a bullseye.  If more than one of the
+      // major (N,S,E,W) directions doesn't have this pattern, then
+      // this is not a bullseye.
+      std::vector<brick::common::UInt8> spoke(radius);
+      unsigned int failedSpokeCount = 0;
+      brick::common::UInt8 darkColor = inImage(keypoint.row, keypoint.column);
+      brick::common::UInt8 lightColor = darkColor;
+
+      // Look right.
+      for(unsigned int ii = 0; ii < radius; ++ii) {
+        spoke[ii] = inImage(keypoint.row, keypoint.column + ii);
+      }
+      if(!this->countTransitions(spoke, m_numberOfTransitions,
+                                 m_minDynamicRange, darkColor, lightColor)) {
+        if(++failedSpokeCount >= 2) {
+          return false;
+        }
+      }
+
+      // Look left.
+      for(unsigned int ii = 0; ii < radius; ++ii) {
+        spoke[ii] = inImage(keypoint.row, keypoint.column - ii);
+      }
+      if(!this->countTransitions(spoke, m_numberOfTransitions,
+                                 m_minDynamicRange, darkColor, lightColor)) {
+        if(++failedSpokeCount >= 2) {
+          return false;
+        }
+      }
+
+      // Look down.
+      for(unsigned int ii = 0; ii < radius; ++ii) {
+        spoke[ii] = inImage(keypoint.row + ii, keypoint.column);
+      }
+      if(!this->countTransitions(spoke, m_numberOfTransitions,
+                                 m_minDynamicRange, darkColor, lightColor)) {
+        if(++failedSpokeCount >= 2) {
+          return false;
+        }
+      }
+
+      // Look up.
+      for(unsigned int ii = 0; ii < radius; ++ii) {
+        spoke[ii] = inImage(keypoint.row - ii, keypoint.column);
+      }
+      if(!this->countTransitions(spoke, m_numberOfTransitions,
+                                 m_minDynamicRange, darkColor, lightColor)) {
+        if(++failedSpokeCount >= 2) {
+          return false;
+        }
+      }
+
+      // Failed to discard this candidate.  Return true so it gets
+      // subjected to more tests.
       return true;
     }
 

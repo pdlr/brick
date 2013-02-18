@@ -36,11 +36,10 @@ namespace brick {
       brick::geometry::Bullseye2D<FloatType> bullseye;
 
       KeypointBullseye(CoordinateType rowArg,
-                       CoordinateType columnArg,
-                       FloatType asymmetryArg)
+                       CoordinateType columnArg)
         : row(rowArg),
           column(columnArg),
-          asymmetry(asymmetryArg),
+          asymmetry(0.0),
           bullseyeMetric(0.0),
           bullseye() {}
     };
@@ -192,6 +191,14 @@ namespace brick {
         brick::common::UnsignedInt32& pixelSquaredSum,
         brick::common::UnsignedInt32& asymmetrySum) const;
 
+
+      bool
+      countTransitions(std::vector<brick::common::UInt8> const& spoke,
+                       unsigned int numberOfTransitions,
+                       brick::common::UInt8 minDynamicRange,
+                       brick::common::UInt8& darkColor,
+                       brick::common::UInt8& lightColor);
+      
       
       // Make sure bounding box of processing region is sane.
       void
@@ -225,14 +232,14 @@ namespace brick {
       // pick a threshold that's low enough.  Low enough means that
       // only interesting pixels have a lower score from
       // evaluateAsymmetry() (where low means "symmetrical").
-      FloatType estimateAsymmetryThreshold(
-        Image<GRAY8> const& inImage,
-        unsigned int radius,
-        unsigned int startRow,
-        unsigned int startColumn,
-        unsigned int stopRow,
-        unsigned int stopColumn,
-        unsigned int numberOfSamples) const;
+      FloatType
+      estimateAsymmetryThreshold(Image<GRAY8> const& inImage,
+                                 unsigned int radius,
+                                 unsigned int startRow,
+                                 unsigned int startColumn,
+                                 unsigned int stopRow,
+                                 unsigned int stopColumn,
+                                 unsigned int numberOfSamples) const;
 
 
       // See if an image location is plausibly the center of a
@@ -245,7 +252,7 @@ namespace brick {
                         unsigned int row, unsigned int column,
                         FloatType& asymmetry) const;
 
-
+      
       inline bool
       testAndRecordEdges(
         Image<GRAY1> const& edgeImage,
@@ -301,14 +308,13 @@ namespace brick {
         // unsigned int minRadius,
         unsigned int maxRadius);
 
+
+      bool
+      isPlausibleBullseye(KeypointBullseye<brick::common::Int32>& keypoint,
+                          Image<GRAY8> const& inImage,
+                          unsigned int radius);
+
       
-      // Find the highest threshold value that would still allow this
-      // particular pixel to pass and be selected as a keypoint.
-      brick::common::Int16
-      measurePixelThreshold(Image<GRAY8> const& image,
-                            unsigned int row, unsigned int column) const;
-
-
       // Insert the new keypoint into a sorted vector, discarding the
       // worst point if the addition would make the vector longer than
       // maxNumberOfBullseyes.
@@ -345,6 +351,7 @@ namespace brick {
       brick::common::UnsignedInt32 m_numberOfTransitions;
       brick::common::UnsignedInt32 m_maxRadius;
       brick::common::UnsignedInt32 m_minRadius;
+      brick::common::UnsignedInt8 m_minDynamicRange;
 
     };
 

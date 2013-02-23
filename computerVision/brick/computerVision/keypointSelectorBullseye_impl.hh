@@ -740,20 +740,20 @@ namespace brick {
       }
       
       // If we have a full set of edge points, find the best-fit bullseye.
-      keypoint.bullseyeMetric = std::numeric_limits<FloatType>::max();
+      keypoint.bullseyeMetric = 0.0;
       brick::geometry::Bullseye2D<FloatType> bullseye;
       if(this->estimateBullseye(
            bullseye, m_edgePositions, m_numberOfTransitions)) {
-        FloatType goodness = 0;
+        FloatType bullseyeMetric = 0;
         if(this->validateBullseye(
              bullseye,
              // inImage,
              edgeImage, gradientX, gradientY,
              keypoint.row, keypoint.column,
-             maxRadius, goodness)) {
+             maxRadius, bullseyeMetric)) {
 
           // OK, this bullseye passed all the tests, remember it.
-          keypoint.bullseyeMetric = 1.0 / goodness;
+          keypoint.bullseyeMetric = bullseyeMetric;
           keypoint.bullseye = bullseye;
         }
       }
@@ -891,7 +891,7 @@ namespace brick {
       // discard it... we're done with it.
       unsigned int vectorSize = keypointVector.size();
       if((vectorSize >= maxNumberOfBullseyes)
-         && (keypoint.bullseyeMetric >=
+         && (keypoint.bullseyeMetric <=
              keypointVector[vectorSize - 1].bullseyeMetric)) {
         return;
       }
@@ -914,7 +914,7 @@ namespace brick {
       unsigned int ii = vectorSize - 1;
       while(ii != 0) {
         if(keypointVector[ii].bullseyeMetric
-           >= keypointVector[ii - 1].bullseyeMetric) {
+           <= keypointVector[ii - 1].bullseyeMetric) {
           break;
         }
         std::swap(keypointVector[ii], keypointVector[ii - 1]);
@@ -934,7 +934,7 @@ namespace brick {
                      unsigned int row,
                      unsigned int column,
                      unsigned int maxRadius,
-                     FloatType& goodness)
+                     FloatType& bullseyeMetric)
     {
       // If the pixel under consideration isn't at the center of
       // the bullseye, then this isn't the right pixel.
@@ -1106,9 +1106,13 @@ namespace brick {
                                         * (majorLength + 3 * minorLength)));
         edgeLengths += approxCircumference;
       }
-      goodness = 0.0;
+      bullseyeMetric = 0.0;
       if(2 * onRingCount > inBoundsCount) {
-        goodness = (2 * onRingCount - inBoundsCount) / edgeLengths;
+        // This number goes from somewhere south of -1 (when
+        // onRingCount is zero, and inBoundsCount > edgeLengths), to a
+        // max of about 1 (when onRingCount approaches edgeLengths,
+        // and inBoundsCount == onRingCount).
+        bullseyeMetric = (2 * onRingCount - inBoundsCount) / edgeLengths;
       }
       return true;
     }

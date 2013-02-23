@@ -174,11 +174,11 @@ namespace brick {
       // for this, and for the next few steps, is in the paper, but
       // isn't reproduced here (don't worry, though, it's just
       // algebra, nothing fancy).
+      brick::numeric::Array2D<Type> TT;
       try {
-        brick::numeric::Array2D<Type> TT = (
-          Type(-1)
-          * brick::numeric::matrixMultiply<Type>(
-            brick::linearAlgebra::inverse(S3), S2.transpose()));
+        TT = (Type(-1)
+              * brick::numeric::matrixMultiply<Type>(
+                brick::linearAlgebra::inverse(S3), S2.transpose()));
       } catch(brick::common::ValueException) {
         BRICK_THROW(brick::common::ValueException,
                     "Ellipse2D::estimate()",

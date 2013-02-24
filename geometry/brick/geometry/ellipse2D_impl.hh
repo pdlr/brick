@@ -51,7 +51,7 @@ namespace brick {
               Type ratio)
       : m_origin(origin),
         m_semimajorAxis(semimajorAxis),
-        m_semiminorAxis(semimajorAxis.y() * ratio, semimajorAxis.x() * ratio)
+        m_semiminorAxis(semimajorAxis.y() * ratio, -semimajorAxis.x() * ratio)
     {
       if(ratio > 1.0) {
         std::swap(m_semimajorAxis, m_semiminorAxis);

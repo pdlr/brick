@@ -167,7 +167,8 @@ namespace brick {
 
       // Keypoint position is redundantly encoded.  Update the
       // bullseye instance to reflect our new location.
-      result.bullseye.setOrigin(crl::Vector2D<FloatType>(result.column, result.row));
+      result.bullseye.setOrigin(
+        brick::numeric::Vector2D<FloatType>(result.column, result.row));
   
       // Note: no checking that the subpixel position is near the
       // integer position.

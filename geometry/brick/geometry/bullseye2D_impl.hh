@@ -357,9 +357,7 @@ namespace brick {
     Bullseye2D<Type>::
     getEllipse()
     {
-      Type ratio = (brick::numeric::magnitude<Type>(m_semiminorAxis)
-                    / brick::numeric::magnitude<Type>(m_semimajorAxis));
-      return Ellipse2D<Type>(m_origin, m_semimajorAxis, ratio);
+      return Ellipse2D<Type>(m_origin, m_semimajorAxis, m_semiminorAxis);
     }
 
     

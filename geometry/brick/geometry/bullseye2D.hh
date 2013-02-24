@@ -14,6 +14,7 @@
 #define BRICK_GEOMETRY_BULLSEYE2D_HH
 
 #include <iostream>
+#include <brick/geometry/ellipse2D.hh>
 #include <brick/numeric/array1D.hh>
 #include <brick/numeric/vector2D.hh>
 
@@ -39,6 +40,30 @@ namespace brick {
       inline
       Bullseye2D();
 
+      
+      /** 
+       * Construct a bullseye, explicitly setting parameters.  TBD:
+       * provide example documentation here.
+       * 
+       * @param ellipse This argument specifies an ellipse that
+       * describes each of the rings of the bullseye.  Each ring will
+       * simply be a scaled version of this ellipse (centered on the
+       * same origin).
+       * 
+       * @param scalesBegin This argument is the beginning of of a
+       * sequence of Type scale parameters, each of which
+       * specifies the size of one of the bulleye rings as a
+       * proportion of the ellipse specified by the other constructor
+       * argument.  The bullseye will have as many rings as there are
+       * elements in this sequence.
+       * 
+       * @param scalesEnd This argument is the end iterator for the
+       * sequence that starts with argument scalesBegin.
+       */
+      template <class Iter>
+      Bullseye2D(Ellipse2D<Type> const& ellipse,
+                 Iter scalesBegin, Iter scalesEnd);
+      
       
       /** 
        * The copy constructor deep copies its argument.
@@ -153,6 +178,20 @@ namespace brick {
       estimate(PointsIterType pointsBeginIter, PointsIterType pointsEndIter,
                CountsIterType countsBeginIter, CountsIterType countsEndIter,
                ResidualIter residualIter, bool computeResidual = true);
+
+
+
+      /** 
+       * Returns an ellipse that describes each of the rings of the
+       * bullseye.  Each ring is simply be a scaled version of this
+       * ellipse (centered on the same origin).  The scales of the
+       * rings can be found by calling member function getScales().
+       * 
+       * @return The return value is an ellipse describing the rings
+       * of the bullseye.
+       */
+      Ellipse2D<Type>
+      getEllipse();
       
 
       /** 
@@ -174,6 +213,20 @@ namespace brick {
       getOrigin() const {return m_origin;}
       
 
+      /** 
+       * This member function returns a sequence of scale parameters,
+       * each of which specifies the size of one of the bulleye rings
+       * as a proportion of the ellipse returned by member function
+       * getEllipse().  The bullseye has as many rings as there are
+       * elements in this sequence. TBD: provide example documentation
+       * here.
+       * 
+       * @return The return value is a sequence of scale parameters.
+       */
+      std::vector<Type> const&
+      getScales() {return m_scales;}
+
+      
       /** 
        * This member function returns a vector pointing from the
        * center of the bullseye to the point on a ring of the bullseye

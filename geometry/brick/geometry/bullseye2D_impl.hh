@@ -45,6 +45,21 @@ namespace brick {
     }
 
     
+    // Construct a bullseye, explicitly setting parameters.
+    template <class Type>
+    template <class Iter>
+    Bullseye2D<Type>::
+    Bullseye2D(Ellipse2D<Type> const& ellipse,
+               Iter scalesBegin, Iter scalesEnd)
+      : m_origin(ellipse.getOrigin()),
+        m_semimajorAxis(ellipse.getSemimajorAxis()),
+        m_semiminorAxis(ellipse.getSemiminorAxis()),
+        m_scales(scalesEnd - scalesBegin)
+    {
+      std::copy(scalesBegin, scalesEnd, m_scales.begin());
+    }
+
+    
     // The copy constructor deep copies its argument.
     template <class Type>
     Bullseye2D<Type>::
@@ -335,6 +350,19 @@ namespace brick {
     }
 
 
+    // Returns an ellipse that describes each of the rings of the
+    // bullseye.
+    template <class Type>
+    Ellipse2D<Type>
+    Bullseye2D<Type>::
+    getEllipse()
+    {
+      Type ratio = (brick::numeric::magnitude<Type>(m_semiminorAxis)
+                    / brick::numeric::magnitude<Type>(m_semimajorAxis));
+      return Ellipse2D<Type>(m_origin, m_semimajorAxis, ratio);
+    }
+
+    
     // Convert from implicit bullseye representation to trigonometric
     // parameters.
     template <class Type>

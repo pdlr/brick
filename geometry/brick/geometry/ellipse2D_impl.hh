@@ -59,6 +59,21 @@ namespace brick {
     }
 
     
+    // This constructor initializes the ellipse using explicitly
+    // specified values.
+    template <class Type>
+    Ellipse2D<Type>::
+    Ellipse2D(brick::numeric::Vector2D<Type> const& origin,
+              brick::numeric::Vector2D<Type> const& semimajorAxis,
+              brick::numeric::Vector2D<Type> const& semiminorAxis)
+      : m_origin(origin),
+        m_semimajorAxis(semimajorAxis),
+        m_semiminorAxis(semiminorAxis)
+    {
+      // Empty.
+    }
+
+    
     // The copy constructor deep copies its argument.
     template <class Type>
     Ellipse2D<Type>::

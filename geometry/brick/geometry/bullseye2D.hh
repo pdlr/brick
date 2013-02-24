@@ -273,7 +273,18 @@ namespace brick {
       getSemiminorAxis(unsigned int ringNumber) const {
         return m_scales[ringNumber] * m_semiminorAxis;
       }
-      
+
+
+      /** 
+       * Sets the position of the bullseye center.
+       * 
+       * @param origin This argument is a Vector2D instance describing
+       * the desired origin.
+       */
+      void
+      setOrigin(brick::numeric::Vector2D<Type> const& origin) {
+        m_origin = origin;
+      }
 
     private:
       // Private member functions.

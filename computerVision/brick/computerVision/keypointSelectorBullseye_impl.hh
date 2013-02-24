@@ -63,6 +63,14 @@ namespace brick {
       KeypointBullseye<brick::common::Int32, FloatType> const& inputKeypoint,
       Image<GRAY8> const& inImage)
     {
+      // Fill in as much of the return value as we can up-front.
+      KeypointBullseye<FloatType, FloatType> result(0, 0);
+      result.asymmetry = inputKeypoint.asymmetry;
+      result.bullseyeMetric = inputKeypoint.bullseyeMetric;
+      result.darkColor = inputKeypoint.darkColor;
+      result.lightColor = inputKeypoint.lightColor;
+      result.bullseye = inputKeypoint.bullseye;
+    
       // Figure out how big a region we need to look at to be sure we
       // get the entire center of the bullseye.
       brick::numeric::Vector2D<FloatType> semimajorAxis;
@@ -112,9 +120,22 @@ namespace brick {
       brick::common::UInt8 componentNumber = ccImage(
         inputKeypoint.row - startRow, inputKeypoint.column - startColumn);
       if(componentNumber == 0) {
+#if 1
+        // Careful checking in member function isPlausibleBullseye()
+        // should prevent this from ever happening when called from
+        // member function setImage().  The exception might be thrown,
+        // however, if the user calls fineTuneBullseye() directly.
         BRICK_THROW(brick::common::ValueException,
                     "KeypointSelectorBullseye::fineTuneKeypoint()",
                     "Center of bullseye is the wrong color.");
+#else
+        // Coloration is wrong, so we can't find the center more
+        // precisely.  Punt and just return the integer coords.  This
+        // bullseye is probably an outlier anyway...
+        result.row = inputKeypoint.row;
+        result.column = inputKeypoint.column;
+        return result;
+#endif
       }
       
       // Compute the centroid of the center of the bullseye.  We have
@@ -125,7 +146,6 @@ namespace brick {
       // of that pixel, at general position coordinates 0.5, 0.5.  For
       // this reason, we add 0.5 to row and column at the end of the
       // centroid calculation.
-      KeypointBullseye<FloatType, FloatType> result(0, 0);
       unsigned int count = 0;
       for(unsigned int rr = 0; rr < binaryImage.rows(); ++rr) {
         for(unsigned int cc = 0; cc < binaryImage.columns(); ++cc) {
@@ -145,13 +165,6 @@ namespace brick {
       result.row += startRow;
       result.column += startColumn;
   
-      // Fill in the rest of result.
-      result.asymmetry = inputKeypoint.asymmetry;
-      result.bullseyeMetric = inputKeypoint.bullseyeMetric;
-      result.darkColor = inputKeypoint.darkColor;
-      result.lightColor = inputKeypoint.lightColor;
-      result.bullseye = inputKeypoint.bullseye;
-
       // Note: no checking that the subpixel position is near the
       // integer position.
       return result;
@@ -1012,6 +1025,15 @@ namespace brick {
         }
       }
 
+      // For now, we require bullseyes to be dark in the middle.  Note
+      // that this assumption also comes up in countTransitions(),
+      // above.
+      brick::common::UInt8 threshold =
+        keypoint.darkColor / 2 + keypoint.lightColor / 2;
+      if(inImage(keypoint.row, keypoint.column) > threshold) {
+        return false;
+      }
+      
       // Failed to discard this candidate.  Return true so it gets
       // subjected to more tests.
       return true;

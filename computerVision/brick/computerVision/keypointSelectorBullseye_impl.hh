@@ -609,9 +609,14 @@ namespace brick {
       }
 
       // Now that we've pruned our set of input points.  Redo the estimation.
-      bullseye.estimate(
-        inliers.begin(), inliers.end(),
-        m_bullseyeEdgeCounts.begin(), m_bullseyeEdgeCounts.end());
+      try {
+        bullseye.estimate(
+          inliers.begin(), inliers.end(),
+          m_bullseyeEdgeCounts.begin(), m_bullseyeEdgeCounts.end());
+      } catch(brick::common::ValueException) {
+        // If this call throws, we'll just return the un-updated
+        // bullseye.
+      }
 
       // All done.
       return true;

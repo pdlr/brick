@@ -83,6 +83,7 @@ stillToComeHeaders		= \
 lib_LTLIBRARIES		= libbrickComputerVision.la
 libbrickComputerVision_la_SOURCES = \
 	cameraIntrinsicsPlumbBob_impl.hh \
+	connectedComponents.cc connectedComponents.hh connectedComponents_impl.hh \
 	imageIO.cc imageIO.hh \
 	histogramEqualize.cc histogramEqualize.hh \
 	keypointMatcherFast.cc keypointMatcherFast.hh \

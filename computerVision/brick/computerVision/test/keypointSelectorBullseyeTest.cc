@@ -99,19 +99,23 @@ namespace brick {
         brick::test::approximatelyEqual(
           keypoints[0].column, bullseyePosition.getColumn(), 1));
 
-#if 0
+
       // Make sure sub-pixel version is plausible.
       std::vector< KeypointBullseye<double> > keypointsGP =
         selector.getKeypointsGeneralPosition();
       BRICK_TEST_ASSERT(keypointsGP.size() == 1);
-      BRICK_TEST_ASSERT(
-        brick::test::approximatelyEqual(
-          keypointsGP[ii].row, (double)bullseyePosition.getRow(), 0.5));
-      BRICK_TEST_ASSERT(
-        brick::test::approximatelyEqual(
-          keypointsGP[ii].column, (double)bullseyePosition.getColumn(), 0.5));
-#endif
-
+      for(unsigned int ii = 0; ii < keypointsGP.size(); ++ii) {
+        BRICK_TEST_ASSERT(
+          brick::test::approximatelyEqual(
+            keypointsGP[ii].row,
+            static_cast<double>(keypoints[ii].row) + 0.5,
+            1.0));
+        BRICK_TEST_ASSERT(
+          brick::test::approximatelyEqual(
+            keypointsGP[ii].column,
+            static_cast<double>(keypoints[ii].column) + 0.5,
+            1.0));
+      }
     }
 
     void

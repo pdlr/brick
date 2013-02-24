@@ -22,6 +22,7 @@
 
 #include <brick/common/mathFunctions.hh>
 #include <brick/computerVision/canny.hh>
+#include <brick/computerVision/connectedComponents.hh>
 
 // Debugging code.
 // #include <brick/utilities/imageIO.hh>
@@ -34,11 +35,14 @@ namespace brick {
     KeypointSelectorBullseye<FloatType>::
     KeypointSelectorBullseye(brick::common::UnsignedInt32 maxNumberOfBullseyes,
                              brick::common::UnsignedInt32 maxRadius,
-                             brick::common::UnsignedInt32 minRadius)
+                             brick::common::UnsignedInt32 minRadius,
+                             bool isGeneralPositionRequired)
       : m_bullseyePoints(),
         m_bullseyeEdgeCounts(3), // TBD: make this user set-able.
         m_edgePositions(3), // TBD: make this user set-able.
+        m_isGeneralPositionRequired(isGeneralPositionRequired),
         m_keypointVector(),
+        m_keypointGPVector(),
         m_maxNumberOfBullseyes(maxNumberOfBullseyes),
         m_numberOfTransitions(3), // TBD: make this user set-able.
         m_maxRadius(maxRadius),
@@ -53,11 +57,122 @@ namespace brick {
 
 
     template <class FloatType>
-    std::vector< KeypointBullseye<brick::common::Int32> >
+    KeypointBullseye<FloatType, FloatType>
+    KeypointSelectorBullseye<FloatType>::
+    fineTuneKeypoint(
+      KeypointBullseye<brick::common::Int32, FloatType> const& inputKeypoint,
+      Image<GRAY8> const& inImage)
+    {
+      // Figure out how big a region we need to look at to be sure we
+      // get the entire center of the bullseye.
+      brick::numeric::Vector2D<FloatType> semimajorAxis;
+      if(inputKeypoint.bullseye.getNumberOfRings() > 1) {
+        semimajorAxis = inputKeypoint.bullseye.getSemimajorAxis(
+          inputKeypoint.bullseye.getNumberOfRings() - 1);
+      } else {
+        semimajorAxis = inputKeypoint.bullseye.getSemimajorAxis(0);
+        semimajorAxis *= FloatType(2);
+      }
+      int radius = static_cast<int>(
+        brick::numeric::magnitude<FloatType>(semimajorAxis) + 0.5);
+
+      // Add a pixel safety margin to prevent the edge of the center
+      // of the bullseye from touching the edge of our reginon of
+      // interest.
+      ++radius;
+
+      // Pick a region of the image that entirely contains the center
+      // of the bullseye.
+      unsigned int startRow = std::max(
+        inputKeypoint.row - radius, 0);
+      unsigned int stopRow = std::min(
+        inputKeypoint.row + radius, static_cast<int>(inImage.rows()));
+      unsigned int startColumn = std::max(
+        inputKeypoint.column - radius, 0);
+      unsigned int stopColumn = std::min(
+        inputKeypoint.column + radius, static_cast<int>(inImage.columns()));
+
+      // Create a binary image in which the center of the bullseye is true.
+      Image<GRAY1> binaryImage(stopRow - startRow, stopColumn - startColumn);
+      brick::common::UInt8 threshold =
+        inputKeypoint.darkColor / 2 + inputKeypoint.lightColor / 2;
+      for(unsigned int rr = 0; rr < binaryImage.rows(); ++rr) {
+        for(unsigned int cc = 0; cc < binaryImage.columns(); ++cc) {
+          bool pixelValue = (inImage(startRow + rr, startColumn + cc)
+                             <= threshold);
+          binaryImage(rr, cc) = pixelValue;
+        }
+      }
+
+      // Run connected components on the binarized image so that we
+      // can select only the center of the bullseye.
+      Image<GRAY8> ccImage = connectedComponents<GRAY8>(binaryImage);
+
+      // Find out which component contains the center of the bullseye.
+      brick::common::UInt8 componentNumber = ccImage(
+        inputKeypoint.row - startRow, inputKeypoint.column - startColumn);
+      if(componentNumber == 0) {
+        BRICK_THROW(brick::common::ValueException,
+                    "KeypointSelectorBullseye::fineTuneKeypoint()",
+                    "Center of bullseye is the wrong color.");
+      }
+      
+      // Compute the centroid of the center of the bullseye.  We have
+      // to be careful here, as our coordinate system convention puts
+      // 0, 0 at the upper left corner of the the upper-left pixel.  A
+      // blob centered on 0, 0 (for example, a blob made up of only
+      // the upper-left pixel) would have its centroid in the center
+      // of that pixel, at general position coordinates 0.5, 0.5.  For
+      // this reason, we add 0.5 to row and column at the end of the
+      // centroid calculation.
+      KeypointBullseye<FloatType, FloatType> result(0, 0);
+      unsigned int count = 0;
+      for(unsigned int rr = 0; rr < binaryImage.rows(); ++rr) {
+        for(unsigned int cc = 0; cc < binaryImage.columns(); ++cc) {
+          if(ccImage(rr, cc) == componentNumber) {
+            result.row += rr;
+            result.column += cc;
+            ++count;
+          }
+        }
+      }
+      result.row /= count;
+      result.column /= count;
+      result.row += 0.5;
+      result.column += 0.5;
+  
+      // Translate back into image coordinates.
+      result.row += startRow;
+      result.column += startColumn;
+  
+      // Fill in the rest of result.
+      result.asymmetry = inputKeypoint.asymmetry;
+      result.bullseyeMetric = inputKeypoint.bullseyeMetric;
+      result.darkColor = inputKeypoint.darkColor;
+      result.lightColor = inputKeypoint.lightColor;
+      result.bullseye = inputKeypoint.bullseye;
+
+      // Note: no checking that the subpixel position is near the
+      // integer position.
+      return result;
+    }
+
+    
+    template <class FloatType>
+    std::vector< KeypointBullseye<brick::common::Int32, FloatType> >
     KeypointSelectorBullseye<FloatType>::
     getKeypoints() const
     {
       return m_keypointVector;
+    }
+
+
+    template <class FloatType>
+    std::vector< KeypointBullseye<FloatType, FloatType> >
+    KeypointSelectorBullseye<FloatType>::
+    getKeypointsGeneralPosition() const
+    {
+      return m_keypointGPVector;
     }
 
 
@@ -103,10 +218,12 @@ namespace brick {
     {
       // Discard last image's keypoints.
       m_keypointVector.clear();
+      m_keypointGPVector.clear();
       
       // Make sure the passed-in image bounds are legal.
       this->checkAndRepairRegionOfInterest(
-        inImage, m_maxRadius, startRow, startColumn, stopRow, stopColumn);
+        inImage.rows(), inImage.columns(), m_maxRadius,
+        startRow, startColumn, stopRow, stopColumn);
 
       // We're going to prune most of the image pixels using a
       // threshold based on local asymmetry.  Things that aren't
@@ -140,7 +257,8 @@ namespace brick {
       for(unsigned int row = startRow; row < stopRow; ++row) {
         for(unsigned int column = startColumn; column < stopColumn;
             ++column, ++totalPixels) {
-          KeypointBullseye<brick::common::Int32> keypoint(row, column);
+          KeypointBullseye<brick::common::Int32, FloatType> keypoint(
+            row, column);
           if(!this->evaluateAsymmetry(
                inImage, m_minRadius, row, column, keypoint.asymmetry)) {
             continue;
@@ -153,23 +271,34 @@ namespace brick {
           // evaluateBullseyeMetric() is still too expensive.  Make
           // absolutely sure this could be a bullseye before
           // proceeding.
-          if(!this->isPlausibleBullseye(keypoint, inImage, m_maxRadius)) {
+          if(!this->isPlausibleBullseye(
+               keypoint, inImage, m_minRadius, m_maxRadius)) {
             continue;
           }
 
           // All prescreening passes.  Go ahead with the expensive
           // bullseye evaluation.
           this->evaluateBullseyeMetric(keypoint, edgeImage,
-                                       gradientX, gradientY, m_maxRadius);
+                                       gradientX, gradientY,
+                                       m_minRadius, m_maxRadius);
           this->sortedInsert(keypoint, m_keypointVector,
                              m_maxNumberOfBullseyes);
           ++testedPixels;
         }
       }
 
-      std::cout << "Tested " << testedPixels
-                << " (" << (100.0 * testedPixels) / totalPixels << "%) of "
-                << totalPixels << " pixels." << std::endl;
+      // std::cout << "Tested " << testedPixels
+      //           << " (" << (100.0 * testedPixels) / totalPixels << "%) of "
+      //           << totalPixels << " pixels." << std::endl;
+
+      // Get general position estimates for our
+      if(m_isGeneralPositionRequired) {
+        m_keypointGPVector.resize(m_keypointVector.size());
+        for(unsigned int ii = 0; ii < m_keypointVector.size(); ++ii) {
+          m_keypointGPVector[ii] = this->fineTuneKeypoint(
+            m_keypointVector[ii], inImage);
+        }
+      }
     }
 
 
@@ -179,7 +308,8 @@ namespace brick {
     template <class FloatType>
     void
     KeypointSelectorBullseye<FloatType>::
-    checkAndRepairRegionOfInterest(Image<GRAY8> const& inImage,
+    checkAndRepairRegionOfInterest(unsigned int rows,
+                                   unsigned int columns,
                                    unsigned int radius,
                                    unsigned int& startRow,
                                    unsigned int& startColumn,
@@ -190,20 +320,20 @@ namespace brick {
         startRow, static_cast<unsigned int>(radius));
       stopRow = std::min(
         stopRow,
-        static_cast<unsigned int>(inImage.rows() - radius));
+        static_cast<unsigned int>(rows - radius));
       startColumn = std::max(
         startColumn, static_cast<unsigned int>(radius));
       stopColumn = std::min(
         stopColumn,
-        static_cast<unsigned int>(inImage.columns() - radius));
+        static_cast<unsigned int>(columns - radius));
 
       // Of course, all of the above will be broken if there aren't
       // enough rows or columns in the image.
-      if(inImage.rows() <= radius) {
+      if(rows <= radius) {
         startRow = 0;
         stopRow = 0;
       }
-      if(inImage.columns() <= radius) {
+      if(columns <= radius) {
         startColumn = 0;
         stopColumn = 0;
       }
@@ -233,7 +363,8 @@ namespace brick {
                      unsigned int numberOfTransitions,
                      brick::common::UInt8 minDynamicRange,
                      brick::common::UInt8& darkColor,
-                     brick::common::UInt8& lightColor)
+                     brick::common::UInt8& lightColor,
+                     unsigned int minRadius)
     {
       unsigned int const numberOfColorOutliers = 1;
       brick::common::Int16 const pixelMin =
@@ -329,6 +460,12 @@ namespace brick {
         if(transitionCount >= numberOfTransitions) {
           darkColor = darkColorBuffer[numberOfColorOutliers];
           lightColor = lightColorBuffer[numberOfColorOutliers];
+
+          // If the bullseye is too small, indicate this to the
+          // calling context.
+          if(ii < minRadius) {
+            return false;
+          }
           return true;
         }
       }
@@ -488,7 +625,8 @@ namespace brick {
     estimateScale(Image<GRAY8> const& image,
                   unsigned int radius,
                   unsigned int row, unsigned int column,
-                  KeypointBullseye<brick::common::Int32>& keypoint) const
+                  KeypointBullseye<brick::common::Int32, FloatType>& keypoint)
+      const
     {
       // Record four "spokes" of image data in each major direction,
       // while computing the range of pixel values in this
@@ -641,12 +779,12 @@ namespace brick {
     void
     KeypointSelectorBullseye<FloatType>::
     evaluateBullseyeMetric(
-        KeypointBullseye<brick::common::Int32>& keypoint,
-        Image<GRAY1> const& edgeImage,
-        brick::numeric::Array2D<FloatType> const& gradientX,
-        brick::numeric::Array2D<FloatType> const& gradientY,
-        // unsigned int minRadius,
-        unsigned int maxRadius)
+      KeypointBullseye<brick::common::Int32, FloatType>& keypoint,
+      Image<GRAY1> const& edgeImage,
+      brick::numeric::Array2D<FloatType> const& gradientX,
+      brick::numeric::Array2D<FloatType> const& gradientY,
+      unsigned int minRadius,
+      unsigned int maxRadius)
     {
       // Make sure there's no cruft still left in our pre-allocated
       // buffers.
@@ -740,17 +878,17 @@ namespace brick {
       }
       
       // If we have a full set of edge points, find the best-fit bullseye.
-      keypoint.bullseyeMetric = 0.0;
+      keypoint.bullseyeMetric = -1.0;
       brick::geometry::Bullseye2D<FloatType> bullseye;
       if(this->estimateBullseye(
            bullseye, m_edgePositions, m_numberOfTransitions)) {
-        FloatType bullseyeMetric = 0;
+        FloatType bullseyeMetric = -1.0;
         if(this->validateBullseye(
              bullseye,
              // inImage,
              edgeImage, gradientX, gradientY,
              keypoint.row, keypoint.column,
-             maxRadius, bullseyeMetric)) {
+             minRadius, maxRadius, bullseyeMetric)) {
 
           // OK, this bullseye passed all the tests, remember it.
           keypoint.bullseyeMetric = bullseyeMetric;
@@ -804,9 +942,11 @@ namespace brick {
     template <class FloatType>
     bool
     KeypointSelectorBullseye<FloatType>::
-    isPlausibleBullseye(KeypointBullseye<brick::common::Int32>& keypoint,
-                        Image<GRAY8> const& inImage,
-                        unsigned int radius)
+    isPlausibleBullseye(
+      KeypointBullseye<brick::common::Int32, FloatType>& keypoint,
+      Image<GRAY8> const& inImage,
+      unsigned int minRadius,
+      unsigned int maxRadius)
     {
       // Figure out what light and dark mean in the neighborhood of
       // this potential bullseye.  Meanwhile, make sure that in each
@@ -814,54 +954,54 @@ namespace brick {
       // pattern, as if it were a bullseye.  If more than one of the
       // major (N,S,E,W) directions doesn't have this pattern, then
       // this is not a bullseye.
-      std::vector<brick::common::UInt8> spoke(radius);
+      std::vector<brick::common::UInt8> spoke(maxRadius);
       unsigned int failedSpokeCount = 0;
       keypoint.darkColor = inImage(keypoint.row, keypoint.column);
       keypoint.lightColor = keypoint.darkColor;
 
       // Look right.
-      for(unsigned int ii = 0; ii < radius; ++ii) {
+      for(unsigned int ii = 0; ii < maxRadius; ++ii) {
         spoke[ii] = inImage(keypoint.row, keypoint.column + ii);
       }
       if(!this->countTransitions(
            spoke, m_numberOfTransitions, m_minDynamicRange,
-           keypoint.darkColor, keypoint.lightColor)) {
+           keypoint.darkColor, keypoint.lightColor, minRadius)) {
         if(++failedSpokeCount >= 2) {
           return false;
         }
       }
 
       // Look left.
-      for(unsigned int ii = 0; ii < radius; ++ii) {
+      for(unsigned int ii = 0; ii < maxRadius; ++ii) {
         spoke[ii] = inImage(keypoint.row, keypoint.column - ii);
       }
       if(!this->countTransitions(
            spoke, m_numberOfTransitions, m_minDynamicRange,
-           keypoint.darkColor, keypoint.lightColor)) {
+           keypoint.darkColor, keypoint.lightColor, minRadius)) {
         if(++failedSpokeCount >= 2) {
           return false;
         }
       }
 
       // Look down.
-      for(unsigned int ii = 0; ii < radius; ++ii) {
+      for(unsigned int ii = 0; ii < maxRadius; ++ii) {
         spoke[ii] = inImage(keypoint.row + ii, keypoint.column);
       }
       if(!this->countTransitions(
            spoke, m_numberOfTransitions, m_minDynamicRange,
-           keypoint.darkColor, keypoint.lightColor)) {
+           keypoint.darkColor, keypoint.lightColor, minRadius)) {
         if(++failedSpokeCount >= 2) {
           return false;
         }
       }
 
       // Look up.
-      for(unsigned int ii = 0; ii < radius; ++ii) {
+      for(unsigned int ii = 0; ii < maxRadius; ++ii) {
         spoke[ii] = inImage(keypoint.row - ii, keypoint.column);
       }
       if(!this->countTransitions(
            spoke, m_numberOfTransitions, m_minDynamicRange,
-           keypoint.darkColor, keypoint.lightColor)) {
+           keypoint.darkColor, keypoint.lightColor, minRadius)) {
         if(++failedSpokeCount >= 2) {
           return false;
         }
@@ -877,8 +1017,8 @@ namespace brick {
     void
     KeypointSelectorBullseye<FloatType>::
     sortedInsert(
-      KeypointBullseye<brick::common::Int32> const& keypoint,
-      std::vector< KeypointBullseye<brick::common::Int32> >& keypointVector,
+      KeypointBullseye<brick::common::Int32, FloatType> const& keypoint,
+      std::vector< KeypointBullseye<brick::common::Int32, FloatType> >& keypointVector,
       unsigned int maxNumberOfBullseyes)
     {
       // Special case: if keypointVector is empty, just add the new point.
@@ -933,6 +1073,7 @@ namespace brick {
                      brick::numeric::Array2D<FloatType> const& gradientY,
                      unsigned int row,
                      unsigned int column,
+                     unsigned int minRadius,
                      unsigned int maxRadius,
                      FloatType& bullseyeMetric)
     {
@@ -945,12 +1086,16 @@ namespace brick {
         return false;
       }
 
-      // Only proceed if bullseye is smaller than maxRadius.
+      // Only proceed if bullseye is smaller than maxRadius and larger
+      // than minRadius.
       brick::numeric::Vector2D<FloatType> semimajorAxis =
         bullseye.getSemimajorAxis(m_numberOfTransitions - 1);
       FloatType bullseyeRadiusSquared =
         brick::numeric::dot<FloatType>(semimajorAxis, semimajorAxis);
-      if(bullseyeRadiusSquared > (maxRadius * maxRadius)) {
+      if(bullseyeRadiusSquared >= (maxRadius * maxRadius)) {
+        return false;
+      }
+      if(bullseyeRadiusSquared < (minRadius * minRadius)) {
         return false;
       }
 
@@ -1106,7 +1251,7 @@ namespace brick {
                                         * (majorLength + 3 * minorLength)));
         edgeLengths += approxCircumference;
       }
-      bullseyeMetric = 0.0;
+      bullseyeMetric = -1.0;
       if(2 * onRingCount > inBoundsCount) {
         // This number goes from somewhere south of -1 (when
         // onRingCount is zero, and inBoundsCount > edgeLengths), to a

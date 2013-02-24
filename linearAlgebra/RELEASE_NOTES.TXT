@@ -4,6 +4,7 @@ This file gives a high level overview of recent changes.
 Revision 1.1
 
 - Updated configure scripts to remove dependence on gfortran.
+- Fixed bug in determinant().
 
 Revision 1.0
 

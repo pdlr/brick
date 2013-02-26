@@ -237,7 +237,8 @@ namespace brick {
                        brick::common::UInt8 minDynamicRange,
                        brick::common::UInt8& darkColor,
                        brick::common::UInt8& lightColor,
-                       unsigned int minRadius);
+                       unsigned int minRadius,
+                       unsigned int& actualRadius) const;
       
       
       // Make sure bounding box of processing region is sane.
@@ -256,7 +257,7 @@ namespace brick {
         brick::geometry::Bullseye2D<FloatType>& bullseye,
         std::vector< std::vector< brick::numeric::Vector2D<FloatType> > > const&
           edgePositions,
-        unsigned int numberOfTransitions);
+        unsigned int numberOfTransitions) const;
 
       
       // Estimate how much the target is squished along each axis.  Is
@@ -276,7 +277,8 @@ namespace brick {
       // evaluateAsymmetry() (where low means "symmetrical").
       FloatType
       estimateAsymmetryThreshold(Image<GRAY8> const& inImage,
-                                 unsigned int radius,
+                                 unsigned int minRadius,
+                                 unsigned int maxRadius,
                                  unsigned int startRow,
                                  unsigned int startColumn,
                                  unsigned int stopRow,
@@ -303,7 +305,7 @@ namespace brick {
         std::vector< std::vector< brick::numeric::Vector2D<FloatType> > >&
         edgePositions,
         unsigned int& edgeCount,
-        brick::common::UnsignedInt32 const& numberOfTransitions)
+        brick::common::UnsignedInt32 const& numberOfTransitions) const
       {
         if(edgeImage(row, column)) {
           edgePositions[edgeCount].push_back(
@@ -324,7 +326,7 @@ namespace brick {
         std::vector< std::vector< brick::numeric::Vector2D<FloatType> > >&
         edgePositions,
         unsigned int& edgeCount,
-        brick::common::UnsignedInt32 const& numberOfTransitions)
+        brick::common::UnsignedInt32 const& numberOfTransitions) const
       {
         if(edgeImage(row, column)
            || (edgeImage(row + d0, column)
@@ -348,7 +350,7 @@ namespace brick {
         brick::numeric::Array2D<FloatType> const& gradientX,
         brick::numeric::Array2D<FloatType> const& gradientY,
         unsigned int minRadius,
-        unsigned int maxRadius);
+        unsigned int maxRadius) const;
 
 
       bool
@@ -356,7 +358,9 @@ namespace brick {
         KeypointBullseye<brick::common::Int32, FloatType>& keypoint,
         Image<GRAY8> const& inImage,
         unsigned int minRadius,
-        unsigned int maxRadius);
+        unsigned int maxRadius,
+        FloatType asymmetryThreshold,
+        bool forceAsymmetry = false) const;
 
       
       // Insert the new keypoint into a sorted vector, discarding the
@@ -379,7 +383,7 @@ namespace brick {
                        unsigned int column,
                        unsigned int minRadius,
                        unsigned int maxRadius,
-                       FloatType& goodness);
+                       FloatType& goodness) const;
       
 
       // Private data members.

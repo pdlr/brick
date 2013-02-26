@@ -257,8 +257,8 @@ namespace brick {
 
       // Do the sampling and estimate the threshold.
       FloatType asymmetryThreshold = this->estimateAsymmetryThreshold(
-        inImage, m_minRadius, startRow, startColumn, stopRow, stopColumn,
-        numberOfPixelsToSample);
+        inImage, m_minRadius, m_maxRadius, startRow, startColumn,
+        stopRow, stopColumn, numberOfPixelsToSample);
 
       // If a pixel has sufficiently good symmetry, it will be tested
       // with a more expensive bullseye algorithm that needs to know
@@ -275,22 +275,16 @@ namespace brick {
       for(unsigned int row = startRow; row < stopRow; ++row) {
         for(unsigned int column = startColumn; column < stopColumn;
             ++column, ++totalPixels) {
+          // Create a candidate keypoint.
           KeypointBullseye<brick::common::Int32, FloatType> keypoint(
             row, column);
-          if(!this->evaluateAsymmetry(
-               inImage, m_minRadius, row, column, keypoint.asymmetry)) {
-            continue;
-          }
-          if(keypoint.asymmetry >= asymmetryThreshold) {
-            continue;
-          }
 
-          // OK, we've passed the first test, but
-          // evaluateBullseyeMetric() is still too expensive.  Make
-          // absolutely sure this could be a bullseye before
-          // proceeding.
+          // Member function evaluateBullseyeMetric() is too expensive
+          // to run at every pixel.  Make absolutely sure this could
+          // be a bullseye before proceeding.
           if(!this->isPlausibleBullseye(
-               keypoint, inImage, m_minRadius, m_maxRadius)) {
+               keypoint, inImage, m_minRadius, m_maxRadius,
+               asymmetryThreshold)) {
             continue;
           }
 
@@ -382,7 +376,8 @@ namespace brick {
                      brick::common::UInt8 minDynamicRange,
                      brick::common::UInt8& darkColor,
                      brick::common::UInt8& lightColor,
-                     unsigned int minRadius)
+                     unsigned int minRadius,
+                     unsigned int& actualRadius) const
     {
       unsigned int const numberOfColorOutliers = 1;
       brick::common::Int16 const pixelMin =
@@ -411,7 +406,8 @@ namespace brick {
       }
       
       // Look at each value in the input array.
-      for(unsigned int ii = 0; ii < spoke.size(); ++ii) {
+      unsigned int ii = 0;
+      for(; ii < spoke.size(); ++ii) {
         brick::common::UInt8 currentColor = spoke[ii];
         
         // Update our tracking of light and dark.
@@ -478,7 +474,8 @@ namespace brick {
         if(transitionCount >= numberOfTransitions) {
           darkColor = darkColorBuffer[numberOfColorOutliers];
           lightColor = lightColorBuffer[numberOfColorOutliers];
-
+          actualRadius = ii;
+          
           // If the bullseye is too small, indicate this to the
           // calling context.
           if(ii < minRadius) {
@@ -492,6 +489,7 @@ namespace brick {
       // transitions.
       darkColor = darkColorBuffer[numberOfColorOutliers];
       lightColor = lightColorBuffer[numberOfColorOutliers];
+      actualRadius = ii;
       return false;
     }
     
@@ -503,7 +501,7 @@ namespace brick {
       brick::geometry::Bullseye2D<FloatType>& bullseye,
       std::vector< std::vector< brick::numeric::Vector2D<FloatType> > > const&
         edgePositions,
-      unsigned int numberOfTransitions)
+      unsigned int numberOfTransitions) const
     {
       // A common failure is to not find any points on the outside
       // ring of the bullseye.  This makes sense: we search from the
@@ -519,11 +517,15 @@ namespace brick {
       // *this, we avoid reallocating every time.  Probably this is
       // false economy, but we'll profile shortly.  Copy all of the
       // edge points into it.
-      m_bullseyePoints.clear();
+      const_cast<KeypointSelectorBullseye<FloatType>*>(this)->
+        m_bullseyePoints.clear();
       for(unsigned int ii = 0; ii < m_numberOfTransitions; ++ii) {
         std::copy(m_edgePositions[ii].begin(), m_edgePositions[ii].end(),
-                  std::back_inserter(m_bullseyePoints));
-        m_bullseyeEdgeCounts[ii] = m_edgePositions[ii].size();
+                  std::back_inserter(
+                    const_cast<KeypointSelectorBullseye<FloatType>*>(this)->
+                    m_bullseyePoints));
+        const_cast<KeypointSelectorBullseye<FloatType>*>(this)->
+          m_bullseyeEdgeCounts[ii] = m_edgePositions[ii].size();
       }
       
       // We require numberOfTransitions + 2 points because that's what
@@ -594,7 +596,12 @@ namespace brick {
         }
         if(absResiduals[ii] > maximumAcceptableResidual) {
           // Found an outlier.  Update bookkeeping and skip it.
-          if(--m_bullseyeEdgeCounts[currentRing] == 0) {
+          // Again, we fight with our decision to make
+          // m_bullseyeEdgeCounts be a class member.
+          if(
+            --(const_cast<KeypointSelectorBullseye<FloatType>*>(this)->
+               m_bullseyeEdgeCounts[currentRing]) == 0
+            ) {
             // We require at least one point in each ring, so we're
             // done.  Fortunately, we still have the bullseye estimate
             // from our non-robust attempt, so return true to indicate
@@ -729,7 +736,8 @@ namespace brick {
     FloatType
     KeypointSelectorBullseye<FloatType>::
     estimateAsymmetryThreshold(Image<GRAY8> const& inImage,
-                              unsigned int radius,
+                              unsigned int minRadius,
+                              unsigned int maxRadius,
                               unsigned int startRow,
                               unsigned int startColumn,
                               unsigned int stopRow,
@@ -753,14 +761,16 @@ namespace brick {
       unsigned int count = 0;
       FloatType asymmetrySum = 0;
       FloatType asymmetrySquaredSum = 0;
-      
+
       for(unsigned int row = startRow; row < stopRow; row += step) {
         for(unsigned int column = startColumn; column < stopColumn;
             column += step) {
-          FloatType asymmetry = 0;
-          if(this->evaluateAsymmetry(inImage, radius, row, column, asymmetry)) {
-            asymmetrySum += asymmetry;
-            asymmetrySquaredSum += asymmetry * asymmetry;
+          KeypointBullseye<brick::common::Int32, FloatType> keypoint(
+            row, column);
+          if(this->isPlausibleBullseye(
+               keypoint, inImage, minRadius, maxRadius, 0.0, true)) {
+            asymmetrySum += keypoint.asymmetry;
+            asymmetrySquaredSum += keypoint.asymmetry * keypoint.asymmetry;
             ++count;
           }
         }
@@ -807,12 +817,15 @@ namespace brick {
       brick::numeric::Array2D<FloatType> const& gradientX,
       brick::numeric::Array2D<FloatType> const& gradientY,
       unsigned int minRadius,
-      unsigned int maxRadius)
+      unsigned int maxRadius) const
     {
       // Make sure there's no cruft still left in our pre-allocated
       // buffers.
       for(unsigned int ii = 0; ii < m_numberOfTransitions; ++ii) {
-        m_edgePositions[ii].clear();
+        // This pre-allocated working buffer idea sucks because it
+        // violates our const-ness promise.
+        const_cast<KeypointSelectorBullseye<FloatType>*>(this)->
+          m_edgePositions[ii].clear();
       }
       
       // Find nearby edges along several major directions.  In each
@@ -823,7 +836,9 @@ namespace brick {
       unsigned int edgeCount = 0;
       for(unsigned int ii = 1; ii < maxRadius; ++ii) {
         if(testAndRecordEdges(
-             edgeImage, keypoint.row, keypoint.column - ii, m_edgePositions,
+             edgeImage, keypoint.row, keypoint.column - ii,
+             (const_cast<KeypointSelectorBullseye<FloatType>*>(this)->
+              m_edgePositions),
              edgeCount, m_numberOfTransitions)) {
           break;
         }
@@ -833,7 +848,9 @@ namespace brick {
       edgeCount = 0;
       for(unsigned int ii = 1; ii < maxRadius; ++ii) {
         if(testAndRecordEdges(
-             edgeImage, keypoint.row, keypoint.column + ii, m_edgePositions,
+             edgeImage, keypoint.row, keypoint.column + ii,
+             (const_cast<KeypointSelectorBullseye<FloatType>*>(this)->
+              m_edgePositions),
              edgeCount, m_numberOfTransitions)) {
           break;
         }
@@ -843,7 +860,9 @@ namespace brick {
       edgeCount = 0;
       for(unsigned int ii = 1; ii < maxRadius; ++ii) {
         if(testAndRecordEdges(
-             edgeImage, keypoint.row - ii, keypoint.column, m_edgePositions,
+             edgeImage, keypoint.row - ii, keypoint.column,
+             (const_cast<KeypointSelectorBullseye<FloatType>*>(this)->
+              m_edgePositions),
              edgeCount, m_numberOfTransitions)) {
           break;
         }
@@ -854,7 +873,9 @@ namespace brick {
       for(unsigned int ii = 1; ii < maxRadius; ++ii) {
         if(testAndRecordEdgesDiagonal(
              edgeImage, keypoint.row - ii, keypoint.column - ii, -1, -1,
-             m_edgePositions, edgeCount, m_numberOfTransitions)) {
+             (const_cast<KeypointSelectorBullseye<FloatType>*>(this)->
+              m_edgePositions),
+             edgeCount, m_numberOfTransitions)) {
           break;
         }
       }
@@ -864,7 +885,8 @@ namespace brick {
       for(unsigned int ii = 1; ii < maxRadius; ++ii) {
         if(testAndRecordEdgesDiagonal(
              edgeImage, keypoint.row - ii, keypoint.column + ii, -1, 1,
-             m_edgePositions, edgeCount, m_numberOfTransitions)) {
+             (const_cast<KeypointSelectorBullseye<FloatType>*>(this)->
+              m_edgePositions), edgeCount, m_numberOfTransitions)) {
           break;
         }
       }
@@ -873,7 +895,9 @@ namespace brick {
       edgeCount = 0;
       for(unsigned int ii = 1; ii < maxRadius; ++ii) {
         if(testAndRecordEdges(
-             edgeImage, keypoint.row + ii, keypoint.column, m_edgePositions,
+             edgeImage, keypoint.row + ii, keypoint.column,
+             (const_cast<KeypointSelectorBullseye<FloatType>*>(this)->
+              m_edgePositions),
              edgeCount, m_numberOfTransitions)) {
           break;
         }
@@ -885,7 +909,8 @@ namespace brick {
       for(unsigned int ii = 1; ii < maxRadius; ++ii) {
         if(testAndRecordEdgesDiagonal(
              edgeImage, keypoint.row + ii, keypoint.column - ii, 1, -1,
-             m_edgePositions, edgeCount, m_numberOfTransitions)) {
+             (const_cast<KeypointSelectorBullseye<FloatType>*>(this)->
+              m_edgePositions), edgeCount, m_numberOfTransitions)) {
           break;
         }
       }
@@ -895,7 +920,8 @@ namespace brick {
       for(unsigned int ii = 1; ii < maxRadius; ++ii) {
         if(testAndRecordEdgesDiagonal(
              edgeImage, keypoint.row + ii, keypoint.column + ii, 1, 1,
-             m_edgePositions, edgeCount, m_numberOfTransitions)) {
+             (const_cast<KeypointSelectorBullseye<FloatType>*>(this)->
+              m_edgePositions), edgeCount, m_numberOfTransitions)) {
           break;
         }
       }
@@ -969,7 +995,9 @@ namespace brick {
       KeypointBullseye<brick::common::Int32, FloatType>& keypoint,
       Image<GRAY8> const& inImage,
       unsigned int minRadius,
-      unsigned int maxRadius)
+      unsigned int maxRadius,
+      FloatType asymmetryThreshold,
+      bool forceAsymmetry) const
     {
       // Figure out what light and dark mean in the neighborhood of
       // this potential bullseye.  Meanwhile, make sure that in each
@@ -982,14 +1010,26 @@ namespace brick {
       keypoint.darkColor = inImage(keypoint.row, keypoint.column);
       keypoint.lightColor = keypoint.darkColor;
 
+      // While doing this, we'll also estimate how big the
+      // hypothetical bullseey is.  This will be useful below, when
+      // we'll want to check the asymmetry of the hypothetical
+      // bullseye.  Remember the radius in each direction using this
+      // array.
+      unsigned int actualRadii[4];
+      
       // Look right.
       for(unsigned int ii = 0; ii < maxRadius; ++ii) {
         spoke[ii] = inImage(keypoint.row, keypoint.column + ii);
       }
+
+      // In each paragraph below here, we return false if 2 spokes
+      // don't have the required transitions, unless forceAsymmetry is
+      // specified, in which case we persever 'til the bitter end.
       if(!this->countTransitions(
            spoke, m_numberOfTransitions, m_minDynamicRange,
-           keypoint.darkColor, keypoint.lightColor, minRadius)) {
-        if(++failedSpokeCount >= 2) {
+           keypoint.darkColor, keypoint.lightColor, minRadius,
+           actualRadii[0])) {
+        if(++failedSpokeCount >= 2 && !forceAsymmetry) {
           return false;
         }
       }
@@ -1000,8 +1040,9 @@ namespace brick {
       }
       if(!this->countTransitions(
            spoke, m_numberOfTransitions, m_minDynamicRange,
-           keypoint.darkColor, keypoint.lightColor, minRadius)) {
-        if(++failedSpokeCount >= 2) {
+           keypoint.darkColor, keypoint.lightColor, minRadius,
+           actualRadii[1])) {
+        if(++failedSpokeCount >= 2 && !forceAsymmetry) {
           return false;
         }
       }
@@ -1012,8 +1053,9 @@ namespace brick {
       }
       if(!this->countTransitions(
            spoke, m_numberOfTransitions, m_minDynamicRange,
-           keypoint.darkColor, keypoint.lightColor, minRadius)) {
-        if(++failedSpokeCount >= 2) {
+           keypoint.darkColor, keypoint.lightColor, minRadius,
+           actualRadii[2])) {
+        if(++failedSpokeCount >= 2 && !forceAsymmetry) {
           return false;
         }
       }
@@ -1024,8 +1066,9 @@ namespace brick {
       }
       if(!this->countTransitions(
            spoke, m_numberOfTransitions, m_minDynamicRange,
-           keypoint.darkColor, keypoint.lightColor, minRadius)) {
-        if(++failedSpokeCount >= 2) {
+           keypoint.darkColor, keypoint.lightColor, minRadius,
+           actualRadii[3])) {
+        if(++failedSpokeCount >= 2 && !forceAsymmetry) {
           return false;
         }
       }
@@ -1035,10 +1078,33 @@ namespace brick {
       // above.
       brick::common::UInt8 threshold =
         keypoint.darkColor / 2 + keypoint.lightColor / 2;
-      if(inImage(keypoint.row, keypoint.column) > threshold) {
+      if(inImage(keypoint.row, keypoint.column) > threshold
+         && !forceAsymmetry) {
         return false;
       }
-      
+
+      // We now have 4 different estimates of the size of the
+      // hypothetical bullseye. Pick one of the non-extreme ones.
+      std::sort(&actualRadii[0], (&actualRadii[0]) + 4);
+      unsigned int actualRadius = actualRadii[1];
+
+      // Now that we know the approximate size of the hypothetical
+      // bullseye, we can see if it's sufficiently symmetrical to be a
+      // good candidate.
+      if(!this->evaluateAsymmetry(
+           inImage, actualRadius, keypoint.row, keypoint.column,
+           keypoint.asymmetry)) {
+        return false;
+      }
+
+      // If we're forcing asymmetry computation, we want to return
+      // true here, indicating that the calculation was successful. If
+      // we're not forcing, then we want to return true only if
+      // asymmetry is below threshold.
+      if((keypoint.asymmetry > asymmetryThreshold) && !forceAsymmetry) {
+        return false;
+      }
+
       // Failed to discard this candidate.  Return true so it gets
       // subjected to more tests.
       return true;
@@ -1107,7 +1173,7 @@ namespace brick {
                      unsigned int column,
                      unsigned int minRadius,
                      unsigned int maxRadius,
-                     FloatType& bullseyeMetric)
+                     FloatType& bullseyeMetric) const
     {
       // If the pixel under consideration isn't at the center of
       // the bullseye, then this isn't the right pixel.

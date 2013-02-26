@@ -7,6 +7,8 @@ Revision 1.3
 - Added very slow KeypointSelectorBulleye class (to be improved later).
 - Fixed failing KeypointMatcherFast unit test.
 - Fixed failing KeypointSelectorHarris unit test.
+- Corrected compile issue in connectedComponents_impl.hh.
+- Other minor changes and updates.
 
 Revision 1.2
 

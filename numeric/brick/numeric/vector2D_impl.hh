@@ -201,9 +201,9 @@ namespace brick {
     operator[](size_t index)
     {
       if(index == 0) {
-        return this->x();
+        return this->m_x;
       }
-      return this->y();
+      return this->m_y;
     }
 
           

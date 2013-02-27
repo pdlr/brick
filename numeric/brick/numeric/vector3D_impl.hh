@@ -144,10 +144,10 @@ namespace brick {
     operator[](size_t index)
     {
       switch(index) {
-      case 0: return this->x(); break;
-      case 1: return this->y(); break;
+      case 0: return this->m_x; break;
+      case 1: return this->m_y; break;
       }
-      return this->z();
+      return this->m_z;
     }
           
 

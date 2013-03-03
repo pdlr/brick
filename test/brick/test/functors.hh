@@ -13,6 +13,8 @@
 #ifndef BRICK_TEST_FUNCTORS_HH
 #define BRICK_TEST_FUNCTORS_HH
 
+#include <functional>
+
 namespace brick {
 
   namespace test {

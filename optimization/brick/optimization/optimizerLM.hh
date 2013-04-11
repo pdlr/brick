@@ -597,7 +597,7 @@ namespace brick {
 
           // Do we have a decrease in the error function at the candidate
           // location?
-          errorValue = m_functor(xCond);
+          errorValue = this->m_functor(xCond);
           if(errorValue < errorHistory[iterationIndex]) {
             // Yes. Go on to the next iteration.
             backtrackCount = 0;

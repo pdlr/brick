@@ -1,6 +1,11 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.2
+
+- Updates to build files.
+- Minor tweaks to comments, etc.
+
 Revision 1.1
 
 - Minor fixes to OptimizerBFGS.  If it has been compiling for you, you do

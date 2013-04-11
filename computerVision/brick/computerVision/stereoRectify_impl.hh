@@ -188,7 +188,7 @@ namespace brick {
       rectifiedIntrinsics1 = rectifiedIntrinsics0;
 
       // Finally, 2D transformations to take coordinates in the
-      // recified images and return matching coordinates in the
+      // rectified images and return matching coordinates in the
       // unrectified image.
       brick::numeric::Array2D<FloatType> oldQ0 =
         privateCode::extractUpperLeftBlock(intrinsics0, camera0Tworld);

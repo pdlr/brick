@@ -72,21 +72,24 @@ namespace brick {
       
     // Explicitly sets 3D coordinates.
     template <class Type>
-    inline void
+    inline Vector3D<Type> const&
     Vector3D<Type>::
     setValue(Type const& xCoord, Type const& yCoord, Type const& zCoord)
     {
       m_x = xCoord; m_y = yCoord; m_z = zCoord;
+      return *this;
     }
 
 
     // Explicitly sets 3D homogeneous coordinates.
     template <class Type>
-    inline void
+    inline Vector3D<Type> const&
     Vector3D<Type>::
     setValue(Type const& xCoord, Type const& yCoord, Type const& zCoord,
-                         Type const& alpha) {
+             Type const& alpha)
+    {
       m_x = xCoord; m_y = yCoord; m_z = zCoord; normalize(alpha);
+      return *this;
     }
 
 
@@ -141,10 +144,10 @@ namespace brick {
     operator[](size_t index)
     {
       switch(index) {
-      case 0: return this->x(); break;
-      case 1: return this->y(); break;
+      case 0: return this->m_x; break;
+      case 1: return this->m_y; break;
       }
-      return this->z();
+      return this->m_z;
     }
           
 

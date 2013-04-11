@@ -33,15 +33,27 @@ namespace brick {
       CoordinateType column;
       FloatType asymmetry;
       FloatType bullseyeMetric;
+      brick::common::UInt8 darkColor;
+      brick::common::UInt8 lightColor;
       brick::geometry::Bullseye2D<FloatType> bullseye;
 
+      KeypointBullseye()
+        : row(0),
+          column(0),
+          asymmetry(0.0),
+          bullseyeMetric(0.0),
+          darkColor(0),
+          lightColor(0),
+          bullseye() {}
+
       KeypointBullseye(CoordinateType rowArg,
-                       CoordinateType columnArg,
-                       FloatType asymmetryArg)
+                       CoordinateType columnArg)
         : row(rowArg),
           column(columnArg),
-          asymmetry(asymmetryArg),
+          asymmetry(0.0),
           bullseyeMetric(0.0),
+          darkColor(0),
+          lightColor(0),
           bullseye() {}
     };
     
@@ -55,7 +67,7 @@ namespace brick {
      ** KeypointSelectorBullseye<double> myKeypointSelector(2, 40, 10);
      ** myKeypointSelector.setImage(myGrayscaleImage);
      ** std::vector< KeypointBullseye<double> > keypoints
-     **    = myKeypointSelector.getKeypointsGeneralPosition() const;
+     **    = myKeypointSelector.getKeypointsGeneralPosition();
      ** @endcode
      **/
     template <class FloatType>
@@ -83,19 +95,45 @@ namespace brick {
        * the smallest bullseye you expect to see.  For example, if the
        * smallest bullseye you expect to see is 8 pixels across, set
        * this to 4 (because radius is half of diameter).
+       *
+       * @param isGeneralPositionRequired Use this argument to turn
+       * off computation of subpixel bullseye positions if you don't
+       * want them.  This saves a little bit of computation.
        */
       KeypointSelectorBullseye(unsigned int maxNumberOfBullseyes,
                                unsigned int maxRadius,
-                               unsigned int minRadius);
+                               unsigned int minRadius,
+                               bool isGeneralPositionRequired = true);
 
 
+      /** 
+       * Given a keypoint, find its subpixel (general position)
+       * location.  This function is exposed publically to give the
+       * user flexibility in finding locations in modified version of
+       * the original image.
+       * 
+       * @param inputKeypoint This argument is the keypoint to be
+       * fine-tuned.
+       * 
+       * @param inImage This argument is the input image against which
+       * to compute the refined position.
+       * 
+       * @return The return value is a copy of the input keypoint with
+       * its row and column updated to subpixel values.
+       */
+      KeypointBullseye<FloatType, FloatType>
+      fineTuneKeypoint(
+        KeypointBullseye<brick::common::Int32, FloatType> const& inputKeypoint,
+        Image<GRAY8> const& inImage);
+
+      
       /** 
        * Return the keypoints detected during the most recent call to
        * member function setImage().
        * 
        * @return The return value is vector of KeypointBullseye instances.
        */
-      std::vector< KeypointBullseye<brick::common::Int32> >
+      std::vector< KeypointBullseye<brick::common::Int32, FloatType> >
       getKeypoints() const;
 
 
@@ -121,7 +159,7 @@ namespace brick {
        * 
        * @return The return value is vector of KeypointBullseye instances.
        */
-      std::vector< KeypointBullseye<FloatType> >
+      std::vector< KeypointBullseye<FloatType, FloatType> >
       getKeypointsGeneralPosition() const;
 
       
@@ -192,10 +230,21 @@ namespace brick {
         brick::common::UnsignedInt32& pixelSquaredSum,
         brick::common::UnsignedInt32& asymmetrySum) const;
 
+
+      bool
+      countTransitions(std::vector<brick::common::UInt8> const& spoke,
+                       unsigned int numberOfTransitions,
+                       brick::common::UInt8 minDynamicRange,
+                       brick::common::UInt8& darkColor,
+                       brick::common::UInt8& lightColor,
+                       unsigned int minRadius,
+                       unsigned int& actualRadius) const;
+      
       
       // Make sure bounding box of processing region is sane.
       void
-      checkAndRepairRegionOfInterest(Image<GRAY8> const& inImage,
+      checkAndRepairRegionOfInterest(unsigned int rows,
+                                     unsigned int columns,
                                      unsigned int radius,
                                      unsigned int& startRow,
                                      unsigned int& startColumn,
@@ -208,16 +257,17 @@ namespace brick {
         brick::geometry::Bullseye2D<FloatType>& bullseye,
         std::vector< std::vector< brick::numeric::Vector2D<FloatType> > > const&
           edgePositions,
-        unsigned int numberOfTransitions);
+        unsigned int numberOfTransitions) const;
 
       
       // Estimate how much the target is squished along each axis.  Is
       // it circular?  Elliptical?
       void
-      estimateScale(Image<GRAY8> const& image,
-                    unsigned int radius,
-                    unsigned int row, unsigned int column,
-                    KeypointBullseye<brick::common::Int32>& keypoint) const;
+      estimateScale(
+        Image<GRAY8> const& image,
+        unsigned int radius,
+        unsigned int row, unsigned int column,
+        KeypointBullseye<brick::common::Int32, FloatType>& keypoint) const;
 
 
       
@@ -225,14 +275,15 @@ namespace brick {
       // pick a threshold that's low enough.  Low enough means that
       // only interesting pixels have a lower score from
       // evaluateAsymmetry() (where low means "symmetrical").
-      FloatType estimateAsymmetryThreshold(
-        Image<GRAY8> const& inImage,
-        unsigned int radius,
-        unsigned int startRow,
-        unsigned int startColumn,
-        unsigned int stopRow,
-        unsigned int stopColumn,
-        unsigned int numberOfSamples) const;
+      FloatType
+      estimateAsymmetryThreshold(Image<GRAY8> const& inImage,
+                                 unsigned int minRadius,
+                                 unsigned int maxRadius,
+                                 unsigned int startRow,
+                                 unsigned int startColumn,
+                                 unsigned int stopRow,
+                                 unsigned int stopColumn,
+                                 unsigned int numberOfSamples) const;
 
 
       // See if an image location is plausibly the center of a
@@ -245,7 +296,7 @@ namespace brick {
                         unsigned int row, unsigned int column,
                         FloatType& asymmetry) const;
 
-
+      
       inline bool
       testAndRecordEdges(
         Image<GRAY1> const& edgeImage,
@@ -254,7 +305,7 @@ namespace brick {
         std::vector< std::vector< brick::numeric::Vector2D<FloatType> > >&
         edgePositions,
         unsigned int& edgeCount,
-        brick::common::UnsignedInt32 const& numberOfTransitions)
+        brick::common::UnsignedInt32 const& numberOfTransitions) const
       {
         if(edgeImage(row, column)) {
           edgePositions[edgeCount].push_back(
@@ -275,7 +326,7 @@ namespace brick {
         std::vector< std::vector< brick::numeric::Vector2D<FloatType> > >&
         edgePositions,
         unsigned int& edgeCount,
-        brick::common::UnsignedInt32 const& numberOfTransitions)
+        brick::common::UnsignedInt32 const& numberOfTransitions) const
       {
         if(edgeImage(row, column)
            || (edgeImage(row + d0, column)
@@ -294,28 +345,31 @@ namespace brick {
       // instance with the corresponding information.
       void
       evaluateBullseyeMetric(
-        KeypointBullseye<brick::common::Int32>& keypoint,
+        KeypointBullseye<brick::common::Int32, FloatType>& keypoint,
         Image<GRAY1> const& edgeImage,
         brick::numeric::Array2D<FloatType> const& gradientX,
         brick::numeric::Array2D<FloatType> const& gradientY,
-        // unsigned int minRadius,
-        unsigned int maxRadius);
+        unsigned int minRadius,
+        unsigned int maxRadius) const;
+
+
+      bool
+      isPlausibleBullseye(
+        KeypointBullseye<brick::common::Int32, FloatType>& keypoint,
+        Image<GRAY8> const& inImage,
+        unsigned int minRadius,
+        unsigned int maxRadius,
+        FloatType asymmetryThreshold,
+        bool forceAsymmetry = false) const;
 
       
-      // Find the highest threshold value that would still allow this
-      // particular pixel to pass and be selected as a keypoint.
-      brick::common::Int16
-      measurePixelThreshold(Image<GRAY8> const& image,
-                            unsigned int row, unsigned int column) const;
-
-
       // Insert the new keypoint into a sorted vector, discarding the
       // worst point if the addition would make the vector longer than
       // maxNumberOfBullseyes.
       void
       sortedInsert(
-        KeypointBullseye<brick::common::Int32> const& keypoint,
-        std::vector< KeypointBullseye<brick::common::Int32> >& keypointVector,
+        KeypointBullseye<brick::common::Int32, FloatType> const& keypoint,
+        std::vector< KeypointBullseye<brick::common::Int32, FloatType> >& keypointVector,
         unsigned int maxNumberOfBullseyes);
 
 
@@ -327,8 +381,9 @@ namespace brick {
                        brick::numeric::Array2D<FloatType> const& gradientY,
                        unsigned int row,
                        unsigned int column,
+                       unsigned int minRadius,
                        unsigned int maxRadius,
-                       FloatType& goodness);
+                       FloatType& goodness) const;
       
 
       // Private data members.
@@ -339,12 +394,15 @@ namespace brick {
         m_bullseyeEdgeCounts;
       std::vector< std::vector< brick::numeric::Vector2D<FloatType> > >
         m_edgePositions;
-      
-      std::vector< KeypointBullseye<brick::common::Int32> > m_keypointVector;
+
+      bool m_isGeneralPositionRequired;      
+      std::vector< KeypointBullseye<brick::common::Int32, FloatType> > m_keypointVector;
+      std::vector< KeypointBullseye<FloatType, FloatType> > m_keypointGPVector;
       brick::common::UnsignedInt32 m_maxNumberOfBullseyes;
       brick::common::UnsignedInt32 m_numberOfTransitions;
       brick::common::UnsignedInt32 m_maxRadius;
       brick::common::UnsignedInt32 m_minRadius;
+      brick::common::UnsignedInt8 m_minDynamicRange;
 
     };
 

@@ -1,6 +1,13 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.3
+
+- Added missing namespace qualifiers, allowing tests to build under recent 
+  versions of g++.
+- Fixed several multiply-defined symbol errors.
+- Other minor updates and bugfixes.
+
 Revision 1.2
 
 - Fixed compile issues in transform3DTo2D.hh and rotations_impl.hh.

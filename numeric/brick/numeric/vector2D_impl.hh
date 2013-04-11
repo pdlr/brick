@@ -152,6 +152,7 @@ namespace brick {
       m_x = xCoord;
       m_y = yCoord;
       this->normalize(alpha);
+      return *this;
     }
 
 
@@ -200,9 +201,9 @@ namespace brick {
     operator[](size_t index)
     {
       if(index == 0) {
-        return this->x();
+        return this->m_x;
       }
-      return this->y();
+      return this->m_y;
     }
 
           

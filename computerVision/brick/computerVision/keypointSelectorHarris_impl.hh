@@ -352,11 +352,11 @@ namespace brick {
       brick::numeric::Index2D& corner0,
       brick::numeric::Index2D& corner1)
     {
-      unsigned int const rowStep     = inImage.getRowStep();
-      unsigned int const startRow    = corner0.getRow();
-      unsigned int const stopRow     = corner1.getRow();
-      unsigned int const startColumn = corner0.getColumn();
-      unsigned int const stopColumn  = corner1.getColumn();
+      int const rowStep     = inImage.getRowStep();
+      int const startRow    = corner0.getRow();
+      int const stopRow     = corner1.getRow();
+      int const startColumn = corner0.getColumn();
+      int const stopColumn  = corner1.getColumn();
 
       // Adjust array sizes, if necessary.
       if((gradientXX.rows() != inImage.rows())
@@ -373,7 +373,7 @@ namespace brick {
       gradientYY = 0;
 #endif /* #if BRICK_COMPUTERVISION_HARRIS_PEDANTIC */
       
-      for(unsigned int row = stopRow - 1; row >= startRow; --row) {
+      for(int row = stopRow - 1; row >= startRow; --row) {
         brick::numeric::Array1D<brick::common::Int32> imageRow =
           inImage.getRow(row);
         brick::numeric::Array1D<AccumulatedType> xxRow =
@@ -382,7 +382,7 @@ namespace brick {
           gradientXY.getRow(row);
         brick::numeric::Array1D<AccumulatedType> yyRow =
           gradientYY.getRow(row);
-        for(unsigned int column = stopColumn - 1; column >= startColumn;
+        for(int column = stopColumn - 1; column >= startColumn;
             --column) {
           brick::common::Int32 gradientX =
             (((static_cast<brick::common::Int32>(imageRow[column + 1])

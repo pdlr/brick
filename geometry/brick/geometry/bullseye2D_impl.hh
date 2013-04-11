@@ -45,6 +45,21 @@ namespace brick {
     }
 
     
+    // Construct a bullseye, explicitly setting parameters.
+    template <class Type>
+    template <class Iter>
+    Bullseye2D<Type>::
+    Bullseye2D(Ellipse2D<Type> const& ellipse,
+               Iter scalesBegin, Iter scalesEnd)
+      : m_origin(ellipse.getOrigin()),
+        m_semimajorAxis(ellipse.getSemimajorAxis()),
+        m_semiminorAxis(ellipse.getSemiminorAxis()),
+        m_scales(scalesEnd - scalesBegin)
+    {
+      std::copy(scalesBegin, scalesEnd, m_scales.begin());
+    }
+
+    
     // The copy constructor deep copies its argument.
     template <class Type>
     Bullseye2D<Type>::
@@ -249,10 +264,16 @@ namespace brick {
       // for this, and for the next few steps, is in the paper, but
       // isn't reproduced here (don't worry, though, it's just
       // algebra, nothing fancy).
-      brick::numeric::Array2D<Type> TT = (
-        Type(-1)
-        * brick::numeric::matrixMultiply<Type>(
-          brick::linearAlgebra::inverse(S3), S2.transpose()));
+      brick::numeric::Array2D<Type> TT;
+      try {
+        TT = (Type(-1)
+              * brick::numeric::matrixMultiply<Type>(
+                brick::linearAlgebra::inverse(S3), S2.transpose()));
+      } catch(brick::common::ValueException) {
+        BRICK_THROW(brick::common::ValueException,
+                    "Bullseye2D::estimate()",
+                    "Input points are not sufficient to estimate bullseye.");
+      }
       
       // After some algebra, Halir & Flasser reduce this the solution
       // for the first three elements to an eigenproblem with 3x3
@@ -329,6 +350,17 @@ namespace brick {
     }
 
 
+    // Returns an ellipse that describes each of the rings of the
+    // bullseye.
+    template <class Type>
+    Ellipse2D<Type>
+    Bullseye2D<Type>::
+    getEllipse()
+    {
+      return Ellipse2D<Type>(m_origin, m_semimajorAxis, m_semiminorAxis);
+    }
+
+    
     // Convert from implicit bullseye representation to trigonometric
     // parameters.
     template <class Type>

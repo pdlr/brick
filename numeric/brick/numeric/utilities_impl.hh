@@ -686,9 +686,10 @@ namespace brick {
     template <class Type>
     inline Vector3D<Type>
     cross(Vector3D<Type> const& vector0, Vector3D<Type> const& vector1) {
-      return Vector3D<Type>((vector0.y() * vector1.z()) - (vector0.z() * vector1.y()),
-                      (vector0.z() * vector1.x()) - (vector0.x() * vector1.z()),
-                      (vector0.x() * vector1.y()) - (vector0.y() * vector1.x()));
+      return Vector3D<Type>(
+        (vector0.y() * vector1.z()) - (vector0.z() * vector1.y()),
+        (vector0.z() * vector1.x()) - (vector0.x() * vector1.z()),
+        (vector0.x() * vector1.y()) - (vector0.y() * vector1.x()));
     }
 
 

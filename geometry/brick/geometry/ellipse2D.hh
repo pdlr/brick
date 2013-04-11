@@ -47,13 +47,38 @@ namespace brick {
        * the boundary of the ellipse that are farthest from the center.
        * 
        * @param ratio This argument specifies the length of the minor
-       * axis as a proportion of the lenth of the major axis.  It must
+       * axis as a proportion of the length of the major axis.  It must
        * be less than or equal to 1.0.
        */
       inline
       Ellipse2D(brick::numeric::Vector2D<Type> const& origin,
                 brick::numeric::Vector2D<Type> const& semimajorAxis,
                 Type ratio);
+
+    
+      /** 
+       * This constructor initializes the ellipse using explicitly
+       * specified values.
+       * 
+       * @param origin This argument specifies the position of the
+       * geometric center of the ellipse.
+       * 
+       * @param semimajorAxis This argument represents a vector pointing
+       * from the center of the ellipse to one of the two points on
+       * the boundary of the ellipse that are farthest from the center.
+       * 
+       * @param semiminorAxis This argument represents a vector
+       * pointing from the center of the ellipse to one of the two
+       * points on the boundary of the ellipse that are closest to the
+       * center.  It must be perpendicular to semimajorAxis, and must
+       * have smaller magnitude than semimajorAxis.  Neither of these
+       * things is checked.  If you violate either, then there may be
+       * trouble.
+       */
+      inline
+      Ellipse2D(brick::numeric::Vector2D<Type> const& origin,
+                brick::numeric::Vector2D<Type> const& semimajorAxis,
+                brick::numeric::Vector2D<Type> const& semiminorAxis);
 
     
       /** 

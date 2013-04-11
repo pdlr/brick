@@ -49,7 +49,6 @@ brickComputerVision_HEADERS	= \
 	imageFormatTraits.hh imageFormatTraits_impl.hh \
 	imagePyramid.hh imagePyramid_impl.hh \
 	imageWarper.hh imageWarper_impl.hh \
-	iterativeClosestPoint.hh iterativeClosestPoint_impl.hh \
 	kdTree.hh kdTree_impl.hh \
 	kernel.hh kernel_impl.hh \
 	kernels.hh kernels_impl.hh \
@@ -84,6 +83,7 @@ stillToComeHeaders		= \
 lib_LTLIBRARIES		= libbrickComputerVision.la
 libbrickComputerVision_la_SOURCES = \
 	cameraIntrinsicsPlumbBob_impl.hh \
+	connectedComponents.cc connectedComponents.hh connectedComponents_impl.hh \
 	imageIO.cc imageIO.hh \
 	histogramEqualize.cc histogramEqualize.hh \
 	keypointMatcherFast.cc keypointMatcherFast.hh \

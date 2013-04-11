@@ -51,11 +51,26 @@ namespace brick {
               Type ratio)
       : m_origin(origin),
         m_semimajorAxis(semimajorAxis),
-        m_semiminorAxis(semimajorAxis.y() * ratio, semimajorAxis.x() * ratio)
+        m_semiminorAxis(semimajorAxis.y() * ratio, -semimajorAxis.x() * ratio)
     {
       if(ratio > 1.0) {
         std::swap(m_semimajorAxis, m_semiminorAxis);
       }
+    }
+
+    
+    // This constructor initializes the ellipse using explicitly
+    // specified values.
+    template <class Type>
+    Ellipse2D<Type>::
+    Ellipse2D(brick::numeric::Vector2D<Type> const& origin,
+              brick::numeric::Vector2D<Type> const& semimajorAxis,
+              brick::numeric::Vector2D<Type> const& semiminorAxis)
+      : m_origin(origin),
+        m_semimajorAxis(semimajorAxis),
+        m_semiminorAxis(semiminorAxis)
+    {
+      // Empty.
     }
 
     
@@ -174,10 +189,16 @@ namespace brick {
       // for this, and for the next few steps, is in the paper, but
       // isn't reproduced here (don't worry, though, it's just
       // algebra, nothing fancy).
-      brick::numeric::Array2D<Type> TT = (
-        Type(-1)
-        * brick::numeric::matrixMultiply<Type>(
-          brick::linearAlgebra::inverse(S3), S2.transpose()));
+      brick::numeric::Array2D<Type> TT;
+      try {
+        TT = (Type(-1)
+              * brick::numeric::matrixMultiply<Type>(
+                brick::linearAlgebra::inverse(S3), S2.transpose()));
+      } catch(brick::common::ValueException) {
+        BRICK_THROW(brick::common::ValueException,
+                    "Ellipse2D::estimate()",
+                    "Input points are not sufficient to estimate ellipse.");
+      }
       
       // After some algebra, Halir & Flasser reduce this the solution
       // for the first three elements to an eigenproblem with 3x3

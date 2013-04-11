@@ -36,41 +36,7 @@ namespace brick {
       // label of the connected blob.
       bool
       propagateLabel(size_t label, size_t node, std::vector<size_t>& labelArray,
-                     const std::vector< std::list<size_t> >& neighborsVector)
-      {
-        // If we already know that the label of this node is not the
-        // lowest among all of the nodes it's connected to, then stop
-        // now.
-        if(labelArray[node] <= label) {
-          return false;
-        }
-        labelArray[node] = label;
-
-        // Make a list of neighbors we need to check.
-        std::list<size_t> nodeList;
-        std::copy(neighborsVector[node].begin(),
-                  neighborsVector[node].end(),
-                  std::back_inserter(nodeList));
-
-        // For each neighbor...
-        std::list<size_t>::iterator nextNodeIterator = nodeList.begin();
-        while(nextNodeIterator != nodeList.end()) {
-          // Don't update labels that are already lower than the current label.
-          if(labelArray[*nextNodeIterator] <= label) {
-            ++nextNodeIterator;
-            continue;
-          }
-          // Propagate the label and add any new neighbors (nodes that
-          // are connected to the node to which we're propagating) to our
-          // list.
-          labelArray[*nextNodeIterator] = label;
-          std::copy(neighborsVector[*nextNodeIterator].begin(),
-                    neighborsVector[*nextNodeIterator].end(),
-                    std::back_inserter(nodeList));
-          ++nextNodeIterator;
-        }
-        return true;
-      }
+                     const std::vector< std::list<size_t> >& neighborsVector);
 
     } // namespace privateCode
     /// @endcond

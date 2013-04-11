@@ -79,7 +79,10 @@ lib_LTLIBRARIES		= libbrickNumeric.la
 libbrickNumeric_la_SOURCES = \
 	ieeeFloat32.cc \
 	index2D.cc \
-	index3D.cc
+	index3D.cc \
+	transform2D.cc \
+	transform3D.cc \
+	transform3DTo2D.cc
 
 
 # List the files that need to be cleaned.

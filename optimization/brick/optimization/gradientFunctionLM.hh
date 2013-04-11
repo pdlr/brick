@@ -33,7 +33,7 @@ namespace brick {
      ** WARNING: This interface is not stable, and is likely to
      ** change.  In particular, GradientFunctionLM currently forces
      ** you to compute your gradient numerically.  Future updates will
-     ** allow you to do this symbolically if you like, but may slightl
+     ** allow you to do this symbolically if you like, but may slightly
      ** break existing code.
      **
      ** Template argument SSDFunctor is assumed to be a subclass of

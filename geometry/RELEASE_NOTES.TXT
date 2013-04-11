@@ -1,6 +1,12 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.1
+
+- Updated build files.
+- Added Ellipse2D class template.
+- Added Bullseye2D class template.
+
 Revision 1.0
 
 - Created brick::geometry by adapting dlrGeometry version 0.3.

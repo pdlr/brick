@@ -119,7 +119,7 @@ namespace brick {
        */
       void
       setNumberOfRestarts(size_t numberOfRestarts) {
-        m_numberOfRestarts = numberOfRestarts;
+        this->m_numberOfRestarts = numberOfRestarts;
       }
 
     
@@ -198,7 +198,7 @@ namespace brick {
        * means no output, 3 means lots.
        */
       virtual void
-      setVerbosity(int verbosity) {m_verbosity = verbosity;}
+      setVerbosity(int verbosity) {this->m_verbosity = verbosity;}
 
       /**
        * Assignment operator.
@@ -405,7 +405,7 @@ namespace brick {
         m_verbosity(0)
     {
       this->setParameters(argument_type());
-      m_deltaValueHack = true;
+      this->m_deltaValueHack = true;
     }
 
 
@@ -420,7 +420,7 @@ namespace brick {
         m_verbosity(0)
     {
       this->setParameters(argument_type());
-      m_deltaValueHack = true;
+      this->m_deltaValueHack = true;
     }
 
     // Copy constructor.
@@ -439,7 +439,7 @@ namespace brick {
         m_functionCallCount(source.m_functionCallCount),
         m_verbosity(source.m_verbosity)
     {
-      copyArgumentType(source.m_delta, m_delta);
+      copyArgumentType(source.m_delta, this->m_delta);
     }
 
     // Destructor.
@@ -459,7 +459,7 @@ namespace brick {
     OptimizerNelderMead<Functor>::
     getNumberOfFunctionCalls()
     {
-      return m_functionCallCount;
+      return this->m_functionCallCount;
     }
 
 
@@ -471,7 +471,7 @@ namespace brick {
     OptimizerNelderMead<Functor>::
     setDelta(const typename OptimizerNelderMead<Functor>::argument_type& delta)
     {
-      copyArgumentType(delta, m_delta);
+      copyArgumentType(delta, this->m_delta);
     }
   
   
@@ -489,15 +489,15 @@ namespace brick {
                   double minimumSimplexValueSpan,
                   size_t verbosity)
     {
-      copyArgumentType(delta, m_delta);
-      m_functionCallLimit = functionCallLimit;
-      m_numberOfRestarts = numberOfRestarts;
-      m_alpha = alpha;
-      m_beta = beta;
-      m_gamma = gamma;
-      m_minimumSimplexValueSpan = minimumSimplexValueSpan;
-      m_verbosity = verbosity;
-      m_deltaValueHack = false;
+      copyArgumentType(delta, this->m_delta);
+      this->m_functionCallLimit = functionCallLimit;
+      this->m_numberOfRestarts = numberOfRestarts;
+      this->m_alpha = alpha;
+      this->m_beta = beta;
+      this->m_gamma = gamma;
+      this->m_minimumSimplexValueSpan = minimumSimplexValueSpan;
+      this->m_verbosity = verbosity;
+      this->m_deltaValueHack = false;
 
       // Inherited member
       Optimizer<Functor>::m_needsOptimization = true;
@@ -510,7 +510,7 @@ namespace brick {
     OptimizerNelderMead<Functor>::
     setStartPoint(argument_type startPoint)
     {
-      m_theta0 = startPoint;
+      this->m_theta0 = startPoint;
 
       // Inherited member
       Optimizer<Functor>::m_needsOptimization = true;
@@ -524,15 +524,15 @@ namespace brick {
     operator=(const OptimizerNelderMead<Functor>& source)
     {
       Optimizer<Functor>::operator=(source);
-      m_delta = source.m_delta;
-      m_functionCallLimit = source.m_functionCallLimit;
-      m_numberOfRestarts = source.m_numberOfRestarts;
-      m_alpha = source.m_alpha;
-      m_beta = source.m_beta;
-      m_gamma = source.m_gamma;
-      m_minimumSimplexValueSpan = source.m_minimumSimplexValueSpan;
-      m_deltaValueHack = source.m_deltaValueHack;
-      m_functionCallCount = source.m_functionCallCount;
+      this->m_delta = source.m_delta;
+      this->m_functionCallLimit = source.m_functionCallLimit;
+      this->m_numberOfRestarts = source.m_numberOfRestarts;
+      this->m_alpha = source.m_alpha;
+      this->m_beta = source.m_beta;
+      this->m_gamma = source.m_gamma;
+      this->m_minimumSimplexValueSpan = source.m_minimumSimplexValueSpan;
+      this->m_deltaValueHack = source.m_deltaValueHack;
+      this->m_functionCallCount = source.m_functionCallCount;
     }
 
     // template <std::unary_function Functor>
@@ -577,7 +577,7 @@ namespace brick {
         currentValues = privateCode::take(currentValues, indices);
         currentPoints = privateCode::take(currentPoints, indices);
 
-        if(m_verbosity >= 3) {
+        if(this->m_verbosity >= 3) {
           std::cout << "\rCurrent best: " << std::setw(15) << currentValues[0]
                     << std::flush;
         }
@@ -590,43 +590,43 @@ namespace brick {
              / (std::fabs(currentValues[dimension])
                 + std::fabs(currentValues[0])));
         }
-        if(m_verbosity >= 3) {
+        if(this->m_verbosity >= 3) {
           std::cout << "         simplexValueSpan: "
                     << std::setw(15) << simplexValueSpan << std::flush;
         }
-        if((simplexValueSpan < m_minimumSimplexValueSpan)
-           || (numberOfFunctionCalls >= m_functionCallLimit)) {
-          if(m_verbosity >= 3) {
+        if((simplexValueSpan < this->m_minimumSimplexValueSpan)
+           || (numberOfFunctionCalls >= this->m_functionCallLimit)) {
+          if(this->m_verbosity >= 3) {
             std::cout << "\n";
           }
-          if(m_verbosity >= 1) {
+          if(this->m_verbosity >= 1) {
             std::cout << "Terminating with:\n"
                       << "  simplexValueSpan = " << simplexValueSpan
-                      << " (" << m_minimumSimplexValueSpan << ")\n";
+                      << " (" << this->m_minimumSimplexValueSpan << ")\n";
             std::cout << "  numberOfFunctionCalls = " << numberOfFunctionCalls
-                      << " (" << m_functionCallLimit << ")" << std::endl;
+                      << " (" << this->m_functionCallLimit << ")" << std::endl;
           }
           break;
         }
         result_type newValue =
           this->evaluateMove(currentPoints, currentValues, axisSums, 
-                             (-1.0 * m_alpha));
+                             (-1.0 * this->m_alpha));
         numberOfFunctionCalls += 1;
         this->computeAxisSums(currentPoints, axisSums);
         if(newValue <= currentValues[0]) {
           newValue = evaluateMove(currentPoints, currentValues, axisSums, 
-                                  m_gamma);
+                                  this->m_gamma);
           numberOfFunctionCalls += 1;
           this->computeAxisSums(currentPoints, axisSums);
         } else if (newValue >= currentValues[dimension - 1]) {
           result_type oldMaxValue = currentValues[dimension];
           newValue = evaluateMove(currentPoints, currentValues, axisSums, 
-                                  m_beta);
+                                  this->m_beta);
           numberOfFunctionCalls += 1;
           if(newValue >= oldMaxValue) {
             for(size_t i = 1; i < dimension + 1; ++i) {
               currentPoints[i] = 0.5 * (currentPoints[i] + currentPoints[0]);
-              currentValues[i] = m_functor(currentPoints[i]);
+              currentValues[i] = this->m_functor(currentPoints[i]);
               numberOfFunctionCalls += 1;
             }
           }
@@ -660,7 +660,7 @@ namespace brick {
       argument_type newPoint =
         ((centroidFactor * axisSums)
          + (extrapolationFactor * currentPoints[dimension]));
-      result_type newValue = m_functor(newPoint);
+      result_type newValue = this->m_functor(newPoint);
       if(newValue < currentValues[dimension]) {
         currentValues[dimension] = newValue;
         currentPoints[dimension] = newPoint;
@@ -675,34 +675,34 @@ namespace brick {
     OptimizerNelderMead<Functor>::
     run()
     {
-      size_t dimension = m_theta0.size();
+      size_t dimension = this->m_theta0.size();
       if(dimension == 0) {
         BRICK_THROW(brick::common::ValueException, "OptimizerNelderMead::run()",
                   "invalid starting point has zero size.");
       }
-      if(m_deltaValueHack) {
+      if(this->m_deltaValueHack) {
         // Initialize delta using only operations that we expect to be
         // supported by argtype, and which we don't expect to be
         // defined in surprising ways.
-        m_delta = (m_theta0 * 0.0) + 1.0;
-        m_deltaValueHack = false;
+        this->m_delta = (this->m_theta0 * 0.0) + 1.0;
+        this->m_deltaValueHack = false;
       }
     
       // The algorithm requires dimension + 1 initial points and values.
       std::vector<argument_type> currentPoints(dimension + 1);
       std::vector<result_type> currentValues(dimension + 1);
       // First point is the one specified by the user.
-      copyArgumentType(m_theta0, currentPoints[0]);
-      currentValues[0] = m_functor(currentPoints[0]);
+      copyArgumentType(this->m_theta0, currentPoints[0]);
+      currentValues[0] = this->m_functor(currentPoints[0]);
 
       // We'll repeat the whole minimization several times.
-      m_functionCallCount.clear();
-      for(size_t i = 0; i < m_numberOfRestarts + 1; ++i) {
-        // The remaining points will be built using m_delta
+      this->m_functionCallCount.clear();
+      for(size_t i = 0; i < this->m_numberOfRestarts + 1; ++i) {
+        // The remaining points will be built using this->m_delta
         for(size_t j = 0; j < dimension; ++j) {
           copyArgumentType(currentPoints[0], currentPoints[j + 1]);
-          (currentPoints[j + 1])[j] += m_delta[j];
-          currentValues[j + 1] = m_functor(currentPoints[j + 1]);
+          (currentPoints[j + 1])[j] += this->m_delta[j];
+          currentValues[j + 1] = this->m_functor(currentPoints[j + 1]);
         }
         size_t numberOfFunctionCalls = (i == 0) ? 1 : 0;
         numberOfFunctionCalls += dimension;
@@ -710,7 +710,7 @@ namespace brick {
         this->doNelderMead(currentPoints, currentValues, numberOfFunctionCalls);
         // Have to add dimension to numberOfFunctionCalls because of the
         // initialization steps above.
-        m_functionCallCount.push_back(numberOfFunctionCalls + dimension);
+        this->m_functionCallCount.push_back(numberOfFunctionCalls + dimension);
       }
       return std::make_pair(currentPoints[0], currentValues[0]);
     }

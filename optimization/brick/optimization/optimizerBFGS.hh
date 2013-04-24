@@ -243,7 +243,7 @@ namespace brick {
        * output.
        */
       virtual void
-      setVerbosity(int verbosity) {m_verbosity = verbosity;}
+      setVerbosity(int verbosity) {this->m_verbosity = verbosity;}
 
     
       /**
@@ -661,7 +661,7 @@ namespace brick {
       // a saddle point.  In either case, we don't know which way to go.
       // Instead, just terminate.
       if(dotArgumentType(currentGradient, currentGradient) == 0) {
-        if(m_verbosity > 0) {
+        if(this->m_verbosity > 0) {
           std::cout << "\nTerminating OptimizerBFGS::doBfgs() with "
                     << "zero gradient" << std::endl;
         }
@@ -725,7 +725,7 @@ namespace brick {
         numberOfFunctionCalls +=
           this->m_optimizerLineSearch.getNumberOfFunctionCalls();
 
-        if(m_verbosity > 1) {
+        if(this->m_verbosity > 1) {
           std::cout << "\rCalls: " << std::setw(10) << numberOfFunctionCalls
                     << ", " << std::setw(10) << numberOfGradientCalls
                     << "     Current value: "
@@ -741,7 +741,7 @@ namespace brick {
 
         // Test for adequately small objective value.
         if(currentValue <= this->m_minimumFunctionValue) {
-          if(m_verbosity > 0) {
+          if(this->m_verbosity > 0) {
             std::cout << "\nTerminating OptimizerBFGS::doBfgs() with "
                       << "objective value (" << currentValue 
                       << ") less than or equal to threshold ("
@@ -758,7 +758,7 @@ namespace brick {
         // Test for "insufficient parameter change" convergence.
         if(contextSensitiveScale(searchStep, thetaLocal)
            < this->m_argumentTolerance) {
-          if(m_verbosity > 0) {
+          if(this->m_verbosity > 0) {
             std::cout << "\nTerminating OptimizerBFGS::doBfgs() with "
                       << "search step magnitude ("
                       << dotArgumentType(searchStep, searchStep)
@@ -803,7 +803,7 @@ namespace brick {
         if(this->gradientConvergenceMetric(thetaLocal, currentValue,
                                            currentGradient)
            < this->m_gradientTolerance) {
-          if(m_verbosity > 0) {
+          if(this->m_verbosity > 0) {
             std::cout << "\nTerminating OptimizerBFGS::doBfgs() with "
                       << "small gradient." << std::endl;
           }

@@ -110,7 +110,7 @@ namespace brick {
        * 
        * @return A Functor instance.
        */
-      Functor objectiveFunction() {return m_functor;}
+      Functor objectiveFunction() {return this->m_functor;}
 
     
       /**
@@ -190,9 +190,9 @@ namespace brick {
       setOptimum(const typename Functor::argument_type& optimumArg,
                  const typename Functor::result_type& optimalValueArg,
                  bool needsFurtherOptimization) {
-        m_optimum = optimumArg;
-        m_optimalValue = optimalValueArg;
-        m_needsOptimization = needsFurtherOptimization;
+        this->m_optimum = optimumArg;
+        this->m_optimalValue = optimalValueArg;
+        this->m_needsOptimization = needsFurtherOptimization;
       }
     
     
@@ -266,7 +266,7 @@ namespace brick {
         m_needsOptimization(source.m_needsOptimization),
         m_optimum()
     {
-      copyArgumentType(source.m_optimum, m_optimum);
+      copyArgumentType(source.m_optimum, this->m_optimum);
     }
 
 
@@ -286,12 +286,12 @@ namespace brick {
     Optimizer<Functor>::
     getOptimalValue()
     {
-      if(m_needsOptimization==true) {
+      if(this->m_needsOptimization==true) {
         std::pair<argument_type, result_type> optimum_optimalValue = this->run();
         this->setOptimum(
           optimum_optimalValue.first, optimum_optimalValue.second, false);
       }
-      return m_optimalValue;
+      return this->m_optimalValue;
     }
 
     // Find the optimum of the current Functor, if necessary, and
@@ -301,12 +301,12 @@ namespace brick {
     Optimizer<Functor>::
     getOptimum()
     {
-      if(m_needsOptimization==true) {
+      if(this->m_needsOptimization==true) {
         std::pair<argument_type, result_type> optimum_optimalValue = this->run();
         this->setOptimum(
           optimum_optimalValue.first, optimum_optimalValue.second, false);
       }
-      return m_optimum;
+      return this->m_optimum;
     }
 
 
@@ -317,9 +317,9 @@ namespace brick {
     operator=(const Optimizer& source)
     {
       if(&source != this) {
-        m_functor = source.m_functor;
-        m_needsOptimization = source.m_needsOptimization;
-        copyArgumentType(source.m_optimum, m_optimum);
+        this->m_functor = source.m_functor;
+        this->m_needsOptimization = source.m_needsOptimization;
+        copyArgumentType(source.m_optimum, this->m_optimum);
       }
       return *this;
     }
@@ -331,8 +331,8 @@ namespace brick {
     Optimizer<Functor>::
     setObjectiveFunction(const Functor& functor)
     {
-      m_functor = functor;
-      m_needsOptimization = true;
+      this->m_functor = functor;
+      this->m_needsOptimization = true;
     }
 
   } // namespace optimization

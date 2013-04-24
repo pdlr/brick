@@ -1,6 +1,10 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.2
+
+- Fixed a compile error when using recent g++.
+
 Revision 1.1
 
 - Updated build files.

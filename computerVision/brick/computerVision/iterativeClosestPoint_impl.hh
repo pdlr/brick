@@ -34,6 +34,7 @@ namespace brick {
     IterativeClosestPoint()
       : m_convergenceThreshold(0.1), // TBD: set this and add better term crit.
         m_distanceThreshold(1.0),    // TBD: set this and add better criterion.
+        m_iterationCount(0),
         m_modelTree()
     {
       // Empty.
@@ -68,28 +69,39 @@ namespace brick {
       Iter beginIter, Iter endIter,
       brick::numeric::Transform3D<FloatType> const& modelFromQueryEstimate)
     {
-      std::vector<Type>      queryPoints(beginIter, endIter);
-      std::vector<FloatType> weights;
-      std::vector<Type>      selectedQueryPoints;
-      std::vector<Type>      matchingModelPoints;
+      std::vector<Type>        queryPoints(beginIter, endIter);
+      std::vector<FloatType>   weights;
+      std::vector<Type>        selectedQueryPoints;
+      std::vector<Type const*> matchingModelPointAddresses;
 
       weights.reserve(            queryPoints.size());
       selectedQueryPoints.reserve(queryPoints.size());
-      matchingModelPoints.reserve(queryPoints.size());
+      matchingModelPointAddresses.reserve(queryPoints.size());
 
       brick::numeric::Transform3D<FloatType> modelFromQuery =
         modelFromQueryEstimate;
 
-      unsigned int count = 0;
+      m_iterationCount = 0;
+      unsigned int pointCount = 0;
       FloatType rmsError(0);
       bool isConverged = false;
       while(!isConverged) {
-        this->selectQueryPoints(selectedQueryPoints, queryPoints);
-        isConverged |= this->findMatches(
-          matchingModelPoints, weights, count, rmsError, selectedQueryPoints,
-          modelFromQuery);
+        bool isQuerySetChanged = this->selectQueryPoints(
+          selectedQueryPoints, queryPoints);
+        bool isMatchingSetChanged = this->findMatches(
+          matchingModelPointAddresses, weights, pointCount, rmsError,
+          selectedQueryPoints, modelFromQuery);
+
+        // Check for convergence.
+        if(!isQuerySetChanged && !isMatchingSetChanged) {
+          isConverged = true;
+          continue;
+        }
+
+        // Re-estimate coordinate transformation.
         modelFromQuery = this->estimateTransformModelFromQuery(
-          selectedQueryPoints, matchingModelPoints, weights);
+          selectedQueryPoints, matchingModelPointAddresses, weights);
+        ++m_iterationCount;
       }
 
       return modelFromQuery;
@@ -116,9 +128,14 @@ namespace brick {
     IterativeClosestPoint<Dimension, Type, FloatType>::
     estimateTransformModelFromQuery(
       std::vector<Type> const& selectedQueryPoints,
-      std::vector<Type> const& matchingModelPoints,
+      std::vector<Type const*> const& matchingModelPointAddresses,
       std::vector<FloatType> const& weights)
     {
+      std::vector<Type> matchingModelPoints(matchingModelPointAddresses.size());
+      for(unsigned int ii = 0; ii < matchingModelPointAddresses.size(); ++ii) {
+        matchingModelPoints[ii] = *(matchingModelPointAddresses[ii]);
+      }
+      
       return registerPoints3D<FloatType>(selectedQueryPoints.begin(),
                                          selectedQueryPoints.end(),
                                          matchingModelPoints.begin(),
@@ -130,7 +147,7 @@ namespace brick {
     template <unsigned int Dimension, class Type, class FloatType>
     bool
     IterativeClosestPoint<Dimension, Type, FloatType>::
-    findMatches(std::vector<Type>& matchingModelPoints,
+    findMatches(std::vector<Type const*>& matchingModelPointAddresses,
                 std::vector<FloatType>& weights,
 		unsigned int& count,
 		FloatType& rmsError,
@@ -139,21 +156,38 @@ namespace brick {
     {
       count = 0;
       rmsError = FloatType(0);
+      bool isMatchingSetChanged = false;
 
-      if(matchingModelPoints.size() != queryPoints.size()) {
-        matchingModelPoints.resize(queryPoints.size());
+      // Make sure output arrays are initialized.
+      if(matchingModelPointAddresses.size() != queryPoints.size()) {
+        matchingModelPointAddresses.resize(queryPoints.size());
+        isMatchingSetChanged = true;
       }
       if(weights.size() != queryPoints.size()) {
         weights.resize(queryPoints.size());
+        isMatchingSetChanged = true;
       }
 
+      // Iterate over all query points.
       for(unsigned int ii = 0; ii < queryPoints.size(); ++ii) {
-        FloatType distance;
+
+        // Transform the query point using our best-so-far estimate of
+        // the final coordinate transformation.
         brick::numeric::Vector3D<FloatType> transformedQueryPoint =
           modelFromQuery * queryPoints[ii];
-        matchingModelPoints[ii] = this->m_modelTree.findNearest(
-          transformedQueryPoint, distance);
 
+        // Find the model point that is nearest to the current
+        // transformed query point.
+        FloatType distance;
+        Type const* matchingPointPtr = &(this->m_modelTree.findNearest(
+                                           transformedQueryPoint, distance));
+
+        // Notice if this particular point match has changed since the
+        // last ICP iteration, and remember the match.
+        isMatchingSetChanged |= (matchingPointPtr
+                                 != matchingModelPointAddresses[ii]);
+        matchingModelPointAddresses[ii] = matchingPointPtr;
+                                 
         // Checks of normals, etc., go here.
         if(distance < this->m_distanceThreshold) {
           weights[ii] = 1.0;
@@ -168,20 +202,21 @@ namespace brick {
       typedef unsigned int UInt;
       count = std::max(count, UInt(1));
       rmsError = brick::common::squareRoot(rmsError / count);
-      if(rmsError < m_convergenceThreshold) {
-        return true;
-      }
-      return false;
+
+      // Tell the calling context whether this ICP iteration has any
+      // new point-to-point correspondences.
+      return isMatchingSetChanged;
     }
     
 
     template <unsigned int Dimension, class Type, class FloatType>
-    void
+    bool
     IterativeClosestPoint<Dimension, Type, FloatType>::
     selectQueryPoints(std::vector<Type>& selectedQueryPoints,
                       std::vector<Type> const& allQueryPoints)
     {
       selectedQueryPoints = allQueryPoints;
+      return false;
     }
 
   } // namespace computerVision

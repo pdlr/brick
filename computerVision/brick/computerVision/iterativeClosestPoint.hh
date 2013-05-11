@@ -61,6 +61,10 @@ namespace brick {
       ~IterativeClosestPoint();
 
 
+      unsigned int
+      getIterationCount() {return m_iterationCount;}
+      
+
       brick::numeric::Transform3D<FloatType>
       getTransform();
 
@@ -88,12 +92,12 @@ namespace brick {
       brick::numeric::Transform3D<FloatType>
       estimateTransformModelFromQuery(
         std::vector<Type> const& selectedQueryPoints,
-        std::vector<Type> const& matchingModelPoints,
+        std::vector<Type const*> const& matchingModelPointAddresses,
         std::vector<FloatType> const& weights);
 
 
       bool
-      findMatches(std::vector<Type>& matchingModelPoints,
+      findMatches(std::vector<Type const*>& matchingModelPointAddresses,
                   std::vector<FloatType>& weights,
 		  unsigned int& count,
 		  FloatType& rmsError,
@@ -101,13 +105,14 @@ namespace brick {
                   brick::numeric::Transform3D<FloatType> const& modelFromQuery);
 
 
-      void
+      bool
       selectQueryPoints(std::vector<Type>& selectedQueryPoints,
                         std::vector<Type> const& allQueryPoints);
 
 
       FloatType                          m_convergenceThreshold;
       FloatType                          m_distanceThreshold;
+      unsigned int                       m_iterationCount;
       KDTree<Dimension, Type, FloatType> m_modelTree;
 
     };

@@ -20,7 +20,6 @@
 namespace com = brick::common;
 namespace num = brick::numeric;
 
-
 namespace brick {
 
   namespace computerVision {
@@ -71,14 +70,22 @@ namespace brick {
       double       const maxTranslation  = 0.2;
       unsigned int const numTranslations = 2;
 
+      double const translationIncrement =
+        2.0 * maxTranslation / (numTranslations - 1);
+      double const rotationIncrement =
+        2.0 * maxRotation / (numRotations - 1);
+      
       std::vector< num::Vector3D<double> > modelPoints;
 
-      // Set up a well behaved shape to register.
+      // Set up a well behaved shape to register.  Note that this
+      // periodic pattern is susceptible to local minima in the the
+      // ICP match.  If you change it, be prepared for the test to
+      // fail.
       for(unsigned int ii = 0; ii < extent; ++ii) {
         for(unsigned int jj = 0; jj < extent; ++jj) {
           double xValue(ii);
           double yValue(jj);
-          double zValue = (std::sin(4.0 * xValue / extent)
+          double zValue = (std::sin(8.5 * xValue / extent)
                            * std::cos(5.0 * yValue / extent));
           modelPoints.push_back(num::Vector3D<double>(xValue, yValue, zValue));
         }
@@ -86,20 +93,32 @@ namespace brick {
 
       // Iterate through a bunch of different ground truth rotations
       // and translations.
-      for(double roll = -maxRotation; roll <= maxRotation; 
-          roll += (2 * maxRotation / numRotations)) {
-        for(double pitch = -maxRotation; pitch <= maxRotation; 
-            pitch += (2 * maxRotation / numRotations)) {
-          for(double yaw = -maxRotation; yaw <= maxRotation; 
-              yaw += (2 * maxRotation / numRotations)) {
-            for(double tx = -maxTranslation; tx <= maxTranslation; 
-                tx += (2 * maxTranslation / numTranslations)) {
-              for(double ty = -maxTranslation; ty <= maxTranslation; 
-                  ty += (2 * maxTranslation / numTranslations)) {
-                for(double tz = -maxTranslation; tz <= maxTranslation; 
-                    tz += (2 * maxTranslation / numTranslations)) {
+      double roll = -maxRotation;
+      for(unsigned int rollCount = 0; rollCount < numRotations;
+          ++rollCount, roll += rotationIncrement) {
+        double pitch = -maxRotation;
+        for(unsigned int pitchCount = 0; pitchCount < numRotations;
+            ++pitchCount, pitch += rotationIncrement) {
+          double yaw = -maxRotation;
+          for(unsigned int yawCount = 0; yawCount < numRotations;
+              ++yawCount, yaw += rotationIncrement) {
+            double tx = -maxTranslation;
+            for(unsigned int txCount = 0; txCount < numTranslations;
+                ++txCount, tx += translationIncrement) {
+              double ty = -maxTranslation;
+              for(unsigned int tyCount = 0; tyCount < numTranslations;
+                  ++tyCount, ty += translationIncrement) {
+                double tz = -maxTranslation;
+                for(unsigned int tzCount = 0; tzCount < numTranslations;
+                    ++tzCount, tz += translationIncrement) {
 
-                  std::cout << "." << std::flush;
+                  // std::cout << "." << std::flush;
+                  std::cout << roll << ",\t"
+                            << pitch << ",\t"
+                            << yaw << ",\t"
+                            << tx << ",\t"
+                            << ty << ",\t"
+                            << tz << std::endl;
                   
                   // Build a ground truth coordinate transform.
                   num::Vector3D<double> rollPitchYaw(roll, pitch, yaw);
@@ -129,7 +148,7 @@ namespace brick {
                     modelFromObservedEstimate);
                   observedFromModelEstimate = 
                     modelFromObservedEstimate.invert();
-
+                  
                   // Verify that we've recovered the correct transform.
                   double txEstimate = observedFromModelEstimate(0, 3);
                   double tyEstimate = observedFromModelEstimate(1, 3);

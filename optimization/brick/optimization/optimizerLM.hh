@@ -143,7 +143,7 @@ namespace brick {
        * this many iterations.
        */
       virtual void
-      setMaxIterations(size_t maxIterations) {m_maxIterations = maxIterations;}
+      setMaxIterations(size_t maxIterations) {this->m_maxIterations = maxIterations;}
 
       
       /**
@@ -154,7 +154,7 @@ namespace brick {
        * "lambda" increases beyound this amount.
        */
       virtual void
-      setMaxLambda(double maxLambda) {m_maxLambda = maxLambda;}
+      setMaxLambda(double maxLambda) {this->m_maxLambda = maxLambda;}
 
       
       /**
@@ -166,7 +166,7 @@ namespace brick {
        * consecutive iterations.
        */
       virtual void
-      setMinDrop(double minDrop) {m_minDrop = minDrop;}
+      setMinDrop(double minDrop) {this->m_minDrop = minDrop;}
 
     
       /**
@@ -260,7 +260,7 @@ namespace brick {
        * output.
        */
       virtual void
-      setVerbosity(int verbosity) {m_verbosity = verbosity;}
+      setVerbosity(int verbosity) {this->m_verbosity = verbosity;}
 
     
       /**
@@ -505,17 +505,17 @@ namespace brick {
     {
       if(&source != this) {
         Optimizer<Functor>::operator=(source);
-        m_initialLambda = source.m_initialLambda;
-        m_maxBackSteps = source.m_maxBackSteps;
-        m_maxIterations = source.m_maxIterations;
-        m_maxLambda = source.m_maxLambda;
-        m_minDrop = source.m_minDrop;
-        m_minError = source.m_minError;
-        m_minGrad = source.m_minGrad;
-        m_minLambda = source.m_minLambda;
+        this->m_initialLambda = source.m_initialLambda;
+        this->m_maxBackSteps = source.m_maxBackSteps;
+        this->m_maxIterations = source.m_maxIterations;
+        this->m_maxLambda = source.m_maxLambda;
+        this->m_minDrop = source.m_minDrop;
+        this->m_minError = source.m_minError;
+        this->m_minGrad = source.m_minGrad;
+        this->m_minLambda = source.m_minLambda;
         copyArgumentType(source.m_startPoint, this->m_startPoint);
-        m_strikes = source.m_strikes;
-        m_verbosity = source.m_verbosity;
+        this->m_strikes = source.m_strikes;
+        this->m_verbosity = source.m_verbosity;
       }
       return *this;
     }
@@ -555,8 +555,8 @@ namespace brick {
       brick::numeric::Array1D<brick::common::Float64> deltaX(theta.size());
       argument_type xCond(theta.size());
       brick::numeric::Array1D<result_type> errorHistory =
-        brick::numeric::zeros<result_type>(m_maxIterations + 1);
-      brick::common::Float64 lambda = m_initialLambda;
+        brick::numeric::zeros<result_type>(this->m_maxIterations + 1);
+      brick::common::Float64 lambda = this->m_initialLambda;
 
       // Get initial value of error function.
       errorValue = this->m_functor(theta);
@@ -565,19 +565,19 @@ namespace brick {
 
       // Loop until termination.
       size_t iterationIndex = 0;
-      for(; iterationIndex < m_maxIterations; ++iterationIndex) {
+      for(; iterationIndex < this->m_maxIterations; ++iterationIndex) {
 
         // Compute gradient.
         this->m_functor.computeGradientAndHessian(theta, dEdX, d2EdX2);
 
         // Gradient almost zero?
-        if(dotArgumentType(dEdX,dEdX) <= m_minGrad) {
+        if(dotArgumentType(dEdX,dEdX) <= this->m_minGrad) {
           this->verboseWrite("Tiny gradient, terminating iteration.\n", 1);
           break;
         }
 
         // Adjust lambda.
-        while(lambda <= m_maxLambda) {
+        while(lambda <= this->m_maxLambda) {
 
           // Precondition the Hessian matrix.
           std::copy(d2EdX2.begin(), d2EdX2.end(), BMatrix.begin());
@@ -604,8 +604,8 @@ namespace brick {
             errorHistory[iterationIndex + 1] = errorValue;
             copyArgumentType(xCond, theta);
             lambda /= 10.0;
-            if(lambda < m_minLambda) {
-              lambda = m_minLambda;
+            if(lambda < this->m_minLambda) {
+              lambda = this->m_minLambda;
             }
             this->verboseWrite("Lambda = ", lambda, 1);
             this->verboseWrite("Theta = ", theta, 2);
@@ -614,22 +614,22 @@ namespace brick {
             // Error did not decrease.  Try a bigger lambda.
             ++backtrackCount;
             lambda *= 10.0;
-            if(lambda > m_maxLambda) {
+            if(lambda > this->m_maxLambda) {
               break;
             }
             this->verboseWrite("Lambda = ", lambda, 1);
 
             // Make sure we haven't exceeded the maxBackSteps
             // termination criterion.
-            if(m_maxBackSteps >= 0
-               && backtrackCount > m_maxBackSteps) {
+            if(this->m_maxBackSteps >= 0
+               && backtrackCount > this->m_maxBackSteps) {
               break;
             }
 
           }
         }
 
-        if(m_verbosity >= 1 ) {
+        if(this->m_verbosity >= 1 ) {
           std::cout << "Error History:\n" << errorHistory << std::endl;
         }
 // Note(xxx):  Not sure if we still want this functionality.
@@ -641,28 +641,28 @@ namespace brick {
         brick::common::Float64 drop =
           (errorHistory[iterationIndex] - errorValue)
           / errorHistory[iterationIndex];
-        if(drop < m_minDrop) {
+        if(drop < this->m_minDrop) {
           ++strikes;
-          if(m_verbosity >= 2) {
+          if(this->m_verbosity >= 2) {
             std::cout << "strikes = " << strikes << std::endl;
           }
         } else {
           strikes = 0;
         }
 
-        if(lambda >= m_maxLambda 
-           || strikes == m_strikes 
-           || errorHistory[iterationIndex] <= m_minError 
-           || (m_maxBackSteps >= 0 && backtrackCount >= m_maxBackSteps)) {
-          if(m_verbosity >= 1) {
+        if(lambda >= this->m_maxLambda 
+           || strikes == this->m_strikes 
+           || errorHistory[iterationIndex] <= this->m_minError 
+           || (this->m_maxBackSteps >= 0 && backtrackCount >= this->m_maxBackSteps)) {
+          if(this->m_verbosity >= 1) {
             std::cout << "Stopping with lambda = " << lambda
-                      << " (" << m_maxLambda << ")\n"
+                      << " (" << this->m_maxLambda << ")\n"
                       << "              strikes = " << strikes
-                      << " (" << m_strikes << ")\n"
+                      << " (" << this->m_strikes << ")\n"
                       << "              error = " << errorHistory[iterationIndex]
-                      << " (" << m_minError << ")\n"
+                      << " (" << this->m_minError << ")\n"
                       << "              backTrackCount = " << backtrackCount
-                      << " (" << m_maxBackSteps << ")" << std::endl;
+                      << " (" << this->m_maxBackSteps << ")" << std::endl;
           }
           break;
         }

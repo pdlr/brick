@@ -8,7 +8,7 @@ dnl
 
 
 dnl Initialization.
-AC_INIT(bricktest, 1.1)
+AC_INIT(bricktest, 1.2)
 AC_CONFIG_SRCDIR(brick/test/Makefile.am)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR([m4])

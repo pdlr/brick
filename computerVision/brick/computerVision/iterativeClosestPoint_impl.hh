@@ -86,11 +86,18 @@ namespace brick {
       FloatType rmsError(0);
       bool isConverged = false;
       while(!isConverged) {
+
+        // Pick the starting point for our next ICP iteration.
+        brick::numeric::Transform3D<FloatType> modelFromQueryHypothesis =
+          modelFromQuery;
+
+        // Set up the next ICP registration by selecting query points
+        // and corresponding model points.
         bool isQuerySetChanged = this->selectQueryPoints(
           selectedQueryPoints, queryPoints);
         bool isMatchingSetChanged = this->findMatches(
           matchingModelPointAddresses, weights, pointCount, rmsError,
-          selectedQueryPoints, modelFromQuery);
+          selectedQueryPoints, modelFromQueryHypothesis);
 
         // Check for convergence.
         if(!isQuerySetChanged && !isMatchingSetChanged) {
@@ -101,6 +108,7 @@ namespace brick {
         // Re-estimate coordinate transformation.
         modelFromQuery = this->estimateTransformModelFromQuery(
           selectedQueryPoints, matchingModelPointAddresses, weights);
+        
         ++m_iterationCount;
       }
 

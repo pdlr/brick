@@ -112,14 +112,6 @@ namespace brick {
                 for(unsigned int tzCount = 0; tzCount < numTranslations;
                     ++tzCount, tz += translationIncrement) {
 
-                  // std::cout << "." << std::flush;
-                  std::cout << roll << ",\t"
-                            << pitch << ",\t"
-                            << yaw << ",\t"
-                            << tx << ",\t"
-                            << ty << ",\t"
-                            << tz << std::endl;
-                  
                   // Build a ground truth coordinate transform.
                   num::Vector3D<double> rollPitchYaw(roll, pitch, yaw);
                   num::Transform3D<double> observedFromModel =

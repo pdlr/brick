@@ -1,6 +1,10 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.2
+
+- Bugfix to allow building on OS X.
+
 Revision 1.1
 
 - Updated build files.

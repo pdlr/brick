@@ -527,7 +527,7 @@ namespace brick {
       if(m_size > 0) {
         // Allocate data storage.  new() should throw an exception if
         // we run out of memory.
-        m_dataPtr = new(Type[m_size]);
+        m_dataPtr = new Type[m_size];
  
         // Set reference count to show that exactly one Array is pointing
         // to this data.

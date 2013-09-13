@@ -412,7 +412,7 @@ namespace brick {
       // TextOutputType is the type one would use to write out a value
       // of Type.  Not surprisingly, this is the type you need to use
       // when reading those values back in.
-      typedef typename NumericTraits<Type>::TextOutputType InputType;
+      // typedef typename NumericTraits<Type>::TextOutputType InputType;
 
       // If stream is in a bad state, we can't read from it.
       if (!inputStream){
@@ -865,7 +865,7 @@ namespace brick {
       if(m_storageSize > 0) {
         // Allocate data storage.  new() should throw an exception if
         // we run out of memory.
-        m_dataPtr = new(Type[m_storageSize]);
+        m_dataPtr = new Type[m_storageSize];
 
         // Set reference count to show that exactly one Array is pointing
         // to this data.

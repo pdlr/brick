@@ -35,6 +35,34 @@ namespace brick {
 
     
     /** 
+     * This function template takes the place of std::acos(),
+     * std::acosf(), std::acosl(), etc., hopefully enabling generic
+     * code.
+     * 
+     * @param arg This argument will have its arccosine computed.
+     * 
+     * @return The return value is the arccosine of arg, expressed in
+     * radians.
+     */
+    template <class Type>
+    inline Type arccosine(Type arg);
+
+
+    /** 
+     * This function template takes the place of std::asin(),
+     * std::asinf(), std::asinl(), etc., hopefully enabling generic
+     * code.
+     * 
+     * @param arg This argument will have its arcsine computed.
+     * 
+     * @return The return value is the arcsine of arg, expressed in
+     * radians.
+     */
+    template <class Type>
+    inline Type arcsine(Type arg);
+    
+    
+    /** 
      * This function template takes the place of std::atan2(),
      * std::atan2f(), std::atan2l(), etc., hopefully enabling generic
      * code.
@@ -43,11 +71,11 @@ namespace brick {
      * 
      * @param xx This argument proportional to cos(theta).
      * 
-     * @return The return value is the principal of the arc tangent of
-     * (yy/xx).
+     * @return The return value is the principal value of the arc
+     * tangent of (yy/xx), expressed in radians.
      */
     template <class Type>
-    inline Type arcTangent2(Type yy, Type xx);
+    inline Type arctangent2(Type yy, Type xx);
 
 
     /** 
@@ -169,7 +197,35 @@ namespace brick {
 
     
     template <class Type>
-    inline Type arcTangent2(Type yy, Type xx) {
+    inline Type arccosine(Type arg) {
+      return static_cast<Type>(std::acos(static_cast<double>(arg)));
+    }
+
+    /* ======== Need to figure out how to test for cosf()  ======== */
+    /* ======== and cosl() availability                    ======== */
+    // template<>
+    // inline float arccosine(float arg) {return std::acosf(arg);}
+    //
+    // template<>
+    // inline long double arccosine(long double arg) {return std::acosl(arg);}
+
+    
+    template <class Type>
+    inline Type arcsine(Type arg) {
+      return static_cast<Type>(std::asin(static_cast<double>(arg)));
+    }
+
+    /* ======== Need to figure out how to test for sinf()  ======== */
+    /* ======== and sinl() availability                    ======== */
+    // template<>
+    // inline float arcsine(float arg) {return std::asinf(arg);}
+    //
+    // template<>
+    // inline long double arcsine(long double arg) {return std::asinl(arg);}
+
+    
+    template <class Type>
+    inline Type arctangent2(Type yy, Type xx) {
       return static_cast<Type>(
         std::atan2(static_cast<double>(yy), static_cast<double>(xx)));
     }
@@ -178,10 +234,10 @@ namespace brick {
     /* ======== Need to figure out how to test for atan2f()  ======== */
     /* ======== and atan2l() availability                    ======== */
     // template <>
-    // inline float arcTangent2(float arg) {return std::atan2f(yy, xx);}
+    // inline float arctangent2(float arg) {return std::atan2f(yy, xx);}
     //
     // template <>
-    // inline long double arcTangent2(long double) {
+    // inline long double arctangent2(long double) {
     //   return std::atan2l(yy, xx);
     // }
 

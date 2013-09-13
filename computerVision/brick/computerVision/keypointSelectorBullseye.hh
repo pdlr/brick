@@ -80,9 +80,6 @@ namespace brick {
       /** 
        * Default constructor.
        * 
-       * @param kappa This argument is the free parameter in the
-       * Bullseye corner metric computation.
-       * 
        * @param maxNumberOfBullseyes Use this argument to indicate how
        * many bullseye targets you expect to find in the image.
        *
@@ -96,13 +93,22 @@ namespace brick {
        * smallest bullseye you expect to see is 8 pixels across, set
        * this to 4 (because radius is half of diameter).
        *
+       * @param numberOfTransitions This argument tells the selector
+       * how many light-to-dark and dark-to-light transitions to
+       * expect when moving from the center of the bulllseye toward
+       * the edge.  For example, a bullseye with a colored center and
+       * one colored ring would have 3 transitions (center to lighter
+       * background; background to first ring; and first ring to
+       * background).
+       *
        * @param isGeneralPositionRequired Use this argument to turn
        * off computation of subpixel bullseye positions if you don't
        * want them.  This saves a little bit of computation.
        */
-      KeypointSelectorBullseye(unsigned int maxNumberOfBullseyes,
-                               unsigned int maxRadius,
-                               unsigned int minRadius,
+      KeypointSelectorBullseye(brick::common::UInt32 maxNumberOfBullseyes,
+                               brick::common::UInt32 maxRadius,
+                               brick::common::UInt32 minRadius,
+                               brick::common::UInt32 numberOfTransitions = 3,
                                bool isGeneralPositionRequired = true);
 
 
@@ -209,10 +215,10 @@ namespace brick {
        */
       void
       setImage(Image<GRAY8> const& inImage,
-               unsigned int startRow,
-               unsigned int startColumn,
-               unsigned int stopRow,
-               unsigned int stopColumn);
+               brick::common::UInt32 startRow,
+               brick::common::UInt32 startColumn,
+               brick::common::UInt32 stopRow,
+               brick::common::UInt32 stopColumn);
 
 
     private:
@@ -226,30 +232,30 @@ namespace brick {
       accumulateAsymmetrySums(
         brick::common::Int32 pixel0,
         brick::common::Int32 pixel1,
-        brick::common::UnsignedInt32& pixelSum,
-        brick::common::UnsignedInt32& pixelSquaredSum,
-        brick::common::UnsignedInt32& asymmetrySum) const;
+        brick::common::UInt32& pixelSum,
+        brick::common::UInt32& pixelSquaredSum,
+        brick::common::UInt32& asymmetrySum) const;
 
 
       bool
       countTransitions(std::vector<brick::common::UInt8> const& spoke,
-                       unsigned int numberOfTransitions,
+                       brick::common::UInt32 numberOfTransitions,
                        brick::common::UInt8 minDynamicRange,
                        brick::common::UInt8& darkColor,
                        brick::common::UInt8& lightColor,
-                       unsigned int minRadius,
-                       unsigned int& actualRadius) const;
+                       brick::common::UInt32 minRadius,
+                       brick::common::UInt32& actualRadius) const;
       
       
       // Make sure bounding box of processing region is sane.
       void
-      checkAndRepairRegionOfInterest(unsigned int rows,
-                                     unsigned int columns,
-                                     unsigned int radius,
-                                     unsigned int& startRow,
-                                     unsigned int& startColumn,
-                                     unsigned int& stopRow,
-                                     unsigned int& stopColumn) const;
+      checkAndRepairRegionOfInterest(brick::common::UInt32 rows,
+                                     brick::common::UInt32 columns,
+                                     brick::common::UInt32 radius,
+                                     brick::common::UInt32& startRow,
+                                     brick::common::UInt32& startColumn,
+                                     brick::common::UInt32& stopRow,
+                                     brick::common::UInt32& stopColumn) const;
 
 
       bool
@@ -257,7 +263,7 @@ namespace brick {
         brick::geometry::Bullseye2D<FloatType>& bullseye,
         std::vector< std::vector< brick::numeric::Vector2D<FloatType> > > const&
           edgePositions,
-        unsigned int numberOfTransitions) const;
+        brick::common::UInt32 numberOfTransitions) const;
 
       
       // Estimate how much the target is squished along each axis.  Is
@@ -265,8 +271,8 @@ namespace brick {
       void
       estimateScale(
         Image<GRAY8> const& image,
-        unsigned int radius,
-        unsigned int row, unsigned int column,
+        brick::common::UInt32 radius,
+        brick::common::UInt32 row, brick::common::UInt32 column,
         KeypointBullseye<brick::common::Int32, FloatType>& keypoint) const;
 
 
@@ -277,13 +283,13 @@ namespace brick {
       // evaluateAsymmetry() (where low means "symmetrical").
       FloatType
       estimateAsymmetryThreshold(Image<GRAY8> const& inImage,
-                                 unsigned int minRadius,
-                                 unsigned int maxRadius,
-                                 unsigned int startRow,
-                                 unsigned int startColumn,
-                                 unsigned int stopRow,
-                                 unsigned int stopColumn,
-                                 unsigned int numberOfSamples) const;
+                                 brick::common::UInt32 minRadius,
+                                 brick::common::UInt32 maxRadius,
+                                 brick::common::UInt32 startRow,
+                                 brick::common::UInt32 startColumn,
+                                 brick::common::UInt32 stopRow,
+                                 brick::common::UInt32 stopColumn,
+                                 brick::common::UInt32 numberOfSamples) const;
 
 
       // See if an image location is plausibly the center of a
@@ -292,8 +298,8 @@ namespace brick {
       // left with right, opposing diagonals.
       bool
       evaluateAsymmetry(Image<GRAY8> const& image,
-                        unsigned int radius,
-                        unsigned int row, unsigned int column,
+                        brick::common::UInt32 radius,
+                        brick::common::UInt32 row, brick::common::UInt32 column,
                         FloatType& asymmetry) const;
 
       
@@ -304,8 +310,8 @@ namespace brick {
         int const& column,
         std::vector< std::vector< brick::numeric::Vector2D<FloatType> > >&
         edgePositions,
-        unsigned int& edgeCount,
-        brick::common::UnsignedInt32 const& numberOfTransitions) const
+        brick::common::UInt32& edgeCount,
+        brick::common::UInt32 const& numberOfTransitions) const
       {
         if(edgeImage(row, column)) {
           edgePositions[edgeCount].push_back(
@@ -325,8 +331,8 @@ namespace brick {
         int const& d1,
         std::vector< std::vector< brick::numeric::Vector2D<FloatType> > >&
         edgePositions,
-        unsigned int& edgeCount,
-        brick::common::UnsignedInt32 const& numberOfTransitions) const
+        brick::common::UInt32& edgeCount,
+        brick::common::UInt32 const& numberOfTransitions) const
       {
         if(edgeImage(row, column)
            || (edgeImage(row + d0, column)
@@ -349,16 +355,16 @@ namespace brick {
         Image<GRAY1> const& edgeImage,
         brick::numeric::Array2D<FloatType> const& gradientX,
         brick::numeric::Array2D<FloatType> const& gradientY,
-        unsigned int minRadius,
-        unsigned int maxRadius) const;
+        brick::common::UInt32 minRadius,
+        brick::common::UInt32 maxRadius) const;
 
 
       bool
       isPlausibleBullseye(
         KeypointBullseye<brick::common::Int32, FloatType>& keypoint,
         Image<GRAY8> const& inImage,
-        unsigned int minRadius,
-        unsigned int maxRadius,
+        brick::common::UInt32 minRadius,
+        brick::common::UInt32 maxRadius,
         FloatType asymmetryThreshold,
         bool forceAsymmetry = false) const;
 
@@ -370,7 +376,7 @@ namespace brick {
       sortedInsert(
         KeypointBullseye<brick::common::Int32, FloatType> const& keypoint,
         std::vector< KeypointBullseye<brick::common::Int32, FloatType> >& keypointVector,
-        unsigned int maxNumberOfBullseyes);
+        brick::common::UInt32 maxNumberOfBullseyes);
 
 
       bool
@@ -379,10 +385,10 @@ namespace brick {
                        Image<GRAY1> const& edgeImage,
                        brick::numeric::Array2D<FloatType> const& gradientX,
                        brick::numeric::Array2D<FloatType> const& gradientY,
-                       unsigned int row,
-                       unsigned int column,
-                       unsigned int minRadius,
-                       unsigned int maxRadius,
+                       brick::common::UInt32 row,
+                       brick::common::UInt32 column,
+                       brick::common::UInt32 minRadius,
+                       brick::common::UInt32 maxRadius,
                        FloatType& goodness) const;
       
 
@@ -390,7 +396,7 @@ namespace brick {
 
       std::vector< brick::numeric::Vector2D<FloatType> >
         m_bullseyePoints;
-      std::vector<unsigned int>
+      std::vector<brick::common::UInt32>
         m_bullseyeEdgeCounts;
       std::vector< std::vector< brick::numeric::Vector2D<FloatType> > >
         m_edgePositions;
@@ -398,11 +404,11 @@ namespace brick {
       bool m_isGeneralPositionRequired;      
       std::vector< KeypointBullseye<brick::common::Int32, FloatType> > m_keypointVector;
       std::vector< KeypointBullseye<FloatType, FloatType> > m_keypointGPVector;
-      brick::common::UnsignedInt32 m_maxNumberOfBullseyes;
-      brick::common::UnsignedInt32 m_numberOfTransitions;
-      brick::common::UnsignedInt32 m_maxRadius;
-      brick::common::UnsignedInt32 m_minRadius;
-      brick::common::UnsignedInt8 m_minDynamicRange;
+      brick::common::UInt32 m_maxNumberOfBullseyes;
+      brick::common::UInt32 m_numberOfTransitions;
+      brick::common::UInt32 m_maxRadius;
+      brick::common::UInt32 m_minRadius;
+      brick::common::UInt8 m_minDynamicRange;
 
     };
 

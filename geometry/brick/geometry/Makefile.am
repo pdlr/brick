@@ -38,7 +38,7 @@ brickGeometry_HEADERS	= \
 # Define the library to build.
 
 lib_LTLIBRARIES		= libbrickGeometry.la
-libbrickGeometry_la_SOURCES = 
+libbrickGeometry_la_SOURCES = quorum.cc
 
 
 # List the files that need to be cleaned.

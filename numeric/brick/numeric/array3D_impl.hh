@@ -275,7 +275,7 @@ namespace brick {
     readFromStream(std::istream& inputStream)
     {
       // Most of the time, InputType will be the same as Type.
-      typedef typename NumericTraits<Type>::TextOutputType InputType;
+      // typedef typename NumericTraits<Type>::TextOutputType InputType;
 
       // If stream is in a bad state, we can't read from it.
       if (!inputStream){
@@ -632,7 +632,7 @@ namespace brick {
       m_shape1Times2  = m_shape1 * m_shape2;
       m_size = m_shape0 * m_shape1 * m_shape2;
       if(m_shape0 > 0 && m_shape1 > 0 && m_shape2 > 0) {
-        m_dataPtr = new(Type[m_size]); // should throw an exeption
+        m_dataPtr = new Type[m_size]; // should throw an exeption
         m_refCountPtr = new size_t;	 // if we're out of memory.
         *m_refCountPtr = 1;
         m_isAllocated = true;

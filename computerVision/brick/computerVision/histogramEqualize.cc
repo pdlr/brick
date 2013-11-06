@@ -31,7 +31,7 @@ namespace brick {
       }
 
       numeric::Array1D<unsigned int> histogram(
-        std::numeric_limits<Image<GRAY8>::PixelType>::max());
+        std::numeric_limits<Image<GRAY8>::PixelType>::max() + 1);
       histogram = 0;
       for(size_t pixelIndex = 0; pixelIndex < inputImage.size(); ++pixelIndex) {
         ++(histogram[inputImage[pixelIndex]]);

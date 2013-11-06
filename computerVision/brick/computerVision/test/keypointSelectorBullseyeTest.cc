@@ -85,7 +85,7 @@ namespace brick {
 
       Image<GRAY8> flagImage(inputImage.rows(), inputImage.columns());
       flagImage = 0;
-      for(unsigned int ii = 0; ii < keypoints.size(); ++ii) {
+      for(brick::common::UInt32 ii = 0; ii < keypoints.size(); ++ii) {
         flagImage(keypoints[ii].row, keypoints[ii].column) =
           (ii + 1) * (255 / keypoints.size());
       }
@@ -104,7 +104,7 @@ namespace brick {
       std::vector< KeypointBullseye<double> > keypointsGP =
         selector.getKeypointsGeneralPosition();
       BRICK_TEST_ASSERT(keypointsGP.size() == 1);
-      for(unsigned int ii = 0; ii < keypointsGP.size(); ++ii) {
+      for(brick::common::UInt32 ii = 0; ii < keypointsGP.size(); ++ii) {
         BRICK_TEST_ASSERT(
           brick::test::approximatelyEqual(
             keypointsGP[ii].row,
@@ -127,10 +127,10 @@ namespace brick {
       std::string inputFileName = getBullseyeFileNamePGM0();
       Image<GRAY8> inputImage = readPGM8(inputFileName);
 
-      unsigned int const scale = 8;
+      brick::common::UInt32 const scale = 8;
       Image<GRAY8> bigImage(inputImage.rows() * scale,
                             inputImage.columns() * scale);
-      for(unsigned int ii = 0; ii < scale; ++ii) {
+      for(brick::common::UInt32 ii = 0; ii < scale; ++ii) {
         numeric::subArray(bigImage,
                           numeric::Slice(ii * inputImage.rows(),
                                          (ii + 1) * inputImage.rows()),

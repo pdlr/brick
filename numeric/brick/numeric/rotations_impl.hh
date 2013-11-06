@@ -435,7 +435,7 @@ namespace brick {
                                transform3D(1, 0) - transform3D(0, 1));
       Type dirMagnitude = magnitude<Type>(direction);
       Type sinTheta = dirMagnitude / 2.0;
-      Type theta = common::arcTangent2(sinTheta, cosTheta);
+      Type theta = common::arctangent2(sinTheta, cosTheta);
       return direction * (theta / dirMagnitude);
     }
     

@@ -941,7 +941,7 @@ namespace brick {
       
       // If we have a full set of edge points, find the best-fit bullseye.
       keypoint.bullseyeMetric = -1.0;
-      brick::geometry::Bullseye2D<FloatType> bullseye;
+      brick::geometry::Bullseye2D<FloatType> bullseye(m_numberOfTransitions);
       if(this->estimateBullseye(
            bullseye, m_edgePositions, m_numberOfTransitions)) {
         FloatType bullseyeMetric = -1.0;

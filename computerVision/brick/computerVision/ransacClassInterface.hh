@@ -123,7 +123,24 @@ namespace brick {
         this->estimate(result);
         return result;
       }
-      
+
+
+      /** 
+       * Controls how many times a model may be refined on each rasac
+       * iteration.  Normally, in each iteration, the model is
+       * repeatedly recomputed using the consensus set until it stops
+       * improving.  This function allow the user to limit how many
+       * refinements can happen during each iteration.
+       * 
+       * @param numberOfRefinements This argument specifies the
+       * maximum number of allowable refinements per iteration.
+       * Setting this to a negative number allows the refinements to
+       * continue until convergence.
+       */
+      void
+      setNumberOfRefinements(int numberOfRefinements) {
+        m_numberOfRefinements = numberOfRefinements;
+      }
 
     protected:
 
@@ -138,11 +155,13 @@ namespace brick {
                   std::vector<bool>& previousConsensusFlags,
                   size_t& consensusSetSize,
                   size_t& previousConsensusSetSize,
-                  size_t& strikes);
+                  size_t& strikes,
+                  int refinementCount);
 
 
       size_t m_minimumConsensusSize;
       size_t m_numberOfRandomSampleSets;
+      int m_numberOfRefinements;
       ProblemType m_problem;
       unsigned int m_verbosity;
     };
@@ -383,6 +402,7 @@ namespace brick {
            unsigned int verbosity)
       : m_minimumConsensusSize(minimumConsensusSize),
         m_numberOfRandomSampleSets(),
+        m_numberOfRefinements(-1),
         m_problem(problem),
         m_verbosity(verbosity)
     {
@@ -482,6 +502,7 @@ namespace brick {
         size_t consensusSetSize = 0;
         size_t previousConsensusSetSize = 0;
         size_t strikes = 0;
+        int refinementCount = 0;
         while(1) {
           // Fit the model to the reduced (randomly sampled) set.
           model = m_problem.estimateModel(trialSet);
@@ -500,7 +521,7 @@ namespace brick {
           // See if this iteration has converged yet.
           if(this->isConverged(consensusFlags, previousConsensusFlags,
                                consensusSetSize, previousConsensusSetSize,
-                               strikes)) {
+                               strikes, refinementCount)) {
             break;
           }
 
@@ -508,6 +529,7 @@ namespace brick {
           // using the new consensus set.
           trialSet = m_problem.getSubset(
             consensusFlags.begin(), consensusFlags.end());
+          ++refinementCount;
         }
 
         // OK, we've converged to a "best" result for this iteration.
@@ -526,6 +548,12 @@ namespace brick {
       // return report the best we found, and return false to indicate
       // our frustration.
       model = maxRecorder.getPayload();
+
+      if(m_verbosity >= 3) {
+        std::cout
+          << "Ransac: terminating with best consensus set size of "
+          << maxRecorder.getMaximum() << std::endl;
+      }
       return false;
     }
 
@@ -537,7 +565,8 @@ namespace brick {
                 std::vector<bool>& previousConsensusFlags,
                 size_t& consensusSetSize,
                 size_t& previousConsensusSetSize,
-                size_t& strikes)
+                size_t& strikes,
+                int refinementCount)
     {
       // Do we even have enough matching points to continue
       // iteration?
@@ -550,6 +579,13 @@ namespace brick {
         return true;
       }
 
+      // Are we permitted to refine the model again?
+      if(m_numberOfRefinements >= 0
+         && refinementCount >= m_numberOfRefinements) {
+        // No.  We're converged, after a fashion.
+        return true;
+      }
+      
       // If previousConsensusFlags isn't initialized yet, then we're
       // clearly not converged, and can skip the remaining tests.
       if(consensusFlags.size() == previousConsensusFlags.size()) {

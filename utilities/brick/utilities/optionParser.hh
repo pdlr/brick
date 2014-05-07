@@ -60,6 +60,12 @@ namespace brick {
      **   optionParser.addOptionWithValue(
      **     "INCLUDE_DIR", "-I", "--include_dir", "",
      **     "Add INCLUDE_DIR to include search path.");
+     **   // ...Note that default values can be non-string types, as long
+     **   // ...as they can be converted to strings via the output stream
+     **   // ...operator.
+     **   optionParser.addOptionWithValue(
+     **     "WARNING_LEVEL", "-W", "--warning_level", 3,
+     **     "Add INCLUDE_DIR to include search path.");
      **
      **   // Specify required positional arguments.
      **   optionParser.addPositionalArgument(

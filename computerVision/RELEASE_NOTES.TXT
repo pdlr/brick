@@ -7,7 +7,6 @@ Revision 1.4
   calibration functions.
 - Many updates to KeypointSelectorBullseye class and KeypointBullseye classes.
 - Corrected a bounds error in getHistogram().
-- Minor (and not definitive) updates to iterative closest point code.
 
 Revision 1.3
 

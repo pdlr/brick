@@ -212,7 +212,7 @@ namespace brick {
     template <class Type>
     Type
     Plane3D<Type>::
-    findDistance(brick::numeric::Vector3D<Type> const& point)
+    findDistance(brick::numeric::Vector3D<Type> const& point) const
     {
       brick::numeric::Vector3D<Type> offset = point - m_origin;
       offset -= (brick::numeric::dot<Type>(offset, m_directionVector0)

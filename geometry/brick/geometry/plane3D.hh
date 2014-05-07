@@ -154,7 +154,7 @@ namespace brick {
 
       // xxx Should this be moved to utilities3D.hh?
       Type
-      findDistance(brick::numeric::Vector3D<Type> const& point);
+      findDistance(brick::numeric::Vector3D<Type> const& point) const;
         
     private:
       // Private member functions.

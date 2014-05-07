@@ -30,7 +30,8 @@ namespace brick {
 
   namespace geometry {
     
-    // The default constructor initializes to the unit circle.
+    // The default constructor initializes to a 3-ring circular
+    // bullseye, with rings at radii of 0.5, 1.0, and 1.5.
     template <class Type>
     Bullseye2D<Type>::
     Bullseye2D()
@@ -41,10 +42,29 @@ namespace brick {
     {
       m_scales[0] = 0.5;
       m_scales[1] = 1.0;
-      m_scales[1] = 1.5;
+      m_scales[2] = 1.5;
     }
 
     
+    // This constructor initializes to a circular bullseye, with a
+    // user-specified number of rings at radii of 0.5, 1.0, 1.5,
+    // etc.
+    template <class Type>
+    Bullseye2D<Type>::
+    Bullseye2D(brick::common::UInt32 numberOfRings)
+      : m_origin(0.0, 0.0),
+        m_semimajorAxis(1.0, 0.0),
+        m_semiminorAxis(0.0, 1.0),
+        m_scales(std::max(numberOfRings, brick::common::UInt32(1)))
+    {
+      Type radius = 0.5;
+      for(brick::common::UInt32 ii = 0; ii < m_scales.size(); ++ii) {
+        m_scales[ii] = radius;
+        radius += 0.5;
+      }
+    }
+
+
     // Construct a bullseye, explicitly setting parameters.
     template <class Type>
     template <class Iter>
@@ -494,6 +514,9 @@ namespace brick {
       }
 
       // And record the scales of the the different rings.
+      if(scales.size() != numberOfRings) {
+        scales.resize(numberOfRings);
+      }
       for(unsigned int ringNumber = 0; ringNumber < numberOfRings;
           ++ringNumber) {
         scales[ringNumber] = ((alphaVector[ringNumber] + betaVector[ringNumber])

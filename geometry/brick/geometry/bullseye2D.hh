@@ -42,6 +42,18 @@ namespace brick {
 
       
       /** 
+       * This constructor initializes to a circular bullseye, with a
+       * user-specified number of rings at radii of 0.5, 1.0, 1.5,
+       * etc.
+       * 
+       * @param numberOfRings This argument must be 1 or greater, and
+       * specifies the number of rings in the bullseye.
+       */
+      explicit inline
+      Bullseye2D(brick::common::UInt32 numberOfRings);
+
+      
+      /** 
        * Construct a bullseye, explicitly setting parameters.  TBD:
        * provide example documentation here.
        * 

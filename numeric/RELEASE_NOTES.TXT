@@ -1,6 +1,11 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.5
+
+- Corrected typo in Transform3D stream output.
+- Added Quaternion::getMagnitude() member function.
+
 Revision 1.4
 
 - Corrected a typo in transform3DToRodrigues().

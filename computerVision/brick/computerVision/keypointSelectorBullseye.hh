@@ -35,6 +35,7 @@ namespace brick {
       FloatType bullseyeMetric;
       brick::common::UInt8 darkColor;
       brick::common::UInt8 lightColor;
+      std::vector< brick::numeric::Vector2D<FloatType> > seedPoints;
       brick::geometry::Bullseye2D<FloatType> bullseye;
 
       KeypointBullseye()
@@ -44,6 +45,7 @@ namespace brick {
           bullseyeMetric(0.0),
           darkColor(0),
           lightColor(0),
+          seedPoints(),
           bullseye() {}
 
       KeypointBullseye(CoordinateType rowArg,
@@ -54,6 +56,7 @@ namespace brick {
           bullseyeMetric(0.0),
           darkColor(0),
           lightColor(0),
+          seedPoints(),
           bullseye() {}
     };
     

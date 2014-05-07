@@ -78,6 +78,7 @@ namespace brick {
       result.bullseyeMetric = inputKeypoint.bullseyeMetric;
       result.darkColor = inputKeypoint.darkColor;
       result.lightColor = inputKeypoint.lightColor;
+      result.seedPoints = inputKeypoint.seedPoints;
       result.bullseye = inputKeypoint.bullseye;
     
       // Figure out how big a region we need to look at to be sure we
@@ -836,7 +837,10 @@ namespace brick {
         const_cast<KeypointSelectorBullseye<FloatType>*>(this)->
           m_edgePositions[ii].clear();
       }
-      
+
+      // Clean the incoming keypoint struct.
+      keypoint.seedPoints.clear();
+
       // Find nearby edges along several major directions.  In each
       // direction, put the first-encountered edge in
       // edgePositions[0], the second in edgePositions[1], and so on.
@@ -951,6 +955,10 @@ namespace brick {
           // OK, this bullseye passed all the tests, remember it.
           keypoint.bullseyeMetric = bullseyeMetric;
           keypoint.bullseye = bullseye;
+          for(brick::common::UInt32 ii = 0; ii < m_numberOfTransitions; ++ii) {
+            std::copy(m_edgePositions[ii].begin(), m_edgePositions[ii].end(),
+                      std::back_inserter(keypoint.seedPoints));
+          }
         }
       }
     }

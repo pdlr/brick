@@ -19,6 +19,108 @@
 namespace brick {
 
   namespace computerVision {
+
+    /**
+     ** Class used to report information describing the result of a
+     ** call to estimateCameraParameters().
+     **/
+    template <class FloatType>
+    class CameraParameterEstimationStatistics {
+    public:
+
+      /** 
+       * Default constructor.
+       */
+      CameraParameterEstimationStatistics();
+
+      /** 
+       * Copy constructor deep copies its argument.
+       * 
+       * @param other This argument is the instance to be copied.
+       */
+      CameraParameterEstimationStatistics(
+        CameraParameterEstimationStatistics const& other);
+
+      /** 
+       * Destructor cleans up resources.
+       */
+      virtual
+      ~CameraParameterEstimationStatistics();
+
+      /** 
+       * The assignment operator deep copies its argument.
+       * 
+       * @param other This argument is the instance to be copied.
+       * 
+       * @return The return value is a reference to &this.
+       */
+      CameraParameterEstimationStatistics&
+      operator=(CameraParameterEstimationStatistics const& other);
+
+      /** 
+       * This function returns the condition number of the approximate
+       * Hessian matrix of the calibration objective function,
+       * evaluated at the local minimum found by
+       * estimateCameraParameters.  If this number is very large, it
+       * indicates that the quality of the result is not good.  Note
+       * that estimateCameraParameters overparameterizes the
+       * optimization by 1 degree of freedom (using an un-normalized
+       * quaternion to represent rotation. For this reason, the
+       * condition number is computed based on a reduced-dimension
+       * version of the Hessian matrix that doesn't include the
+       * unconstrained degree of freedom corresponding to quaternion
+       * scale.
+       * 
+       * @param numberOfUnconstrainedAxes This argument allows the
+       * optimization to be overparameterized, for example by using a
+       * non-unit quaternion to represent rotation
+       * 
+       * @return The return value is the condition number.
+       */
+      FloatType
+      getConditionNumber(unsigned int numberOfUnconstrainedAxes = 1);
+
+
+      brick::numeric::Array1D<FloatType>
+      getEigenvalues();
+
+
+      brick::numeric::Array2D<FloatType>
+      getEigenvectors();
+
+
+      brick::numeric::Array1D<FloatType>
+      getParameters();
+
+      
+      /** 
+       * This member function is called by estimateCameraParameters to
+       * record calibration statistics that will later be available to
+       * the user.
+       * 
+       * @param residuals This argument is a vector of residuals from
+       * nonlinear least squares optimization.
+       * 
+       * @param parameterVector This argument is the parameter vector
+       * of the nonlinear least squares optimization at the selected
+       * minimum.
+       * 
+       * @param m_hessianMatrix This argument is the estimated second
+       * derivative matrix of the nonlinear least squares objective
+       * function at the selected minimum.
+       */
+      void
+      setStatistics(brick::numeric::Array1D<FloatType> residuals,
+                    brick::numeric::Array1D<FloatType> parameterVector,
+                    brick::numeric::Array2D<FloatType> hessianMatrix);
+
+
+    protected:
+      brick::numeric::Array1D<FloatType> m_residuals;
+      brick::numeric::Array1D<FloatType> m_parameterVector;
+      brick::numeric::Array2D<FloatType> m_hessianMatrix;
+    };
+    
     
     /** 
      * This function estimates camera intrinsic parameters for
@@ -189,6 +291,8 @@ namespace brick {
     estimateCameraParameters(
       Intrinsics& intrinsics,
       numeric::Transform3D<typename Intrinsics::FloatType>& cameraTworld,
+      CameraParameterEstimationStatistics<typename Intrinsics::FloatType>&
+        statistics,
       unsigned int numPixelsX, unsigned int numPixelsY,
       Iter3D points3DBegin, Iter3D points3DEnd,
       Iter2D points2DBegin,

@@ -19,6 +19,8 @@
 // 
 // #include <brick/computerVision/calibrationTools.hh>
 
+#include <limits>
+
 #include <brick/linearAlgebra/linearAlgebra.hh>
 #include <brick/numeric/rotations.hh>
 #include <brick/numeric/transform3D.hh>
@@ -513,6 +515,132 @@ namespace brick {
       
     } // namespace privateCode
 
+
+    // Default constructor.
+    template <class FloatType>
+    CameraParameterEstimationStatistics<FloatType>::
+    CameraParameterEstimationStatistics()
+      : m_residuals(),
+        m_parameterVector(),
+        m_hessianMatrix()
+    {
+      // Empty.
+    }
+
+
+    // Copy constructor deep copies its argument.
+    template <class FloatType>
+    CameraParameterEstimationStatistics<FloatType>::
+    CameraParameterEstimationStatistics(
+      CameraParameterEstimationStatistics const& other)
+    {
+      m_residuals = other.m_residuals.copy();
+      m_parameterVector = other.m_parameterVector.copy();
+      m_hessianMatrix = other.m_hessianMatrix.copy();
+    }
+
+
+    // Destructor cleans up resources.
+    template <class FloatType>
+    CameraParameterEstimationStatistics<FloatType>::
+    ~CameraParameterEstimationStatistics()
+    {
+      // Empty.
+    }
+
+
+    // The assignment operator deep copies its argument.
+    template <class FloatType>
+    CameraParameterEstimationStatistics<FloatType>&
+    CameraParameterEstimationStatistics<FloatType>::
+    operator=(CameraParameterEstimationStatistics const& other)
+    {
+      if(this != &other) {
+        m_residuals = other.m_residuals.copy();
+        m_parameterVector = other.m_parameterVector.copy();
+        m_hessianMatrix = other.m_hessianMatrix.copy();
+      }
+    }
+
+
+    // This function returns the condition number of the approximate
+    // Hessian matrix of the calibration objective function,
+    // evaluated at the local minimum found by
+    // estimateCameraParameters.
+    template <class FloatType>
+    FloatType
+    CameraParameterEstimationStatistics<FloatType>::
+    getConditionNumber(unsigned int numberOfUnconstrainedAxes)
+    {
+      // Make sure argument is sane.
+      if(numberOfUnconstrainedAxes > (m_hessianMatrix.rows() - 1)) {
+        return 0.0;
+      }
+
+      // Because the Hessian matrix is real and symmetric (and
+      // therefore normal), condition number can be computed as a
+      // ratio of eigenvalues.
+      brick::numeric::Array1D<FloatType> eigenvalues = 
+        brick::linearAlgebra::eigenvaluesSymmetric(m_hessianMatrix);
+
+      // Pick the right eigenvalue to compare.
+      unsigned int indexOfMinimumEigenvalue =
+        eigenvalues.size() - (1 + numberOfUnconstrainedAxes);
+      FloatType smallEigenvalue = eigenvalues[indexOfMinimumEigenvalue];
+
+      if(smallEigenvalue == 0.0) {
+        return std::numeric_limits<FloatType>::max();
+      }
+      return eigenvalues[0] / smallEigenvalue;
+    }
+
+
+    template <class FloatType>
+    brick::numeric::Array1D<FloatType>
+    CameraParameterEstimationStatistics<FloatType>::
+    getEigenvalues()
+    {
+      return brick::linearAlgebra::eigenvaluesSymmetric(m_hessianMatrix);
+    }
+
+
+    template <class FloatType>
+    brick::numeric::Array2D<FloatType>
+    CameraParameterEstimationStatistics<FloatType>::
+    getEigenvectors()
+    {
+      brick::numeric::Array1D<FloatType> eigenvalues;
+      brick::numeric::Array2D<FloatType> eigenvectors;
+      brick::linearAlgebra::eigenvectorsSymmetric(
+        this->m_hessianMatrix, eigenvalues, eigenvectors);
+      return eigenvectors;
+    }
+
+
+    template <class FloatType>
+    brick::numeric::Array1D<FloatType>
+    CameraParameterEstimationStatistics<FloatType>::
+    getParameters()
+    {
+      return this->m_parameterVector;
+    }
+    
+    
+    // This member function is called by estimateCameraParameters to
+    // record calibration statistics that will later be available to
+    // the user.
+    template <class FloatType>
+    void
+    CameraParameterEstimationStatistics<FloatType>::
+    setStatistics(brick::numeric::Array1D<FloatType> residuals,
+                  brick::numeric::Array1D<FloatType> parameterVector,
+                  brick::numeric::Array2D<FloatType> hessianMatrix)
+    {
+        m_residuals = residuals.copy();
+        m_parameterVector = parameterVector.copy();
+        m_hessianMatrix = hessianMatrix.copy();
+    }
+
     
     // This function estimates camera intrinsic parameters for
     // "complicated" types of camera intrinsics that require nonlinear
@@ -802,6 +930,8 @@ namespace brick {
     estimateCameraParameters(
       Intrinsics& intrinsics,
       numeric::Transform3D<typename Intrinsics::FloatType>& cameraTworld,
+      CameraParameterEstimationStatistics<typename Intrinsics::FloatType>&
+        statistics,
       unsigned int numPixelsX, unsigned int numPixelsY,
       Iter3D points3DBegin, Iter3D points3DEnd,
       Iter2D points2DBegin,
@@ -863,6 +993,15 @@ namespace brick {
       objectiveFunction.setParameters(allFreeParameters);
       cameraTworld = objectiveFunction.getPoseCameraTworld();
       intrinsics = objectiveFunction.getIntrinsics();
+
+      // ...including convergence statistics.
+      brick::numeric::Array1D<FloatType> gradient;
+      brick::numeric::Array2D<FloatType> hessian;
+      gradientFunction.computeGradientAndHessian(
+        allFreeParameters, gradient, hessian);
+      statistics.setStatistics(
+        objectiveFunction(allFreeParameters), allFreeParameters, hessian);
+                               
     }
 
     

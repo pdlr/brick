@@ -275,11 +275,25 @@ testEstimateCameraParameters()
   // Now run the estimation code.
   CameraIntrinsicsPlumbBob<double> recoveredIntrinsics;
   Transform3D<double> recoveredCameraTworld;
+  CameraParameterEstimationStatistics<double> statistics;
   estimateCameraParameters< CameraIntrinsicsPlumbBob<double> >(
-    recoveredIntrinsics, recoveredCameraTworld,
+    recoveredIntrinsics, recoveredCameraTworld, statistics,
     referenceIntrinsics.getNumPixelsX(), referenceIntrinsics.getNumPixelsY(),
     points3D_world.begin(), points3D_world.end(), points2D.begin());
 
+#if 0
+  std::cout << "Unconstrained condition: "
+            << statistics.getConditionNumber() << std::endl;
+  std::cout << "Parameters:\n" << statistics.getParameters()
+            << "\n" << std::endl;
+  std::cout << "Eigenvalues:\n" << statistics.getEigenvalues()
+            << "\n" << std::endl;
+  std::cout << "Eigenvectors (per row):\n"
+            << statistics.getEigenvectors().transpose()
+            << "\n" << std::endl;
+#endif
+
+  BRICK_TEST_ASSERT(statistics.getConditionNumber() < 1.0E8);
   BRICK_TEST_ASSERT(
     this->checkIntrinsicsEqual(
       recoveredIntrinsics, referenceIntrinsics, m_relaxedTolerance));
@@ -309,11 +323,25 @@ testEstimateCameraParametersConstrained()
   Transform3D<double> recoveredCameraTworld;
   recoveredIntrinsics.allowSkew(false);
   recoveredIntrinsics.allowSixthOrderRadial(false);
+  CameraParameterEstimationStatistics<double> statistics;
   estimateCameraParameters< CameraIntrinsicsPlumbBob<double> >(
-    recoveredIntrinsics, recoveredCameraTworld,
+    recoveredIntrinsics, recoveredCameraTworld, statistics,
     referenceIntrinsics.getNumPixelsX(), referenceIntrinsics.getNumPixelsY(),
     points3D_world.begin(), points3D_world.end(), points2D.begin());
 
+#if 0
+  std::cout << "Constrained condition: "
+            << statistics.getConditionNumber() << "\n" << std::endl;
+  std::cout << "Parameters:\n" << statistics.getParameters()
+            << "\n" << std::endl;
+  std::cout << "Eigenvalues:\n" << statistics.getEigenvalues()
+            << "\n" << std::endl;
+  std::cout << "Eigenvectors (per row):\n"
+            << statistics.getEigenvectors().transpose()
+            << "\n" << std::endl;
+#endif
+
+  BRICK_TEST_ASSERT(statistics.getConditionNumber() < 1.0E8);
   BRICK_TEST_ASSERT(recoveredIntrinsics.getSkewCoefficient() == 0.0);
   BRICK_TEST_ASSERT(recoveredIntrinsics.getRadialCoefficient2() == 0.0);
   BRICK_TEST_ASSERT(

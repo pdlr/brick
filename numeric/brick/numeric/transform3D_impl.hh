@@ -696,7 +696,7 @@ namespace brick {
       // choking on it, so we default to what works.  We repair most
       // of the damage by specializing for double and float below.
 #if 0
-      stream << "Transform3D<Type>("
+      stream << "Transform3D("
              << transform0.value<0, 0>() << ", "
              << transform0.value<0, 1>() << ", "
              << transform0.value<0, 2>() << ", "
@@ -714,7 +714,7 @@ namespace brick {
              << transform0.value<3, 2>() << ", "
              << transform0.value<3, 3>() << ")";
 #else /* #if 0 */
-      stream << "Transform3D<Type>("
+      stream << "Transform3D("
              << transform0(0, 0) << ", "
              << transform0(0, 1) << ", "
              << transform0(0, 2) << ", "

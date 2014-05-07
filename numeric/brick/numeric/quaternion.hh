@@ -135,6 +135,17 @@ namespace brick {
       bool
       isNormalized() {return m_isNormalized;}
 
+
+      /** 
+       * This member function computes and returns the magnitude of
+       * the quaternion.
+       * 
+       * @return The return value is the computed magnitude.
+       */
+      Type
+      getMagnitude();
+
+      
       /** 
        * This member function normalizes the Quaternion, first computing
        * the magnitude of the Quaternion, and then dividing each element

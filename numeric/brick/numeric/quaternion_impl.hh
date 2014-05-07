@@ -18,10 +18,24 @@
 
 #include <cmath>
 
+#include <brick/common/mathFunctions.hh>
+
 namespace brick {
 
   namespace numeric {
 
+
+    // This member function computes and returns the magnitude of the
+    // quaternion.
+    template <class Type>
+    Type
+    Quaternion<Type>::
+    getMagnitude()
+    {
+      return brick::common::squareRoot(m_s*m_s + m_i*m_i + m_j*m_j + m_k*m_k);
+    }
+
+    
     // This member function normalizes the Quaternion, first computing
     // the magnitude of the Quaternion, and then dividing each element
     // by that value.
@@ -34,7 +48,7 @@ namespace brick {
       // magnitude.
       if(!m_isNormalized) {
 	// First compute the magnitude of the Quaternion.
-	double norm = std::sqrt(m_s*m_s + m_i*m_i + m_j*m_j + m_k*m_k);
+	double norm = this->getMagnitude();
 
 	// Next some error checking.
 	if(norm == 0) {

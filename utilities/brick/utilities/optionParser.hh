@@ -268,7 +268,9 @@ namespace brick {
        * 
        * @param defaultValue This argument specifies the default value
        * for the option.  If the option is not found on the command
-       * line, then the default value will be used.
+       * line, then the default value will be used.  If the default
+       * value is not a std:string, it will be converted to a string
+       * using a std::ostringstream and the stream output operator.
        * 
        * @param docString This argument specifies a breif description
        * for the option.  If the automatic documentation features of
@@ -286,11 +288,12 @@ namespace brick {
        * not the supplied value (on the command line) is permitted to
        * begin with the character '-'.
        */
+      template<class Type>
       void
       addOptionWithValue(std::string const& name,
                          std::string const& shortVersion,
                          std::string const& longVersion,
-                         std::string const& defaultValue,
+                         Type const& defaultValue,
                          std::string const& docString,
                          bool requireArgument = true,
                          bool allowPartialMatch = true,
@@ -601,9 +604,50 @@ namespace brick {
 
 /* ========= Definitions of inline and template functions below. ========== */
 
+#include <sstream>
+
 namespace brick {
 
   namespace utilities {
+
+    
+    // This member function adds an option which requires a value to
+    // the list which will be recognized during command line
+    // parsing.  This template is specialized for std::string.
+    template<>
+    void
+    OptionParser::
+    addOptionWithValue<std::string>(std::string const& name,
+                                    std::string const& shortVersion,
+                                    std::string const& longVersion,
+                                    std::string const& defaultValue,
+                                    std::string const& docString,
+                                    bool requireArgument,
+                                    bool allowPartialMatch,
+                                    bool allowOptionishValue);
+    
+    
+    // This member function adds an option which requires a value to
+    // the list which will be recognized during command line
+    // parsing.  
+    template<class Type>
+    void
+    OptionParser::
+    addOptionWithValue(std::string const& name,
+                       std::string const& shortVersion,
+                       std::string const& longVersion,
+                       Type const& defaultValue,
+                       std::string const& docString,
+                       bool requireArgument,
+                       bool allowPartialMatch,
+                       bool allowOptionishValue)
+    {
+      std::ostringstream buffer;
+      buffer << defaultValue;
+      this->addOptionWithValue(
+        name, shortVersion, longVersion, buffer.str(), docString,
+        requireArgument, allowPartialMatch, allowOptionishValue);
+    }
 
     
     template<class Type>

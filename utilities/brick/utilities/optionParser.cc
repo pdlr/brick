@@ -104,16 +104,17 @@ namespace brick {
     }
 
 
+    template<>
     void
     OptionParser::
-    addOptionWithValue(std::string const& name,
-                       std::string const& shortVersion,
-                       std::string const& longVersion,
-                       std::string const& defaultValue,
-                       std::string const& docString,
-                       bool requireArgument,
-                       bool allowPartialMatch,
-                       bool allowOptionishValue)
+    addOptionWithValue<std::string>(std::string const& name,
+                                    std::string const& shortVersion,
+                                    std::string const& longVersion,
+                                    std::string const& defaultValue,
+                                    std::string const& docString,
+                                    bool requireArgument,
+                                    bool allowPartialMatch,
+                                    bool allowOptionishValue)
     {
       if(requireArgument == false) {
         BRICK_THROW(brick::common::NotImplementedException,

@@ -12,6 +12,7 @@
 
 #include <string>
 
+#include <brick/common/mathFunctions.hh>
 #include <brick/utilities/optionParser.hh>
 #include <brick/test/testFixture.hh>
 
@@ -229,6 +230,8 @@ namespace brick {
       const char* argv0[] = {"foo", "-b", "10", "--bar=Ten", "--baz", "baz"};
       int argc1 = 6;
       const char* argv1[] = {"foo", "-bbl", "10", "--bar=Ten", "--baz", "baz"};
+      int argc2 = 1;
+      const char* argv2[] = {"foo"};
     
       OptionParser optionParser0;
       optionParser0.addOptionWithValue(
@@ -281,6 +284,21 @@ namespace brick {
       BRICK_TEST_ASSERT(optionParser1.getValue("BASTE") == "bl");
       BRICK_TEST_ASSERT(extraArguments.size() == 1);
       BRICK_TEST_ASSERT(extraArguments[0] == "10");
+
+      // Check that non-string default arguments are handled OK.
+      OptionParser optionParser2;
+      optionParser2.addOptionWithValue(
+        "BAR", "-b", "--bar", 7, "Set the bar.");
+      optionParser2.addOptionWithValue(
+        "BAZ", "", "--baz", 6.5, "Set the baz.");
+      optionParser2.addOptionWithValue(
+        "PRY", "-p", "--pry", "--", "Set the pry.");
+
+      optionParser0.parseCommandLine(argc2, argv2);
+      BRICK_TEST_ASSERT(optionParser2.convertValue<int>("BAR") == 7);
+      BRICK_TEST_ASSERT(
+        brick::common::absoluteValue(optionParser2.convertValue<double>("BAZ")
+                                     - 6.5) < 1.0e-9);
     }
 
   

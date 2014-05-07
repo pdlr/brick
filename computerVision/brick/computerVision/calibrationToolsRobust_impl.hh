@@ -49,6 +49,8 @@ namespace brick {
       struct CTRResult {
         numeric::Transform3D<typename Intrinsics::FloatType> cameraTworld;
         Intrinsics intrinsics;
+        CameraParameterEstimationStatistics<typename Intrinsics::FloatType>
+          statistics;
       };
 
 
@@ -199,6 +201,7 @@ namespace brick {
           result.intrinsics = this->m_intrinsics;
           estimateCameraParameters(
             result.intrinsics, result.cameraTworld,
+            result.statistics,
             this->m_numPixelsX, this->m_numPixelsY,
             worldPoints.begin(), worldPoints.end(), imagePoints.begin());
           return result;

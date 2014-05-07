@@ -16,6 +16,7 @@
 #include <brick/numeric/solveQuadratic.hh>
 #include <brick/test/testFixture.hh>
 
+#include <brick/optimization/optimizerNelderMead.hh>
 
 namespace brick {
 
@@ -32,10 +33,19 @@ namespace brick {
       void tearDown(const std::string& /* testName */) {}
 
       // Tests.
-      void testEstimate();
+      void testEstimate_0();
+      void testEstimate_1();
 
     private:
 
+      // Given a set of 2D points on an ellipse, estimate the
+      // algebraic parameters a, b, c, d, e, and f, such that
+      // 
+      //   a*x*x + b*x*y + c*y*y + d*x + e*y + f = 0.
+      brick::numeric::Array1D<double>
+      estimateAlgebraicParameters(
+        std::vector< brick::numeric::Vector2D<double> > const& samplePoints);
+      
       // Given an algebraic parameterization of an ellipse and an X
       // coordinate, find the corresponding Y coordinates (if the X
       // coordinate is within the range of the ellipse, else return
@@ -48,6 +58,7 @@ namespace brick {
         double& yy1);
       
       const double m_defaultTolerance;
+      const double m_relaxedTolerance;
       
     }; // class Ellipse2DTest
 
@@ -57,15 +68,17 @@ namespace brick {
     Ellipse2DTest::
     Ellipse2DTest()
       : brick::test::TestFixture<Ellipse2DTest>("Ellipse2DTest"),
-        m_defaultTolerance(1.0E-9)
+        m_defaultTolerance(1.0E-9),
+        m_relaxedTolerance(1.0E-6)
     {
-      BRICK_TEST_REGISTER_MEMBER(testEstimate);
+      BRICK_TEST_REGISTER_MEMBER(testEstimate_0);
+      BRICK_TEST_REGISTER_MEMBER(testEstimate_1);
     }
 
 
     void
     Ellipse2DTest::
-    testEstimate()
+    testEstimate_0()
     {
       // Pick some ellipse parameters to recover.
       brick::numeric::Array1D<double> const algebraicParameters(
@@ -96,7 +109,7 @@ namespace brick {
          || maximumXObserved <= minimumX
          || minimumXObserved > maximumXObserved) {
         BRICK_THROW(brick::common::LogicException,
-                    "Ellipse2DTest::testEstimate()",
+                    "Ellipse2DTest::testEstimate_0()",
                     "Test ellipse is not in the expected X range.");
       }
 
@@ -107,7 +120,7 @@ namespace brick {
         double yy1 = 0.0;
         if(!this->solveAlgebraicEllipse(xx, algebraicParameters, yy0, yy1)) {
           BRICK_THROW(brick::common::LogicException,
-                      "Ellipse2DTest::testEstimate()",
+                      "Ellipse2DTest::testEstimate_0()",
                       "Valid xx range is suddenly invalid.");
         }
 
@@ -138,6 +151,75 @@ namespace brick {
           + algebraicParameters[5]);
 
         BRICK_TEST_ASSERT(algebraicDistance < this->m_defaultTolerance);
+      }
+    }
+
+
+    void
+    Ellipse2DTest::
+    testEstimate_1()
+    {
+      // Test ellipses of all orientations and make sure all are
+      // recovered correctly.  This is important because there is some
+      // trigonometry in the estimation that might fail in specific
+      // quadrants only.
+      
+      double semimajorAxisMagnitude = 45.0;
+      double semiminorAxisMagnitude = 30.0;
+      brick::numeric::Vector2D<double> origin(100.0, 200.0);
+
+      for(double theta = 0.0; theta < brick::common::constants::twoPi;
+          theta += brick::common::constants::twoPi / 1000.0) {
+
+        // Define an ellipse, rotated by theta.
+        double cosineTheta = brick::common::cosine(theta);
+        double sineTheta = brick::common::sine(theta);
+        brick::numeric::Vector2D<double> semimajorAxis(
+          semimajorAxisMagnitude * cosineTheta,
+          semimajorAxisMagnitude * sineTheta);
+        brick::numeric::Vector2D<double> semiminorAxis(
+          -1.0 * semiminorAxisMagnitude * sineTheta,
+          semiminorAxisMagnitude * cosineTheta);
+
+        // Pick several points on the ellipse.
+        std::vector< brick::numeric::Vector2D<double> > samplePoints;
+        for(double alpha = 0.0; alpha < brick::common::constants::twoPi;
+            alpha += brick::common::constants::pi / 4.0) {
+          samplePoints.push_back(
+            brick::common::cosine(alpha) * semimajorAxis
+            + brick::common::sine(alpha) * semiminorAxis
+            + origin);
+        }
+
+        // Try to recover the ellipse from the sample points.
+        Ellipse2D<double> ellipse2D;
+        ellipse2D.estimate(samplePoints.begin(), samplePoints.end());
+
+        // Make sure we succeeded!
+        BRICK_TEST_ASSERT(
+          approximatelyEqual(ellipse2D.getOrigin().getX(), origin.getX(),
+                             this->m_defaultTolerance));
+        BRICK_TEST_ASSERT(
+          approximatelyEqual(ellipse2D.getOrigin().getY(), origin.getY(),
+                             this->m_defaultTolerance));
+        BRICK_TEST_ASSERT(
+          approximatelyEqual(
+            brick::numeric::magnitude<double>(ellipse2D.getSemimajorAxis()),
+            semimajorAxisMagnitude, this->m_relaxedTolerance));
+        BRICK_TEST_ASSERT(
+          approximatelyEqual(
+            brick::numeric::magnitude<double>(ellipse2D.getSemiminorAxis()),
+            semiminorAxisMagnitude, this->m_relaxedTolerance));
+        BRICK_TEST_ASSERT(
+          approximatelyEqual(
+            brick::numeric::dot<double>(ellipse2D.getSemimajorAxis(),
+                                        semiminorAxis),
+            0.0, this->m_relaxedTolerance));
+        BRICK_TEST_ASSERT(
+          approximatelyEqual(
+            brick::numeric::dot<double>(ellipse2D.getSemiminorAxis(),
+                                        semimajorAxis),
+            0.0, this->m_relaxedTolerance));
       }
     }
 

@@ -324,6 +324,8 @@ namespace brick {
 
       // Compute sine and cosine of ellipse rotation angle.  These
       // define directions of the major and minor axes of the ellipse.
+      // If aa == cc, then theta == pi/4,
+      // and cos(theta) == sin(theta) == sqrt(2)/2.
       Type CC = brick::common::constants::rootOverTwo;
       Type SS = brick::common::constants::rootOverTwo;
       if(aa != cc) {
@@ -335,6 +337,19 @@ namespace brick {
         SS = brick::common::squareRoot((1.0 - lambda) / 2);
       }
 
+      // Here we add a step to Lopez's approach.  The rotation angle
+      // recovered above is chosen by variable substitution to
+      // axis-align the ellipse, but it _doesn't_ guarantee which axis
+      // is aligned with the major axis of the ellipse.  Here we make
+      // sure we choose the right alignment noting which axis is the
+      // major one.  Note that the orientation of the original ellipse
+      // (rotated clockwise or counterclockwise from axis alignment)
+      // depends on the sign of bb.
+      if(((aa < cc) && (bb > 0.0))
+         || ((aa > cc) && (bb < 0.0))){
+        SS = -SS;
+      }
+      
       // Finally, solve for the scale of the ellipse and recover the
       // scaled major and minor axes.
       Type PP = aa * CC * CC + cc * SS * SS + bb * CC * SS;

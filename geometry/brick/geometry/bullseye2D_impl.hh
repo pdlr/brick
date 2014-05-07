@@ -444,6 +444,19 @@ namespace brick {
         SS = brick::common::squareRoot((1.0 - lambda) / 2);
       }
 
+      // Here we add a step to Lopez's approach.  The rotation angle
+      // recovered above is chosen by variable substitution to
+      // axis-align the ellipse, but it _doesn't_ guarantee which axis
+      // is aligned with the major axis of the ellipse.  Here we make
+      // sure we choose the right alignment noting which axis is the
+      // major one.  Note that the orientation of the original ellipse
+      // (rotated clockwise or counterclockwise from axis alignment)
+      // depends on the sign of bb.
+      if(((aa < cc) && (bb > 0.0))
+         || ((aa > cc) && (bb < 0.0))){
+        SS = -SS;
+      }
+      
       // We'll compute scaling for each ring, then commit to semimajor
       // and semiminor axes later.
       std::vector<Type> alphaVector(numberOfRings);
@@ -462,7 +475,7 @@ namespace brick {
         betaVector[ringNumber] = brick::common::squareRoot(rho / QQ);
       }
 
-      // Now pinck a major and minor axis that are approximately
+      // Now pick a major and minor axis that are approximately
       // scaled to match the input data.  We'll just take the average
       // of the scales of the rings.
       Type alpha = Type(0);

@@ -241,6 +241,15 @@ namespace brick {
 
 
       bool
+      adjustFiducialSize(brick::common::UInt32& minRadius,
+                         brick::common::UInt32& maxRadius,
+                         brick::common::UInt32 row,
+                         brick::common::UInt32 column,
+                         brick::common::UInt32 numberOfRows,
+                         brick::common::UInt32 numberOfColumns) const;
+
+      
+      bool
       countTransitions(std::vector<brick::common::UInt8> const& spoke,
                        brick::common::UInt32 numberOfTransitions,
                        brick::common::UInt8 minDynamicRange,
@@ -252,13 +261,12 @@ namespace brick {
       
       // Make sure bounding box of processing region is sane.
       void
-      checkAndRepairRegionOfInterest(brick::common::UInt32 rows,
-                                     brick::common::UInt32 columns,
-                                     brick::common::UInt32 radius,
-                                     brick::common::UInt32& startRow,
+      checkAndRepairRegionOfInterest(brick::common::UInt32& startRow,
                                      brick::common::UInt32& startColumn,
                                      brick::common::UInt32& stopRow,
-                                     brick::common::UInt32& stopColumn) const;
+                                     brick::common::UInt32& stopColumn,
+                                     brick::common::UInt32 rows,
+                                     brick::common::UInt32 columns) const;
 
 
       bool
@@ -378,7 +386,8 @@ namespace brick {
       void
       sortedInsert(
         KeypointBullseye<brick::common::Int32, FloatType> const& keypoint,
-        std::vector< KeypointBullseye<brick::common::Int32, FloatType> >& keypointVector,
+        std::vector< KeypointBullseye<brick::common::Int32, FloatType> >&
+          keypointVector,
         brick::common::UInt32 maxNumberOfBullseyes);
 
 

@@ -250,8 +250,8 @@ namespace brick {
       
       // Make sure the passed-in image bounds are legal.
       this->checkAndRepairRegionOfInterest(
-        inImage.rows(), inImage.columns(), m_maxRadius,
-        startRow, startColumn, stopRow, stopColumn);
+        startRow, startColumn, stopRow, stopColumn,
+        inImage.rows(), inImage.columns());
 
       // We're going to prune most of the image pixels using a
       // threshold based on local asymmetry.  Things that aren't
@@ -285,6 +285,15 @@ namespace brick {
       for(brick::common::UInt32 row = startRow; row < stopRow; ++row) {
         for(brick::common::UInt32 column = startColumn; column < stopColumn;
             ++column, ++totalPixels) {
+          // Tailor fiducial size so we don't run off the side of the
+          // image.
+          brick::common::UInt32 minRadius = m_minRadius;
+          brick::common::UInt32 maxRadius = m_maxRadius;
+          if(!this->adjustFiducialSize(minRadius, maxRadius, row, column,
+                                       inImage.rows(), inImage.columns())) {
+            continue;
+          }
+
           // Create a candidate keypoint.
           KeypointBullseye<brick::common::Int32, FloatType> keypoint(
             row, column);
@@ -293,8 +302,7 @@ namespace brick {
           // to run at every pixel.  Make absolutely sure this could
           // be a bullseye before proceeding.
           if(!this->isPlausibleBullseye(
-               keypoint, inImage, m_minRadius, m_maxRadius,
-               asymmetryThreshold)) {
+               keypoint, inImage, minRadius, maxRadius, asymmetryThreshold)) {
             continue;
           }
 
@@ -302,9 +310,11 @@ namespace brick {
           // bullseye evaluation.
           this->evaluateBullseyeMetric(keypoint, edgeImage,
                                        gradientX, gradientY,
-                                       m_minRadius, m_maxRadius);
-          this->sortedInsert(keypoint, m_keypointVector,
-                             m_maxNumberOfBullseyes);
+                                       minRadius, maxRadius);
+          if(keypoint.bullseyeMetric >= 0.0) {
+            this->sortedInsert(keypoint, m_keypointVector,
+                               m_maxNumberOfBullseyes);
+          }
           ++testedPixels;
         }
       }
@@ -330,41 +340,6 @@ namespace brick {
     template <class FloatType>
     void
     KeypointSelectorBullseye<FloatType>::
-    checkAndRepairRegionOfInterest(brick::common::UInt32 rows,
-                                   brick::common::UInt32 columns,
-                                   brick::common::UInt32 radius,
-                                   brick::common::UInt32& startRow,
-                                   brick::common::UInt32& startColumn,
-                                   brick::common::UInt32& stopRow,
-                                   brick::common::UInt32& stopColumn) const
-    {
-      startRow = std::max(
-        startRow, static_cast<brick::common::UInt32>(radius));
-      stopRow = std::min(
-        stopRow,
-        static_cast<brick::common::UInt32>(rows - radius));
-      startColumn = std::max(
-        startColumn, static_cast<brick::common::UInt32>(radius));
-      stopColumn = std::min(
-        stopColumn,
-        static_cast<brick::common::UInt32>(columns - radius));
-
-      // Of course, all of the above will be broken if there aren't
-      // enough rows or columns in the image.
-      if(rows <= radius) {
-        startRow = 0;
-        stopRow = 0;
-      }
-      if(columns <= radius) {
-        startColumn = 0;
-        stopColumn = 0;
-      }
-    }
-
-
-    template <class FloatType>
-    void
-    KeypointSelectorBullseye<FloatType>::
     accumulateAsymmetrySums(brick::common::Int32 pixel0,
                             brick::common::Int32 pixel1,
                             brick::common::UInt32& pixelSum,
@@ -375,6 +350,55 @@ namespace brick {
       pixelSquaredSum += pixel0 * pixel0 + pixel1 * pixel1;
       brick::common::Int32 difference = pixel1 - pixel0;
       asymmetrySum += difference * difference;
+    }
+
+
+    template <class FloatType>
+    bool
+    KeypointSelectorBullseye<FloatType>::
+    adjustFiducialSize(brick::common::UInt32& minRadius,
+                       brick::common::UInt32& maxRadius,
+                       brick::common::UInt32 row,
+                       brick::common::UInt32 column,
+                       brick::common::UInt32 numberOfRows,
+                       brick::common::UInt32 numberOfColumns) const
+    {
+      // Figure out how near the closest image edge is.
+      brick::common::UInt32 availableRowSpace =
+        std::min(row, numberOfRows - row - 1);
+      brick::common::UInt32 availableColumnSpace =
+        std::min(column, numberOfColumns - column - 1);
+      brick::common::UInt32 availableSpace =
+        std::min(availableRowSpace, availableColumnSpace);
+
+      // If there's clearly not enough space for a bullseye, then
+      // we're done.
+      if(minRadius >= availableSpace) {
+        return false;
+      }
+
+      // OK.  It looks like there's enough space.  We just need to
+      // clamp down on the max fiducial radius so it doesn't overlap
+      // the edge of the image.
+      maxRadius = std::min(maxRadius, availableSpace);
+      return true;
+    }
+
+
+    template <class FloatType>
+    void
+    KeypointSelectorBullseye<FloatType>::
+    checkAndRepairRegionOfInterest(brick::common::UInt32& startRow,
+                                   brick::common::UInt32& startColumn,
+                                   brick::common::UInt32& stopRow,
+                                   brick::common::UInt32& stopColumn,
+                                   brick::common::UInt32 rows,
+                                   brick::common::UInt32 columns) const
+    {
+      startRow = std::min(startRow, rows - 1);
+      stopRow = std::min(stopRow, rows - 1);
+      startColumn = std::min(startColumn, columns - 1);
+      stopColumn = std::min(stopColumn, columns - 1);
     }
 
 
@@ -775,6 +799,15 @@ namespace brick {
       for(brick::common::UInt32 row = startRow; row < stopRow; row += step) {
         for(brick::common::UInt32 column = startColumn; column < stopColumn;
             column += step) {
+          // Tailor fiducial size so we don't run off the side of the
+          // image.
+          brick::common::UInt32 minRadius = m_minRadius;
+          brick::common::UInt32 maxRadius = m_maxRadius;
+          if(!this->adjustFiducialSize(minRadius, maxRadius, row, column,
+                                       inImage.rows(), inImage.columns())) {
+            continue;
+          }
+
           KeypointBullseye<brick::common::Int32, FloatType> keypoint(
             row, column);
           if(this->isPlausibleBullseye(

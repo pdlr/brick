@@ -92,6 +92,7 @@ namespace brick {
     Triangle2DTest::
     testGetArea()
     {
+      // For a bunch of different triangles...
       for(brick::common::UInt32 ii = 0; ii < 10; ++ii) {
         for(brick::common::UInt32 jj = 0; jj < 10; ++jj) {
           for(brick::common::UInt32 kk = 0; kk < 10; ++kk) {

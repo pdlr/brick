@@ -19,6 +19,7 @@
 // #include <brick/geometry/triangle2D.hh>
 
 #include <brick/common/expect.hh>
+#include <brick/common/mathFunctions.hh>
 #include <brick/numeric/utilities.hh>
 
 namespace brick {

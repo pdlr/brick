@@ -13,9 +13,11 @@ VPATH			= @srcdir@
 
 TESTS = \
 	bullseye2DTest \
+	circle3DTest \
 	ellipse2DTest \
 	plane3DTest \
 	ray2DTest \
+	triangle2DTest \
 	triangle3DTest \
 	utilities2DTest \
 	utilities3DTest
@@ -25,9 +27,11 @@ TESTS = \
 
 check_PROGRAMS = \
 	bullseye2DTest \
+	circle3DTest \
 	ellipse2DTest \
 	plane3DTest \
 	ray2DTest \
+	triangle2DTest \
 	triangle3DTest \
 	utilities2DTest \
 	utilities3DTest
@@ -37,9 +41,11 @@ check_PROGRAMS = \
 # source files.
 
 bullseye2DTest_SOURCES		= bullseye2DTest.cc
+circle3DTest_SOURCES		= circle3DTest.cc
 ellipse2DTest_SOURCES		= ellipse2DTest.cc
 plane3DTest_SOURCES		= plane3DTest.cc
 ray2DTest_SOURCES		= ray2DTest.cc
+triangle2DTest_SOURCES		= triangle2DTest.cc
 triangle3DTest_SOURCES		= triangle3DTest.cc
 utilities2DTest_SOURCES		= utilities2DTest.cc
 utilities3DTest_SOURCES		= utilities3DTest.cc

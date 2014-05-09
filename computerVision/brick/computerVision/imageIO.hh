@@ -106,6 +106,13 @@ namespace brick {
               const Image<RGB8>& outputImage,
               const std::string& comment = "");
 
+
+    void
+    writePPM16(const std::string& fileName,
+               const Image<RGB16>& outputImage,
+               const std::string& comment = "");
+    
+    
 #ifndef HAVE_LIBPNG
 #define HAVE_LIBPNG 1
 #endif

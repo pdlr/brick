@@ -498,6 +498,13 @@ namespace brick {
               const Image<RGB8>& outputImage,
               const std::string& comment)
     {
+      if(!Image<RGB8>::value_type::isContiguous()) {
+        BRICK_THROW(
+          brick::common::NotImplementedException, "writePPM8()",
+          "Your compiler appears to pack RGB pixels in an unusual way.  "
+          "Please update brick::computerVision::writePPM8() to handle this.");
+      }
+      
       std::ofstream outputStream(fileName.c_str(), std::ios::binary);
       if(!outputStream) {
         std::ostringstream message;
@@ -539,6 +546,74 @@ namespace brick {
     }
 
 
+    void
+    writePPM16(const std::string& fileName,
+               const Image<RGB16>& outputImage,
+               const std::string& comment)
+    {
+      if(!Image<RGB16>::value_type::isContiguous()) {
+        BRICK_THROW(
+          brick::common::NotImplementedException, "writePPM16()",
+          "Your compiler appears to pack RGB pixels in an unusual way.  "
+          "Please update brick::computerVision::writePPM16() to handle this.");
+      }
+      
+      std::ofstream outputStream(fileName.c_str(), std::ios::binary);
+      if(!outputStream) {
+        std::ostringstream message;
+        message << "Couldn't open output file: " << fileName;
+        BRICK_THROW(brick::common::IOException,
+                    "writePPM16()", message.str().c_str());
+      }
+
+      // Write the header.
+      outputStream << "P6\n";
+      if(comment != "") {
+        outputStream << "# " << comment << "\n";
+      }
+      outputStream << outputImage.columns() << " " << outputImage.rows() << "\n"
+                   << "65535\n";
+
+      // Check for errors.
+      if(!outputStream) {
+        std::ostringstream message;
+        message << "Couldn't write image header to file: " << fileName;
+        BRICK_THROW(brick::common::IOException,
+                    "writePPM16()", message.str().c_str());
+      }
+
+      // And write the pixels.
+      size_t numberOfElements = outputImage.size();
+      size_t numberOfBytes =
+        numberOfElements * sizeof(Image<RGB16>::value_type);
+      if(brick::common::getByteOrder() == brick::common::BRICK_BIG_ENDIAN) {
+        outputStream.write(
+          reinterpret_cast<const char*>(outputImage.data()), numberOfBytes);
+      } else {
+        char* swabbedData = new char[numberOfBytes];
+        switchByteOrder(
+          reinterpret_cast<brick::common::UInt16 const*>(outputImage.data()),
+          numberOfBytes / 2,
+          reinterpret_cast<brick::common::UInt16*>(swabbedData),
+          brick::common::getByteOrder(), brick::common::BRICK_BIG_ENDIAN);
+        outputStream.write(swabbedData, numberOfBytes);
+        delete[] swabbedData;
+      }
+
+      // Check for errors.
+      if(!outputStream) {
+        outputStream.close();
+        std::ostringstream message;
+        message << "Error writing image data to output file: " << fileName;
+        BRICK_THROW(brick::common::IOException,
+                    "writePPM16()", message.str().c_str());
+      }
+    
+      // All done!
+      outputStream.close();
+    }
+
+    
 #if HAVE_LIBPNG
 
     Image<GRAY8>

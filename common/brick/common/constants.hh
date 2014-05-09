@@ -22,18 +22,22 @@ namespace brick {
     namespace constants {
 
       // Basic physical constants.
-      const brick::common::Float64 e = 2.7182818284590451;
-      const brick::common::Float64 pi = 3.141592653589793238;
+      const brick::common::Float64 e =
+        2.71828182845904523536028747135266249775724709369995;
+      const brick::common::Float64 pi =
+        3.14159265358979323846264338327950288419716939937510;
+      const brick::common::Float64 rootTwo =
+        1.41421356237309504880168872420969807856967187537694;
 
       // Empirical constants.
       const brick::common::Float64 avogadro = 6.02214179E23;
 
       // Constants that derive from the basic ones.
       const brick::common::Float64 degreesPerRadian = 180.0 / pi;
-      const brick::common::Float64 piOverTwo = 1.5707963267948966;
+      const brick::common::Float64 piOverTwo = pi / 2.0;
       const brick::common::Float64 radiansPerDegree = pi / 180.0;
-      const brick::common::Float64 rootTwo = 1.4142135623730951;
-      const brick::common::Float64 rootOverTwo = 0.70710678118654757;
+      const brick::common::Float64 rootTwoOverTwo = rootTwo / 2.0;
+      const brick::common::Float64 rootOverTwo = rootTwoOverTwo;
       const brick::common::Float64 twoPi = 2.0 * pi;
 
     } // namespace contants

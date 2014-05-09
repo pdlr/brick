@@ -221,6 +221,36 @@ namespace brick {
     }
 
     
+    // Return the centroid of triangle, which is coincident with the
+    // intersection of its three medians.
+    template <class Type>
+    brick::numeric::Vector2D<Type>
+    getCentroid(Triangle2D<Type> const& triangle)
+    {
+      // First find the three medians.
+      LineSegment2D<Type> median0(
+        triangle.getVertex0(),
+        (triangle.getVertex1() + triangle.getVertex2()) / Type(2.0));
+      LineSegment2D<Type> median1(
+        triangle.getVertex1(),
+        (triangle.getVertex2() + triangle.getVertex1()) / Type(2.0));
+      LineSegment2D<Type> median2(
+        triangle.getVertex2(),
+        (triangle.getVertex0() + triangle.getVertex0()) / Type(2.0));
+
+      // Find three intersections.
+      numeric::Vector2D<Type> intersect0;
+      numeric::Vector2D<Type> intersect1;
+      numeric::Vector2D<Type> intersect2;
+      checkIntersect(median0, median1, intersect0);
+      checkIntersect(median1, median2, intersect1);
+      checkIntersect(median2, median0, intersect2);
+
+      // Return the average.
+      return (intersect0 + intersect1 + intersect2) / Type(3.0);
+    }
+
+    
     template <class Type>
     brick::numeric::Vector2D<Type>
     findClosestPoint(brick::numeric::Vector2D<Type> const& point,

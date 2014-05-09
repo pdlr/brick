@@ -18,6 +18,7 @@
 #include <brick/numeric/vector2D.hh>
 #include <brick/geometry/lineSegment2D.hh>
 #include <brick/geometry/ray2D.hh>
+#include <brick/geometry/triangle2D.hh>
 
 
 namespace brick {
@@ -63,6 +64,20 @@ namespace brick {
                    LineSegment2D<Type> const& lineSegment,
                    brick::numeric::Vector2D<Type>& intersect,
                    double& lambda);
+
+    
+    /** 
+     * Return the centroid of triangle, which is coincident with the
+     * intersection of its three medians.
+     *
+     * @param triangle The triangle of which the centroid will be
+     * computed.
+     *
+     * @return The return value is the centroid.
+     */
+    template <class Type>
+    brick::numeric::Vector2D<Type>
+    getCentroid(Triangle2D<Type> const& triangle);
 
     
     template <class Type>

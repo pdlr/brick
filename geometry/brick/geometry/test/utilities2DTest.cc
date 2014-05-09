@@ -34,6 +34,7 @@ namespace brick {
       void testCheckIntersect__lineSegment2D__lineSegment2D__vector2DRef();
       void testCheckIntersect__ray2D__lineSegment2D__vector2DRef__doubleRef();
       void testFindClosestPoint__vector2D__ray2D();
+      void testGetCentroid__triangle2D();
       void testOperatorTimes__Transform2D__LineSegment2D();
       void testOperatorTimes__Transform2D__Ray2D();
 
@@ -62,6 +63,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(
         testCheckIntersect__ray2D__lineSegment2D__vector2DRef__doubleRef);
       BRICK_TEST_REGISTER_MEMBER(testFindClosestPoint__vector2D__ray2D);
+      BRICK_TEST_REGISTER_MEMBER(testGetCentroid__triangle2D);
       BRICK_TEST_REGISTER_MEMBER(testOperatorTimes__Transform2D__LineSegment2D);
       BRICK_TEST_REGISTER_MEMBER(testOperatorTimes__Transform2D__Ray2D);
     }
@@ -188,6 +190,48 @@ namespace brick {
     }
 
 
+    void
+    Utilities2DTest::
+    testGetCentroid__triangle2D()
+    {
+      // For a bunch of different triangles...
+      for(brick::common::UInt32 ii = 0; ii < 10; ++ii) {
+        for(brick::common::UInt32 jj = 0; jj < 10; ++jj) {
+          for(brick::common::UInt32 kk = 0; kk < 10; ++kk) {
+
+            // Three arbitrary vertices.
+            numeric::Vector2D<double> vertex0(10.0 * ii + 5.0, 2.0 * jj);
+            numeric::Vector2D<double> vertex1(-2.0 * jj - 3.0, 1.0 * kk + 7.0);
+            numeric::Vector2D<double> vertex2(7.0 * kk, -2.0 * ii + 1.0);
+
+            // Make a Triangle2D instance and query its centoid.
+            Triangle2D<double> triangle(vertex0, vertex1, vertex2);
+            numeric::Vector2D<double> centroid = getCentroid(triangle);
+
+            // If the centroid is correct, then the areas & centroids
+            // of the three sub-triangles surrounding the centroid
+            // should "balance out."
+            Triangle2D<double> subtriangle0(centroid, vertex0, vertex1);
+            Triangle2D<double> subtriangle1(centroid, vertex1, vertex2);
+            Triangle2D<double> subtriangle2(centroid, vertex2, vertex0);
+
+            numeric::Vector2D<double> testCentroid =
+              subtriangle0.getArea() * getCentroid(subtriangle0)
+              + subtriangle1.getArea() * getCentroid(subtriangle1)
+              + subtriangle2.getArea() * getCentroid(subtriangle2);
+            
+            BRICK_TEST_ASSERT(
+              approximatelyEqual(centroid.getX(), testCentroid.getX(),
+                                 m_defaultTolerance));
+            BRICK_TEST_ASSERT(
+              approximatelyEqual(centroid.getY(), testCentroid.getY(),
+                                 m_defaultTolerance));
+          }
+        }
+      }
+    }
+
+    
     void
     Utilities2DTest::
     testFindClosestPoint__vector2D__ray2D()

@@ -13,15 +13,13 @@
 #ifndef BRICK_GEOMETRY_TRIANGLE3D_IMPL_HH
 #define BRICK_GEOMETRY_TRIANGLE3D_IMPL_HH
 
-// This file is included by circle2D.hh, and should not be directly included
-// by user code, so no need to include circle2D.hh here.
+// This file is included by triangle3D.hh, and should not be directly included
+// by user code, so no need to include triangle3D.hh here.
 // 
 // #include <brick/geometry/triangle3D.hh>
 
 #include <brick/common/expect.hh>
 #include <brick/numeric/utilities.hh>
-
-namespace dnum = brick::numeric;
 
 namespace brick {
 

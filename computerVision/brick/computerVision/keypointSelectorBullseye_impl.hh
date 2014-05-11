@@ -801,17 +801,18 @@ namespace brick {
             column += step) {
           // Tailor fiducial size so we don't run off the side of the
           // image.
-          brick::common::UInt32 minRadius = m_minRadius;
-          brick::common::UInt32 maxRadius = m_maxRadius;
-          if(!this->adjustFiducialSize(minRadius, maxRadius, row, column,
-                                       inImage.rows(), inImage.columns())) {
+          brick::common::UInt32 localMinRadius = minRadius;
+          brick::common::UInt32 localMaxRadius = maxRadius;
+          if(!this->adjustFiducialSize(
+               localMinRadius, localMaxRadius, row, column,
+               inImage.rows(), inImage.columns())) {
             continue;
           }
 
           KeypointBullseye<brick::common::Int32, FloatType> keypoint(
             row, column);
           if(this->isPlausibleBullseye(
-               keypoint, inImage, minRadius, maxRadius, 0.0, true)) {
+               keypoint, inImage, localMinRadius, localMaxRadius, 0.0, true)) {
             asymmetrySum += keypoint.asymmetry;
             asymmetrySquaredSum += keypoint.asymmetry * keypoint.asymmetry;
             ++count;

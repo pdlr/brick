@@ -201,8 +201,8 @@ namespace brick {
 
             // Three arbitrary vertices.
             numeric::Vector2D<double> vertex0(10.0 * ii + 5.0, 2.0 * jj);
-            numeric::Vector2D<double> vertex1(-2.0 * jj - 3.0, 1.0 * kk + 7.0);
-            numeric::Vector2D<double> vertex2(7.0 * kk, -2.0 * ii + 1.0);
+            numeric::Vector2D<double> vertex1(-2.0 * jj - 3.1, 1.0 * kk + 7.2);
+            numeric::Vector2D<double> vertex2(7.3 * kk, -2.0 * ii + 1.6);
 
             // Make a Triangle2D instance and query its centoid.
             Triangle2D<double> triangle(vertex0, vertex1, vertex2);
@@ -215,11 +215,21 @@ namespace brick {
             Triangle2D<double> subtriangle1(centroid, vertex1, vertex2);
             Triangle2D<double> subtriangle2(centroid, vertex2, vertex0);
 
+            double area0 = subtriangle0.getArea();
+            double area1 = subtriangle1.getArea();
+            double area2 = subtriangle2.getArea();
             numeric::Vector2D<double> testCentroid =
-              subtriangle0.getArea() * getCentroid(subtriangle0)
-              + subtriangle1.getArea() * getCentroid(subtriangle1)
-              + subtriangle2.getArea() * getCentroid(subtriangle2);
+              area0 * getCentroid(subtriangle0)
+              + area1 * getCentroid(subtriangle1)
+              + area2 * getCentroid(subtriangle2);
+            testCentroid /= (area0 + area1 + area2);
             
+            BRICK_TEST_ASSERT(
+              !approximatelyEqual(testCentroid.getX(), 0.0,
+                                  m_defaultTolerance));
+            BRICK_TEST_ASSERT(
+              !approximatelyEqual(testCentroid.getY(), 0.0,
+                                  m_defaultTolerance));
             BRICK_TEST_ASSERT(
               approximatelyEqual(centroid.getX(), testCentroid.getX(),
                                  m_defaultTolerance));

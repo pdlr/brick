@@ -233,10 +233,10 @@ namespace brick {
         (triangle.getVertex1() + triangle.getVertex2()) / Type(2.0));
       LineSegment2D<Type> median1(
         triangle.getVertex1(),
-        (triangle.getVertex2() + triangle.getVertex1()) / Type(2.0));
+        (triangle.getVertex2() + triangle.getVertex0()) / Type(2.0));
       LineSegment2D<Type> median2(
         triangle.getVertex2(),
-        (triangle.getVertex0() + triangle.getVertex0()) / Type(2.0));
+        (triangle.getVertex0() + triangle.getVertex1()) / Type(2.0));
 
       // Find three intersections.
       numeric::Vector2D<Type> intersect0;

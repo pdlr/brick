@@ -53,11 +53,6 @@ namespace brick {
     
     template <class Type>
     brick::numeric::Vector3D<Type>
-    findIntersect(Ray3D<Type> const& ray, Plane3D<Type> const& plane, Type& distance);
-
-
-    template <class Type>
-    brick::numeric::Vector3D<Type>
     findIntersect(Ray3D<Type> const& ray, Plane3D<Type> const& plane);
 
 

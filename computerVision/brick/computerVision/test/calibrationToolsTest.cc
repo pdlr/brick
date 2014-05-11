@@ -15,6 +15,8 @@
 #include <brick/computerVision/calibrationTools.hh>
 #include <brick/computerVision/cameraIntrinsicsPinhole.hh>
 #include <brick/computerVision/cameraIntrinsicsPlumbBob.hh>
+#include <brick/computerVision/image.hh>
+#include <brick/geometry/utilities3D.hh>
 #include <brick/numeric/transform3D.hh>
 #include <brick/numeric/quaternion.hh>
 #include <brick/numeric/rotations.hh>
@@ -46,6 +48,7 @@ public:
   void testEstimateCameraParametersConstrained();
   void testEstimateCameraParametersPinhole();
   void testEstimateTransform3DTo2D();
+  void testEstimateProjectedAreaAndCentroid();
   
 private:
 
@@ -83,7 +86,8 @@ private:
                 Transform3D<double>& cameraTworld);
 
   void
-  getTestIntrinsicsPlumbBob(CameraIntrinsicsPlumbBob<double>& intrinsics);
+  getTestIntrinsicsPlumbBob(CameraIntrinsicsPlumbBob<double>& intrinsics,
+                            double resolutionFactor = 1.0);
   
   
   double m_defaultTolerance;
@@ -109,6 +113,7 @@ CalibrationToolsTest()
   BRICK_TEST_REGISTER_MEMBER(testEstimateCameraParametersConstrained);
   BRICK_TEST_REGISTER_MEMBER(testEstimateCameraParametersPinhole);
   BRICK_TEST_REGISTER_MEMBER(testEstimateTransform3DTo2D);
+  BRICK_TEST_REGISTER_MEMBER(testEstimateProjectedAreaAndCentroid);
 }
 
 
@@ -450,6 +455,154 @@ testEstimateTransform3DTo2D()
 }
 
 
+void
+CalibrationToolsTest::
+testEstimateProjectedAreaAndCentroid()
+{
+  // Create a hypothetical calibration fiducial, off to the side of
+  // the image, and rotated with respect to the camera.
+  brick::numeric::Vector3D<double> circleCenter(3.0, 1.5, 1.0);
+  brick::numeric::Vector3D<double> circleAxis0(0.2, 0.03, 0.02);
+  brick::numeric::Vector3D<double> circleAxis1(0.02, 0.1, -0.05);
+  brick::geometry::Circle3D<double> circle(
+    circleCenter, circleAxis0, circleAxis1);
+
+  // We'll need to know the plane in which the circle lies.
+  brick::geometry::Plane3D<double> plane(
+    circleCenter, circleCenter + circleAxis0, circleCenter + circleAxis1);
+
+  // Create the hypothetical camera.
+  CameraIntrinsicsPlumbBob<double> intrinsics;
+  getTestIntrinsicsPlumbBob(intrinsics);
+
+  // For independently estimating the centroid of the fiducial, we'll
+  // want a higher resolution camera. Create that here.
+  double const subsampleFactor = 5;
+  CameraIntrinsicsPlumbBob<double> highResIntrinsics;
+  getTestIntrinsicsPlumbBob(highResIntrinsics, subsampleFactor);
+
+  // Pick a pixel range that completely surrounds the projection of
+  // the circle.
+  double rowMin = std::numeric_limits<double>::max();
+  double rowMax = -rowMin;
+  double columnMin = std::numeric_limits<double>::max();
+  double columnMax = -columnMin;
+  double angleIncrement = brick::common::constants::pi / 100;
+  for(double angle = 0; angle < brick::common::constants::twoPi;
+      angle += angleIncrement) {
+    brick::numeric::Vector3D<double> perimeterPoint =
+      circle.getPerimeterPoint(angle);
+    brick::numeric::Vector2D<double> projectedPoint =
+      highResIntrinsics.project(perimeterPoint);
+    columnMin = std::min(columnMin, projectedPoint.getX());
+    columnMax = std::max(columnMax, projectedPoint.getX());
+    rowMin = std::min(rowMin, projectedPoint.getY());
+    rowMax = std::max(rowMax, projectedPoint.getY());
+
+    // Sanity check.
+    brick::numeric::Vector3D<double> radiusVector =
+      perimeterPoint - circleCenter;
+    double measuredRadius = brick::numeric::magnitude<double>(radiusVector);
+    BRICK_TEST_ASSERT(approximatelyEqual(measuredRadius, circle.getRadius(),
+                                         m_defaultTolerance));
+
+    // Second sanity check.
+    double planeOffset = brick::numeric::dot<double>(
+      radiusVector, plane.getNormal()) * measuredRadius;
+    BRICK_TEST_ASSERT(planeOffset < m_defaultTolerance);
+  }
+  
+  brick::common::Int32 startRow = std::floor(rowMin) - 5;
+  brick::common::Int32 stopRow = std::ceil(rowMax) + 5;
+  brick::common::Int32 startColumn = std::floor(columnMin) - 5;
+  brick::common::Int32 stopColumn = std::ceil(columnMax) + 5;
+
+  // Create an image of the circle.  Don't actually create it, but
+  // compute the pixel values and accumulate the centroid of the
+  // projection of the circle.  Actually, we will create the image for
+  // debugging purposes...
+  double referenceArea = 0.0;
+  brick::numeric::Vector2D<double> centroidAccumulator(0.0, 0.0);
+  Image<GRAY8> testImage(stopRow - startRow, stopColumn - startColumn);
+  testImage = brick::common::UInt8(0);
+  for(brick::common::Int32 row = startRow; row < stopRow; ++row) {
+    for(brick::common::Int32 column = startColumn; column < stopColumn;
+        ++column) {
+      // Corners of pixels are at integer coordinates, so centers are
+      // at "and-a-half" coordinates.
+      brick::numeric::Vector2D<double> pixelCenter(column + 0.5, row + 0.5);
+
+      // Figure out the point on the plane of the fiducial that
+      // projects to this pixel.
+      brick::geometry::Ray3D<double> ray =
+        highResIntrinsics.reverseProject(pixelCenter);
+      brick::numeric::Vector3D<double> intersect = findIntersect(ray, plane);
+
+      // Sanity check.
+      brick::numeric::Vector2D<double> reprojection =
+        highResIntrinsics.project(intersect);
+      double residual = brick::numeric::magnitude<double>(
+        reprojection - pixelCenter);
+      BRICK_TEST_ASSERT(residual < 1.0E-3);
+      
+      // Is the intersect within the circle?
+      double radius = brick::numeric::magnitude<double>(
+        intersect - circleCenter);
+      if(radius <= circle.getRadius()) {
+        centroidAccumulator += Vector2D<double>(column + 0.5, row + 0.5);
+        referenceArea += 1.0;
+        testImage(row - startRow, column - startColumn) =
+          brick::common::UInt8(255);
+      } 
+    }
+  }
+  brick::numeric::Vector2D<double> referenceCentroid =
+    centroidAccumulator / referenceArea;
+  referenceCentroid /= subsampleFactor;
+  referenceArea /= (subsampleFactor * subsampleFactor);
+
+  // Make a nice plot of centroid error.
+  brick::common::UInt32 const smallestNumberOfTriangles = 80;
+  brick::common::UInt32 const largestNumberOfTriangles = 81;
+  brick::numeric::Array1D<double> projectionErrors(
+    largestNumberOfTriangles - smallestNumberOfTriangles);
+  brick::numeric::Array1D<double> areaErrors(
+    largestNumberOfTriangles - smallestNumberOfTriangles);
+  for(brick::common::UInt32 numberOfTriangles = smallestNumberOfTriangles;
+      numberOfTriangles < largestNumberOfTriangles; ++numberOfTriangles) {
+    
+    // Recover the same quantities using the function under test.
+    double area;
+    brick::numeric::Vector2D<double> centroid;
+    estimateProjectedAreaAndCentroid(area, centroid, circle, intrinsics,
+                                     numberOfTriangles);
+    
+    // And remember errors.
+    projectionErrors[numberOfTriangles - smallestNumberOfTriangles] =
+      brick::numeric::magnitude<double>(centroid - referenceCentroid);
+    areaErrors[numberOfTriangles - smallestNumberOfTriangles] =
+      referenceArea - area;
+  }
+  
+  // For comparison, see where the circle centroid projects to.
+  brick::numeric::Vector2D<double> projectedCenter =
+    intrinsics.project(circle.getOrigin());
+  
+  // Make sure this was actually a difficult test.
+  double asymmetryMetric = brick::numeric::magnitude<double>(
+    projectedCenter - referenceCentroid);
+  BRICK_TEST_ASSERT(asymmetryMetric > 2.0);
+
+  // Make sure our two different ways of computing the projected
+  // centroid agree.
+  BRICK_TEST_ASSERT(projectionErrors[0] < 0.01);
+
+  // Make sure our two different ways of computing the projected
+  // area agree.
+  BRICK_TEST_ASSERT(areaErrors[0] < 0.2);
+}
+
+
 bool
 CalibrationToolsTest::
 checkIntrinsicsEqual(CameraIntrinsicsPinhole<double> const& intrinsics0,
@@ -638,15 +791,16 @@ get3DTestData(std::vector< Vector3D<double> >& points3D_world,
 
 void
 CalibrationToolsTest::
-getTestIntrinsicsPlumbBob(CameraIntrinsicsPlumbBob<double>& intrinsics)
+getTestIntrinsicsPlumbBob(CameraIntrinsicsPlumbBob<double>& intrinsics,
+                          double resolutionFactor)
 {
   // Arbitrary camera params.
-  size_t numPixelsX = 320;
-  size_t numPixelsY = 240;
-  double focalLengthX = 30.0;
-  double focalLengthY = 15.0;
-  double centerU = 100.0;
-  double centerV = 125.0;
+  size_t numPixelsX = 320 * resolutionFactor;
+  size_t numPixelsY = 240 * resolutionFactor;
+  double focalLengthX = 30.0 * resolutionFactor;
+  double focalLengthY = 15.0 * resolutionFactor;
+  double centerU = 100.0 * resolutionFactor;
+  double centerV = 125.0 * resolutionFactor;
   double skewCoefficient = 0.001;
   double radialCoefficient0 = 0.02;
   double radialCoefficient1 = 0.0001;

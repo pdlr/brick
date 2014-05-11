@@ -14,6 +14,7 @@
 #define BRICK_COMPUTERVISION_CALIBRATIONTOOLS_HH
 
 #include <brick/computerVision/cameraIntrinsicsPinhole.hh>
+#include <brick/geometry/circle3D.hh>
 #include <brick/numeric/transform3D.hh>
 
 namespace brick {
@@ -367,6 +368,37 @@ namespace brick {
       Iter2D points2DBegin);
 
 
+    /** 
+     * This function estimates the centroid, in pixel coordinates, of
+     * the projection of a circular target into the image, accounting
+     * for perspective effects and lens distortion.
+     * 
+     * @param target This argument describes the target to be
+     * projected.  It is a flat circular target in 3D camera
+     * coordinates, with no constraints on position or orientation.
+     *
+     * @param intrinsics This argument describes the camera
+     * projection, includingn lens distortion.
+     *
+     * @param numberOfTriangles The circle will be approximated by
+     * this many "pie slice" triangles.  Higher numbers mean better
+     * precision, but more computation.  The default value makes the
+     * area of the approximation be about 99% of the area of the
+     * circle.  The error in centroid position, of course, depends on
+     * the camera projection.
+     * 
+     * @return The return value is the estimated centroid in pixel
+     * coordinates.
+     */
+    template <class Intrinsics>
+    void
+    estimateProjectedAreaAndCentroid(
+      typename Intrinsics::FloatType& area,
+      numeric::Vector2D<typename Intrinsics::FloatType>& centroid,
+      geometry::Circle3D<typename Intrinsics::FloatType> const& target,
+      Intrinsics const& intrinsics,
+      common::UInt32 numberOfTriangles = 80);
+  
   } // namespace computerVision
   
 } // namespace brick

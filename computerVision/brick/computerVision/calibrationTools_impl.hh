@@ -21,6 +21,9 @@
 
 #include <limits>
 
+#include <brick/common/constants.hh>
+#include <brick/geometry/triangle2D.hh>
+#include <brick/geometry/utilities2D.hh>
 #include <brick/linearAlgebra/linearAlgebra.hh>
 #include <brick/numeric/rotations.hh>
 #include <brick/numeric/transform3D.hh>
@@ -1238,6 +1241,113 @@ namespace brick {
       }
 
       // Phew!
+    }
+
+
+    // This function estimates the centroid, in pixel coordinates, of
+    // the projection of a circular target into the image, accounting
+    // for perspective effects and lens distortion.
+    template <class Intrinsics>
+    void
+    estimateProjectedAreaAndCentroid(
+      typename Intrinsics::FloatType& area,
+      numeric::Vector2D<typename Intrinsics::FloatType>& centroid,
+      geometry::Circle3D<typename Intrinsics::FloatType> const& target,
+      Intrinsics const& intrinsics,
+      common::UInt32 numberOfTriangles)
+    {
+      // We're going to approximate the circle with a bunch of
+      // triangles, each having the center of the circle as one
+      // vertex.  The base of the triangle is a chord of the circle,
+      // with length 2 * r * sin(pi / N), where N is the number of
+      // triangles.
+      // 
+      // As an aside, we idly wonder what the differe difference
+      // between the area of the triangular approximation and the area
+      // of the circle will be.  The area of the circle is
+      //
+      // @code
+      //   A_c = pi * r^2.
+      // @endcode
+      // 
+      // The "height" of each triangle is just r * cos(pi / N).  This
+      // makes the area of each triangle be A_t = r^2 * sin(pi / N) *
+      // cos(pi / N).  So the area of the approximation is
+      //
+      // @code
+      //   A_a = N * A_t = N * r^2 * sin(pi/N) * cos(pi/N).
+      // @endcode
+      // 
+      // So we have (assuming we shoot for "equal to", not "less than"):
+      //
+      // @code
+      //   (A_c - A_a) / A_c = proportional_error
+      //
+      //   A_a / A_c = 1 - proportional_error
+      //
+      //   sin(pi/N) * cos(pi/N) = (pi / N) * (1 - proportional_error)
+      //
+      //   (1/2) * sin(2*pi/N) = (pi / N) * (1 - proportional_error)
+      //
+      //   sin(2*pi/N) = (2 * pi / N) * (1 - proportional_error)
+      //
+      //   1 - proportional_error = sinc(2*pi/N)
+      // @endcode
+      //
+      // So if we want the area of the approximation to be, say 99% of
+      // the area of the circle, we need to choose N so that
+      // sinc(2*pi/N) == 0.99, or N ~= 80.  If we want the area of the
+      // approximation to be 95% of the actual area, then N ~= 36.  If
+      // we want the area of the approximation to be 99.9% of the area
+      // of the circle, then N ~= 254.
+
+      // Typedef to clean up code below.
+      typedef typename Intrinsics::FloatType MyFloat;
+
+      // Sort out how we'll pie-slice the circle.
+      MyFloat const angleIncrement = 
+        common::constants::twoPi / numberOfTriangles;
+      MyFloat const stopAngle =
+        common::constants::twoPi - angleIncrement / 2.0;
+
+      // Project our starting geometry into the image.
+      numeric::Vector2D<MyFloat> centerPoint =
+        intrinsics.project(target.getOrigin());
+      numeric::Vector2D<MyFloat> firstCorner =
+        intrinsics.project(target.getPerimeterPoint(0.0));
+      numeric::Vector2D<MyFloat> previousCorner = firstCorner;
+
+      // Now iterate over all pie slices but the last.
+      MyFloat totalArea = 0.0;
+      numeric::Vector2D<MyFloat> accumulator(0.0, 0.0);
+      MyFloat currentAngle = angleIncrement;
+      while(currentAngle < stopAngle) {
+        // Define our new triangle.
+        numeric::Vector2D<MyFloat> nextCorner =
+          intrinsics.project(target.getPerimeterPoint(currentAngle));
+        geometry::Triangle2D<MyFloat> nextTriangle(
+          nextCorner, previousCorner, centerPoint);
+
+        // Incorporate its statistics into our accumulating centroid.
+        MyFloat areaIncrement = nextTriangle.getArea();
+        totalArea += areaIncrement;
+        accumulator += areaIncrement * geometry::getCentroid(nextTriangle);
+
+        // Prepare for the next iteration.
+        previousCorner = nextCorner;
+        currentAngle += angleIncrement;
+      }
+      
+      // Add in the final triangle.
+      geometry::Triangle2D<MyFloat> finalTriangle(
+        firstCorner, previousCorner, centerPoint);
+      MyFloat areaIncrement = finalTriangle.getArea();
+      totalArea += areaIncrement;
+      accumulator += areaIncrement * geometry::getCentroid(finalTriangle);
+
+      // Finally, return the centroid.
+      area = totalArea;
+      centroid = accumulator / totalArea;
     }
 
   } // namespace computerVision

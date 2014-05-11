@@ -18,6 +18,7 @@
 // 
 // #include <brick/geometry/circle3D.hh>
 
+#include <brick/common/mathFunctions.hh>
 #include <brick/numeric/utilities.hh>
 
 namespace brick {

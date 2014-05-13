@@ -94,7 +94,17 @@ namespace brick {
       inline Circle3D<Type>&
       operator=(Circle3D<Type> const& source);
 
+      
+      /** 
+       * This member function returns the geometric center of the circle.
+       * 
+       * @return The return value is the point at the center of the
+       * circle.
+       */
+      brick::numeric::Vector3D<Type> const&
+      getBasisVector(brick::common::UInt32 basisIndex) const;
 
+      
       /** 
        * This member function returns the geometric center of the circle.
        * 

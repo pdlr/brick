@@ -94,6 +94,19 @@ namespace brick {
     }
 
 
+    // This member function returns the geometric center of the circle.
+    template <class Type>
+    brick::numeric::Vector3D<Type> const&
+    Circle3D<Type>::
+    getBasisVector(brick::common::UInt32 basisIndex) const
+    {
+      if(0 == basisIndex) {
+        return this->m_basisVector0;
+      }
+      return this->m_basisVector1;
+    }
+
+    
     // This member function returns a point on the perimiter of the
     // circle, rotated a user-specified angle around the circle,
     // from an arbitrary-but-unchanging start point.

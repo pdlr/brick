@@ -35,6 +35,7 @@ namespace brick {
       void testCheckIntersect__ray__triangle();
       void testFindIntersect__ray__plane__doubleRef();
       void testFindIntersect__ray3D__ray3D__doubleRef();
+      void testOperatorTimes__Transform3D__Circle3D();
       void testOperatorTimes__Transform3D__Plane3D();
       void testOperatorTimes__Transform3D__Ray3D();
 
@@ -55,6 +56,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testCheckIntersect__ray__triangle);
       BRICK_TEST_REGISTER_MEMBER(testFindIntersect__ray__plane__doubleRef);
       BRICK_TEST_REGISTER_MEMBER(testFindIntersect__ray3D__ray3D__doubleRef);
+      BRICK_TEST_REGISTER_MEMBER(testOperatorTimes__Transform3D__Circle3D);
       BRICK_TEST_REGISTER_MEMBER(testOperatorTimes__Transform3D__Plane3D);
       BRICK_TEST_REGISTER_MEMBER(testOperatorTimes__Transform3D__Ray3D);
     }
@@ -198,6 +200,43 @@ namespace brick {
     }
 
     
+    void
+    Utilities3DTest::
+    testOperatorTimes__Transform3D__Circle3D()
+    {
+      // Arbitrary points and transform.
+      Vector3D<double> origin(1.0, 2.0, 3.0);
+      Vector3D<double> basisVector0(2.0, -1.0, 3.0);;
+      Vector3D<double> basisVector1(-2.0, -3.0, 4.0);;
+      Transform3D<double> xf = rollPitchYawToTransform3D(
+        Vector3D<double>(0.2, -0.1, 0.5));
+      xf.setValue<0, 3>(2.0);
+      xf.setValue<1, 3>(-1.0);
+      xf.setValue<2, 3>(-3.0);
+
+      Circle3D<double> circle0(origin, basisVector0, basisVector1);
+
+      Vector3D<double> referenceOrigin = xf * circle0.getOrigin();
+      Vector3D<double> referencePoint0 = xf * circle0.getPerimeterPoint(0.0);
+      Vector3D<double> referencePoint1 = xf * circle0.getPerimeterPoint(2.0);
+
+      Circle3D<double> circle1 = xf * circle0;
+      Vector3D<double> testOrigin = circle1.getOrigin();
+      Vector3D<double> testPoint0 = circle1.getPerimeterPoint(0.0);
+      Vector3D<double> testPoint1 = circle1.getPerimeterPoint(2.0);
+
+      BRICK_TEST_ASSERT(
+        brick::numeric::magnitude<double>(testOrigin - referenceOrigin)
+        < m_defaultTolerance);
+      BRICK_TEST_ASSERT(
+        brick::numeric::magnitude<double>(testPoint0 - referencePoint0)
+        < m_defaultTolerance);
+      BRICK_TEST_ASSERT(
+        brick::numeric::magnitude<double>(testPoint1 - referencePoint1)
+        < m_defaultTolerance);
+    }
+
+
     void
     Utilities3DTest::
     testOperatorTimes__Transform3D__Plane3D()

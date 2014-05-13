@@ -240,6 +240,19 @@ namespace brick {
     
 
     template <class Type>
+    Circle3D<Type>
+    operator*(brick::numeric::Transform3D<Type> const& transform,
+              Circle3D<Type> const& inputCircle)
+    {
+      return Circle3D<Type>(
+        transform * inputCircle.getOrigin(),
+        transform.rotate(inputCircle.getBasisVector(0)),
+        transform.rotate(inputCircle.getBasisVector(1)),
+        true);
+    }
+
+    
+    template <class Type>
     Plane3D<Type>
     operator*(brick::numeric::Transform3D<Type> const& transform,
               Plane3D<Type> const& inputPlane)

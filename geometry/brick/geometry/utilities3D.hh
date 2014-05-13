@@ -20,6 +20,7 @@
 
 #include <brick/numeric/vector3D.hh>
 #include <brick/numeric/transform3D.hh>
+#include <brick/geometry/circle3D.hh>
 #include <brick/geometry/plane3D.hh>
 #include <brick/geometry/ray3D.hh>
 #include <brick/geometry/triangle3D.hh>
@@ -67,6 +68,12 @@ namespace brick {
     findIntersect(Ray3D<Type> const& ray0, Ray3D<Type> const& ray1,
                   Type& distance0, Type& distance1, Type& residual);
 
+
+    template <class Type>
+    Circle3D<Type>
+    operator*(brick::numeric::Transform3D<Type> const& transform,
+              Circle3D<Type> const& inputCircle);
+    
 
     template <class Type>
     Plane3D<Type>

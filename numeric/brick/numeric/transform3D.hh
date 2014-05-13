@@ -150,6 +150,26 @@ namespace brick {
 
     
       /** 
+       * Assuming the *this represents a rigid body transformation,
+       * this member function takes a point and applies only the
+       * rotational part of the coordinate transform, returning the
+       * result.  It is like operator*(Vector3D<Type> const&), but
+       * does not apply the translational component of the coordinate
+       * transform.
+       *
+       * WARNING: This function assumes *this represents a rigid body
+       * transform (i.e., the upper-left 3x3 submatrix is orthogonal,
+       * and the bottom row is [0, 0, 0, 1]), but does not check that
+       * this is true.
+       * 
+       * @param vector0 The point to be transformed.
+       * @return The result of the transformation.
+       */
+      Vector3D<Type>
+      rotate(const Vector3D<Type>& vector0) const;
+
+      
+      /** 
        * Change the Transform3D value by explicitly setting element values
        * as if setting the elements of a 4x4 transformation matrix:
        *    [[a00, a01, a02, a03],

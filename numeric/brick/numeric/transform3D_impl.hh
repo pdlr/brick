@@ -253,6 +253,20 @@ namespace brick {
         -det013012 / det01230123, det012012 / det01230123);
     }
 
+
+    // This operator takes a point and applies only the rotational
+    // part of the coordinate transform, returning the result.
+    template <class Type>
+    Vector3D<Type>
+    Transform3D<Type>::
+    rotate(const Vector3D<Type>& vector0) const
+    {
+      return Vector3D<Type>(
+        m_00 * vector0.x() + m_01 * vector0.y() + m_02 * vector0.z(),
+        m_10 * vector0.x() + m_11 * vector0.y() + m_12 * vector0.z(),
+        m_20 * vector0.x() + m_21 * vector0.y() + m_22 * vector0.z());
+    }
+    
   
     // Change the Transform3D value by explicitly setting element values
     // as if setting the elements of a 4x4 transformation matrix:

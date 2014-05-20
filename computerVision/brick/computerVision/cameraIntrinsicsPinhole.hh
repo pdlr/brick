@@ -122,6 +122,46 @@ namespace brick {
 
 
       /** 
+       * This constructor allows the caller to explicitly set the
+       * camera intrinsic parameters.  It differs from the 7-argument
+       * constructor in that focal length is specified in units of
+       * pixel size, rather than in units of length.
+       * 
+       * @param numPixelsX This argument specifies how many columns
+       * there are in the camera images.
+       * 
+       * @param numPixelsY This argument specifies how many rows there
+       * are in the camera images.
+       * 
+       * @param focalLengthX This argument specifies the distance from
+       * the camera focus to the image plane in units of pixel width.
+       * Generally this number should be positive, indicating that the
+       * the image plane lies at a positive Z coordinate in the 3D
+       * camera coordinate frame.
+       * 
+       * @param focalLengthY This argument specifies the distance from
+       * the camera focus to the image plane in units of pixel height.
+       * Generally this number should be positive, indicating that the
+       * the image plane lies at a positive Z coordinate in the 3D
+       * camera coordinate frame.
+       * 
+       * @param centerU This argument and the next specify the
+       * position in pixel coordinates at which the Z axis passes
+       * through the image plane.
+       * 
+       * @param centerV This argument and the previous specify the
+       * position in pixel coordinates at which the Z axis passes
+       * through the image plane.
+       */
+      CameraIntrinsicsPinhole(unsigned int numPixelsX,
+                              unsigned int numPixelsY,
+                              FloatType focalLengthX,
+                              FloatType focalLengthY,
+                              FloatType centerU,
+                              FloatType centerV);
+
+
+      /** 
        * Destructor.
        */
       virtual
@@ -154,12 +194,37 @@ namespace brick {
 
       /** 
        * This member function returns the focal length of the camera,
-       * as passed to the CameraIntrinsicsPinhole constructor.
+       * as passed to the CameraIntrinsicsPinhole constructor.  If the
+       * 6-element constructor was used, then a return value will be
+       * 1.0.
        * 
-       * @return The return value is the originally specified focal length.
+       * @return The return value is the originally specified focal
+       * length, or 1.0 if no focal length was specified.
        */
       FloatType
       getFocalLength() const {return m_focalLength;}
+          
+
+      /** 
+       * This member function returns the focal length of the camera
+       * in units of pixel width.
+       * 
+       * @return The return value is the originally specified focal
+       * length, measured in units of pixel width.
+       */
+      FloatType
+      getFocalLengthX() const {return this->getKx();}
+          
+
+      /** 
+       * This member function returns the focal length of the camera
+       * in units of pixel height.
+       * 
+       * @return The return value is the originally specified focal
+       * length, measured in units of pixel height.
+       */
+      FloatType
+      getFocalLengthY() const {return this->getKy();}
           
 
       /** 
@@ -206,10 +271,13 @@ namespace brick {
 
       /** 
        * This member function returns the width of the image pixels in
-       * whatever units were used in the constructor call.
+       * whatever units were used in the constructor call.  If the
+       * 6-element constructor was used, then the returned value will
+       * be 1.0 / focalLengthX.
        * 
        * @return The return value is the size of each pixel in the X
-       * direction.
+       * direction, or 1.0 / focalLengthX if no pixel size was
+       * specified.
        */
       FloatType
       getPixelSizeX() const {return m_focalLength / m_kX;}
@@ -217,10 +285,13 @@ namespace brick {
 
       /** 
        * This member function returns the height of the image pixels in
-       * whatever units were used in the constructor call.
+       * whatever units were used in the constructor call.  If the
+       * 6-element constructor was used, then the returned value will
+       * be 1.0 / focalLengthX.
        * 
        * @return The return value is the size of each pixel in the Y
-       * direction.
+       * direction, or 1.0 / focalLengthY if no pixel size was
+       * specified.
        */
       FloatType
       getPixelSizeY() const {return m_focalLength / m_kY;}
@@ -287,6 +358,54 @@ namespace brick {
                      bool normalize = true) const;
 
 
+      /** 
+       * This member function specifies the U coordinate of the center
+       * of projection of the camera.  See the class documentation for
+       * discussion of this coordinate system.
+       * 
+       * @param centerU The U coordinate of the center of projection.
+       */
+      virtual void
+      setCenterU(FloatType centerU) {m_centerU = centerU;}
+
+      
+      /** 
+       * This member function specifies the V coordinate of the center
+       * of projection of the camera.  See the class documentation for
+       * discussion of this coordinate system.
+       * 
+       * @param centerV The V coordinate of the center of projection.
+       */
+      virtual void
+      setCenterV(FloatType centerV) {m_centerV = centerV;}
+
+      
+      /** 
+       * This member function specifies the focal length of the imager
+       * in units of pixel width.  Or conversely, you can think of
+       * focal length as being fixed, and this member function as as
+       * indirectly specifying the width of a pixel.
+       * 
+       * @param focalLengthX The focal length of the lens in units of
+       * pixel width.
+       */
+      virtual void
+      setFocalLengthX(FloatType focalLengthX) {m_kX = focalLengthX;}
+
+      
+      /** 
+       * This member function specifies the focal length of the imager
+       * in units of pixel height.  Or conversely, you can think of
+       * focal length as being fixed, and this member function as as
+       * indirectly specifying the height of a pixel.
+       * 
+       * @param focalLengthY The focal length of the lens in units of
+       * pixel height.
+       */
+      virtual void
+      setFocalLengthY(FloatType focalLengthY) {m_kY = focalLengthY;}
+
+      
       /** 
        * This member function specifies the width of the image in
        * pixels.

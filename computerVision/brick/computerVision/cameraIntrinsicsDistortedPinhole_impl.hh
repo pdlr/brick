@@ -1,8 +1,9 @@
 /**
 ***************************************************************************
-* @file brick/computerVision/cameraIntrinsicsDistorted_impl.hh
+* @file brick/computerVision/cameraIntrinsicsDistortedPinhole_impl.hh
 *
-* Definitions of inline and template functions for CameraIntrinsicsDistorted.
+* Definitions of inline and template functions for
+* CameraIntrinsicsDistortedPinhole.
 *
 * Copyright (C) 2007-2014 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
@@ -10,18 +11,17 @@
 ***************************************************************************
 */
 
-#ifndef BRICK_COMPUTERVISION_CAMERAINTRINSICSDISTORTED_IMPL_HH
-#define BRICK_COMPUTERVISION_CAMERAINTRINSICSDISTORTED_IMPL_HH
+#ifndef BRICK_COMPUTERVISION_CAMERAINTRINSICSDISTORTEDPINHOLE_IMPL_HH
+#define BRICK_COMPUTERVISION_CAMERAINTRINSICSDISTORTEDPINHOLE_IMPL_HH
 
-// This file is included by cameraIntrinsicsDistorted.hh, and should
+// This file is included by cameraIntrinsicsDistortedPinhole.hh, and should
 // not be directly included by user code, so no need to include
-// cameraIntrinsicsDistorted.hh here.
+// cameraIntrinsicsDistortedPinhole.hh here.
 // 
-// #include <brick/numeric/cameraIntrinsicsDistorted.hh>
+// #include <brick/numeric/cameraIntrinsicsDistortedPinhole.hh>
 
 #include <iomanip>
 #include <brick/common/expect.hh>
-#include <brick/computerVision/cameraIntrinsicsDistorted.hh>
 #include <brick/optimization/optimizerBFGS.hh>
 #include <brick/optimization/optimizerNelderMead.hh>
 
@@ -33,8 +33,8 @@ namespace brick {
 
       /**
        ** This functor is called by
-       ** CameraIntrinsicsDistorted::reverseProject() during iterative
-       ** approximation of reverse projection.
+       ** CameraIntrinsicsDistortedPinhole::reverseProject() during
+       ** iterative approximation of reverse projection.
        **/
       template <class FloatType>
       class ReverseProjectionObjective
@@ -45,7 +45,7 @@ namespace brick {
         ReverseProjectionObjective();
         
         ReverseProjectionObjective(
-          CameraIntrinsicsDistorted<FloatType> const& intrinsics,
+          CameraIntrinsicsDistortedPinhole<FloatType> const& intrinsics,
           const brick::numeric::Vector2D<FloatType>& uvTarget);
         
         FloatType
@@ -69,7 +69,7 @@ namespace brick {
                                      FloatType dVdX, FloatType dVdY,
                                      FloatType& dPdX, FloatType& dPdY);
 
-        CameraIntrinsicsDistorted<FloatType> const* m_intrinsicsPtr;
+        CameraIntrinsicsDistortedPinhole<FloatType> const* m_intrinsicsPtr;
         FloatType m_offset;
         brick::numeric::Vector2D<FloatType> m_uvTarget;
       };
@@ -81,13 +81,43 @@ namespace brick {
 
 
 
+    // Default constructor.
+    template <class FloatType>
+    CameraIntrinsicsDistortedPinhole<FloatType>::
+    CameraIntrinsicsDistortedPinhole()
+      : CameraIntrinsics<FloatType>(),
+        m_pinholeIntrinsics()
+    {
+      // Empty.
+    };
+
+    
+    // This constructor allows the caller to explicitly set the
+    // camera pinhole intrinsic parameters.
+    template <class FloatType>
+    CameraIntrinsicsDistortedPinhole<FloatType>::
+    CameraIntrinsicsDistortedPinhole(unsigned int numPixelsX,
+                                     unsigned int numPixelsY,
+                                     FloatType focalLengthX,
+                                     FloatType focalLengthY,
+                                     FloatType centerU,
+                                     FloatType centerV)
+      : CameraIntrinsics<FloatType>(),
+        m_pinholeIntrinsics(numPixelsX, numPixelsY,
+                            focalLengthX, focalLengthY,
+                            centerU, centerV)
+    {
+      // Empty.
+    }
+
+    
     // This member function takes a point in 2D pixel coordinates
     // and returns a ray in 3D camera coordinates passing through
     // all of the 3D points that project to the specified 2D
     // position.
     template <class FloatType>
     geometry::Ray3D<FloatType>
-    CameraIntrinsicsDistorted<FloatType>::
+    CameraIntrinsicsDistortedPinhole<FloatType>::
     reverseProject(const brick::numeric::Vector2D<FloatType>& pixelPosition,
                    bool normalize) const
     {
@@ -116,9 +146,10 @@ namespace brick {
       
       if(residual > (this->getMaximumReverseProjectionResidual()
                      + objective.getOffset())) {
-        BRICK_THROW(brick::common::ValueException,
-                    "CameraIntrinsicsDistorted<FloatType>::reverseProject()",
-                    "Reverse projection failed to converge.");
+        BRICK_THROW(
+          brick::common::ValueException,
+          "CameraIntrinsicsDistortedPinhole<FloatType>::reverseProject()",
+          "Reverse projection failed to converge.");
       }
       
       return brick::geometry::Ray3D<FloatType>(
@@ -145,7 +176,7 @@ namespace brick {
       template <class FloatType>
       ReverseProjectionObjective<FloatType>::
       ReverseProjectionObjective(
-        const CameraIntrinsicsDistorted<FloatType>& intrinsics,
+        const CameraIntrinsicsDistortedPinhole<FloatType>& intrinsics,
         const brick::numeric::Vector2D<FloatType>& uvTarget)
         : m_intrinsicsPtr(&intrinsics),
           m_offset(0.0001),
@@ -336,4 +367,4 @@ namespace brick {
   
 } // namespace brick
 
-#endif /* #ifndef BRICK_COMPUTERVISION_CAMERAINTRINSICSDISTORTED_IMPL_HH */
+#endif /* #ifndef BRICK_COMPUTERVISION_CAMERAINTRINSICSDISTORTEDPINHOLE_IMPL_HH */

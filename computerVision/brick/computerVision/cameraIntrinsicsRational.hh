@@ -15,7 +15,7 @@
 #define BRICK_COMPUTERVISION_CAMERAINTRINSICSRATIONAL_HH
 
 #include <iostream>
-#include <brick/computerVision/cameraIntrinsicsDistorted.hh>
+#include <brick/computerVision/cameraIntrinsicsDistortedPinhole.hh>
 #include <brick/numeric/array1D.hh>
 #include <brick/numeric/utilities.hh>
 
@@ -66,9 +66,23 @@ namespace brick {
      **/
     template <class FloatType>
     class CameraIntrinsicsRational
-      : public CameraIntrinsicsDistorted<FloatType> {
+      : public CameraIntrinsicsDistortedPinhole<FloatType> {
 
     public:
+
+      // Public member functions inherited from
+      // CameraIntrinsicsDistortedPinhole.
+      // 
+      // FloatType getCenterU();
+      // FloatType getCenterV();
+      // FloatType getFocalLengthX();
+      // FloatType getFocalLengthY();
+      // unsigned int getNumPixelsX();
+      // unsigned int getNumPixelsY();
+      // void setDependentParameters(...);
+      // void setNumPixelsX(unsigned int);
+      // void setNumPixelsY(unsigned int);
+
 
       /** 
        * The default constructor initializes the
@@ -171,28 +185,6 @@ namespace brick {
       ~CameraIntrinsicsRational() {}
 
 
-     /** 
-       * This member function provides access to the value of
-       * parameter centerU, as described in the constructor
-       * documentation.
-       * 
-       * @return The return value is the requested parameter.
-       */
-      FloatType
-      getCenterU() const {return m_centerU;}
-
-
-      /** 
-       * This member function provides access to the value of
-       * parameter centerV, as described in the constructor
-       * documentation.
-       * 
-       * @return The return value is the requested parameter.
-       */
-      FloatType
-      getCenterV() const {return m_centerV;}
-
-
       /** 
        * This function exposes the distortion parameters of the camera model.
        * 
@@ -204,28 +196,6 @@ namespace brick {
       getDistortionCoefficients() const;
       
       
-      /** 
-       * This member function provides access to the value of
-       * parameter focalLengthX, as described in the constructor
-       * documentation.
-       * 
-       * @return The return value is the requested parameter.
-       */
-      FloatType
-      getFocalLengthX() const {return m_kX;}
-
-
-      /** 
-       * This member function provides access to the value of
-       * parameter focalLengthY, as described in the constructor
-       * documentation.
-       * 
-       * @return The return value is the requested parameter.
-       */
-      FloatType
-      getFocalLengthY() const {return m_kY;}
-
-
       /** 
        * This function exposes a subset of the intrinsic parameters
        * for use in calibration routines.  Parameters that can
@@ -253,28 +223,6 @@ namespace brick {
       virtual typename CameraIntrinsicsRational<FloatType>::ParameterVectorType
       getNominalFreeParameters() const;
       
-      
-      /** 
-       * This member function returns the number of columns in images
-       * produced by the camera corresponding to *this.
-       * 
-       * @return The return value is the number of pixels in each
-       * image row.
-       */
-      virtual unsigned int
-      getNumPixelsX() const {return m_numPixelsX;}
-
-
-      /** 
-       * This member function returns the number of rows in images
-       * produced by the camera corresponding to *this.
-       * 
-       * @return The return value is the number of pixels in each
-       * image column.
-       */
-      virtual unsigned int
-      getNumPixelsY() const {return m_numPixelsY;}
-
       
       /** 
        * This member function takes a point in 3D camera coordinates
@@ -328,53 +276,6 @@ namespace brick {
 
 
       /** 
-       * This function is the counterpart to setFreeParameters().  It
-       * allows the calling context to specify pinhole parameters that
-       * are normally estimated closed-form.
-       * 
-       * @param numPixelsX This argument specifies how many columns
-       * there are in the camera images.
-       * 
-       * @param numPixelsY This argument specifies how many rows there
-       * are in the camera images.
-       * 
-       * @param focalLengthX This argument the distance from the
-       * camera focus to the image plane in units of "pixel width."
-       * Generally this number should be positive, indicating that the
-       * the image plane lies at a positive Z coordinate in the 3D
-       * camera coordinate frame.
-       * 
-       * @param focalLengthY This argument the distance from the
-       * camera focus to the image plane in units of "pixel height."
-       * Generally this number should be positive, indicating that the
-       * the image plane lies at a positive Z coordinate in the 3D
-       * camera coordinate frame.
-       * 
-       * @param centerU This argument and the next specify the
-       * position in pixel coordinates at which the Z axis passes
-       * through the image plane.
-       * 
-       * @param centerV This argument and the previous specify the
-       * position in pixel coordinates at which the Z axis passes
-       * through the image plane.
-       */
-      virtual void
-      setDependentParameters(unsigned int numPixelsX,
-                             unsigned int numPixelsY,
-                             FloatType focalLengthX,
-                             FloatType focalLengthY,
-                             FloatType centerU,
-                             FloatType centerV) {
-        m_numPixelsX = numPixelsX;
-        m_numPixelsY = numPixelsY;
-        m_kX = focalLengthX;
-        m_kY = focalLengthY;
-        m_centerU = centerU;
-        m_centerV = centerV;
-      }
-
-      
-      /** 
        * This sets the value of a subset of the intrinsic parameters,
        * and is commonly used by in calibration routines.  Parameters
        * that can generally be calculated closed-form are omitted from
@@ -393,26 +294,6 @@ namespace brick {
         const& parameterVector);
   
 
-      /** 
-       * This member function specifies the width of the image in
-       * pixels.
-       * 
-       * @param numPixelsX The width of the image.
-       */
-      virtual void
-      setNumPixelsX(unsigned int numPixelsX) {m_numPixelsX = numPixelsX;}
-
-
-      /** 
-       * This member function specifies the height of the image in
-       * pixels.
-       * 
-       * @param numPixelsX The height of the image.
-       */
-      virtual void
-      setNumPixelsY(unsigned int numPixelsY) {m_numPixelsY = numPixelsY;}
-      
-      
       /** 
        * This member function writes the calibration to an
        * outputstream in a format which is compatible with member
@@ -441,12 +322,8 @@ namespace brick {
                                     FloatType& dVdX,
                                     FloatType& dVdY) const;
 
-      FloatType m_centerU;
-      FloatType m_centerV;
-      FloatType m_kX;
-      FloatType m_kY;
-      unsigned int m_numPixelsX;
-      unsigned int m_numPixelsY;
+
+      // Protected data members.
       FloatType m_radialCoefficient0;
       FloatType m_radialCoefficient1;
       FloatType m_radialCoefficient2;

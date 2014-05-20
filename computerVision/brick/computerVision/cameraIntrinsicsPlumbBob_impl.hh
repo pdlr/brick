@@ -34,15 +34,9 @@ namespace brick {
     template <class FloatType>
     CameraIntrinsicsPlumbBob<FloatType>::
     CameraIntrinsicsPlumbBob()
-      : CameraIntrinsicsDistorted<FloatType>(),
+      : CameraIntrinsicsDistortedPinhole<FloatType>(),
         m_allowSixthOrderRadial(true),
         m_allowSkew(true),
-        m_centerU(50),
-        m_centerV(50),
-        m_kX(1.0),
-        m_kY(1.0),
-        m_numPixelsX(100),
-        m_numPixelsY(100),
         m_radialCoefficient0(0.0),
         m_radialCoefficient1(0.0),
         m_radialCoefficient2(0.0),
@@ -70,15 +64,11 @@ namespace brick {
                              FloatType radialCoefficient2,
                              FloatType tangentialCoefficient0,
                              FloatType tangentialCoefficient1)
-      : CameraIntrinsicsDistorted<FloatType>(),
+      : CameraIntrinsicsDistortedPinhole<FloatType>(numPixelsX, numPixelsY,
+                                                    focalLengthX, focalLengthY,
+                                                    centerU, centerV),
         m_allowSixthOrderRadial(true),
         m_allowSkew(true),
-        m_centerU(centerU),
-        m_centerV(centerV),
-        m_kX(focalLengthX),
-        m_kY(focalLengthY),
-        m_numPixelsX(numPixelsX),
-        m_numPixelsY(numPixelsY),
         m_radialCoefficient0(radialCoefficient0),
         m_radialCoefficient1(radialCoefficient1),
         m_radialCoefficient2(radialCoefficient2),
@@ -183,8 +173,8 @@ namespace brick {
       brick::numeric::Vector3D<FloatType> skewedPoint =
         this->projectThroughDistortion(point);
       return brick::numeric::Vector2D<FloatType>(
-        m_kX * skewedPoint.x() + m_centerU,
-        m_kY * skewedPoint.y() + m_centerV);
+        this->getFocalLengthX() * skewedPoint.x() + this->getCenterU(),
+        this->getFocalLengthY() * skewedPoint.y() + this->getCenterV());
     }
     
 
@@ -245,12 +235,8 @@ namespace brick {
       stream >> common::Expect("}", flags);
 
       if(stream) {
-        m_centerU = centerU;
-        m_centerV = centerV;
-        m_kX = kX;
-        m_kY = kY;
-        m_numPixelsX = numpixelsX;
-        m_numPixelsY = numpixelsY;
+        this->setDependentParameters(
+          numpixelsX, numpixelsY, kX, kY, centerU, centerV);
         m_radialCoefficient0 = radialCoefficient0;
         m_radialCoefficient1 = radialCoefficient1;
         m_radialCoefficient2 = radialCoefficient2;
@@ -302,12 +288,12 @@ namespace brick {
       stream.precision(15);
       stream << "CameraIntrinsicsPlumbBob {"
              << std::fixed << std::setw(15)
-             << m_numPixelsX << ", "
-             << m_numPixelsY << ", "
-             << m_kX << ", "
-             << m_kY << ", "
-             << m_centerU << ", "
-             << m_centerV << ", "
+             << this->getNumPixelsX() << ", "
+             << this->getNumPixelsY() << ", "
+             << this->getFocalLengthX() << ", "
+             << this->getFocalLengthY() << ", "
+             << this->getCenterU() << ", "
+             << this->getCenterV() << ", "
              << m_skewCoefficient << ", "
              << m_radialCoefficient0 << ", "
              << m_radialCoefficient1 << ", "
@@ -399,13 +385,16 @@ namespace brick {
       FloatType dSkewedXDY = dDistortedXDY + m_skewCoefficient * dDistortedYDY;
       FloatType dSkewedYDX = dDistortedYDX;
       FloatType dSkewedYDY = dDistortedYDY;
-      
-      uValue = m_kX * skewedPoint.x() + m_centerU;
-      vValue = m_kY * skewedPoint.y() + m_centerV;
-      dUdX = m_kX * dSkewedXDX;
-      dUdY = m_kX * dSkewedXDY;
-      dVdX = m_kY * dSkewedYDX;
-      dVdY = m_kY * dSkewedYDY;
+
+      FloatType kX = this->getFocalLengthX();
+      FloatType kY = this->getFocalLengthY();
+
+      uValue = kX * skewedPoint.x() + this->getCenterU();
+      vValue = kY * skewedPoint.y() + this->getCenterV();
+      dUdX = kX * dSkewedXDX;
+      dUdY = kX * dSkewedXDY;
+      dVdX = kY * dSkewedYDX;
+      dVdY = kY * dSkewedYDY;
     }
     
     

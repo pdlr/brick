@@ -35,13 +35,7 @@ namespace brick {
     template <class FloatType>
     CameraIntrinsicsRational<FloatType>::
     CameraIntrinsicsRational()
-      : CameraIntrinsicsDistorted<FloatType>(),
-        m_centerU(50),
-        m_centerV(50),
-        m_kX(1.0),
-        m_kY(1.0),
-        m_numPixelsX(100),
-        m_numPixelsY(100),
+      : CameraIntrinsicsDistortedPinhole<FloatType>(),
         m_radialCoefficient0(0.0),
         m_radialCoefficient1(0.0),
         m_radialCoefficient2(0.0),
@@ -73,13 +67,9 @@ namespace brick {
                              FloatType radialCoefficient5,
                              FloatType tangentialCoefficient0,
                              FloatType tangentialCoefficient1)
-      : CameraIntrinsicsDistorted<FloatType>(),
-        m_centerU(centerU),
-        m_centerV(centerV),
-        m_kX(focalLengthX),
-        m_kY(focalLengthY),
-        m_numPixelsX(numPixelsX),
-        m_numPixelsY(numPixelsY),
+      : CameraIntrinsicsDistortedPinhole<FloatType>(numPixelsX, numPixelsY,
+                                                    focalLengthX, focalLengthY,
+                                                    centerU, centerV),
         m_radialCoefficient0(radialCoefficient0),
         m_radialCoefficient1(radialCoefficient1),
         m_radialCoefficient2(radialCoefficient2),
@@ -144,11 +134,11 @@ namespace brick {
     CameraIntrinsicsRational<FloatType>::
     project(const brick::numeric::Vector3D<FloatType>& point) const
     {
-      brick::numeric::Vector3D<FloatType> skewedPoint =
+      brick::numeric::Vector3D<FloatType> distortedPoint =
         this->projectThroughDistortion(point);
       return brick::numeric::Vector2D<FloatType>(
-        m_kX * skewedPoint.x() + m_centerU,
-        m_kY * skewedPoint.y() + m_centerV);
+        this->getFocalLengthX() * distortedPoint.x() + this->getCenterU(),
+        this->getFocalLengthY() * distortedPoint.y() + this->getCenterV());
     }
     
 
@@ -215,12 +205,8 @@ namespace brick {
       stream >> common::Expect("}", flags);
 
       if(stream) {
-        m_centerU = centerU;
-        m_centerV = centerV;
-        m_kX = kX;
-        m_kY = kY;
-        m_numPixelsX = numpixelsX;
-        m_numPixelsY = numpixelsY;
+        this->setDependentParameters(
+          numpixelsX, numpixelsY, kX, kY, centerU, centerV);
         m_radialCoefficient0 = radialCoefficient0;
         m_radialCoefficient1 = radialCoefficient1;
         m_radialCoefficient2 = radialCoefficient2;
@@ -268,12 +254,12 @@ namespace brick {
       stream.precision(15);
       stream << "CameraIntrinsicsRational {"
              << std::fixed << std::setw(15)
-             << m_numPixelsX << ", "
-             << m_numPixelsY << ", "
-             << m_kX << ", "
-             << m_kY << ", "
-             << m_centerU << ", "
-             << m_centerV << ", "
+             << this->getNumPixelsX() << ", "
+             << this->getNumPixelsY() << ", "
+             << this->getFocalLengthX() << ", "
+             << this->getFocalLengthY() << ", "
+             << this->getCenterU() << ", "
+             << this->getCenterV() << ", "
              << m_radialCoefficient0 << ", "
              << m_radialCoefficient1 << ", "
              << m_radialCoefficient2 << ", "
@@ -389,13 +375,16 @@ namespace brick {
       FloatType dDistortedYDX = dRadialDistortionDX * yNorm + dTangYDX;
       FloatType dDistortedYDY =
         dRadialDistortionDY * yNorm + radialDistortion + dTangYDY;
-      
-      uValue = m_kX * distortedPoint.x() + m_centerU;
-      vValue = m_kY * distortedPoint.y() + m_centerV;
-      dUdX = m_kX * dDistortedXDX;
-      dUdY = m_kX * dDistortedXDY;
-      dVdX = m_kY * dDistortedYDX;
-      dVdY = m_kY * dDistortedYDY;
+
+      FloatType kX = this->getFocalLengthX();
+      FloatType kY = this->getFocalLengthY();
+
+      uValue = kX * distortedPoint.x() + this->getCenterU();
+      vValue = kY * distortedPoint.y() + this->getCenterV();
+      dUdX = kX * dDistortedXDX;
+      dUdY = kX * dDistortedXDY;
+      dVdX = kY * dDistortedYDX;
+      dVdY = kY * dDistortedYDY;
     }
     
     

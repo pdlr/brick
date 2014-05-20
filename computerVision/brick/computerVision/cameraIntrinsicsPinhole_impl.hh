@@ -23,9 +23,6 @@
 #include <iomanip>
 #include <brick/common/expect.hh>
 
-using namespace brick::numeric;
-using namespace brick::geometry;
-
 namespace brick {
 
   namespace computerVision {
@@ -70,6 +67,29 @@ namespace brick {
     {
       // Empty.
     }
+
+
+    // This constructor allows the caller to explicitly set the
+    // camera intrinsic parameters.
+    template <class FloatType>
+    CameraIntrinsicsPinhole<FloatType>::
+    CameraIntrinsicsPinhole(unsigned int numPixelsX,
+                            unsigned int numPixelsY,
+                            FloatType focalLengthX,
+                            FloatType focalLengthY,
+                            FloatType centerU,
+                            FloatType centerV)
+      : CameraIntrinsics<FloatType>(),
+        m_centerU(centerU),
+        m_centerV(centerV),
+        m_focalLength(1.0),
+        m_kX(focalLengthX),
+        m_kY(focalLengthY),
+        m_numPixelsX(numPixelsX),
+        m_numPixelsY(numPixelsY)
+    {
+      // Empty.
+    }
     
     
     // This member function returns a coordinate transform that
@@ -90,12 +110,13 @@ namespace brick {
     // This member function takes a point in 3D camera coordinates
     // and projects it into pixel coordinates.
     template <class FloatType>
-    Vector2D<FloatType>
+    brick::numeric::Vector2D<FloatType>
     CameraIntrinsicsPinhole<FloatType>::
     project(const brick::numeric::Vector3D<FloatType>& point) const
     {
-      return Vector2D<FloatType>(m_kX * point.x() / point.z() + m_centerU,
-                                 m_kY * point.y() / point.z() + m_centerV);
+      return brick::numeric::Vector2D<FloatType>(
+        m_kX * point.x() / point.z() + m_centerU,
+        m_kY * point.y() / point.z() + m_centerV);
     }
     
 
@@ -150,9 +171,9 @@ namespace brick {
     // all of the 3D points that project to the specified 2D
     // position.
     template <class FloatType>
-    geometry::Ray3D<FloatType>
+    brick::geometry::Ray3D<FloatType>
     CameraIntrinsicsPinhole<FloatType>::
-    reverseProject(const Vector2D<FloatType>& pixelPosition,
+    reverseProject(const brick::numeric::Vector2D<FloatType>& pixelPosition,
                    bool normalize) const
     {
       // For pinhole camera model, assume 3D point [x_cam, y_cam,
@@ -173,11 +194,12 @@ namespace brick {
       //   x_cam = (x_pix - x_c) / k_x, and
       //   y_cam = (y_pix - y_c) / k_y.
       //   z_cam = 1.0
-      return Ray3D<FloatType>(
-        Vector3D<FloatType>(0.0, 0.0, 0.0),
-        Vector3D<FloatType>((pixelPosition.x() - m_centerU) / m_kX,
-                            (pixelPosition.y() - m_centerV) / m_kY,
-                            1.0), normalize);
+      return brick::geometry::Ray3D<FloatType>(
+        brick::numeric::Vector3D<FloatType>(0.0, 0.0, 0.0),
+        brick::numeric::Vector3D<FloatType>(
+          (pixelPosition.x() - m_centerU) / m_kX,
+          (pixelPosition.y() - m_centerV) / m_kY,
+          1.0), normalize);
     }
 
 

@@ -27,7 +27,8 @@ brickComputerVision_HEADERS	= \
 	calibrationTools.hh calibrationTools_impl.hh \
 	calibrationToolsRobust.hh calibrationToolsRobust_impl.hh \
 	cameraIntrinsics.hh \
-	cameraIntrinsicsDistorted.hh \
+	cameraIntrinsicsDistortedPinhole.hh \
+	cameraIntrinsicsDistortedPinhole_impl.hh \
 	cameraIntrinsicsPinhole.hh cameraIntrinsicsPinhole_impl.hh \
 	cameraIntrinsicsPlumbBob.hh cameraIntrinsicsPlumbBob_impl.hh \
 	cameraIntrinsicsRational.hh cameraIntrinsicsRational_impl.hh \

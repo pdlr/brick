@@ -1477,7 +1477,7 @@ namespace brick {
      *
      * @return The return is the RMS value of the elements of array0.
      */
-    template <class Type0, class Type1>
+    template <class Type1, class Type0>
     Type1
     rms(Array1D<Type0> const& array0);
 

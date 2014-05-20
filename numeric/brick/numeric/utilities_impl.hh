@@ -1442,7 +1442,7 @@ namespace brick {
 
     // This function computes the RMS (Root Mean Square) value of the
     // elements of its argument.
-    template <class Type0, class Type1>
+    template <class Type1, class Type0>
     Type1
     rms(Array1D<Type0> const& array0)
     {

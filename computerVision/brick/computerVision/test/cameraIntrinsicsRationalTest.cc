@@ -59,10 +59,12 @@ private:
   const double m_focalLengthY;
   const double m_centerU;
   const double m_centerV;
-  const double m_skewCoefficient;
   const double m_radialCoefficient0;
   const double m_radialCoefficient1;
   const double m_radialCoefficient2;
+  const double m_radialCoefficient3;
+  const double m_radialCoefficient4;
+  const double m_radialCoefficient5;
   const double m_tangentialCoefficient0;
   const double m_tangentialCoefficient1;
 }; // class CameraIntrinsicsRationalTest
@@ -84,10 +86,12 @@ CameraIntrinsicsRationalTest()
     m_focalLengthY(15.0),
     m_centerU(100.0),
     m_centerV(125.0),
-    m_skewCoefficient(0.001),
     m_radialCoefficient0(0.02),
     m_radialCoefficient1(0.0001),
     m_radialCoefficient2(0.000007),
+    m_radialCoefficient3(0.000005),
+    m_radialCoefficient4(-0.000003),
+    m_radialCoefficient5(0.000002),
     m_tangentialCoefficient0(-0.01),
     m_tangentialCoefficient1(0.005)
 {
@@ -236,8 +240,10 @@ testProject()
 
         // Radial distortion.
         double radialDistortion =
-          (1.0 + m_radialCoefficient0 * r2 + m_radialCoefficient1 * r4
-           + m_radialCoefficient2 * r6);
+          ((1.0 + m_radialCoefficient0 * r2 + m_radialCoefficient1 * r4
+           + m_radialCoefficient2 * r6)
+           / (1.0 + m_radialCoefficient3 * r2 + m_radialCoefficient4 * r4
+              + m_radialCoefficient5 * r6));
         double xDistorted0 = xNorm * radialDistortion;
         double yDistorted0 = yNorm * radialDistortion;
  
@@ -252,13 +258,9 @@ testProject()
         double xDistorted1 = xDistorted0 + xTangential;
         double yDistorted1 = yDistorted0 + yTangential;
 
-        // Skew.
-        double xDistorted2 = xDistorted1 + m_skewCoefficient * yDistorted1;
-        double yDistorted2 = yDistorted1;
-
         // Pinhole model.
-        double referenceU = xDistorted2 * m_focalLengthX + m_centerU;
-        double referenceV = yDistorted2 * m_focalLengthY + m_centerV;
+        double referenceU = xDistorted1 * m_focalLengthX + m_centerU;
+        double referenceV = yDistorted1 * m_focalLengthY + m_centerV;
 
         BRICK_TEST_ASSERT(
           approximatelyEqual(pixelCoord.x(), referenceU, m_defaultTolerance));
@@ -323,24 +325,17 @@ testStreamOperators()
   BRICK_TEST_ASSERT(approximatelyEqual(testIntrinsics.getCenterV(),
                                      refIntrinsics.getCenterV(),
                                      m_reconstructionTolerance));
-  BRICK_TEST_ASSERT(approximatelyEqual(testIntrinsics.getSkewCoefficient(),
-                                     refIntrinsics.getSkewCoefficient(),
-                                     m_reconstructionTolerance));
-  BRICK_TEST_ASSERT(approximatelyEqual(testIntrinsics.getRadialCoefficient0(),
-                                     refIntrinsics.getRadialCoefficient0(),
-                                     m_reconstructionTolerance));
-  BRICK_TEST_ASSERT(approximatelyEqual(testIntrinsics.getRadialCoefficient1(),
-                                     refIntrinsics.getRadialCoefficient1(),
-                                     m_reconstructionTolerance));
-  BRICK_TEST_ASSERT(approximatelyEqual(testIntrinsics.getRadialCoefficient2(),
-                                     refIntrinsics.getRadialCoefficient2(),
-                                     m_reconstructionTolerance));
-  BRICK_TEST_ASSERT(approximatelyEqual(testIntrinsics.getTangentialCoefficient0(),
-                                     refIntrinsics.getTangentialCoefficient0(),
-                                     m_reconstructionTolerance));
-  BRICK_TEST_ASSERT(approximatelyEqual(testIntrinsics.getTangentialCoefficient1(),
-                                     refIntrinsics.getTangentialCoefficient1(),
-                                     m_reconstructionTolerance));
+  brick::numeric::Array1D<double> testCoefficients =
+    testIntrinsics.getDistortionCoefficients();
+  brick::numeric::Array1D<double> referenceCoefficients =
+    refIntrinsics.getDistortionCoefficients();
+  BRICK_TEST_ASSERT(testCoefficients.size() == referenceCoefficients.size());
+  BRICK_TEST_ASSERT(testCoefficients.size() == 8);
+  for(unsigned int ii = 0; ii < testCoefficients.size(); ++ii) {
+    BRICK_TEST_ASSERT(approximatelyEqual(testCoefficients[ii],
+                                         referenceCoefficients[ii],
+                                         m_reconstructionTolerance));
+  }
 }
 
 CameraIntrinsicsRational<double>
@@ -350,8 +345,9 @@ getIntrinsicsInstance()
   // Arbitrary camera params.
   CameraIntrinsicsRational<double> intrinsics(
     m_numPixelsX, m_numPixelsY, m_focalLengthX, m_focalLengthY,
-    m_centerU, m_centerV, m_skewCoefficient, m_radialCoefficient0,
+    m_centerU, m_centerV, m_radialCoefficient0,
     m_radialCoefficient1, m_radialCoefficient2,
+    m_radialCoefficient3, m_radialCoefficient4, m_radialCoefficient5,
     m_tangentialCoefficient0, m_tangentialCoefficient1);
   return intrinsics;
 }

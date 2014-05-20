@@ -207,6 +207,17 @@ namespace brick {
 
 
       /** 
+       * This function exposes the distortion parameters of the camera model.
+       * 
+       * @return The return value is a vector of free parameters
+       * containing, in order, the six radial coefficients and the two
+       * tangential coefficients.
+       */
+      typename CameraIntrinsicsRational<FloatType>::ParameterVectorType
+      getDistortionCoefficients() const;
+      
+      
+      /** 
        * This member function provides access to the value of
        * parameter focalLengthX, as described in the constructor
        * documentation.
@@ -277,17 +288,6 @@ namespace brick {
       virtual unsigned int
       getNumPixelsY() const {return m_numPixelsY;}
 
-      
-      /** 
-       * This function exposes the distortion parameters of the camera model.
-       * 
-       * @return The return value is a vector of free parameters
-       * containing, in order, the six radial coefficients and the two
-       * tangential coefficients.
-       */
-      FloatType
-      getDistortionCoefficients() const {return m_radialCoefficient0;}
-      
       
       /** 
        * This member function takes a point in 3D camera coordinates

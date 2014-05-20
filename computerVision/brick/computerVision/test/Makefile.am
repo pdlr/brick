@@ -35,6 +35,7 @@ TESTS = \
 	calibrationToolsRobustTest \
 	cameraIntrinsicsPinholeTest \
 	cameraIntrinsicsPlumbBobTest \
+	cameraIntrinsicsRationalTest \
 	cannyTest \
 	colorspaceConverterTest \
 	connectedComponentsTest \
@@ -71,6 +72,7 @@ check_PROGRAMS = \
 	calibrationToolsRobustTest \
 	cameraIntrinsicsPinholeTest \
 	cameraIntrinsicsPlumbBobTest \
+	cameraIntrinsicsRationalTest \
 	cannyTest \
 	colorspaceConverterTest \
 	connectedComponentsTest \
@@ -107,6 +109,7 @@ calibrationToolsTest_SOURCES	= calibrationToolsTest.cc
 calibrationToolsRobustTest_SOURCES	= calibrationToolsRobustTest.cc
 cameraIntrinsicsPinholeTest_SOURCES	= cameraIntrinsicsPinholeTest.cc
 cameraIntrinsicsPlumbBobTest_SOURCES	= cameraIntrinsicsPlumbBobTest.cc
+cameraIntrinsicsRationalTest_SOURCES	= cameraIntrinsicsRationalTest.cc
 cannyTest_SOURCES		= cannyTest.cc
 colorspaceConverterTest_SOURCES	= colorspaceConverterTest.cc
 connectedComponentsTest_SOURCES	= connectedComponentsTest.cc testImages.hh

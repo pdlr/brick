@@ -30,6 +30,7 @@ brickComputerVision_HEADERS	= \
 	cameraIntrinsicsDistorted.hh \
 	cameraIntrinsicsPinhole.hh cameraIntrinsicsPinhole_impl.hh \
 	cameraIntrinsicsPlumbBob.hh cameraIntrinsicsPlumbBob_impl.hh \
+	cameraIntrinsicsRational.hh cameraIntrinsicsRational_impl.hh \
 	canny.hh canny_impl.hh \
 	colorspaceConverter.hh colorspaceConverter_impl.hh \
 	connectedComponents.hh connectedComponents_impl.hh \

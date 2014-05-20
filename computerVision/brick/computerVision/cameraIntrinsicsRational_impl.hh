@@ -21,6 +21,7 @@
 
 #include <iomanip>
 #include <brick/common/expect.hh>
+#include <brick/common/types.hh>
 #include <brick/computerVision/cameraIntrinsicsRational.hh>
 #include <brick/optimization/optimizerBFGS.hh>
 #include <brick/optimization/optimizerNelderMead.hh>
@@ -150,14 +151,14 @@ namespace brick {
     }
     
 
-    // This function exposes a subset of the intrinsic parameters
-    // for use in calibration routines.
+    // This function exposes the distortion parameters of the camera
+    // model.
     template <class FloatType>
     typename CameraIntrinsicsRational<FloatType>::ParameterVectorType
     CameraIntrinsicsRational<FloatType>::
-    getFreeParameters() const
+    getDistortionCoefficients() const
     {
-      uint32_t const numParameters = 8;
+      brick::common::UInt32 const numParameters = 8;
       typename CameraIntrinsicsRational<FloatType>::ParameterVectorType
         result(numParameters);
       unsigned int resultIndex = 0;
@@ -171,8 +172,8 @@ namespace brick {
       result[resultIndex] = m_tangentialCoefficient1; ++resultIndex;
       if(resultIndex != numParameters) {
         BRICK_THROW(brick::common::LogicException,
-                    "CameraIntrinsicsRational::getFreeParameters()"
-                    "Wrong number of parameters."
+                    "CameraIntrinsicsRational::getFreeParameters()",
+                    "Wrong number of parameters.");
       }
       return result;        
     }
@@ -186,7 +187,7 @@ namespace brick {
     CameraIntrinsicsRational<FloatType>::
     getNominalFreeParameters() const
     {
-      uint32_t const numParameters = 8;
+      brick::common::UInt32 const numParameters = 8;
       typename CameraIntrinsicsRational<FloatType>::ParameterVectorType
         result(numParameters);
       result = 0.0;
@@ -254,8 +255,6 @@ namespace brick {
       stream >> common::Expect(",", flags);
       stream >> centerV;
       stream >> common::Expect(",", flags);
-      stream >> skewCoefficient;
-      stream >> common::Expect(",", flags);
       stream >> radialCoefficient0;
       stream >> common::Expect(",", flags);
       stream >> radialCoefficient1;
@@ -268,9 +267,9 @@ namespace brick {
       stream >> common::Expect(",", flags);
       stream >> radialCoefficient5;
       stream >> common::Expect(",", flags);
-      stream >> tangentialCoefficient3;
+      stream >> tangentialCoefficient0;
       stream >> common::Expect(",", flags);
-      stream >> tangentialCoefficient4;
+      stream >> tangentialCoefficient1;
       stream >> common::Expect("}", flags);
 
       if(stream) {
@@ -556,8 +555,10 @@ namespace brick {
          + 2.0 * m_tangentialCoefficient1 * crossTerm));
     
       // Apply distortion and return.
-      return brick::numeric::Vector2D<FloatType>(
+      brick::numeric::Vector2D<FloatType> distortedPoint(
         radialDistortion * normalizedPoint + tangentialDistortion);
+      return brick::numeric::Vector3D<FloatType>(
+        distortedPoint.x(), distortedPoint.y(), 1.0);
     }
 
 

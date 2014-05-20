@@ -35,8 +35,8 @@ public:
   void tearDown(const std::string& /* testName */) {}
 
   // Tests.
-  void testPlumbBobObjectiveApplicationOperator();
-  void testPlumbBobObjectiveGradient();
+  void testReverseProjectionObjectiveApplicationOperator();
+  void testReverseProjectionObjectiveGradient();
   void testConstructor__void();
   void testConstructor__args();
   void testProject();
@@ -91,8 +91,8 @@ CameraIntrinsicsPlumbBobTest()
     m_tangentialCoefficient0(-0.01),
     m_tangentialCoefficient1(0.005)
 {
-  BRICK_TEST_REGISTER_MEMBER(testPlumbBobObjectiveApplicationOperator);
-  BRICK_TEST_REGISTER_MEMBER(testPlumbBobObjectiveGradient);
+  BRICK_TEST_REGISTER_MEMBER(testReverseProjectionObjectiveApplicationOperator);
+  BRICK_TEST_REGISTER_MEMBER(testReverseProjectionObjectiveGradient);
   BRICK_TEST_REGISTER_MEMBER(testConstructor__void);
   BRICK_TEST_REGISTER_MEMBER(testConstructor__args);
   BRICK_TEST_REGISTER_MEMBER(testProject);
@@ -103,7 +103,7 @@ CameraIntrinsicsPlumbBobTest()
 
 void
 CameraIntrinsicsPlumbBobTest::
-testPlumbBobObjectiveApplicationOperator()
+testReverseProjectionObjectiveApplicationOperator()
 {
   // Arbitrary camera params.
   CameraIntrinsicsPlumbBob<double> intrinsics = this->getIntrinsicsInstance();
@@ -112,8 +112,8 @@ testPlumbBobObjectiveApplicationOperator()
     for(double xCoord = -1.0; xCoord < 1.0; xCoord += 0.1) {
       Vector3D<double> cameraCoord(xCoord, yCoord, 1.0);
       Vector2D<double> pixelCoord = intrinsics.project(cameraCoord);
-      brick::computerVision::privateCode::PlumbBobObjective<double> objective(
-        intrinsics, pixelCoord);
+      brick::computerVision::privateCode::ReverseProjectionObjective<double>
+        objective(intrinsics, pixelCoord);
 
       Array1D<double> theta(2);
       double result;
@@ -146,7 +146,7 @@ testPlumbBobObjectiveApplicationOperator()
 
 void
 CameraIntrinsicsPlumbBobTest::
-testPlumbBobObjectiveGradient()
+testReverseProjectionObjectiveGradient()
 {
   // Arbitrary camera params.
   CameraIntrinsicsPlumbBob<double> intrinsics = this->getIntrinsicsInstance();
@@ -155,8 +155,8 @@ testPlumbBobObjectiveGradient()
     for(double xCoord = -1.0; xCoord < 1.0; xCoord += 0.1) {
       Vector3D<double> cameraCoord(xCoord, yCoord, 1.0);
       Vector2D<double> pixelCoord = intrinsics.project(cameraCoord);
-      brick::computerVision::privateCode::PlumbBobObjective<double> objective(
-        intrinsics, pixelCoord);
+      brick::computerVision::privateCode::ReverseProjectionObjective<double>
+        objective(intrinsics, pixelCoord);
 
       Array1D<double> theta(2);
       theta[0] = xCoord; theta[1] = yCoord;
@@ -171,7 +171,7 @@ testPlumbBobObjectiveGradient()
   Vector2D<double> pixelCoord = intrinsics.project(
     Vector3D<double>(1.0, -1.0, 1.0));
 
-  typedef brick::computerVision::privateCode::PlumbBobObjective<double>
+  typedef brick::computerVision::privateCode::ReverseProjectionObjective<double>
     Objective;
 
   Objective objective(intrinsics, pixelCoord);

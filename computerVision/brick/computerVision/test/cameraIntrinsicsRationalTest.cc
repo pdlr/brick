@@ -35,8 +35,8 @@ public:
   void tearDown(const std::string& /* testName */) {}
 
   // Tests.
-  void testRationalObjectiveApplicationOperator();
-  void testRationalObjectiveGradient();
+  void testReverseProjectionObjectiveApplicationOperator();
+  void testReverseProjectionObjectiveGradient();
   void testConstructor__void();
   void testConstructor__args();
   void testProject();
@@ -95,8 +95,8 @@ CameraIntrinsicsRationalTest()
     m_tangentialCoefficient0(-0.01),
     m_tangentialCoefficient1(0.005)
 {
-  BRICK_TEST_REGISTER_MEMBER(testRationalObjectiveApplicationOperator);
-  BRICK_TEST_REGISTER_MEMBER(testRationalObjectiveGradient);
+  BRICK_TEST_REGISTER_MEMBER(testReverseProjectionObjectiveApplicationOperator);
+  BRICK_TEST_REGISTER_MEMBER(testReverseProjectionObjectiveGradient);
   BRICK_TEST_REGISTER_MEMBER(testConstructor__void);
   BRICK_TEST_REGISTER_MEMBER(testConstructor__args);
   BRICK_TEST_REGISTER_MEMBER(testProject);
@@ -107,7 +107,7 @@ CameraIntrinsicsRationalTest()
 
 void
 CameraIntrinsicsRationalTest::
-testRationalObjectiveApplicationOperator()
+testReverseProjectionObjectiveApplicationOperator()
 {
   // Arbitrary camera params.
   CameraIntrinsicsRational<double> intrinsics = this->getIntrinsicsInstance();
@@ -116,8 +116,8 @@ testRationalObjectiveApplicationOperator()
     for(double xCoord = -1.0; xCoord < 1.0; xCoord += 0.1) {
       Vector3D<double> cameraCoord(xCoord, yCoord, 1.0);
       Vector2D<double> pixelCoord = intrinsics.project(cameraCoord);
-      brick::computerVision::privateCode::RationalObjective<double> objective(
-        intrinsics, pixelCoord);
+      brick::computerVision::privateCode::ReverseProjectionObjective<double>
+        objective(intrinsics, pixelCoord);
 
       Array1D<double> theta(2);
       double result;
@@ -150,7 +150,7 @@ testRationalObjectiveApplicationOperator()
 
 void
 CameraIntrinsicsRationalTest::
-testRationalObjectiveGradient()
+testReverseProjectionObjectiveGradient()
 {
   // Arbitrary camera params.
   CameraIntrinsicsRational<double> intrinsics = this->getIntrinsicsInstance();
@@ -159,8 +159,8 @@ testRationalObjectiveGradient()
     for(double xCoord = -1.0; xCoord < 1.0; xCoord += 0.1) {
       Vector3D<double> cameraCoord(xCoord, yCoord, 1.0);
       Vector2D<double> pixelCoord = intrinsics.project(cameraCoord);
-      brick::computerVision::privateCode::RationalObjective<double> objective(
-        intrinsics, pixelCoord);
+      brick::computerVision::privateCode::ReverseProjectionObjective<double>
+        objective(intrinsics, pixelCoord);
 
       Array1D<double> theta(2);
       theta[0] = xCoord; theta[1] = yCoord;
@@ -175,7 +175,7 @@ testRationalObjectiveGradient()
   Vector2D<double> pixelCoord = intrinsics.project(
     Vector3D<double>(1.0, -1.0, 1.0));
 
-  typedef brick::computerVision::privateCode::RationalObjective<double>
+  typedef brick::computerVision::privateCode::ReverseProjectionObjective<double>
     Objective;
 
   Objective objective(intrinsics, pixelCoord);

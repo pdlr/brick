@@ -23,14 +23,6 @@ namespace brick {
 
   namespace computerVision {
 
-    namespace privateCode {
-
-      // Forward declaration of class to help with reverse projection.
-      template <class FloatType>
-      class PlumbBobObjective;
-
-    } // namespace privateCode;
-
     
     /**
      ** This class represents calibration parameters for cameras
@@ -67,10 +59,6 @@ namespace brick {
     template <class FloatType>
     class CameraIntrinsicsPlumbBob
       : public CameraIntrinsicsDistorted<FloatType> {
-
-      // This class is defined externally so that it can be more
-      // easily unit tested.
-      friend class privateCode::PlumbBobObjective<FloatType>;
       
     public:
 
@@ -403,31 +391,6 @@ namespace brick {
        */
       std::istream&
       readFromStream(std::istream& inputStream);
-
-
-      /** 
-       * This member function takes a point in 2D pixel coordinates
-       * and computes a ray in 3D camera coordinates passing through
-       * all of the 3D points that project to the specified 2D
-       * position.  We don't currently have a closed form solution, so
-       * this member function runs an iterative approximation.
-       *
-       * @param pixelPosition This argument is the point to be
-       * projected out into 3D camera coordinates.
-       * 
-       * @param normalize This argument indicates whether the returned
-       * vector should be normalized to unit length.  Setting this to
-       * false saves a few arithmetic operations.  Note that reverse
-       * projection is quite expensive for this camera model, so this
-       * savings is insignificant.
-       * 
-       * @return The return value is the ray in 3D camera coordinates
-       * corresponding to the input 2D point.
-       */
-      virtual brick::geometry::Ray3D<FloatType>
-      reverseProject(const brick::numeric::Vector2D<FloatType>& pixelPosition,
-                     bool normalize = true) const;
-
 
 
       /** 

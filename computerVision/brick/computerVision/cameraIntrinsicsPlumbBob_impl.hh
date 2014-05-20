@@ -29,64 +29,6 @@ namespace brick {
 
   namespace computerVision {
 
-    namespace privateCode {
-
-      // We require reverse projection accuracy of better than 1/100th of
-      // a pixel.
-      template <class FloatType>
-      const FloatType&
-      getPlumbBobMaximumReverseProjectionResidual() {
-        static FloatType maxResidual(0.01 * 0.01);
-        return maxResidual;
-      }
-
-      
-      /**
-       ** This functor is called by
-       ** CameraIntrinsicsPlumbBob::reverseProject() during iterative
-       ** approximation of reverse projection.
-       **/
-      template <class FloatType>
-      class PlumbBobObjective
-        : public std::unary_function<brick::numeric::Array1D<FloatType>,
-                                     FloatType>
-      {
-      public:
-        PlumbBobObjective(const CameraIntrinsicsPlumbBob<FloatType>& intrinsics,
-                          const brick::numeric::Vector2D<FloatType>& uvTarget);
-        
-        FloatType
-        operator()(const brick::numeric::Array1D<FloatType>& theta);
-
-        FloatType
-        getOffset();
-        
-        brick::numeric::Array1D<FloatType>
-        gradient(const brick::numeric::Array1D<FloatType>& theta);
-
-      private:
-
-        FloatType
-        computeBoundsPenalty(
-          const brick::numeric::Vector2D<FloatType>& uvPosition);
-
-        void
-        computeBoundsPenaltyGradient(FloatType uValue, FloatType vValue,
-                                     FloatType dUdX, FloatType dUdY,
-                                     FloatType dVdX, FloatType dVdY,
-                                     FloatType& dPdX, FloatType& dPdY);
-
-        CameraIntrinsicsPlumbBob<FloatType> m_intrinsics;
-        FloatType m_offset;
-        brick::numeric::Vector2D<FloatType> m_uvTarget;
-      };
-
-      // Implementation of PlumbBobObjective is at the bottom of this
-      // file.
-      
-    } // namespace privateCode;
-
-
     // The default constructor initializes the CameraIntrinsicsPlumbBob
     // instance to a consistent (but not terribly useful) state.
     template <class FloatType>
@@ -238,9 +180,11 @@ namespace brick {
     CameraIntrinsicsPlumbBob<FloatType>::
     project(const brick::numeric::Vector3D<FloatType>& point) const
     {
-      brick::numeric::Vector3D<FloatType> skewedPoint = this->projectThroughDistortion(point);
-      return brick::numeric::Vector2D<FloatType>(m_kX * skewedPoint.x() + m_centerU,
-                      m_kY * skewedPoint.y() + m_centerV);
+      brick::numeric::Vector3D<FloatType> skewedPoint =
+        this->projectThroughDistortion(point);
+      return brick::numeric::Vector2D<FloatType>(
+        m_kX * skewedPoint.x() + m_centerU,
+        m_kY * skewedPoint.y() + m_centerV);
     }
     
 
@@ -315,63 +259,6 @@ namespace brick {
         m_tangentialCoefficient1 = tangentialCoefficient1;
       }
       return stream;
-    }
-
-
-    // This member function takes a point in 2D pixel coordinates
-    // and returns a ray in 3D camera coordinates passing through
-    // all of the 3D points that project to the specified 2D
-    // position.
-    template <class FloatType>
-    geometry::Ray3D<FloatType>
-    CameraIntrinsicsPlumbBob<FloatType>::
-    reverseProject(const brick::numeric::Vector2D<FloatType>& pixelPosition,
-                   bool normalize) const
-    {
-      // TODO(xxx): Collapse this optimization to 1D when tangential
-      // distortion is zero.
-
-      // Ignoring distortion, we calculate an initial guess using the
-      // pinhole camera model.  See
-      // CameraIntrinsicsPinhole::reverseProject() for more detailed
-      // comments.
-      //
-      // Array1D<FloatType> startPoint(2);
-      // startPoint[0] = (pixelPosition.x() - m_centerU) / m_kX;
-      // startPoint[1] = (pixelPosition.y() - m_centerV) / m_kY;
-
-      // Actually, for extreme distortions, the estimate above can be
-      // a point that projects quite far outside the image.  This can
-      // cause numerical problems because we have an eighth power
-      // out-of-bounds error term that blows up quickly.  Instead of
-      // using the pinhole projection above, we choose the safest
-      // start point we can think of... the center of projection.
-      brick::numeric::Array1D<FloatType> startPoint(2);
-      startPoint = 0.0;
-      
-      // Now optimize to find a better answer.
-      typedef privateCode::PlumbBobObjective<FloatType> LocalObjective;
-      LocalObjective objective(*this, pixelPosition);
-      OptimizerBFGS<LocalObjective> optimizer(objective);
-      optimizer.setStartPoint(startPoint);
-      brick::numeric::Array1D<FloatType> endPoint = optimizer.optimum();
-      FloatType residual = optimizer.optimalValue();
-
-      // This would be the place to check convergence and try a
-      // different start point, if we were so inclined.
-      
-      if(residual >
-         (privateCode::getPlumbBobMaximumReverseProjectionResidual<FloatType>()
-          + objective.getOffset())) {
-        BRICK_THROW(brick::common::ValueException,
-                    "CameraIntrinsicsPlumbBob<FloatType>::reverseProject()",
-                    "Reverse projection failed to converge.");
-      }
-      
-      return brick::geometry::Ray3D<FloatType>(
-        brick::numeric::Vector3D<FloatType>(0.0, 0.0, 0.0),
-        brick::numeric::Vector3D<FloatType>(endPoint[0], endPoint[1], 1.0),
-        normalize);
     }
 
 
@@ -562,182 +449,6 @@ namespace brick {
         distortedPoint.y(),
         1.0);
     }
-
-
-
-    // Implementation of PlumbBobObjective.
-    namespace privateCode {
-
-      template <class FloatType>
-      PlumbBobObjective<FloatType>::
-      PlumbBobObjective(const CameraIntrinsicsPlumbBob<FloatType>& intrinsics,
-                        const brick::numeric::Vector2D<FloatType>& uvTarget)
-        : m_intrinsics(intrinsics),
-          m_offset(0.0001),
-          m_uvTarget(uvTarget)
-      {
-        // Empty.
-      }
-
-        
-      template <class FloatType>
-      FloatType
-      PlumbBobObjective<FloatType>::
-      operator()(const brick::numeric::Array1D<FloatType>& theta)
-      {
-        brick::numeric::Vector3D<FloatType> candidate(theta[0], theta[1], 1.0);
-        brick::numeric::Vector2D<FloatType> projection = m_intrinsics.project(candidate);
-
-        // The high order terms of the distortion model can lead to
-        // false minima outside the image boundaries.  We add an even
-        // higher order penalty for projecting outside the image,
-        // hopefully reducing this problem.
-        FloatType boundsPenalty = this->computeBoundsPenalty(projection);
-
-        return (brick::numeric::magnitudeSquared<FloatType>(
-                  projection - m_uvTarget) + boundsPenalty + m_offset);
-      }
-
-
-      template <class FloatType>
-      FloatType
-      PlumbBobObjective<FloatType>::
-      getOffset()
-      {
-        return m_offset;
-      }
-
-      
-      template <class FloatType>
-      brick::numeric::Array1D<FloatType>
-      PlumbBobObjective<FloatType>::
-      gradient(const brick::numeric::Array1D<FloatType>& theta)
-      {
-        FloatType uValue;
-        FloatType vValue;
-        FloatType dUdX;
-        FloatType dUdY;
-        FloatType dVdX;
-        FloatType dVdY;
-        m_intrinsics.projectWithPartialDerivatives(
-          theta[0], theta[1], uValue, vValue, dUdX, dUdY, dVdX, dVdY);
-
-        FloatType twoTimesDeltaU = 2.0 * (uValue - m_uvTarget.x());
-        FloatType twoTimesDeltaV = 2.0 * (vValue - m_uvTarget.y());
-
-        // Using chain rule,
-        //
-        // (d/dx)(deltaU^2 + deltaV^2) =
-        //    2*deltaU*(d/dx)deltaU + 2*deltaV*(d/dx)deltaV
-        //
-        // (d/dy)(deltaU^2 + deltaV^2) =
-        //    2*deltaU*(d/dy)deltaU + 2*deltaV*(d/dy)deltaV 
-        brick::numeric::Array1D<FloatType> gradientArray(2);
-        gradientArray[0] = twoTimesDeltaU * dUdX + twoTimesDeltaV * dVdX;
-        gradientArray[1] = twoTimesDeltaU * dUdY + twoTimesDeltaV * dVdY;
-
-        // Don't forget to add gradient for bounds penalty.
-        FloatType dPdX;
-        FloatType dPdY;
-        this->computeBoundsPenaltyGradient(
-          uValue, vValue, dUdX, dUdY, dVdX, dVdY, dPdX, dPdY);
-        gradientArray[0] += dPdX;
-        gradientArray[1] += dPdY;
-        
-        return gradientArray;
-      }
-
-
-      template <class FloatType>
-      FloatType
-      PlumbBobObjective<FloatType>::
-      computeBoundsPenalty(const brick::numeric::Vector2D<FloatType>& uvPosition)
-      {
-        // Start by computing a vaguely normalized measure of how far
-        // out-of-bounds uvPosition is.  We'll call this "violation."
-        FloatType uViolation = 0.0;
-        FloatType scaleU = m_intrinsics.getNumPixelsX() / 10.0;
-        if(uvPosition.x() < 0) {
-          uViolation = -uvPosition.x() / scaleU;
-        } else if(uvPosition.x() >= m_intrinsics.getNumPixelsX()) {
-          uViolation = ((uvPosition.x() - m_intrinsics.getNumPixelsX())
-                        / scaleU);
-        }
-        FloatType vViolation = 0.0;
-        FloatType scaleV = m_intrinsics.getNumPixelsY() / 10.0;
-        if(uvPosition.y() < 0) {
-          vViolation = -uvPosition.y() / scaleV;
-        } else if(uvPosition.y() >= m_intrinsics.getNumPixelsY()) {
-          vViolation = ((uvPosition.y() - m_intrinsics.getNumPixelsY())
-                        / scaleV);
-        }
-
-        // Bounds penaly is violation**8 so as to dominate the r**6
-        // term in the distortion model.
-        uViolation *= uViolation;
-        uViolation *= uViolation;
-        uViolation *= uViolation;
-        vViolation *= vViolation;
-        vViolation *= vViolation;
-        vViolation *= vViolation;
-        return uViolation + vViolation;
-      }
-        
-
-      template <class FloatType>
-      void
-      PlumbBobObjective<FloatType>::
-      computeBoundsPenaltyGradient(FloatType uValue, FloatType vValue,
-                                   FloatType dUdX, FloatType dUdY,
-                                   FloatType dVdX, FloatType dVdY,
-                                   FloatType& dPdX, FloatType& dPdY)
-      {
-        // Start by computing a vaguely normalized measure of how far
-        // out-of-bounds uvPosition is.  We'll call this "violation."
-        // Simultaneously compute the first derivative of violation
-        // wrt x and y.
-        FloatType uViolation = 0.0;
-        FloatType scaleU = m_intrinsics.getNumPixelsX() / 10.0;
-        FloatType dUVdX = 0.0;  // <-- derivative of uViolation wrt X.
-        FloatType dUVdY = 0.0;  // <-- derivative of uViolation wrt Y.
-        if(uValue < 0) {
-          uViolation = -uValue / scaleU;
-          dUVdX = -dUdX / scaleU;
-          dUVdY = -dUdY / scaleU;
-        } else if(uValue >= m_intrinsics.getNumPixelsX()) {
-          uViolation = (uValue - m_intrinsics.getNumPixelsX()) / scaleU;
-          dUVdX = dUdX / scaleU;
-          dUVdY = dUdY / scaleU;
-        }
-        FloatType vViolation = 0.0;
-        FloatType scaleV = m_intrinsics.getNumPixelsY() / 10.0;
-        FloatType dVVdX = 0.0;  // <-- derivative of vViolation wrt X.
-        FloatType dVVdY = 0.0;  // <-- derivative of vViolation wrt Y.
-        if(vValue < 0) {
-          vViolation = -vValue / scaleV;
-          dVVdX = -dVdX / scaleV;
-          dVVdY = -dVdY / scaleV;
-        } else if(vValue >= m_intrinsics.getNumPixelsY()) {
-          vViolation = (vValue - m_intrinsics.getNumPixelsY()) / scaleV;
-          dVVdX = dVdX / scaleV;
-          dVVdY = dVdY / scaleV;
-        }
-        // Bounds penaly is violation**8 so as to dominate the r**6
-        // term in the distortion model.  Using chain rule, then first
-        // derivative is (8 * violation^7 * derivative-of-violation).
-        FloatType uViolationTo2 = uViolation * uViolation;
-        FloatType uViolationTo4 = uViolationTo2 * uViolationTo2;
-        FloatType uViolationTo7 = uViolationTo4 * uViolationTo2 * uViolation;
-        FloatType vViolationTo2 = vViolation * vViolation;
-        FloatType vViolationTo4 = vViolationTo2 * vViolationTo2;
-        FloatType vViolationTo7 = vViolationTo4 * vViolationTo2 * vViolation;
-
-        dPdX = 8.0 * uViolationTo7 * dUVdX + 8.0 * vViolationTo7 * dVVdX;
-        dPdY = 8.0 * uViolationTo7 * dUVdY + 8.0 * vViolationTo7 * dVVdY;
-      }
-        
-
-    } // namespace privateCode;
     
   } // namespace computerVision
   

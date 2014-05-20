@@ -13,8 +13,9 @@
 #ifndef BRICK_COMPUTERVISION_CAMERAINTRINSICSPLUMBBOB_IMPL_HH
 #define BRICK_COMPUTERVISION_CAMERAINTRINSICSPLUMBBOB_IMPL_HH
 
-// This file is included by array1D.hh, and should not be directly included
-// by user code, so no need to include cameraIntrinsicsPlumbBob.hh here.
+// This file is included by cameraIntrinsicsPlumbBob.hh, and should
+// not be directly included by user code, so no need to include
+// cameraIntrinsicsPlumbBob.hh here.
 // 
 // #include <brick/numeric/cameraIntrinsicsPlumbBob.hh>
 
@@ -47,7 +48,8 @@ namespace brick {
        **/
       template <class FloatType>
       class PlumbBobObjective
-        : public std::unary_function<brick::numeric::Array1D<FloatType>, FloatType>
+        : public std::unary_function<brick::numeric::Array1D<FloatType>,
+                                     FloatType>
       {
       public:
         PlumbBobObjective(const CameraIntrinsicsPlumbBob<FloatType>& intrinsics,
@@ -456,7 +458,7 @@ namespace brick {
       FloatType dRSixthDX = 3.0 * rFourth * dRSquaredDX;
       FloatType dRSixthDY = 3.0 * rFourth * dRSquaredDY;
 
-      // Compute distortion terms according to plumb bob model.
+      // Compute distortion terms according to distortion model.
       FloatType radialDistortion = (1.0 + m_radialCoefficient0 * rSquared
                                  + m_radialCoefficient1 * rFourth
                                  + m_radialCoefficient2 * rSixth);
@@ -540,10 +542,10 @@ namespace brick {
       FloatType rFourth = rSquared * rSquared;
       FloatType rSixth = rSquared * rFourth;
     
-      // Compute distortion terms according to plumb bob model.
+      // Compute distortion terms.
       FloatType radialDistortion = (1.0 + m_radialCoefficient0 * rSquared
-                                 + m_radialCoefficient1 * rFourth
-                                 + m_radialCoefficient2 * rSixth);
+                                    + m_radialCoefficient1 * rFourth
+                                    + m_radialCoefficient2 * rSixth);
     
       FloatType crossTerm = normalizedPoint.x() * normalizedPoint.y();
       brick::numeric::Vector2D<FloatType> tangentialDistortion(

@@ -241,7 +241,7 @@ namespace brick {
        * generally be calculated closed-form are omitted from this
        * return vector, leaving only those that are normally estimated
        * using nonlinear optimization.  Normally, this means leaving
-       * only the pinhole projection parameters.
+       * out the pinhole projection parameters.
        * 
        * @return The return value is a vector of free parameters
        * containing, in order, the three radial coefficients, the skew
@@ -431,7 +431,7 @@ namespace brick {
 
 
       /** 
-       * This function is the counter part to setFreeParameters().  It
+       * This function is the counterpart to setFreeParameters().  It
        * allows the calling context to specify pinhole parameters that
        * are normally estimated closed-form.
        * 
@@ -478,12 +478,12 @@ namespace brick {
 
       
       /** 
-       * This function exposes a subset of the intrinsic parameters
-       * for use in calibration routines.  Parameters that can
-       * generally be calculated closed-form are omitted from this
-       * return vector, leaving only those that are normally estimated
-       * using nonlinear optimization.  The omitted parameters are
-       * generally pinhole projection parameters.
+       * This sets the value of a subset of the intrinsic parameters,
+       * and is commonly used by in calibration routines.  Parameters
+       * that can generally be calculated closed-form are omitted from
+       * this return vector, leaving only those that are normally
+       * estimated using nonlinear optimization.  The omitted
+       * parameters are generally pinhole projection parameters.
        * 
        * @param parameterVector This argument specifies values for the
        * free parameters as a vector of free parameters containing, in

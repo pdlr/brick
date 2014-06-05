@@ -1,6 +1,13 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.6
+
+- Refactored CameraIntrinsics class heirarchy.
+- Added new class CameraIntrinsicsRational.
+- Minor updates to KeypointSelectorBullseye.
+- Other minor cleanup.
+
 Revision 1.5
 
 - Added function estimateProjectedAreaAndCentroid() to facilitate

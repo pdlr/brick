@@ -203,7 +203,7 @@ namespace brick {
        * of the bullseye.
        */
       Ellipse2D<Type>
-      getEllipse();
+      getEllipse() const;
       
 
       /** 
@@ -236,7 +236,7 @@ namespace brick {
        * @return The return value is a sequence of scale parameters.
        */
       std::vector<Type> const&
-      getScales() {return m_scales;}
+      getScales() const {return m_scales;}
 
       
       /** 

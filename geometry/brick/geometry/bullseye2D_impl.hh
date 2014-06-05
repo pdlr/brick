@@ -375,7 +375,7 @@ namespace brick {
     template <class Type>
     Ellipse2D<Type>
     Bullseye2D<Type>::
-    getEllipse()
+    getEllipse() const
     {
       return Ellipse2D<Type>(m_origin, m_semimajorAxis, m_semiminorAxis);
     }

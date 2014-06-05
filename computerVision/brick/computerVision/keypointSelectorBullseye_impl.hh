@@ -313,7 +313,7 @@ namespace brick {
                                        minRadius, maxRadius);
           if(keypoint.bullseyeMetric >= 0.0) {
             this->sortedInsert(keypoint, m_keypointVector,
-                               m_maxNumberOfBullseyes);
+                               this->m_minRadius, this->m_maxNumberOfBullseyes);
           }
           ++testedPixels;
         }
@@ -1168,8 +1168,11 @@ namespace brick {
     sortedInsert(
       KeypointBullseye<brick::common::Int32, FloatType> const& keypoint,
       std::vector< KeypointBullseye<brick::common::Int32, FloatType> >& keypointVector,
+      FloatType minRadius,
       brick::common::UInt32 maxNumberOfBullseyes)
     {
+      FloatType const minRadiusSquared = minRadius * minRadius;
+      
       // Special case: if keypointVector is empty, just add the new point.
       if(keypointVector.empty()) {
         keypointVector.push_back(keypoint);
@@ -1185,22 +1188,60 @@ namespace brick {
         return;
       }
 
-      // At this point, we know that the new point is going to be
-      // added to the vector, so make room for it by discarding the
-      // worst point we've seen so far (unless keypointVector isn't
-      // full yet; in that case, no need to throw away any keypoint.
-      while(vectorSize >= maxNumberOfBullseyes) {
-        keypointVector.pop_back();
-        --vectorSize;
+      // The following includes a bunch of steps that are O(n).
+      // Inserting a point in the middle of a vector is O(n) anyway,
+      // so this isn't _too_ terrible, but it still suggests we should
+      // look for a better approach.
+
+      // Check and make sure there isn't a previously-found keypoint
+      // that is (1) within minRadius of our new keypoint, and (2)
+      // better than our new keypoint.
+      brick::common::UInt32 ii = 0;
+      while(ii < vectorSize) {
+        if(keypointVector[ii].bullseyeMetric < keypoint.bullseyeMetric) {
+          break;
+        }
+        brick::numeric::Vector2D<FloatType> offset =
+          keypointVector[ii].bullseye.getOrigin()
+          - keypoint.bullseye.getOrigin();
+        FloatType distanceSquared = brick::numeric::magnitudeSquared<FloatType>(
+          offset);
+        if(distanceSquared < minRadiusSquared) {
+          // We've found a better keypoint that's within minRadius of
+          // the new one.  Discard the new one.
+          return;
+        }
+        ++ii;
       }
 
-      // Now add the new point, and bubble-sort it into its rightful
-      // place.  Inserting a point in the middle of a vector is O(n)
-      // anyway, so the bubble sort isn't too much more of a penalty.
+      // Now check to see if there is a previously-found keypoint that
+      // is (1) within minRadius of our new keypoint, and (2) worse
+      // than our new keypoint.  If so, discard that keypoint and
+      // replace it with the new one.
+      while(ii < vectorSize) {
+        brick::numeric::Vector2D<FloatType> offset =
+          keypointVector[ii].bullseye.getOrigin()
+          - keypoint.bullseye.getOrigin();
+        FloatType distanceSquared = brick::numeric::magnitudeSquared<FloatType>(
+          offset);
+        if(distanceSquared < minRadiusSquared) {
+          keypointVector[ii] = keypoint;
+          break;
+        }
+        ++ii;
+      }
+
+      // If we haven't yet stuck the new keypoint into keypointVector,
+      // do so now.
+      if(ii == vectorSize) {
+        keypointVector.push_back(keypoint);
+        ++vectorSize;
+      }
+      
+      // Finally, bubble-sort the new keypoint into its rightful
+      // place.
+      //
       // TBD make this stanza clearer.
-      keypointVector.push_back(keypoint);
-      ++vectorSize;
-      brick::common::UInt32 ii = vectorSize - 1;
       while(ii != 0) {
         if(keypointVector[ii].bullseyeMetric
            <= keypointVector[ii - 1].bullseyeMetric) {
@@ -1208,6 +1249,13 @@ namespace brick {
         }
         std::swap(keypointVector[ii], keypointVector[ii - 1]);
         --ii;
+      }
+
+      // Finally, make sure we haven't grown keypointVector larger
+      // than necessary.
+      while(vectorSize > maxNumberOfBullseyes) {
+        keypointVector.pop_back();
+        --vectorSize;
       }
     }
 

@@ -388,6 +388,7 @@ namespace brick {
         KeypointBullseye<brick::common::Int32, FloatType> const& keypoint,
         std::vector< KeypointBullseye<brick::common::Int32, FloatType> >&
           keypointVector,
+        FloatType minRadius,
         brick::common::UInt32 maxNumberOfBullseyes);
 
 

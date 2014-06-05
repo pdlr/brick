@@ -194,6 +194,28 @@ namespace brick {
 
 
       /** 
+       * Indicates whether or not a nonzero third radial distortion
+       * coefficient is allowed.
+       * 
+       * @return The return value indicates whether a nonzero
+       * coefficient is allowed (true) or not (false).
+       */
+      bool
+      getAllowSixthOrderRadial() const {return m_allowSixthOrderRadial;}
+      
+
+      /** 
+       * Indicates whether or not a nonzero skew coefficient is
+       * allowed.
+       * 
+       * @return The return value indicates whether a nonzero
+       * coefficient is allowed (true) or not (false).
+       */
+      bool
+      getAllowSkew() const {return m_allowSkew;}
+      
+
+      /** 
        * This function exposes a subset of the intrinsic parameters
        * for use in calibration routines.  Parameters that can
        * generally be calculated closed-form are omitted from this

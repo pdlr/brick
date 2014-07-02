@@ -47,6 +47,7 @@ TESTS = \
 	fivePointAlgorithmTest \
 	getEuclideanDistanceTest \
 	imageFilterTest \
+	imageIOTest \
 	imagePyramidTest \
 	imageWarperTest \
 	kdTreeTest \
@@ -84,6 +85,7 @@ check_PROGRAMS = \
 	fivePointAlgorithmTest \
 	getEuclideanDistanceTest \
 	imageFilterTest \
+	imageIOTest \
 	imagePyramidTest \
 	imageWarperTest \
 	kdTreeTest \
@@ -121,6 +123,7 @@ featureAssociationTest_SOURCES	= featureAssociationTest.cc
 fivePointAlgorithmTest_SOURCES	= fivePointAlgorithmTest.cc
 getEuclideanDistanceTest_SOURCES	= getEuclideanDistanceTest.cc
 imageFilterTest_SOURCES		= imageFilterTest.cc testImages.hh
+imageIOTest_SOURCES		= imageIOTest.cc testImages.hh
 imagePyramidTest_SOURCES	= imagePyramidTest.cc testImages.hh
 imageWarperTest_SOURCES		= imageWarperTest.cc
 kdTreeTest_SOURCES		= kdTreeTest.cc

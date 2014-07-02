@@ -77,6 +77,303 @@ namespace brick {
     /// @endcond
     
 
+#if HAVE_LIBPNG
+
+#include <png.h>
+
+    template <ImageFormat FORMAT>
+    Image<FORMAT>
+    readPNG8(const std::string& /* fileName */,
+             std::string& /* commentString */)
+    {
+      BRICK_THROW(brick::common::NotImplementedException, "readPNG8()",
+                  "This function is not yet implemented for the specified "
+                  "image format.");
+      return Image<FORMAT>();
+    }
+
+
+    template <>
+    Image<GRAY8>
+    readPNG8(const std::string& fileName,
+             std::string& /* commentString */)
+    {
+      // This code is heavily in debt to example.c from the libpng 1.2.1
+      // distribition, which carries the following header comment:
+      // /* example.c - an example of using libpng
+      //  * Last changed in libpng 1.2.1 December 7, 2001.
+      //  * This file has been placed in the public domain by the authors.
+      //  * Maintained 1998-2001 Glenn Randers-Pehrson
+      //  * Maintained 1996, 1997 Andreas Dilger)
+      //  * Written 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
+      //  */
+
+      Image<GRAY8> result;
+
+      // We'll check eight bytes of magic at the beginning of the file
+      // to make sure it's actually a png image.
+      const size_t pngSignatureSize = 8;
+
+      FILE *fp = fopen(fileName.c_str(), "rb");
+      if (fp == 0) {
+        BRICK_THROW(brick::common::IOException,
+                    "dlr::computerVision::readPng8()",
+                    "Couldn't open input file.");
+      }
+
+      // Be sure to clean up the open file.
+      try {
+
+        // Read and check the png magic to see if we have an actual
+        // png image.
+        unsigned char header[pngSignatureSize + 1];
+        if(fread(header, 1, pngSignatureSize, fp) != pngSignatureSize) {
+          BRICK_THROW(brick::common::IOException,
+                      "brick::computerVision::readPng8()",
+                      "Couldn't read png signature from file.");
+        }
+        if(png_sig_cmp(header, 0, pngSignatureSize) != 0) {
+          BRICK_THROW(brick::common::IOException,
+                      "brick::computerVision::readPng8()",
+                      "File doesn't seem to be a PNG image.");
+        }
+        
+        // Create and initialize the png_struct with the default stderr
+        // and longjump error functions.
+        png_structp pngPtr = png_create_read_struct(
+          PNG_LIBPNG_VER_STRING, 0, 0, 0);
+        if(pngPtr == 0) {
+          BRICK_THROW(brick::common::RunTimeException,
+                      "dlr::computerVision::readPng8()",
+                      "Couldn't initialize png_structp.");
+        }
+
+        // This variable is just to let us choreograph nicely with libpng
+        // cleanup functions.
+        png_infop* infoPtrPtrForCleanup = png_infopp_NULL;
+
+        // Be sure to clean up pngPtr (and later, infoPtr).
+        try {
+
+          // Allocate/initialize the memory for image information.
+          png_infop infoPtr = png_create_info_struct(pngPtr);
+          if (infoPtr == 0) {
+            BRICK_THROW(brick::common::RunTimeException,
+                        "brick::computerVision::readPng8()",
+                        "Couldn't initialize png_infop.");
+          }
+          infoPtrPtrForCleanup = &infoPtr;
+       
+          // Set error handling in case libpng calls longjmp().
+          if(setjmp(png_jmpbuf(pngPtr))) {
+            BRICK_THROW(brick::common::IOException,
+                        "dlr::computerVision::readPng8()",
+                        "Trouble reading from file.");
+          }
+        
+          // Set up the input control.
+          png_init_io(pngPtr, fp);
+
+          // Let libpng know that we've already checked some magic.
+          png_set_sig_bytes(pngPtr, pngSignatureSize);
+          
+          // Read entire image into pngPtr.
+          png_read_png(pngPtr, infoPtr, PNG_TRANSFORM_IDENTITY, png_voidp_NULL);
+
+          // Find out about our image.
+          png_uint_32 width, height;
+          int bitDepth, colorType, interlaceType;
+          int compressionType, filterMethod;
+          png_get_IHDR(pngPtr, infoPtr, &width, &height, &bitDepth, &colorType,
+                       &interlaceType, &compressionType, &filterMethod);
+          if(bitDepth != 8) {
+            BRICK_THROW(brick::common::IOException,
+                        "brick::computerVision::readPng8()",
+                        "Image file is not 8 bit.");
+          }
+          if(colorType != PNG_COLOR_TYPE_GRAY) {
+            BRICK_THROW(brick::common::IOException,
+                        "brick::computerVision::readPng8()",
+                        "Can currently only handle grayscale images.");
+          }
+          if(interlaceType != PNG_INTERLACE_NONE) {
+            BRICK_THROW(brick::common::IOException,
+                        "brick::computerVision::readPng8()",
+                        "Can currently only handle non-interlaced images.");
+          }
+
+          // Copy image and return.
+          result.reinit(height, width);
+          png_bytep* rowPointers = png_get_rows(pngPtr, infoPtr);
+          for(size_t rowIndex = 0; rowIndex < height; ++rowIndex) {
+            result.getRow(rowIndex).copy(rowPointers[rowIndex]);
+          }
+
+        } catch(...) {
+          png_destroy_read_struct(
+            &pngPtr, infoPtrPtrForCleanup, png_infopp_NULL);
+          throw;
+        }
+        
+        // clean up after the read, and free any memory allocated.
+        png_destroy_read_struct(&pngPtr, infoPtrPtrForCleanup, png_infopp_NULL);
+
+      } catch(...) {
+        fclose(fp);
+        throw;
+      }
+      fclose(fp);
+
+      return result;
+    }
+
+
+    template <>
+    Image<RGB8>
+    readPNG8(const std::string& fileName,
+             std::string& /* commentString */)
+    {
+      // This code is heavily in debt to example.c from the libpng 1.2.1
+      // distribition, which carries the following header comment:
+      // /* example.c - an example of using libpng
+      //  * Last changed in libpng 1.2.1 December 7, 2001.
+      //  * This file has been placed in the public domain by the authors.
+      //  * Maintained 1998-2001 Glenn Randers-Pehrson
+      //  * Maintained 1996, 1997 Andreas Dilger)
+      //  * Written 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
+      //  */
+
+      if(!PixelRGB8::isContiguous()) {
+        BRICK_THROW(brick::common::NotImplementedException,
+                    "readPNG8RGB()",
+                    "This function currently only works with compilers that "
+                    "don't add padding to the PixelRGB8 memory layout.");
+      }
+
+      Image<RGB8> result;
+
+      // We'll check eight bytes of magic at the beginning of the file
+      // to make sure it's actually a png image.
+      const size_t pngSignatureSize = 8;
+
+      FILE *fp = fopen(fileName.c_str(), "rb");
+      if (fp == 0) {
+        BRICK_THROW(brick::common::IOException,
+                    "dlr::computerVision::readPng8()",
+                    "Couldn't open input file.");
+      }
+
+      // Be sure to clean up the open file.
+      try {
+
+        // Read and check the png magic to see if we have an actual
+        // png image.
+        unsigned char header[pngSignatureSize + 1];
+        if(fread(header, 1, pngSignatureSize, fp) != pngSignatureSize) {
+          BRICK_THROW(brick::common::IOException,
+                      "brick::computerVision::readPng8()",
+                      "Couldn't read png signature from file.");
+        }
+        if(png_sig_cmp(header, 0, pngSignatureSize) != 0) {
+          BRICK_THROW(brick::common::IOException,
+                      "brick::computerVision::readPng8()",
+                      "File doesn't seem to be a PNG image.");
+        }
+        
+        // Create and initialize the png_struct with the default stderr
+        // and longjump error functions.
+        png_structp pngPtr = png_create_read_struct(
+          PNG_LIBPNG_VER_STRING, 0, 0, 0);
+        if(pngPtr == 0) {
+          BRICK_THROW(brick::common::RunTimeException,
+                      "dlr::computerVision::readPng8()",
+                      "Couldn't initialize png_structp.");
+        }
+
+        // This variable is just to let us choreograph nicely with libpng
+        // cleanup functions.
+        png_infop* infoPtrPtrForCleanup = png_infopp_NULL;
+
+        // Be sure to clean up pngPtr (and later, infoPtr).
+        try {
+
+          // Allocate/initialize the memory for image information.
+          png_infop infoPtr = png_create_info_struct(pngPtr);
+          if (infoPtr == 0) {
+            BRICK_THROW(brick::common::RunTimeException,
+                        "brick::computerVision::readPng8()",
+                        "Couldn't initialize png_infop.");
+          }
+          infoPtrPtrForCleanup = &infoPtr;
+       
+          // Set error handling in case libpng calls longjmp().
+          if(setjmp(png_jmpbuf(pngPtr))) {
+            BRICK_THROW(brick::common::IOException,
+                        "dlr::computerVision::readPng8()",
+                        "Trouble reading from file.");
+          }
+        
+          // Set up the input control.
+          png_init_io(pngPtr, fp);
+
+          // Let libpng know that we've already checked some magic.
+          png_set_sig_bytes(pngPtr, pngSignatureSize);
+          
+          // Read entire image into pngPtr.
+          png_read_png(pngPtr, infoPtr, PNG_TRANSFORM_IDENTITY, png_voidp_NULL);
+
+          // Find out about our image.
+          png_uint_32 width, height;
+          int bitDepth, colorType, interlaceType;
+          int compressionType, filterMethod;
+          png_get_IHDR(pngPtr, infoPtr, &width, &height, &bitDepth, &colorType,
+                       &interlaceType, &compressionType, &filterMethod);
+          if(bitDepth != 8) {
+            BRICK_THROW(brick::common::IOException,
+                        "brick::computerVision::readPng8()",
+                        "Image file is not 8 bit.");
+          }
+          /*if(colorType != PNG_COLOR_TYPE_GRAY) {
+            BRICK_THROW(brick::common::IOException,
+            "brick::computerVision::readPng8()",
+            "Can currently only handle grayscale images.");
+            }*/
+          if(interlaceType != PNG_INTERLACE_NONE) {
+            BRICK_THROW(brick::common::IOException,
+                        "brick::computerVision::readPng8()",
+                        "Can currently only handle non-interlaced images.");
+          }
+
+          // Copy image and return.
+          result.reinit(height, width);
+          png_bytep* rowPointers = png_get_rows(pngPtr, infoPtr);
+          for(size_t rowIndex = 0; rowIndex < height; ++rowIndex) {
+            std::copy(rowPointers[rowIndex], rowPointers[rowIndex] + width * 3, 
+                      reinterpret_cast<common::UInt8*>(
+                        result.getRow(rowIndex).data()));
+          }
+
+        } catch(...) {
+          png_destroy_read_struct(
+            &pngPtr, infoPtrPtrForCleanup, png_infopp_NULL);
+          throw;
+        }
+        
+        // clean up after the read, and free any memory allocated.
+        png_destroy_read_struct(&pngPtr, infoPtrPtrForCleanup, png_infopp_NULL);
+
+      } catch(...) {
+        fclose(fp);
+        throw;
+      }
+      fclose(fp);
+
+      return result;
+    }
+    
+#endif /* #if HAVE_LIBPNG */
+
+    
     template<class Type>
     void
     writePGM(const std::string& fileName,

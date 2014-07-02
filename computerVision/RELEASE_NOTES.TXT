@@ -1,6 +1,10 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.7
+
+- Added routines for reading and writing color PNG images.
+
 Revision 1.6
 
 - Refactored CameraIntrinsics class heirarchy.

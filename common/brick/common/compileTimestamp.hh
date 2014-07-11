@@ -13,6 +13,8 @@
 #ifndef BRICK_COMMON_COMPILETIMESTAMP_HH
 #define BRICK_COMMON_COMPILETIMESTAMP_HH
 
+#include <string>
+
 namespace brick {
 
   namespace common {

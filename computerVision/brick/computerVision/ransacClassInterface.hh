@@ -126,6 +126,22 @@ namespace brick {
 
 
       /** 
+       * Overrides the computed number of RANSAC iterations to be
+       * ultimately run if no compelling solution is found.  You may
+       * want to use this function if your model estimation algorithm
+       * has local minima, and you think you need to boost how many
+       * RANSAC iterations get run.
+       * 
+       * @param numberOfRandomSampleSets This argument specifies the
+       * maximum number of allowable RANSAC iterations.
+       */
+      void
+      setNumberOfRandomSampleSets(int numberOfRandomSampleSets) {
+        m_numberOfRandomSampleSets = numberOfRandomSampleSets;
+      }
+
+      
+      /** 
        * Controls how many times a model may be refined on each rasac
        * iteration.  Normally, in each iteration, the model is
        * repeatedly recomputed using the consensus set until it stops

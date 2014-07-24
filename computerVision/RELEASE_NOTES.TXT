@@ -1,6 +1,23 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.7
+
+- Added routines for reading and writing color PNG images.
+- Added beginIteration() member function to RansacProblem class. 
+
+  WARNING: This change will break any customer code that uses 
+           RansacClassInterface, but does not derive from RansacProblem.
+           If this applies to your code, simple add an empty member 
+           function, void beginIteration(size_t) to your problem class.
+
+Revision 1.6
+
+- Refactored CameraIntrinsics class heirarchy.
+- Added new class CameraIntrinsicsRational.
+- Minor updates to KeypointSelectorBullseye.
+- Other minor cleanup.
+
 Revision 1.5
 
 - Added function estimateProjectedAreaAndCentroid() to facilitate

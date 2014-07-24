@@ -77,6 +77,34 @@ namespace brick {
     /// @endcond
     
 
+#if HAVE_LIBPNG
+
+    template <ImageFormat FORMAT>
+    Image<FORMAT>
+    readPNG8(const std::string& /* fileName */,
+             std::string& /* commentString */)
+    {
+      BRICK_THROW(brick::common::NotImplementedException, "readPNG8()",
+                  "This function is not yet implemented for the specified "
+                  "image format.");
+      return Image<FORMAT>();
+    }
+
+
+    // Declare specializations that will be defined in imageIO.cc.
+    template <>
+    Image<GRAY8>
+    readPNG8(const std::string& fileName,
+             std::string& /* commentString */);
+
+    template <>
+    Image<RGB8>
+    readPNG8(const std::string& fileName,
+             std::string& /* commentString */);
+    
+#endif /* #if HAVE_LIBPNG */
+
+    
     template<class Type>
     void
     writePGM(const std::string& fileName,

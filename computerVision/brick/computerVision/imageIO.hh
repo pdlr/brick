@@ -128,7 +128,8 @@ namespace brick {
      * 
      * @return The return value ...
      */
-    Image<GRAY8>
+    template <ImageFormat FORMAT>
+    Image<FORMAT>
     readPNG8(const std::string& fileName,
              std::string& commentString);
 
@@ -147,6 +148,21 @@ namespace brick {
               const Image<GRAY8>& outputImage,
               const std::string& comment = "");
 
+
+    /** 
+     * WARNING: This routine may not stick around for long.
+     * 
+     * @param fileName This argument ...
+     * 
+     * @param outputImage This argument ...
+     * 
+     * @param comment This argument is currently ignored.
+     */
+    void
+    writePNG8(const std::string& fileName,
+              const Image<RGB8>& outputImage,
+              const std::string& comment = "");
+    
 #endif /* #if HAVE_LIBPNG */
 
 

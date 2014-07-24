@@ -245,6 +245,27 @@ namespace brick {
       // ========= You definitely do need to change these.        =========
 
       /** 
+       * Subclasses may override this member function to reset
+       * internal state prior to the beginning of each iteration of
+       * the RANSAC algorithm.  Consider a problem that uses nonlinear
+       * optimization inside estimateModel().  Such a problem might
+       * remember the most recent model estimate, and use that
+       * estimate as initial conditions for iterative refinement of
+       * the model (with progressively changing consensus sets) during
+       * a single RANSAC iteration.  This member function allows such
+       * a problem to reset its initial conditions after each
+       * iteration so that the results of a previous random sample
+       * don't influence the current one.
+       *
+       * @param iterationNumber This argument starts at zero and
+       * increments with each call to beginIteration(), indicating
+       * which iteration is beginning.
+       */
+      virtual void
+      beginIteration(size_t /* iterationNumber */) {}
+
+      
+      /** 
        * This member function should take a sequence of samples, and
        * compute the best fit model based on the sample values.  The
        * number of sample values contained in argument sampleSequence
@@ -499,6 +520,13 @@ namespace brick {
         std::vector<bool> consensusFlags(m_problem.getPoolSize());
         std::vector<bool> previousConsensusFlags(m_problem.getPoolSize(),
                                                  false);
+
+        // Some problem classes may, for example, retain internal
+        // state during the iterative refinement loop below.  This
+        // call allows those problems to reset that state prior to
+        // starting over with a new random sample.
+        m_problem.beginIteration(iteration);
+        
         size_t consensusSetSize = 0;
         size_t previousConsensusSetSize = 0;
         size_t strikes = 0;

@@ -563,6 +563,7 @@ namespace brick {
         m_parameterVector = other.m_parameterVector.copy();
         m_hessianMatrix = other.m_hessianMatrix.copy();
       }
+      return *this;
     }
 
 

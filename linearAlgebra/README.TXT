@@ -21,14 +21,6 @@ this directory for up-to-date contact information.
 
 Please see the file LICENSE.TXT in this directory.
 
-The configure script for this package includes code generated from
-Steven G. Johnson's autoconf files, acx_latex.m4 and acx_blas.m4.
-Distribution of this generated code is permitted under the terms of
-the associated license (GPLWithACException).  The actual files
-acx_lapack.m4 and acx_blas.m4 should not be included in this
-distribution.  If you would like access to these files, they are
-available from http://ac-archive.sourceforge.net.
-
 @section platform_sec Platform
 
 This library is in regular use under Linux (32- & 64-bit).  It should

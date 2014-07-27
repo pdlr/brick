@@ -10,8 +10,8 @@
 ***************************************************************************
 **/
 
-#ifndef BRICK_ARRAY2D_HH
-#define BRICK_ARRAY2D_HH
+#ifndef BRICK_NUMERIC_ARRAY2D_HH
+#define BRICK_NUMERIC_ARRAY2D_HH
 
 // Early inclusion of <algorithm> to allow inlining of member templates.
 #include <algorithm>
@@ -109,7 +109,7 @@ namespace brick {
 
       /**
        * Construct from an initialization string.  The idea is to make
-       * constructor very flexible about interpreting string syntax.
+       * this constructor very flexible about interpreting string syntax.
        * For now, though, the input string must have the format:
        *
        * "[[#, #, #, ...], [#, #, #, ...], [#, #, #, ...], ...]"
@@ -1762,4 +1762,4 @@ namespace brick {
 
 #include <brick/numeric/array2D_impl.hh>
 
-#endif /* #ifdef BRICK_ARRAY2D_HH */
+#endif /* #ifdef BRICK_NUMERIC_ARRAY2D_HH */

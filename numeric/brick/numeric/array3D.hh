@@ -93,7 +93,7 @@ namespace brick {
 
       /**
        * Construct from an initialization string.  The idea is to make
-       * constructor very flexible about interpreting string syntax.
+       * this constructor very flexible about interpreting string syntax.
        * For now, though, the input string must have the format:
        *
        * "[[[#, #, #, ...], [#, #, #, ...], [#, #, #, ...], ...],

@@ -1,14 +1,12 @@
 /**
 @file README.TXT
 
-@mainpage brick::linearAlgebra Utility Library
+@mainpage brick::sparse Utility Library
 
 @section intro_sec Introduction
 
-This library provides C++ wrappers around LAPACK linear algebra
-routines.  Currently it includes routines for matrix inverse, solution
-of linear equations, SVD, determinant, and eigenvectors/eigenvalues of
-symmetric real matrices.  The current version number is shown in file
+This library provides some classes and functions for working with
+sparse matrices.  The current version number is shown in file
 VERSION.TXT, and recent changes can be seen in the file
 RELEASE_NOTES.TXT.
 
@@ -28,8 +26,8 @@ be portable to any platform supporting ISO C++.
 
 @section status_sec Status
 
-This is a reasonably stable library.  Efforts will be made to maintain
-a consistent interface, and not break existing code.
+This library is unstable.  Please expect its interface to change
+significantly.
 
 @section dependencies_sec Dependencies
 
@@ -38,28 +36,12 @@ libraries:
 
   brick::common
   brick::portability
-  brick::numeric
-  lapack
-  blas
-  (and possibly, g2c)
 
 In order to build the unit tests for this library, you must install
 the brick::test library.
 
-You should be able to get brick::numeric, brick::portability, 
-brick::common, and brick::test from the same place you got this library.  
-Lapack and blas are included with most linux distributions and other 
-unix-ish operating systems, such as OS X.  Most linux distributions also 
-include optimized versions of lapack and blas named atlas or atlas3.  You 
-can use these instead of the reference versions for higher performance.
-Non-free versions of lapack and blas that are optimized for intel
-CPUs are available for various platforms from http://www.intel.com.
-You may be able to find pre-built lapack binaries for your
-architecture at http://www.netlib.org/lapack/archives/.  The library
-libg2c may be needed if you compile with g++.  Libg2c is included as
-part of the gnu compiler collection.  Depending on your OS
-distribution, it may be prepackaged for you, in its own package, or
-bundled with g77.
+You should be able to get these dependencies from the same place you
+got this library.
 
 @section installation_sec Installation
 
@@ -69,8 +51,8 @@ Building and installing is done via GNU Autotools.  If you're building
 from a tarball, the simplest possible version looks like this:
 
 @code
-> tar -xvf bricklinearalgebra-x.y.z.tar.gz
-> cd bricklinearAlgebra-x.y.z
+> tar -xvf bricksparse-x.y.z.tar.gz
+> cd bricksparse-x.y.z
 > ./configure
 > make
 > make install

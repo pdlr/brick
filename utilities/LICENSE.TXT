@@ -1,7 +1,7 @@
 /** @file LICENSE.TXT
 This file describes the license for the brick::utilities library.
 
-Copyright (C) 2000 - 2011, David LaRose, Pittsburgh, Pennsylvania, USA.
+Copyright (C) 2000 - 2014, David LaRose, Pittsburgh, Pennsylvania, USA.
 All Rights Reserved
 
 This library is free software; you can redistribute it and/or
@@ -22,8 +22,8 @@ David LaRose can be contacted at the following paper and electronic
 mail addresses:
 
   David LaRose
-  4632 Penn Ave, Apt 2
-  Pittsburgh, PA 15224
+  910 N Negley Ave
+  Pittsburgh, PA 15206
 
   dlr@cs.cmu.edu
 

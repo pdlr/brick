@@ -1,0 +1,3 @@
+/** @file VERSION.TXT
+This is brick::sparse version 0.1.
+**/

@@ -18,6 +18,10 @@
 #include <brick/utilities/lockFile.hh>
 #include <brick/utilities/timeUtilities.hh>
 
+#ifndef _WIN32
+#include <unistd.h>
+#endif /* #ifndef _WIN32 */
+
 namespace brick {
 
   namespace utilities {

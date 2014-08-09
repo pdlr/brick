@@ -13,6 +13,7 @@
 #include <brick/computerVision/test/testImages.hh>
 #include <brick/computerVision/image.hh>
 #include <brick/computerVision/imageIO.hh>
+#include <brick/computerVision/utilities.hh>
 #include <brick/test/testFixture.hh>
 
 namespace brick {
@@ -30,8 +31,10 @@ namespace brick {
       void tearDown(const std::string& /* testName */) {}
 
       // Tests of member functions.
-      void testWritePNG8_GRAY8();
-      void testWritePNG8_RGB8();
+      void testWritePNG_GRAY8();
+      void testWritePNG_RGB8();
+      void testWritePNG_GRAY16();
+      void testWritePNG_RGB16();
 
     private:
 
@@ -44,19 +47,21 @@ namespace brick {
     ImageIOTest()
       : brick::test::TestFixture<ImageIOTest>("ImageIOTest")
     {
-      BRICK_TEST_REGISTER_MEMBER(testWritePNG8_GRAY8);
-      BRICK_TEST_REGISTER_MEMBER(testWritePNG8_RGB8);
+      BRICK_TEST_REGISTER_MEMBER(testWritePNG_GRAY8);
+      BRICK_TEST_REGISTER_MEMBER(testWritePNG_RGB8);
+      BRICK_TEST_REGISTER_MEMBER(testWritePNG_GRAY16);
+      BRICK_TEST_REGISTER_MEMBER(testWritePNG_RGB16);
     }
 
 
     void
     ImageIOTest::
-    testWritePNG8_GRAY8()
+    testWritePNG_GRAY8()
     {
       Image<GRAY8> referenceImage = readPGM8(getTestImageFileNamePGM0());
       // TBD(xxx): get a real temp file name.
       std::string outputFileName = "/var/tmp/testImage.png";
-      writePNG8(outputFileName, referenceImage);
+      writePNG(outputFileName, referenceImage);
       std::string commentString;
       Image<GRAY8> resultImage = readPNG<GRAY8>(
         outputFileName, commentString);
@@ -68,18 +73,58 @@ namespace brick {
  
     void
     ImageIOTest::
-    testWritePNG8_RGB8()
+    testWritePNG_RGB8()
     {
       Image<RGB8> referenceImage = readPPM8(getTestImageFileNamePPM0());
       // TBD(xxx): get a real temp file name.
       std::string outputFileName = "/var/tmp/testImage.png";
-      writePNG8(outputFileName, referenceImage);
+      writePNG(outputFileName, referenceImage);
       std::string commentString;
       Image<RGB8> resultImage = readPNG<RGB8>(
         outputFileName, commentString);
       
       BRICK_TEST_ASSERT(std::equal(resultImage.begin(), resultImage.end(),
                                    referenceImage.begin()));
+    }
+
+
+    void
+    ImageIOTest::
+    testWritePNG_GRAY16()
+    {
+      Image<GRAY8> referenceImage = readPGM8(getTestImageFileNamePGM0());
+      Image<GRAY16> referenceImage16 =
+        convertColorspace<GRAY16>(referenceImage);
+      
+      // TBD(xxx): get a real temp file name.
+      std::string outputFileName = "/var/tmp/testImage.png";
+      writePNG(outputFileName, referenceImage16);
+      std::string commentString;
+      Image<GRAY16> resultImage = readPNG<GRAY16>(
+        outputFileName, commentString);
+      
+      BRICK_TEST_ASSERT(std::equal(resultImage.begin(), resultImage.end(),
+                                   referenceImage16.begin()));
+    }
+
+ 
+    void
+    ImageIOTest::
+    testWritePNG_RGB16()
+    {
+      Image<RGB8> referenceImage = readPPM8(getTestImageFileNamePPM0());
+      Image<RGB16> referenceImage16 =
+        convertColorspace<RGB16>(referenceImage);
+      
+      // TBD(xxx): get a real temp file name.
+      std::string outputFileName = "/var/tmp/testImage.png";
+      writePNG(outputFileName, referenceImage16);
+      std::string commentString;
+      Image<RGB16> resultImage = readPNG<RGB16>(
+        outputFileName, commentString);
+      
+      BRICK_TEST_ASSERT(std::equal(resultImage.begin(), resultImage.end(),
+                                   referenceImage16.begin()));
     }
     
   } // namespace computerVision

@@ -215,6 +215,67 @@ namespace brick {
 namespace brick {
 
   namespace computerVision {
+
+    namespace privateCode {
+      
+      inline void
+      setPngHeaderInfo(png_structp pngPtr,
+                       png_infop infoPtr,
+                       Image<GRAY8> const& outputImage) {
+        png_set_IHDR(
+          pngPtr, infoPtr, outputImage.columns(), outputImage.rows(),
+          sizeof(ImageFormatTraits<GRAY8>::PixelType) * 8,
+          PNG_COLOR_TYPE_GRAY, PNG_INTERLACE_NONE,
+          PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+      }
+      
+      inline void
+      setPngHeaderInfo(png_structp pngPtr,
+                       png_infop infoPtr,
+                       Image<GRAY16> const& outputImage) {
+        png_set_IHDR(
+          pngPtr, infoPtr, outputImage.columns(), outputImage.rows(),
+          sizeof(ImageFormatTraits<GRAY16>::PixelType) * 8,
+          PNG_COLOR_TYPE_GRAY, PNG_INTERLACE_NONE,
+          PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+      }
+      
+      inline void
+      setPngHeaderInfo(png_structp pngPtr,
+                       png_infop infoPtr,
+                       Image<RGB8> const& outputImage) {
+        if(!Image<RGB8>::value_type::isContiguous()) {
+          BRICK_THROW(
+            brick::common::NotImplementedException, "writePNG()",
+            "Your compiler appears to pack RGB pixels in an unusual way.  "
+            "Please update brick::computerVision::writePNG() to handle this.");
+        }
+        png_set_IHDR(
+          pngPtr, infoPtr, outputImage.columns(), outputImage.rows(),
+          sizeof(ImageFormatTraits<GRAY8>::PixelType) * 8,
+          PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
+          PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+      }
+
+      inline void
+      setPngHeaderInfo(png_structp pngPtr,
+                       png_infop infoPtr,
+                       Image<RGB16> const& outputImage) {
+        if(!Image<RGB16>::value_type::isContiguous()) {
+          BRICK_THROW(
+            brick::common::NotImplementedException, "writePNG()",
+            "Your compiler appears to pack RGB pixels in an unusual way.  "
+            "Please update brick::computerVision::writePNG() to handle this.");
+        }
+        png_set_IHDR(
+          pngPtr, infoPtr, outputImage.columns(), outputImage.rows(),
+          sizeof(ImageFormatTraits<GRAY16>::PixelType) * 8,
+          PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
+          PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
+      }
+
+    } // namespace privateCode
+      
     
     template <ImageFormat Format>
     Image<Format>
@@ -225,6 +286,124 @@ namespace brick {
       return pngReader.getImage<Format>();
     }
 
+
+    template<ImageFormat Format>
+    void
+    writePNG(const std::string& fileName,
+             const Image<Format>& outputImage,
+             const std::string& /* comment */)
+    {
+      // This code is heavily in debt to example.c from the libpng 1.2.1
+      // distribition, which carries the following header comment:
+      // /* example.c - an example of using libpng
+      //  * Last changed in libpng 1.2.1 December 7, 2001.
+      //  * This file has been placed in the public domain by the authors.
+      //  * Maintained 1998-2001 Glenn Randers-Pehrson
+      //  * Maintained 1996, 1997 Andreas Dilger)
+      //  * Written 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
+      //  */
+
+      FILE* fp = fopen(fileName.c_str(), "wb");
+      if (fp == 0) {
+        BRICK_THROW(brick::common::IOException, "ImageIO::writePNG()",
+                    "Couldn't open output file.");
+      }
+
+      // Make sure we clean up open FILE.
+      try {
+
+        // Create and initialize the png_struct with the default stderr and
+        // longjump error handler functions.
+        png_structp pngPtr = png_create_write_struct(
+          PNG_LIBPNG_VER_STRING, 0, 0, 0);
+        if (pngPtr == 0) {
+          BRICK_THROW(brick::common::RunTimeException, "ImageIO::writePng()",
+                      "Couldn't initialize png_structp.");
+        }
+
+        // This variable is just to let us choreograph nicely with libpng
+        // cleanup functions.
+        png_infop* infoPtrPtrForCleanup = png_infopp_NULL;
+
+        // Make sure we clean up pngPtr (and eventually infoPtr).
+        try { 
+
+          // We'll need a place to record details (colorspace, etc.)
+          // about the image.
+          png_infop infoPtr = png_create_info_struct(pngPtr);
+          if (infoPtr == 0) {
+            BRICK_THROW(brick::common::RunTimeException, "ImageIO::writePng()",
+                        "Couldn't initialize png_infop.");
+          }
+          infoPtrPtrForCleanup = &infoPtr;
+     
+          // Set error handling in case libpng calls longjmp().
+          if(setjmp(png_jmpbuf(pngPtr))) {
+            // If we get here, we had a problem reading the file
+            BRICK_THROW(brick::common::IOException, "ImageIO::writePng()",
+                        "Trouble reading from file.");
+          }
+
+          // Set up the output control.
+          png_init_io(pngPtr, fp);
+
+          // Note(xxx): Just in case we need it...
+          // png_set_compression_level(pngPtr, Z_BEST_COMPRESSION);
+
+          privateCode::setPngHeaderInfo(pngPtr, infoPtr, outputImage);
+          
+          // Fill in png structure here.
+          png_bytep* rowPointers = (png_bytep*)png_malloc(
+            pngPtr, outputImage.rows() * png_sizeof(png_bytep));
+          if(rowPointers == 0) {
+            BRICK_THROW(brick::common::RunTimeException, "ImageIO::writePng()",
+                        "Couldn't allocate row pointers.");
+          }
+
+          // Be sure to free rowPointers.
+          try {
+            
+            for(size_t rowIndex = 0; rowIndex < outputImage.rows();
+                ++rowIndex) {
+              rowPointers[rowIndex] =
+                (png_bytep)(outputImage.getRow(rowIndex).data());
+            }
+
+            png_set_rows(pngPtr, infoPtr, rowPointers);
+            png_write_png(
+              pngPtr, infoPtr, PNG_TRANSFORM_IDENTITY, png_voidp_NULL);
+          } catch(...) {
+            png_free(pngPtr, rowPointers);
+          }
+          png_free(pngPtr, rowPointers);
+
+          /* If you png_malloced a palette, free it here (don't free
+             infoPtr->palette, as recommended in versions 1.0.5m and
+             earlier of this example; if libpng mallocs infoPtr->palette,
+             libpng will free it).  If you allocated it with malloc()
+             instead of png_malloc(), use free() instead of
+             png_free(). */
+          // png_free(pngPtr, palette); xxx;
+          // palette=NULL;
+
+        } catch(...) {
+          png_destroy_write_struct(&pngPtr, infoPtrPtrForCleanup);
+          throw;
+        }
+     
+        /* clean up after the write, and free any memory allocated */
+        png_destroy_write_struct(&pngPtr, infoPtrPtrForCleanup);
+
+      } catch(...) {
+        fclose(fp);
+        throw;
+      }
+
+      fclose(fp);
+    }
+
+
+    
   } // namespace computerVision
 
 } // namespace brick

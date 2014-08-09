@@ -130,8 +130,25 @@ namespace brick {
      */
     template <ImageFormat FORMAT>
     Image<FORMAT>
+    readPNG(const std::string& fileName,
+            std::string& commentString);
+
+    
+    /** 
+     * WARNING: This routine may not stick around for long.
+     * 
+     * @param fileName This argument ...
+     * 
+     * @param commentString This argument is currently ignored.
+     * 
+     * @return The return value ...
+     */
+    template <ImageFormat FORMAT>
+    Image<FORMAT>
     readPNG8(const std::string& fileName,
-             std::string& commentString);
+             std::string& commentString) {
+      return readPNG<FORMAT>(fileName, commentString);
+    }
 
 
     /** 

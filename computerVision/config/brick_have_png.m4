@@ -33,6 +33,7 @@ AC_DEFUN([BRICK_HAVE_PNG],
           modifying the LDFLAGS environment variable so that the compiler 
           can more easily find the missing library.  
           Please see ./config.log for details of the failure.])])
+     AC_DEFINE(HAVE_LIBPNG,1,[Define if you have png library.])
      LIBS="${BRICK_SAVED_LIBS}"
      LDFLAGS="$BRICK_SAVED_LDFLAGS"
      CPPFLAGS="$BRICK_SAVED_CPPFLAGS"])

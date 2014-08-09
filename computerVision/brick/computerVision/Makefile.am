@@ -66,6 +66,7 @@ brickComputerVision_HEADERS	= \
 	pixelRGB.hh \
 	pixelRGBA.hh \
 	pixelYIQ.hh \
+	pngInterface.hh \
 	randomSampleSelector.hh randomSampleSelector_impl.hh \
 	ransac.hh ransac_impl.hh \
 	ransacClassInterface.hh \
@@ -94,6 +95,7 @@ libbrickComputerVision_la_SOURCES = \
 	keypointSelectorBullseye_impl.hh \
 	keypointSelectorFast.cc keypointSelectorFast.hh \
 	keypointSelectorFast_impl.hh \
+	pngInterface.cc pngInterface.hh \
 	ransac.cc ransac.hh
 
 

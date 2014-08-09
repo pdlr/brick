@@ -58,7 +58,7 @@ namespace brick {
       std::string outputFileName = "/var/tmp/testImage.png";
       writePNG8(outputFileName, referenceImage);
       std::string commentString;
-      Image<GRAY8> resultImage = readPNG8<GRAY8>(
+      Image<GRAY8> resultImage = readPNG<GRAY8>(
         outputFileName, commentString);
       
       BRICK_TEST_ASSERT(std::equal(resultImage.begin(), resultImage.end(),
@@ -75,13 +75,13 @@ namespace brick {
       std::string outputFileName = "/var/tmp/testImage.png";
       writePNG8(outputFileName, referenceImage);
       std::string commentString;
-      Image<RGB8> resultImage = readPNG8<RGB8>(
+      Image<RGB8> resultImage = readPNG<RGB8>(
         outputFileName, commentString);
       
       BRICK_TEST_ASSERT(std::equal(resultImage.begin(), resultImage.end(),
                                    referenceImage.begin()));
     }
-
+    
   } // namespace computerVision
 
 } // namespace brick

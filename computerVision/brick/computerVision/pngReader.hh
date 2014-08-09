@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file brick/computerVision/pngInterface.hh
+* @file brick/computerVision/pngReader.hh
 *
 * Header file declaring a class for interfacing with libpng.
 *
@@ -10,7 +10,7 @@
 ***************************************************************************
 */
 
-#ifndef BRICK_COMPUTERVISION_PNGINTERFACE_HH
+#ifndef BRICK_COMPUTERVISION_PNGREADER_HH
 
 #ifndef HAVE_LIBPNG
 #define HAVE_LIBPNG 1
@@ -26,112 +26,106 @@ namespace brick {
 
   namespace computerVision {
 
-    /// @cond privateCode
-    namespace privateCode {
+    /**
+     ** Wrapper class to make it easy to interact with libpng.
+     **/
+    class PngReader {
+    public:
 
-      /**
-       ** Wrapper class to make it easy to interact with libpng.
-       **/
-      class PngInterface {
-      public:
-
-        /** 
-         * The constructor opens a png image file and reads its contents.
-         * 
-         * @param fileName This argument is the name of the file to be
-         * opened.
-         */
-        PngInterface(std::string const& fileName);
+      /** 
+       * The constructor opens a png image file and reads its contents.
+       * 
+       * @param fileName This argument is the name of the file to be
+       * opened.
+       */
+      PngReader(std::string const& fileName);
 
         
-        /**
-         * Destructor.
-         */
-        virtual
-        ~PngInterface();
+      /**
+       * Destructor.
+       */
+      virtual
+      ~PngReader();
 
 
-        /** 
-         * Returns the contents of the the image file in the requested
-         * image format.
-         * 
-         * @return The return value is an image reflecting the
-         * contents of the .png file.
-         */
-        template <ImageFormat Format>
-        Image<Format>
-        getImage();
+      /** 
+       * Returns the contents of the the image file in the requested
+       * image format.
+       * 
+       * @return The return value is an image reflecting the
+       * contents of the .png file.
+       */
+      template <ImageFormat Format>
+      Image<Format>
+      getImage();
 
 
-        /** 
-         * Returns the native image format of the .png file.
-         * 
-         * @return The return value indicates how the data is stored
-         * in the file.
-         */
-        ImageFormat
-        getNativeImageFormat();
+      /** 
+       * Returns the native image format of the .png file.
+       * 
+       * @return The return value indicates how the data is stored
+       * in the file.
+       */
+      ImageFormat
+      getNativeImageFormat();
       
 
-        /** 
-         * Indicates whether the image data in the file is interlaced.
-         * 
-         * @return The return value is true if the .png file contains
-         * interlaced data, false otherwise.
-         */
-        bool
-        isInterlaced();
+      /** 
+       * Indicates whether the image data in the file is interlaced.
+       * 
+       * @return The return value is true if the .png file contains
+       * interlaced data, false otherwise.
+       */
+      bool
+      isInterlaced();
 
-      private:
+    private:
 
-        // Helper function for getImage().
-        template <ImageFormat Format>
-        Image<Format>
-        convertImage();
+      // Helper function for getImage().
+      template <ImageFormat Format>
+      Image<Format>
+      convertImage();
 
 
-        // ---- Data members below this line ----
+      // ---- Data members below this line ----
 
-        png_structp m_pngPtr;
-        png_infop m_infoPtr;
+      png_structp m_pngPtr;
+      png_infop m_infoPtr;
         
-        png_uint_32 m_width;
-        png_uint_32 m_height;
-        int m_bitDepth;
-        int m_colorType;
-        int m_interlaceType;
-        int m_compressionType;
-        int m_filterMethod;
+      png_uint_32 m_width;
+      png_uint_32 m_height;
+      int m_bitDepth;
+      int m_colorType;
+      int m_interlaceType;
+      int m_compressionType;
+      int m_filterMethod;
         
-      };
+    };
 
 
-      // Declare template specializations.
-      template <>
-      Image<GRAY8>
-      PngInterface::
-      getImage<GRAY8>();
+    // Declare template specializations.
+    template <>
+    Image<GRAY8>
+    PngReader::
+    getImage<GRAY8>();
 
 
-      template <>
-      Image<GRAY16>
-      PngInterface::
-      getImage<GRAY16>();
+    template <>
+    Image<GRAY16>
+    PngReader::
+    getImage<GRAY16>();
   
 
-      template <>
-      Image<RGB8>
-      PngInterface::
-      getImage<RGB8>();
+    template <>
+    Image<RGB8>
+    PngReader::
+    getImage<RGB8>();
 
 
-      template <>
-      Image<RGB16>
-      PngInterface::
-      getImage<RGB16>();
-
-      
-    } // namespace privateCode
+    template <>
+    Image<RGB16>
+    PngReader::
+    getImage<RGB16>();
 
   } // namespace computerVision
 
@@ -139,4 +133,4 @@ namespace brick {
 
 #endif /* #if HAVE_LIBPNG */
 
-#endif /* #ifndef BRICK_COMPUTERVISION_PNGINTERFACE_HH */
+#endif /* #ifndef BRICK_COMPUTERVISION_PNGREADER_HH */

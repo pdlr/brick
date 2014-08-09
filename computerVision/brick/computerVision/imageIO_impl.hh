@@ -210,7 +210,7 @@ namespace brick {
 
 #if HAVE_LIBPNG
 
-#include <brick/computerVision/pngInterface.hh>
+#include <brick/computerVision/pngReader.hh>
 
 namespace brick {
 
@@ -221,8 +221,8 @@ namespace brick {
     readPNG(const std::string& fileName,
              std::string& /* commentString */)
     {
-      privateCode::PngInterface pngInterface(fileName);
-      return pngInterface.getImage<Format>();
+      PngReader pngReader(fileName);
+      return pngReader.getImage<Format>();
     }
 
   } // namespace computerVision

@@ -176,7 +176,7 @@ namespace brick {
      * 
      * @param comment This argument is currently ignored.
      */
-    void
+    inline void
     writePNG8(const std::string& fileName,
               const Image<GRAY8>& outputImage,
               const std::string& comment = "") {
@@ -193,7 +193,7 @@ namespace brick {
      * 
      * @param comment This argument is currently ignored.
      */
-    void
+    inline void
     writePNG8(const std::string& fileName,
               const Image<RGB8>& outputImage,
               const std::string& comment = "") {

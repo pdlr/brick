@@ -48,6 +48,26 @@ namespace brick {
 
 
       /** 
+       * This constructor initializes the line segment using four
+       * coordinates representing a pair of points.
+       * 
+       * @param x0 This argument is the x coordinate of the start
+       * point of the line segment.
+       * 
+       * @param y0 This argument  is the y coordinate of the start
+       * point of the line segment.
+       * 
+       * @param x1 This argument  is the x coordinate of the end
+       * point of the line segment.
+       * 
+       * @param y1 This argument  is the y coordinate of the end
+       * point of the line segment.
+       */
+      LineSegment2D(Type const& x0, Type const& y0,
+                    Type const& x1, Type const& y1);
+
+
+      /** 
        * The copy constructor deep copies its argument.
        * 
        * @param source This argument is the class instance to be
@@ -91,6 +111,16 @@ namespace brick {
        * representing the start point of the line segment.
        */
       brick::numeric::Vector2D<Type> const&
+      getStartPoint() const;
+
+
+      /** 
+       * This member function returns the start point of the line segment.
+       * 
+       * @return The return value is a const reference to Vector2D
+       * representing the start point of the line segment.
+       */
+      brick::numeric::Vector2D<Type> const&
       getVertex0() const;
 
 
@@ -102,16 +132,6 @@ namespace brick {
        */
       brick::numeric::Vector2D<Type> const&
       getVertex1() const;
-
-
-      /** 
-       * This member function returns the start point of the line segment.
-       * 
-       * @return The return value is a const reference to Vector2D
-       * representing the start point of the line segment.
-       */
-      brick::numeric::Vector2D<Type> const&
-      getStartPoint() const;
 
 
       /** 

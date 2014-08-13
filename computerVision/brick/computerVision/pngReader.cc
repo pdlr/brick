@@ -10,7 +10,7 @@
 ***************************************************************************
 */
 
-
+#include <brick/common/byteOrder.hh>
 #include <brick/computerVision/pngReader.hh>
 #include <brick/computerVision/utilities.hh>
 
@@ -104,6 +104,17 @@ namespace brick {
 
           // Let libpng know that we've already checked some magic.
           png_set_sig_bytes(this->m_pngPtr, pngSignatureSize);
+
+#if 0
+          // Seems like this should work, but it doesn't.
+          
+          // PNG files are natively big-endian, but can be coerced to
+          // provide little-endian data without a swap.
+          if(brick::common::getByteOrder()
+             == brick::common::BRICK_LITTLE_ENDIAN) {
+            png_set_swap(this->m_pngPtr);
+          }
+#endif /* #if 0 */
           
           // Read entire image into pngPtr.
           png_read_png(this->m_pngPtr, this->m_infoPtr,
@@ -115,6 +126,30 @@ namespace brick {
                        &(this->m_bitDepth), &(this->m_colorType),
                        &(this->m_interlaceType), &(this->m_compressionType),
                        &(this->m_filterMethod));
+
+          // Here we brute force the endianness fix that didn't work above.
+          if(this->m_bitDepth == 16) {
+
+            // TBD(xxx): Handle RGBA, etc.
+            brick::common::UInt32 numberOfComponents = 1;
+            if(this->m_colorType == PNG_COLOR_TYPE_RGB) {
+              numberOfComponents = 3;
+            }
+            
+            // Swap each row individually.
+            png_bytep* rowPointers = png_get_rows(
+              this->m_pngPtr, this->m_infoPtr);
+
+            for(size_t rowIndex = 0; rowIndex < this->m_height; ++rowIndex) {
+              brick::common::switchByteOrder(
+                reinterpret_cast<common::UInt16*>(rowPointers[rowIndex]),
+                this->m_width * numberOfComponents,
+                brick::common::BRICK_BIG_ENDIAN,
+                brick::common::getByteOrder());
+            }
+
+          } // if(this->m_bitDepth == 16)
+            
         } catch(...) {
           png_destroy_read_struct(
             &(this->m_pngPtr), &(this->m_infoPtr), png_infopp_NULL);

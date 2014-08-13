@@ -2,10 +2,6 @@
 # Makefile.am
 #   Process this file with automake to produce Makefile.in.
 #
-# $Revision: 915 $
-# $Date: 2007-05-18 01:27:47 -0400 (Fri, 18 May 2007) $
-#
-
 
 AUTOMAKE_OPTIONS	= dist-zip
 ACLOCAL_AMFLAGS		= -I m4

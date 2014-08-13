@@ -3,7 +3,6 @@ dnl configure.in
 dnl   Process this file with autoconf to produce a configure script.
 dnl
 
-
 dnl Initialization.
 AC_INIT(brickcomputervision, 1.7)
 AC_CONFIG_SRCDIR(brick/computerVision/Makefile.am)

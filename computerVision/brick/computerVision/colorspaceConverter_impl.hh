@@ -136,6 +136,17 @@ namespace brick {
     template<>
     inline
     void
+    ColorspaceConverter<GRAY8, GRAY16>::
+    operator()(const Image<GRAY8>::PixelType& inputPixel,
+               Image<GRAY16>::PixelType& outputPixel)
+    {
+      outputPixel = Image<GRAY16>::PixelType(inputPixel) << 8;
+    }
+
+
+    template<>
+    inline
+    void
     ColorspaceConverter<GRAY8, RGB8>::
     operator()(const Image<GRAY8>::PixelType& inputPixel,
                Image<RGB8>::PixelType& outputPixel)
@@ -143,6 +154,17 @@ namespace brick {
       outputPixel.red = inputPixel;
       outputPixel.green = inputPixel;
       outputPixel.blue = inputPixel;
+    }
+
+
+    template<>
+    inline
+    void
+    ColorspaceConverter<GRAY16, GRAY8>::
+    operator()(const Image<GRAY16>::PixelType& inputPixel,
+               Image<GRAY8>::PixelType& outputPixel)
+    {
+      outputPixel = Image<GRAY8>::PixelType(inputPixel >> 8);
     }
 
 
@@ -196,9 +218,9 @@ namespace brick {
     operator()(const Image<RGB8>::PixelType& inputPixel,
                Image<RGB16>::PixelType& outputPixel)
     {
-      outputPixel.red = static_cast<brick::common::UnsignedInt16>(inputPixel.red);
-      outputPixel.green = static_cast<brick::common::UnsignedInt16>(inputPixel.green);
-      outputPixel.blue = static_cast<brick::common::UnsignedInt16>(inputPixel.blue);
+      outputPixel.red = static_cast<brick::common::UnsignedInt16>(inputPixel.red) << 8;
+      outputPixel.green = static_cast<brick::common::UnsignedInt16>(inputPixel.green) << 8;
+      outputPixel.blue = static_cast<brick::common::UnsignedInt16>(inputPixel.blue) << 8;
     }
 
 
@@ -334,9 +356,9 @@ namespace brick {
     operator()(const Image<RGB16>::PixelType& inputPixel,
                Image<RGB8>::PixelType& outputPixel)
     {
-      outputPixel.red = static_cast<brick::common::UnsignedInt8>(inputPixel.red);
-      outputPixel.green = static_cast<brick::common::UnsignedInt8>(inputPixel.green);
-      outputPixel.blue = static_cast<brick::common::UnsignedInt8>(inputPixel.blue);
+      outputPixel.red = static_cast<brick::common::UnsignedInt8>(inputPixel.red >> 8);
+      outputPixel.green = static_cast<brick::common::UnsignedInt8>(inputPixel.green >> 8);
+      outputPixel.blue = static_cast<brick::common::UnsignedInt8>(inputPixel.blue >> 8);
     }
 
 

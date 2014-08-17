@@ -4,11 +4,13 @@
 * 
 * Source file defining BSpline2DTest class.
 *
-* Copyright (C) 2006-2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2006-2014 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
 **/
+
+#include <limits>
 
 #include <brick/common/functional.hh>
 #include <brick/numeric/bSpline2D.hh>
@@ -68,48 +70,52 @@ namespace brick {
         " [5.7, 2.5, 5.8],"
         " [3.1, 0.0, 2.2]]");
 
-      // Parameters and interpolated data recovered from reference
-      // BSpline implementation.  For now, we force ourselves to trust
-      // these numbers.
-      Array2D<double> referenceData(
-        "[[ 0.39241379,  0.39241379,  3.62563104], "
-        " [ 0.39241379,  0.39241379,  3.62563104], "
-        " [ 0.39241379,  0.39241379,  3.62563104], "
-        " [ 0.39241379,  0.39241379,  3.62563104], "
-        " [ 1.76586207,  1.76586207,  1.30474756], "
-        " [ 1.76586207,  1.76586207,  1.30474756], "
-        " [ 1.76586207,  1.76586207,  1.30474756], "
-        " [ 1.76586207,  1.76586207,  1.30474756], "
-        " [ 3.13931034,  3.13931034,  2.14289096], "
-        " [ 3.13931034,  3.13931034,  2.14289096], "
-        " [ 3.13931034,  3.13931034,  2.14289096], "
-        " [ 3.13931034,  3.13931034,  2.14289096], "
-        " [ 4.51275862,  4.51275862,  5.7244739 ], "
-        " [ 4.51275862,  4.51275862,  5.7244739 ], "
-        " [ 4.51275862,  4.51275862,  5.7244739 ], "
-        " [ 4.51275862,  4.51275862,  5.7244739 ]]");
-    
-      // Approximate the made up data using a BSpline2D instance.
-      BSpline2D<double> bSpline;
-      bSpline.setNumberOfNodes(6, 7);
-      Array2D<double> sCoordArray = subArray(testData, Slice(), Slice(0, 1));
-      Array2D<double> tCoordArray = subArray(testData, Slice(), Slice(1, 2));
-      Array2D<double> zCoordArray = subArray(testData, Slice(), Slice(2, 3));
-      bSpline.approximateScatteredData(sCoordArray.begin(), sCoordArray.end(),
-                                       tCoordArray.begin(),
-                                       zCoordArray.begin());
 
-      // Compare the resulting approximation with data from our
-      // reference implementation.
-      for(size_t index0 = 0; index0 < referenceData.rows(); ++index0) {
-        double computedResult =
-          bSpline(referenceData(index0, 0), referenceData(index0, 1));
-        BRICK_TEST_ASSERT(
-          approximatelyEqual(computedResult, referenceData(index0, 2),
-                             m_defaultTolerance));
+      // Approximate the made up data using a BSpline2D instance,
+      // using a variety of control point densities.
+      Array1D<double> previousResiduals(testData.rows());
+      previousResiduals = std::numeric_limits<double>::max();
+      Array1D<double> currentResiduals(testData.rows());
+      for(size_t nn = 5; nn < 30; nn += 3) {
 
+        BSpline2D<double> bSpline;
+        bSpline.setNumberOfNodes(nn, nn + 2);
+        Array2D<double> sCoordArray = subArray(testData, Slice(), Slice(0, 1));
+        Array2D<double> tCoordArray = subArray(testData, Slice(), Slice(1, 2));
+        Array2D<double> zCoordArray = subArray(testData, Slice(), Slice(2, 3));
+        bSpline.approximateScatteredData(sCoordArray.begin(), sCoordArray.end(),
+                                         tCoordArray.begin(),
+                                         zCoordArray.begin());
+
+        // Make sure approximation is better with this number of
+        // control points than it was for the previous, coarser grid.
+        // Note that this is not guaranteed to be true, but happens to
+        // be true for the selected test data and control point
+        // spacings.
+        for(size_t index0 = 0; index0 < testData.rows(); ++index0) {
+          double computedResult =
+            bSpline(testData(index0, 0), testData(index0, 1));
+          currentResiduals[index0] = 
+            common::absoluteValue(computedResult - testData(index0, 2));
+
+          std::cout << currentResiduals[index0] << " vs. " 
+                    << previousResiduals[index0] << std::endl;
+          BRICK_TEST_ASSERT(currentResiduals[index0]
+                            <= previousResiduals[index0] + m_defaultTolerance);
+        }
+
+        // Get ready for the next control point spacing.
+        previousResiduals = currentResiduals.copy();
       }
-    }
+
+      // At the finest control point density, there should be no
+      // compromise: all points reconstructed exactly.
+      for(size_t index0 = 0; index0 < testData.rows(); ++index0) {
+        BRICK_TEST_ASSERT(approximatelyEqual(currentResiduals[index0], 
+                                             0.0, m_defaultTolerance));
+      }
+
+    } // testApproximateScatteredData.
 
   } // namespace numeric
 

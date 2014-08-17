@@ -4,7 +4,7 @@
 *
 * Header file declaring the BSpline2D class.
 *
-* Copyright (C) 2006-2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2006-2014 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
@@ -42,6 +42,16 @@ namespace brick {
      ** non-periodic splines, and currently only supports uniform node
      ** spacing.  For now knot multiplicities are fixed at 1, meaning
      ** that folds and discontinuities are not supported.
+     **
+     ** This class implements the 2D spline used by
+     ** ScatteredDataInterpolater, which is an implementation of the
+     ** scattered data interpolation algorithm of Lee, Wolberg, and
+     ** Shin [1].
+     **
+     ** 1. Seungyong Lee, George Wolberg, and Sung Yong Shin,
+     **    "Scattered Data Interpolation with Multilevel B-Splines," IEEE
+     **    Transactions on Visualization and Computer Graphics, Vol. 3,
+     **    No. 3, July–September 1997.
      **/
     template <class Type>
     class BSpline2D {
@@ -248,8 +258,6 @@ namespace brick {
       Array2D<Type> m_controlGrid;
       Vector2D<double> m_minimumXY;
       Vector2D<double> m_maximumXY;
-      size_t m_numberOfNodesS;
-      size_t m_numberOfNodesT;
       Vector2D<double> m_xyCellOrigin;
       Vector2D<double> m_xyCellSize;
     };

@@ -20,6 +20,7 @@ TESTS			= \
 	arrayNDTest \
 	boxIntegrator2DTest \
 	bSplineTest \
+	bSpline2DTest \
 	convolve1DTest \
 	convolve2DTest \
 	convolveNDTest \
@@ -55,6 +56,7 @@ check_PROGRAMS          = \
 	arrayNDTest \
 	boxIntegrator2DTest \
 	bSplineTest \
+	bSpline2DTest \
 	convolve1DTest \
 	convolve2DTest \
 	convolveNDTest \
@@ -90,6 +92,7 @@ array3DTest_SOURCES		= array3DTest.cc arrayTestCommon.hh
 arrayNDTest_SOURCES		= arrayNDTest.cc arrayTestCommon.hh
 boxIntegrator2DTest_SOURCES	= boxIntegrator2DTest.cc
 bSplineTest_SOURCES		= bSplineTest.cc
+bSpline2DTest_SOURCES		= bSpline2DTest.cc
 convolve1DTest_SOURCES		= convolve1DTest.cc
 convolve2DTest_SOURCES		= convolve2DTest.cc
 convolveNDTest_SOURCES		= convolveNDTest.cc

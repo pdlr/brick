@@ -276,6 +276,85 @@ namespace brick {
     }
 
 
+    // This member function doubles the resolution of the B-spline
+    // control grid without changing the shape of the interpolated
+    // function or altering its range.
+    template <class Type>
+    void 
+    BSpline2D<Type>::
+    promote()
+    {
+      // Check that *this is a valid B-spline.
+      size_t numberOfNodesS = this->m_controlGrid.columns();
+      size_t numberOfNodesT = this->m_controlGrid.rows();
+      if ((numberOfNodesS <= 3) || (numberOfNodesT <= 3)){
+        BRICK_THROW(brick::common::StateException,
+                    "BSpline2D::promote()",
+                    "Control grid has not been initialized.  Please call "
+                    "member function setNumberOfNodes() before calling "
+                    "promote().");
+      }
+
+      // Member m_basisArray is unchanged.
+      
+      // Member m_controlGrid doubles in height and width.
+      Array2D<Type> newControlGrid(this->m_controlGrid.rows() * 2,
+				   this->m_controlGrid.columns() * 2);
+      for(size_t ii = 0; ii < this->m_controlGrid.columns(); ++ii) {
+	for(size_t jj = 0; jj < this->m_controlGrid.rows(); ++jj) {
+	  size_t twoTimesIi = ii << 1;
+	  size_t twoTimesJj = jj << 1;
+	  if(0 != ii && 0 != jj) {
+	    newControlGrid(twoTimesJj, twoTimesIi) =
+	      (this->m_controlGrid(jj - 1, ii - 1) 
+	       + this->m_controlGrid(jj + 1, ii - 1)
+	       + this->m_controlGrid(jj - 1, ii + 1)
+	       + this->m_controlGrid(jj + 1, ii + 1)
+	       + 6.0 * (this->m_controlGrid(jj, ii - 1)
+			+ this->m_controlGrid(jj - 1, ii)
+			+ this->m_controlGrid(jj + 1, ii)
+			+ this->m_controlGrid(jj, ii + 1))
+	       + 36.0 * this->m_controlGrid(jj, ii)) / 64.0;
+	  }
+	  if(0 != ii) {
+	    newControlGrid(twoTimesJj + 1, twoTimesIi) =
+	      (this->m_controlGrid(jj, ii - 1) 
+	       + this->m_controlGrid(jj + 1, ii - 1)
+	       + this->m_controlGrid(jj, ii + 1) 
+	       + this->m_controlGrid(jj + 1, ii + 1)
+	       + 6.0 * (this->m_controlGrid(jj, ii)
+			+ this->m_controlGrid(jj + 1, ii))) / 16.0;
+	  }
+	  if(0 != jj) {
+	    newControlGrid(twoTimesJj, twoTimesIi + 1) =
+	      (this->m_controlGrid(jj - 1, ii) 
+	       + this->m_controlGrid(jj + 1, ii)
+	       + this->m_controlGrid(jj - 1, ii + 1) 
+	       + this->m_controlGrid(jj + 1, ii + 1)
+	       + 6.0 * (this->m_controlGrid(jj, ii)
+			+ this->m_controlGrid(jj, ii + 1))) / 16.0;
+	  }
+	  newControlGrid(twoTimesJj + 1, twoTimesIi + 1) =
+	    (this->m_controlGrid(jj, ii) 
+	     + this->m_controlGrid(jj + 1, ii)
+	     + this->m_controlGrid(jj, ii + 1) 
+	     + this->m_controlGrid(jj + 1, ii + 1)) / 4.0;
+	}
+      }
+      this->m_controlGrid = newControlGrid;
+
+      // Member m_minimumXY is unchanged.
+      // Member m_maximumXY is unchanged.
+      // Member m_xyCellOrigin is unchanged.
+
+      numberOfNodesS = this->m_controlGrid.columns();
+      numberOfNodesT = this->m_controlGrid.rows();
+      this->m_xyCellSize.setValue(
+        (m_maximumXY.x() - m_minimumXY.x()) / (numberOfNodesS - 3),
+        (m_maximumXY.y() - m_minimumXY.y()) / (numberOfNodesT - 3));
+    }
+
+
     // This member function sets the values of the control points of
     // the spline.  If the spline is periodic, then the value of the
     template <class Type>

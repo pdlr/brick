@@ -35,6 +35,7 @@ namespace brick {
 
       // Tests of member functions.
       void testApproximateScatteredData();
+      void testPromote();
 
     private:
 
@@ -52,6 +53,7 @@ namespace brick {
     {
       // Register all tests.
       BRICK_TEST_REGISTER_MEMBER(testApproximateScatteredData);
+      BRICK_TEST_REGISTER_MEMBER(testPromote);
     }
 
 
@@ -98,8 +100,6 @@ namespace brick {
           currentResiduals[index0] = 
             common::absoluteValue(computedResult - testData(index0, 2));
 
-          std::cout << currentResiduals[index0] << " vs. " 
-                    << previousResiduals[index0] << std::endl;
           BRICK_TEST_ASSERT(currentResiduals[index0]
                             <= previousResiduals[index0] + m_defaultTolerance);
         }
@@ -116,6 +116,65 @@ namespace brick {
       }
 
     } // testApproximateScatteredData.
+
+
+    void
+    BSpline2DTest::
+    testPromote()
+    {
+      // Arbitrary, made up, scattered data to interpolate.
+      Array2D<double> testData(
+        "[[0.0, 0.7, 4.0],"
+        " [5.5, 0.0, 6.0],"
+        " [3.0, 3.0, 1.0],"
+        " [1.2, 3.7, 0.4],"
+        " [3.0, 4.5, 1.3],"
+        " [4.2, 4.6, 6.0],"
+        " [5.7, 2.5, 5.8],"
+        " [3.1, 0.0, 2.2]]");
+
+
+      // Approximate the made up data using a BSpline2D instance.
+      BSpline2D<double> bSpline0;
+      bSpline0.setNumberOfNodes(5, 7);
+      Array2D<double> sCoordArray = subArray(testData, Slice(), Slice(0, 1));
+      Array2D<double> tCoordArray = subArray(testData, Slice(), Slice(1, 2));
+      Array2D<double> zCoordArray = subArray(testData, Slice(), Slice(2, 3));
+      bSpline0.approximateScatteredData(sCoordArray.begin(), sCoordArray.end(),
+				       tCoordArray.begin(),
+				       zCoordArray.begin());
+
+      // Repeat the approximation, then promote the second B-spline.
+      BSpline2D<double> bSpline1;
+      bSpline1.setNumberOfNodes(5, 7);
+      bSpline1.approximateScatteredData(sCoordArray.begin(), sCoordArray.end(),
+					tCoordArray.begin(),
+					zCoordArray.begin());
+      bSpline1.promote();
+
+      // Make sure the promotion didn't change the value of the
+      // interpolated function.
+
+      for(double sCoord = 0.001; sCoord <= 5.699; sCoord += 0.02) {
+	for(double tCoord = 0.001; tCoord <= 4.599; tCoord += 0.02) {
+
+          double computedResult0 = bSpline0(sCoord, tCoord);
+          double computedResult1 = bSpline1(sCoord, tCoord);
+
+          std::cout << computedResult0 << " vs. " 
+                    << computedResult1 << std::endl;
+
+#if 0
+          BRICK_TEST_ASSERT(
+	    approximatelyEqual(computedResult0, computedResult1, 
+			       this->m_defaultTolerance));
+#endif
+
+        }  // for(double tCoord...)
+
+      } // for(double sCoord...)
+
+    } // testPromote.
 
   } // namespace numeric
 

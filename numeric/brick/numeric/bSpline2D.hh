@@ -156,6 +156,18 @@ namespace brick {
       getMinimumSAndTValues(double& minimumS, double& minimumT);
 
 
+      /**
+       * This member function doubles the resolution of the B-spline
+       * control grid without changing the shape of the interpolated
+       * function or altering its range.  Member function promote() is
+       * primarily useful for adding the function represented by *this
+       * to the function represented by a B-spline with twice the
+       * resolution.
+       */
+      void 
+      promote();
+
+
       /** 
        * This member function sets the values of the control points of
        * the spline.  If the spline is periodic, then the value of the

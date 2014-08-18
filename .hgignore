@@ -19,3 +19,8 @@ missing
 configure
 libtool
 stamp-h1
+*Test
+*.log
+*.trs
+compile
+test-driver

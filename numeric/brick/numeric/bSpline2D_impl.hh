@@ -297,7 +297,18 @@ namespace brick {
 
       // Member m_basisArray is unchanged.
       
-      // Member m_controlGrid doubles in height and width.
+      // Member m_controlGrid nearly doubles in height and width.  To
+      // see why it doesn't actually double, consider that the valid
+      // interpolation range is interior to the rectangle formed by
+      // the second row of the control grid, the sencond column, the
+      // next-to-last row, and the next-to-last column.  The very
+      // outside border of control points is only there to support
+      // interpolation within this valid area.  When the control grid
+      // resolution doubles, the required supporting border halves in
+      // width.  There is no need to represent the entire span of the
+      // original control grid.  Put another way, a spline of order N
+      // requires N + 3 control points.  We're doubling the order of
+      // the spline, not the number of control points.
       size_t newNumberOfNodesS = 2 * (numberOfNodesS - 3) + 3;
       size_t newNumberOfNodesT = 2 * (numberOfNodesT - 3) + 3;
       Array2D<Type> newControlGrid(newNumberOfNodesT, newNumberOfNodesS);
@@ -306,6 +317,16 @@ namespace brick {
       size_t const inRowsMinus1 = this->m_controlGrid.rows() - 1;
       size_t const inColumnsMinus1 = this->m_controlGrid.columns() - 1;
 
+      // Assign values to the higher resolution control grid.  This
+      // step is briefly described on page 234 of [1], which
+      // references more detail in [2].  One could also derive these
+      // numbers by solving a system of linear equations requiring the
+      // output of the resampled spline to match that of the original
+      // spline.
+      //
+      // 2. T. Lyche and K. Morken, "Making the Oslo Algorithm More
+      // Efficient," SIAM Journel of Numerical Analysis, Vol. 23, No
+      // 3, June 1986.
       for(size_t ii = 0; ii < inColumnsMinus1; ++ii) {
         for(size_t jj = 0; jj < inRowsMinus1; ++jj) {
 

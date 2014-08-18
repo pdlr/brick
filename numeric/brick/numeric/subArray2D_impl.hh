@@ -19,6 +19,7 @@
 // #include <brick/numeric/subArray2D.hh>
 
 #include <cmath>
+#include <brick/common/exception.hh>
 #include <brick/common/mathFunctions.hh>   // For absoluteValue().
 #include <brick/common/stridedPointer.hh>
 
@@ -235,53 +236,61 @@ namespace brick {
       if((m_startRow < 0) || (m_startRow >= static_cast<int>(other.rows()))) {
         std::ostringstream message;
         message << "Invalid start row: " << m_startRow << std::endl;
-        BRICK_THROW(IndexException, "SubArray2D::checkArray2DSize()",
-                  message.str().c_str());
+        BRICK_THROW(brick::common::IndexException,
+                    "SubArray2D::checkArray2DSize()",
+                    message.str().c_str());
       }
       if(m_rowStride > 0) {
         if(m_stopRow > static_cast<int>(other.rows())) {
           std::ostringstream message;
           message << "Invalid stop row: " << m_stopRow << std::endl;
-          BRICK_THROW(IndexException, "SubArray2D::checkArray2DSize()",
-                    message.str().c_str());
+          BRICK_THROW(brick::common::IndexException,
+                      "SubArray2D::checkArray2DSize()",
+                      message.str().c_str());
         }
       } else if(m_rowStride < 0) {
         if(m_stopRow < -1) {
           std::ostringstream message;
           message << "Invalid stop row: " << m_stopRow << std::endl;
-          BRICK_THROW(IndexException, "SubArray2D::checkArray2DSize()",
-                    message.str().c_str());
+          BRICK_THROW(brick::common::IndexException,
+                      "SubArray2D::checkArray2DSize()",
+                      message.str().c_str());
         }
       } else {
         // m_rowStride == 0
-        BRICK_THROW(IndexException, "SubArray2D::checkArray2DSize()",
-                  "Invalid row stride: 0\n");
+        BRICK_THROW(brick::common::IndexException,
+                    "SubArray2D::checkArray2DSize()",
+                    "Invalid row stride: 0\n");
       }
       if((m_startColumn < 0)
          || (m_startColumn >= static_cast<int>(other.columns()))) {
         std::ostringstream message;
         message << "Invalid start column: " << m_startColumn << std::endl;
-        BRICK_THROW(IndexException, "SubArray2D::checkArray2DSize()",
-                  message.str().c_str());
+        BRICK_THROW(brick::common::IndexException,
+                    "SubArray2D::checkArray2DSize()",
+                    message.str().c_str());
       }
       if(m_columnStride > 0) {
         if(m_stopColumn > static_cast<int>(other.columns())) {
           std::ostringstream message;
           message << "Invalid stop column: " << m_stopColumn << std::endl;
-          BRICK_THROW(IndexException, "SubArray2D::checkArray2DSize()",
-                    message.str().c_str());
+          BRICK_THROW(brick::common::IndexException,
+                      "SubArray2D::checkArray2DSize()",
+                      message.str().c_str());
         }
       } else if(m_columnStride < 0) {
         if(m_stopColumn < -1) {
           std::ostringstream message;
           message << "Invalid stop column: " << m_stopColumn << std::endl;
-          BRICK_THROW(IndexException, "SubArray2D::checkArray2DSize()",
-                    message.str().c_str());
+          BRICK_THROW(brick::common::IndexException,
+                      "SubArray2D::checkArray2DSize()",
+                      message.str().c_str());
         }
       } else {
         // m_columnStride == 0
-        BRICK_THROW(IndexException, "SubArray2D::checkArray2DSize()",
-                  "Invalid column stride: 0\n");
+        BRICK_THROW(brick::common::IndexException,
+                    "SubArray2D::checkArray2DSize()",
+                    "Invalid column stride: 0\n");
       }
 #endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
     }
@@ -300,15 +309,17 @@ namespace brick {
         std::ostringstream message;
         message << "Row mismatch: " << other.rows() << " vs. "
                 << this->rows() << std::endl;
-        BRICK_THROW(IndexException, "SubArray2D::checkSubArray2DSize()",
-                  message.str().c_str());
+        BRICK_THROW(brick::common::IndexException,
+                    "SubArray2D::checkSubArray2DSize()",
+                    message.str().c_str());
       }
       if(other.columns() != this->columns()) {
         std::ostringstream message;
         message << "Column mismatch: " << other.columns() << " vs. "
                 << this->columns() << std::endl;
-        BRICK_THROW(IndexException, "SubArray2D::checkSubArray2DSize()",
-                  message.str().c_str());
+        BRICK_THROW(brick::common::IndexException,
+                    "SubArray2D::checkSubArray2DSize()",
+                    message.str().c_str());
       }
 #endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
     }

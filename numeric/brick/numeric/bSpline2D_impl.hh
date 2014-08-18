@@ -298,60 +298,70 @@ namespace brick {
       // Member m_basisArray is unchanged.
       
       // Member m_controlGrid doubles in height and width.
-      Array2D<Type> newControlGrid(this->m_controlGrid.rows() * 2,
-				   this->m_controlGrid.columns() * 2);
-      for(size_t ii = 0; ii < this->m_controlGrid.columns(); ++ii) {
-	for(size_t jj = 0; jj < this->m_controlGrid.rows(); ++jj) {
-	  size_t twoTimesIi = ii << 1;
-	  size_t twoTimesJj = jj << 1;
-	  if(0 != ii && 0 != jj) {
-	    newControlGrid(twoTimesJj, twoTimesIi) =
-	      (this->m_controlGrid(jj - 1, ii - 1) 
-	       + this->m_controlGrid(jj + 1, ii - 1)
-	       + this->m_controlGrid(jj - 1, ii + 1)
-	       + this->m_controlGrid(jj + 1, ii + 1)
-	       + 6.0 * (this->m_controlGrid(jj, ii - 1)
-			+ this->m_controlGrid(jj - 1, ii)
-			+ this->m_controlGrid(jj + 1, ii)
-			+ this->m_controlGrid(jj, ii + 1))
-	       + 36.0 * this->m_controlGrid(jj, ii)) / 64.0;
-	  }
-	  if(0 != ii) {
-	    newControlGrid(twoTimesJj + 1, twoTimesIi) =
-	      (this->m_controlGrid(jj, ii - 1) 
-	       + this->m_controlGrid(jj + 1, ii - 1)
-	       + this->m_controlGrid(jj, ii + 1) 
-	       + this->m_controlGrid(jj + 1, ii + 1)
-	       + 6.0 * (this->m_controlGrid(jj, ii)
-			+ this->m_controlGrid(jj + 1, ii))) / 16.0;
-	  }
-	  if(0 != jj) {
-	    newControlGrid(twoTimesJj, twoTimesIi + 1) =
-	      (this->m_controlGrid(jj - 1, ii) 
-	       + this->m_controlGrid(jj + 1, ii)
-	       + this->m_controlGrid(jj - 1, ii + 1) 
-	       + this->m_controlGrid(jj + 1, ii + 1)
-	       + 6.0 * (this->m_controlGrid(jj, ii)
-			+ this->m_controlGrid(jj, ii + 1))) / 16.0;
-	  }
-	  newControlGrid(twoTimesJj + 1, twoTimesIi + 1) =
-	    (this->m_controlGrid(jj, ii) 
-	     + this->m_controlGrid(jj + 1, ii)
-	     + this->m_controlGrid(jj, ii + 1) 
-	     + this->m_controlGrid(jj + 1, ii + 1)) / 4.0;
-	}
+      size_t newNumberOfNodesS = 2 * (numberOfNodesS - 3) + 3;
+      size_t newNumberOfNodesT = 2 * (numberOfNodesT - 3) + 3;
+      Array2D<Type> newControlGrid(newNumberOfNodesT, newNumberOfNodesS);
+
+      // To help with clean indexing below.
+      size_t const inRowsMinus1 = this->m_controlGrid.rows() - 1;
+      size_t const inColumnsMinus1 = this->m_controlGrid.columns() - 1;
+
+      for(size_t ii = 0; ii < inColumnsMinus1; ++ii) {
+        for(size_t jj = 0; jj < inRowsMinus1; ++jj) {
+
+          // To help with clean indexing below.
+          size_t const twoTimesIi = (ii << 1);
+          size_t const twoTimesJj = (jj << 1);
+
+          if(0 != ii && 0 != jj) {
+            newControlGrid(twoTimesJj - 1, twoTimesIi - 1) =
+              (this->m_controlGrid(jj - 1, ii - 1) 
+               + this->m_controlGrid(jj + 1, ii - 1)
+               + this->m_controlGrid(jj - 1, ii + 1)
+               + this->m_controlGrid(jj + 1, ii + 1)
+               + 6.0 * (this->m_controlGrid(jj, ii - 1)
+                        + this->m_controlGrid(jj - 1, ii)
+                        + this->m_controlGrid(jj + 1, ii)
+                        + this->m_controlGrid(jj, ii + 1))
+               + 36.0 * this->m_controlGrid(jj, ii)) / 64.0;
+          }
+          if(0 != ii) {
+            newControlGrid(twoTimesJj, twoTimesIi - 1) =
+              (this->m_controlGrid(jj, ii - 1) 
+               + this->m_controlGrid(jj + 1, ii - 1)
+               + this->m_controlGrid(jj, ii + 1) 
+               + this->m_controlGrid(jj + 1, ii + 1)
+               + 6.0 * (this->m_controlGrid(jj, ii)
+                        + this->m_controlGrid(jj + 1, ii))) / 16.0;
+          }
+          if(0 != jj) {
+            newControlGrid(twoTimesJj - 1, twoTimesIi) =
+              (this->m_controlGrid(jj - 1, ii) 
+               + this->m_controlGrid(jj + 1, ii)
+               + this->m_controlGrid(jj - 1, ii + 1) 
+               + this->m_controlGrid(jj + 1, ii + 1)
+               + 6.0 * (this->m_controlGrid(jj, ii)
+                        + this->m_controlGrid(jj, ii + 1))) / 16.0;
+          }
+          newControlGrid(twoTimesJj, twoTimesIi) =
+            (this->m_controlGrid(jj, ii) 
+             + this->m_controlGrid(jj + 1, ii)
+             + this->m_controlGrid(jj, ii + 1) 
+             + this->m_controlGrid(jj + 1, ii + 1)) / 4.0;
+        }
       }
       this->m_controlGrid = newControlGrid;
 
       // Member m_minimumXY is unchanged.
       // Member m_maximumXY is unchanged.
-      // Member m_xyCellOrigin is unchanged.
 
-      numberOfNodesS = this->m_controlGrid.columns();
-      numberOfNodesT = this->m_controlGrid.rows();
-      this->m_xyCellSize.setValue(
-        (m_maximumXY.x() - m_minimumXY.x()) / (numberOfNodesS - 3),
-        (m_maximumXY.y() - m_minimumXY.y()) / (numberOfNodesT - 3));
+      // New cell size is dictated by the new resolution, and should
+      // be exactly half of the previous cell size.
+      m_xyCellSize.setValue(
+        (m_maximumXY.x() - m_minimumXY.x()) / (newNumberOfNodesS - 3),
+        (m_maximumXY.y() - m_minimumXY.y()) / (newNumberOfNodesT - 3));
+
+      m_xyCellOrigin = m_minimumXY - m_xyCellSize;
     }
 
 
@@ -362,9 +372,6 @@ namespace brick {
     BSpline2D<Type>::
     setControlPoints(const Array2D<Type>& controlPoints)
     {
-      BRICK_THROW(brick::common::NotImplementedException,
-                  "BSpline2D::setControlPoints()",
-                  "Not yet written...");
       if(controlPoints.rows() <= 3 || controlPoints.columns() <= 3) {
         BRICK_THROW(brick::common::ValueException,
                     "BSpline2D::setControlPoints()",

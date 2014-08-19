@@ -27,12 +27,14 @@ namespace brick {
 
   namespace numeric {
 
-    // This constructor builds a BSpline2D instance of unspecified length.
+    // This constructor builds a BSpline2D instance of unspecified
+    // length and width.
     template <class Type, class FloatType>
     BSpline2D<Type, FloatType>::
-    BSpline2D()
+    BSpline2D(bool isIsotropic)
       : m_basisArray(4),
         m_controlGrid(),
+        m_isIsotropic(isIsotropic),
         m_minimumXY(0.0, 0.0),
         m_maximumXY(0.0, 0.0),
         m_xyCellOrigin(0.0, 0.0),
@@ -95,6 +97,7 @@ namespace brick {
     BSpline2D(BSpline2D<Type, FloatType> const& other)
       : m_basisArray(other.m_basisArray.size()),
         m_controlGrid(other.m_controlGrid.copy()),
+        m_isIsotropic(other.m_isIsotropic),
         m_minimumXY(other.m_minimumXY),
         m_maximumXY(other.m_maximumXY),
         m_xyCellOrigin(other.m_xyCellOrigin),
@@ -139,18 +142,26 @@ namespace brick {
       }
 
       // Chose the origin and spacing of the control grid.
-      m_xyCellSize.setValue(
+      this->m_xyCellSize.setValue(
         (m_maximumXY.x() - m_minimumXY.x()) / (numberOfNodesS - 3),
         (m_maximumXY.y() - m_minimumXY.y()) / (numberOfNodesT - 3));
 
-      m_xyCellOrigin = m_minimumXY - m_xyCellSize;
+      if(this->m_isIsotropic) {
+        FloatType cellSize = std::max(this->m_xyCellSize.x(),
+                                      this->m_xyCellSize.x());
+        this->m_xyCellSize.setValue(cellSize, cellSize);
+      }
+
+      this->m_xyCellOrigin = this->m_minimumXY - this->m_xyCellSize;
       
       // Allocate some space for intermediate grids, as described in
       // Lee, Wolberg, and Shin.
-      Array2D<Type> deltaGrid(m_controlGrid.rows(), m_controlGrid.columns());
-      Array2D<FloatType> omegaGrid(m_controlGrid.rows(), m_controlGrid.columns());
+      Array2D<Type> deltaGrid(this->m_controlGrid.rows(),
+                              this->m_controlGrid.columns());
+      Array2D<FloatType> omegaGrid(this->m_controlGrid.rows(),
+                                   this->m_controlGrid.columns());
       deltaGrid = static_cast<Type>(0.0);
-      omegaGrid = 0.0;
+      omegaGrid = static_cast<FloatType>(0.0);
     
       // This code implements the algorithm on page 231 of the paper.
       size_t iIndex;
@@ -382,12 +393,18 @@ namespace brick {
         (m_maximumXY.x() - m_minimumXY.x()) / (newNumberOfNodesS - 3),
         (m_maximumXY.y() - m_minimumXY.y()) / (newNumberOfNodesT - 3));
 
+      if(this->m_isIsotropic) {
+        FloatType cellSize = std::max(this->m_xyCellSize.x(),
+                                      this->m_xyCellSize.x());
+        this->m_xyCellSize.setValue(cellSize, cellSize);
+      }
+
       m_xyCellOrigin = m_minimumXY - m_xyCellSize;
     }
 
 
     // This member function sets the values of the control points of
-    // the spline.  If the spline is periodic, then the value of the
+    // the spline.
     template <class Type, class FloatType>
     void
     BSpline2D<Type, FloatType>::
@@ -439,16 +456,17 @@ namespace brick {
     operator=(BSpline2D<Type, FloatType> const& other)
     {
       if(&other != this) {
-        m_basisArray.reinit(other.m_basisArray.size());
-        m_controlGrid = other.m_controlGrid.copy();
-        m_minimumXY = other.m_minimumXY;
-        m_maximumXY = other.m_maximumXY;
-        m_xyCellOrigin = other.m_xyCellOrigin;
-        m_xyCellSize = other.m_xyCellSize;
+        this->m_basisArray.reinit(other.m_basisArray.size());
+        this->m_controlGrid = other.m_controlGrid.copy();
+        this->m_isIsotropic = other.m_isIsotropic;
+        this->m_minimumXY = other.m_minimumXY;
+        this->m_maximumXY = other.m_maximumXY;
+        this->m_xyCellOrigin = other.m_xyCellOrigin;
+        this->m_xyCellSize = other.m_xyCellSize;
 
         // Deep copy basis coefficients.
-        for(size_t index0 = 0; index0 < m_basisArray.size(); ++index0) {
-          m_basisArray[index0] = (other.m_basisArray[index0]).copy();
+        for(size_t index0 = 0; index0 < this->m_basisArray.size(); ++index0) {
+          this->m_basisArray[index0] = (other.m_basisArray[index0]).copy();
         }
 
       }

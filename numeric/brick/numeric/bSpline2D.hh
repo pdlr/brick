@@ -65,8 +65,17 @@ namespace brick {
        * length and width.  Currently only bicubic splines are
        * supported; we do not provide any way to construct splines of
        * order different that 3.
+       * 
+       * @param isIsotropic If this argument is true, the spatial
+       * resolution of the spline control grid will be the same in
+       * each of the two interpolated axes.  If this argument is set
+       * to false, the spacing of spline control points will differ
+       * between the two axes so that after a call to
+       * approximateScatteredData(), the resolution will be higher in
+       * the axis-aligned direction along which the data are most
+       * tightly grouped.
        */
-      BSpline2D();
+      explicit BSpline2D(bool isIsotropic = false);
 
 
       /** 
@@ -173,10 +182,7 @@ namespace brick {
 
       /** 
        * This member function sets the values of the control points of
-       * the spline.  If the spline is periodic, then the value of the
-       * final control point should be omitted; it will be
-       * automatically copied from the value of the first control
-       * point.
+       * the spline.
        * 
        * @param controlPoints This argument specifies the control
        * point values for the spline.  It must have shape
@@ -192,11 +198,14 @@ namespace brick {
        * This member function both specifies the number of nodes in
        * the spline and sets the node positions so that the spline is
        * "uniform".  The node positions will be set so that the first
-       * node lies at spline parameter (s, t) = (0.0, 0.0) and
-       * subsequent nodes lie at (0.0, 1.0), (0.0, 2.0), (1.0, 0.0),
+       * node lies at spline parameter (s, t) = (-1.0, -1.0) and
+       * subsequent nodes lie at (0.0, 0.0), (0.0, 1.0), (1.0, 0.0),
        * etc.  Note that the actual number of nodes in the spline is
        * equal to numberOfNodesS * numberOfNodesT, because the nodes
-       * form a 2D array.
+       * form a 2D array.  Further note that the valid range for
+       * interpolated s and t values starts at 0.0, and goes to
+       * (numberOfNodesS - 3.0) and (numberOfNodesT - 3.0),
+       * respectively.
        * 
        * @param numberOfNodesS This argument specifies how many nodes
        * the spline should have along the S axis.
@@ -271,6 +280,7 @@ namespace brick {
 
       Array1D< Array1D<FloatType> > m_basisArray;
       Array2D<Type> m_controlGrid;
+      bool m_isIsotropic;
       Vector2D<FloatType> m_minimumXY;
       Vector2D<FloatType> m_maximumXY;
       Vector2D<FloatType> m_xyCellOrigin;

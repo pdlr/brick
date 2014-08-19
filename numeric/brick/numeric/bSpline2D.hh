@@ -43,6 +43,9 @@ namespace brick {
      ** spacing.  For now knot multiplicities are fixed at 1, meaning
      ** that folds and discontinuities are not supported.
      **
+     ** The second template paramter, FloatType, controls the
+     ** precision with which internal calculations are carried out.
+     **
      ** This class implements the 2D spline used by
      ** ScatteredDataInterpolater, which is an implementation of the
      ** scattered data interpolation algorithm of Lee, Wolberg, and
@@ -53,7 +56,7 @@ namespace brick {
      **    Transactions on Visualization and Computer Graphics, Vol. 3,
      **    No. 3, July–September 1997.
      **/
-    template <class Type>
+    template <class Type, class FloatType = double>
     class BSpline2D {
     public:
 
@@ -71,7 +74,7 @@ namespace brick {
        * 
        * @param other This argument is the BSpline2D instance to be copied.
        */
-      BSpline2D(const BSpline2D& other);
+      BSpline2D(BSpline2D<Type, FloatType> const& other);
 
 
       /** 
@@ -121,12 +124,12 @@ namespace brick {
                                CoordIter sEnd,
                                CoordIter tBegin,
                                ObsIter observationsBegin,
-                               double buffer = 1.0E-10);
+                               FloatType buffer = 1.0E-10);
 
       
       /** 
        * This member function returns the maximum value for the spline
-       * parameters S and T.  Calling operator()(double, double) with
+       * parameters S and T.  Calling operator()(FloatType, FloatType) with
        * arguments greater than or equal to those reported by
        * getMaximumSAndTValues() is an error.
        * 
@@ -137,12 +140,12 @@ namespace brick {
        * value of spline parameter T by reference.
        */
       void
-      getMaximumSAndTValues(double& maximumS, double& maximumT);
+      getMaximumSAndTValues(FloatType& maximumS, FloatType& maximumT) const;
 
 
       /** 
        * This member function returns the minimum value for the spline
-       * parameters S and T.  Calling operator()(double, double) with
+       * parameters S and T.  Calling operator()(FloatType, FloatType) with
        * arguments less than those reported by getMinimumSAndTValues()
        * is an error.
        * 
@@ -153,7 +156,7 @@ namespace brick {
        * value of spline parameter T by reference.
        */
       void
-      getMinimumSAndTValues(double& minimumS, double& minimumT);
+      getMinimumSAndTValues(FloatType& minimumS, FloatType& minimumT) const;
 
 
       /**
@@ -182,7 +185,7 @@ namespace brick {
        * setNumberOfNodes.
        */
       void
-      setControlPoints(const Array2D<Type>& controlPoints);
+      setControlPoints(Array2D<Type> const& controlPoints);
 
 
       /** 
@@ -211,8 +214,8 @@ namespace brick {
        * 
        * @param other This argument is the BSpline2D instance to be copied.
        */
-      BSpline2D<Type>&
-      operator=(const BSpline2D<Type>& other);
+      BSpline2D<Type, FloatType>&
+      operator=(BSpline2D<Type, FloatType> const& other);
 
       
       /** 
@@ -222,7 +225,7 @@ namespace brick {
        * @return The return value is the calculated spline value.
        */
       Type
-      operator()(double sValue, double tValue);
+      operator()(FloatType sValue, FloatType tValue) const;
       
 
     protected:
@@ -261,17 +264,17 @@ namespace brick {
        * t, will be written.
        */
       void
-      decomposeSamplePoint(double sValue, double tValue,
+      decomposeSamplePoint(FloatType sValue, FloatType tValue,
                            size_t& iIndex, size_t& jIndex,
-                           double* powersOfS, double* powersOfT);
+                           FloatType* powersOfS, FloatType* powersOfT) const;
 
 
-      Array1D< Array1D<double> > m_basisArray;
+      Array1D< Array1D<FloatType> > m_basisArray;
       Array2D<Type> m_controlGrid;
-      Vector2D<double> m_minimumXY;
-      Vector2D<double> m_maximumXY;
-      Vector2D<double> m_xyCellOrigin;
-      Vector2D<double> m_xyCellSize;
+      Vector2D<FloatType> m_minimumXY;
+      Vector2D<FloatType> m_maximumXY;
+      Vector2D<FloatType> m_xyCellOrigin;
+      Vector2D<FloatType> m_xyCellSize;
     };
     
   } // namespace numeric

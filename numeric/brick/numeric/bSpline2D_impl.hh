@@ -28,8 +28,8 @@ namespace brick {
   namespace numeric {
 
     // This constructor builds a BSpline2D instance of unspecified length.
-    template <class Type>
-    BSpline2D<Type>::
+    template <class Type, class FloatType>
+    BSpline2D<Type, FloatType>::
     BSpline2D()
       : m_basisArray(4),
         m_controlGrid(),
@@ -39,7 +39,7 @@ namespace brick {
         m_xyCellSize(0.0, 0.0)
     {
       // Temporary storage for polynomial coefficients.
-      Array1D<double> basisCoefficients(4);
+      Array1D<FloatType> basisCoefficients(4);
 
       // // The following basis functions are copied from Lee,
       // // Wolberg, and Shin, "Scattered Data Interpolation with
@@ -90,9 +90,9 @@ namespace brick {
 
     
     // The copy constructor does a deep copy.
-    template <class Type>
-    BSpline2D<Type>::
-    BSpline2D(const BSpline2D& other)
+    template <class Type, class FloatType>
+    BSpline2D<Type, FloatType>::
+    BSpline2D(BSpline2D<Type, FloatType> const& other)
       : m_basisArray(other.m_basisArray.size()),
         m_controlGrid(other.m_controlGrid.copy()),
         m_minimumXY(other.m_minimumXY),
@@ -109,15 +109,15 @@ namespace brick {
     
     // This function allows the spline parameters to be automatically
     // set in order to approximate an irregularly sampled function.
-    template <class Type>
+    template <class Type, class FloatType>
     template <class CoordIter, class ObsIter>
     void
-    BSpline2D<Type>::
+    BSpline2D<Type, FloatType>::
     approximateScatteredData(CoordIter sBegin,
                              CoordIter sEnd,
                              CoordIter tBegin,
                              ObsIter observationsBegin,
-                             double buffer)
+                             FloatType buffer)
     {
       CoordIter tEnd = tBegin + (sEnd - sBegin);
     
@@ -148,20 +148,20 @@ namespace brick {
       // Allocate some space for intermediate grids, as described in
       // Lee, Wolberg, and Shin.
       Array2D<Type> deltaGrid(m_controlGrid.rows(), m_controlGrid.columns());
-      Array2D<double> omegaGrid(m_controlGrid.rows(), m_controlGrid.columns());
+      Array2D<FloatType> omegaGrid(m_controlGrid.rows(), m_controlGrid.columns());
       deltaGrid = static_cast<Type>(0.0);
       omegaGrid = 0.0;
     
       // This code implements the algorithm on page 231 of the paper.
       size_t iIndex;
       size_t jIndex;
-      Array2D<double> weightArray(4, 4);
-      double powersOfS[4];
-      double powersOfT[4];
+      Array2D<FloatType> weightArray(4, 4);
+      FloatType powersOfS[4];
+      FloatType powersOfT[4];
 
       // Iterate over each observation (each scattered data point).
       while(sBegin != sEnd) {
-        double weightSquaredSum = 0.0;
+        FloatType weightSquaredSum = 0.0;
 
         // This call sets the value of powersOfS and powersOfT,
         // and returns by reference the indices of the control grid
@@ -180,20 +180,20 @@ namespace brick {
         for(size_t kIndex = 0; kIndex < 4; ++kIndex) {
 
           // Compute one basis function value.
-          double B_k = std::inner_product(
+          FloatType B_k = std::inner_product(
             powersOfS, powersOfS + 4, (this->m_basisArray)[kIndex].data(),
-            static_cast<double>(0));
+            static_cast<FloatType>(0));
   
           for(size_t lIndex = 0; lIndex < 4; ++lIndex) {
 
             // Compute the second basis function value.
-            double B_l = std::inner_product(
+            FloatType B_l = std::inner_product(
               powersOfT, powersOfT + 4, (this->m_basisArray)[lIndex].data(),
-              static_cast<double>(0));
+              static_cast<FloatType>(0));
 
             // Multiply to get the relevant weight.  Indexing into
             // weightArray is (row, column), not (k, l).
-            double weight = B_k * B_l;
+            FloatType weight = B_k * B_l;
             weightArray(lIndex, kIndex) = weight;
             weightSquaredSum += weight * weight;            
           }
@@ -212,7 +212,7 @@ namespace brick {
             // Solve directly for the control point value (phi)
             // following Equation 3 of [1].  Indexing into
             // weightArray is (row, column), not (k, l).
-            double weight = weightArray(lIndex, kIndex);
+            FloatType weight = weightArray(lIndex, kIndex);
             Type phi = (weight / weightSquaredSum) * (*observationsBegin);
 
             // Sanity check.  This test should not pass because the
@@ -230,7 +230,7 @@ namespace brick {
             // average of the phi values from each scattered data
             // observation that affects each control point.  Next, we
             // will use these to compute a final value of phi.
-            double weightSquared = weight * weight;
+            FloatType weightSquared = weight * weight;
             deltaGrid(index1, index0) += phi * weightSquared;
             omegaGrid(index1, index0) += weightSquared;
           }
@@ -254,10 +254,10 @@ namespace brick {
 
     // This member function returns the maximum values for the spline
     // parameters S and T.
-    template <class Type>
+    template <class Type, class FloatType>
     void
-    BSpline2D<Type>::
-    getMaximumSAndTValues(double& maximumS, double& maximumT)
+    BSpline2D<Type, FloatType>::
+    getMaximumSAndTValues(FloatType& maximumS, FloatType& maximumT) const
     {
       maximumS = m_maximumXY.x();
       maximumT = m_maximumXY.y();
@@ -266,10 +266,10 @@ namespace brick {
 
     // This member function returns the minimum values for the spline
     // parameters S and T.
-    template <class Type>
+    template <class Type, class FloatType>
     void
-    BSpline2D<Type>::
-    getMinimumSAndTValues(double& minimumS, double& minimumT)
+    BSpline2D<Type, FloatType>::
+    getMinimumSAndTValues(FloatType& minimumS, FloatType& minimumT) const
     {
       minimumS = m_minimumXY.x();
       minimumT = m_minimumXY.y();
@@ -279,9 +279,9 @@ namespace brick {
     // This member function doubles the resolution of the B-spline
     // control grid without changing the shape of the interpolated
     // function or altering its range.
-    template <class Type>
+    template <class Type, class FloatType>
     void 
-    BSpline2D<Type>::
+    BSpline2D<Type, FloatType>::
     promote()
     {
       // Check that *this is a valid B-spline.
@@ -388,10 +388,10 @@ namespace brick {
 
     // This member function sets the values of the control points of
     // the spline.  If the spline is periodic, then the value of the
-    template <class Type>
+    template <class Type, class FloatType>
     void
-    BSpline2D<Type>::
-    setControlPoints(const Array2D<Type>& controlPoints)
+    BSpline2D<Type, FloatType>::
+    setControlPoints(Array2D<Type> const& controlPoints)
     {
       if(controlPoints.rows() <= 3 || controlPoints.columns() <= 3) {
         BRICK_THROW(brick::common::ValueException,
@@ -401,8 +401,8 @@ namespace brick {
       }
       m_controlGrid = controlPoints.copy();
       m_minimumXY.setValue(0.0, 0.0);
-      m_maximumXY.setValue(static_cast<double>(controlPoints.columns() - 3),
-                           static_cast<double>(controlPoints.rows() - 3));
+      m_maximumXY.setValue(static_cast<FloatType>(controlPoints.columns() - 3),
+                           static_cast<FloatType>(controlPoints.rows() - 3));
       m_xyCellOrigin.setValue(-1.0, -1.0);
       m_xyCellSize.setValue(1.0, 1.0);
     }
@@ -411,9 +411,9 @@ namespace brick {
     // This member function both specifies the number of nodes in
     // the spline and sets the node positions so that the spline is
     // "uniform".
-    template <class Type>
+    template <class Type, class FloatType>
     void
-    BSpline2D<Type>::
+    BSpline2D<Type, FloatType>::
     setNumberOfNodes(size_t numberOfNodesS,
                      size_t numberOfNodesT)
     {
@@ -425,18 +425,18 @@ namespace brick {
       m_controlGrid.reinit(numberOfNodesT, numberOfNodesS);
       m_controlGrid = 0.0;
       m_minimumXY.setValue(0.0, 0.0);
-      m_maximumXY.setValue(static_cast<double>(numberOfNodesS - 3),
-                           static_cast<double>(numberOfNodesT - 3));
+      m_maximumXY.setValue(static_cast<FloatType>(numberOfNodesS - 3),
+                           static_cast<FloatType>(numberOfNodesT - 3));
       m_xyCellOrigin.setValue(-1.0, -1.0);
       m_xyCellSize.setValue(1.0, 1.0);
     }
 
     
     // The assigment operator does a deep copy.
-    template <class Type>
-    BSpline2D<Type>&
-    BSpline2D<Type>::
-    operator=(const BSpline2D<Type>& other)
+    template <class Type, class FloatType>
+    BSpline2D<Type, FloatType>&
+    BSpline2D<Type, FloatType>::
+    operator=(BSpline2D<Type, FloatType> const& other)
     {
       if(&other != this) {
         m_basisArray.reinit(other.m_basisArray.size());
@@ -457,18 +457,18 @@ namespace brick {
     
     // This operator evaluates the spline at the specified values of
     // spline parameters s and t.
-    template <class Type>
+    template <class Type, class FloatType>
     Type
-    BSpline2D<Type>::
-    operator()(double sValue, double tValue)
+    BSpline2D<Type, FloatType>::
+    operator()(FloatType sValue, FloatType tValue) const
     {
       // This call sets the value of powersOfS and powersOfT,
       // and returns by reference the indices of the control grid
       // cell into which (s, t) falls.
       size_t iIndex;
       size_t jIndex;
-      double powersOfS[4];
-      double powersOfT[4];
+      FloatType powersOfS[4];
+      FloatType powersOfT[4];
       this->decomposeSamplePoint(sValue, tValue, iIndex, jIndex,
                                  powersOfS, powersOfT);
       
@@ -476,24 +476,24 @@ namespace brick {
       // surrounding control points.
       int index0 = iIndex - 1;
       int index1 = jIndex - 1;
-      double functionValue = 0.0;
+      FloatType functionValue = 0.0;
       for(size_t kIndex = 0; kIndex < 4; ++kIndex) {
  
         size_t i0PlusK = index0 + kIndex;
 
-        //  double B_k = dot<double>((this->m_basisArray)[kIndex], powersOfS);
-        double B_k = std::inner_product(
+        //  FloatType B_k = dot<FloatType>((this->m_basisArray)[kIndex], powersOfS);
+        FloatType B_k = std::inner_product(
           powersOfS, powersOfS + 4, (this->m_basisArray)[kIndex].data(),
-          static_cast<double>(0));
+          static_cast<FloatType>(0));
 
         for(size_t lIndex = 0; lIndex < 4; ++lIndex) {
 
           size_t i1PlusL = index1 + lIndex;
 
-          // double B_l = dot<double>((this->m_basisArray)[lIndex], powersOfT);
-          double B_l = std::inner_product(
+          // FloatType B_l = dot<FloatType>((this->m_basisArray)[lIndex], powersOfT);
+          FloatType B_l = std::inner_product(
             powersOfT, powersOfT + 4, (this->m_basisArray)[lIndex].data(),
-            static_cast<double>(0));
+            static_cast<FloatType>(0));
 
           // Indexing into control grid is (row, column), not (k, l).
           functionValue += (B_k * B_l * m_controlGrid(i1PlusL, i0PlusK));
@@ -503,19 +503,19 @@ namespace brick {
     }
 
 
-    template <class Type>
+    template <class Type, class FloatType>
     void
-    BSpline2D<Type>::
-    decomposeSamplePoint(double sValue, double tValue,
+    BSpline2D<Type, FloatType>::
+    decomposeSamplePoint(FloatType sValue, FloatType tValue,
                          size_t& iIndex, size_t& jIndex,
-                         double* powersOfS, double* powersOfT)
+                         FloatType* powersOfS, FloatType* powersOfT) const
     {
       // Note(xxx): consider using std::modf() here.
       
       // Find the integer coords of the control grid cell in which the
       // input point lies.
-      double iTmp = (sValue - m_xyCellOrigin.x()) / m_xyCellSize.x();
-      double jTmp = (tValue - m_xyCellOrigin.y()) / m_xyCellSize.y();
+      FloatType iTmp = (sValue - m_xyCellOrigin.x()) / m_xyCellSize.x();
+      FloatType jTmp = (tValue - m_xyCellOrigin.y()) / m_xyCellSize.y();
       int iCoord = static_cast<int>(std::floor(iTmp));
       int jCoord = static_cast<int>(std::floor(jTmp));
 

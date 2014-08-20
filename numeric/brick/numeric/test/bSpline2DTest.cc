@@ -36,6 +36,7 @@ namespace brick {
       // Tests of member functions.
       void testApproximateScatteredData();
       void testPromote();
+      void testOperatorPlusEquals();
 
     private:
 
@@ -54,6 +55,7 @@ namespace brick {
       // Register all tests.
       BRICK_TEST_REGISTER_MEMBER(testApproximateScatteredData);
       BRICK_TEST_REGISTER_MEMBER(testPromote);
+      BRICK_TEST_REGISTER_MEMBER(testOperatorPlusEquals);
     }
 
 
@@ -171,6 +173,78 @@ namespace brick {
 
     } // testPromote.
 
+ 
+    void
+    BSpline2DTest::
+    testOperatorPlusEquals()
+    {
+      // Arbitrary, made up, scattered data to interpolate.
+      Array2D<double> testData0(
+        "[[0.0, 0.7, 4.0],"
+        " [5.5, 0.0, 6.0],"
+        " [3.0, 3.0, 1.0],"
+        " [1.2, 3.7, 0.4],"
+        " [3.0, 4.5, 1.3],"
+        " [4.2, 4.6, 6.0],"
+        " [5.7, 2.5, 5.8],"
+        " [3.1, 0.0, 2.2]]");
+
+      // The second dataset has the same min and max for columns 0 and
+      // 1, so that interpolating splines for the two datasets will
+      // have the same range.
+      Array2D<double> testData1(
+        "[[0.0, 4.5, 2.0],"
+        " [1.1, 1.0, 4.0],"
+        " [3.5, 0.0, 2.0],"
+        " [0.2, 2.7, 6.2],"
+        " [2.5, 4.6, 1.0],"
+        " [4.2, 3.0, 4.4],"
+        " [4.4, 1.1, 5.0],"
+        " [5.7, 0.1, 2.0]]");
+      
+      // Approximate the made up data using BSpline2D instances.
+      BSpline2D<double> bSpline0;
+      bSpline0.setNumberOfNodes(5, 7);
+      Array2D<double> sCoordArray0 = subArray(testData0, Slice(), Slice(0, 1));
+      Array2D<double> tCoordArray0 = subArray(testData0, Slice(), Slice(1, 2));
+      Array2D<double> zCoordArray0 = subArray(testData0, Slice(), Slice(2, 3));
+      bSpline0.approximateScatteredData(sCoordArray0.begin(),
+                                        sCoordArray0.end(),
+                                        tCoordArray0.begin(),
+                                        zCoordArray0.begin());
+
+      BSpline2D<double> bSpline1;
+      bSpline1.setNumberOfNodes(5, 7);
+      Array2D<double> sCoordArray1 = subArray(testData1, Slice(), Slice(0, 1));
+      Array2D<double> tCoordArray1 = subArray(testData1, Slice(), Slice(1, 2));
+      Array2D<double> zCoordArray1 = subArray(testData1, Slice(), Slice(2, 3));
+      bSpline1.approximateScatteredData(sCoordArray1.begin(),
+                                        sCoordArray1.end(),
+                                        tCoordArray1.begin(),
+                                        zCoordArray1.begin());
+
+      BSpline2D<double> bSpline2;
+      bSpline2.setNumberOfNodes(5, 7);
+      bSpline2.approximateScatteredData(sCoordArray0.begin(),
+                                        sCoordArray0.end(),
+                                        tCoordArray0.begin(),
+                                        zCoordArray0.begin());
+
+      // Exercise the operator under test.
+      bSpline2 += bSpline1;
+
+      // And verify correct effect.
+      for(double ss = 0.0; ss < 5.7; ss += 0.2) {
+        for(double tt = 0.0; tt < 4.6; tt += 0.2) {
+          double result0 = bSpline0(ss, tt) + bSpline1(ss, tt);
+          double result1 = bSpline2(ss, tt);
+          BRICK_TEST_ASSERT(
+            approximatelyEqual(result0, result1, this->m_defaultTolerance));
+        }
+      }
+
+    }
+    
   } // namespace numeric
 
 } // namespace brick

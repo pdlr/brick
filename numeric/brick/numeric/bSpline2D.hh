@@ -133,8 +133,90 @@ namespace brick {
                                CoordIter sEnd,
                                CoordIter tBegin,
                                ObsIter observationsBegin,
-                               FloatType buffer = 1.0E-10);
+                               FloatType buffer = 1.0E-5);
 
+      
+      /** 
+       * This function allows the spline parameters to be
+       * automatically set in order to approximate an irregularly
+       * sampled function.  If you have some randomly distributed
+       * observations of a function value, and you want to approximate
+       * them with a spline, this the right member function to call.
+       * First you must create a spline, decide how many control
+       * points it should have along each axis (set this using member
+       * function setNumberOfNodes()), and then call
+       * approximateScatteredData().
+       * 
+       * @param sBegin This iterator specifies the beginning of a
+       * sequence of (possibly non-uniformly distributed) S
+       * coordinates of points at which observations of the
+       * to-be-approximated function were made.
+       *
+       * @param sEnd This iterator specifies the end of the sequence
+       * of S coordinates.
+       *
+       * @param tBegin This iterator specifies the beginning of a
+       * sequence of (possibly non-uniformly distributed) T
+       * coordinates corresponding to the S coordinate sequence
+       * described above.  The sequence of T coordinates must have at
+       * least as many elements as the sequence of S coordinates.
+       *
+       * @param observationsBegin This iterator specifies the
+       * beginning of a sequence of observations corresponding to the
+       * sequences of S and T coordinates described above.  The spline
+       * control points will be set so that, for 0 <= N <
+       * (observedSPositionsEnd - observedSPositionsBegin), the value
+       * of the spline at (S, T) = (*(observedSPositionsBegin + N),
+       * *(observedTPositionsBegin + N)) approximates
+       * *(observationsBegin + N) as closely as possible.
+       *
+       * @param corner0 This argument and the next define a
+       * rectangular region in parameter space over which the
+       * interpolated function will be valid.  It is an error if any
+       * of the input (S, T) coordinates lie outside of this region.
+       *
+       * @param corner1 This argument and the previous define a
+       * rectangular region in parameter space over which the
+       * interpolated function will be valid.  It is an error if any
+       * of the input (S, T) coordinates lie outside of this region.
+       */
+      template <class CoordIter, class ObsIter>
+      void
+      approximateScatteredData(CoordIter sBegin,
+                               CoordIter sEnd,
+                               CoordIter tBegin,
+                               ObsIter observationsBegin,
+                               Vector2D<FloatType> corner0,
+                               Vector2D<FloatType> corner1);
+
+
+      /**
+       * Indicates whether the spacing of the spline control grid is
+       * the same in both S and T directions.
+       *
+       * @return The return value is true if the spatial resolution of
+       * the spline control grid is constrained to be the same along
+       * each of the two interpolated axes.  If the return value is
+       * false, the spacing of spline control points can differ
+       * between the two axes.
+       */
+      bool getIsIsotropic() {return this->m_isIsotropic;}
+
+      
+      /** 
+       * This member queries the size of the underlying B-Spline
+       * control grid.
+       * 
+       * @param numberOfNodesS This argument returns how many nodes
+       * the spline has along the S axis.
+       * 
+       * @param numberOfNodesT This argument returns how many nodes
+       * the spline has along the T axis.
+       */
+      void
+      getNumberOfNodes(size_t& numberOfNodesS,
+                       size_t& numberOfNodesT) const;
+      
       
       /** 
        * This member function returns the maximum value for the spline
@@ -225,6 +307,20 @@ namespace brick {
        */
       BSpline2D<Type, FloatType>&
       operator=(BSpline2D<Type, FloatType> const& other);
+
+      
+      /** 
+       * This operator updates a spline so that its output is exactly
+       * the sum of its original output and the output of another
+       * spline.  The argument of this function must have the same
+       * minimumXY, maximumXY, xyCellSize, and controlGrid size as
+       * *this.
+       * 
+       * @param other This argument is the BSpline2D instance to be
+       * added to *this.
+       */
+      BSpline2D<Type, FloatType>&
+      operator+=(BSpline2D<Type, FloatType> const& other);
 
       
       /** 

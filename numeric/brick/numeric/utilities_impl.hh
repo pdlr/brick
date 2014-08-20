@@ -590,6 +590,35 @@ namespace brick {
     }
 
     
+    // This function swaps values between its two arguments so that
+    // the value of each element of corner0 is less than or equal to
+    // the corresponding value of corner1.
+    template <class Type>
+    bool
+    cleanupCorners(Vector2D<Type>& corner0, Vector2D<Type>& corner1)
+    {
+      bool returnValue = true;
+      
+      if(corner0.getX() > corner1.getX()) {
+        Type maxX = corner0.getX();
+        corner0.setValue(corner1.getX(), corner0.getY());
+        corner1.setValue(maxX, corner1.getY());
+      } else if(corner0.getX() == corner1.getX()) {
+        returnValue = false;
+      }
+
+      if(corner0.getY() > corner1.getY()) {
+        Type maxY = corner0.getY();
+        corner0.setValue(corner0.getX(), corner1.getY());
+        corner1.setValue(corner1.getX(), maxY);
+      } else if(corner0.getY() == corner1.getY()) {
+        returnValue = false;
+      }
+
+      return returnValue;
+    }
+
+    
     // columnIndices(rows, columns): Returns an Array2D in which each
     // element contains the index of its column.
     template <class Type>

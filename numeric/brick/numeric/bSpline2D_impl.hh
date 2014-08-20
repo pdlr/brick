@@ -124,11 +124,38 @@ namespace brick {
     {
       CoordIter tEnd = tBegin + (sEnd - sBegin);
     
-      // Set bounds for reconstruction
-      m_minimumXY.setValue(*std::min_element(sBegin, sEnd) - buffer,
-                           *std::min_element(tBegin, tEnd) - buffer);
-      m_maximumXY.setValue(*std::max_element(sBegin, sEnd) + buffer,
-                           *std::max_element(tBegin, tEnd) + buffer);
+      // Establish bounds for reconstruction
+      Vector2D<FloatType> corner0(*std::min_element(sBegin, sEnd) - buffer,
+                                  *std::min_element(tBegin, tEnd) - buffer);
+      Vector2D<FloatType> corner1(*std::max_element(sBegin, sEnd) + buffer,
+                                  *std::max_element(tBegin, tEnd) + buffer);
+
+      // Do the interpolation.
+      this->approximateScatteredData(sBegin, sEnd, tBegin, observationsBegin,
+                                     corner0, corner1);
+    }
+
+
+    // This function allows the spline parameters to be automatically
+    // set in order to approximate an irregularly sampled function.
+    template <class Type, class FloatType>
+    template <class CoordIter, class ObsIter>
+    void
+    BSpline2D<Type, FloatType>::
+    approximateScatteredData(CoordIter sBegin,
+                               CoordIter sEnd,
+                               CoordIter tBegin,
+                               ObsIter observationsBegin,
+                               Vector2D<FloatType> corner0,
+                               Vector2D<FloatType> corner1)
+    {
+      // Sanity check input corners (cleanupCorners() is declared in
+      // brick/numeric/utilities.hh).
+      cleanupCorners(corner0, corner1);
+      
+      // Remember the specified bounds for reconstruction
+      m_minimumXY = corner0;
+      m_maximumXY = corner1;
 
       // Recover control grid size, and sanity check it.      
       size_t numberOfNodesS = m_controlGrid.columns();
@@ -255,14 +282,27 @@ namespace brick {
       // different control grid values.
       for(size_t index0 = 0; index0 < m_controlGrid.size(); ++index0) {
         if(omegaGrid[index0] == 0.0) {
-          m_controlGrid[index0] = static_cast<Type>(0.0);
+          this->m_controlGrid[index0] = static_cast<Type>(0.0);
         } else {
-          m_controlGrid[index0] = deltaGrid[index0] / omegaGrid[index0];
+          this->m_controlGrid[index0] = deltaGrid[index0] / omegaGrid[index0];
         }
       }
     }
     
 
+    // This member queries the size of the underlying B-Spline
+    // control grid.
+    template <class Type, class FloatType>
+    void
+    BSpline2D<Type, FloatType>::
+    getNumberOfNodes(size_t& numberOfNodesS,
+                     size_t& numberOfNodesT) const
+    {
+      numberOfNodesS = this->m_controlGrid.columns();
+      numberOfNodesT = this->m_controlGrid.rows();
+    }
+      
+      
     // This member function returns the maximum values for the spline
     // parameters S and T.
     template <class Type, class FloatType>
@@ -468,10 +508,35 @@ namespace brick {
         for(size_t index0 = 0; index0 < this->m_basisArray.size(); ++index0) {
           this->m_basisArray[index0] = (other.m_basisArray[index0]).copy();
         }
-
       }
+      return *this;
     }
 
+
+    // This operator updates a spline so that its output is exactly
+    // the sum of its original output and the output of another
+    // spline.
+    template <class Type, class FloatType>
+    BSpline2D<Type, FloatType>&
+    BSpline2D<Type, FloatType>::
+    operator+=(BSpline2D<Type, FloatType> const& other)
+    {
+      if(&other != this) {
+        // Member m_basisArray is assumed to be the same between the
+        // two splines.
+
+        this->m_controlGrid += other.m_controlGrid;
+
+        // Several members are assumed to be unchanged.
+        // this->m_isIsotropic
+        // this->m_minimumXY
+        // this->m_maximumXY
+        // this->m_xyCellOrigin
+        // this->m_xyCellSize
+      }
+      return *this;
+    }
+    
     
     // This operator evaluates the spline at the specified values of
     // spline parameters s and t.

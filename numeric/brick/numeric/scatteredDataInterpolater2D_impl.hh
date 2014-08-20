@@ -30,15 +30,16 @@ namespace brick {
 
     // This constructor builds a ScatteredDataInterpolater2D instance
     // of unspecified length and width.
-    template <class Type, class FloatType>
-    ScatteredDataInterpolater2D<Type, FloatType>::
+    template <class Type, class FloatType, class TestType>
+    ScatteredDataInterpolater2D<Type, FloatType, TestType>::
     ScatteredDataInterpolater2D(size_t numberOfLevels, 
                                 bool isMeanCentered,
                                 bool isIsotropic)
       : m_bSpline2D(isIsotropic),
         m_isMeanCentered(isMeanCentered),
-        m_meanValue(static_cast<FloatType>(0.0)),
-        m_numberOfLevels(numberOfLevels)
+        m_meanValue(static_cast<Type>(0.0)),
+        m_numberOfLevels(numberOfLevels),
+        m_testFunctor()
     {
       if(0 == numberOfLevels) {
         BRICK_THROW(brick::common::ValueException, 
@@ -49,14 +50,15 @@ namespace brick {
 
     
     // The copy constructor does a deep copy.
-    template <class Type, class FloatType>
-    ScatteredDataInterpolater2D<Type, FloatType>::
+    template <class Type, class FloatType, class TestType>
+    ScatteredDataInterpolater2D<Type, FloatType, TestType>::
     ScatteredDataInterpolater2D(
-      ScatteredDataInterpolater2D<Type, FloatType> const& other)
+      ScatteredDataInterpolater2D<Type, FloatType, TestType> const& other)
       : m_bSpline2D(other.m_bSpline2D),
         m_isMeanCentered(other.m_isMeanCentered),
         m_meanValue(other.m_meanValue),
-        m_numberOfLevels(other.m_numberOfLevels)
+        m_numberOfLevels(other.m_numberOfLevels),
+        m_testFunctor(other.m_testFunctor)
     {
       // Empty.
     }
@@ -64,15 +66,40 @@ namespace brick {
     
     // This function allows the spline parameters to be automatically
     // set in order to approximate an irregularly sampled function.
-    template <class Type, class FloatType>
+    template <class Type, class FloatType, class TestType>
     template <class CoordIter, class ObsIter>
     void
-    ScatteredDataInterpolater2D<Type, FloatType>::
-    approximateScatteredData(CoordIter sBegin,
-                             CoordIter sEnd,
-                             CoordIter tBegin,
-                             ObsIter observationsBegin,
-                             FloatType buffer)
+    ScatteredDataInterpolater2D<Type, FloatType, TestType>::
+    approximate(CoordIter sBegin, CoordIter sEnd,
+                CoordIter tBegin,
+                ObsIter observationsBegin,
+                FloatType buffer)
+    {
+      CoordIter tEnd = tBegin + (sEnd - sBegin);
+    
+      // Establish bounds for reconstruction
+      Vector2D<FloatType> corner0(*std::min_element(sBegin, sEnd) - buffer,
+                                  *std::min_element(tBegin, tEnd) - buffer);
+      Vector2D<FloatType> corner1(*std::max_element(sBegin, sEnd) + buffer,
+                                  *std::max_element(tBegin, tEnd) + buffer);
+
+      // Do the interpolation.
+      this->approximate(sBegin, sEnd, tBegin, observationsBegin,
+                        corner0, corner1);
+    }
+
+
+    // This function allows the spline parameters to be automatically
+    // set in order to approximate an irregularly sampled function.
+    template <class Type, class FloatType, class TestType>
+    template <class CoordIter, class ObsIter>
+    void
+    ScatteredDataInterpolater2D<Type, FloatType, TestType>::
+    approximate(CoordIter sBegin, CoordIter sEnd,
+                CoordIter tBegin,
+                ObsIter observationsBegin,
+                Vector2D<FloatType> const& corner0,
+                Vector2D<FloatType> const& corner1)
     {
       // Make a local -- and mutable -- copy of the input values.
       size_t numberOfObservations = sEnd - sBegin;
@@ -83,52 +110,65 @@ namespace brick {
       // Start by computing the mean value, if appropriate, and
       // subtracting it out of the input data.
       if(this->m_isMeanCentered) {
-        this->m_meanValue = mean(observationsBegin, observationsEnd);
+        this->m_meanValue = mean<Type>(shiftedObservations);
         shiftedObservations -= this->m_meanValue;
       } else {
-        this->m_meanValue = static_cast<FloatType>(0.0);
+        this->m_meanValue = static_cast<Type>(0.0);
       }
 
       // Create and initial, very course, B-spline approximation to
       // the possibly-shifted input data.
-      this->bSpline2D.setNumberOfControlPoints(4, 4);
-      this->bSpline2D.approximateScatteredData(
-        sBegin, sEnd, tBegin, shiftedObservations.begin(), buffer);
+      this->m_bSpline2D.setNumberOfNodes(4, 4);
+      this->m_bSpline2D.approximateScatteredData(
+        sBegin, sEnd, tBegin, shiftedObservations.begin(), corner0, corner1);
       
       // Iterate until there are no more refinements to be done.
       Array1D<Type> residuals(shiftedObservations.size());
-      for(size_t levelNumber = 0; levelNumber < this->m_numberOfLevels; 
+      for(size_t levelNumber = 1; levelNumber < this->m_numberOfLevels; 
           ++levelNumber) {
 
-        // Resample the B-spline to the next higher resolution.
-        this->m_bSpline2D.promote();
-        
         // Subtract the best-so-far interpolation from the observations
         // to get a residual, which will be interpolated below.
         CoordIter sIter = sBegin;
         CoordIter tIter = tBegin;
-        Array1D<Type>::const_iter obsIter = shiftedObservations.begin();
-        Array1D<Type>::iter residualsIter = residuals.begin();
+        typename Array1D<Type>::const_iterator obsIter =
+          shiftedObservations.begin();
+        typename Array1D<Type>::iterator residualsIter =
+          residuals.begin();
+
+        bool isTerminationOk = true;
         while(sIter != sEnd) {
-          *residualsIter = *obsIter - this->bSpline2D(*sIter, *tIter);
+          *residualsIter = *obsIter - this->m_bSpline2D(*sIter, *tIter);
+          isTerminationOk = (isTerminationOk
+                             && this->m_testFunctor(*residualsIter));
           ++residualsIter;
           ++obsIter;
           ++sIter;
           ++tIter;
         }
 
+        // If all residuals are acceptable, then there's no sense in
+        // continuing to iterate.
+        if(isTerminationOk) {
+          break;
+        }
+        
+        // Resample the B-spline to the next higher resolution.
+        this->m_bSpline2D.promote();
+        
         // Recover the dimensions of the current spline control grid.
-        size_t numberOfControlPointsS;
-        size_t numberOfControlPointsT;
-        this->bSpline2D.getNumberOfControlPoints(numberOfControlPointsS,
-                                                 numberOfControlPointsT);
+        size_t numberOfNodesS;
+        size_t numberOfNodesT;
+        this->m_bSpline2D.getNumberOfNodes(numberOfNodesS,
+                                           numberOfNodesT);
 
         // Interpolate the residual at the current resolution.
-        BSpline2D<Type, FloatType> residualInterpolator(this->isIsotropic);
-        residualInterpolator.setNumberOfControlPoints(numberOfControlPointsS,
-                                                      numberOfControlPointsT);
+        BSpline2D<Type, FloatType> residualInterpolator(
+          this->m_bSpline2D.getIsIsotropic());
+        residualInterpolator.setNumberOfNodes(numberOfNodesS,
+                                              numberOfNodesT);
         residualInterpolator.approximateScatteredData(
-          sBegin, sEnd, tBegin, residuals.begin(), buffer);
+          sBegin, sEnd, tBegin, residuals.begin(), corner0, corner1);
 
         // Add the residual spline to the overall interpolation
         // function, making the interpolation more accurate.
@@ -139,9 +179,9 @@ namespace brick {
 
     // This member function returns the maximum values for the spline
     // parameters S and T.
-    template <class Type, class FloatType>
+    template <class Type, class FloatType, class TestType>
     void
-    ScatteredDataInterpolater2D<Type, FloatType>::
+    ScatteredDataInterpolater2D<Type, FloatType, TestType>::
     getMaximumSAndTValues(FloatType& maximumS, FloatType& maximumT) const
     {
       this->m_bSpline2D.getMaximumSAndTValues(maximumS, maximumT);
@@ -150,9 +190,9 @@ namespace brick {
 
     // This member function returns the minimum values for the spline
     // parameters S and T.
-    template <class Type, class FloatType>
+    template <class Type, class FloatType, class TestType>
     void
-    ScatteredDataInterpolater2D<Type, FloatType>::
+    ScatteredDataInterpolater2D<Type, FloatType, TestType>::
     getMinimumSAndTValues(FloatType& minimumS, FloatType& minimumT) const
     {
       this->m_bSpline2D.getMinimumSAndTValues(minimumS, minimumT);
@@ -160,25 +200,26 @@ namespace brick {
 
 
     // The assigment operator does a deep copy.
-    template <class Type, class FloatType>
-    ScatteredDataInterpolater2D<Type, FloatType>&
-    ScatteredDataInterpolater2D<Type, FloatType>::
-    operator=(ScatteredDataInterpolater2D<Type, FloatType> const& other)
+    template <class Type, class FloatType, class TestType>
+    ScatteredDataInterpolater2D<Type, FloatType, TestType>&
+    ScatteredDataInterpolater2D<Type, FloatType, TestType>::
+    operator=(ScatteredDataInterpolater2D<Type, FloatType, TestType> const& other)
     {
       if(&other != this) {
         this->m_bSpline2D = other.m_bSpline2D;
         this->m_isMeanCentered = other.m_isMeanCentered;
         this->m_meanValue = other.m_meanValue;
         this->m_numerOfLevels = other.m_numberOfLevels;
+        this->m_testFunctor = other.m_testFunctor;
       }
     }
 
     
     // This operator evaluates the spline at the specified values of
     // spline parameters s and t.
-    template <class Type, class FloatType>
+    template <class Type, class FloatType, class TestType>
     Type
-    ScatteredDataInterpolater2D<Type, FloatType>::
+    ScatteredDataInterpolater2D<Type, FloatType, TestType>::
     operator()(FloatType sValue, FloatType tValue) const
     {
       return this->m_bSpline2D(sValue, tValue) + this->m_meanValue;

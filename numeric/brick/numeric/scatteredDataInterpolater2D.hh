@@ -21,6 +21,18 @@ namespace brick {
   namespace numeric {
 
     /**
+     ** This functor always returns false.  It is used as a default
+     ** argument in ScatteredDataInterpolater2D::approximate().  Users
+     ** can replace it with a functor that returns true to indicate
+     ** when approximation residuals are sufficiently small.
+     **/
+    template <class ResidualType>
+    struct FailFunctor : public std::unary_function<ResidualType, bool> {
+      bool operator()(ResidualType const&) {return false;}
+    };
+    
+    
+    /**
      ** Warning: This class is very new, and its test suite is
      ** incomplete.  It almost certainly contain bugs, and its
      ** interface may change.
@@ -48,10 +60,11 @@ namespace brick {
      **    Transactions on Visualization and Computer Graphics, Vol. 3,
      **    No. 3, July–September 1997.
      **/
-    template <class Type, class FloatType>
+    template < class Type, class FloatType = double,
+               class TestType = FailFunctor<Type> >
     class ScatteredDataInterpolater2D {
     public:
-
+      
       /** 
        * This constructor builds a ScatteredDataInterpolater2D instance
        * of unspecified length and width.
@@ -92,7 +105,7 @@ namespace brick {
        * instance to be copied.
        */
       ScatteredDataInterpolater2D(
-        ScatteredDataInterpolater2D<Type, FloatType> const& other);
+        ScatteredDataInterpolater2D<Type, FloatType, TestType> const& other);
 
 
       /** 
@@ -133,12 +146,59 @@ namespace brick {
        */
       template <class CoordIter, class ObsIter>
       void
-      approximateScatteredData(CoordIter sBegin,
-                               CoordIter sEnd,
-                               CoordIter tBegin,
-                               ObsIter observationsBegin,
-                               FloatType buffer = 1.0E-5);
+      approximate(CoordIter sBegin, CoordIter sEnd,
+                  CoordIter tBegin,
+                  ObsIter observationsBegin,
+                  FloatType buffer = 1.0E-5);
+      
 
+      /** 
+       * This function specifies the data to be interpolated.  With
+       * each call to this function, any previous approximation is
+       * discarded, and the interpolating function is re-estimated.
+       * 
+       * @param sBegin This iterator specifies the beginning of a
+       * sequence of (possibly non-uniformly distributed) S
+       * coordinates of points at which observations of the
+       * to-be-approximated function were made.
+       *
+       * @param sEnd This iterator specifies the end of the sequence
+       * of S coordinates.
+       *
+       * @param tBegin This iterator specifies the beginning of a
+       * sequence of (possibly non-uniformly distributed) T
+       * coordinates corresponding to the S coordinate sequence
+       * described above.  The sequence of T coordinates must have at
+       * least as many elements as the sequence of S coordinates.
+       *
+       * @param observationsBegin This iterator specifies the
+       * beginning of a sequence of observations corresponding to the
+       * sequences of S and T coordinates described above.  The
+       * interpolating function will be set so that, for 0 <= N <
+       * (observedSPositionsEnd - observedSPositionsBegin), the value
+       * of the interpolating function at (S, T) =
+       * (*(observedSPositionsBegin + N), *(observedTPositionsBegin +
+       * N)) approximates *(observationsBegin + N) as closely as
+       * possible.
+       *
+       * @param corner0 This argument and the next define a
+       * rectangular region in parameter space over which the
+       * interpolated function will be valid.  It is an error if any
+       * of the input (S, T) coordinates lie outside of this region.
+       *
+       * @param corner1 This argument and the previous define a
+       * rectangular region in parameter space over which the
+       * interpolated function will be valid.  It is an error if any
+       * of the input (S, T) coordinates lie outside of this region.
+       */
+      template <class CoordIter, class ObsIter>
+      void
+      approximate(CoordIter sBegin, CoordIter sEnd,
+                  CoordIter tBegin,
+                  ObsIter observationsBegin,
+                  Vector2D<FloatType> const& corner0,
+                  Vector2D<FloatType> const& corner1);
+      
       
       /** 
        * This member function returns the maximum value for the
@@ -174,13 +234,42 @@ namespace brick {
 
 
       /** 
+       * This member function specifies a functor that is used to
+       * test the quality of the approximation.  At each iteration (up
+       * to the number of iterations specified by constructor argument
+       * numberOfLevels), a residual is computed for each observation
+       * by subtracting the interpolated value from the observation.
+       * Each residual is evaluated by passing it to this functor, and
+       * if the return value of this functor is true for each
+       * residual, then iteration will terminate.  This allows the
+       * caller to avoid additional computation once the interpolated
+       * function is sufficiently close to the input data.
+       *
+       * For example, if the interpolated type is double, one might
+       * pass std::bind2nd(std::less<double>(), 0.1) as the value of
+       * this argument.  Or in C++11, one might pass [](double
+       * x){return x < 0.1;} as the value of this argument.  The
+       * default value of this argument always returns false, and will
+       * never terminate the iteration early.
+       * 
+       * @param testFunctor This argument is the functor to be applied
+       * to each residual.
+       */
+      void
+      setTestFunctor(TestType const& testFunctor) {
+        this->m_testFunctor = testFunctor;
+      }
+
+      
+      /** 
        * The assigment operator does a deep copy.
        * 
        * @param other This argument is the ScatteredDataInterpolater2D
        * instance to be copied.
        */
-      ScatteredDataInterpolater2D<Type, FloatType>&
-      operator=(ScatteredDataInterpolater2D<Type, FloatType> const& other);
+      ScatteredDataInterpolater2D<Type, FloatType, TestType>&
+      operator=(
+        ScatteredDataInterpolater2D<Type, FloatType, TestType> const& other);
 
       
       /** 
@@ -197,8 +286,9 @@ namespace brick {
 
       BSpline2D<Type, FloatType> m_bSpline2D;
       bool m_isMeanCentered;
-      FloatType m_meanValue;
+      Type m_meanValue;
       size_t m_numberOfLevels;
+      TestType m_testFunctor;
     };
     
   } // namespace numeric

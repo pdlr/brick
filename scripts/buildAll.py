@@ -142,9 +142,7 @@ def unpackTarball(tarballName, sourceDirName):
   return True
 # end def
 
-
-if __name__ == '__main__':
-  if len(sys.argv) < 2:
+def printUsage(argv):
     print "Usage: %s [--clean] [--test] installPrefix" % sys.argv[0]
     print ""
     print "  where installPrefix is the directory under which you'd like"
@@ -152,6 +150,11 @@ if __name__ == '__main__':
     print "  "
     print "  Specifying --test causes unit tests to be run before installing."
     print "  Specifying --clean removes the local build directories."
+#endif
+
+if __name__ == '__main__':
+  if len(sys.argv) < 2:
+    printUsage(sys.argv)
     sys.exit(0)
   # end if
 
@@ -166,6 +169,7 @@ if __name__ == '__main__':
       elif sys.argv[argIndex] == '--test':
         runTests = True
       else:
+        printUsage(sys.argv)
         raise ValueError("Unrecognized option: %s" % sys.argv[argIndex])
       # end if
     else:

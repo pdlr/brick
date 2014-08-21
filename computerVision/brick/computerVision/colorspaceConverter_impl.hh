@@ -21,6 +21,8 @@
 
 #include <cmath>
 
+#include <brick/common/mathFunctions.hh>
+
 namespace brick {
 
   namespace computerVision {
@@ -34,9 +36,11 @@ namespace brick {
       // which is not templated.  Life gets much easiser.
 
         
-      // This conversion follows the wikipedia article "HSL color space"
-      // as of 2009-02-19, with the exception that all resulting
-      // components are scaled [0.0, 1.0].  
+      // This conversion follows the wikipedia article "HSL color
+      // space" as of 2009-02-19, with the exceptions that all
+      // resulting components are scaled [0.0, 1.0], and that the
+      // resulting hue value is rotated 60 degrees to match the page's
+      // contents as of 2014-08-21.
       inline void
       doColorspaceConversion(const Image<RGB_FLOAT64>::PixelType& inputPixel,
                              Image<HSV_FLOAT64>::PixelType& outputPixel)
@@ -95,6 +99,72 @@ namespace brick {
                            ? (outputPixel.hue + 1.0) : outputPixel.hue);
 #endif    
       }    
+
+
+      // This conversion inverts the RGB->HSV conversion defined above.
+      inline void
+      doColorspaceConversion(const Image<HSV_FLOAT64>::PixelType& inputPixel,
+                             Image<RGB_FLOAT64>::PixelType& outputPixel)
+      {
+        brick::common::Float64 chroma =
+          inputPixel.value * inputPixel.saturation;
+        brick::common::Float64 huePrime =
+          inputPixel.hue * 6.0;
+
+        // Make sure huePrime is positive.
+        while(huePrime < 0.0) {
+          huePrime += 6.0;
+        }
+
+        // Compute huePrime % 2
+        double remainder = huePrime;
+        while(remainder >= 2.0) {
+          remainder -= 2.0;
+        }
+        
+        brick::common::Float64 xValue =
+          chroma * (1.0 - brick::common::absoluteValue(remainder - 1));
+
+        // Make sure huePrime is positive.
+        while(huePrime < 0.0) {
+          huePrime += 6.0;
+        }
+        
+        brick::common::Float64 red = 0.0;
+        brick::common::Float64 green = 0.0;
+        brick::common::Float64 blue = 0.0;
+        if(huePrime < 1.0) {
+          red = chroma;
+          green = xValue;
+          blue = 0.0;
+        } else if (huePrime < 2.0) {
+          red = xValue;
+          green = chroma;
+          blue = 0.0;
+        } else if (huePrime < 3.0) {
+          red = 0.0;
+          green = chroma;
+          blue = xValue;
+        } else if (huePrime < 4.0) {
+          red = 0.0;
+          green = xValue;
+          blue = chroma;
+        } else if (huePrime < 5.0) {
+          red = xValue;
+          green = 0.0;
+          blue = chroma;
+        } else {
+          red = chroma;
+          green = 0.0;
+          blue = xValue;
+        } 
+
+        // Now update to reflect pixel brightness.
+        double increment = inputPixel.value - chroma;
+        outputPixel.red = red + increment;
+        outputPixel.green = green + increment;
+        outputPixel.blue = blue + increment;
+      }
 
     } // namespace privateCode
 
@@ -458,6 +528,19 @@ namespace brick {
       outputPixel.blue = inputPixel.blue;
     }
 
+
+    template<>
+    inline
+    void
+    ColorspaceConverter<HSV_FLOAT64, RGB_FLOAT64>::
+    operator()(const Image<HSV_FLOAT64>::PixelType& inputPixel,
+               Image<RGB_FLOAT64>::PixelType& outputPixel)
+    {
+      privateCode::doColorspaceConversion(inputPixel, outputPixel);
+    }
+
+
+    
   } // namespace computerVision
     
 } // namespace brick

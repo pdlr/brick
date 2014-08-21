@@ -57,7 +57,7 @@ brickNumeric_HEADERS	= \
 	rotations.hh rotations_impl.hh \
 	slice.hh \
 	sampledFunctions.hh sampledFunctions_impl.hh \
-	scatteredDataInterpolater2D.hh scatteredDataInterpolater2D_impl.hh \
+	scatteredDataInterpolator2D.hh scatteredDataInterpolator2D_impl.hh \
 	solveCubic.hh solveCubic_impl.hh \
 	solveQuadratic.hh solveQuadratic_impl.hh \
 	solveQuartic.hh solveQuartic_impl.hh \

@@ -1,8 +1,8 @@
 /**
 ***************************************************************************
-* @file brick/numeric/scatteredDataInterpolater2D.hh
+* @file brick/numeric/scatteredDataInterpolator2D.hh
 *
-* Header file declaring the ScatteredDataInterpolater2D class.
+* Header file declaring the ScatteredDataInterpolator2D class.
 *
 * Copyright (C) 2014 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
@@ -10,8 +10,8 @@
 ***************************************************************************
 */
 
-#ifndef BRICK_NUMERIC_SCATTEREDDATAINTERPOLATER2D_HH
-#define BRICK_NUMERIC_SCATTEREDDATAINTERPOLATER2D_HH
+#ifndef BRICK_NUMERIC_SCATTEREDDATAINTERPOLATOR2D_HH
+#define BRICK_NUMERIC_SCATTEREDDATAINTERPOLATOR2D_HH
 
 #include <vector>
 #include <brick/numeric/bSpline2D.hh>
@@ -22,7 +22,7 @@ namespace brick {
 
     /**
      ** This functor always returns false.  It is used as a default
-     ** argument in ScatteredDataInterpolater2D::approximate().  Users
+     ** argument in ScatteredDataInterpolator2D::approximate().  Users
      ** can replace it with a functor that returns true to indicate
      ** when approximation residuals are sufficiently small.
      **/
@@ -62,11 +62,11 @@ namespace brick {
      **/
     template < class Type, class FloatType = double,
                class TestType = FailFunctor<Type> >
-    class ScatteredDataInterpolater2D {
+    class ScatteredDataInterpolator2D {
     public:
       
       /** 
-       * This constructor builds a ScatteredDataInterpolater2D instance
+       * This constructor builds a ScatteredDataInterpolator2D instance
        * of unspecified length and width.
        * 
        * @param numberOfLevels This argument specifies how many levels
@@ -93,7 +93,7 @@ namespace brick {
        * axis-aligned direction along which the data are most tightly
        * grouped.
        */
-      ScatteredDataInterpolater2D(size_t numberOfLevels = 8, 
+      ScatteredDataInterpolator2D(size_t numberOfLevels = 8, 
                                   bool isMeanCentered = true,
                                   bool isIsotropic = true);
 
@@ -101,11 +101,11 @@ namespace brick {
       /** 
        * The copy constructor does a deep copy.
        * 
-       * @param other This argument is the ScatteredDataInterpolater2D
+       * @param other This argument is the ScatteredDataInterpolator2D
        * instance to be copied.
        */
-      ScatteredDataInterpolater2D(
-        ScatteredDataInterpolater2D<Type, FloatType, TestType> const& other);
+      ScatteredDataInterpolator2D(
+        ScatteredDataInterpolator2D<Type, FloatType, TestType> const& other);
 
 
       /** 
@@ -264,12 +264,12 @@ namespace brick {
       /** 
        * The assigment operator does a deep copy.
        * 
-       * @param other This argument is the ScatteredDataInterpolater2D
+       * @param other This argument is the ScatteredDataInterpolator2D
        * instance to be copied.
        */
-      ScatteredDataInterpolater2D<Type, FloatType, TestType>&
+      ScatteredDataInterpolator2D<Type, FloatType, TestType>&
       operator=(
-        ScatteredDataInterpolater2D<Type, FloatType, TestType> const& other);
+        ScatteredDataInterpolator2D<Type, FloatType, TestType> const& other);
 
       
       /** 
@@ -297,6 +297,6 @@ namespace brick {
 
 // Include file containing definitions of inline and template
 // functions.
-#include <brick/numeric/scatteredDataInterpolater2D_impl.hh>
+#include <brick/numeric/scatteredDataInterpolator2D_impl.hh>
 
-#endif /* #ifndef BRICK_NUMERIC_SCATTEREDDATAINTERPOLATER2D_HH */
+#endif /* #ifndef BRICK_NUMERIC_SCATTEREDDATAINTERPOLATOR2D_HH */

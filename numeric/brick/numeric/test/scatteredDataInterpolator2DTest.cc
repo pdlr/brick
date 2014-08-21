@@ -1,8 +1,8 @@
 /**
 ***************************************************************************
-* @file scatteredDataInterpolater2DTest.cpp
+* @file scatteredDataInterpolator2DTest.cpp
 * 
-* Source file defining ScatteredDataInterpolater2DTest class.
+* Source file defining ScatteredDataInterpolator2DTest class.
 *
 * Copyright (C) 2014 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
@@ -15,7 +15,7 @@
 #include <limits>
 
 #include <brick/common/functional.hh>
-#include <brick/numeric/scatteredDataInterpolater2D.hh>
+#include <brick/numeric/scatteredDataInterpolator2D.hh>
 #include <brick/numeric/subArray2D.hh>
 #include <brick/test/testFixture.hh>
 
@@ -25,12 +25,12 @@ namespace brick {
 
   namespace numeric {
 
-    class ScatteredDataInterpolater2DTest : public brick::test::TestFixture<ScatteredDataInterpolater2DTest> {
+    class ScatteredDataInterpolator2DTest : public brick::test::TestFixture<ScatteredDataInterpolator2DTest> {
 
     public:
 
-      ScatteredDataInterpolater2DTest();
-      ~ScatteredDataInterpolater2DTest() {};
+      ScatteredDataInterpolator2DTest();
+      ~ScatteredDataInterpolator2DTest() {};
 
       void setUp(const std::string& /* testName */) {}
       void tearDown(const std::string& /* testName */) {}
@@ -42,14 +42,14 @@ namespace brick {
 
       double m_defaultTolerance;
     
-    }; // class ScatteredDataInterpolater2DTest
+    }; // class ScatteredDataInterpolator2DTest
 
 
     /* ============== Member Function Definititions ============== */
 
-    ScatteredDataInterpolater2DTest::
-    ScatteredDataInterpolater2DTest()
-      : TestFixture<ScatteredDataInterpolater2DTest>("ScatteredDataInterpolater2DTest"),
+    ScatteredDataInterpolator2DTest::
+    ScatteredDataInterpolator2DTest()
+      : TestFixture<ScatteredDataInterpolator2DTest>("ScatteredDataInterpolator2DTest"),
         m_defaultTolerance(1.0E-7)
     {
       // Register all tests.
@@ -58,7 +58,7 @@ namespace brick {
 
 
     void
-    ScatteredDataInterpolater2DTest::
+    ScatteredDataInterpolator2DTest::
     testApproximate()
     {
       // Arbitrary, made up, scattered data to interpolate.
@@ -100,7 +100,7 @@ namespace brick {
         std::log(numberOfControlPoints) / std::log(2) + 2);
       
       // Approximate the made up data using
-      // ScatteredDataInterpolater2D instances of progressively
+      // ScatteredDataInterpolator2D instances of progressively
       // increasing resolution, verifying that the fidelity of the
       // approximation increases with each step.
       Array1D<double> currentResiduals(valueArray.size());
@@ -109,9 +109,9 @@ namespace brick {
           ++numberOfLevels) {
 
         // Do the approximation.
-        ScatteredDataInterpolater2D<double> scatteredDataInterpolater(
+        ScatteredDataInterpolator2D<double> scatteredDataInterpolator(
           numberOfLevels);
-        scatteredDataInterpolater.approximate(
+        scatteredDataInterpolator.approximate(
           sCoordArray.begin(), sCoordArray.end(), tCoordArray.begin(),
           valueArray.begin(), corner0, corner1);
 
@@ -120,7 +120,7 @@ namespace brick {
         // in numberOfLevels.
         for(size_t index0 = 0; index0 < testData.rows(); ++index0) {
           double computedResult =
-            scatteredDataInterpolater(testData(index0, 0), testData(index0, 1));
+            scatteredDataInterpolator(testData(index0, 0), testData(index0, 1));
           currentResiduals[index0] = 
             common::absoluteValue(computedResult - testData(index0, 2));
         }
@@ -149,7 +149,7 @@ namespace brick {
 
 int main(int /* argc */, char** /* argv */)
 {
-  brick::numeric::ScatteredDataInterpolater2DTest currentTest;
+  brick::numeric::ScatteredDataInterpolator2DTest currentTest;
   bool result = currentTest.run();
   return (result ? 0 : 1);
 }
@@ -158,7 +158,7 @@ int main(int /* argc */, char** /* argv */)
 
 namespace {
 
-  brick::numeric::ScatteredDataInterpolater2DTest currentTest;
+  brick::numeric::ScatteredDataInterpolator2DTest currentTest;
 
 }
 

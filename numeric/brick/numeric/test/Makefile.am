@@ -35,7 +35,7 @@ TESTS			= \
 	polynomialTest \
 	rotationsTest \
 	sampledFunctionsTest \
-	scatteredDataInterpolater2DTest \
+	scatteredDataInterpolator2DTest \
 	solveCubicTest \
 	solveQuadraticTest \
 	solveQuarticTest \
@@ -72,7 +72,7 @@ check_PROGRAMS          = \
 	polynomialTest \
 	rotationsTest \
 	sampledFunctionsTest \
-	scatteredDataInterpolater2DTest \
+	scatteredDataInterpolator2DTest \
 	solveCubicTest \
 	solveQuadraticTest \
 	solveQuarticTest \
@@ -109,7 +109,7 @@ normalizedCorrelatorTest_SOURCES = normalizedCorrelatorTest.cc
 polynomialTest_SOURCES		= polynomialTest.cc
 rotationsTest_SOURCES		= rotationsTest.cc
 sampledFunctionsTest_SOURCES	= sampledFunctionsTest.cc
-scatteredDataInterpolater2DTest_SOURCES	= scatteredDataInterpolater2DTest.cc
+scatteredDataInterpolator2DTest_SOURCES	= scatteredDataInterpolator2DTest.cc
 solveCubicTest_SOURCES		= solveCubicTest.cc
 solveQuadraticTest_SOURCES	= solveQuadraticTest.cc
 solveQuarticTest_SOURCES	= solveQuarticTest.cc

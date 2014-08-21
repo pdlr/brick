@@ -1,8 +1,9 @@
 /**
 ***************************************************************************
-* @file brick/numeric/scatteredDataInterpolater2D_impl.hh
+* @file brick/numeric/scatteredDataInterpolator2D_impl.hh
 *
-* Header file defining inline and template functions from ScatteredDataInterpolater2D.hh.
+* Header file defining inline and template functions from
+* ScatteredDataInterpolator2D.hh.
 *
 * Copyright (C) 2014 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
@@ -10,14 +11,14 @@
 ***************************************************************************
 */
 
-#ifndef BRICK_NUMERIC_SCATTEREDDATAINTERPOLATER2D_IMPL_HH
-#define BRICK_NUMERIC_SCATTEREDDATAINTERPOLATER2D_IMPL_HH
+#ifndef BRICK_NUMERIC_SCATTEREDDATAINTERPOLATOR2D_IMPL_HH
+#define BRICK_NUMERIC_SCATTEREDDATAINTERPOLATOR2D_IMPL_HH
 
-// This file is included by scatteredDataInterpolater2D.hh, and should
+// This file is included by scatteredDataInterpolator2D.hh, and should
 // not be directly included by user code, so no need to include
-// scatteredDataInterpolater2D.hh here.
+// scatteredDataInterpolator2D.hh here.
 // 
-// #include <brick/numeric/scatteredDataInterpolater2D.hh>
+// #include <brick/numeric/scatteredDataInterpolator2D.hh>
 
 #include <cmath>
 #include <algorithm>
@@ -28,11 +29,11 @@ namespace brick {
 
   namespace numeric {
 
-    // This constructor builds a ScatteredDataInterpolater2D instance
+    // This constructor builds a ScatteredDataInterpolator2D instance
     // of unspecified length and width.
     template <class Type, class FloatType, class TestType>
-    ScatteredDataInterpolater2D<Type, FloatType, TestType>::
-    ScatteredDataInterpolater2D(size_t numberOfLevels, 
+    ScatteredDataInterpolator2D<Type, FloatType, TestType>::
+    ScatteredDataInterpolator2D(size_t numberOfLevels, 
                                 bool isMeanCentered,
                                 bool isIsotropic)
       : m_bSpline2D(isIsotropic),
@@ -43,7 +44,7 @@ namespace brick {
     {
       if(0 == numberOfLevels) {
         BRICK_THROW(brick::common::ValueException, 
-                    "ScatteredDataInterpolater::ScatteredDataInterpolater()",
+                    "ScatteredDataInterpolator::ScatteredDataInterpolator()",
                     "Argument numberOfLevels must be greater than 0.");
       }
     }
@@ -51,9 +52,9 @@ namespace brick {
     
     // The copy constructor does a deep copy.
     template <class Type, class FloatType, class TestType>
-    ScatteredDataInterpolater2D<Type, FloatType, TestType>::
-    ScatteredDataInterpolater2D(
-      ScatteredDataInterpolater2D<Type, FloatType, TestType> const& other)
+    ScatteredDataInterpolator2D<Type, FloatType, TestType>::
+    ScatteredDataInterpolator2D(
+      ScatteredDataInterpolator2D<Type, FloatType, TestType> const& other)
       : m_bSpline2D(other.m_bSpline2D),
         m_isMeanCentered(other.m_isMeanCentered),
         m_meanValue(other.m_meanValue),
@@ -69,7 +70,7 @@ namespace brick {
     template <class Type, class FloatType, class TestType>
     template <class CoordIter, class ObsIter>
     void
-    ScatteredDataInterpolater2D<Type, FloatType, TestType>::
+    ScatteredDataInterpolator2D<Type, FloatType, TestType>::
     approximate(CoordIter sBegin, CoordIter sEnd,
                 CoordIter tBegin,
                 ObsIter observationsBegin,
@@ -94,7 +95,7 @@ namespace brick {
     template <class Type, class FloatType, class TestType>
     template <class CoordIter, class ObsIter>
     void
-    ScatteredDataInterpolater2D<Type, FloatType, TestType>::
+    ScatteredDataInterpolator2D<Type, FloatType, TestType>::
     approximate(CoordIter sBegin, CoordIter sEnd,
                 CoordIter tBegin,
                 ObsIter observationsBegin,
@@ -181,7 +182,7 @@ namespace brick {
     // parameters S and T.
     template <class Type, class FloatType, class TestType>
     void
-    ScatteredDataInterpolater2D<Type, FloatType, TestType>::
+    ScatteredDataInterpolator2D<Type, FloatType, TestType>::
     getMaximumSAndTValues(FloatType& maximumS, FloatType& maximumT) const
     {
       this->m_bSpline2D.getMaximumSAndTValues(maximumS, maximumT);
@@ -192,7 +193,7 @@ namespace brick {
     // parameters S and T.
     template <class Type, class FloatType, class TestType>
     void
-    ScatteredDataInterpolater2D<Type, FloatType, TestType>::
+    ScatteredDataInterpolator2D<Type, FloatType, TestType>::
     getMinimumSAndTValues(FloatType& minimumS, FloatType& minimumT) const
     {
       this->m_bSpline2D.getMinimumSAndTValues(minimumS, minimumT);
@@ -201,9 +202,9 @@ namespace brick {
 
     // The assigment operator does a deep copy.
     template <class Type, class FloatType, class TestType>
-    ScatteredDataInterpolater2D<Type, FloatType, TestType>&
-    ScatteredDataInterpolater2D<Type, FloatType, TestType>::
-    operator=(ScatteredDataInterpolater2D<Type, FloatType, TestType> const& other)
+    ScatteredDataInterpolator2D<Type, FloatType, TestType>&
+    ScatteredDataInterpolator2D<Type, FloatType, TestType>::
+    operator=(ScatteredDataInterpolator2D<Type, FloatType, TestType> const& other)
     {
       if(&other != this) {
         this->m_bSpline2D = other.m_bSpline2D;
@@ -219,7 +220,7 @@ namespace brick {
     // spline parameters s and t.
     template <class Type, class FloatType, class TestType>
     Type
-    ScatteredDataInterpolater2D<Type, FloatType, TestType>::
+    ScatteredDataInterpolator2D<Type, FloatType, TestType>::
     operator()(FloatType sValue, FloatType tValue) const
     {
       return this->m_bSpline2D(sValue, tValue) + this->m_meanValue;
@@ -230,4 +231,4 @@ namespace brick {
 
 } // namespace brick
 
-#endif /* #ifndef BRICK_NUMERIC_SCATTEREDDATAINTERPOLATER2D_IMPL_HH */
+#endif /* #ifndef BRICK_NUMERIC_SCATTEREDDATAINTERPOLATOR2D_IMPL_HH */

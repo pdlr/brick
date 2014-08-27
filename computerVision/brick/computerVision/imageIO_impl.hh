@@ -332,7 +332,7 @@ namespace brick {
                        Image<RGB8> const& outputImage) {
         if(!Image<RGB8>::value_type::isContiguous()) {
           BRICK_THROW(
-            brick::common::NotImplementedException, "writePNG()",
+            brick::common::NotImplementedException, "setPngHeaderInfo()",
             "Your compiler appears to pack RGB pixels in an unusual way.  "
             "Please update brick::computerVision::writePNG() to handle this.");
         }
@@ -349,7 +349,7 @@ namespace brick {
                        Image<RGB16> const& outputImage) {
         if(!Image<RGB16>::value_type::isContiguous()) {
           BRICK_THROW(
-            brick::common::NotImplementedException, "writePNG()",
+            brick::common::NotImplementedException, "setPngHeaderInfo()",
             "Your compiler appears to pack RGB pixels in an unusual way.  "
             "Please update brick::computerVision::writePNG() to handle this.");
         }

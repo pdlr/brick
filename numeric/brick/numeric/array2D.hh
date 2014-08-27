@@ -1111,7 +1111,7 @@ namespace brick {
        * 
        * @return Value of the (index)th element of the array.
        */
-      Type operator()(size_t index) const {
+      Type const& operator()(size_t index) const {
         this->checkBounds(index);
         return m_dataPtr[index];
       }
@@ -1142,7 +1142,7 @@ namespace brick {
        *
        * @return Value of the array element.
        */
-      Type
+      Type const&
       operator()(size_t rowIndex, size_t columnIndex) const {
         this->checkBounds(rowIndex, columnIndex);
         return m_dataPtr[columnIndex + rowIndex * m_rowStep];
@@ -1169,7 +1169,7 @@ namespace brick {
        *
        * @return Value of the (index)th element of the array.
        */
-      Type
+      Type const&
       operator[](size_t index) const {return this->operator()(index);}
 
 

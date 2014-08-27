@@ -549,8 +549,7 @@ namespace brick {
        * 
        * @return Reference to the (index)th element of the array.
        */
-      Type&
-      operator()(size_t index) {
+      Type& operator()(size_t index) {
         this->checkBounds(index);
         return m_dataPtr[index];
       }
@@ -563,7 +562,7 @@ namespace brick {
        * 
        * @return Value of the (index)th element of the array.
        */
-      Type operator()(size_t index) const {
+      Type const& operator()(size_t index) const {
         this->checkBounds(index);
         return m_dataPtr[index];
       }
@@ -588,7 +587,9 @@ namespace brick {
        * 
        * @return Value of the (index)th element of the array.
        */
-      Type operator[](size_t index) const {return this->operator()(index);}
+      Type const& operator[](size_t index) const {
+        return this->operator()(index);
+      }
 
       
       /** 

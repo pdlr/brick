@@ -533,7 +533,7 @@ namespace brick {
        * 
        * @return Value of the (index)th element of the array.
        */
-      Type operator()(size_t index0) const {return m_storage(index0);}
+      Type const& operator()(size_t index0) const {return m_storage(index0);}
 
       
       /** 
@@ -556,7 +556,7 @@ namespace brick {
        * 
        * @return Value of the (index)th element of the array.
        */
-      Type operator()(Array1D<size_t> const& index0) const {
+      Type const& operator()(Array1D<size_t> const& index0) const {
         return m_storage[this->flattenIndex(index0)];
       }
 
@@ -580,7 +580,8 @@ namespace brick {
        * 
        * @return Value of the (index)th element of the array.
        */
-      Type operator[](size_t index) const {return this->operator()(index);}
+      Type const&
+      operator[](size_t index) const {return this->operator()(index);}
 
 
       /** 

@@ -201,6 +201,17 @@ namespace brick {
       while(sBegin != sEnd) {
         FloatType weightSquaredSum = 0.0;
 
+        // Sanity check input data.
+        if(*sBegin < this->m_minimumXY.x()
+           || *sBegin >= this->m_maximumXY.x()
+           || *tBegin < this->m_minimumXY.y()
+           || *tBegin >= this->m_maximumXY.y()) {
+
+          BRICK_THROW(brick::common::ValueException,
+                      "BSpline2D::approximateScatteredData()",
+                      "Input datum is out of bounds.");
+        }
+        
         // This call sets the value of powersOfS and powersOfT,
         // and returns by reference the indices of the control grid
         // cell into which (s, t) falls.

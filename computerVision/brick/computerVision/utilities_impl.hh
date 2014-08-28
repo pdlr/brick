@@ -521,18 +521,20 @@ namespace brick {
     Image<OutputFormat>
     supersample(const Image<InputFormat>& inputImage)
     {
+      typedef typename Image<InputFormat>::PixelType InputType;
+      typedef typename Image<OutputFormat>::PixelType OutputType;
+      typedef typename Image<IntermediateFormat>::PixelType IntermediateType;
+      
       Image<OutputFormat> outputImage(inputImage.rows() * 2 - 1,
                                       inputImage.columns() * 2 - 1);
-      ColorspaceConverter<InputFormat, OutputFormat> converter0;
-      ColorspaceConverter<InputFormat, IntermediateFormat> converter1;
-      ColorspaceConverter<IntermediateFormat, OutputFormat> converter2;
+      ColorspaceConverter<InputFormat, OutputFormat> converter;
 
       // Working variables.
-      typename ImageFormatTraits<IntermediateFormat>::PixelType tempPixel;
-      brick::numeric::Array1D<typename Image<InputFormat>::PixelType> inputRow0;
-      brick::numeric::Array1D<typename Image<InputFormat>::PixelType> inputRow1;
-      brick::numeric::Array1D<typename Image<OutputFormat>::PixelType> outputRow0;
-      brick::numeric::Array1D<typename Image<OutputFormat>::PixelType> outputRow1;
+      IntermediateType accumulator;
+      brick::numeric::Array1D<InputType> inputRow0;
+      brick::numeric::Array1D<InputType> inputRow1;
+      brick::numeric::Array1D<OutputType> outputRow0;
+      brick::numeric::Array1D<OutputType> outputRow1;
 
       // The main supersampling loop.
       for(size_t inputRowIndex = 0; inputRowIndex < (inputImage.rows() - 1);
@@ -546,36 +548,36 @@ namespace brick {
             inputColumnIndex < (inputImage.columns() - 1);
             ++inputColumnIndex) {
           outputRow0[outputColumnIndex] =
-            converter0(inputRow0[inputColumnIndex]);
+            converter(inputRow0[inputColumnIndex]);
 
           // Note(xxx): This can be made more efficient.
-          tempPixel = converter1(inputRow0[inputColumnIndex]);
-          tempPixel += converter1(inputRow0[inputColumnIndex + 1]);
-          tempPixel /= 2;
-          outputRow0[outputColumnIndex + 1] = converter2(tempPixel);
+          accumulator = (IntermediateType(inputRow0[inputColumnIndex])
+                         + IntermediateType(inputRow0[inputColumnIndex + 1]));
+          accumulator /= 2;
+          outputRow0[outputColumnIndex + 1] = accumulator;
 
-          tempPixel = converter1(inputRow0[inputColumnIndex]);
-          tempPixel += converter1(inputRow1[inputColumnIndex]);
-          tempPixel /= 2;
-          outputRow1[outputColumnIndex] = converter2(tempPixel);
+          accumulator = (IntermediateType(inputRow0[inputColumnIndex])
+                         + IntermediateType(inputRow1[inputColumnIndex]));
+          accumulator /= 2;
+          outputRow1[outputColumnIndex] = accumulator;
 
-          tempPixel = converter1(inputRow0[inputColumnIndex]);
-          tempPixel += converter1(inputRow0[inputColumnIndex + 1]);
-          tempPixel += converter1(inputRow1[inputColumnIndex]);
-          tempPixel += converter1(inputRow1[inputColumnIndex + 1]);
-          tempPixel /= 4;
-          outputRow1[outputColumnIndex + 1] = converter2(tempPixel);
+          accumulator = (IntermediateType(inputRow0[inputColumnIndex])
+                         + IntermediateType(inputRow0[inputColumnIndex + 1])
+                         + IntermediateType(inputRow1[inputColumnIndex])
+                         + IntermediateType(inputRow1[inputColumnIndex + 1]));
+          accumulator /= 4;
+          outputRow1[outputColumnIndex + 1] = accumulator;
 
           outputColumnIndex += 2;
         }
         // Handle pixels at end of rows.
         outputRow0[outputColumnIndex] =
-          converter0(inputRow0[inputRow0.size() - 1]);
+          converter(inputRow0[inputRow0.size() - 1]);
 
-        tempPixel = converter1(inputRow0[inputRow0.size() - 1]);
-        tempPixel += converter1(inputRow1[inputRow0.size() - 1]);
-        tempPixel /= 2;
-        outputRow1[outputColumnIndex] = converter2(tempPixel);
+        accumulator = (IntermediateType(inputRow0[inputRow0.size() - 1])
+                       + IntermediateType(inputRow1[inputRow0.size() - 1]));
+        accumulator /= 2;
+        outputRow1[outputColumnIndex] = accumulator;
       }
 
       // Handle final row.
@@ -586,17 +588,17 @@ namespace brick {
           inputColumnIndex < (inputImage.columns() - 1);
           ++inputColumnIndex) {
         outputRow0[outputColumnIndex] =
-          converter0(inputRow0[inputColumnIndex]);
+          converter(inputRow0[inputColumnIndex]);
 
-        tempPixel = converter1(inputRow0[inputColumnIndex]);
-        tempPixel += converter1(inputRow0[inputColumnIndex + 1]);
-        tempPixel /= 2;
-        outputRow0[outputColumnIndex + 1] = converter2(tempPixel);
+        accumulator = (IntermediateType(inputRow0[inputColumnIndex])
+                       + IntermediateType(inputRow0[inputColumnIndex + 1]));
+        accumulator /= 2;
+        outputRow0[outputColumnIndex + 1] = accumulator;
 
         outputColumnIndex += 2;
       }
       outputRow0[outputImage.columns() - 1] =
-        inputRow0[inputImage.columns() - 1];
+        converter(inputRow0[inputImage.columns() - 1]);
 
       return outputImage;
     }

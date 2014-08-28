@@ -58,8 +58,8 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testConvertColorspace);
       BRICK_TEST_REGISTER_MEMBER(testDissociateColorComponents);
       BRICK_TEST_REGISTER_MEMBER(testEstimateAffineTransform);
-      BRICK_TEST_REGISTER_MEMBER(testSupersample);
       BRICK_TEST_REGISTER_MEMBER(testSubsample);
+      BRICK_TEST_REGISTER_MEMBER(testSupersample);
       BRICK_TEST_REGISTER_MEMBER(testToArray);
     }
 
@@ -321,11 +321,12 @@ namespace brick {
 } // namespace brick
 
 
-#if 0
+#if 1
 
-int main(int argc, char** argv)
+int main(int /* argc */, char** /* argv */)
 {
   brick::computerVision::UtilitiesTest currentTest;
+  currentTest.testSupersample();
   bool result = currentTest.run();
   return (result ? 0 : 1);
 }

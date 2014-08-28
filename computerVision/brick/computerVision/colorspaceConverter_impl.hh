@@ -98,7 +98,7 @@ namespace brick {
         outputPixel.hue = ((outputPixel.hue < 0.0)
                            ? (outputPixel.hue + 1.0) : outputPixel.hue);
 #endif    
-      }    
+      }
 
 
       // This conversion inverts the RGB->HSV conversion defined above.
@@ -527,6 +527,25 @@ namespace brick {
       outputPixel.green = inputPixel.green;
       outputPixel.blue = inputPixel.blue;
     }
+
+
+    template<>
+    inline
+    void
+    ColorspaceConverter<HSV_FLOAT64, RGB8>::
+    operator()(const Image<HSV_FLOAT64>::PixelType& inputPixel,
+               Image<RGB8>::PixelType& outputPixel)
+    {
+      PixelRGBFloat64 tempResult;
+      privateCode::doColorspaceConversion(inputPixel, tempResult);
+      outputPixel.red =
+        static_cast<common::UInt8>(tempResult.red * 255.0 + 0.5);
+      outputPixel.green =
+        static_cast<common::UInt8>(tempResult.green * 255.0 + 0.5);
+      outputPixel.blue =
+        static_cast<common::UInt8>(tempResult.blue * 255.0 + 0.5);
+    }
+
 
 
     template<>

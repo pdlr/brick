@@ -41,6 +41,7 @@ brickNumeric_HEADERS	= \
 	convolve2D.hh convolve2D_impl.hh \
 	convolveND.hh convolveND_impl.hh \
 	derivativeRidders.hh derivativeRidders_impl.hh \
+	differentiableScalar.hh differentiableScalar_impl.hh \
 	extremumRecorder.hh \
 	functional.hh \
 	ieeeFloat32.hh \

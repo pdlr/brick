@@ -25,6 +25,7 @@ TESTS			= \
 	convolve2DTest \
 	convolveNDTest \
 	derivativeRiddersTest \
+	differentiableScalarTest \
 	filterTest \
 	ieeeFloat32Test \
 	index3DTest \
@@ -62,6 +63,7 @@ check_PROGRAMS          = \
 	convolve2DTest \
 	convolveNDTest \
 	derivativeRiddersTest \
+	differentiableScalarTest \
 	filterTest \
 	ieeeFloat32Test \
 	index3DTest \
@@ -99,6 +101,7 @@ convolve1DTest_SOURCES		= convolve1DTest.cc
 convolve2DTest_SOURCES		= convolve2DTest.cc
 convolveNDTest_SOURCES		= convolveNDTest.cc
 derivativeRiddersTest_SOURCES	= derivativeRiddersTest.cc
+differentiableScalarTest_SOURCES	= differentiableScalarTest.cc
 filterTest_SOURCES		= filterTest.cc
 ieeeFloat32Test_SOURCES		= ieeeFloat32Test.cc
 index3DTest_SOURCES		= index3DTest.cc

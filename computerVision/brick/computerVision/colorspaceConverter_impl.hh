@@ -125,11 +125,6 @@ namespace brick {
         brick::common::Float64 xValue =
           chroma * (1.0 - brick::common::absoluteValue(remainder - 1));
 
-        // Make sure huePrime is positive.
-        while(huePrime < 0.0) {
-          huePrime += 6.0;
-        }
-        
         brick::common::Float64 red = 0.0;
         brick::common::Float64 green = 0.0;
         brick::common::Float64 blue = 0.0;

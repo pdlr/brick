@@ -52,6 +52,9 @@ namespace brick {
       void testOperatorMinus();
       void testCosine();
       void testSine();
+
+      // Additional tests.
+      void testOverallFunction();
     
     private:
 
@@ -59,8 +62,13 @@ namespace brick {
       getExampleScalars(DifferentiableScalar<double, 2>& twoXSquaredPlusY,
                         DifferentiableScalar<double, 2>& twoXPlusThreeYPlusFive,
                         DifferentiableScalar<double, 2>& fourXCubedEtc);
+
+      template <class Type>
+      Type
+      continuousFunction(Type arg0, Type arg1);
       
       double m_defaultTolerance;
+      double m_relaxedTolerance;
 
     }; // class DifferentiableScalarTest
 
@@ -70,7 +78,8 @@ namespace brick {
     DifferentiableScalarTest::
     DifferentiableScalarTest()
       : brick::test::TestFixture<DifferentiableScalarTest>("DifferentiableScalarTest"),
-        m_defaultTolerance(1.0E-11)
+        m_defaultTolerance(1.0E-11),
+        m_relaxedTolerance(1.0E-5)
     {
       // Register all tests.
       BRICK_TEST_REGISTER_MEMBER(testConstructor__void);
@@ -92,6 +101,8 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testOperatorMinus);
       BRICK_TEST_REGISTER_MEMBER(testCosine);
       BRICK_TEST_REGISTER_MEMBER(testSine);
+
+      BRICK_TEST_REGISTER_MEMBER(testOverallFunction);
     }
 
 
@@ -628,6 +639,44 @@ namespace brick {
 
     void
     DifferentiableScalarTest::
+    testOverallFunction()
+    {
+      double epsilon = 1.0e-6;
+      double xx = 3.0;
+      double yy = 4.0;
+      double referenceValue = this->continuousFunction(xx, yy);
+      double referencePartial0 = ((this->continuousFunction(xx + epsilon, yy)
+                                   - this->continuousFunction(xx - epsilon, yy))
+                                  / (2.0 * epsilon));
+      double referencePartial1 = ((this->continuousFunction(xx, yy + epsilon)
+                                   - this->continuousFunction(xx, yy - epsilon))
+                                  / (2.0 * epsilon));
+
+      DifferentiableScalar<double, 2> scalar0(3.0);
+      DifferentiableScalar<double, 2> scalar1(4.0);
+      scalar1.setPartialDerivative(0, 0.0);
+      scalar1.setPartialDerivative(1, 1.0);
+      DifferentiableScalar<double, 2> result =
+        this->continuousFunction(scalar0, scalar1);
+
+      
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(result.getValue(),
+                           referenceValue,
+                           this->m_relaxedTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(result.getPartialDerivative(0),
+                           referencePartial0,
+                           this->m_relaxedTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(result.getPartialDerivative(1),
+                           referencePartial1,
+                           this->m_relaxedTolerance));
+    }
+
+    
+    void
+    DifferentiableScalarTest::
     getExampleScalars(DifferentiableScalar<double, 2>& twoXSquaredPlusY,
                       DifferentiableScalar<double, 2>& twoXPlusThreeYPlusFive,
                       DifferentiableScalar<double, 2>& fourXCubedEtc)
@@ -662,6 +711,18 @@ namespace brick {
       fourXCubedEtc.setValue(value2);
       fourXCubedEtc.setPartialDerivative(0, d2_dx);
       fourXCubedEtc.setPartialDerivative(1, d2_dy);
+    }
+
+
+    template <class Type>
+    Type
+    DifferentiableScalarTest::
+    continuousFunction(Type arg0, Type arg1)
+    {
+      Type result0 = arg0 * arg0 * arg0 + arg0 * arg1;
+      Type result1 = arg0 - arg1 * arg1;
+      Type result2 = result0 / result1;
+      return result2;
     }
 
   } //  namespace numeric

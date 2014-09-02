@@ -320,19 +320,6 @@ namespace brick {
 
 
     /** 
-     * This operator computes the sine of a DifferentiableScalar
-     * instance, with partial derivatives.
-     * 
-     * @param arg0 The sine of this argument will be computed.
-     * 
-     * @return The return value is the result of the calculation.
-     */
-    template<class Type, uint32_t Dimension>
-    DifferentiableScalar<Type, Dimension>
-    sine(DifferentiableScalar<Type, Dimension> const& arg0);
-    
-
-    /** 
      * This operator computes the cosine of a DifferentiableScalar
      * instance, with partial derivatives.
      * 
@@ -344,6 +331,19 @@ namespace brick {
     DifferentiableScalar<Type, Dimension>
     cosine(DifferentiableScalar<Type, Dimension> const& arg0);
 
+
+    /** 
+     * This operator computes the sine of a DifferentiableScalar
+     * instance, with partial derivatives.
+     * 
+     * @param arg0 The sine of this argument will be computed.
+     * 
+     * @return The return value is the result of the calculation.
+     */
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    sine(DifferentiableScalar<Type, Dimension> const& arg0);
+    
   } // namespace numeric
 
 } // namespace brick

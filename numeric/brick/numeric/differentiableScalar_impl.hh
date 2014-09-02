@@ -261,24 +261,6 @@ namespace brick {
     }
 
 
-    // This operator computes the sine of a DifferentiableScalar
-    // instance, with partial derivatives.
-    template<class Type, uint32_t Dimension>
-    DifferentiableScalar<Type, Dimension>
-    sine(DifferentiableScalar<Type, Dimension> const& arg0)
-    {
-      DifferentiableScalar<Type, Dimension> result(
-        brick::common::sine(arg0.getValue()));
-
-      // Derivative of sin(f(x)) is cos(f(x)) * f'(x).
-      Type cosineValue = brick::common::cosine(arg0.getValue());
-      for(uint32_t ii = 0; ii < Dimension; ++ii) {
-        result.setPartialDerivative(
-          cosineValue * arg0.getPartialDerivative(ii));
-      }
-    }
-    
-
     // This operator computes the cosine of a DifferentiableScalar
     // instance, with partial derivatives.
     template<class Type, uint32_t Dimension>
@@ -292,8 +274,30 @@ namespace brick {
       Type sineValue = brick::common::sine(arg0.getValue());
       for(uint32_t ii = 0; ii < Dimension; ++ii) {
         result.setPartialDerivative(
-          -sineValue * arg0.getPartialDerivative(ii));
+          ii, -sineValue * arg0.getPartialDerivative(ii));
       }
+
+      return result;
+    }
+
+    
+    // This operator computes the sine of a DifferentiableScalar
+    // instance, with partial derivatives.
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    sine(DifferentiableScalar<Type, Dimension> const& arg0)
+    {
+      DifferentiableScalar<Type, Dimension> result(
+        brick::common::sine(arg0.getValue()));
+
+      // Derivative of sin(f(x)) is cos(f(x)) * f'(x).
+      Type cosineValue = brick::common::cosine(arg0.getValue());
+      for(uint32_t ii = 0; ii < Dimension; ++ii) {
+        result.setPartialDerivative(
+          ii, cosineValue * arg0.getPartialDerivative(ii));
+      }
+
+      return result;
     }
     
   } // namespace numeric

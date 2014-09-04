@@ -36,10 +36,11 @@ namespace brick {
       void testRGB8ToRGBA8();
       void testRGB8ToHSV_FLOAT64();
       void testRGB8ToYIQ_FLOAT64();
+      void testRGB_FLOAT64ToHSV_FLOAT64();
       void testRGB_FLOAT64ToYIQ_FLOAT64();
       void testBGRA8ToRGB8();
       void testRGBA8ToRGB8();
-
+      void testHSV_FLOAT64ToRGB8();
     private:
 
     }; // class ColorspaceConverterTest
@@ -57,9 +58,11 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testRGB8ToRGBA8);
       BRICK_TEST_REGISTER_MEMBER(testRGB8ToHSV_FLOAT64);
       BRICK_TEST_REGISTER_MEMBER(testRGB8ToYIQ_FLOAT64);
+      BRICK_TEST_REGISTER_MEMBER(testRGB_FLOAT64ToHSV_FLOAT64);
       BRICK_TEST_REGISTER_MEMBER(testRGB_FLOAT64ToYIQ_FLOAT64);
       BRICK_TEST_REGISTER_MEMBER(testRGBA8ToRGB8);
       BRICK_TEST_REGISTER_MEMBER(testRGBA8ToRGB8);
+      BRICK_TEST_REGISTER_MEMBER(testHSV_FLOAT64ToRGB8);
     }
 
 
@@ -225,6 +228,46 @@ namespace brick {
  
     void
     ColorspaceConverterTest::
+    testRGB_FLOAT64ToHSV_FLOAT64()
+    {
+      std::vector<PixelRGBFloat64> inputPixels;
+
+      inputPixels.push_back(
+        PixelRGBFloat64(192 / 255.0, 128 / 255.0, 108 / 255.0));
+      inputPixels.push_back(
+        PixelRGBFloat64(177 / 255.0, 192 / 255.0, 108 / 255.0));
+      inputPixels.push_back(
+        PixelRGBFloat64(108 / 255.0, 192 / 255.0, 134 / 255.0));
+      inputPixels.push_back(
+        PixelRGBFloat64(108 / 255.0, 167 / 255.0, 192 / 255.0));
+      inputPixels.push_back(
+        PixelRGBFloat64(132 / 255.0, 108 / 255.0, 192 / 255.0));
+      inputPixels.push_back(
+        PixelRGBFloat64(192 / 255.0, 108 / 255.0, 169 / 255.0));
+
+      ColorspaceConverter<RGB_FLOAT64, HSV_FLOAT64> converter0;
+      ColorspaceConverter<HSV_FLOAT64, RGB_FLOAT64> converter1;
+      
+      for(unsigned int ii = 0; ii < inputPixels.size(); ++ii) {
+        PixelHSV<brick::common::Float64> hsvPixel = converter0(inputPixels[ii]);
+        PixelRGBFloat64 rgbPixel = converter1(hsvPixel);
+        
+        const double tolerance = 1.0E-9;
+	BRICK_TEST_ASSERT(
+          approximatelyEqual(rgbPixel.red, inputPixels[ii].red,
+                             tolerance));
+	BRICK_TEST_ASSERT(
+          approximatelyEqual(rgbPixel.green, inputPixels[ii].green,
+                             tolerance));
+	BRICK_TEST_ASSERT(
+          approximatelyEqual(rgbPixel.blue, inputPixels[ii].blue,
+                             tolerance));
+      }
+    }
+
+
+    void
+    ColorspaceConverterTest::
     testRGB_FLOAT64ToYIQ_FLOAT64()
     {
       std::vector<PixelRGBFloat64> inputPixels;
@@ -321,7 +364,34 @@ namespace brick {
         }
       }
     }
-  
+
+
+    void
+    ColorspaceConverterTest::
+    testHSV_FLOAT64ToRGB8()
+    {
+      std::vector<PixelRGBFloat64> inputPixels;
+
+      inputPixels.push_back(PixelRGB8(192, 128, 108));
+      inputPixels.push_back(PixelRGB8(177, 192, 108));
+      inputPixels.push_back(PixelRGB8(108, 192, 134));
+      inputPixels.push_back(PixelRGB8(108, 167, 192));
+      inputPixels.push_back(PixelRGB8(132, 108, 192));
+      inputPixels.push_back(PixelRGB8(192, 108, 169));
+
+      ColorspaceConverter<RGB8, HSV_FLOAT64> converter0;
+      ColorspaceConverter<HSV_FLOAT64, RGB8> converter1;
+      
+      for(unsigned int ii = 0; ii < inputPixels.size(); ++ii) {
+        PixelHSV<brick::common::Float64> hsvPixel = converter0(inputPixels[ii]);
+        PixelRGB8 rgbPixel = converter1(hsvPixel);
+        
+	BRICK_TEST_ASSERT(rgbPixel.red == inputPixels[ii].red);
+	BRICK_TEST_ASSERT(rgbPixel.green == inputPixels[ii].green);
+	BRICK_TEST_ASSERT(rgbPixel.blue == inputPixels[ii].blue);
+      }
+    }
+    
   } // namespace computerVision
 
 } // namespace brick

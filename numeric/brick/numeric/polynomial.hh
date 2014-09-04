@@ -129,7 +129,7 @@ namespace brick {
        * 
        * @param other This argument is the Polynomial instance to copy.
        */
-      Polynomial(const Polynomial<Type>& other);
+      Polynomial(Polynomial<Type> const& other);
 
 
       /** 
@@ -162,7 +162,7 @@ namespace brick {
        * @return The return value is a reference to *this.
        */
       Polynomial<Type>&
-      operator=(const Polynomial<Type> other);
+      operator=(Polynomial<Type> const& other);
       
 
       /** 
@@ -190,8 +190,8 @@ namespace brick {
        * 
        * @return The return value is a reference to *this.
        */
-      Polynomial&
-      operator*=(const Polynomial& other);
+      Polynomial<Type>&
+      operator*=(Polynomial<Type> const& other);
 
 
       /** 
@@ -206,8 +206,8 @@ namespace brick {
        * 
        * @return The return value is a reference to *this.
        */
-      Polynomial&
-      operator+=(const Polynomial& other);
+      Polynomial<Type>&
+      operator+=(Polynomial<Type> const& other);
 
 
       /** 
@@ -223,8 +223,8 @@ namespace brick {
        * 
        * @return The return value is a reference to *this.
        */
-      Polynomial&
-      operator-=(const Polynomial& other);
+      Polynomial<Type>&
+      operator-=(Polynomial<Type> const& other);
       
     private:
 
@@ -252,7 +252,7 @@ namespace brick {
      */
     template<class Type>
     Polynomial<Type>
-    operator*(const Polynomial<Type>& arg0, const Polynomial<Type>& arg1);
+    operator*(Polynomial<Type> const& arg0, Polynomial<Type> const& arg1);
 
 
     /** 
@@ -271,7 +271,7 @@ namespace brick {
      */
     template<class Type>
     Polynomial<Type>
-    operator+(const Polynomial<Type>& arg0, const Polynomial<Type>& arg1);
+    operator+(Polynomial<Type> const& arg0, Polynomial<Type> const& arg1);
   
 
     /** 
@@ -280,17 +280,17 @@ namespace brick {
      * multiplication will be equal to arg0.operator(xValue) -
      * arg1.operator()(xValue).
      * 
-     * @param arg0 This argument is the Polynomial instances from which
+     * @param arg0 This argument is the Polynomial instance from which
      * arg1 is to be subtracted.
      * 
-     * @param arg1 This argument is the Polynomial instances to be
+     * @param arg1 This argument is the Polynomial instance to be
      * subtracted from arg0.
      * 
      * @return The return value is the result of the subtraction.
      */
     template<class Type>
     Polynomial<Type>
-    operator-(const Polynomial<Type>& arg0, const Polynomial<Type>& arg1);
+    operator-(Polynomial<Type> const& arg0, Polynomial<Type> const& arg1);
 
 
   } // namespace numeric

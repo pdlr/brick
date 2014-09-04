@@ -582,7 +582,7 @@ namespace brick {
        * @param index Indicates the selected element.
        * @return Value of the (index)th element of the array.
        */
-      inline Type
+      inline Type const&
       operator()(size_t index) const {
         checkBounds(index);
         return m_dataPtr[index];
@@ -621,7 +621,7 @@ namespace brick {
        * along the third axis.
        * @return Value of the selected element of the array.
        */
-      inline Type
+      inline Type const&
       operator()(size_t index0, size_t index1, size_t index2) const {
         checkBounds(index0, index1, index2);
         return m_dataPtr[index2 + (index1 * m_shape2)
@@ -645,7 +645,7 @@ namespace brick {
        * @param index Indicates the selected element.
        * @return Value of the (index)th element of the array.
        */
-      inline Type
+      inline Type const&
       operator[](size_t index) const {return this->operator()(index);}
 
       /** 

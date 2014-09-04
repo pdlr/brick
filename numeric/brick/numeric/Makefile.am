@@ -35,11 +35,13 @@ brickNumeric_HEADERS	= \
 	bilinearInterpolator.hh bilinearInterpolator_impl.hh \
 	boxIntegrator2D.hh boxIntegrator2D_impl.hh \
 	bSpline.hh bSpline_impl.hh \
+	bSpline2D.hh bSpline2D_impl.hh \
 	convolutionStrategy.hh \
 	convolve1D.hh convolve1D_impl.hh \
 	convolve2D.hh convolve2D_impl.hh \
 	convolveND.hh convolveND_impl.hh \
 	derivativeRidders.hh derivativeRidders_impl.hh \
+	differentiableScalar.hh differentiableScalar_impl.hh \
 	extremumRecorder.hh \
 	functional.hh \
 	ieeeFloat32.hh \
@@ -56,6 +58,7 @@ brickNumeric_HEADERS	= \
 	rotations.hh rotations_impl.hh \
 	slice.hh \
 	sampledFunctions.hh sampledFunctions_impl.hh \
+	scatteredDataInterpolator2D.hh scatteredDataInterpolator2D_impl.hh \
 	solveCubic.hh solveCubic_impl.hh \
 	solveQuadratic.hh solveQuadratic_impl.hh \
 	solveQuartic.hh solveQuartic_impl.hh \

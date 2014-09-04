@@ -21,6 +21,8 @@
 
 #include <cmath>
 
+#include <brick/common/mathFunctions.hh>
+
 namespace brick {
 
   namespace computerVision {
@@ -34,9 +36,11 @@ namespace brick {
       // which is not templated.  Life gets much easiser.
 
         
-      // This conversion follows the wikipedia article "HSL color space"
-      // as of 2009-02-19, with the exception that all resulting
-      // components are scaled [0.0, 1.0].  
+      // This conversion follows the wikipedia article "HSL color
+      // space" as of 2009-02-19, with the exceptions that all
+      // resulting components are scaled [0.0, 1.0], and that the
+      // resulting hue value is rotated 60 degrees to match the page's
+      // contents as of 2014-08-21.
       inline void
       doColorspaceConversion(const Image<RGB_FLOAT64>::PixelType& inputPixel,
                              Image<HSV_FLOAT64>::PixelType& outputPixel)
@@ -94,7 +98,68 @@ namespace brick {
         outputPixel.hue = ((outputPixel.hue < 0.0)
                            ? (outputPixel.hue + 1.0) : outputPixel.hue);
 #endif    
-      }    
+      }
+
+
+      // This conversion inverts the RGB->HSV conversion defined above.
+      inline void
+      doColorspaceConversion(const Image<HSV_FLOAT64>::PixelType& inputPixel,
+                             Image<RGB_FLOAT64>::PixelType& outputPixel)
+      {
+        brick::common::Float64 chroma =
+          inputPixel.value * inputPixel.saturation;
+        brick::common::Float64 huePrime =
+          inputPixel.hue * 6.0;
+
+        // Make sure huePrime is positive.
+        while(huePrime < 0.0) {
+          huePrime += 6.0;
+        }
+
+        // Compute huePrime % 2
+        double remainder = huePrime;
+        while(remainder >= 2.0) {
+          remainder -= 2.0;
+        }
+        
+        brick::common::Float64 xValue =
+          chroma * (1.0 - brick::common::absoluteValue(remainder - 1));
+
+        brick::common::Float64 red = 0.0;
+        brick::common::Float64 green = 0.0;
+        brick::common::Float64 blue = 0.0;
+        if(huePrime < 1.0) {
+          red = chroma;
+          green = xValue;
+          blue = 0.0;
+        } else if (huePrime < 2.0) {
+          red = xValue;
+          green = chroma;
+          blue = 0.0;
+        } else if (huePrime < 3.0) {
+          red = 0.0;
+          green = chroma;
+          blue = xValue;
+        } else if (huePrime < 4.0) {
+          red = 0.0;
+          green = xValue;
+          blue = chroma;
+        } else if (huePrime < 5.0) {
+          red = xValue;
+          green = 0.0;
+          blue = chroma;
+        } else {
+          red = chroma;
+          green = 0.0;
+          blue = xValue;
+        } 
+
+        // Now update to reflect pixel brightness.
+        double increment = inputPixel.value - chroma;
+        outputPixel.red = red + increment;
+        outputPixel.green = green + increment;
+        outputPixel.blue = blue + increment;
+      }
 
     } // namespace privateCode
 
@@ -136,6 +201,17 @@ namespace brick {
     template<>
     inline
     void
+    ColorspaceConverter<GRAY8, GRAY16>::
+    operator()(const Image<GRAY8>::PixelType& inputPixel,
+               Image<GRAY16>::PixelType& outputPixel)
+    {
+      outputPixel = Image<GRAY16>::PixelType(inputPixel) << 8;
+    }
+
+
+    template<>
+    inline
+    void
     ColorspaceConverter<GRAY8, RGB8>::
     operator()(const Image<GRAY8>::PixelType& inputPixel,
                Image<RGB8>::PixelType& outputPixel)
@@ -143,6 +219,17 @@ namespace brick {
       outputPixel.red = inputPixel;
       outputPixel.green = inputPixel;
       outputPixel.blue = inputPixel;
+    }
+
+
+    template<>
+    inline
+    void
+    ColorspaceConverter<GRAY16, GRAY8>::
+    operator()(const Image<GRAY16>::PixelType& inputPixel,
+               Image<GRAY8>::PixelType& outputPixel)
+    {
+      outputPixel = Image<GRAY8>::PixelType(inputPixel >> 8);
     }
 
 
@@ -157,6 +244,20 @@ namespace brick {
                             + 0.59 * inputPixel.green
                             + 0.11 * inputPixel.blue);
       outputPixel = static_cast<Image<GRAY8>::PixelType>(accumulator + 0.5);
+    }
+
+
+    template<>
+    inline
+    void
+    ColorspaceConverter<RGB8, GRAY16>::
+    operator()(const Image<RGB8>::PixelType& inputPixel,
+               Image<GRAY16>::PixelType& outputPixel)
+    {
+      double accumulator = (0.3 * inputPixel.red
+                            + 0.59 * inputPixel.green
+                            + 0.11 * inputPixel.blue) * 256;
+      outputPixel = static_cast<Image<GRAY16>::PixelType>(accumulator + 0.5);
     }
 
 
@@ -182,9 +283,9 @@ namespace brick {
     operator()(const Image<RGB8>::PixelType& inputPixel,
                Image<RGB16>::PixelType& outputPixel)
     {
-      outputPixel.red = static_cast<brick::common::UnsignedInt16>(inputPixel.red);
-      outputPixel.green = static_cast<brick::common::UnsignedInt16>(inputPixel.green);
-      outputPixel.blue = static_cast<brick::common::UnsignedInt16>(inputPixel.blue);
+      outputPixel.red = static_cast<brick::common::UnsignedInt16>(inputPixel.red) << 8;
+      outputPixel.green = static_cast<brick::common::UnsignedInt16>(inputPixel.green) << 8;
+      outputPixel.blue = static_cast<brick::common::UnsignedInt16>(inputPixel.blue) << 8;
     }
 
 
@@ -211,19 +312,6 @@ namespace brick {
       outputPixel.red = static_cast<brick::common::Float64>(inputPixel.red);
       outputPixel.green = static_cast<brick::common::Float64>(inputPixel.green);
       outputPixel.blue = static_cast<brick::common::Float64>(inputPixel.blue);
-    }
-
-
-    template<>
-    inline
-    void
-    ColorspaceConverter<RGB_FLOAT32, RGB8>::
-    operator()(const Image<RGB_FLOAT32>::PixelType& inputPixel,
-               Image<RGB8>::PixelType& outputPixel)
-    {
-      outputPixel.red = static_cast<brick::common::UnsignedInt8>(inputPixel.red + 0.5);
-      outputPixel.green = static_cast<brick::common::UnsignedInt8>(inputPixel.green + 0.5);
-      outputPixel.blue = static_cast<brick::common::UnsignedInt8>(inputPixel.blue + 0.5);
     }
 
 
@@ -299,13 +387,43 @@ namespace brick {
     template<>
     inline
     void
+    ColorspaceConverter<RGB16, GRAY8>::
+    operator()(const Image<RGB16>::PixelType& inputPixel,
+               Image<GRAY8>::PixelType& outputPixel)
+    {
+      // Scale by 256 to avoid overflow.
+      double accumulator = (0.3 * inputPixel.red
+                            + 0.59 * inputPixel.green
+                            + 0.11 * inputPixel.blue) / 256.0;
+      outputPixel = static_cast<Image<GRAY8>::PixelType>(accumulator + 0.5);
+    }
+
+
+    template<>
+    inline
+    void
+    ColorspaceConverter<RGB16, GRAY16>::
+    operator()(const Image<RGB16>::PixelType& inputPixel,
+               Image<GRAY16>::PixelType& outputPixel)
+    {
+      // Scale by 256 to avoid overflow.
+      double accumulator = (0.3 * inputPixel.red
+                            + 0.59 * inputPixel.green
+                            + 0.11 * inputPixel.blue);
+      outputPixel = static_cast<Image<GRAY16>::PixelType>(accumulator + 0.5);
+    }
+
+
+    template<>
+    inline
+    void
     ColorspaceConverter<RGB16, RGB8>::
     operator()(const Image<RGB16>::PixelType& inputPixel,
                Image<RGB8>::PixelType& outputPixel)
     {
-      outputPixel.red = static_cast<brick::common::UnsignedInt8>(inputPixel.red);
-      outputPixel.green = static_cast<brick::common::UnsignedInt8>(inputPixel.green);
-      outputPixel.blue = static_cast<brick::common::UnsignedInt8>(inputPixel.blue);
+      outputPixel.red = static_cast<brick::common::UnsignedInt8>(inputPixel.red >> 8);
+      outputPixel.green = static_cast<brick::common::UnsignedInt8>(inputPixel.green >> 8);
+      outputPixel.blue = static_cast<brick::common::UnsignedInt8>(inputPixel.blue >> 8);
     }
 
 
@@ -316,11 +434,24 @@ namespace brick {
     operator()(const Image<RGB_FLOAT32>::PixelType& inputPixel,
                Image<GRAY8>::PixelType& outputPixel)
     {
-      double accumulator = (inputPixel.red * inputPixel.red
-                            + inputPixel.green * inputPixel.green
-                            + inputPixel.blue * inputPixel.blue) / 3.0;
+      brick::common::Float32 accumulator = (0.3 * inputPixel.red
+                                            + 0.59 * inputPixel.green
+                                            + 0.11 * inputPixel.blue);
       outputPixel =
-        static_cast<Image<GRAY8>::PixelType>(std::sqrt(accumulator) + 0.5);
+        static_cast<Image<GRAY8>::PixelType>(accumulator + 0.5);
+    }
+
+
+    template<>
+    inline
+    void
+    ColorspaceConverter<RGB_FLOAT32, RGB8>::
+    operator()(const Image<RGB_FLOAT32>::PixelType& inputPixel,
+               Image<RGB8>::PixelType& outputPixel)
+    {
+      outputPixel.red = static_cast<brick::common::UnsignedInt8>(inputPixel.red + 0.5);
+      outputPixel.green = static_cast<brick::common::UnsignedInt8>(inputPixel.green + 0.5);
+      outputPixel.blue = static_cast<brick::common::UnsignedInt8>(inputPixel.blue + 0.5);
     }
 
 
@@ -392,6 +523,38 @@ namespace brick {
       outputPixel.blue = inputPixel.blue;
     }
 
+
+    template<>
+    inline
+    void
+    ColorspaceConverter<HSV_FLOAT64, RGB8>::
+    operator()(const Image<HSV_FLOAT64>::PixelType& inputPixel,
+               Image<RGB8>::PixelType& outputPixel)
+    {
+      PixelRGBFloat64 tempResult;
+      privateCode::doColorspaceConversion(inputPixel, tempResult);
+      outputPixel.red =
+        static_cast<common::UInt8>(tempResult.red * 255.0 + 0.5);
+      outputPixel.green =
+        static_cast<common::UInt8>(tempResult.green * 255.0 + 0.5);
+      outputPixel.blue =
+        static_cast<common::UInt8>(tempResult.blue * 255.0 + 0.5);
+    }
+
+
+
+    template<>
+    inline
+    void
+    ColorspaceConverter<HSV_FLOAT64, RGB_FLOAT64>::
+    operator()(const Image<HSV_FLOAT64>::PixelType& inputPixel,
+               Image<RGB_FLOAT64>::PixelType& outputPixel)
+    {
+      privateCode::doColorspaceConversion(inputPixel, outputPixel);
+    }
+
+
+    
   } // namespace computerVision
     
 } // namespace brick

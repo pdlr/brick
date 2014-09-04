@@ -64,8 +64,9 @@ namespace brick {
      **
      ** @code
      **   typedef AmanatidesWoo3D< Array3D<int> >::iterator awIterator;
+     **   Transform3D<double> voxelFromWorld;
      **   AmanatidesWoo3D< Array3D<int> > rayTracer(
-     **     myArray3D, rayOrigin, rayDirection, false);
+     **     myArray3D, voxelFromWorld, rayOrigin, rayDirection, false);
      **   awIterator iterator0 = rayTracer.begin(); 
      **   awIterator iterator1 = rayTracer.end();
      **   for(; iterator0 != iterator1; ++iterator0) {

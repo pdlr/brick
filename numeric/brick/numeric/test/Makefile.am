@@ -20,10 +20,12 @@ TESTS			= \
 	arrayNDTest \
 	boxIntegrator2DTest \
 	bSplineTest \
+	bSpline2DTest \
 	convolve1DTest \
 	convolve2DTest \
 	convolveNDTest \
 	derivativeRiddersTest \
+	differentiableScalarTest \
 	filterTest \
 	ieeeFloat32Test \
 	index3DTest \
@@ -34,6 +36,7 @@ TESTS			= \
 	polynomialTest \
 	rotationsTest \
 	sampledFunctionsTest \
+	scatteredDataInterpolator2DTest \
 	solveCubicTest \
 	solveQuadraticTest \
 	solveQuarticTest \
@@ -55,10 +58,12 @@ check_PROGRAMS          = \
 	arrayNDTest \
 	boxIntegrator2DTest \
 	bSplineTest \
+	bSpline2DTest \
 	convolve1DTest \
 	convolve2DTest \
 	convolveNDTest \
 	derivativeRiddersTest \
+	differentiableScalarTest \
 	filterTest \
 	ieeeFloat32Test \
 	index3DTest \
@@ -69,6 +74,7 @@ check_PROGRAMS          = \
 	polynomialTest \
 	rotationsTest \
 	sampledFunctionsTest \
+	scatteredDataInterpolator2DTest \
 	solveCubicTest \
 	solveQuadraticTest \
 	solveQuarticTest \
@@ -90,10 +96,12 @@ array3DTest_SOURCES		= array3DTest.cc arrayTestCommon.hh
 arrayNDTest_SOURCES		= arrayNDTest.cc arrayTestCommon.hh
 boxIntegrator2DTest_SOURCES	= boxIntegrator2DTest.cc
 bSplineTest_SOURCES		= bSplineTest.cc
+bSpline2DTest_SOURCES		= bSpline2DTest.cc
 convolve1DTest_SOURCES		= convolve1DTest.cc
 convolve2DTest_SOURCES		= convolve2DTest.cc
 convolveNDTest_SOURCES		= convolveNDTest.cc
 derivativeRiddersTest_SOURCES	= derivativeRiddersTest.cc
+differentiableScalarTest_SOURCES	= differentiableScalarTest.cc
 filterTest_SOURCES		= filterTest.cc
 ieeeFloat32Test_SOURCES		= ieeeFloat32Test.cc
 index3DTest_SOURCES		= index3DTest.cc
@@ -104,6 +112,7 @@ normalizedCorrelatorTest_SOURCES = normalizedCorrelatorTest.cc
 polynomialTest_SOURCES		= polynomialTest.cc
 rotationsTest_SOURCES		= rotationsTest.cc
 sampledFunctionsTest_SOURCES	= sampledFunctionsTest.cc
+scatteredDataInterpolator2DTest_SOURCES	= scatteredDataInterpolator2DTest.cc
 solveCubicTest_SOURCES		= solveCubicTest.cc
 solveQuadraticTest_SOURCES	= solveQuadraticTest.cc
 solveQuarticTest_SOURCES	= solveQuarticTest.cc

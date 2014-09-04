@@ -94,7 +94,7 @@ namespace brick {
     // The copy constructor does a deep copy.
     template <class Type>
     Polynomial<Type>::
-    Polynomial(const Polynomial<Type>& other)
+    Polynomial(Polynomial<Type> const& other)
       : m_coefficientArray(other.m_coefficientArray.copy())
     {
       // Empty.
@@ -148,7 +148,7 @@ namespace brick {
     template <class Type>
     Polynomial<Type>&
     Polynomial<Type>::
-    operator*=(const Polynomial& other)
+    operator*=(Polynomial<Type> const& other)
     {
       size_t oldOrder = this->getOrder();
       size_t otherOrder = other.getOrder();
@@ -177,7 +177,7 @@ namespace brick {
     template <class Type>
     Polynomial<Type>&
     Polynomial<Type>::
-    operator+=(const Polynomial& other)
+    operator+=(Polynomial<Type> const& other)
     {
       size_t largerSize = m_coefficientArray.size();
       size_t smallerSize = other.m_coefficientArray.size();
@@ -209,7 +209,7 @@ namespace brick {
     template <class Type>
     Polynomial<Type>&
     Polynomial<Type>::
-    operator-=(const Polynomial& other)
+    operator-=(Polynomial<Type> const& other)
     {
       size_t largerSize = m_coefficientArray.size();
       size_t smallerSize = other.m_coefficientArray.size();
@@ -243,7 +243,7 @@ namespace brick {
     // This operator multiplies two Polynomial instances.
     template<class Type>
     Polynomial<Type>
-    operator*(const Polynomial<Type>& arg0, const Polynomial<Type>& arg1)
+    operator*(Polynomial<Type> const& arg0, Polynomial<Type> const& arg1)
     {
       Polynomial<Type> result = arg0;
       result *= arg1;
@@ -254,7 +254,7 @@ namespace brick {
     // This operator adds two Polynomial instances.
     template<class Type>
     Polynomial<Type>
-    operator+(const Polynomial<Type>& arg0, const Polynomial<Type>& arg1)
+    operator+(Polynomial<Type> const& arg0, Polynomial<Type> const& arg1)
     {
       Polynomial<Type> result = arg0;
       result += arg1;
@@ -265,7 +265,7 @@ namespace brick {
     // This operator subtracts two Polynomial instances.
     template<class Type>
     Polynomial<Type>
-    operator-(const Polynomial<Type>& arg0, const Polynomial<Type>& arg1)
+    operator-(Polynomial<Type> const& arg0, Polynomial<Type> const& arg1)
     {
       Polynomial<Type> result = arg0;
       result -= arg1;

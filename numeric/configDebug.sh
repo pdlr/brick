@@ -1,5 +1,5 @@
 export INSTALLDIR="/var/tmp"
-export COMMONFLAGS="-Wall -Wextra -Werror -Wshadow -g"
+export COMMONFLAGS="-Wall -Wextra -Werror -Wshadow -g -DBRICK_NUMERIC_CHECKBOUNDS=1"
 
 export CPPFLAGS="-I$INSTALLDIR/include"
 export LDFLAGS="-L$INSTALLDIR/lib"

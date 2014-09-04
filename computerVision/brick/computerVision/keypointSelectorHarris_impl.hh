@@ -19,6 +19,7 @@
 // 
 // #include <brick/computerVision/keypointSelectorHarris.hh>
 
+#include <brick/common/mathFunctions.hh>
 #include <brick/computerVision/imageFilter.hh>
 #include <brick/numeric/bilinearInterpolator.hh>
 #include <brick/numeric/filter.hh>
@@ -145,11 +146,20 @@ namespace brick {
     KeypointSelectorHarris<FloatType>::
     getKeypointsGeneralPosition(Iter iterator) const
     {
-      // Get bounds on the region of valid pixels for this calculation.
-      unsigned int const startRow    = m_searchRegionCorner0.getRow();
-      unsigned int const stopRow     = m_searchRegionCorner1.getRow();
-      unsigned int const startColumn = m_searchRegionCorner0.getColumn();
-      unsigned int const stopColumn  = m_searchRegionCorner1.getColumn();
+      // Sanity check region to make sure shrinking the search region
+      // isn't going to break anything.
+      if(0 == m_searchRegionCorner1.getRow() 
+         || 0 == m_searchRegionCorner1.getColumn()) {
+        return;
+      }
+
+      // Get bounds on the region of valid pixels for this
+      // calculation.  Shrink search region by one pixel to allow
+      // non-max suppression.
+      unsigned int const startRow    = m_searchRegionCorner0.getRow() + 1;
+      unsigned int const stopRow     = m_searchRegionCorner1.getRow() - 1;
+      unsigned int const startColumn = m_searchRegionCorner0.getColumn() + 1;
+      unsigned int const stopColumn  = m_searchRegionCorner1.getColumn() - 1;
 
       // These interpolators will make things easy on us later when
       // trying to gather information about keypoints in non-integral
@@ -196,11 +206,18 @@ namespace brick {
                  *(candidatePtr + rowStep + 1),
                  rowCoordinate, columnCoordinate, extremeValue)) {
 
-              *(iterator++) = KeypointHarris<FloatType>(
-                rowCoordinate, columnCoordinate, extremeValue,
-                xxInterpolator(rowCoordinate, columnCoordinate),
-                xyInterpolator(rowCoordinate, columnCoordinate),
-                yyInterpolator(rowCoordinate, columnCoordinate));
+              // Sanity check interpolation result, as subpixelInterpolate()
+              // does not do so.
+              if(common::absoluteValue(rowCoordinate - row) < 1.0
+                 && common::absoluteValue(columnCoordinate - column) < 1.0) {
+
+                *(iterator++) = KeypointHarris<FloatType>(
+                  rowCoordinate, columnCoordinate, extremeValue,
+                  xxInterpolator(rowCoordinate, columnCoordinate),
+                  xyInterpolator(rowCoordinate, columnCoordinate),
+                  yyInterpolator(rowCoordinate, columnCoordinate));
+                
+              }
             }
           }
         }

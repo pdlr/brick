@@ -60,8 +60,9 @@ namespace brick {
      **
      ** @code
      **   typedef AmanatidesWoo2D< Array2D<int> >::iterator awIterator;
+     **   Transform2D<double> pixelFromWorld;
      **   AmanatidesWoo2D< Array2D<int> > rayTracer(
-     **     myArray2D, rayOrigin, rayDirection, false);
+     **     myArray2D, pixelFromWorld, rayOrigin, rayDirection, false);
      **   awIterator iterator0 = rayTracer.begin(); 
      **   awIterator iterator1 = rayTracer.end();
      **   for(; iterator0 != iterator1; ++iterator0) {

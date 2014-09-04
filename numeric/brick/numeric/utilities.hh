@@ -558,6 +558,30 @@ namespace brick {
     axisSum(Array2D<Type> const& array0, size_t axis,
             ResultType const& initialValue, Functor adder);
 
+
+    /** 
+     * This function swaps values between its two arguments so that
+     * the value of each element of corner0 is less than or equal to
+     * the corresponding value of corner1.  After calling this
+     * function, you can safely write code that depends on the
+     * relative positioning of the two corners.
+     * 
+     * @param corner0 This argument is the corner that should have
+     * smaller values.
+     * 
+     * @param corner1 This argument is the corner that should have
+     * larger values.
+     * 
+     * @return The return value is true if -- after the call to
+     * cleanupCorners() -- the area of the rectangle defined by
+     * corner0 and corner1 is non-zero.  That is, the return value is
+     * false if and only if ((corner0.getX() == corner1.getX()) ||
+     * (corner0.getY() == corner1.getY())).
+     */
+    template <class Type>
+    bool
+    cleanupCorners(Vector2D<Type>& corner0, Vector2D<Type>& corner1);
+
     
     /**
      * columnIndices(rows, columns): Returns an Array2D in which each

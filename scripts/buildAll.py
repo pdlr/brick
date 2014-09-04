@@ -16,6 +16,7 @@ libraryList = ['brickCommon',
                'brickUtilities',
                'brickThread',
                'brickGeometry',
+               'brickPixelGraphics',
                'brickComputerVision',
                'brickMedia']
 
@@ -23,30 +24,36 @@ libraryList = ['brickCommon',
 preferredConfig = './configure'
 
 def checkVersionEqual(version0, version1):
-  if ((version0[0] == version1[0]) & (version0[1] == version1[1]) & (version0[2] == version1[2])):
-    return True
+  if len(version0) != len(version1):
+    return False
   # end if
-  return False
+  for ii in range(len(version0)):
+    if version0[ii] != version1[ii]:
+      return False
+    # end if
+  # end for
+  return True
 # end if
 
 
 def checkVersionGreater(version0, version1):
-  if version0[0] > version1[0]:
-    return True
-  # end if
-  if ((version0[0] == version1[0]) & (version0[1] > version1[1])):
-    return True
-  # end if
-  if ((version0[0] == version1[0]) & (version0[1] == version1[1])
-      & (version0[2] > version1[2])):
-    return True
-  # end if
+  for ii in range(len(version0)):
+    if ii >= len(version1):
+      return True
+    # end if
+    if version0[ii] > version1[ii]:
+      return True
+    # end if
+    if version0[ii] < version1[ii]:
+      return False
+    # end if
+  # end for
   return False
 # end if
 
 
 def findLatestVersion(fileNameList):
-  latestVersion = (0, 0, '')
+  latestVersion = [0, 0, 0]
   latestFileName = ''
   for fileName in fileNameList:
     candidateName = fileName
@@ -58,23 +65,15 @@ def findLatestVersion(fileNameList):
       candidateName = base
     # end while
     if len(ext) <= 1:
-      raise IOError('Malformed fileName: %s' % fileName)
+      raise IOError('Bad segment, %s, in fileName: %s' % (ext, fileName))
     # end if
     try:
-      if (len(ext) == 2):
-        minorRev = int(ext[1:])
-        revModifier = ''
-      else:
-        # Warning(xxx): assuming minor revision is only single digit.
-        minorRev = int(ext[1:2])
-        revModifier = ext[2:]
-      # end if
-      ext = base.split('-')[-1]
-      majorRev = int(ext)
+      versionString = candidateName.split('-')[-1]
+      versionArray = map(int, versionString.split('.'))
     except ValueError:
       raise IOError('Malformed fileName: %s' % fileName)
     # end try
-    newVersion = (majorRev, minorRev, revModifier)
+    newVersion = versionArray
     if checkVersionGreater(newVersion, latestVersion):
       latestVersion = newVersion
       latestFileName = fileName
@@ -82,8 +81,8 @@ def findLatestVersion(fileNameList):
   # end for
   return latestFileName, latestVersion
 # end def
-      
 
+      
 def findSource(libraryName):
   sourceDirGlob = libraryName.lower() + '-?.*'
   tarballGlob = sourceDirGlob + '.tar.gz'
@@ -105,7 +104,7 @@ def findSource(libraryName):
 
   if (isTarballExisting & isSourceDirExisting):
     if checkVersionGreater(prevSourceVersion, tarballVersion):
-      raise IOException(
+      raise IOError(
         'Tarball %s is out of date relative to source dir %s'
         % (tarballName, prevSourceDirName))
     # end if
@@ -143,30 +142,87 @@ def unpackTarball(tarballName, sourceDirName):
   return True
 # end def
 
-
-if __name__ == '__main__':
-  if len(sys.argv) < 2:
-    print "Usage: %s [--clean] installPrefix" % sys.argv[0]
+def printUsage(argv):
+    print "Usage: %s [--clean] [--test] installPrefix" % sys.argv[0]
     print ""
     print "  where installPrefix is the directory under which you'd like"
     print "  all of the libraries, headers, etc. to be installed."
+    print "  "
+    print "  Specifying --test causes unit tests to be run before installing."
+    print "  Specifying --clean removes the local build directories."
+#endif
+
+if __name__ == '__main__':
+  if len(sys.argv) < 2:
+    printUsage(sys.argv)
     sys.exit(0)
   # end if
 
   installPrefix = "."
   action = 'build'
+  runTests = False
   argIndex = 1
   while argIndex < len(sys.argv):
     if sys.argv[argIndex][0] == '-':
       if sys.argv[argIndex] == '--clean':
         action = 'clean'
+      elif sys.argv[argIndex] == '--test':
+        runTests = True
       else:
+        printUsage(sys.argv)
         raise ValueError("Unrecognized option: %s" % sys.argv[argIndex])
       # end if
     else:
       installPrefix = sys.argv[argIndex]
     # end if
     argIndex = argIndex + 1
+  # end if
+
+  if action == 'clean':
+    commandLine = ('rm -rf '
+                   + 'brickcommon-?.? '
+                   + 'brickcommon-?.?? '
+                   + 'brickcommon-?.*-?.? '
+                   + 'brickcommon-?.*-?.?? '
+                   + 'brickcomputervision-?.? '
+                   + 'brickcomputervision-?.?? '
+                   + 'brickcomputervision-?.*-?.? '
+                   + 'brickcomputervision-?.*-?.?? '
+                   + 'brickgeometry-?.? '
+                   + 'brickgeometry-?.?? '
+                   + 'brickgeometry-?.*-?.? '
+                   + 'brickgeometry-?.*-?.?? '
+                   + 'bricklinearalgebra-?.? '
+                   + 'bricklinearalgebra-?.?? '
+                   + 'bricklinearalgebra-?.*-?.? '
+                   + 'bricklinearalgebra-?.*-?.?? '
+                   + 'bricknumeric-?.? '
+                   + 'bricknumeric-?.?? '
+                   + 'bricknumeric-?.*-?.? '
+                   + 'bricknumeric-?.*-?.?? '
+                   + 'brickoptimization-?.? '
+                   + 'brickoptimization-?.?? '
+                   + 'brickoptimization-?.*-?.? '
+                   + 'brickoptimization-?.*-?.?? '
+                   + 'brickportability-?.? '
+                   + 'brickportability-?.?? '
+                   + 'brickportability-?.*-?.? '
+                   + 'brickportability-?.*-?.?? '
+                   + 'brickrandom-?.? '
+                   + 'brickrandom-?.?? '
+                   + 'brickrandom-?.*-?.? '
+                   + 'brickrandom-?.*-?.?? '
+                   + 'bricktest-?.? '
+                   + 'bricktest-?.?? '
+                   + 'bricktest-?.*-?.? '
+                   + 'bricktest-?.*-?.?? '
+                   + 'brickutilities-?.? '
+                   + 'brickutilities-?.?? '
+                   + 'brickutilities-?.*-?.? '
+                   + 'brickutilities-?.*-?.?? '
+                   )
+    os.system(commandLine)
+    sys.exit(0)
   # end if
 
   installPrefix = os.path.abspath(installPrefix)
@@ -215,23 +271,36 @@ if __name__ == '__main__':
         if not os.environ.has_key("CXXFLAGS"):
           cxxflags = cxxflags + " -O2"
         # end if
-        returnCode = os.system(
-          """export LDFLAGS="$LDFLAGS -L%s/lib" && \
-             export CFLAGS="$CFLAGS %s" && \
-             export CXXFLAGS="$CXXFLAGS %s" && \
-             cd %s && \
-             ./configure --prefix "%s" && \
-             make && \
-             make check && \
-             make install""" 
+        if runTests:
+          returnCode = os.system(
+            """export LDFLAGS="$LDFLAGS -L%s/lib" && \
+               export CFLAGS="$CFLAGS %s" && \
+               export CXXFLAGS="$CXXFLAGS %s" && \
+               cd %s && \
+               ./configure --prefix "%s" && \
+               make && \
+               make check && \
+               make install""" 
           % (installPrefix, cflags, cxxflags, sourceDirName, installPrefix))
+        else:
+          returnCode = os.system(
+            """export LDFLAGS="$LDFLAGS -L%s/lib" && \
+               export CFLAGS="$CFLAGS %s" && \
+               export CXXFLAGS="$CXXFLAGS %s" && \
+               cd %s && \
+               ./configure --prefix "%s" && \
+               make && \
+               make install""" 
+          % (installPrefix, cflags, cxxflags, sourceDirName, installPrefix))
+        # end if
+
         if returnCode != 0:
           # Clean up failed build.
           print 'Failed build...'
           cleanupCommand = 'rm -rf %s' % sourceDirName
-          response = raw_input('  Clean up (%s)? [y/N]: ' % cleanupCommand)
+          response = raw_input('  Clean up (%s)? [Y/n]: ' % cleanupCommand)
           if response == '':
-            response = 'N'
+            response = 'Y'
           # end if
           if ((response[0] == 'y') | (response[0] == 'Y')):
             os.system(cleanupCommand)

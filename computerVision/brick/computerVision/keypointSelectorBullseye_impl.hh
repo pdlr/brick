@@ -1171,7 +1171,10 @@ namespace brick {
       FloatType minRadius,
       brick::common::UInt32 maxNumberOfBullseyes)
     {
-      FloatType const minRadiusSquared = minRadius * minRadius;
+      // Keypoints should not overlap.  This means their centers must
+      // be at least 2*radius apart.  We square this distance to avoid
+      // performing square root calculations later.
+      FloatType const distanceSquaredThreshold = 4.0 * minRadius * minRadius;
       
       // Special case: if keypointVector is empty, just add the new point.
       if(keypointVector.empty()) {
@@ -1206,7 +1209,7 @@ namespace brick {
           - keypoint.bullseye.getOrigin();
         FloatType distanceSquared = brick::numeric::magnitudeSquared<FloatType>(
           offset);
-        if(distanceSquared < minRadiusSquared) {
+        if(distanceSquared < distanceSquaredThreshold) {
           // We've found a better keypoint that's within minRadius of
           // the new one.  Discard the new one.
           return;
@@ -1224,7 +1227,7 @@ namespace brick {
           - keypoint.bullseye.getOrigin();
         FloatType distanceSquared = brick::numeric::magnitudeSquared<FloatType>(
           offset);
-        if(distanceSquared < minRadiusSquared) {
+        if(distanceSquared < distanceSquaredThreshold) {
           keypointVector[ii] = keypoint;
           break;
         }

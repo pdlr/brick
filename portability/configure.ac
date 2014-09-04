@@ -2,10 +2,6 @@ dnl
 dnl configure.in
 dnl   Process this file with autoconf to produce a configure script.
 dnl
-dnl $Revision: 940 $
-dnl $Date: 2007-07-09 16:23:56 -0400 (Mon, 09 Jul 2007) $
-dnl
-
 
 dnl Initialization.
 AC_INIT(brickportability, 1.1)

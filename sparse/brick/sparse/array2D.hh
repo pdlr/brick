@@ -542,6 +542,19 @@ namespace brick {
       operator>>=(int numberOfBits);
 
     private:
+
+      typedef brick::numeric::Index2D Key;
+      struct Index2DComparator
+        : public std::binary_function<Key, Key, bool>
+      {
+        bool operator()(Key const& key0, Key const& key1) {
+          if(key0.getRow() > key1.getRow()) {return true;}
+          if(key0.getColumn() > key1.getColumn()) {return true;}
+          return false;
+        }
+      };
+
+        
       /* ******** Private member functions ******** */
       /** 
        * Allocate memory for array data and initialize reference count.
@@ -609,12 +622,11 @@ namespace brick {
       /* ********Private data members******** */
       size_t m_rows;
       size_t m_columns;
-      size_t m_rowStep;
       size_t m_size;
-      size_t m_storageSize;
-      Type* m_dataPtr;
+      std::map<Key, Type>* m_dictionaryPtr;
       common::ReferenceCount m_referenceCount;
     };
+    
   
     /* Non-member functions that will ultimately wind up in a different file */
 

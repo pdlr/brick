@@ -22,6 +22,94 @@ namespace brick {
 
   namespace computerVision {
 
+#if 0  /* Still in progress. */
+
+    /** 
+     * Given rectified intrinsics and extrinsics for a stereo camera,
+     * calculate the reprojection matrix Q that transforms image
+     * coordinates and disparities into 3D coordinates. 
+     *
+     * @param intrinsics0 This argument specifies the camera
+     * intrinsics corresponding to rectified images from the first
+     * (usually left) camera.
+     * 
+     * @param intrinsics1 This argument specifies the camera
+     * intrinsics corresponding to rectified images from the second
+     * (usually right) camera.  The value of this argument is normally
+     * identical to intrinsics0, and is permitted to differ from
+     * intrinsics0 only in the value of the U coordinate projection
+     * center.
+     * 
+     * @param camera0Tworld This argument specifies the coordinate
+     * transformation taking world coordinates and returning the
+     * corresponding coordinates in the camera coordinate system
+     * corresponding to intrinsics0.
+     * 
+     * @param camera1Tworld This argument specifies the coordinate
+     * transformation taking world coordinates and returning the
+     * corresponding coordinates in the camera coordinate system
+     * corresponding to intrinsics1.  The rotation component of this
+     * tranform must be identical to the rotation component of
+     * camera0Tworld, although the translation components may differ.
+     * 
+     * @return The return value is the calculated reprojection matrix.
+     */
+    template <class FloatType>
+    brick::numeric::Transform3D<FloatType>
+    calculateReprojectionMatrix(
+      CameraIntrinsicsPinhole<FloatType> const& intrinsics0,
+      CameraIntrinsicsPinhole<FloatType> const& intrinsics1,
+      numeric::Transform3D<FloatType> const& camera0Tworld,
+      numeric::Transform3D<FloatType> const& camera1Tworld,
+      FloatType epsilon);
+
+
+    /** 
+     * Given rectified intrinsics and a stereo baseline for a camera pair,
+     * calculate the reprojection matrix Q that transforms image
+     * coordinates and disparities into 3D coordinates.  That is:
+     *
+     * @code
+     *    |a*x|       |u|
+     *    |a*y| = Q * |v|
+     *    |a*z|       |d|
+     *    | a |       |1|
+     * @endcode
+     *
+     * where 'a' is a projective scale factor, and 'd' is along-row
+     * disparity between the two images.  This routine assumes that
+     * the cameras are displaced in a direction parallel to the image
+     * rows, as is normally the case for conventional stereo pairs.
+     *
+     * Note that it is permissible to have non-square image pixels.
+     * 
+     * @param intrinsics0 This argument specifies the camera
+     * intrinsics corresponding to rectified images from the first
+     * (usually left) camera.
+     * 
+     * @param intrinsics1 This argument specifies the camera
+     * intrinsics corresponding to rectified images from the second
+     * (usually right) camera.  The value of this argument is normally
+     * identical to intrinsics0, and is permitted to differ from
+     * intrinsics0 only in the value of the U coordinate projection
+     * center.
+     * 
+     * @param This argument specifies the offset between left and
+     * right cameras, which is assumed to be exactly in the direction
+     * of the camera X axis.
+     * 
+     * @return The return value is the calculated reprojection matrix.
+     */
+    template <class FloatType>
+    brick::numeric::Transform3D<FloatType>
+    calculateReprojectionMatrix(
+      CameraIntrinsicsPinhole<FloatType> const& intrinsics0,
+      CameraIntrinsicsPinhole<FloatType> const& intrinsics1,
+      FloatType baseline);
+    
+#endif /* #if 0 */
+
+    
     /**
      * This function implements the stereo rectification algorithm of
      * Fusello, Trucco, and Verri [1].  Our convention is that, from

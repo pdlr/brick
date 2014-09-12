@@ -13,6 +13,7 @@
 #ifndef BRICK_COMPUTERVISION_HHISTOGRAMEQUALIZE_H
 #define BRICK_COMPUTERVISION_HHISTOGRAMEQUALIZE_H
 
+#include <brick/common/types.hh>
 #include <brick/computerVision/image.hh>
 
 
@@ -32,7 +33,7 @@ namespace brick {
      * element indicates the number of pixels having the value 1, and so
      * forth.
      */
-    brick::numeric::Array1D<unsigned int>
+    brick::numeric::Array1D<brick::common::UInt32>
     getHistogram(const Image<GRAY8>& inputImage);
   
 

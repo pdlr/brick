@@ -20,17 +20,17 @@ namespace brick {
   namespace computerVision {
     
     // This function computes the histogram of an image.
-    numeric::Array1D<unsigned int>
+    numeric::Array1D<brick::common::UInt32>
     getHistogram(const Image<GRAY8>& inputImage)
     {
-      if(inputImage.size() > std::numeric_limits<unsigned int>::max()) {
+      if(inputImage.size() > std::numeric_limits<brick::common::UInt32>::max()) {
         std::ostringstream message;
         message << "Currently, we can only equalize images with "
                 << std::numeric_limits<int>::max() << " or fewer pixels.";
         BRICK_THROW(common::ValueException, "histogramEqualize()", message.str().c_str());
       }
 
-      numeric::Array1D<unsigned int> histogram(
+      numeric::Array1D<brick::common::UInt32> histogram(
         std::numeric_limits<Image<GRAY8>::PixelType>::max() + 1);
       histogram = 0;
       for(size_t pixelIndex = 0; pixelIndex < inputImage.size(); ++pixelIndex) {
@@ -48,10 +48,10 @@ namespace brick {
     histogramEqualize(const Image<GRAY8>& inputImage)
     {
       // Compute the histogram and CDF.
-      numeric::Array1D<unsigned int> histogram = getHistogram(inputImage);
-      numeric::Array1D<unsigned int> cdf(histogram.size());
+      numeric::Array1D<brick::common::UInt32> histogram = getHistogram(inputImage);
+      numeric::Array1D<brick::common::UInt32> cdf(histogram.size());
       std::partial_sum(histogram.begin(), histogram.end(), cdf.begin(),
-                       std::plus<unsigned int>());
+                       std::plus<brick::common::UInt32>());
 
       // Rescale the image according to the CDF.
       Image<GRAY8> outputImage(inputImage.rows(), inputImage.columns());

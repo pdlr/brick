@@ -228,6 +228,28 @@ namespace brick {
           
 
       /** 
+       * This member function returns the height of the image in
+       * pixels.
+       * 
+       * @return The return value is the number of pixels in the Y
+       * direction.
+       */
+      unsigned int
+      getImageHeight() const {return m_numPixelsY;}
+          
+
+      /** 
+       * This member function returns the width of the image in
+       * pixels.
+       * 
+       * @return The return value is the number of pixels in the X
+       * direction.
+       */
+      unsigned int
+      getImageWidth() const {return m_numPixelsX;}
+          
+
+      /** 
        * This member function returns the camera focal length
        * expressed in units of pixel width.
        * 

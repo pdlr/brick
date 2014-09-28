@@ -69,6 +69,8 @@ namespace brick {
       // FloatType getCenterV();
       // FloatType getFocalLengthX();
       // FloatType getFocalLengthY();
+      // unsigned int getImageHeight();
+      // unsigned int getImageWidth();
       // unsigned int getNumPixelsX();
       // unsigned int getNumPixelsY();
       // void setDependentParameters(...);

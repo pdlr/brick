@@ -186,6 +186,28 @@ namespace brick {
 
 
       /** 
+       * This member function returns the number of rows in images
+       * produced by the camera corresponding to *this.
+       * 
+       * @return The return value is the number of pixels in each
+       * image column.
+       */
+      virtual unsigned int
+      getImageHeight() const {return m_pinholeIntrinsics.getImageHeight();}
+
+      
+      /** 
+       * This member function returns the number of columns in images
+       * produced by the camera corresponding to *this.
+       * 
+       * @return The return value is the number of pixels in each
+       * image row.
+       */
+      virtual unsigned int
+      getImageWidth() const {return m_pinholeIntrinsics.getImageWidth();}
+
+
+      /** 
        * This function provides a reasonable starting point for
        * intrinsic parameters that are generally estimated by
        * nonlinear optimization.  See getFreeParameters().

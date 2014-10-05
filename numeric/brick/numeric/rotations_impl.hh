@@ -163,7 +163,7 @@ namespace brick {
       Type cosineHalfTheta = quaternionCopy.s();
       Vector3D<Type> sineTimesAxis(
         quaternionCopy.i(), quaternionCopy.j(), quaternionCopy.k());
-      Type sineHalfTheta = magnitude(sineTimesAxis);
+      Type sineHalfTheta = magnitude<Type>(sineTimesAxis);
 
       // Recover angle and axis.
       Type angle = 2 * std::atan2(sineHalfTheta, cosineHalfTheta);

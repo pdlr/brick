@@ -40,7 +40,7 @@ namespace brick {
      ** be tracked.  For example:
      **
      ** @code
-     **   // Compute the derivative with respect to x and y of the function
+     **   // Compute partial derivatives of the function
      **   // f(x) = x^2 + 2xy + sin(y), evaluated at x == 5.0 and y = 3.0.
      **   Array1D<double> xDerivatives("[1.0, 0.0]");
      **   Array1D<double> yDerivatives("[0.0, 1.0]");
@@ -181,7 +181,7 @@ namespace brick {
        * *this.
        */
       Type const&
-      getDerivative() const {return m_partials[0];}
+      getDerivative() const {return this->getPartialDerivative(0);}
 
 
       /** 

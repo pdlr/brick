@@ -116,7 +116,7 @@ namespace brick {
     template <class Type>
     Polynomial<Type>&
     Polynomial<Type>::
-    operator=(const Polynomial<Type> other)
+    operator=(Polynomial<Type> const& other)
     {
       if(&other != this) {
         m_coefficientArray = other.m_coefficientArray.copy();

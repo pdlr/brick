@@ -1,6 +1,16 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.8
+
+- Added several new colorspace conversions.
+  WARNING: Colorspace conversion between type of different integer precision
+  now rescales values to reflect the dynamic range of the pixel type, and 
+  output of colorspace conversion from RGB_FLOAT32 to GRAY8 is now scaled
+  differently.
+- Improved to the robustness of KeypointSelectorBullseye.
+- Added routines for reading and writing 16-bit PNG images.
+
 Revision 1.7
 
 - Added routines for reading and writing color PNG images.

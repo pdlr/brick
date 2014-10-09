@@ -4,7 +4,7 @@ dnl   Process this file with autoconf to produce a configure script.
 dnl
 
 dnl Initialization.
-AC_INIT(brickgeometry, 1.4)
+AC_INIT(brickgeometry, 1.5)
 AC_CONFIG_SRCDIR(brick/geometry/Makefile.am)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR([m4])

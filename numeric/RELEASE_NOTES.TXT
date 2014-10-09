@@ -1,6 +1,15 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.7
+
+- Added new DifferentiableScalar class to help with computing derivatives 
+  of functions.
+- Corrected compile errors in Polynomial class.
+- Added new ScatteredDataInterpolator2D class, and fleshed out 
+  implementation of BSpline2D class.
+- Other minor updates, including swapping template parameter order in rms().
+
 Revision 1.6
 
 - Added Transform3D::rotate(Vector3D const&) member function.

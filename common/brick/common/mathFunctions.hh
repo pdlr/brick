@@ -274,10 +274,12 @@ namespace brick {
     inline void splitFraction(Type arg, Type& integerPart,
                               Type& fractionalPart)
     {
-      double integerDouble;
-      fractionalPart = static_cast<Type>(std::modf(static_cast<double>(arg),
-                                                   &integerDouble));
-      integerPart = static_cast<Type>(integerDouble);
+      // std::round() won't be available until C++11.
+      integerPart = static_cast<Type>(
+        (arg >= 0.0)
+        ? std::floor(static_cast<double>(arg))
+        : std::ceil(static_cast<double>(arg)));
+      fractionalPart = arg - integerPart;
     }
 
 

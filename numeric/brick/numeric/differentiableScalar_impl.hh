@@ -91,7 +91,7 @@ namespace brick {
       }
       return *this;
     }
-      
+
 
     // This operator multiplies the differentiableScalar by another
     // differentiableScalar.
@@ -341,6 +341,17 @@ namespace brick {
       return result - arg1;
     }
     
+
+    // The additive inverse operator.
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    operator-(DifferentiableScalar<Type, Dimension> const& arg0)
+    {
+      DifferentiableScalar<Type, Dimension> result(arg0);
+      result *= Type(-1);
+      return result;
+    }
+      
     
     // This operator computes the cosine of a DifferentiableScalar
     // instance, with partial derivatives.
@@ -394,7 +405,7 @@ namespace brick {
         stream << arg1.getPartialDerivative(0);
       }
       for(uint32_t ii = 1; ii < Dimension; ++ii) {
-        stream << ", " << arg1.getPartialDerivative(0);
+        stream << ", " << arg1.getPartialDerivative(ii);
       }
       stream << "]}";
       return stream;

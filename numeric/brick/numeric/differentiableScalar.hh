@@ -15,6 +15,7 @@
 #define BRICK_NUMERIC_DIFFERENTIABLESCALAR_HH
 
 #include <inttypes.h>
+#include <iostream>
 
 namespace brick {
 
@@ -132,7 +133,7 @@ namespace brick {
         return static_cast<OtherType>(this->getValue());
       }
 
-      
+
       /** 
        * This operator multiplies the differentiableScalar by another
        * differentiableScalar.  After the multipliation, the partial
@@ -474,6 +475,53 @@ namespace brick {
     DifferentiableScalar<Type, Dimension>
     operator-(Type const& arg0,
               DifferentiableScalar<Type, Dimension> const& arg1);
+
+
+    /** 
+     * The additive inverse operator.
+     * 
+     * @param arg0 This argument is the the differentiableScalar to
+     * be negated.
+     * 
+     * @return The return value is -arg0.
+     */
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    operator-(DifferentiableScalar<Type, Dimension> const& arg0);
+
+      
+    /** 
+     * Compares the values of two DifferentiableScalar instances.
+     * 
+     * @param arg0 This argument is the first value to be compared.
+     * 
+     * @param arg1 This argument is the second value to be compared.
+     * 
+     * @return The return value is true if arg0.getValue() ==
+     * arg1.getValue(), false otherwise.
+     */
+    template<class Type, uint32_t Dimension>
+    bool
+    operator==(DifferentiableScalar<Type, Dimension> const& arg0,
+              DifferentiableScalar<Type, Dimension> const& arg1)
+    {return arg0.getValue() == arg1.getValue();}
+
+
+    /** 
+     * Compares the values of two DifferentiableScalar instances.
+     * 
+     * @param arg0 This argument is the first value to be compared.
+     * 
+     * @param arg1 This argument is the second value to be compared.
+     * 
+     * @return The return value is true if arg0.getValue() !=
+     * arg1.getValue(), false otherwise.
+     */
+    template<class Type, uint32_t Dimension>
+    bool
+    operator!=(DifferentiableScalar<Type, Dimension> const& arg0,
+              DifferentiableScalar<Type, Dimension> const& arg1)
+    {return arg0.getValue() != arg1.getValue();}
 
 
     /** 

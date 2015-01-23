@@ -276,7 +276,7 @@ namespace brick {
     {
       // std::round() won't be available until C++11.
       integerPart = static_cast<Type>(
-        (arg >= 0.0)
+        (arg >= static_cast<Type>(0.0))
         ? std::floor(static_cast<double>(arg))
         : std::ceil(static_cast<double>(arg)));
       fractionalPart = arg - integerPart;

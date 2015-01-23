@@ -13,6 +13,7 @@
 #ifndef BRICK_NUMERIC_BILINEARINTERPOLATOR_HH
 #define BRICK_NUMERIC_BILINEARINTERPOLATOR_HH
 
+#include <brick/common/types.hh>
 #include <brick/numeric/array2D.hh>
 
 namespace brick {
@@ -27,8 +28,19 @@ namespace brick {
      **   BilinearInterpolator interpolator(myArray);
      **   double myInterpolatedValue = interpolator(3.9, 2.1);
      ** @endcode
+     **
+     ** Template argument TypeIn describes the contents of the input array.
+     ** 
+     ** Template argument TypeOut describes the type of the
+     ** interpolation result.
+     **
+     ** Template argument FloatType describes the type of to be used
+     ** to for internal calculations, as well as the type that will be
+     ** used to "index" into the interpolated array.
      **/
-    template <class TypeIn, class TypeOut = double>
+    template <class TypeIn,
+              class TypeOut = brick::common::Float64,
+              class FloatType = brick::common::Float64>
     class BilinearInterpolator
     {
     public:
@@ -56,12 +68,12 @@ namespace brick {
        * @return The interpolated value.
        */
       inline TypeOut
-      operator()(double row, double column);
+      operator()(FloatType row, FloatType column);
 
     private:
 
       inline void
-      checkBounds(double row, double column) const;
+      checkBounds(FloatType row, FloatType column) const;
     
       Array2D<TypeIn> m_array;
     };

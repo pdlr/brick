@@ -18,6 +18,7 @@ TESTS			= \
 	array2DTest \
 	array3DTest \
 	arrayNDTest \
+	bilinearInterpolatorTest \
 	boxIntegrator2DTest \
 	bSplineTest \
 	bSpline2DTest \
@@ -56,6 +57,7 @@ check_PROGRAMS          = \
 	array2DTest \
 	array3DTest \
 	arrayNDTest \
+	bilinearInterpolatorTest \
 	boxIntegrator2DTest \
 	bSplineTest \
 	bSpline2DTest \
@@ -94,6 +96,7 @@ array1DTest_SOURCES		= array1DTest.cc arrayTestCommon.hh
 array2DTest_SOURCES		= array2DTest.cc arrayTestCommon.hh
 array3DTest_SOURCES		= array3DTest.cc arrayTestCommon.hh
 arrayNDTest_SOURCES		= arrayNDTest.cc arrayTestCommon.hh
+bilinearInterpolatorTest_SOURCES	= bilinearInterpolatorTest.cc
 boxIntegrator2DTest_SOURCES	= boxIntegrator2DTest.cc
 bSplineTest_SOURCES		= bSplineTest.cc
 bSpline2DTest_SOURCES		= bSpline2DTest.cc

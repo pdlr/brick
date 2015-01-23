@@ -15,6 +15,7 @@
 
 #include <limits>
 #include <vector>
+#include <brick/common/mathFunctions.hh>
 #include <brick/common/triple.hh>
 #include <brick/optimization/optimizer.hh>
 #include <brick/optimization/optimizerLineSearch.hh>
@@ -39,7 +40,7 @@ namespace brick {
      ** convergence of a class of double rank minimization algorithms,
      ** J. Inst. Math. Appl., 6:222-231, 1970.
      **/
-    template <class Functor>
+    template <class Functor, class FloatType = double>
     class OptimizerBFGS
       : public Optimizer<Functor>
     {
@@ -166,14 +167,14 @@ namespace brick {
       virtual void
       setParameters(size_t iterationLimit = 500,
                     size_t numberOfRestarts = 1,
-                    double argumentTolerance = 1.2E-7, // Generally 4*(num. Eps.)
-                    double gradientTolerance = 0.00001,
-                    double lineSearchAlpha = 1.0E-4,
-                    double lineSearchArgumentTolerance = 1.0e-7,
-                    double numericEpsilon = 3.0E-8,
-                    double maximumStepMagnitudeFactor = 100.0,
-                    double minimumFunctionValue =
-                      -std::numeric_limits<double>::max());
+                    FloatType argumentTolerance = 1.2E-7, // Generally 4*(num. Eps.)
+                    FloatType gradientTolerance = 0.00001,
+                    FloatType lineSearchAlpha = 1.0E-4,
+                    FloatType lineSearchArgumentTolerance = 1.0e-7,
+                    FloatType numericEpsilon = 3.0E-8,
+                    FloatType maximumStepMagnitudeFactor = 100.0,
+                    FloatType minimumFunctionValue =
+                      -std::numeric_limits<FloatType>::max());
     
     
       /** 
@@ -214,7 +215,7 @@ namespace brick {
        * objective function value falls to or below this value.
        */
       virtual void
-      setMinimumFunctionValue(double minimumFunctionValue) {
+      setMinimumFunctionValue(FloatType minimumFunctionValue) {
         this->m_minimumFunctionValue = minimumFunctionValue;
       }
 
@@ -274,7 +275,7 @@ namespace brick {
        * @return The return value gets progressively smaller as we
        * approach a local minimum.
        */
-      double
+      FloatType
       gradientConvergenceMetric(const argument_type& theta,
                                 const result_type& value,
                                 const argument_type& gradient);
@@ -330,16 +331,16 @@ namespace brick {
              size_t& numberOfIterations);
 
       // Data members.
-      double m_argumentTolerance;
+      FloatType m_argumentTolerance;
       size_t m_iterationLimit;
-      double m_gradientTolerance;
-      double m_lineSearchAlpha;
-      double m_lineSearchArgumentTolerance;
-      double m_maximumStepMagnitudeFactor;
-      double m_minimumFunctionValue;
+      FloatType m_gradientTolerance;
+      FloatType m_lineSearchAlpha;
+      FloatType m_lineSearchArgumentTolerance;
+      FloatType m_maximumStepMagnitudeFactor;
+      FloatType m_minimumFunctionValue;
       size_t m_numberOfRestarts;
-      double m_numericEpsilon;
-      OptimizerLineSearch<Functor> m_optimizerLineSearch;
+      FloatType m_numericEpsilon;
+      OptimizerLineSearch<Functor, FloatType> m_optimizerLineSearch;
       argument_type m_startPoint;
       int m_verbosity;
       
@@ -381,8 +382,8 @@ namespace brick {
 
   namespace optimization {
   
-    template <class Functor>
-    OptimizerBFGS<Functor>::
+    template <class Functor, class FloatType>
+    OptimizerBFGS<Functor, FloatType>::
     OptimizerBFGS()
       : Optimizer<Functor>(),
         m_argumentTolerance(),
@@ -405,8 +406,8 @@ namespace brick {
     }
 
 
-    template <class Functor>
-    OptimizerBFGS<Functor>::
+    template <class Functor, class FloatType>
+    OptimizerBFGS<Functor, FloatType>::
     OptimizerBFGS(const Functor& functor)
       : Optimizer<Functor>(functor),
         m_argumentTolerance(),
@@ -429,8 +430,8 @@ namespace brick {
     }
   
 
-    template<class Functor>
-    OptimizerBFGS<Functor>::
+    template<class Functor, class FloatType>
+    OptimizerBFGS<Functor, FloatType>::
     OptimizerBFGS(const OptimizerBFGS& source)
       : Optimizer<Functor>(source),
         m_argumentTolerance(source.m_argumentTolerance),
@@ -452,25 +453,25 @@ namespace brick {
       copyArgumentType(source.m_startPoint, this->m_startPoint);
     }
 
-    template <class Functor>
-    OptimizerBFGS<Functor>::
+    template <class Functor, class FloatType>
+    OptimizerBFGS<Functor, FloatType>::
     ~OptimizerBFGS()
     {
       // Empty
     }
 
-    template<class Functor>
+    template<class Functor, class FloatType>
     void
-    OptimizerBFGS<Functor>::
+    OptimizerBFGS<Functor, FloatType>::
     setParameters(size_t iterationLimit,
                   size_t numberOfRestarts,
-                  double argumentTolerance,
-                  double gradientTolerance,
-                  double lineSearchAlpha,
-                  double lineSearchArgumentTolerance,
-                  double numericEpsilon,
-                  double maximumStepMagnitudeFactor,
-                  double minimumFunctionValue)
+                  FloatType argumentTolerance,
+                  FloatType gradientTolerance,
+                  FloatType lineSearchAlpha,
+                  FloatType lineSearchArgumentTolerance,
+                  FloatType numericEpsilon,
+                  FloatType maximumStepMagnitudeFactor,
+                  FloatType minimumFunctionValue)
     {
       // Copy input arguments.
       this->m_iterationLimit = iterationLimit;
@@ -495,9 +496,9 @@ namespace brick {
     }    
 
     
-    template<class Functor>
+    template<class Functor, class FloatType>
     void
-    OptimizerBFGS<Functor>::
+    OptimizerBFGS<Functor, FloatType>::
     setStartPoint(const typename Functor::argument_type& startPoint)
     {
       copyArgumentType(startPoint, this->m_startPoint);
@@ -514,10 +515,10 @@ namespace brick {
     }
 
 
-    template<class Functor>
-    OptimizerBFGS<Functor>&
-    OptimizerBFGS<Functor>::
-    operator=(const OptimizerBFGS<Functor>& source)
+    template<class Functor, class FloatType>
+    OptimizerBFGS<Functor, FloatType>&
+    OptimizerBFGS<Functor, FloatType>::
+    operator=(const OptimizerBFGS<Functor, FloatType>& source)
     {
       Optimizer<Functor>::operator=(source);
       this->m_argumentTolerance = source.m_argumentTolerance;
@@ -542,20 +543,24 @@ namespace brick {
 
     // =============== Protected member functions below =============== //
 
-    template <class Functor>
-    double
-    OptimizerBFGS<Functor>::
+    template <class Functor, class FloatType>
+    FloatType
+    OptimizerBFGS<Functor, FloatType>::
     gradientConvergenceMetric(const argument_type& theta,
                               const result_type& value,
                               const argument_type& gradient)
     {
-      double returnValue = 0.0;
-      double denominator = std::max(static_cast<double>(value), 1.0);
+      FloatType returnValue = 0.0;
+      FloatType denominator = static_cast<FloatType>(
+        std::max(value, static_cast<result_type>(1.0)));
       for(size_t index = 0; index < theta.size(); ++index) {
-        double thetaAbsValue = std::fabs(theta[index]);
-        double gradientAbsValue = std::fabs(gradient[index]);
-        double candidate =
-          gradientAbsValue * std::max(thetaAbsValue, 1.0) / denominator;
+        FloatType thetaAbsValue = brick::common::absoluteValue(theta[index]);
+        FloatType gradientAbsValue = brick::common::absoluteValue(gradient[index]);
+        FloatType candidate =
+          gradientAbsValue
+          * std::max(thetaAbsValue, static_cast<FloatType>(1.0))
+          / denominator;
+        
         if(candidate > returnValue) {
           returnValue = candidate;
         }
@@ -563,15 +568,15 @@ namespace brick {
       return returnValue;
     }
 
-    template <class Functor>
+    template <class Functor, class FloatType>
     std::pair<typename Functor::argument_type, typename Functor::result_type>
-    OptimizerBFGS<Functor>::
+    OptimizerBFGS<Functor, FloatType>::
     run()
     {
       // Check that we have a valid startPoint.
       if(this->m_startPoint.size() == 0) {
         BRICK_THROW(brick::common::StateException,
-		    "OptimizerBFGS<Functor>::run()",
+		    "OptimizerBFGS<Functor, FloatType>::run()",
 		    "startPoint has not been initialized.");
       }
     
@@ -618,11 +623,11 @@ namespace brick {
                             optimum_optimalValue_gradient.second);
     }
     
-    template <class Functor>
+    template <class Functor, class FloatType>
     brick::common::Triple<typename Functor::argument_type,
                           typename Functor::result_type,
                           typename Functor::argument_type>
-    OptimizerBFGS<Functor>::
+    OptimizerBFGS<Functor, FloatType>::
     doBfgs(const argument_type& theta,
            const result_type& startValue,
            const argument_type& startGradient,
@@ -660,7 +665,7 @@ namespace brick {
       // If gradient magnitude is zero, we're already at an extremum or
       // a saddle point.  In either case, we don't know which way to go.
       // Instead, just terminate.
-      if(dotArgumentType(currentGradient, currentGradient) == 0) {
+      if(dotArgumentType<argument_type, FloatType>(currentGradient, currentGradient) == static_cast<FloatType>(0)) {
         if(this->m_verbosity > 0) {
           std::cout << "\nTerminating OptimizerBFGS::doBfgs() with "
                     << "zero gradient" << std::endl;
@@ -676,12 +681,12 @@ namespace brick {
                 << " but objective function returns gradient with "
                 << "dimensionality " << currentGradient.size() << ".";
         BRICK_THROW(brick::common::ValueException,
-		    "OptimizerBFGS<Functor>::doBfgs()",
+		    "OptimizerBFGS<Functor, FloatType>::doBfgs()",
 		    message.str().c_str());
       }
     
       // Set up inverse hessian estimate.
-      brick::numeric::Array2D<double> inverseHessian(dimensionality, dimensionality);
+      brick::numeric::Array2D<FloatType> inverseHessian(dimensionality, dimensionality);
       inverseHessian = 0.0;
       for(size_t index = 0; index < dimensionality; ++index) {
         // initialize to identity.
@@ -695,14 +700,14 @@ namespace brick {
       }
 
       // Compute maximum allowable step size, allowing for numerical issues.
-      double thetaMagnitudeSquared = 0.0;
+      FloatType thetaMagnitudeSquared = 0.0;
       for(size_t index = 0; index < dimensionality; ++index) {
         thetaMagnitudeSquared += thetaLocal[index] * thetaLocal[index];
       }
-      double thetaMagnitude = std::sqrt(thetaMagnitudeSquared);
-      double maximumStepMagnitude =
+      FloatType thetaMagnitude = brick::common::squareRoot(thetaMagnitudeSquared);
+      FloatType maximumStepMagnitude =
         (this->m_maximumStepMagnitudeFactor
-         * std::max(thetaMagnitude, static_cast<double>(dimensionality)));
+         * std::max(thetaMagnitude, static_cast<FloatType>(dimensionality)));
 
       // Now set line search parameters
       // Make sure line search optimizer has the right objective function.
@@ -756,14 +761,14 @@ namespace brick {
         }
 
         // Test for "insufficient parameter change" convergence.
-        if(contextSensitiveScale(searchStep, thetaLocal)
+        if(contextSensitiveScale<argument_type, FloatType>(searchStep, thetaLocal)
            < this->m_argumentTolerance) {
           if(this->m_verbosity > 0) {
             std::cout << "\nTerminating OptimizerBFGS::doBfgs() with "
                       << "search step magnitude ("
-                      << dotArgumentType(searchStep, searchStep)
+                      << dotArgumentType<argument_type, FloatType>(searchStep, searchStep)
                       << ") small compared to argument magnitude ("
-                      << dotArgumentType(thetaLocal, thetaLocal)
+                      << dotArgumentType<argument_type, FloatType>(thetaLocal, thetaLocal)
                       << ")." << std::endl;
           }
 
@@ -774,7 +779,7 @@ namespace brick {
         }
 
         // Temporarily save gradient value.
-        brick::numeric::Array1D<double> deltaGradient(dimensionality);
+        brick::numeric::Array1D<FloatType> deltaGradient(dimensionality);
         for(size_t index = 0; index < dimensionality; ++index) {
           deltaGradient[index] = -currentGradient[index];
         }
@@ -789,7 +794,7 @@ namespace brick {
           message << "dimensionality of gradient changed mid-stream from "
                   << dimensionality << " to " << currentGradient.size() << ".";
           BRICK_THROW(brick::common::RunTimeException,
-		      "OptimizerBFGS<Functor>::doBfgs()",
+		      "OptimizerBFGS<Functor, FloatType>::doBfgs()",
 		      message.str().c_str());
         }
 
@@ -813,23 +818,23 @@ namespace brick {
 
         // Now prepare to update estimate of the inverse hessian.
         argument_type inverseHessianTimesDeltaGradient(dimensionality);
-        matrixMultiplyArgumentType(inverseHessian, deltaGradient,
-                                   inverseHessianTimesDeltaGradient);
-        double fac = dotArgumentType(deltaGradient, searchStep);
-        if(fac < 0.0) {
-          fac = 0.0;
+        matrixMultiplyArgumentType<argument_type, FloatType>(inverseHessian, deltaGradient,
+                                              inverseHessianTimesDeltaGradient);
+        FloatType fac = dotArgumentType<argument_type, FloatType>(deltaGradient, searchStep);
+        if(fac < static_cast<FloatType>(0.0)) {
+          fac = static_cast<FloatType>(0.0);
         }
-        double fae = dotArgumentType(
+        FloatType fae = dotArgumentType<argument_type, FloatType>(
           deltaGradient, inverseHessianTimesDeltaGradient);
-        double mag2DeltaGradient = dotArgumentType(deltaGradient, deltaGradient);
-        double mag2SearchStep = dotArgumentType(searchStep, searchStep);
+        FloatType mag2DeltaGradient = dotArgumentType<argument_type, FloatType>(deltaGradient, deltaGradient);
+        FloatType mag2SearchStep = dotArgumentType<argument_type, FloatType>(searchStep, searchStep);
 
         // Are gradient change and search direction sufficiently aligned?
         if((fac * fac)
            > (this->m_numericEpsilon * mag2DeltaGradient * mag2SearchStep)) {
           // Some useful scalars.
-          double oneOverFac = 1.0 / fac;
-          double fad = 1.0 / fae;
+          FloatType oneOverFac = 1.0 / fac;
+          FloatType fad = 1.0 / fae;
 
           // Use deltaGradient as temporary storage
           for(size_t index = 0; index < dimensionality; ++index) {
@@ -845,14 +850,14 @@ namespace brick {
               // 
               // Note(xxx): redundant calculation?  this multiplication
               // is done immediately above.
-              double increment0 = (oneOverFac * searchStep[row]
+              FloatType increment0 = (oneOverFac * searchStep[row]
                                    * searchStep[column]);
               // Second DFP term.
-              double decrement1 = (fad * inverseHessianTimesDeltaGradient[row]
+              FloatType decrement1 = (fad * inverseHessianTimesDeltaGradient[row]
                                    * inverseHessianTimesDeltaGradient[column]);
               // BFGS term.  Remember that deltaGradient has been preempted for
               // temporary storage at this point.
-              double increment2 = (fae * deltaGradient[row]
+              FloatType increment2 = (fae * deltaGradient[row]
                                    * deltaGradient[column]);
               // Now do the update.
               inverseHessian(row, column) += (increment0 - decrement1
@@ -860,17 +865,17 @@ namespace brick {
             }
           }
 
-          // Array2D<double> increment0 =
+          // Array2D<FloatType> increment0 =
           //   outerProduct(oneOverFac * searchStep, searchStep);
 
           // Second DFP term.
-          // Array2D<double> decrement1 =
+          // Array2D<FloatType> decrement1 =
           //   outerProduct(fad * inverseHessianTimesDeltaGradient,
           //                inverseHessianTimesDeltaGradient);
 
           // BFGS term.  Remember that deltaGradient has been preempted for
           // temporary storage at this point.
-          // Array2D<double> increment2 =
+          // Array2D<FloatType> increment2 =
           //   outerProduct(fae * deltaGradient, deltaGradient);
 
           // Actually do the update.
@@ -880,7 +885,7 @@ namespace brick {
         }
 
         // Use Newton's method to choose the next update.
-        matrixMultiplyArgumentType(inverseHessian, currentGradient, searchStep);
+        matrixMultiplyArgumentType<argument_type, FloatType>(inverseHessian, currentGradient, searchStep);
         for(size_t index = 0; index < dimensionality; ++index) {
           searchStep[index] = -(searchStep[index]);
         }
@@ -897,7 +902,7 @@ namespace brick {
           message << "Iteration limit of " << this->m_iterationLimit
                   << " exceeded.";
           BRICK_THROW(brick::common::RunTimeException, 
-		      "OptimizerBFGS<Functor>::doBfgs()",
+		      "OptimizerBFGS<Functor, FloatType>::doBfgs()",
 		      message.str().c_str());
         }
       }

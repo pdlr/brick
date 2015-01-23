@@ -13,6 +13,7 @@
 #ifndef BRICK_OPTIMIZATION_OPTIMIZERLINESEARCH_HH
 #define BRICK_OPTIMIZATION_OPTIMIZERLINESEARCH_HH
 
+#include <brick/common/mathFunctions.hh>
 #include <brick/optimization/optimizer.hh>
 #include <brick/optimization/optimizerCommon.hh>
 
@@ -37,7 +38,7 @@ namespace brick {
      ** [1] W. H. Press et al., Numerical Recipes in C The Art of
      ** Scientific Computing, Cambridge University Press, 1988.
      **/
-    template <class Functor>
+    template <class Functor, class FloatType = double>
     class OptimizerLineSearch
       : public Optimizer<Functor>
     {
@@ -163,9 +164,9 @@ namespace brick {
        * step of the line search.
        */
       void
-      setParameters(double argumentTolerance=1.0e-7,
-                    double alpha=1.0e-4,
-                    double maximumStepMagnitude=100.0);
+      setParameters(FloatType argumentTolerance=1.0e-7,
+                    FloatType alpha=1.0e-4,
+                    FloatType maximumStepMagnitude=100.0);
     
       /**
        * Assignment operator.
@@ -199,12 +200,12 @@ namespace brick {
       run();
     
       // Data members
-      double m_alpha;
-      double m_argumentTolerance;
+      FloatType m_alpha;
+      FloatType m_argumentTolerance;
       size_t m_functionCallCount;
       argument_type m_initialStep;
-      double m_initialStepMagnitude;
-      double m_maximumStepMagnitude;
+      FloatType m_initialStepMagnitude;
+      FloatType m_maximumStepMagnitude;
       argument_type m_startGradient;
       argument_type m_startPoint;
       result_type m_startValue;
@@ -239,8 +240,8 @@ namespace brick {
 
   namespace optimization {
 
-    template <class Functor>
-    OptimizerLineSearch<Functor>::
+    template <class Functor, class FloatType>
+    OptimizerLineSearch<Functor, FloatType>::
     OptimizerLineSearch()
       : Optimizer<Functor>(),
         m_alpha(0.0),
@@ -256,8 +257,8 @@ namespace brick {
       this->setParameters();
     }
 
-    template <class Functor>
-    OptimizerLineSearch<Functor>::
+    template <class Functor, class FloatType>
+    OptimizerLineSearch<Functor, FloatType>::
     OptimizerLineSearch(const Functor& functor)
       : Optimizer<Functor>(functor),
         m_alpha(0.0),
@@ -273,8 +274,8 @@ namespace brick {
       this->setParameters();
     }
   
-    template<class Functor>
-    OptimizerLineSearch<Functor>::
+    template<class Functor, class FloatType>
+    OptimizerLineSearch<Functor, FloatType>::
     OptimizerLineSearch(const OptimizerLineSearch& source)
       : Optimizer<Functor>(source),
         m_alpha(source.m_alpha),
@@ -292,15 +293,15 @@ namespace brick {
       copyArgumentType(source.m_startPoint, this->m_startPoint);
     }
 
-    template <class Functor>
-    OptimizerLineSearch<Functor>::
+    template <class Functor, class FloatType>
+    OptimizerLineSearch<Functor, FloatType>::
     ~OptimizerLineSearch()
     {
       // Empty
     }
 
-    template <class Functor>
-    void OptimizerLineSearch<Functor>::
+    template <class Functor, class FloatType>
+    void OptimizerLineSearch<Functor, FloatType>::
     setStartPoint(const argument_type& startPoint)
     {
       // Copy input argument.
@@ -322,9 +323,9 @@ namespace brick {
       this->m_needsOptimization = true;
     }
 
-    template<class Functor>
+    template<class Functor, class FloatType>
     void
-    OptimizerLineSearch<Functor>::
+    OptimizerLineSearch<Functor, FloatType>::
     setStartPoint(const argument_type& startPoint,
                   const result_type& startValue,
                   const argument_type& startGradient)
@@ -343,14 +344,14 @@ namespace brick {
       this->m_needsOptimization = true;
     }
 
-    template<class Functor>
-    void OptimizerLineSearch<Functor>::
+    template<class Functor, class FloatType>
+    void OptimizerLineSearch<Functor, FloatType>::
     setInitialStep(const argument_type& initialStep)
     {
       // First, make sure this is a valid initialStep.  
-      double initialStepMagnitude =
-        std::sqrt(dotArgumentType(initialStep, initialStep));
-      if(initialStepMagnitude == 0.0) {
+      FloatType initialStepMagnitude =
+        brick::common::squareRoot(dotArgumentType<argument_type, FloatType>(initialStep, initialStep));
+      if(initialStepMagnitude == static_cast<FloatType>(0.0)) {
         BRICK_THROW(brick::common::ValueException, 
 		    "OptimizerLineSearch::setInitialStep()",
 		    "initialStep magnitude is equal to 0.0.");
@@ -370,11 +371,11 @@ namespace brick {
       this->m_needsOptimization = true;
     }
   
-    template<class Functor>
-    void OptimizerLineSearch<Functor>::
-    setParameters(double argumentTolerance,
-                  double alpha,
-                  double maximumStepMagnitude)
+    template<class Functor, class FloatType>
+    void OptimizerLineSearch<Functor, FloatType>::
+    setParameters(FloatType argumentTolerance,
+                  FloatType alpha,
+                  FloatType maximumStepMagnitude)
     {
       this->m_argumentTolerance = argumentTolerance;
       this->m_alpha = alpha;
@@ -389,8 +390,8 @@ namespace brick {
       this->m_needsOptimization = true;
     }    
   
-    template <class Functor>
-    OptimizerLineSearch<Functor>& OptimizerLineSearch<Functor>::
+    template <class Functor, class FloatType>
+    OptimizerLineSearch<Functor, FloatType>& OptimizerLineSearch<Functor, FloatType>::
     operator=(const OptimizerLineSearch& source)
     {
       // First, call the assignment operator of the parent class.
@@ -410,9 +411,9 @@ namespace brick {
       return *this;
     }
 
-    template <class Functor>
+    template <class Functor, class FloatType>
     std::pair<typename Functor::argument_type, typename Functor::result_type>
-    OptimizerLineSearch<Functor>::
+    OptimizerLineSearch<Functor, FloatType>::
     run()
     {
       // Make sure all required starting values have been specified.
@@ -434,8 +435,9 @@ namespace brick {
       }
 
       // Compute degree of similarity between startGradient and initialStep.
-      double slope = dotArgumentType(this->m_startGradient, initialStep);
-      if(slope >= 0.0) {
+      FloatType slope = dotArgumentType<argument_type, FloatType>(
+        this->m_startGradient, initialStep);
+      if(slope >= static_cast<FloatType>(0.0)) {
         std::ostringstream message;
         message << "Initial search direction: " << initialStep << " "
                 << "is not downhill with respect to initial gradient: "
@@ -446,20 +448,20 @@ namespace brick {
       }
 
       // Compute smallest allowable step, allowing for numerical issues.
-      double scale = contextSensitiveScale(initialStep, this->m_startPoint);
-      if(scale == 0.0) {
+      FloatType scale = contextSensitiveScale<argument_type, FloatType>(initialStep, this->m_startPoint);
+      if(scale == static_cast<FloatType>(0.0)) {
         BRICK_THROW(brick::common::RunTimeException,
 		    "OptimizerLineSearch::run()",
 		    "Invalid initial scale.  "
 		    "Perhaps initialStep is the zero vector.");
       }
-      double minimumLambda = this->m_argumentTolerance / scale;
+      FloatType minimumLambda = this->m_argumentTolerance / scale;
 
       // Now do the search.
-      double lambdaValue = 1.0;
+      FloatType lambdaValue = 1.0;
       argument_type nextSamplePoint(initialStep.size());
-      double previousLambdaValue = 1.0;
-      double previousNextFunctionValue = this->m_startValue;
+      FloatType previousLambdaValue = 1.0;
+      FloatType previousNextFunctionValue = this->m_startValue;
       while(1) {
         // Check first termination criterion.
         // Note: this differs from NRC in that NRC first computes
@@ -467,7 +469,7 @@ namespace brick {
         // returns it to the calling context if the following conditional
         // passes.
         if(lambdaValue < minimumLambda) {
-          // In this case, root finding programs should double check
+          // In this case, root finding programs should FloatType check
           // convergence!
           copyArgumentType(this->m_startPoint, nextSamplePoint);
           // Note: This return value differs from NRC, in that we return
@@ -493,46 +495,46 @@ namespace brick {
         }
 
         // Compute next value of lambda.
-        double lambdaHat;
-        if(lambdaValue == 1.0) {
+        FloatType lambdaHat;
+        if(lambdaValue == static_cast<FloatType>(1.0)) {
           lambdaHat =
             (-slope / (2.0 * (nextFunctionValue - this->m_startValue
                               - slope)));
         } else {
           // Buld vector.
-          double b0 = (nextFunctionValue - this->m_startValue
+          FloatType b0 = (nextFunctionValue - this->m_startValue
                        - (lambdaValue * slope));
-          double b1 = (previousNextFunctionValue - this->m_startValue
+          FloatType b1 = (previousNextFunctionValue - this->m_startValue
                        - (previousLambdaValue * slope));
           // Build matrix.
-          double deltaLambda = lambdaValue - previousLambdaValue;
-          double a00 = 1.0 / (lambdaValue * lambdaValue * deltaLambda);
-          double a01 = -1.0 / (previousLambdaValue * previousLambdaValue
+          FloatType deltaLambda = lambdaValue - previousLambdaValue;
+          FloatType a00 = 1.0 / (lambdaValue * lambdaValue * deltaLambda);
+          FloatType a01 = -1.0 / (previousLambdaValue * previousLambdaValue
                                * deltaLambda);
-          double a10 = -previousLambdaValue / (lambdaValue * lambdaValue
+          FloatType a10 = -previousLambdaValue / (lambdaValue * lambdaValue
                                                * deltaLambda);
-          double a11 = lambdaValue / (previousLambdaValue * previousLambdaValue
+          FloatType a11 = lambdaValue / (previousLambdaValue * previousLambdaValue
                                       * deltaLambda);
           // Do matrix multiplication.
-          double ab0 = a00 * b0 + a01 * b1;
-          double ab1 = a10 * b0 + a11 * b1;
+          FloatType ab0 = a00 * b0 + a01 * b1;
+          FloatType ab1 = a10 * b0 + a11 * b1;
 
           // Use result to choose next value of lambda.
-          if(ab0 == 0.0) {
-            if(ab1 == 0.0) {
+          if(ab0 == static_cast<FloatType>(0.0)) {
+            if(ab1 == static_cast<FloatType>(0.0)) {
               BRICK_THROW(brick::common::RunTimeException, 
 			  "OptimizerLineSearch::run()",
 			  "Invalid value for internal variable ab1.");
             }
             lambdaHat = -slope / (2.0 * ab1);
           } else {
-            double discriminant = ab1 * ab1 - (3.0 * ab0 * slope);
-            if(discriminant < 0.0) {
+            FloatType discriminant = ab1 * ab1 - (3.0 * ab0 * slope);
+            if(discriminant < static_cast<FloatType>(0.0)) {
               BRICK_THROW(brick::common::RunTimeException,
 			  "OptimizerLineSearch::run()",
 			  "Roundoff error, discriminant < 0.0");
             }
-            lambdaHat = (-ab1 + std::sqrt(discriminant)) / (3.0 * ab0);
+            lambdaHat = (-ab1 + brick::common::squareRoot(discriminant)) / (3.0 * ab0);
           }
           if(lambdaHat > (0.5 * lambdaValue)) {
             lambdaHat = 0.5 * lambdaValue;

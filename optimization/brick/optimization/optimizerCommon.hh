@@ -14,6 +14,7 @@
 #define BRICK_OPTIMIZATION_OPTIMIZERCOMMON_HH
 
 #include <cmath>
+#include <brick/common/mathFunctions.hh>
 #include <brick/numeric/array2D.hh>
 
 namespace brick {
@@ -29,8 +30,8 @@ namespace brick {
      * @param point A starting point for use in the scaling calculation.
      * @return A scale factor, always greater than zero.
      */
-    template <class ArgumentType>
-    double
+    template <class ArgumentType, class FloatType = double>
+    FloatType
     contextSensitiveScale(const ArgumentType& vector,
                           const ArgumentType& point);
 
@@ -52,21 +53,21 @@ namespace brick {
      * This function computes the dot product of two ArgumentType instances.
      * Note that ArgumentType is assumed to be a vector class supporting
      * operator[](size_t) for const access to its elements, and providing
-     * a size() member function.  The dot product is returned as a double.
+     * a size() member function.  The dot product is returned as a FloatType.
      * 
      * @param argument0 This argument is the first term in the dot product.
      * @param argument1 This argument is the second term in the dot product.
      * @return The sum of the products of corresponding elements of
      * the two arguments.
      */
-    template <class ArgumentType>
-    double
+    template <class ArgumentType, class FloatType = double>
+    FloatType
     dotArgumentType(const ArgumentType& argument0,
                     const ArgumentType& argument1);
 
 
     /** 
-     * This function computes matrix product of an Array2D<double> instance
+     * This function computes matrix product of an Array2D<FloatType> instance
      * and an ArgumentType instance.  Note that ArgumentType is assumed to
      * be a vector class supporting operator[](size_t) for const access to
      * its elements, and providing a size() member function.  The
@@ -78,9 +79,9 @@ namespace brick {
      * @param result The elements of this argument will be  set to the
      * result of the matrix * vector product.
      */
-    template <class ArgumentType>
+    template <class ArgumentType, class FloatType = double>
     void
-    matrixMultiplyArgumentType(const brick::numeric::Array2D<double>& matrix0,
+    matrixMultiplyArgumentType(const brick::numeric::Array2D<FloatType>& matrix0,
                                const ArgumentType& vector0,
                                ArgumentType& result);
 
@@ -112,8 +113,8 @@ namespace brick {
 
   namespace optimization {
 
-    template <class ArgumentType>
-    double
+    template <class ArgumentType, class FloatType>
+    FloatType
     contextSensitiveScale(const ArgumentType& vector,
                           const ArgumentType& point)
     {
@@ -121,14 +122,14 @@ namespace brick {
         BRICK_THROW(brick::common::ValueException, "contextSensitiveScale",
 		    "Scaling arguments have different sizes.");
       }
-      double chosenScale = 0.0;
+      FloatType chosenScale = 0.0;
       for(size_t index = 0; index < vector.size(); ++index) {
-        double vectorElement = fabs(vector[index]);
-        double pointElement = fabs(point[index]);
-        if(pointElement < 1.0) {
-          pointElement = 1.0;
+        FloatType vectorElement = brick::common::absoluteValue(vector[index]);
+        FloatType pointElement = brick::common::absoluteValue(point[index]);
+        if(pointElement < static_cast<FloatType>(1.0)) {
+          pointElement = static_cast<FloatType>(1.0);
         }
-        double scaleCandidate = vectorElement / pointElement;
+        FloatType scaleCandidate = vectorElement / pointElement;
         if(scaleCandidate > chosenScale) {
           chosenScale = scaleCandidate;
         }
@@ -154,8 +155,8 @@ namespace brick {
 
     
 // This function computes the dot product of two ArgumentType instances.
-    template <class ArgumentType>
-    double
+    template <class ArgumentType, class FloatType>
+    FloatType
     dotArgumentType(const ArgumentType& argument0,
                     const ArgumentType& argument1)
     {
@@ -165,18 +166,18 @@ namespace brick {
 		    "Input arguments have different size.");
       }
       // Now compute the dot product.
-      double result = 0.0;
+      FloatType result = 0.0;
       for(size_t index = 0; index < argument0.size(); ++index){
         result += argument0[index] * argument1[index];
       }
       return result;
     }
 
-// This function computes matrix product of an Array2D<double> instance
-// and an ArgumentType instance.
-    template <class ArgumentType>
+    // This function computes matrix product of an Array2D<FloatType> instance
+    // and an ArgumentType instance.
+    template <class ArgumentType, class FloatType>
     void
-    matrixMultiplyArgumentType(const brick::numeric::Array2D<double>& matrix0,
+    matrixMultiplyArgumentType(const brick::numeric::Array2D<FloatType>& matrix0,
                                const ArgumentType& vector0,
                                ArgumentType& result)
     {

@@ -571,7 +571,7 @@ namespace brick {
         this->m_functor.computeGradientAndHessian(theta, dEdX, d2EdX2);
 
         // Gradient almost zero?
-        if(dotArgumentType(dEdX,dEdX) <= this->m_minGrad) {
+        if(dotArgumentType<argument_type, FloatType>(dEdX,dEdX) <= this->m_minGrad) {
           this->verboseWrite("Tiny gradient, terminating iteration.\n", 1);
           break;
         }

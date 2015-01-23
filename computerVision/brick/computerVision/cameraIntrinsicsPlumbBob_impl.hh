@@ -22,8 +22,6 @@
 #include <iomanip>
 #include <brick/common/expect.hh>
 #include <brick/computerVision/cameraIntrinsicsPlumbBob.hh>
-#include <brick/optimization/optimizerBFGS.hh>
-#include <brick/optimization/optimizerNelderMead.hh>
 
 namespace brick {
 
@@ -408,7 +406,7 @@ namespace brick {
       // The if clause here is to avoid Vector2D throwing an exception
       // if point.z() == 0.
       brick::numeric::Vector2D<FloatType> normalizedPoint;
-      if(point.z() != 0.0) {
+      if(point.z() != static_cast<FloatType>(0.0)) {
         normalizedPoint.setValue(point.x(), point.y(), point.z());
       }
     

@@ -136,7 +136,7 @@ namespace brick {
       // Now optimize to find a better answer.
       typedef privateCode::ReverseProjectionObjective<FloatType> LocalObjective;
       LocalObjective objective(*this, pixelPosition);
-      OptimizerBFGS<LocalObjective> optimizer(objective);
+      OptimizerBFGS<LocalObjective, FloatType> optimizer(objective);
       optimizer.setStartPoint(startPoint);
       brick::numeric::Array1D<FloatType> endPoint = optimizer.optimum();
       FloatType residual = optimizer.optimalValue();
@@ -276,19 +276,25 @@ namespace brick {
         // out-of-bounds uvPosition is.  We'll call this "violation."
         FloatType uViolation = 0.0;
         FloatType scaleU = m_intrinsicsPtr->getNumPixelsX() / 10.0;
-        if(uvPosition.x() < 0) {
+        if(uvPosition.x() < static_cast<FloatType>(0)) {
           uViolation = -uvPosition.x() / scaleU;
-        } else if(uvPosition.x() >= m_intrinsicsPtr->getNumPixelsX()) {
-          uViolation = ((uvPosition.x() - m_intrinsicsPtr->getNumPixelsX())
-                        / scaleU);
+        } else if(uvPosition.x()
+                  >= static_cast<FloatType>(m_intrinsicsPtr->getNumPixelsX())) {
+          uViolation =
+            ((uvPosition.x()
+              - static_cast<FloatType>(m_intrinsicsPtr->getNumPixelsX()))
+             / scaleU);
         }
         FloatType vViolation = 0.0;
         FloatType scaleV = m_intrinsicsPtr->getNumPixelsY() / 10.0;
-        if(uvPosition.y() < 0) {
+        if(uvPosition.y() < static_cast<FloatType>(0)) {
           vViolation = -uvPosition.y() / scaleV;
-        } else if(uvPosition.y() >= m_intrinsicsPtr->getNumPixelsY()) {
-          vViolation = ((uvPosition.y() - m_intrinsicsPtr->getNumPixelsY())
-                        / scaleV);
+        } else if(uvPosition.y()
+                  >= static_cast<FloatType>(m_intrinsicsPtr->getNumPixelsY())) {
+          vViolation =
+            ((uvPosition.y()
+              - static_cast<FloatType>(m_intrinsicsPtr->getNumPixelsY()))
+             / scaleV);
         }
 
         // Bounds penaly is violation**8 so as to dominate the r**6
@@ -325,12 +331,15 @@ namespace brick {
         FloatType scaleU = m_intrinsicsPtr->getNumPixelsX() / 10.0;
         FloatType dUVdX = 0.0;  // <-- derivative of uViolation wrt X.
         FloatType dUVdY = 0.0;  // <-- derivative of uViolation wrt Y.
-        if(uValue < 0) {
+        if(uValue < static_cast<FloatType>(0)) {
           uViolation = -uValue / scaleU;
           dUVdX = -dUdX / scaleU;
           dUVdY = -dUdY / scaleU;
-        } else if(uValue >= m_intrinsicsPtr->getNumPixelsX()) {
-          uViolation = (uValue - m_intrinsicsPtr->getNumPixelsX()) / scaleU;
+        } else if(uValue
+                  >= static_cast<FloatType>(m_intrinsicsPtr->getNumPixelsX())) {
+          uViolation =
+            (uValue - static_cast<FloatType>(m_intrinsicsPtr->getNumPixelsX()))
+            / scaleU;
           dUVdX = dUdX / scaleU;
           dUVdY = dUdY / scaleU;
         }
@@ -338,12 +347,15 @@ namespace brick {
         FloatType scaleV = m_intrinsicsPtr->getNumPixelsY() / 10.0;
         FloatType dVVdX = 0.0;  // <-- derivative of vViolation wrt X.
         FloatType dVVdY = 0.0;  // <-- derivative of vViolation wrt Y.
-        if(vValue < 0) {
+        if(vValue < static_cast<FloatType>(0)) {
           vViolation = -vValue / scaleV;
           dVVdX = -dVdX / scaleV;
           dVVdY = -dVdY / scaleV;
-        } else if(vValue >= m_intrinsicsPtr->getNumPixelsY()) {
-          vViolation = (vValue - m_intrinsicsPtr->getNumPixelsY()) / scaleV;
+        } else if(vValue
+                  >= static_cast<FloatType>(m_intrinsicsPtr->getNumPixelsY())) {
+          vViolation =
+            (vValue - static_cast<FloatType>(m_intrinsicsPtr->getNumPixelsY()))
+            / scaleV;
           dVVdX = dVdX / scaleV;
           dVVdY = dVdY / scaleV;
         }

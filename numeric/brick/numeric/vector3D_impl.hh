@@ -182,7 +182,7 @@ namespace brick {
     Vector3D<Type>::
     operator/=(Type const& scalar)
     {
-      if (scalar == 0) {
+      if (scalar == static_cast<Type>(0)) {
         BRICK_THROW(common::ValueException, "Vector3D::operator/=(Type)",
                     "Can't divide by zero.");
       }

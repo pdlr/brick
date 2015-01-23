@@ -5,7 +5,7 @@
 * Header file defining inline and template functions for the
 * BilinearInterpolator class.
 *
-* Copyright (C) 1999-2007,2011 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 1999-2007,2011,2015 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
@@ -31,7 +31,7 @@ namespace brick {
     template <class TypeIn, class TypeOut, class FloatType>
     inline TypeOut
     BilinearInterpolator<TypeIn, TypeOut, FloatType>::
-    operator()(FloatType row, FloatType column)
+    operator()(FloatType row, FloatType column) const
     {
       this->checkBounds(row, column);
 
@@ -48,10 +48,12 @@ namespace brick {
       FloatType y0 = 1.0 - y1;
       size_t index0 = m_array.columns() * j0 + i0;
       return TypeOut(
-        x0 * (y0 * this->m_array(index0)
-              + y1 * this->m_array(index0 + m_array.columns()))
-        + x1 * (y0 * this->m_array(index0 + 1)
-                + y1 * this->m_array(index0 + m_array.columns() + 1)));
+        x0 * (y0 * static_cast<FloatType>(this->m_array(index0))
+              + y1 * static_cast<FloatType>(
+                this->m_array(index0 + m_array.columns())))
+        + x1 * (y0 * static_cast<FloatType>(this->m_array(index0 + 1))
+                + y1 * static_cast<FloatType>(
+                  this->m_array(index0 + m_array.columns() + 1))));
     }
 
 

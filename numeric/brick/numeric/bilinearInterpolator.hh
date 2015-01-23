@@ -4,7 +4,7 @@
 *
 * Header file declaring BilinearInterpolator class.
 *
-* Copyright (C) 1999-2007,2011 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 1999-2007,2011,2015 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
@@ -68,7 +68,7 @@ namespace brick {
        * @return The interpolated value.
        */
       inline TypeOut
-      operator()(FloatType row, FloatType column);
+      operator()(FloatType row, FloatType column) const;
 
     private:
 

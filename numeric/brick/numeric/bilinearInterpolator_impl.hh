@@ -70,8 +70,8 @@ namespace brick {
     {
 #ifdef BRICK_NUMERIC_CHECKBOUNDS
       int row0 = static_cast<int>(row);
-      if(row0 < static_cast<FloatType>(0)
-         || ((row0 + static_cast<FloatType>(1))
+      if(row0 < 0
+         || (static_cast<FloatType>(row0 + 1)
              >= static_cast<FloatType>(m_array.rows()))) {
         std::ostringstream message;
         message << "Row index " << row << " is invalid for a(n) "
@@ -81,8 +81,8 @@ namespace brick {
                     message.str().c_str());
       }
       int column0 = static_cast<int>(column);
-      if(column0 < static_cast<FloatType>(0)
-         || ((column0 + static_cast<FloatType>(1))
+      if(column0 < 0
+         || (static_cast<FloatType>(column0 + 1)
              >= static_cast<FloatType>(m_array.columns()))) {
         std::ostringstream message;
         message << "Column index " << column << " is too high "

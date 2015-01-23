@@ -12,6 +12,8 @@
 
 #include <brick/common/functional.hh>
 #include <brick/numeric/array1D.hh>
+#include <brick/numeric/array2D.hh>
+#include <brick/numeric/bilinearInterpolator.hh>
 #include <brick/numeric/differentiableScalar.hh>
 #include <brick/test/testFixture.hh>
 
@@ -55,6 +57,7 @@ namespace brick {
 
       // Additional tests.
       void testOverallFunction();
+      void testWithBilinearInterpolator();
     
     private:
 
@@ -103,6 +106,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testSine);
 
       BRICK_TEST_REGISTER_MEMBER(testOverallFunction);
+      BRICK_TEST_REGISTER_MEMBER(testWithBilinearInterpolator);
     }
 
 
@@ -115,25 +119,18 @@ namespace brick {
         BRICK_TEST_ASSERT(
           approximatelyEqual(ds.getValue(), 0.0, this->m_defaultTolerance));
         BRICK_TEST_ASSERT(
-          approximatelyEqual(ds.getDerivative(), 1.0, this->m_defaultTolerance));
+          approximatelyEqual(ds.getDerivative(), 0.0, this->m_defaultTolerance));
       }
 
       {
         DifferentiableScalar<double, 4> ds;
         BRICK_TEST_ASSERT(
           approximatelyEqual(ds.getValue(), 0.0, this->m_defaultTolerance));
-        BRICK_TEST_ASSERT(
-          approximatelyEqual(ds.getPartialDerivative(0), 1.0,
-                             this->m_defaultTolerance));
-        BRICK_TEST_ASSERT(
-          approximatelyEqual(ds.getPartialDerivative(1), 0.0,
-                             this->m_defaultTolerance));
-        BRICK_TEST_ASSERT(
-          approximatelyEqual(ds.getPartialDerivative(2), 0.0,
-                             this->m_defaultTolerance));
-        BRICK_TEST_ASSERT(
-          approximatelyEqual(ds.getPartialDerivative(3), 0.0,
-                             this->m_defaultTolerance));
+        for(unsigned int ii = 0; ii < 4; ++ii) {
+          BRICK_TEST_ASSERT(
+            approximatelyEqual(ds.getPartialDerivative(ii), 0.0,
+                               this->m_defaultTolerance));
+        }
       }
     }
 
@@ -149,7 +146,7 @@ namespace brick {
           BRICK_TEST_ASSERT(
             approximatelyEqual(ds.getValue(), xx, this->m_defaultTolerance));
           BRICK_TEST_ASSERT(
-            approximatelyEqual(ds.getDerivative(), 1.0,
+            approximatelyEqual(ds.getDerivative(), 0.0,
                                this->m_defaultTolerance));
         }
 
@@ -157,18 +154,11 @@ namespace brick {
           DifferentiableScalar<double, 4> ds;
           BRICK_TEST_ASSERT(
             approximatelyEqual(ds.getValue(), 0.0, this->m_defaultTolerance));
-          BRICK_TEST_ASSERT(
-            approximatelyEqual(ds.getPartialDerivative(0), 1.0,
-                               this->m_defaultTolerance));
-          BRICK_TEST_ASSERT(
-            approximatelyEqual(ds.getPartialDerivative(1), 0.0,
-                               this->m_defaultTolerance));
-          BRICK_TEST_ASSERT(
-            approximatelyEqual(ds.getPartialDerivative(2), 0.0,
-                               this->m_defaultTolerance));
-          BRICK_TEST_ASSERT(
-            approximatelyEqual(ds.getPartialDerivative(3), 0.0,
-                               this->m_defaultTolerance));
+          for(unsigned int ii = 0; ii < 4; ++ii) {
+            BRICK_TEST_ASSERT(
+              approximatelyEqual(ds.getPartialDerivative(ii), 0.0,
+                                 this->m_defaultTolerance));
+          }
         }
         
       }
@@ -653,8 +643,8 @@ namespace brick {
                                   / (2.0 * epsilon));
 
       DifferentiableScalar<double, 2> scalar0(3.0);
+      scalar0.setPartialDerivative(0, 1.0);
       DifferentiableScalar<double, 2> scalar1(4.0);
-      scalar1.setPartialDerivative(0, 0.0);
       scalar1.setPartialDerivative(1, 1.0);
       DifferentiableScalar<double, 2> result =
         this->continuousFunction(scalar0, scalar1);
@@ -672,6 +662,55 @@ namespace brick {
         approximatelyEqual(result.getPartialDerivative(1),
                            referencePartial1,
                            this->m_relaxedTolerance));
+    }
+
+
+    void
+    DifferentiableScalarTest::
+    testWithBilinearInterpolator()
+    {
+      typedef DifferentiableScalar<double, 2> Scalar2;
+
+      // Constant factors for our simple linear equation.
+      double const k0 = 2.0;
+      double const k1 = 3.0;
+      
+      Array2D<double> myArray(3, 5);
+      for(unsigned int rr = 0; rr < myArray.rows(); ++rr) {
+        for(unsigned int cc = 0; cc < myArray.columns(); ++cc) {
+          myArray(rr, cc) = k0 * rr + k1 * cc;
+        }
+      }
+
+      BilinearInterpolator<double, Scalar2, Scalar2> interpolator(myArray);
+      for(double yy = 0.0;
+          yy < static_cast<double>(myArray.rows() - 1.0);
+          yy += 0.1) {
+
+        for(double xx = 0.0;
+            xx < static_cast<double>(myArray.columns() - 1.0);
+            xx += 0.1) {
+
+          double nominalValue = k0 * yy + k1 * xx;
+
+          Scalar2 xIndex(xx);
+          xIndex.setPartialDerivative(1, 1.0);
+          Scalar2 yIndex(yy);
+          yIndex.setPartialDerivative(0, 1.0);
+          Scalar2 observedValue = interpolator(yIndex, xIndex);
+
+          BRICK_TEST_ASSERT(
+            approximatelyEqual(observedValue.getValue(),
+                               nominalValue, this->m_defaultTolerance));
+          BRICK_TEST_ASSERT(
+            approximatelyEqual(observedValue.getPartialDerivative(0),
+                               k0, this->m_defaultTolerance));
+          BRICK_TEST_ASSERT(
+            approximatelyEqual(observedValue.getPartialDerivative(1),
+                               k1, this->m_defaultTolerance));
+        }
+      }
+
     }
 
     

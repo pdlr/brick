@@ -29,10 +29,18 @@ namespace brick {
      **   // Compute the derivative with respect to x of the function
      **   // f(x) = x^2 + sin(x), evaluated at x == 5.0;
      **   DifferentiableScalar xx(5.0);
+     **   xx.setDerivative(1.0);
      **   DifferentiableScalar result = xx * xx + sin(xx);
      **   std::cout << "df/dx = " << result.getDerivative() << std::endl;
      ** @endcode
      **
+     ** In the previous example, we initialize xx with value 5.  Since
+     ** we are computing d/dx, and and the quantity represented by
+     ** variable xx is the value of x, the derivative of the value
+     ** represented by xx is (trivially) 1.0.  After the value and
+     ** derivative of xx have been set, the subsequent mathematical
+     ** operations transparently update the derivative of the result.
+     ** 
      ** The first template argument of this class determines the
      ** precision with which calculations are to be carried out, while
      ** the second template argument specifies the dimensionality of
@@ -60,21 +68,18 @@ namespace brick {
 
       /** 
        * The default constructor makes a differentiableScalar with
-       * value 0, first partial derivative equal to 1, and all other
-       * partials equal to 0.
+       * value 0, and all partial derivatives equal to 0.
        */
       DifferentiableScalar();
 
 
       /** 
        * This default constructor makes a differentiableScalar with a
-       * user specified value, first partial derivative equal to 1,
-       * and all other partials equal to 0.
+       * user specified value, and all partial derivatives equal to 0.
        *
        * @param value This argument specifies the scalar value of
        * *this.
        */
-      explicit
       DifferentiableScalar(Type value);
 
 
@@ -90,7 +95,6 @@ namespace brick {
        * to the value of class template argument Dimension.
        */
       template <class Iter>
-      explicit
       DifferentiableScalar(Type value, Iter partialsBegin);
 
       
@@ -115,6 +119,20 @@ namespace brick {
       operator=(DifferentiableScalar<Type, Dimension> const& other);
       
 
+      /** 
+       * This type conversion operator allows implicit casting to a
+       * scalar value, discarding derivatives.
+       * 
+       * @return The return value is the scalar value represented by
+       * *this.
+       */
+      template <class OtherType>
+      explicit
+      operator OtherType() const {
+        return static_cast<OtherType>(this->getValue());
+      }
+
+      
       /** 
        * This operator multiplies the differentiableScalar by another
        * differentiableScalar.  After the multipliation, the partial
@@ -264,6 +282,42 @@ namespace brick {
 
 
     /** 
+     * This operator multiplies a DifferentiableScalar instance by a
+     * scalar.
+     * 
+     * @param arg0 This argument is the DifferentiableScalar instance
+     * by which arg1 is to be multiplied.
+     * 
+     * @param arg1 This argument is the scalar to be multiplied by
+     * arg0.
+     * 
+     * @return The return value is the result of the multiplication.
+     */
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    operator*(DifferentiableScalar<Type, Dimension> const& arg0,
+              Type const& arg1);
+
+
+    /** 
+     * This operator multiplies a scalar by a DifferentiableScalar
+     * instance.
+     * 
+     * @param arg0 This argument is the scalar by which arg1 is to
+     * be multiplied.
+     * 
+     * @param arg1 This argument is the DifferentiableScalar instance
+     * to be multiplied by arg0.
+     * 
+     * @return The return value is the result of the multiplication.
+     */
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    operator*(Type const& arg0,
+              DifferentiableScalar<Type, Dimension> const& arg1);
+
+
+    /** 
      * This operator divides two DifferentiableScalar instances,
      * applying the quotient rule to compute the derivatives of the
      * result.
@@ -279,6 +333,42 @@ namespace brick {
     template<class Type, uint32_t Dimension>
     DifferentiableScalar<Type, Dimension>
     operator/(DifferentiableScalar<Type, Dimension> const& arg0,
+              DifferentiableScalar<Type, Dimension> const& arg1);
+
+
+    /** 
+     * This operator divides a DifferentiableScalar instance by a
+     * scalar.
+     * 
+     * @param arg0 This argument is the DifferentiableScalar instance
+     * by which arg1 is to be divided.
+     * 
+     * @param arg1 This argument is the scalar to be divided by
+     * arg0.
+     * 
+     * @return The return value is the result of the division.
+     */
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    operator/(DifferentiableScalar<Type, Dimension> const& arg0,
+              Type const& arg1);
+
+
+    /** 
+     * This operator divides a scalar by a DifferentiableScalar
+     * instance.
+     * 
+     * @param arg0 This argument is the scalar by which arg1 is to
+     * be divided.
+     * 
+     * @param arg1 This argument is the DifferentiableScalar instance
+     * to be divided by arg0.
+     * 
+     * @return The return value is the result of the division.
+     */
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    operator/(Type const& arg0,
               DifferentiableScalar<Type, Dimension> const& arg1);
 
 
@@ -300,10 +390,41 @@ namespace brick {
   
 
     /** 
-     * This operator subtracts two DifferentiableScalar instances.  Values
-     * returned by operator()(xValue) of the result of this
-     * multiplication will be equal to arg0.operator(xValue) -
-     * arg1.operator()(xValue).
+     * This operator adds a DifferentiableScalar instance to a scalar.
+     * 
+     * @param arg0 This argument is the DifferentiableScalar instance
+     * to which arg1 is to be added.
+     * 
+     * @param arg1 This argument is the scalar to be added to
+     * arg0.
+     * 
+     * @return The return value is the result of the addition.
+     */
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    operator+(DifferentiableScalar<Type, Dimension> const& arg0,
+              Type const& arg1);
+
+
+    /** 
+     * This operator adds a scalar to a DifferentiableScalar instance.
+     * 
+     * @param arg0 This argument is the scalar to which arg1 is to
+     * be added.
+     * 
+     * @param arg1 This argument is the DifferentiableScalar instance
+     * to be added to arg0.
+     * 
+     * @return The return value is the result of the addition.
+     */
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    operator+(Type const& arg0,
+              DifferentiableScalar<Type, Dimension> const& arg1);
+
+
+    /** 
+     * This operator subtracts two DifferentiableScalar instances.
      * 
      * @param arg0 This argument is the DifferentiableScalar instance
      * from which arg1 is to be subtracted.
@@ -318,6 +439,110 @@ namespace brick {
     operator-(DifferentiableScalar<Type, Dimension> const& arg0,
               DifferentiableScalar<Type, Dimension> const& arg1);
 
+
+    /** 
+     * This operator subtracts a scalar from a DifferentiableScalar
+     * instance.
+     * 
+     * @param arg0 This argument is the DifferentiableScalar instance
+     * from which arg1 is to be subtracted.
+     * 
+     * @param arg1 This argument is the scalar to be subtracted from
+     * arg0.
+     * 
+     * @return The return value is the result of the subtraction.
+     */
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    operator-(DifferentiableScalar<Type, Dimension> const& arg0,
+              Type const& arg1);
+
+
+    /** 
+     * This operator subtracts a DifferentiableScalar instance from a
+     * scalar.
+     * 
+     * @param arg0 This argument is the scalar from which arg1 is to
+     * be subtracted.
+     * 
+     * @param arg1 This argument is the DifferentiableScalar instance
+     * to be subtracted from arg0.
+     * 
+     * @return The return value is the result of the subtraction.
+     */
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    operator-(Type const& arg0,
+              DifferentiableScalar<Type, Dimension> const& arg1);
+
+
+    /** 
+     * Compares the values of two DifferentiableScalar instances.
+     * 
+     * @param arg0 This argument is the first value to be compared.
+     * 
+     * @param arg1 This argument is the second value to be compared.
+     * 
+     * @return The return value is true if arg0.getValue() >
+     * arg1.getValue(), false otherwise.
+     */
+    template<class Type, uint32_t Dimension>
+    bool
+    operator>(DifferentiableScalar<Type, Dimension> const& arg0,
+              DifferentiableScalar<Type, Dimension> const& arg1)
+    {return arg0.getValue() > arg1.getValue();}
+
+
+    /** 
+     * Compares the values of two DifferentiableScalar instances.
+     * 
+     * @param arg0 This argument is the first value to be compared.
+     * 
+     * @param arg1 This argument is the second value to be compared.
+     * 
+     * @return The return value is true if arg0.getValue() >=
+     * arg1.getValue(), false otherwise.
+     */
+    template<class Type, uint32_t Dimension>
+    bool
+    operator>=(DifferentiableScalar<Type, Dimension> const& arg0,
+               DifferentiableScalar<Type, Dimension> const& arg1)
+    {return arg0.getValue() >= arg1.getValue();}
+
+
+    /** 
+     * Compares the values of two DifferentiableScalar instances.
+     * 
+     * @param arg0 This argument is the first value to be compared.
+     * 
+     * @param arg1 This argument is the second value to be compared.
+     * 
+     * @return The return value is true if arg0.getValue() <
+     * arg1.getValue(), false otherwise.
+     */
+    template<class Type, uint32_t Dimension>
+    bool
+    operator<(DifferentiableScalar<Type, Dimension> const& arg0,
+              DifferentiableScalar<Type, Dimension> const& arg1)
+    {return arg0.getValue() < arg1.getValue();}
+
+
+    /** 
+     * Compares the values of two DifferentiableScalar instances.
+     * 
+     * @param arg0 This argument is the first value to be compared.
+     * 
+     * @param arg1 This argument is the second value to be compared.
+     * 
+     * @return The return value is true if arg0.getValue() <=
+     * arg1.getValue(), false otherwise.
+     */
+    template<class Type, uint32_t Dimension>
+    bool
+    operator<=(DifferentiableScalar<Type, Dimension> const& arg0,
+               DifferentiableScalar<Type, Dimension> const& arg1)
+    {return arg0.getValue() <= arg1.getValue();}
+    
 
     /** 
      * This operator computes the cosine of a DifferentiableScalar
@@ -343,6 +568,22 @@ namespace brick {
     template<class Type, uint32_t Dimension>
     DifferentiableScalar<Type, Dimension>
     sine(DifferentiableScalar<Type, Dimension> const& arg0);
+
+
+    /** 
+     * Stream output operator.
+     * 
+     * @param stream This argument is the output stream to which arg1
+     * will be written.
+     * 
+     * @param arg1 This argument will be formatted to the output stream.
+     * 
+     * @return The return value is the output stream after writing.
+     */
+    template<class Type, uint32_t Dimension>
+    std::ostream&
+    operator<<(std::ostream& stream,
+               DifferentiableScalar<Type, Dimension> const& arg1);
     
   } // namespace numeric
 

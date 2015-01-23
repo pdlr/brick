@@ -4,7 +4,11 @@ This file gives a high level overview of recent changes.
 Revision 1.4
 
 - Fixed a compilation error due to missing include directive in 
-  compileTimestamp.hh
+  compileTimestamp.hh.
+- Updated splitFraction() function template to tolerate a wider range
+  of types.
+- Added rough first whack at a version number class to handle "X.Y.Z"
+  style version numbers.
 
 Revision 1.3
 

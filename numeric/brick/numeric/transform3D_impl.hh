@@ -237,7 +237,7 @@ namespace brick {
 
       // Note that in general, roundoff error will make us pass these
       // tests, even for singular matrices.
-      if(det01230123 == 0.0) {
+      if(det01230123 == Type(0.0)) {
         BRICK_THROW(common::ValueException, "Transform3D::invert()",
                   "Transform is not invertible.");
       }
@@ -502,14 +502,16 @@ namespace brick {
     Transform3D<Type>::
     operator=(const Transform3D<Type>& source)
     {
-      m_00 = source.m_00; m_01 = source.m_01;
-      m_02 = source.m_02; m_03 = source.m_03;
-      m_10 = source.m_10; m_11 = source.m_11;
-      m_12 = source.m_12; m_13 = source.m_13;
-      m_20 = source.m_20; m_21 = source.m_21;
-      m_22 = source.m_22; m_23 = source.m_23;
-      m_30 = source.m_30; m_31 = source.m_31;
-      m_32 = source.m_32; m_33 = source.m_33;
+      if(&source != this) {
+        m_00 = source.m_00; m_01 = source.m_01;
+        m_02 = source.m_02; m_03 = source.m_03;
+        m_10 = source.m_10; m_11 = source.m_11;
+        m_12 = source.m_12; m_13 = source.m_13;
+        m_20 = source.m_20; m_21 = source.m_21;
+        m_22 = source.m_22; m_23 = source.m_23;
+        m_30 = source.m_30; m_31 = source.m_31;
+        m_32 = source.m_32; m_33 = source.m_33;
+      }
       return *this;
     }
 
@@ -519,13 +521,13 @@ namespace brick {
     Transform3D<Type>::
     normalize()
     {
-      if(m_33 == 0.0) {
+      if(m_33 == Type(0.0)) {
         BRICK_THROW(common::ValueException, "Transform3D::normalize()",
                   "Invalid normalization constant. "
                   "The bottom right element of a homogeneous transformation "
                   "cannot be equal to 0.0.");
       }
-      if(m_33 != 1.0) {
+      if(m_33 != Type(1.0)) {
         m_00 /= m_33;
         m_01 /= m_33;
         m_02 /= m_33;

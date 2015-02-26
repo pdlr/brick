@@ -179,7 +179,7 @@ namespace brick {
     
       // Note that in general, roundoff error will make us pass this
       // test, even for singular matrices.
-      if(det012012 == 0.0) {
+      if(det012012 == Type(0.0)) {
         BRICK_THROW(common::ValueException, "Transform2D::invert()",
                   "Transform is not invertible.");
       }
@@ -380,13 +380,13 @@ namespace brick {
     Transform2D<Type>::
     normalize()
     {
-      if(m_22 == 0.0) {
+      if(m_22 == Type(0.0)) {
         BRICK_THROW(common::ValueException, "Trahnsform2D::normalize(Type)",
                    "Invalid normalization constant. "
                    "The bottom right element of a homogeneous transformation "
                    "cannot be equal to 0.0.");
       }
-      if(m_22 != 1.0) {
+      if(m_22 != Type(1.0)) {
         m_00 /= m_22;
         m_01 /= m_22;
         m_02 /= m_22;

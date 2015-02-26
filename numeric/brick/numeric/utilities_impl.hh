@@ -23,6 +23,8 @@
 #include <sstream>
 #include <numeric>
 
+#include <brick/numeric/mathFunctions.hh>
+
 namespace brick {
 
   namespace numeric {
@@ -876,7 +878,7 @@ namespace brick {
     magnitude(Array1D<Type0> const& array0)
     {
       // TBD.
-      return static_cast<Type1>(std::sqrt(magnitudeSquared<double>(array0)));
+      return brick::numeric::squareRoot(magnitudeSquared<Type1>(array0));
     }
 
   
@@ -885,7 +887,7 @@ namespace brick {
     inline Type1
     magnitude(Vector2D<Type0> const& vector0) {
       // TBD.
-      return static_cast<Type1>(std::sqrt(magnitudeSquared<double>(vector0)));
+      return brick::numeric::squareRoot(magnitudeSquared<Type1>(vector0));
     }
 
   
@@ -893,7 +895,7 @@ namespace brick {
     template <class Type1, class Type0>
     inline Type1
     magnitude(Vector3D<Type0> const& vector0) {
-      return static_cast<Type1>(std::sqrt(magnitudeSquared<double>(vector0)));
+      return brick::numeric::squareRoot(magnitudeSquared<Type1>(vector0));
     }
 
 
@@ -1389,8 +1391,9 @@ namespace brick {
         ++iter1;
       }
       Type2 numerator = sum01 - oneOverN * sum0 * sum1;
-      Type2 denominator = std::sqrt((sum00 - oneOverN * sum0 * sum0)
-                                    * (sum11 - oneOverN * sum1 * sum1));
+      Type2 denominator = brick::numeric::squareRoot(
+        (sum00 - oneOverN * sum0 * sum0)
+        * (sum11 - oneOverN * sum1 * sum1));
       return numerator / denominator;
     }
 
@@ -1480,7 +1483,8 @@ namespace brick {
         Type1 element = static_cast<Type1>(array0[index]);
         accumulator += element * element;
       }
-      return ::sqrt(accumulator / static_cast<Type1>(array0.size()));
+      return brick::numeric::squareRoot(
+        accumulator / static_cast<Type1>(array0.size()));
     }
 
 
@@ -1579,7 +1583,7 @@ namespace brick {
     inline Type1
     standardDeviation(Array1D<Type0> const& array0)
     {
-      return ::sqrt(variance<Type1>(array0));
+      return brick::numeric::squareRoot(variance<Type1>(array0));
     }
 
 

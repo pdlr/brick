@@ -54,6 +54,7 @@ namespace brick {
       void testOperatorMinus();
       void testCosine();
       void testSine();
+      void testSquareRoot();
 
       // Additional tests.
       void testOverallFunction();
@@ -104,6 +105,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testOperatorMinus);
       BRICK_TEST_REGISTER_MEMBER(testCosine);
       BRICK_TEST_REGISTER_MEMBER(testSine);
+      BRICK_TEST_REGISTER_MEMBER(testSquareRoot);
 
       BRICK_TEST_REGISTER_MEMBER(testOverallFunction);
       BRICK_TEST_REGISTER_MEMBER(testWithBilinearInterpolator);
@@ -622,6 +624,44 @@ namespace brick {
                            this->m_defaultTolerance));
       BRICK_TEST_ASSERT(
         approximatelyEqual(sinStuff.getPartialDerivative(1),
+                           referencePartial1,
+                           this->m_defaultTolerance));
+    }
+
+
+    void
+    DifferentiableScalarTest::
+    testSquareRoot()
+    {
+      double theta0 = 0.312;
+      double theta1 = -0.125;
+
+      // This variable represents 5.0*theta0 + 2.0*theta1.
+      DifferentiableScalar<double, 2> fiveTheta0PlusTwoTheta1;
+      fiveTheta0PlusTwoTheta1.setValue(5.0 * theta0 + 2.0 * theta1);
+      fiveTheta0PlusTwoTheta1.setPartialDerivative(0, 5.0);
+      fiveTheta0PlusTwoTheta1.setPartialDerivative(1, 2.0);
+
+      // Do the operation under test. 
+      DifferentiableScalar<double, 2> sqrtStuff = squareRoot(
+        fiveTheta0PlusTwoTheta1);
+
+      // Check the result.
+      double omega = 5.0 * theta0 + 2.0 * theta1;
+      double referenceValue = brick::common::squareRoot(omega);
+      double referencePartial0 = 5.0 / (2.0 * referenceValue);
+      double referencePartial1 = 2.0 / (2.0 * referenceValue);
+      
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(sqrtStuff.getValue(),
+                           referenceValue,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(sqrtStuff.getPartialDerivative(0),
+                           referencePartial0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(sqrtStuff.getPartialDerivative(1),
                            referencePartial1,
                            this->m_defaultTolerance));
     }

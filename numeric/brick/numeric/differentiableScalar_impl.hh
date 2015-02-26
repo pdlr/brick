@@ -360,10 +360,10 @@ namespace brick {
     cosine(DifferentiableScalar<Type, Dimension> const& arg0)
     {
       DifferentiableScalar<Type, Dimension> result(
-        brick::common::cosine(arg0.getValue()));
+        brick::numeric::cosine(arg0.getValue()));
 
       // Derivative of cos(f(x)) is -sin(f(x)) * f'(x).
-      Type sineValue = brick::common::sine(arg0.getValue());
+      Type sineValue = brick::numeric::sine(arg0.getValue());
       for(uint32_t ii = 0; ii < Dimension; ++ii) {
         result.setPartialDerivative(
           ii, -sineValue * arg0.getPartialDerivative(ii));
@@ -380,13 +380,34 @@ namespace brick {
     sine(DifferentiableScalar<Type, Dimension> const& arg0)
     {
       DifferentiableScalar<Type, Dimension> result(
-        brick::common::sine(arg0.getValue()));
+        brick::numeric::sine(arg0.getValue()));
 
       // Derivative of sin(f(x)) is cos(f(x)) * f'(x).
-      Type cosineValue = brick::common::cosine(arg0.getValue());
+      Type cosineValue = brick::numeric::cosine(arg0.getValue());
       for(uint32_t ii = 0; ii < Dimension; ++ii) {
         result.setPartialDerivative(
           ii, cosineValue * arg0.getPartialDerivative(ii));
+      }
+
+      return result;
+    }
+
+
+    // This operator computes the square root of a
+    // DifferentiableScalar instance, with partial derivatives.
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    squareRoot(DifferentiableScalar<Type, Dimension> const& arg0)
+    {
+      DifferentiableScalar<Type, Dimension> result(
+        brick::numeric::squareRoot(arg0.getValue()));
+
+      // Derivative of (f(x))^(1/2) is (1/2) * (f(x))^(-1/2) * f'(x),
+      // or equivalently f'(x) / (2 * x^(1/2)).
+      Type denominator = Type(2.0) * result.getValue();
+      for(uint32_t ii = 0; ii < Dimension; ++ii) {
+        result.setPartialDerivative(
+          ii, arg0.getPartialDerivative(ii) / denominator);
       }
 
       return result;

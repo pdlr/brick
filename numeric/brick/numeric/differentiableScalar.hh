@@ -17,6 +17,8 @@
 #include <inttypes.h>
 #include <iostream>
 
+#include <brick/numeric/mathFunctions.hh>
+
 namespace brick {
 
   namespace numeric {
@@ -503,7 +505,7 @@ namespace brick {
     template<class Type, uint32_t Dimension>
     bool
     operator==(DifferentiableScalar<Type, Dimension> const& arg0,
-              DifferentiableScalar<Type, Dimension> const& arg1)
+               DifferentiableScalar<Type, Dimension> const& arg1)
     {return arg0.getValue() == arg1.getValue();}
 
 
@@ -616,6 +618,19 @@ namespace brick {
     template<class Type, uint32_t Dimension>
     DifferentiableScalar<Type, Dimension>
     sine(DifferentiableScalar<Type, Dimension> const& arg0);
+
+
+    /** 
+     * This Function computes the square root of a
+     * DifferentiableScalar instance, with partial derivatives.
+     * 
+     * @param arg0 The square of this argument will be computed.
+     * 
+     * @return The return value is the result of the calculation.
+     */
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    squareRoot(DifferentiableScalar<Type, Dimension> const& arg0);
 
 
     /** 

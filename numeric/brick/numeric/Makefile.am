@@ -49,6 +49,7 @@ brickNumeric_HEADERS	= \
 	index3D.hh \
 	filter.hh filter_impl.hh \
 	geometry2D.hh geometry2D_impl.hh \
+	mathFunctions.hh \
 	maxRecorder.hh \
 	minRecorder.hh \
 	normalizedCorrelator.hh normalizedCorrelator_impl.hh \

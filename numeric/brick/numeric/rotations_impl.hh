@@ -228,7 +228,7 @@ namespace brick {
       Vector3D<Type> direction = rodrigues / theta;
       Type cosTheta = brick::common::cosine(theta);
       Type sinTheta = brick::common::sine(theta);
-      Type oneMinusCT = 1.0 - cosTheta;
+      Type oneMinusCT = Type(1.0) - cosTheta;
 
       // The rest of this code simply implements
       // angleAxisToTransform3D(), albeit in a different way.
@@ -241,15 +241,15 @@ namespace brick {
         
       return Transform3D<Type>(
         omcxx + cosTheta, omcxy - sinTheta * direction.z(),
-        omcxz + sinTheta * direction.y(), 0.0,
+        omcxz + sinTheta * direction.y(), Type(0.0),
 
         omcxy + sinTheta * direction.z(), omcyy + cosTheta,
-        omcyz - sinTheta * direction.x(), 0.0,
+        omcyz - sinTheta * direction.x(), Type(0.0),
         
         omcxz - sinTheta * direction.y(), omcyz + sinTheta * direction.x(),
-        omczz + cosTheta, 0.0,
+        omczz + cosTheta, Type(0.0),
 
-        0.0, 0.0, 0.0, 1.0);
+        Type(0.0), Type(0.0), Type(0.0), Type(1.0));
     }
 
     

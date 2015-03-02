@@ -10,6 +10,11 @@
 ***************************************************************************
 **/
 
+#include <stdint.h>
+
+#include <fstream>
+#include <iostream>
+
 #include <brick/computerVision/test/testImages.hh>
 #include <brick/computerVision/image.hh>
 #include <brick/computerVision/imageIO.hh>
@@ -31,6 +36,7 @@ namespace brick {
       void tearDown(const std::string& /* testName */) {}
 
       // Tests of member functions.
+      void testReadPGM16();
       void testWritePNG_GRAY8();
       void testWritePNG_RGB8();
       void testWritePNG_GRAY16();
@@ -47,10 +53,53 @@ namespace brick {
     ImageIOTest()
       : brick::test::TestFixture<ImageIOTest>("ImageIOTest")
     {
+      BRICK_TEST_REGISTER_MEMBER(testReadPGM16);
       BRICK_TEST_REGISTER_MEMBER(testWritePNG_GRAY8);
       BRICK_TEST_REGISTER_MEMBER(testWritePNG_RGB8);
       BRICK_TEST_REGISTER_MEMBER(testWritePNG_GRAY16);
       BRICK_TEST_REGISTER_MEMBER(testWritePNG_RGB16);
+    }
+
+
+    void
+    ImageIOTest::
+    testReadPGM16()
+    {
+      std::string testImageFileName = "/var/tmp/brickTestImage.pgm";
+      uint32_t const imageWidth = 3;
+      uint32_t const imageHeight = 2;
+      uint8_t imageData[] = {0x00, 0x00, 0x00, 0xe8, 0x15, 0x11,
+                             0xfd, 0xf0, 0x22, 0x22, 0x21, 0x01};
+
+      std::ofstream outputStream(testImageFileName.c_str());
+      if(!outputStream) {
+        BRICK_THROW(brick::common::IOException, "ImageIOTest::testReadPGM16()",
+                    "Unable to open output stream to "
+                    "/var/tmp/brickTestImage.pgm");
+      }
+      
+      outputStream << "P5\n"
+                   << imageWidth << " " << imageHeight << "\n"
+                   << "65535\n";
+      outputStream.write(reinterpret_cast<const char*>(imageData),
+                         imageHeight * imageWidth * 2);
+      outputStream.close();
+      Image<GRAY16> inputImage = readPGM16(testImageFileName);
+
+      BRICK_TEST_ASSERT(inputImage.rows() == imageHeight);
+      BRICK_TEST_ASSERT(inputImage.columns() == imageWidth);
+
+      uint32_t ii = 0;
+      for(uint32_t rr = 0; rr < inputImage.rows(); ++rr) {
+        for(uint32_t cc = 0; cc < inputImage.columns(); ++cc) {
+          uint16_t pixelValue = inputImage(rr, cc);
+          BRICK_TEST_ASSERT(static_cast<uint8_t>((pixelValue & 0xff00) >> 8)
+                            == imageData[ii]);
+          BRICK_TEST_ASSERT(static_cast<uint8_t>(pixelValue & 0x00ff)
+                            == imageData[ii + 1]);
+          ii += 2;
+        }
+      }
     }
 
 
@@ -69,7 +118,7 @@ namespace brick {
       BRICK_TEST_ASSERT(std::equal(resultImage.begin(), resultImage.end(),
                                    referenceImage.begin()));
     }
-
+    
  
     void
     ImageIOTest::

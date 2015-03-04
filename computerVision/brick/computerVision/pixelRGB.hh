@@ -227,6 +227,23 @@ namespace brick {
 
 
     /** 
+     * This operator multiplies the color component values of a pixel
+     * by a scalar.
+     * 
+     * @param pixel1 The color component values of this pixel will be
+     * multiplied by the scalar.
+     * 
+     * @param scalar Each color component will be multiplied by this
+     * value.
+     * 
+     * @return The return value is the result of the multiplication.
+     */
+    template<class Scalar, class Type>
+    inline PixelRGB<Type>
+    operator*(PixelRGB<Type> const& pixel1, Scalar scalar);
+
+
+    /** 
      * This operator adds the values of the individual color
      * components of its arguments.
      * 
@@ -263,6 +280,23 @@ namespace brick {
     inline PixelRGB<Type>
     operator-(PixelRGB<Type> const& pixel0, PixelRGB<Type> const& pixel1);
     
+
+    /** 
+     * This operator divides the color component values of a pixel
+     * by a scalar.
+     * 
+     * @param pixel1 The color component values of this pixel will be
+     * divided by the scalar.
+     * 
+     * @param scalar Each color component will be divided by this
+     * value.
+     * 
+     * @return The return value is the result of the multiplication.
+     */
+    template<class Scalar, class Type>
+    inline PixelRGB<Type>
+    operator/(PixelRGB<Type> const& pixel1, Scalar scalar);
+
 
     /** 
      * This operator multiplies the values of the individual color
@@ -440,16 +474,42 @@ namespace brick {
     }
 
 
-    // This operator subtracts the values of the individual color
-    // components of its arguments.
+    // This operator multiplies the values of the individual color
+    // components of its argument.
     template<class Scalar, class Type>
     inline PixelRGB<Type>
     operator*(Scalar scalar, PixelRGB<Type> const& pixel1)
     {
       return PixelRGB<Type>(
-          scalar * pixel1.red,
-          scalar * pixel1.green,
-          scalar * pixel1.blue);
+        scalar * pixel1.red,
+        scalar * pixel1.green,
+        scalar * pixel1.blue);
+    }
+
+
+    // This operator multiplies the values of the individual color
+    // components of its argument.
+    template<class Scalar, class Type>
+    inline PixelRGB<Type>
+    operator*(PixelRGB<Type> const& pixel1, Scalar scalar)
+    {
+      return PixelRGB<Type>(
+        pixel1.red * scalar,
+        pixel1.green * scalar,
+        pixel1.blue * scalar);
+    }
+
+
+    // This operator divides the values of the individual color
+    // components of its argument.
+    template<class Scalar, class Type>
+    inline PixelRGB<Type>
+    operator/(PixelRGB<Type> const& pixel1, Scalar scalar)
+    {
+      return PixelRGB<Type>(
+        pixel1.red / scalar,
+        pixel1.green / scalar,
+        pixel1.blue / scalar);
     }
 
 

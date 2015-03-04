@@ -149,6 +149,7 @@ namespace brick {
       while(fromLevel < toLevel) {
         row /= m_scaleFactorPerLevel;
         column /= m_scaleFactorPerLevel;
+        ++fromLevel;
       }
       return brick::numeric::Index2D(static_cast<unsigned int>(row),
                                      static_cast<unsigned int>(column));

@@ -38,6 +38,7 @@ namespace brick {
       typedef bool PixelType;
       typedef bool ComponentType;
       static size_t getNumberOfComponents() {return 1;}
+      static PixelType getZeroPixel() {return false;}
       static bool isIntegral() {return true;}
     };
     
@@ -48,6 +49,7 @@ namespace brick {
       typedef brick::common::UnsignedInt8 PixelType;
       typedef brick::common::UnsignedInt8 ComponentType;
       static size_t getNumberOfComponents() {return 1;}
+      static PixelType getZeroPixel() {return PixelType(0);}
       static bool isIntegral() {return true;}
     };
     
@@ -58,6 +60,7 @@ namespace brick {
       typedef brick::common::UnsignedInt16 PixelType;
       typedef brick::common::UnsignedInt16 ComponentType;
       static size_t getNumberOfComponents() {return 1;}
+      static PixelType getZeroPixel() {return PixelType(0);}
       static bool isIntegral() {return true;}
     };
     
@@ -68,6 +71,7 @@ namespace brick {
       typedef brick::common::UnsignedInt32 PixelType;
       typedef brick::common::UnsignedInt32 ComponentType;
       static size_t getNumberOfComponents() {return 1;}
+      static PixelType getZeroPixel() {return PixelType(0);}
       static bool isIntegral() {return true;}
     };
     
@@ -78,6 +82,7 @@ namespace brick {
       typedef brick::common::UnsignedInt64 PixelType;
       typedef brick::common::UnsignedInt64 ComponentType;
       static size_t getNumberOfComponents() {return 1;}
+      static PixelType getZeroPixel() {return PixelType(0);}
       static bool isIntegral() {return true;}
     };
     
@@ -88,6 +93,7 @@ namespace brick {
       typedef brick::common::Int16 PixelType;
       typedef brick::common::Int16 ComponentType;
       static size_t getNumberOfComponents() {return 1;}
+      static PixelType getZeroPixel() {return PixelType(0);}
       static bool isIntegral() {return true;}
     };
     
@@ -98,6 +104,7 @@ namespace brick {
       typedef brick::common::Int32 PixelType;
       typedef brick::common::Int32 ComponentType;
       static size_t getNumberOfComponents() {return 1;}
+      static PixelType getZeroPixel() {return PixelType(0);}
       static bool isIntegral() {return true;}
     };
     
@@ -108,6 +115,7 @@ namespace brick {
       typedef brick::common::Float32 PixelType;
       typedef brick::common::Float32 ComponentType;
       static size_t getNumberOfComponents() {return 1;}
+      static PixelType getZeroPixel() {return PixelType(0);}
       static bool isIntegral() {return false;}
     };
     
@@ -118,6 +126,7 @@ namespace brick {
       typedef brick::common::Float64 PixelType;
       typedef brick::common::Float64 ComponentType;
       static size_t getNumberOfComponents() {return 1;}
+      static PixelType getZeroPixel() {return PixelType(0);}
       static bool isIntegral() {return false;}
     };
     
@@ -128,6 +137,7 @@ namespace brick {
       typedef PixelRGB8 PixelType;
       typedef brick::common::UnsignedInt8 ComponentType;
       static size_t getNumberOfComponents() {return 3;}
+      static PixelType getZeroPixel() {return PixelType(0, 0, 0);}
       static bool isIntegral() {return true;}
     };
     
@@ -138,6 +148,7 @@ namespace brick {
       typedef PixelRGB16 PixelType;
       typedef brick::common::UnsignedInt16 ComponentType;
       static size_t getNumberOfComponents() {return 3;}
+      static PixelType getZeroPixel() {return PixelType(0, 0, 0);}
       static bool isIntegral() {return true;}
     };
 
@@ -148,6 +159,7 @@ namespace brick {
       typedef PixelRGBSigned16 PixelType;
       typedef brick::common::Int16 ComponentType;
       static size_t getNumberOfComponents() {return 3;}
+      static PixelType getZeroPixel() {return PixelType(0, 0, 0);}
       static bool isIntegral() {return true;}
     };
 
@@ -158,6 +170,7 @@ namespace brick {
       typedef PixelRGBSigned32 PixelType;
       typedef brick::common::Int32 ComponentType;
       static size_t getNumberOfComponents() {return 3;}
+      static PixelType getZeroPixel() {return PixelType(0, 0, 0);}
       static bool isIntegral() {return true;}
     };
 
@@ -168,6 +181,7 @@ namespace brick {
       typedef PixelRGBFloat32 PixelType;
       typedef brick::common::Float32 ComponentType;
       static size_t getNumberOfComponents() {return 3;}
+      static PixelType getZeroPixel() {return PixelType(0, 0, 0);}
       static bool isIntegral() {return false;}
     };
 
@@ -178,6 +192,7 @@ namespace brick {
       typedef PixelRGBFloat64 PixelType;
       typedef brick::common::Float64 ComponentType;
       static size_t getNumberOfComponents() {return 3;}
+      static PixelType getZeroPixel() {return PixelType(0, 0, 0);}
       static bool isIntegral() {return false;}
     };
 
@@ -188,6 +203,7 @@ namespace brick {
       typedef PixelHSVFloat64 PixelType;
       typedef brick::common::Float64 ComponentType;
       static size_t getNumberOfComponents() {return 3;}
+      static PixelType getZeroPixel() {return PixelType(0, 0, 0);}
       static bool isIntegral() {return false;}
     };
   
@@ -198,6 +214,7 @@ namespace brick {
       typedef PixelYIQFloat64 PixelType;
       typedef brick::common::Float64 ComponentType;
       static size_t getNumberOfComponents() {return 3;}
+      static PixelType getZeroPixel() {return PixelType(0, 0, 0);}
       static bool isIntegral() {return false;}
     };
   
@@ -208,6 +225,7 @@ namespace brick {
       typedef PixelRGBA8 PixelType;
       typedef brick::common::UnsignedInt8 ComponentType;
       static size_t getNumberOfComponents() {return 4;}
+      static PixelType getZeroPixel() {return PixelType(0, 0, 0, 0);}
       static bool isIntegral() {return true;}
     };
     
@@ -218,6 +236,7 @@ namespace brick {
       typedef PixelBGRA8 PixelType;
       typedef brick::common::UnsignedInt8 ComponentType;
       static size_t getNumberOfComponents() {return 4;}
+      static PixelType getZeroPixel() {return PixelType(0, 0, 0, 0);}
       static bool isIntegral() {return true;}
     };
 

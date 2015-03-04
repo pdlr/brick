@@ -38,6 +38,7 @@ namespace brick {
       typedef brick::common::UnsignedInt8 PixelType;
       typedef brick::common::UnsignedInt8 ComponentType;
       static size_t getNumberOfComponents() {return 1;}
+      static PixelType getZeroPixel() {return PixelType();}
       static bool isIntegral() {return true;}
     };
 

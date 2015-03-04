@@ -50,6 +50,7 @@ brickComputerVision_HEADERS	= \
 	imageFormat.hh \
 	imageFormatTraits.hh imageFormatTraits_impl.hh \
 	imagePyramid.hh imagePyramid_impl.hh \
+	imagePyramidBinomial.hh imagePyramidBinomial_impl.hh \
 	imageWarper.hh imageWarper_impl.hh \
 	kdTree.hh kdTree_impl.hh \
 	kernel.hh kernel_impl.hh \

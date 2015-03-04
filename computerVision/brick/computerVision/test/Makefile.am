@@ -49,6 +49,7 @@ TESTS = \
 	imageFilterTest \
 	imageIOTest \
 	imagePyramidTest \
+	imagePyramidBinomialTest \
 	imageWarperTest \
 	kdTreeTest \
 	keypointMatcherFastTest \
@@ -87,6 +88,7 @@ check_PROGRAMS = \
 	imageFilterTest \
 	imageIOTest \
 	imagePyramidTest \
+	imagePyramidBinomialTest \
 	imageWarperTest \
 	kdTreeTest \
 	keypointMatcherFastTest \
@@ -125,6 +127,7 @@ getEuclideanDistanceTest_SOURCES	= getEuclideanDistanceTest.cc
 imageFilterTest_SOURCES		= imageFilterTest.cc testImages.hh
 imageIOTest_SOURCES		= imageIOTest.cc testImages.hh
 imagePyramidTest_SOURCES	= imagePyramidTest.cc testImages.hh
+imagePyramidBinomialTest_SOURCES	= imagePyramidBinomialTest.cc testImages.hh
 imageWarperTest_SOURCES		= imageWarperTest.cc
 kdTreeTest_SOURCES		= kdTreeTest.cc
 keypointMatcherFastTest_SOURCES	= keypointMatcherFastTest.cc

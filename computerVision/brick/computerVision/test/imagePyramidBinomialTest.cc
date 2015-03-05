@@ -82,7 +82,7 @@ namespace brick {
       double time1 = utilities::getCurrentTime();
       std::cout << "ET: " << time1 - time0 << " to build a pyramid for a "
                 << inputImageGray.rows() << "x" << inputImageGray.columns()
-                << " gray image." << std::endl;
+                << " float32 gray image." << std::endl;
 
 #if 0
       for(unsigned int ii = 0; ii < pyramidGray.getNumberOfLevels(); ++ii) {
@@ -94,6 +94,15 @@ namespace brick {
                  true);
       }
 #endif
+
+      time0 = utilities::getCurrentTime();
+      ImagePyramidBinomial<GRAY8, GRAY16> pyramidGray16(
+        inputImageGray, 0, 6, false);
+      time1 = utilities::getCurrentTime();
+      std::cout << "ET: " << time1 - time0 << " to build a pyramid for a "
+                << inputImageGray.rows() << "x" << inputImageGray.columns()
+                << " gray8 image." << std::endl;
+
       
       Image<RGB8> inputImageRGB = readPPM8(getTestImageFileNamePPM0());
       // Image<RGB8> inputImageRGB2 = readPPM8(getTestImageFileNamePPM0());
@@ -110,7 +119,14 @@ namespace brick {
       time1 = utilities::getCurrentTime();
       std::cout << "ET: " << time1 - time0 << " to build a pyramid for a "
                 << inputImageGray.rows() << "x" << inputImageGray.columns()
-                << " RGB image." << std::endl;
+                << " float32 RGB image." << std::endl;
+      
+      time0 = utilities::getCurrentTime();
+      ImagePyramidBinomial<RGB8, RGB16> pyramidRGB8(inputImageRGB);
+      time1 = utilities::getCurrentTime();
+      std::cout << "ET: " << time1 - time0 << " to build a pyramid for a "
+                << inputImageGray.rows() << "x" << inputImageGray.columns()
+                << " RGB8 image." << std::endl;
       
     }
 

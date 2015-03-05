@@ -20,6 +20,7 @@
 // 
 // #include <brick/computerVision/imagePyramidBinomial.hh>
 
+#include <brick/computerVision/pixelOperations.hh>
 #include <brick/computerVision/utilities.hh>
 #include <brick/numeric/numericTraits.hh>
 
@@ -218,9 +219,6 @@ namespace brick {
         typename ImagePyramidBinomial<Format, InternalFormat>::InternalPixelType> >
         const& inputRowBuffer)
     {
-      typedef typename ImageFormatTraits<InternalFormat>::ComponentType
-        ElementType;
-      
       if(inputRowBuffer.size() != 3) {
         BRICK_THROW(brick::common::LogicException,
                     "ImagePyramidBinomial::filterColumns()",
@@ -230,31 +228,14 @@ namespace brick {
         outputRow.reinit(inputRowBuffer[0].size());
       }
 
-#if 0 /* TBD(xxx): make the next stanza compile. */      
-      if(brick::numeric::NumericTraits<ElementType>::isIntegral()) {
-        for(uint32_t ii = 0; ii < outputRow.size(); ++ii) {
-          InternalPixelType outputPixelValue =
-            (inputRowBuffer[0][ii]
-             + (inputRowBuffer[1][ii] << 1)
-             + inputRowBuffer[2][ii])
-            >> 2;
-          outputRow[ii] = static_cast<PixelType>(outputPixelValue);
-        }
-      } else {
-#endif /* #if 0 */
-        ElementType two(2);
-        ElementType four(4);
-        for(uint32_t ii = 0; ii < outputRow.size(); ++ii) {
-          InternalPixelType outputPixelValue =
-            (inputRowBuffer[0][ii]
-             + (inputRowBuffer[1][ii] * two)
-             + inputRowBuffer[2][ii])
-            / four;
-          outputRow[ii] = static_cast<PixelType>(outputPixelValue);
-        }
-#if 0 /* TBD(xxx): (see above). */      
+      for(uint32_t ii = 0; ii < outputRow.size(); ++ii) {
+        InternalPixelType tempPixel =
+          inputRowBuffer[0][ii]
+          + multiplyPixel<2>(inputRowBuffer[1][ii])
+          + inputRowBuffer[2][ii];
+        InternalPixelType outputPixelValue = dividePixel<4>(tempPixel);
+        outputRow[ii] = static_cast<PixelType>(outputPixelValue);
       }
-#endif /* #if 0 */
     }
 
     
@@ -317,42 +298,24 @@ namespace brick {
     ImagePyramidBinomial<Format, InternalFormat>::
     filterRow(brick::numeric::Array1D<PixelType> const& inputRow)
     {
-      typedef typename ImageFormatTraits<InternalFormat>::ComponentType
-        ElementType;
-      
       brick::numeric::Array1D<InternalPixelType> outputRow(inputRow.size());
       uint32_t sizeMinusOne = outputRow.size() - 1;
       
       outputRow[0] =
         ImageFormatTraits<InternalFormat>().getZeroPixel();
 
-#if 0 /* TBD(xxx): make the next stanza compile. */
-      if(brick::numeric::NumericTraits<ElementType>().isIntegral()) {
-        for(uint32_t outputRowIndex = 1;
-            outputRowIndex < sizeMinusOne;
-            ++outputRowIndex) {
-          outputRow[outputRowIndex] = (
-            static_cast<InternalPixelType>(inputRow[outputRowIndex - 1])
-            + static_cast<InternalPixelType>(inputRow[outputRowIndex]) << 1
-            + static_cast<InternalPixelType>(inputRow[outputRowIndex + 1]))
-            >> 2;
-        }
-      } else {
-#endif /* #if 0 */
-        ElementType two(2);
-        ElementType four(4);
-        for(uint32_t outputRowIndex = 1;
-            outputRowIndex < sizeMinusOne;
-            ++outputRowIndex) {
-          outputRow[outputRowIndex] = (
-            static_cast<InternalPixelType>(inputRow[outputRowIndex - 1])
-            + two * static_cast<InternalPixelType>(inputRow[outputRowIndex])
-            + static_cast<InternalPixelType>(inputRow[outputRowIndex + 1]))
-            / four;
-        }
-#if 0 /* TBD(xxx): (see above). */
+      for(uint32_t outputRowIndex = 1;
+          outputRowIndex < sizeMinusOne;
+          ++outputRowIndex) {
+        InternalPixelType tempPixel =
+          static_cast<InternalPixelType>(inputRow[outputRowIndex - 1])
+          + multiplyPixel<2>(
+            static_cast<InternalPixelType>(inputRow[outputRowIndex]))
+          + static_cast<InternalPixelType>(inputRow[outputRowIndex + 1]);
+        outputRow[outputRowIndex] = dividePixel<4>(tempPixel);
+
       }
-#endif /* #if 0 */
+
       outputRow[sizeMinusOne] = 
         ImageFormatTraits<InternalFormat>().getZeroPixel();
 
@@ -432,9 +395,6 @@ namespace brick {
     ImagePyramidBinomial<Format, InternalFormat>::
     filterAndSubsampleRow(brick::numeric::Array1D<PixelType> const& inputRow)
     {
-      typedef typename ImageFormatTraits<InternalFormat>::ComponentType
-        ElementType;
-      
       brick::numeric::Array1D<InternalPixelType> outputRow(inputRow.size() / 2);
       uint32_t sizeMinusOne = inputRow.size() - 1;
       
@@ -442,35 +402,18 @@ namespace brick {
         ImageFormatTraits<InternalFormat>().getZeroPixel();
 
       uint32_t outputRowIndex = 1;
-#if 0 /* TBD(xxx): make the next stanza compile. */      
-      if(brick::numeric::NumericTraits<ElementType>::isIntegral()) {
-        for(uint32_t inputRowIndex = 2;
-            inputRowIndex < sizeMinusOne;
-            inputRowIndex += 2) {
-          outputRow[outputRowIndex] = (
-            static_cast<InternalPixelType>(inputRow[inputRowIndex - 1])
-            + static_cast<InternalPixelType>(inputRow[inputRowIndex]) << 1
-            + static_cast<InternalPixelType>(inputRow[inputRowIndex + 1]))
-            >> 2;
-          ++outputRowIndex;
-        }
-      } else {
-#endif /* #if 0 */
-        ElementType two(2);
-        ElementType four(4);
-        for(uint32_t inputRowIndex = 2;
-            inputRowIndex < sizeMinusOne;
-            inputRowIndex += 2) {
-          outputRow[outputRowIndex] = (
-            static_cast<InternalPixelType>(inputRow[inputRowIndex - 1])
-            + static_cast<InternalPixelType>(inputRow[inputRowIndex]) * two
-            + static_cast<InternalPixelType>(inputRow[inputRowIndex + 1]))
-            / four;
-          ++outputRowIndex;
-        }
-#if 0 /* TBD(xxx): make the next stanza compile. */      
+      for(uint32_t inputRowIndex = 2;
+          inputRowIndex < sizeMinusOne;
+          inputRowIndex += 2) {
+        InternalPixelType tempPixel =
+          static_cast<InternalPixelType>(inputRow[inputRowIndex - 1])
+          + multiplyPixel<2>(
+              static_cast<InternalPixelType>(inputRow[inputRowIndex]))
+          + static_cast<InternalPixelType>(inputRow[inputRowIndex + 1]);
+        outputRow[outputRowIndex] = dividePixel<4>(tempPixel);
+        ++outputRowIndex;
       }
-#endif /* #if 0 */
+
       while(outputRowIndex < outputRow.size()) {
         outputRow[outputRowIndex] = 
           ImageFormatTraits<InternalFormat>().getZeroPixel();
@@ -504,7 +447,6 @@ namespace brick {
       }
       return outputImage;
     }
-
 
   } // namespace computerVision
   

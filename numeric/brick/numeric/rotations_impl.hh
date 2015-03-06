@@ -14,7 +14,7 @@
 #include <cmath>
 #include <brick/common/exception.hh>
 #include <brick/common/functional.hh>
-#include <brick/common/mathFunctions.hh>
+#include <brick/numeric/mathFunctions.hh>
 #include <brick/numeric/rotations.hh>
 #include <brick/numeric/utilities.hh>
 
@@ -50,27 +50,27 @@ namespace {
   Transform3D<Type>
   l_getEulerComponent(const Type& angle, Axis axis)
   {
-    Type cosineAngle = brick::common::cosine(angle);
-    Type sineAngle = brick::common::sine(angle);
+    Type cosineAngle = brick::numeric::cosine(angle);
+    Type sineAngle = brick::numeric::sine(angle);
 
     switch(axis) {
     case BRICK_AXIS_X:
-      return Transform3D<Type>(1.0, 0.0, 0.0, 0.0,
-                         0.0, cosineAngle, -sineAngle, 0.0,
-                         0.0, sineAngle, cosineAngle, 0.0,
-                         0.0, 0.0, 0.0, 1.0);
+      return Transform3D<Type>(Type(1.0), Type(0.0), Type(0.0), Type(0.0),
+                               Type(0.0), cosineAngle, -sineAngle, Type(0.0),
+                               Type(0.0), sineAngle, cosineAngle, Type(0.0),
+                               Type(0.0), Type(0.0), Type(0.0), Type(1.0));
       break;
     case BRICK_AXIS_Y:
-      return Transform3D<Type>(cosineAngle, 0.0, sineAngle, 0.0,
-                         0.0, 1.0, 0.0, 0.0,
-                         -sineAngle, 0.0, cosineAngle, 0.0,
-                         0.0, 0.0, 0.0, 1.0);
+      return Transform3D<Type>(cosineAngle, Type(0.0), sineAngle, Type(0.0),
+                               Type(0.0), Type(1.0), Type(0.0), Type(0.0),
+                               -sineAngle, Type(0.0), cosineAngle, Type(0.0),
+                               Type(0.0), Type(0.0), Type(0.0), Type(1.0));
       break;
     case BRICK_AXIS_Z:
-      return Transform3D<Type>(cosineAngle, -sineAngle, 0.0, 0.0,
-                         sineAngle, cosineAngle, 0.0, 0.0,
-                         0.0, 0.0, 1.0, 0.0, 
-                         0.0, 0.0, 0.0, 1.0);
+      return Transform3D<Type>(cosineAngle, -sineAngle, Type(0.0), Type(0.0),
+                               sineAngle, cosineAngle, Type(0.0), Type(0.0),
+                               Type(0.0), Type(0.0), Type(1.0), Type(0.0), 
+                               Type(0.0), Type(0.0), Type(0.0), Type(1.0));
       break;
     default:
       // Should never get here.
@@ -94,24 +94,24 @@ namespace brick {
     angleAxisToQuaternion(const Type& angle, const Vector3D<Type>& axis, bool isNormalized)
     {
       // Deal with the angle.
-      Type angleOverTwo = angle / 2.0;
-      Type cosineValue = brick::common::cosine(angleOverTwo);
-      Type sineValue = brick::common::sine(angleOverTwo);
+      Type angleOverTwo = angle / Type(2.0);
+      Type cosineValue = brick::numeric::cosine(angleOverTwo);
+      Type sineValue = brick::numeric::sine(angleOverTwo);
 
       // If the axis is already unit length, we're done!
       if(isNormalized) {
         return Quaternion<Type>(cosineValue, sineValue * axis.x(),
-                          sineValue * axis.y(), sineValue * axis.z());
+                                sineValue * axis.y(), sineValue * axis.z());
       }
 
       // Axis is not known to be unit length, so we have more work to do.
       Vector3D<Type> axisCopy = axis;
       Type axisMagnitude = magnitude<Type>(axis);
-      if(axisMagnitude != 0.0) {
+      if(axisMagnitude != Type(0.0)) {
         axisCopy /= axisMagnitude;
       } else {
         // Axis is too small to observe.  Pick an arbitrary axis.
-        axisCopy.setValue(1.0, 0.0, 0.0);
+        axisCopy.setValue(Type(1.0), Type(0.0), Type(0.0));
       }
       return Quaternion<Type>(cosineValue, sineValue * axisCopy.x(),
                         sineValue * axisCopy.y(), sineValue * axisCopy.z());
@@ -166,9 +166,10 @@ namespace brick {
       Type sineHalfTheta = magnitude<Type>(sineTimesAxis);
 
       // Recover angle and axis.
-      Type angle = 2 * std::atan2(sineHalfTheta, cosineHalfTheta);
-      if(sineHalfTheta == 0.0) {
-        return std::make_pair(angle, Vector3D<Type>(1.0, 0.0, 0.0));
+      Type angle = 2 * brick::numeric::arctangent2(
+        sineHalfTheta, cosineHalfTheta);
+      if(sineHalfTheta == Type(0.0)) {
+        return std::make_pair(angle, Vector3D<Type>(Type(1.0), Type(0.0), Type(0.0)));
       }
       return std::make_pair(angle, sineTimesAxis / sineHalfTheta);
     }
@@ -193,20 +194,21 @@ namespace brick {
       quaternionCopy.normalize();
 
       // Some convenience variables.
-      Type ii = 2.0 * quaternionCopy.i() * quaternionCopy.i();
-      Type jj = 2.0 * quaternionCopy.j() * quaternionCopy.j();
-      Type kk = 2.0 * quaternionCopy.k() * quaternionCopy.k();
-      Type si = 2.0 * quaternionCopy.s() * quaternionCopy.i();
-      Type sj = 2.0 * quaternionCopy.s() * quaternionCopy.j();
-      Type sk = 2.0 * quaternionCopy.s() * quaternionCopy.k();
-      Type ij = 2.0 * quaternionCopy.i() * quaternionCopy.j();
-      Type ik = 2.0 * quaternionCopy.i() * quaternionCopy.k();
-      Type jk = 2.0 * quaternionCopy.j() * quaternionCopy.k();
+      Type ii = Type(2.0) * quaternionCopy.i() * quaternionCopy.i();
+      Type jj = Type(2.0) * quaternionCopy.j() * quaternionCopy.j();
+      Type kk = Type(2.0) * quaternionCopy.k() * quaternionCopy.k();
+      Type si = Type(2.0) * quaternionCopy.s() * quaternionCopy.i();
+      Type sj = Type(2.0) * quaternionCopy.s() * quaternionCopy.j();
+      Type sk = Type(2.0) * quaternionCopy.s() * quaternionCopy.k();
+      Type ij = Type(2.0) * quaternionCopy.i() * quaternionCopy.j();
+      Type ik = Type(2.0) * quaternionCopy.i() * quaternionCopy.k();
+      Type jk = Type(2.0) * quaternionCopy.j() * quaternionCopy.k();
 
-      return Transform3D<Type>(1 - jj - kk, ij - sk, ik + sj, 0.0,
-                         ij + sk, 1 - ii - kk, jk - si, 0.0,
-                         ik - sj, jk + si, 1 - ii - jj, 0.0,
-                         0.0, 0.0, 0.0, 1.0);
+      return Transform3D<Type>(
+        Type(1.0) - jj - kk, ij - sk, ik + sj, Type(0.0),
+        ij + sk, Type(1.0) - ii - kk, jk - si, Type(0.0),
+        ik - sj, jk + si, Type(1.0) - ii - jj, Type(0.0),
+        Type(0.0), Type(0.0), Type(0.0), Type(1.0));
     }
 
   
@@ -226,8 +228,8 @@ namespace brick {
       // context not to pass in a vector that's short enough to break
       // this math.
       Vector3D<Type> direction = rodrigues / theta;
-      Type cosTheta = brick::common::cosine(theta);
-      Type sinTheta = brick::common::sine(theta);
+      Type cosTheta = brick::numeric::cosine(theta);
+      Type sinTheta = brick::numeric::sine(theta);
       Type oneMinusCT = Type(1.0) - cosTheta;
 
       // The rest of this code simply implements
@@ -276,28 +278,28 @@ namespace brick {
     rollPitchYawToTransform3D(const Vector3D<Type>& rollPitchYaw)
     {
       // First compute some convenience values.
-      Type cosineRoll = brick::common::cosine(rollPitchYaw.x());
-      Type cosinePitch = brick::common::cosine(rollPitchYaw.y());
-      Type cosineYaw = brick::common::cosine(rollPitchYaw.z());
+      Type cosineRoll = brick::numeric::cosine(rollPitchYaw.x());
+      Type cosinePitch = brick::numeric::cosine(rollPitchYaw.y());
+      Type cosineYaw = brick::numeric::cosine(rollPitchYaw.z());
 
-      Type sineRoll = brick::common::sine(rollPitchYaw.x());
-      Type sinePitch = brick::common::sine(rollPitchYaw.y());
-      Type sineYaw = brick::common::sine(rollPitchYaw.z());
+      Type sineRoll = brick::numeric::sine(rollPitchYaw.x());
+      Type sinePitch = brick::numeric::sine(rollPitchYaw.y());
+      Type sineYaw = brick::numeric::sine(rollPitchYaw.z());
 
       // Each of roll, pitch, yaw, correspond to a rotation about one
       // axis.
-      Transform3D<Type> rollTransform(1.0, 0.0, 0.0, 0.0,
-                                0.0, cosineRoll, -sineRoll, 0.0,
-                                0.0, sineRoll, cosineRoll, 0.0,
-                                0.0, 0.0, 0.0, 1.0);
-      Transform3D<Type> pitchTransform(cosinePitch, 0.0, sinePitch, 0.0,
-                                 0.0, 1.0, 0.0, 0.0,
-                                 -sinePitch, 0.0, cosinePitch, 0.0,
-                                 0.0, 0.0, 0.0, 1.0);
-      Transform3D<Type> yawTransform(cosineYaw, -sineYaw, 0.0, 0.0,
-                               sineYaw, cosineYaw, 0.0, 0.0,
-                               0.0, 0.0, 1.0, 0.0, 
-                               0.0, 0.0, 0.0, 1.0);
+      Transform3D<Type> rollTransform(Type(1.0), Type(0.0), Type(0.0), Type(0.0),
+                                Type(0.0), cosineRoll, -sineRoll, Type(0.0),
+                                Type(0.0), sineRoll, cosineRoll, Type(0.0),
+                                Type(0.0), Type(0.0), Type(0.0), Type(1.0));
+      Transform3D<Type> pitchTransform(cosinePitch, Type(0.0), sinePitch, Type(0.0),
+                                 Type(0.0), Type(1.0), Type(0.0), Type(0.0),
+                                 -sinePitch, Type(0.0), cosinePitch, Type(0.0),
+                                 Type(0.0), Type(0.0), Type(0.0), Type(1.0));
+      Transform3D<Type> yawTransform(cosineYaw, -sineYaw, Type(0.0), Type(0.0),
+                               sineYaw, cosineYaw, Type(0.0), Type(0.0),
+                               Type(0.0), Type(0.0), Type(1.0), Type(0.0), 
+                               Type(0.0), Type(0.0), Type(0.0), Type(1.0));
 
       // Compose the three rotations to get the result.
       return rollTransform * (pitchTransform * yawTransform);
@@ -343,15 +345,15 @@ namespace brick {
       Type t22 = transform3D(2, 2);
     
       // First compute s.
-      Type sSquaredTimesFour = (1.0 + t00 + t11 + t22);
+      Type sSquaredTimesFour = (Type(1.0) + t00 + t11 + t22);
       // Allow for numerical errors.
-      if(sSquaredTimesFour < 0.0) {
-        sSquaredTimesFour = 0.0;
+      if(sSquaredTimesFour < Type(0.0)) {
+        sSquaredTimesFour = Type(0.0);
       }
-      Type sValue = brick::common::squareRoot(sSquaredTimesFour) / 2.0;
+      Type sValue = brick::numeric::squareRoot(sSquaredTimesFour) / Type(2.0);
       // Allow for numerical errors.
-      if(sValue > 1.0) {
-        sValue = 1.0;
+      if(sValue > Type(1.0)) {
+        sValue = Type(1.0);
       }
 
       // This vector points in the direction of the axis of rotation, but
@@ -378,21 +380,21 @@ namespace brick {
 
       // Now compute the parallel vector and add it to axis0.
       if(axisOfLargestRotation == 0) {
-        Vector3D<Type> axis1(1.0 + t00 - t11 - t22, t10 + t01, t20 + t02);
+        Vector3D<Type> axis1(Type(1.0) + t00 - t11 - t22, t10 + t01, t20 + t02);
         if(axis0.x() >= 0) {
           axis0 += axis1;
         } else {
           axis0 -= axis1;
         }
       } else if(axisOfLargestRotation == 1) {
-        Vector3D<Type> axis1(t10 + t01, 1.0 + t11 - t00 - t22, t21 + t12);
+        Vector3D<Type> axis1(t10 + t01, Type(1.0) + t11 - t00 - t22, t21 + t12);
         if(axis0.y() >= 0) {
           axis0 += axis1;
         } else {
           axis0 -= axis1;
         }
       } else if(axisOfLargestRotation == 2) {
-        Vector3D<Type> axis1(t20 + t02, t21 + t12, 1.0 + t22 - t00 - t11);
+        Vector3D<Type> axis1(t20 + t02, t21 + t12, Type(1.0) + t22 - t00 - t11);
         if(axis0.z() >= 0) {
           axis0 += axis1;
         } else {
@@ -407,12 +409,12 @@ namespace brick {
         // Hmm, we still have a very small axis.  Assume this means that
         // the input rotation is nearly zero.
         if(sValue >= 0) {
-          return Quaternion<Type>(1.0, 0.0, 0.0, 0.0);
+          return Quaternion<Type>(Type(1.0), Type(0.0), Type(0.0), Type(0.0));
         } else {
-          return Quaternion<Type>(-1.0, 0.0, 0.0, 0.0);
+          return Quaternion<Type>(Type(-1.0), Type(0.0), Type(0.0), Type(0.0));
         }
       }
-      axis0 *= brick::common::squareRoot((1 - (sValue * sValue)) / axisMagnitudeSquared);
+      axis0 *= brick::numeric::squareRoot((1 - (sValue * sValue)) / axisMagnitudeSquared);
 
       // Done.
       return Quaternion<Type>( sValue, axis0.x(), axis0.y(), axis0.z());
@@ -434,7 +436,7 @@ namespace brick {
                                transform3D(0, 2) - transform3D(2, 0),
                                transform3D(1, 0) - transform3D(0, 1));
       Type dirMagnitude = magnitude<Type>(direction);
-      Type sinTheta = dirMagnitude / 2.0;
+      Type sinTheta = dirMagnitude / Type(2.0);
       Type theta = common::arctangent2(sinTheta, cosTheta);
       return direction * (theta / dirMagnitude);
     }
@@ -452,13 +454,13 @@ namespace brick {
       // Type sinePitch = transform3D.value<0, 2>();
       Type sinePitch = transform3D(0, 2);
 
-      // Type cosinePitch = brick::common::squareRoot(
+      // Type cosinePitch = brick::numeric::squareRoot(
       //   transform3D.value<0, 0>() * transform3D.value<0, 0>()
       //   + transform3D.value<0, 1>() * transform3D.value<0, 1>());
-      Type cosinePitch = brick::common::squareRoot(
+      Type cosinePitch = brick::numeric::squareRoot(
         transform3D(0, 0) * transform3D(0, 0)
         + transform3D(0, 1) * transform3D(0, 1));
-      Type pitch = std::atan2(sinePitch, cosinePitch);
+      Type pitch = brick::numeric::arctangent2(sinePitch, cosinePitch);
 
       // Now recover roll and yaw.
       Type roll;
@@ -468,22 +470,22 @@ namespace brick {
          && (!approximatelyEqual(pitch, -piOverTwo,
                                  l_getRotationsEpsilon<Type>()))) {
         // Choose a more numerically stable version of cos(pitch).
-        cosinePitch = brick::common::cosine(pitch);
-        // roll = std::atan2(-(transform3D.value<1, 2>() / cosinePitch),
+        cosinePitch = brick::numeric::cosine(pitch);
+        // roll = brick::numeric::arctangent2(-(transform3D.value<1, 2>() / cosinePitch),
         //                   (transform3D.value<2, 2>() / cosinePitch));
-        // yaw = std::atan2(-(transform3D.value<0, 1>() / cosinePitch),
+        // yaw = brick::numeric::arctangent2(-(transform3D.value<0, 1>() / cosinePitch),
         //                  (transform3D.value<0, 0>() / cosinePitch));
-        roll = std::atan2(-(transform3D(1, 2) / cosinePitch),
+        roll = brick::numeric::arctangent2(-(transform3D(1, 2) / cosinePitch),
                           (transform3D(2, 2) / cosinePitch));
-        yaw = std::atan2(-(transform3D(0, 1) / cosinePitch),
+        yaw = brick::numeric::arctangent2(-(transform3D(0, 1) / cosinePitch),
                          (transform3D(0, 0) / cosinePitch));
 
       } else {
-        // roll = std::atan2(transform3D.value<2, 1>(),
+        // roll = brick::numeric::arctangent2(transform3D.value<2, 1>(),
         //                   transform3D.value<1, 1>());
-        roll = std::atan2(transform3D(2, 1),
+        roll = brick::numeric::arctangent2(transform3D(2, 1),
                           transform3D(1, 1));
-        yaw = 0.0;
+        yaw = Type(0.0);
       }
       return Vector3D<Type>(roll, pitch, yaw);
     }

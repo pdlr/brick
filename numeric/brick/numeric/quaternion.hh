@@ -59,7 +59,7 @@ namespace brick {
        * resulting quaternion will have magnitude equal to one, you can
        * set this argument to true.
        */
-      Quaternion(double ss, double ii, double jj, double kk,
+      Quaternion(Type ss, Type ii, Type jj, Type kk,
                  bool isAlreadyNormalized=false) 
         : m_s(ss), m_i(ii), m_j(jj), m_k(kk),
           m_isNormalized(isAlreadyNormalized) {}
@@ -89,7 +89,7 @@ namespace brick {
        * Quaternion.
        */
       inline
-      double
+      Type
       s() const { return m_s; };
 
       /** 
@@ -100,7 +100,7 @@ namespace brick {
        * the Quaternion.
        */
       inline
-      double
+      Type
       i() const { return m_i; };
 
       /** 
@@ -111,7 +111,7 @@ namespace brick {
        * the Quaternion.
        */
       inline
-      double
+      Type
       j() const { return m_j; };
 
       /** 
@@ -122,7 +122,7 @@ namespace brick {
        * the Quaternion.
        */
       inline
-      double
+      Type
       k() const { return m_k; };
 
       /** 
@@ -179,7 +179,7 @@ namespace brick {
        */
       inline
       void
-      setValue(double ss, double ii, double jj, double kk,
+      setValue(Type ss, Type ii, Type jj, Type kk,
                bool isAlreadyNormalized = false) {
         m_s = ss; m_i = ii; m_j = jj; m_k = kk;
         m_isNormalized = isAlreadyNormalized;
@@ -202,10 +202,10 @@ namespace brick {
     
     private:
       // Components of the quaternion are listed in order.
-      double m_s;
-      double m_i;
-      double m_j;
-      double m_k;
+      Type m_s;
+      Type m_i;
+      Type m_j;
+      Type m_k;
 
       // A flag to avoid repeatedly re-normalizing.
       bool m_isNormalized;

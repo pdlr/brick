@@ -18,7 +18,7 @@
 
 #include <cmath>
 
-#include <brick/common/mathFunctions.hh>
+#include <brick/numeric/mathFunctions.hh>
 
 namespace brick {
 
@@ -32,7 +32,7 @@ namespace brick {
     Quaternion<Type>::
     getMagnitude()
     {
-      return brick::common::squareRoot(m_s*m_s + m_i*m_i + m_j*m_j + m_k*m_k);
+      return brick::numeric::squareRoot(m_s*m_s + m_i*m_i + m_j*m_j + m_k*m_k);
     }
 
     
@@ -48,16 +48,16 @@ namespace brick {
       // magnitude.
       if(!m_isNormalized) {
 	// First compute the magnitude of the Quaternion.
-	double norm = this->getMagnitude();
+	Type norm = this->getMagnitude();
 
 	// Next some error checking.
-	if(norm == 0) {
+	if(norm == Type(0.0)) {
 	  // BRICK_THROW(ValueException, "Quaternion::normalize()",
 	  //           "Can't normalize a zero magnitude Quaternion.");
-	  m_s = 1.0;
-	  m_i = 0.0;
-	  m_j = 0.0;
-	  m_k = 0.0;
+	  m_s = Type(1.0);
+	  m_i = Type(0.0);
+	  m_j = Type(0.0);
+	  m_k = Type(0.0);
 	  m_isNormalized = true;
 	} else {
 	  // Finally, normalize.

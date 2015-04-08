@@ -36,7 +36,8 @@ brickCommon_HEADERS       = \
 	stridedPointer.hh \
 	traceable.hh \
 	triple.hh \
-	types.hh
+	types.hh \
+	versionNumber.hh
 
 
 # Define the library to build.

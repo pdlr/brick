@@ -22,6 +22,7 @@
 #define BRICK_NUMERIC_MATHFUNCTIONS_HH
 
 #include <brick/common/mathFunctions.hh>
+#include <brick/common/types.hh>
 
 namespace brick {
 

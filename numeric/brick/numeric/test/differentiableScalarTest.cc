@@ -52,6 +52,7 @@ namespace brick {
       void testOperatorDivide();
       void testOperatorPlus();
       void testOperatorMinus();
+      void testAbsoluteValue();
       void testCosine();
       void testSine();
       void testSquareRoot();
@@ -103,6 +104,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testOperatorDivide);
       BRICK_TEST_REGISTER_MEMBER(testOperatorPlus);
       BRICK_TEST_REGISTER_MEMBER(testOperatorMinus);
+      BRICK_TEST_REGISTER_MEMBER(testAbsoluteValue);
       BRICK_TEST_REGISTER_MEMBER(testCosine);
       BRICK_TEST_REGISTER_MEMBER(testSine);
       BRICK_TEST_REGISTER_MEMBER(testSquareRoot);
@@ -553,6 +555,44 @@ namespace brick {
     }
 
     
+    void
+    DifferentiableScalarTest::
+    testAbsoluteValue()
+    {
+      DifferentiableScalar<double, 2> probe0;
+      probe0.setValue(1.0);
+      probe0.setPartialDerivative(0, 5.0);
+      probe0.setPartialDerivative(1, -2.0);
+
+      DifferentiableScalar<double, 2> probe1;
+      probe1.setValue(-1.0);
+      probe1.setPartialDerivative(0, 5.0);
+      probe1.setPartialDerivative(1, -2.0);
+
+      // Do the operation under test. 
+      DifferentiableScalar<double, 2> result0 = absoluteValue(probe0);
+      DifferentiableScalar<double, 2> result1 = absoluteValue(probe1);
+
+      // Check the result.
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(result0.getValue(), 1.0, this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(result0.getPartialDerivative(0), 5.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(result0.getPartialDerivative(1), -2.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(result1.getValue(), 1.0, this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(result1.getPartialDerivative(0), -5.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(result1.getPartialDerivative(1), 2.0,
+                           this->m_defaultTolerance));
+    }
+
+
     void
     DifferentiableScalarTest::
     testCosine()

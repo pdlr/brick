@@ -595,7 +595,20 @@ namespace brick {
     
 
     /** 
-     * This operator computes the cosine of a DifferentiableScalar
+     * This function computes the absolute value of a
+     * DifferentiableScalar instance, with partial derivatives.
+     * 
+     * @param arg0 The absolute value of this argument will be
+     * computed.
+     * 
+     * @return The return value is the result of the calculation.
+     */
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    absoluteValue(DifferentiableScalar<Type, Dimension> const& arg0);
+    
+    /** 
+     * This function computes the cosine of a DifferentiableScalar
      * instance, with partial derivatives.
      * 
      * @param arg0 The cosine of this argument will be computed.
@@ -608,7 +621,7 @@ namespace brick {
 
 
     /** 
-     * This operator computes the sine of a DifferentiableScalar
+     * This function computes the sine of a DifferentiableScalar
      * instance, with partial derivatives.
      * 
      * @param arg0 The sine of this argument will be computed.
@@ -621,7 +634,7 @@ namespace brick {
 
 
     /** 
-     * This Function computes the square root of a
+     * This function computes the square root of a
      * DifferentiableScalar instance, with partial derivatives.
      * 
      * @param arg0 The square of this argument will be computed.

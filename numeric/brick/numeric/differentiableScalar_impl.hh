@@ -353,7 +353,21 @@ namespace brick {
     }
       
     
-    // This operator computes the cosine of a DifferentiableScalar
+    // This function computes the absoluteValue of a DifferentiableScalar
+    // instance, with partial derivatives.
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    absoluteValue(DifferentiableScalar<Type, Dimension> const& arg0)
+    {
+      DifferentiableScalar<Type, Dimension> result(arg0);
+      if(arg0.getValue() < 0.0) {
+        result *= DifferentiableScalar<Type, Dimension>(-1.0);
+      }
+      return result;
+    }
+
+    
+    // This function computes the cosine of a DifferentiableScalar
     // instance, with partial derivatives.
     template<class Type, uint32_t Dimension>
     DifferentiableScalar<Type, Dimension>
@@ -373,7 +387,7 @@ namespace brick {
     }
 
     
-    // This operator computes the sine of a DifferentiableScalar
+    // This function computes the sine of a DifferentiableScalar
     // instance, with partial derivatives.
     template<class Type, uint32_t Dimension>
     DifferentiableScalar<Type, Dimension>
@@ -393,7 +407,7 @@ namespace brick {
     }
 
 
-    // This operator computes the square root of a
+    // This function computes the square root of a
     // DifferentiableScalar instance, with partial derivatives.
     template<class Type, uint32_t Dimension>
     DifferentiableScalar<Type, Dimension>

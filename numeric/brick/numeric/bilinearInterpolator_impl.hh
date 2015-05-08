@@ -73,6 +73,7 @@ namespace brick {
 #ifdef BRICK_NUMERIC_CHECKBOUNDS
       int row0 = static_cast<int>(row);
       if(row0 < 0
+         || (row0 == std::numeric_limits<int>::max())
          || (static_cast<FloatType>(row0 + 1)
              >= static_cast<FloatType>(m_array.rows()))) {
         std::ostringstream message;
@@ -84,6 +85,7 @@ namespace brick {
       }
       int column0 = static_cast<int>(column);
       if(column0 < 0
+         || (column0 == std::numeric_limits<int>::max())
          || (static_cast<FloatType>(column0 + 1)
              >= static_cast<FloatType>(m_array.columns()))) {
         std::ostringstream message;

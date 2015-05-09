@@ -255,11 +255,11 @@ namespace brick {
       for(unsigned int jj = 0; jj < numTerms; ++jj) {
         errorTermsCopy[jj] = errorTerms[jj];
       }
-      dEdX = brick::numeric::matrixMultiply<double>(jacobian, errorTerms);
+      dEdX = brick::numeric::matrixMultiply<Scalar>(jacobian, errorTerms);
       dEdX *= 2.0;
       
       // Compute Hession estimate.
-      d2EdX2 = brick::numeric::matrixMultiply<double>(
+      d2EdX2 = brick::numeric::matrixMultiply<Scalar>(
         jacobian, jacobian.transpose());
       d2EdX2 *= 2.0;
     }

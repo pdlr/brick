@@ -226,8 +226,8 @@ namespace brick {
     Vector3D<Type>::
     normalize(Type const& alpha)
     {
-      if(alpha == 1.0) {return;}
-      if(alpha == 0.0) {
+      if(alpha == static_cast<Type>(1.0)) {return;}
+      if(alpha == static_cast<Type>(0.0)) {
         BRICK_THROW(common::ValueException, "Vector3D::normalize()",
                     "Bad alpha (0.0).");
       }

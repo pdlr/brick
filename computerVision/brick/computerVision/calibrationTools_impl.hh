@@ -657,10 +657,11 @@ namespace brick {
                              Iter2D points2DBegin,
                              int verbosity)
     {
+      typedef typename Intrinsics::FloatType FloatType;
       typedef privateCode::CameraIntrinsicsObjectiveFunction<Intrinsics>
         ObjectiveFunction;
-      typedef brick::optimization::GradientFunctionLM<ObjectiveFunction>
-        GradientFunctionLM;
+      typedef brick::optimization::GradientFunctionLM<
+        ObjectiveFunction, FloatType> GradientFunctionLM;
       
       Intrinsics intrinsics;
       intrinsics.setNumPixelsX(numPixelsX);
@@ -671,7 +672,7 @@ namespace brick {
         intrinsics, points3DBegin, points3DEnd, points2DBegin);
 
       GradientFunctionLM gradientFunction(objectiveFunction);
-      OptimizerLM<GradientFunctionLM> optimizer(gradientFunction);
+      OptimizerLM<GradientFunctionLM, FloatType> optimizer(gradientFunction);
       optimizer.setMaxIterations(100);
       optimizer.setMaxLambda(1.0E15);
       optimizer.setMinDrop(1.0E-6);
@@ -941,11 +942,11 @@ namespace brick {
       Iter2D points2DBegin,
       int verbosity)
     {
+      typedef typename Intrinsics::FloatType FloatType;
       typedef privateCode::CameraParametersObjectiveFunction<Intrinsics>
         ObjectiveFunction;
-      typedef brick::optimization::GradientFunctionLM<ObjectiveFunction>
-        GradientFunctionLM;
-      typedef typename Intrinsics::FloatType FloatType;
+      typedef brick::optimization::GradientFunctionLM<
+        ObjectiveFunction, FloatType> GradientFunctionLM;
 
       // Set output values that we know already.
       intrinsics.setNumPixelsX(numPixelsX);
@@ -985,7 +986,7 @@ namespace brick {
       ObjectiveFunction objectiveFunction(
         intrinsics, points3DBegin, points3DEnd, points2DBegin);
       GradientFunctionLM gradientFunction(objectiveFunction);
-      OptimizerLM<GradientFunctionLM> optimizerLM(gradientFunction);
+      OptimizerLM<GradientFunctionLM, FloatType> optimizerLM(gradientFunction);
       optimizerLM.setMaxIterations(100);
       optimizerLM.setMaxLambda(1.0E15);
       optimizerLM.setMinDrop(1.0E-6);

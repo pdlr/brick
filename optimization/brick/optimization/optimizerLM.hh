@@ -35,7 +35,7 @@ namespace brick {
      ** [1] W. H. Press et al., Numerical Recipes in C The Art of
      ** Scientific Computing, Cambridge University Press, 1988.
      **/
-    template <class Functor>
+    template <class Functor, class FloatType = double>
     class OptimizerLM
       : public Optimizer<Functor>
     {
@@ -154,7 +154,7 @@ namespace brick {
        * "lambda" increases beyound this amount.
        */
       virtual void
-      setMaxLambda(double maxLambda) {this->m_maxLambda = maxLambda;}
+      setMaxLambda(FloatType maxLambda) {this->m_maxLambda = maxLambda;}
 
       
       /**
@@ -166,7 +166,7 @@ namespace brick {
        * consecutive iterations.
        */
       virtual void
-      setMinDrop(double minDrop) {this->m_minDrop = minDrop;}
+      setMinDrop(FloatType minDrop) {this->m_minDrop = minDrop;}
 
     
       /**
@@ -180,7 +180,7 @@ namespace brick {
        * considered small enough to terminate iteration.
        */
       virtual void
-      setMinimumGradientMagnitude(double minimumGradientMagnitude);
+      setMinimumGradientMagnitude(FloatType minimumGradientMagnitude);
 
     
       /** 
@@ -224,13 +224,13 @@ namespace brick {
        * output.
        */
       virtual void
-      setParameters(double initialLambda = 1.0,
+      setParameters(FloatType initialLambda = 1.0,
                     size_t maxIterations = 40,
-                    double maxLambda = 1.0E7,
-                    double minLambda = 1.0E-13,
-                    double minError = 0.0,
-                    double minimumGradientMagnitude = 1.0E-5,
-                    double minDrop = 1.0E-4,
+                    FloatType maxLambda = 1.0E7,
+                    FloatType minLambda = 1.0E-13,
+                    FloatType minError = 0.0,
+                    FloatType minimumGradientMagnitude = 1.0E-5,
+                    FloatType minDrop = 1.0E-4,
                     size_t strikes = 3,
                     int maxBackSteps = -1,
                     int verbosity = 0);
@@ -291,7 +291,7 @@ namespace brick {
        * @return The return value gets progressively smaller as we
        * approach a local minimum.
        */
-      double
+      FloatType
       gradientConvergenceMetric(const argument_type& theta,
                                 const result_type& value,
                                 const argument_type& gradient);
@@ -319,14 +319,14 @@ namespace brick {
       verboseWrite(const char* intro, const Type& subject, int verbosity);
     
       // Data members.
-      double m_initialLambda;
+      FloatType m_initialLambda;
       int m_maxBackSteps;
       size_t m_maxIterations;
-      double m_maxLambda;
-      double m_minDrop;
-      double m_minError;
-      double m_minGrad;
-      double m_minLambda;
+      FloatType m_maxLambda;
+      FloatType m_minDrop;
+      FloatType m_minError;
+      FloatType m_minGrad;
+      FloatType m_minLambda;
       argument_type m_startPoint;
       size_t m_strikes;
       int m_verbosity;
@@ -362,8 +362,8 @@ namespace brick {
 
   namespace optimization {
   
-    template <class Functor>
-    OptimizerLM<Functor>::
+    template <class Functor, class FloatType>
+    OptimizerLM<Functor, FloatType>::
     OptimizerLM()
       : Optimizer<Functor>(),
         m_initialLambda(),
@@ -382,8 +382,8 @@ namespace brick {
     }
 
 
-    template <class Functor>
-    OptimizerLM<Functor>::
+    template <class Functor, class FloatType>
+    OptimizerLM<Functor, FloatType>::
     OptimizerLM(const Functor& functor)
       : Optimizer<Functor>(functor),
         m_initialLambda(),
@@ -402,8 +402,8 @@ namespace brick {
     }
   
 
-    template<class Functor>
-    OptimizerLM<Functor>::
+    template <class Functor, class FloatType>
+    OptimizerLM<Functor, FloatType>::
     OptimizerLM(const OptimizerLM& source)
       : Optimizer<Functor>(source),
         m_initialLambda(source.m_initialLambda),
@@ -422,8 +422,8 @@ namespace brick {
     }
 
   
-    template <class Functor>
-    OptimizerLM<Functor>::
+    template <class Functor, class FloatType>
+    OptimizerLM<Functor, FloatType>::
     ~OptimizerLM()
     {
       // Empty
@@ -432,25 +432,25 @@ namespace brick {
 
     // This method sets one of the termination criteria of the
     // optimization.
-    template<class Functor>
+    template <class Functor, class FloatType>
     void
-    OptimizerLM<Functor>::
-    setMinimumGradientMagnitude(double minimumGradientMagnitude)
+    OptimizerLM<Functor, FloatType>::
+    setMinimumGradientMagnitude(FloatType minimumGradientMagnitude)
     {
       this->m_minGrad = minimumGradientMagnitude * minimumGradientMagnitude;
     }
 
   
-    template<class Functor>
+    template <class Functor, class FloatType>
     void
-    OptimizerLM<Functor>::
-    setParameters(double initialLambda,
+    OptimizerLM<Functor, FloatType>::
+    setParameters(FloatType initialLambda,
                   size_t maxIterations,
-                  double maxLambda,
-                  double minLambda,
-                  double minError,
-                  double minimumGradientMagnitude,
-                  double minDrop,
+                  FloatType maxLambda,
+                  FloatType minLambda,
+                  FloatType minError,
+                  FloatType minimumGradientMagnitude,
+                  FloatType minDrop,
                   size_t strikes,
                   int maxBackSteps,
                   int verbosity)
@@ -479,9 +479,9 @@ namespace brick {
     }    
 
 
-    template<class Functor>
+    template <class Functor, class FloatType>
     void
-    OptimizerLM<Functor>::
+    OptimizerLM<Functor, FloatType>::
     setStartPoint(const typename Functor::argument_type& startPoint)
     {
       copyArgumentType(startPoint, this->m_startPoint);
@@ -498,10 +498,10 @@ namespace brick {
     }
 
 
-    template<class Functor>
-    OptimizerLM<Functor>&
-    OptimizerLM<Functor>::
-    operator=(const OptimizerLM<Functor>& source)
+    template <class Functor, class FloatType>
+    OptimizerLM<Functor, FloatType>&
+    OptimizerLM<Functor, FloatType>::
+    operator=(const OptimizerLM<Functor, FloatType>& source)
     {
       if(&source != this) {
         Optimizer<Functor>::operator=(source);
@@ -523,15 +523,15 @@ namespace brick {
 
     // =============== Protected member functions below =============== //
 
-    template <class Functor>
+    template <class Functor, class FloatType>
     std::pair<typename Functor::argument_type, typename Functor::result_type>
-    OptimizerLM<Functor>::
+    OptimizerLM<Functor, FloatType>::
     run()
     {
       // Check that we have a valid startPoint.
       if(this->m_startPoint.size() == 0) {
         BRICK_THROW(brick::common::StateException, 
-		    "OptimizerLM<Functor>::run()",
+		    "OptimizerLM<Functor, FloatType>::run()",
 		    "startPoint has not been initialized.");
       }
     
@@ -548,15 +548,15 @@ namespace brick {
       // derivatives.
       result_type errorValue;
       argument_type dEdX(theta.size());
-      brick::numeric::Array2D<brick::common::Float64> d2EdX2(theta.size(), theta.size());
+      brick::numeric::Array2D<FloatType> d2EdX2(theta.size(), theta.size());
 
       // Initialize intermediate values used by the minimization.
-      brick::numeric::Array2D<brick::common::Float64> BMatrix(theta.size(), theta.size());
-      brick::numeric::Array1D<brick::common::Float64> deltaX(theta.size());
+      brick::numeric::Array2D<FloatType> BMatrix(theta.size(), theta.size());
+      brick::numeric::Array1D<FloatType> deltaX(theta.size());
       argument_type xCond(theta.size());
       brick::numeric::Array1D<result_type> errorHistory =
         brick::numeric::zeros<result_type>(this->m_maxIterations + 1);
-      brick::common::Float64 lambda = this->m_initialLambda;
+      FloatType lambda = this->m_initialLambda;
 
       // Get initial value of error function.
       errorValue = this->m_functor(theta);
@@ -638,7 +638,7 @@ namespace brick {
 //       }
     
         // Test termination conditions.
-        brick::common::Float64 drop =
+        FloatType drop =
           (errorHistory[iterationIndex] - errorValue)
           / errorHistory[iterationIndex];
         if(drop < this->m_minDrop) {
@@ -671,9 +671,9 @@ namespace brick {
     }
 
 
-    template <class Functor>
+    template <class Functor, class FloatType>
     inline void
-    OptimizerLM<Functor>::
+    OptimizerLM<Functor, FloatType>::
     verboseWrite(const char* message, int verbosity)
     {
       if(verbosity <= this->m_verbosity) {
@@ -682,9 +682,9 @@ namespace brick {
     }
 
 
-    template <class Functor> template <class Type>
+    template <class Functor, class FloatType> template <class Type>
     inline void
-    OptimizerLM<Functor>::
+    OptimizerLM<Functor, FloatType>::
     verboseWrite(const char* intro, const Type& subject, int verbosity)
     {
       if(verbosity <= this->m_verbosity) {

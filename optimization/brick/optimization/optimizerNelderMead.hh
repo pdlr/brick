@@ -35,7 +35,7 @@ namespace brick {
      ** minimization. Computer Journal, 7:303--313, 1965.
      **/
     // template <std::unary_function Functor>
-    template <class Functor>
+    template <class Functor, class FloatType = double>
     class OptimizerNelderMead
       : public Optimizer<Functor> {
     public:
@@ -173,10 +173,10 @@ namespace brick {
       setParameters(argument_type delta,
                     size_t functionCallLimit=5000,
                     size_t numberOfRestarts=1,
-                    double alpha=1.0,
-                    double beta=0.5,
-                    double gamma=2.0,
-                    double minimumSimplexValueSpan=0.0001,
+                    FloatType alpha=1.0,
+                    FloatType beta=0.5,
+                    FloatType gamma=2.0,
+                    FloatType minimumSimplexValueSpan=0.0001,
                     size_t verbosity=0);
 
     
@@ -270,7 +270,7 @@ namespace brick {
       evaluateMove(std::vector<argument_type>& currentPoints,
                    std::vector<result_type>& currentValues,
                    const argument_type& axisSums,
-                   double factor);
+                   FloatType factor);
 
 
       /** 
@@ -286,10 +286,10 @@ namespace brick {
       argument_type m_delta;
       size_t m_functionCallLimit;
       size_t m_numberOfRestarts;
-      double m_alpha;
-      double m_beta;
-      double m_gamma;
-      double m_minimumSimplexValueSpan;
+      FloatType m_alpha;
+      FloatType m_beta;
+      FloatType m_gamma;
+      FloatType m_minimumSimplexValueSpan;
       bool m_deltaValueHack;
 
       std::vector<size_t> m_functionCallCount;
@@ -397,8 +397,8 @@ namespace brick {
     // Sets parameters to reasonable values for functions which take
     // values and arguments in the "normal" range of 0 to 100 or so.
     // template <std::unary_function Functor>
-    template <class Functor>
-    OptimizerNelderMead<Functor>::
+    template <class Functor, class FloatType>
+    OptimizerNelderMead<Functor, FloatType>::
     OptimizerNelderMead()
       : Optimizer<Functor>(),
         m_functionCallCount(),
@@ -412,8 +412,8 @@ namespace brick {
     // Constructor which specifies the specific Functor instance to
     // use.
     // template <std::unary_function Functor>
-    template <class Functor>
-    OptimizerNelderMead<Functor>::
+    template <class Functor, class FloatType>
+    OptimizerNelderMead<Functor, FloatType>::
     OptimizerNelderMead(const Functor& functor)
       : Optimizer<Functor>(functor),
         m_functionCallCount(),
@@ -425,8 +425,8 @@ namespace brick {
 
     // Copy constructor.
     // template <std::unary_function Functor>
-    template <class Functor>
-    OptimizerNelderMead<Functor>::
+    template <class Functor, class FloatType>
+    OptimizerNelderMead<Functor, FloatType>::
     OptimizerNelderMead(const OptimizerNelderMead& source)
       : Optimizer<Functor>(source),
         m_functionCallLimit(source.m_functionCallLimit),
@@ -444,8 +444,8 @@ namespace brick {
 
     // Destructor.
     // template <std::unary_function Functor>
-    template <class Functor>
-    OptimizerNelderMead<Functor>::
+    template <class Functor, class FloatType>
+    OptimizerNelderMead<Functor, FloatType>::
     ~OptimizerNelderMead()
     {
       // Empty
@@ -454,9 +454,9 @@ namespace brick {
     // Queries the number of functionCalls required to complete the
     // previous minimization.
     // template <std::unary_function Functor>
-    template <class Functor>
+    template <class Functor, class FloatType>
     std::vector<size_t>
-    OptimizerNelderMead<Functor>::
+    OptimizerNelderMead<Functor, FloatType>::
     getNumberOfFunctionCalls()
     {
       return this->m_functionCallCount;
@@ -466,10 +466,10 @@ namespace brick {
     // This method sets the spacing of the initial points used in the
     // nonlinear optimization, without affecting any other optimization
     // parameters.
-    template <class Functor>
+    template <class Functor, class FloatType>
     void
-    OptimizerNelderMead<Functor>::
-    setDelta(const typename OptimizerNelderMead<Functor>::argument_type& delta)
+    OptimizerNelderMead<Functor, FloatType>::
+    setDelta(const typename OptimizerNelderMead<Functor, FloatType>::argument_type& delta)
     {
       copyArgumentType(delta, this->m_delta);
     }
@@ -477,16 +477,16 @@ namespace brick {
   
     // Sets minimization parameters.
     // template <std::unary_function Functor>
-    template <class Functor>
+    template <class Functor, class FloatType>
     void
-    OptimizerNelderMead<Functor>::
-    setParameters(typename OptimizerNelderMead<Functor>::argument_type delta,
+    OptimizerNelderMead<Functor, FloatType>::
+    setParameters(typename OptimizerNelderMead<Functor, FloatType>::argument_type delta,
                   size_t functionCallLimit,
                   size_t numberOfRestarts,
-                  double alpha,
-                  double beta,
-                  double gamma,
-                  double minimumSimplexValueSpan,
+                  FloatType alpha,
+                  FloatType beta,
+                  FloatType gamma,
+                  FloatType minimumSimplexValueSpan,
                   size_t verbosity)
     {
       copyArgumentType(delta, this->m_delta);
@@ -505,9 +505,9 @@ namespace brick {
 
     // Sets the initial conditions for the minimization.
     // template <std::unary_function Functor>
-    template <class Functor>
+    template <class Functor, class FloatType>
     void
-    OptimizerNelderMead<Functor>::
+    OptimizerNelderMead<Functor, FloatType>::
     setStartPoint(argument_type startPoint)
     {
       this->m_theta0 = startPoint;
@@ -518,10 +518,10 @@ namespace brick {
                   
     // Assignment operator.
     // template <std::unary_function Functor>
-    template <class Functor>
-    OptimizerNelderMead<Functor>&
-    OptimizerNelderMead<Functor>::
-    operator=(const OptimizerNelderMead<Functor>& source)
+    template <class Functor, class FloatType>
+    OptimizerNelderMead<Functor, FloatType>&
+    OptimizerNelderMead<Functor, FloatType>::
+    operator=(const OptimizerNelderMead<Functor, FloatType>& source)
     {
       Optimizer<Functor>::operator=(source);
       this->m_delta = source.m_delta;
@@ -536,13 +536,13 @@ namespace brick {
     }
 
     // template <std::unary_function Functor>
-    template <class Functor>
+    template <class Functor, class FloatType>
     void
-    OptimizerNelderMead<Functor>::
+    OptimizerNelderMead<Functor, FloatType>::
     computeAxisSums(
-      const std::vector<typename OptimizerNelderMead<Functor>::argument_type>&
+      const std::vector<typename OptimizerNelderMead<Functor, FloatType>::argument_type>&
       currentPoints,
-      typename OptimizerNelderMead<Functor>::argument_type& axisSums)
+      typename OptimizerNelderMead<Functor, FloatType>::argument_type& axisSums)
     {
       if(currentPoints.size() == 0) {
         BRICK_THROW(brick::common::LogicException, 
@@ -559,13 +559,13 @@ namespace brick {
   
     // Run the actual simplex search.  Modifies all arguments.
     // template <std::unary_function Functor>
-    template <class Functor>
+    template <class Functor, class FloatType>
     void
-    OptimizerNelderMead<Functor>::
+    OptimizerNelderMead<Functor, FloatType>::
     doNelderMead(
-      std::vector<typename OptimizerNelderMead<Functor>::argument_type>&
+      std::vector<typename OptimizerNelderMead<Functor, FloatType>::argument_type>&
       currentPoints,
-      std::vector<typename OptimizerNelderMead<Functor>::result_type>&
+      std::vector<typename OptimizerNelderMead<Functor, FloatType>::result_type>&
       currentValues,
       size_t& numberOfFunctionCalls)
     {
@@ -582,7 +582,7 @@ namespace brick {
                     << std::flush;
         }
 
-        double simplexValueSpan = 0;
+        FloatType simplexValueSpan = 0;
         if((std::fabs(currentValues[dimension])
             + std::fabs(currentValues[0])) > 0) {
           simplexValueSpan =
@@ -646,17 +646,17 @@ namespace brick {
     // = ((1 - factor)/n)*sum(xSubi) - ((1 - factor)/n)*xMax + factor*xMax
     // = ((1 - factor)/n)*sum(xSubi) + (factor - ((1 - factor)/n))*xMax
     // template <std::unary_function Functor>
-    template <class Functor>
-    typename OptimizerNelderMead<Functor>::result_type
-    OptimizerNelderMead<Functor>::
+    template <class Functor, class FloatType>
+    typename OptimizerNelderMead<Functor, FloatType>::result_type
+    OptimizerNelderMead<Functor, FloatType>::
     evaluateMove(std::vector<argument_type>& currentPoints,
                  std::vector<result_type>& currentValues,
                  const argument_type& axisSums,
-                 double factor)
+                 FloatType factor)
     {
       size_t dimension = currentPoints.size() - 1;
-      double centroidFactor = (1.0 - factor) / dimension;
-      double extrapolationFactor = factor - centroidFactor;
+      FloatType centroidFactor = (1.0 - factor) / dimension;
+      FloatType extrapolationFactor = factor - centroidFactor;
       argument_type newPoint =
         ((centroidFactor * axisSums)
          + (extrapolationFactor * currentPoints[dimension]));
@@ -670,9 +670,9 @@ namespace brick {
 
     // Perform the minimization (top level).
     // template <std::unary_function Functor>
-    template <class Functor>
+    template <class Functor, class FloatType>
     std::pair<typename Functor::argument_type, typename Functor::result_type>
-    OptimizerNelderMead<Functor>::
+    OptimizerNelderMead<Functor, FloatType>::
     run()
     {
       size_t dimension = this->m_theta0.size();

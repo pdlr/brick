@@ -153,6 +153,9 @@ namespace brick {
       int m_fileDescriptor;
       std::string m_fileName;
 
+      // This member is currently only to soothe compiler warnings.
+      int m_returnCode;
+      
     }; // class LockFile
 
   } // namespace utilities

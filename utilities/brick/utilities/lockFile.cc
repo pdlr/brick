@@ -63,7 +63,8 @@ namespace brick {
              double timeout)
       : m_fileDescriptor(open(fileName.c_str(), O_WRONLY | O_CREAT | O_EXCL,
                               S_IWUSR)),
-        m_fileName(fileName)
+        m_fileName(fileName),
+        m_returnCode(0)
     {
       if(timeout != 0.0) {
         double stopTime = std::numeric_limits<double>::max();
@@ -82,10 +83,12 @@ namespace brick {
         }
       }
       if(m_fileDescriptor != -1) {
-        // Success of these function calls is largely irrelevant.
-        write(m_fileDescriptor, (const void*)contents.c_str(), contents.size());
-        close(m_fileDescriptor);
-        chmod(m_fileName.c_str(), S_IRUSR);
+        // Success of these function calls is largely irrelevant. We
+        // check the return codes only to avoid a warning from gcc.
+        this->m_returnCode = write(m_fileDescriptor, (const void*)contents.c_str(),
+                               contents.size());
+        this->m_returnCode |= close(m_fileDescriptor);
+        this->m_returnCode |= chmod(m_fileName.c_str(), S_IRUSR);
       }
     }
       

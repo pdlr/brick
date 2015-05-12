@@ -86,7 +86,7 @@ namespace brick {
     estimateDerivative(typename Functor::argument_type const& argument,
                        Scalar& errorEstimate)
     {
-      Scalar result;
+      Scalar result(0);
       errorEstimate = std::numeric_limits<Scalar>::max();
 
       // xxx

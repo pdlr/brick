@@ -20,6 +20,8 @@
 // 
 // #include <brick/numeric/differentiableScalar.hh>
 
+#include <algorithm>
+
 #include <brick/common/exception.hh>
 #include <brick/common/mathFunctions.hh>
 

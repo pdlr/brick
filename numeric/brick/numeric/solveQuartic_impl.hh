@@ -34,8 +34,10 @@ namespace brick {
     template <class Type>
     void
     solveQuartic(Type c0, Type c1, Type c2, Type c3,
-                 std::complex<Type>& root0, std::complex<Type>& root1,
-                 std::complex<Type>& root2, std::complex<Type>& root3)
+                 brick::common::ComplexNumber<Type>& root0,
+                 brick::common::ComplexNumber<Type>& root1,
+                 brick::common::ComplexNumber<Type>& root2,
+                 brick::common::ComplexNumber<Type>& root3)
     {
       // This solution method follows the "Quick and memorable
       // solution from first principles" algorithm contributed to
@@ -98,15 +100,17 @@ namespace brick {
       Type k0 = Type(2.0) * alpha;
       Type k1 = alpha * alpha - Type(4.0) * gamma;
       Type k2 = -(beta * beta);
-      std::complex<Type> r0;
-      std::complex<Type> r1;
-      std::complex<Type> r2;
+      brick::common::ComplexNumber<Type> r0;
+      brick::common::ComplexNumber<Type> r1;
+      brick::common::ComplexNumber<Type> r2;
       solveCubic(k0, k1, k2, r0, r1, r2);
 
       // Pick the largest root of the polynomial.
-      Type mag2R0 = r0.real() * r0.real(); // R1 is always real.
-      Type mag2R1 = r1.real() * r1.real() + r1.imag() * r1.imag();
-      Type mag2R2 = r2.real() * r2.real() + r2.imag() * r2.imag();
+      Type mag2R0 = r0.getRealPart() * r0.getRealPart(); // R1 is always real.
+      Type mag2R1 = (r1.getRealPart() * r1.getRealPart()
+                     + r1.getImaginaryPart() * r1.getImaginaryPart());
+      Type mag2R2 = (r2.getRealPart() * r2.getRealPart()
+                     + r2.getImaginaryPart() * r2.getImaginaryPart());
       if(mag2R1 > mag2R0) {
         std::swap(r1, r0);
         std::swap(mag2R1, mag2R0);
@@ -117,17 +121,19 @@ namespace brick {
       }
 
       // Recover p.
-      std::complex<Type> pp = std::sqrt(r0);
+      brick::common::ComplexNumber<Type> pp = squareRoot(r0);
 
       // Recover s and q from the equations
       //
       //   alpha + p^2 = s + q
       //   beta / p = s - q
-      std::complex<Type> alphaPlusPpSquared = alpha + pp * pp;
-      std::complex<Type> betaOverPp =
-        mag2R0 ? (beta / pp) : std::complex<Type>(Type(0.0), Type(0.0));
-      std::complex<Type> ss = (alphaPlusPpSquared + betaOverPp) / Type(2.0);
-      std::complex<Type> qq = (alphaPlusPpSquared - betaOverPp) / Type(2.0);
+      brick::common::ComplexNumber<Type> alphaPlusPpSquared = alpha + pp * pp;
+      brick::common::ComplexNumber<Type> betaOverPp =
+        mag2R0 ? (beta / pp) : brick::common::ComplexNumber<Type>();
+      brick::common::ComplexNumber<Type> ss =
+        (alphaPlusPpSquared + betaOverPp) / Type(2.0);
+      brick::common::ComplexNumber<Type> qq =
+        (alphaPlusPpSquared - betaOverPp) / Type(2.0);
 
       // Now find the roots of the polynomial in u, and change
       // variables back to x:

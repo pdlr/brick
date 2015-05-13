@@ -119,21 +119,21 @@ namespace brick {
       double c1 = 10.0;
       double c2 = 28.0;
 
-      std::complex<double> root0;
-      std::complex<double> root1;
+      brick::common::ComplexNumber<double> root0;
+      brick::common::ComplexNumber<double> root1;
       solveQuadratic(c0, c1, c2, root0, root1);
 
-      if(root0.real() > root1.real()) {
-        std::swap(root0.real(), root1.real());
+      if(root0.getRealPart() > root1.getRealPart()) {
+        std::swap(root0, root1);
       }
       BRICK_TEST_ASSERT(
-        approximatelyEqual(root0.real(), -2.0, m_defaultTolerance));
+        approximatelyEqual(root0.getRealPart(), -2.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(
-        approximatelyEqual(root0.imag(), 0.0, m_defaultTolerance));
+        approximatelyEqual(root0.getImaginaryPart(), 0.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(
-        approximatelyEqual(root1.real(), 7.0, m_defaultTolerance));
+        approximatelyEqual(root1.getRealPart(), 7.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(
-        approximatelyEqual(root1.imag(), 0.0, m_defaultTolerance));
+        approximatelyEqual(root1.getImaginaryPart(), 0.0, m_defaultTolerance));
 
 
       // Test for (2x + 4)(-x - 7) = 0;
@@ -143,17 +143,17 @@ namespace brick {
 
       solveQuadratic(c0, c1, c2, root0, root1);
 
-      if(root0.real() > root1.real()) {
-        std::swap(root0.real(), root1.real());
+      if(root0.getRealPart() > root1.getRealPart()) {
+        std::swap(root0, root1);
       }
       BRICK_TEST_ASSERT(
-        approximatelyEqual(root0.real(), -7.0, m_defaultTolerance));
+        approximatelyEqual(root0.getRealPart(), -7.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(
-        approximatelyEqual(root0.imag(), 0.0, m_defaultTolerance));
+        approximatelyEqual(root0.getImaginaryPart(), 0.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(
-        approximatelyEqual(root1.real(), -2.0, m_defaultTolerance));
+        approximatelyEqual(root1.getRealPart(), -2.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(
-        approximatelyEqual(root1.imag(), 0.0, m_defaultTolerance));
+        approximatelyEqual(root1.getImaginaryPart(), 0.0, m_defaultTolerance));
 
       // Test for (2x + 4i)(4x - 8i) = 0;
       c0 = 8.0;
@@ -162,17 +162,17 @@ namespace brick {
 
       solveQuadratic(c0, c1, c2, root0, root1);
 
-      if(root0.imag() > root1.imag()) {
+      if(root0.getImaginaryPart() > root1.getImaginaryPart()) {
         std::swap(root0, root1);
       }
       BRICK_TEST_ASSERT(
-        approximatelyEqual(root0.real(), 0.0, m_defaultTolerance));
+        approximatelyEqual(root0.getRealPart(), 0.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(
-        approximatelyEqual(root0.imag(), -2.0, m_defaultTolerance));
+        approximatelyEqual(root0.getImaginaryPart(), -2.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(
-        approximatelyEqual(root1.real(), 0.0, m_defaultTolerance));
+        approximatelyEqual(root1.getRealPart(), 0.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(
-        approximatelyEqual(root1.imag(), 2.0, m_defaultTolerance));
+        approximatelyEqual(root1.getImaginaryPart(), 2.0, m_defaultTolerance));
     }
 
 
@@ -181,62 +181,62 @@ namespace brick {
     testSolveQuadratic__complex_complex_complex_complex()
     {
       // Test for (2x + 4)(-x + 7) = 0;
-      std::complex<double> c0(-2.0, 0.0);
-      std::complex<double> c1(10.0, 0.0);
-      std::complex<double> c2(28.0, 0.0);
+      brick::common::ComplexNumber<double> c0(-2.0, 0.0);
+      brick::common::ComplexNumber<double> c1(10.0, 0.0);
+      brick::common::ComplexNumber<double> c2(28.0, 0.0);
 
-      std::complex<double> root0;
-      std::complex<double> root1;
+      brick::common::ComplexNumber<double> root0;
+      brick::common::ComplexNumber<double> root1;
       solveQuadratic(c1 / c0, c2 / c0, root0, root1);
 
-      if(root0.real() > root1.real()) {
-        std::swap(root0.real(), root1.real());
-      }
-      BRICK_TEST_ASSERT(
-        approximatelyEqual(root0.real(), -2.0, m_defaultTolerance));
-      BRICK_TEST_ASSERT(
-        approximatelyEqual(root0.imag(), 0.0, m_defaultTolerance));
-      BRICK_TEST_ASSERT(
-        approximatelyEqual(root1.real(), 7.0, m_defaultTolerance));
-      BRICK_TEST_ASSERT(
-        approximatelyEqual(root1.imag(), 0.0, m_defaultTolerance));
-
-
-      // Test for (2x + 4)(-x - 7) = 0;
-      c0 = std::complex<double>(-2.0, 0.0);
-      c1 = std::complex<double>(-18.0, 0.0);
-      c2 = std::complex<double>(-28.0, 0.0);
-      solveQuadratic(c1 / c0, c2 / c0, root0, root1);
-
-      if(root0.real() > root1.real()) {
-        std::swap(root0.real(), root1.real());
-      }
-      BRICK_TEST_ASSERT(
-        approximatelyEqual(root0.real(), -7.0, m_defaultTolerance));
-      BRICK_TEST_ASSERT(
-        approximatelyEqual(root0.imag(), 0.0, m_defaultTolerance));
-      BRICK_TEST_ASSERT(
-        approximatelyEqual(root1.real(), -2.0, m_defaultTolerance));
-      BRICK_TEST_ASSERT(
-        approximatelyEqual(root1.imag(), 0.0, m_defaultTolerance));
-
-      // Test for (2x + 4i)(4x - 8i) = 0;
-      c0 = std::complex<double>(8.0, 0.0);
-      c1 = std::complex<double>(0.0, 0.0);
-      c2 = std::complex<double>(32.0, 0.0);
-      solveQuadratic(c1 / c0, c2 / c0, root0, root1);
-
-      if(root0.imag() > root1.imag()) {
+      if(root0.getRealPart() > root1.getRealPart()) {
         std::swap(root0, root1);
       }
       BRICK_TEST_ASSERT(
-        approximatelyEqual(root0.real(), 0.0, m_defaultTolerance));
+        approximatelyEqual(root0.getRealPart(), -2.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(
-        approximatelyEqual(root0.imag(), -2.0, m_defaultTolerance));
+        approximatelyEqual(root0.getImaginaryPart(), 0.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(
-        approximatelyEqual(root1.real(), 0.0, m_defaultTolerance));
+        approximatelyEqual(root1.getRealPart(), 7.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(
-        approximatelyEqual(root1.imag(), 2.0, m_defaultTolerance));
+        approximatelyEqual(root1.getImaginaryPart(), 0.0, m_defaultTolerance));
+
+
+      // Test for (2x + 4)(-x - 7) = 0;
+      c0 = brick::common::ComplexNumber<double>(-2.0, 0.0);
+      c1 = brick::common::ComplexNumber<double>(-18.0, 0.0);
+      c2 = brick::common::ComplexNumber<double>(-28.0, 0.0);
+      solveQuadratic(c1 / c0, c2 / c0, root0, root1);
+
+      if(root0.getRealPart() > root1.getRealPart()) {
+        std::swap(root0, root1);
+      }
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(root0.getRealPart(), -7.0, m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(root0.getImaginaryPart(), 0.0, m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(root1.getRealPart(), -2.0, m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(root1.getImaginaryPart(), 0.0, m_defaultTolerance));
+
+      // Test for (2x + 4i)(4x - 8i) = 0;
+      c0 = brick::common::ComplexNumber<double>(8.0, 0.0);
+      c1 = brick::common::ComplexNumber<double>(0.0, 0.0);
+      c2 = brick::common::ComplexNumber<double>(32.0, 0.0);
+      solveQuadratic(c1 / c0, c2 / c0, root0, root1);
+
+      if(root0.getImaginaryPart() > root1.getImaginaryPart()) {
+        std::swap(root0, root1);
+      }
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(root0.getRealPart(), 0.0, m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(root0.getImaginaryPart(), -2.0, m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(root1.getRealPart(), 0.0, m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(root1.getImaginaryPart(), 2.0, m_defaultTolerance));
     }
     
   } // namespace numeric

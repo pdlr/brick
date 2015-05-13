@@ -22,6 +22,7 @@
 
 #include <cmath>
 #include <brick/common/constants.hh>
+#include <brick/numeric/mathFunctions.hh>
 
 namespace brick {
 
@@ -52,8 +53,8 @@ namespace brick {
       Type c0OverThree = c0 / Type(3.0);
       if(rrSquared < qqCubed) {
         // Looks like we have three real roots.
-        Type theta = std::acos(rr / std::sqrt(qqCubed));
-        Type minusTwoRootQq = Type(-2.0) * Type(std::sqrt(qq));
+        Type theta = std::acos(rr / squareRoot(qqCubed));
+        Type minusTwoRootQq = Type(-2.0) * Type(squareRoot(qq));
         Type twoPi = Type(2.0 * brick::common::constants::pi);
 
         root0 = (minusTwoRootQq * std::cos(theta / Type(3.0))
@@ -66,7 +67,7 @@ namespace brick {
         // Looks like we have some complex roots.
         bool signRr = rr > Type(0.0);
         Type absRr = signRr ? rr : -rr;
-        Type aa = std::pow(absRr + std::sqrt(rrSquared - qqCubed), 1.0 / 3.0);
+        Type aa = std::pow(absRr + squareRoot(rrSquared - qqCubed), 1.0 / 3.0);
         if(signRr) {
           aa = -aa;
         }
@@ -86,8 +87,9 @@ namespace brick {
     template <class Type>
     void
     solveCubic(Type c0, Type c1, Type c2,
-               std::complex<Type>& root0, std::complex<Type>& root1,
-               std::complex<Type>& root2)
+               brick::common::ComplexNumber<Type>& root0,
+               brick::common::ComplexNumber<Type>& root1,
+               brick::common::ComplexNumber<Type>& root2)
     {
       // We follow the formulation in Press et al, "Numerical Recipes,
       // The Art of Scientific Computing," third edition, Cambridge
@@ -104,36 +106,34 @@ namespace brick {
       Type c0OverThree = c0 / Type(3.0);
       if(rrSquared < qqCubed) {
         // Looks like we have three real roots.
-        Type theta = std::acos(rr / std::sqrt(qqCubed));
-        Type minusTwoRootQq = Type(-2.0) * Type(std::sqrt(qq));
+        Type theta = std::acos(rr / squareRoot(qqCubed));
+        Type minusTwoRootQq = Type(-2.0) * Type(squareRoot(qq));
         Type twoPi = Type(2.0 * brick::common::constants::pi);
 
-        root0.real() = (minusTwoRootQq * std::cos(theta / Type(3.0))
-                        - c0OverThree);
-        root0.imag() = 0.0;
-        root1.real() = (minusTwoRootQq * std::cos((theta + twoPi) / Type(3.0))
-                        - c0OverThree);
-        root1.imag() = 0.0;
-        root2.real() = (minusTwoRootQq * std::cos((theta - twoPi) / Type(3.0))
-                        - c0OverThree);
-        root2.imag() = 0.0;
+        root0.setValue((minusTwoRootQq * std::cos(theta / Type(3.0))
+                        - c0OverThree),
+                       0.0);
+        root1.setValue((minusTwoRootQq * std::cos((theta + twoPi) / Type(3.0))
+                        - c0OverThree), 
+                       0.0);
+        root2.setValue((minusTwoRootQq * std::cos((theta - twoPi) / Type(3.0))
+                        - c0OverThree),
+                       0.0);
       } else {
         // Looks like we have some complex roots.
         bool signRr = rr > Type(0.0);
         Type absRr = signRr ? rr : -rr;
-        Type aa = std::pow(absRr + std::sqrt(rrSquared - qqCubed), 1.0 / 3.0);
+        Type aa = std::pow(absRr + squareRoot(rrSquared - qqCubed), 1.0 / 3.0);
         if(signRr) {
           aa = -aa;
         }
 
         Type bb = (aa == Type(0.0)) ? Type(0.0) : (qq / aa);
 
-        root0.real() = (aa + bb) - c0OverThree;
-        root0.imag() = 0.0;
-        root1.real() = Type(-0.5) * (aa + bb) - c0OverThree;
-        root1.imag() = (Type(std::sqrt(3.0)) / Type(2.0)) * (aa - bb);
-        root2.real() = root1.real();
-        root2.imag() = -root1.imag();
+        root0.setValue(((aa + bb) - c0OverThree), 0.0);
+        root1.setValue((Type(-0.5) * (aa + bb) - c0OverThree), 
+                       (Type(squareRoot(3.0)) / Type(2.0)) * (aa - bb));
+        root2.setValue(root1.getRealPart(), -(root1.getImaginaryPart()));
       }
     }
 

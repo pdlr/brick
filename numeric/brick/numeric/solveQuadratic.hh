@@ -14,7 +14,7 @@
 #ifndef BRICK_NUMERIC_SOLVEQUADRATIC_HH
 #define BRICK_NUMERIC_SOLVEQUADRATIC_HH
 
-#include <complex>
+#include <brick/common/complexNumber.hh>
 
 namespace brick {
 
@@ -70,7 +70,9 @@ namespace brick {
   
     /** 
      * This function computes the (possibly complex) roots of the
-     * quadratic polynomial c0*x^2 + c1*x + c2 = 0.
+     * quadratic polynomial c0*x^2 + c1*x + c2 = 0.  As of mid-2015,
+     * the std::complex API is not stable, so we use
+     * brick::common::ComplexNumber instead.
      * 
      * @param c0 This argument is the quadratic coefficient of the
      * polynomial.
@@ -90,7 +92,8 @@ namespace brick {
     template <class Type>
     void
     solveQuadratic(Type c0, Type c1, Type c2,
-                   std::complex<Type>& root0, std::complex<Type>& root1);
+                   brick::common::ComplexNumber<Type>& root0,
+                   brick::common::ComplexNumber<Type>& root1);
 
 
     /** 
@@ -111,8 +114,10 @@ namespace brick {
      */
     template <class Type>
     void
-    solveQuadratic(std::complex<Type> c0, std::complex<Type> c1,
-                   std::complex<Type>& root0, std::complex<Type>& root1);
+    solveQuadratic(brick::common::ComplexNumber<Type> c0,
+                   brick::common::ComplexNumber<Type> c1,
+                   brick::common::ComplexNumber<Type>& root0,
+                   brick::common::ComplexNumber<Type>& root1);
     
   
   } // namespace numeric

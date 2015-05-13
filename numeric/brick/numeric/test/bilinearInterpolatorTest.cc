@@ -86,14 +86,12 @@ namespace brick {
 } // namespace brick
 
 
-#if 1
+#if 0
 
 int main(int /* argc */, char** /* argv */)
 {
   brick::numeric::BilinearInterpolatorTest currentTest;
-  // bool result = currentTest.run();
-  bool result = 0;
-  currentTest.testIndexOperator();
+  bool result = currentTest.run();
   return (result ? 0 : 1);
 }
 

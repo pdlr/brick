@@ -14,7 +14,7 @@
 #ifndef BRICK_NUMERIC_SOLVEQUARTIC_HH
 #define BRICK_NUMERIC_SOLVEQUARTIC_HH
 
-#include <complex>
+#include <brick/common/complexNumber.hh>
 
 namespace brick {
 
@@ -51,8 +51,10 @@ namespace brick {
     template <class Type>
     void
     solveQuartic(Type c0, Type c1, Type c2, Type c3,
-                 std::complex<Type>& root0, std::complex<Type>& root1,
-                 std::complex<Type>& root2, std::complex<Type>& root3);
+                 brick::common::ComplexNumber<Type>& root0,
+                 brick::common::ComplexNumber<Type>& root1,
+                 brick::common::ComplexNumber<Type>& root2,
+                 brick::common::ComplexNumber<Type>& root3);
 
   
   } // namespace numeric

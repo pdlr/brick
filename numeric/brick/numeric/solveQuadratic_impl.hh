@@ -21,6 +21,7 @@
 // #include <brick/numeric/solveQuadratic.hh>
 
 #include <cmath>
+#include <brick/numeric/mathFunctions.hh>
 
 namespace brick {
 
@@ -37,7 +38,7 @@ namespace brick {
       if(ss < static_cast<Type>(0.0)) {
         return false;
       }
-      Type rt = std::sqrt(ss);
+      Type rt = squareRoot(ss);
       if(c1 < static_cast<Type>(0.0)) {
         rt = -rt;
       }
@@ -54,21 +55,21 @@ namespace brick {
     template <class Type>
     void
     solveQuadratic(Type c0, Type c1, Type c2,
-                   std::complex<Type>& root0, std::complex<Type>& root1)
+                   brick::common::ComplexNumber<Type>& root0,
+                   brick::common::ComplexNumber<Type>& root1)
     {
       Type ss = (c1 * c1) - (static_cast<Type>(4.0) * c0 * c2);
-      std::complex<Type> rt;
+      brick::common::ComplexNumber<Type> rt;
       if(ss >= static_cast<Type>(0.0)) {
-        rt.real() = std::sqrt(ss);
-        rt.imag() = static_cast<Type>(0.0);
+        rt.setValue(squareRoot(ss), static_cast<Type>(0.0));
       } else {
-        rt.real() = static_cast<Type>(0.0);
-        rt.imag() = std::sqrt(-ss);
+        rt.setValue(static_cast<Type>(0.0), squareRoot(-ss));
       }
       if(c1 < static_cast<Type>(0.0)) {
         rt = -rt;
       }
-      std::complex<Type> qq = static_cast<Type>(-0.5) * (rt + c1);
+      brick::common::ComplexNumber<Type> qq =
+        static_cast<Type>(-0.5) * (rt + c1);
       root0 = qq / c0;
       root1 = c2 / qq;
     }
@@ -78,25 +79,29 @@ namespace brick {
     // x^2 + c0*x + c1 = 0, where c0 and c1 are complex.
     template <class Type>
     void
-    solveQuadratic(std::complex<Type> c0, std::complex<Type> c1,
-                   std::complex<Type>& root0, std::complex<Type>& root1)
+    solveQuadratic(brick::common::ComplexNumber<Type> c0,
+                   brick::common::ComplexNumber<Type> c1,
+                   brick::common::ComplexNumber<Type>& root0,
+                   brick::common::ComplexNumber<Type>& root1)
     {
-      std::complex<Type> ss = (c0 * c0) - (static_cast<Type>(4.0) * c1);
-      std::complex<Type> rt = std::sqrt(ss);
-      if((c0.real() * rt.real() + c0.imag() * rt.imag())
+      brick::common::ComplexNumber<Type> ss =
+        (c0 * c0) - (static_cast<Type>(4.0) * c1);
+      brick::common::ComplexNumber<Type> rt = squareRoot(ss);
+      if((c0.getRealPart() * rt.getRealPart()
+          + c0.getImaginaryPart() * rt.getImaginaryPart())
          < static_cast<Type>(0.0)) {
         rt = -rt;
       }
-      std::complex<Type> qq = static_cast<Type>(-0.5) * (rt + c0);
+      brick::common::ComplexNumber<Type> qq =
+        static_cast<Type>(-0.5) * (rt + c0);
       root0 = qq;
 
       // If qq is zero, then c0 and c1 are zero, and we know the
       // second root.
-      if(qq.real() || qq.imag()) {
+      if(qq.getRealPart() || qq.getImaginaryPart()) {
         root1 = c1 / qq;
       } else {
-        root1.real() = Type(0.0);
-        root1.imag() = Type(0.0);
+        root1.setValue(Type(0.0), Type(0.0));
       }
     } 
     

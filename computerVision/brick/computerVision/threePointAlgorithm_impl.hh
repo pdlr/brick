@@ -21,8 +21,8 @@
 // #include <brick/computerVision/threePointAlgorithm.hh>
 
 #include <cmath>
-#include <complex>
 #include <limits>
+#include <brick/common/complexNumber.hh>
 #include <brick/common/mathFunctions.hh>
 #include <brick/computerVision/registerPoints3D.hh>
 #include <brick/numeric/solveQuartic.hh>
@@ -319,7 +319,7 @@ namespace brick {
       // Now we solve for the roots of the quartic, which tell us
       // valid values of k2.  Each root corresponds to a scale factor
       // that's consistent with the observed data.
-      std::complex<FloatType> k2Roots[4];
+      brick::common::ComplexNumber<FloatType> k2Roots[4];
       brick::numeric::solveQuartic(
         A3 / A4, A2 / A4, A1 / A4, A0 / A4,
         k2Roots[0], k2Roots[1], k2Roots[2], k2Roots[3]);
@@ -327,10 +327,11 @@ namespace brick {
       // For real value of k1, there's a corresponding value of k2 (see
       // Eq. 8 in [1]).
       for(unsigned int ii = 0; ii < 4; ++ii) {
-        bool isReal = (brick::common::absoluteValue(k2Roots[ii].imag())
+        bool isReal = (brick::common::absoluteValue(
+                         k2Roots[ii].getImaginaryPart())
                        <= epsilon);
         if(isReal) {
-          FloatType k2 = k2Roots[ii].real();
+          FloatType k2 = k2Roots[ii].getRealPart();
           FloatType numerator = (a2MinusC2OverB2Minus1 * k2 * k2
                               - 2.0 * a2MinusC2OverB2 * cosBeta * k2
                               + onePlusA2MinusC2OverB2);

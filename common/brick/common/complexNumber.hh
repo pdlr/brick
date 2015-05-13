@@ -151,10 +151,12 @@ namespace brick {
 
       // Convert into the form r*(cos(x) + i*sin(x)).
       Type xx = arctangent2(arg0.getImaginaryPart(), arg0.getRealPart());
-      while(xx >= constants::twoPi) {xx -= constants::twoPi;}
-      while(xx < 0.0) {xx += constants::twoPi;}
+      while(xx >= constants::pi) {xx -= constants::twoPi;}
+      while(xx < -(constants::pi)) {xx += constants::twoPi;}
       Type rr(0);
-      if(xx < constants::piOverFour || xx >= (constants::threePiOverFour)) {
+      if((xx < constants::piOverFour && xx >= -(constants::piOverFour))
+         || xx >= constants::threePiOverFour
+         || xx < -(constants::threePiOverFour)) {
         rr = arg0.getRealPart() / cosine(xx);
       } else {
         rr = arg0.getImaginaryPart() / sine(xx);

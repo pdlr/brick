@@ -27,6 +27,7 @@ brickCommon_HEADERS       = \
 	argumentDescription.hh \
 	byteOrder.hh \
 	compileTimestamp.hh \
+	complexNumber.hh \
 	constants.hh \
 	exception.hh \
 	expect.hh \

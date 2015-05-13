@@ -174,26 +174,30 @@ namespace brick {
       if((m_start < 0) || (m_start >= static_cast<int>(other.size()))) {
         std::ostringstream message;
         message << "Invalid start index: " << m_start << std::endl;
-        BRICK_THROW(IndexException, "SubArray1D::checkArray1DSize()",
+        BRICK_THROW(brick::common::IndexException,
+                    "SubArray1D::checkArray1DSize()",
                     message.str().c_str());
       }
       if(m_stride > 0) {
         if(m_stop > static_cast<int>(other.size())) {
           std::ostringstream message;
           message << "Invalid stop index: " << m_stop << std::endl;
-          BRICK_THROW(IndexException, "SubArray1D::checkArray1DSize()",
+          BRICK_THROW(brick::common::IndexException,
+                      "SubArray1D::checkArray1DSize()",
                       message.str().c_str());
         }
       } else if(m_stride < 0) {
         if(m_stop < -1) {
           std::ostringstream message;
           message << "Invalid stop index: " << m_stop << std::endl;
-          BRICK_THROW(IndexException, "SubArray1D::checkArray1DSize()",
+          BRICK_THROW(brick::common::IndexException,
+                      "SubArray1D::checkArray1DSize()",
                       message.str().c_str());
         }
       } else {
         // m_stride == 0
-        BRICK_THROW(IndexException, "SubArray1D::checkArray1DSize()",
+        BRICK_THROW(brick::common::IndexException,
+                    "SubArray1D::checkArray1DSize()",
                     "Invalid stride: 0");
       }
 #endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
@@ -213,7 +217,8 @@ namespace brick {
         std::ostringstream message;
         message << "Size mismatch: " << other.size() << " vs. "
                 << this->size() << std::endl;
-        BRICK_THROW(IndexException, "SubArray1D::checkSubArray1DSize()",
+        BRICK_THROW(brick::common::IndexException,
+                    "SubArray1D::checkSubArray1DSize()",
                     message.str().c_str());
       }
 #endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */

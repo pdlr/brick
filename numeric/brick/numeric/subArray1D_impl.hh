@@ -20,6 +20,7 @@
 // #include <brick/numeric/subArray1D.hh>
 
 #include <cmath>
+#include <brick/common/exception.hh>
 #include <brick/common/mathFunctions.hh>   // For absoluteValue().
 #include <brick/common/stridedPointer.hh>
 

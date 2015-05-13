@@ -329,26 +329,34 @@ namespace brick {
 
       // Copy eigenvalues and eigenvectors.
       for(size_t ii = 0; ii < dimension; ++ii) {
-        eigenvalues[ii].real() = eigenvaluesReal[ii];
-        eigenvalues[ii].imag() = eigenvaluesImag[ii];
-        if(eigenvaluesImag[ii] == 0.0) {
+        eigenvalues[ii] = std::complex<Float64>(eigenvaluesReal[ii],
+                                                eigenvaluesImag[ii]);
+        if(!eigenvaluesImag[ii]) {
           for(size_t jj = 0; jj < dimension; ++jj) {
-            eigenvectors(jj, ii).real() = leftEigenvectorsTranspose(ii, jj);
-            eigenvectors(jj, ii).imag() = 0.0;
+            eigenvectors(jj, ii) = std::complex<Float64>(
+              leftEigenvectorsTranspose(ii, jj), 0.0);
           }
         } else {
-          eigenvalues[ii + 1].real() = eigenvaluesReal[ii + 1];
-          eigenvalues[ii + 1].imag() = eigenvaluesImag[ii + 1];
-          for(size_t jj = 0; jj < dimension; ++jj) {
-            eigenvectors(jj, ii).real() =
-              leftEigenvectorsTranspose(ii, jj);
-            eigenvectors(jj, ii).imag() =
-              leftEigenvectorsTranspose(ii + 1, jj);
-            eigenvectors(jj, ii + 1).real() =
-              leftEigenvectorsTranspose(ii, jj);
-            eigenvectors(jj, ii + 1).imag() =
-              -leftEigenvectorsTranspose(ii + 1, jj);
+          if(ii >= (dimension - 1)) {
+            BRICK_THROW(brick::common::LogicException,
+                    "eigenvectors()",
+                    "Indexing error while copying result.");
           }
+          // Eigenvalue is complex... we need to copy both this
+          // eigenvalue/eigenvector and its complex conjugate.
+          eigenvalues[ii + 1] = std::complex<Float64>(
+            eigenvaluesReal[ii + 1], eigenvaluesImag[ii + 1]);
+          for(size_t jj = 0; jj < dimension; ++jj) {
+            eigenvectors(jj, ii) = std::complex<Float64>(
+              leftEigenvectorsTranspose(ii, jj), 
+              leftEigenvectorsTranspose(ii + 1, jj));
+            eigenvectors(jj, ii + 1) = std::complex<Float64>(
+              leftEigenvectorsTranspose(ii, jj),
+              -leftEigenvectorsTranspose(ii + 1, jj));
+          }
+
+          // Increment to reflect the fact that we've copied an
+          // additional eigenvector/eigenvalue pair.
           ++ii;
         }
       }

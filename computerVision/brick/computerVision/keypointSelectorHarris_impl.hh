@@ -399,32 +399,38 @@ namespace brick {
           gradientXY.getRow(row);
         brick::numeric::Array1D<AccumulatedType> yyRow =
           gradientYY.getRow(row);
+
+        // Note that in the filter code below, we actually index
+        // _outside_ of the data pointed to by imageRow.  This is "ok"
+        // because we know that imageRow points into inImage (and we
+        // know the memory layout of inImage), so we're sure there's
+        // valid data, even past the end or beginning of the row.
         for(int column = stopColumn - 1; column >= startColumn;
             --column) {
           brick::common::Int32 gradientX =
             (((static_cast<brick::common::Int32>(imageRow[column + 1])
                - static_cast<brick::common::Int32>(imageRow[column - 1])) << 1)
              + (static_cast<brick::common::Int32>(
-                  imageRow[column + rowStep + 1])
+                  *(imageRow.getData(column) + rowStep + 1))
                 - static_cast<brick::common::Int32>(
-                  imageRow[column + rowStep - 1]))
-            + (static_cast<brick::common::Int32>(
-                 imageRow[column - rowStep + 1])
-               - static_cast<brick::common::Int32>(
-                 imageRow[column - rowStep - 1]))); /* >> 2; */
+                  *(imageRow.getData(column) + rowStep - 1)))
+             + (static_cast<brick::common::Int32>(
+                  *(imageRow.getData(column) - rowStep + 1))
+                - static_cast<brick::common::Int32>(
+                  *(imageRow.getData(column) - rowStep - 1)))); /* >> 2; */
           brick::common::Int32 gradientY =
             (((static_cast<brick::common::Int32>(
-                 imageRow[column + rowStep])
+                 *(imageRow.getData(column) + rowStep))
                - static_cast<brick::common::Int32>(
-                 imageRow[column - rowStep])) << 1)
+                 *(imageRow.getData(column) - rowStep))) << 1)
              + (static_cast<brick::common::Int32>(
-                  imageRow[column + rowStep - 1])
+                  *(imageRow.getData(column) + rowStep - 1))
                 - static_cast<brick::common::Int32>(
-                  imageRow[column - rowStep - 1]))
+                  *(imageRow.getData(column) - rowStep - 1)))
              + (static_cast<brick::common::Int32>(
-                  imageRow[column + rowStep + 1])
+                  *(imageRow.getData(column) + rowStep + 1))
                 - static_cast<brick::common::Int32>(
-                  imageRow[column - rowStep + 1]))); /* >> 2 */;
+                  *(imageRow.getData(column) - rowStep + 1)))); /* >> 2 */;
           xxRow[column] = (gradientX * gradientX); /* >> 4; */
           xyRow[column] = (gradientX * gradientY); /* >> 4; */
           yyRow[column] = (gradientY * gradientY); /* >> 4; */

@@ -34,10 +34,13 @@ namespace brick {
 
       // Constants that derive from the basic ones.
       const brick::common::Float64 degreesPerRadian = 180.0 / pi;
+      const brick::common::Float64 piOverFour = pi / 4.0;
       const brick::common::Float64 piOverTwo = pi / 2.0;
       const brick::common::Float64 radiansPerDegree = pi / 180.0;
       const brick::common::Float64 rootTwoOverTwo = rootTwo / 2.0;
       const brick::common::Float64 rootOverTwo = rootTwoOverTwo;
+      const brick::common::Float64 threePiOverFour = piOverTwo + piOverFour;
+      const brick::common::Float64 threePiOverTwo = pi + piOverTwo;
       const brick::common::Float64 twoPi = 2.0 * pi;
 
     } // namespace contants

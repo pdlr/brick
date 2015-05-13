@@ -70,7 +70,7 @@ brickComputerVision_HEADERS	= \
 	pngReader.hh \
 	randomSampleSelector.hh randomSampleSelector_impl.hh \
 	ransac.hh ransac_impl.hh \
-	ransacClassInterface.hh \
+	ransacClassInterface.hh ransacClassInterface_impl.hh \
 	registerPoints3D.hh registerPoints3D_impl.hh \
 	segmenterFelzenszwalb.hh segmenterFelzenszwalb_impl.hh \
 	sobel.hh sobel_impl.hh \

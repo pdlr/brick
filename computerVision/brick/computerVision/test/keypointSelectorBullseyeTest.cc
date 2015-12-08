@@ -70,51 +70,70 @@ namespace brick {
     KeypointSelectorBullseyeTest::
     testKeypointSelectorBullseye()
     {
-      // Load an image with a moderately tricky bullseye in it.
-      std::string inputFileName = getBullseyeFileNamePGM0();
-      Image<GRAY8> inputImage = readPGM8(inputFileName);
+      // We'll use two different input files.  The first is the
+      // original test file, which contains a moderately tricky
+      // bullseye.  The second is a copy of the first in which the
+      // bullseye has been edited so that the centroid of the center
+      // spot is at a precisely known location.
+      std::vector<std::string> inputFileNameVector;
+      inputFileNameVector.push_back(getBullseyeFileNamePGM0());
+      inputFileNameVector.push_back(getBullseyeFileNamePGM1());
 
-      // Where we expect the keypoint detector to fire.
-      // Note(xxx): must be a better way than hardcoding this.
-      numeric::Index2D bullseyePosition(59, 54);
+      // These tolerances control how precisely the general position
+      // output of the keypoint selector must match the nominal
+      // position of the bullseye.  The tolerance is much tighter on
+      // the second image because the centroid of the center bull of
+      // the target is precisely known.
+      std::vector<double> toleranceVector;
+      toleranceVector.push_back(0.5);
+      toleranceVector.push_back(1.0e-8);
+
+      // For now, both images have the same nominal bullseye position.
+      std::vector< numeric::Vector2D<double> > bullseyePositionVector;
+      bullseyePositionVector.push_back(numeric::Vector2D<double>(54.5, 59.5));
+      bullseyePositionVector.push_back(numeric::Vector2D<double>(54.5, 59.5));
       
-      // Make sure the detector finds the target.
-      KeypointSelectorBullseye<double> selector(1, 15, 5);
-      selector.setImage(inputImage);
-      std::vector< KeypointBullseye<int> > keypoints = selector.getKeypoints();
+      for(brick::common::UInt32 jj = 0; jj < inputFileNameVector.size();
+	  ++jj) {
 
-      Image<GRAY8> flagImage(inputImage.rows(), inputImage.columns());
-      flagImage = 0;
-      for(brick::common::UInt32 ii = 0; ii < keypoints.size(); ++ii) {
-        flagImage(keypoints[ii].row, keypoints[ii].column) =
-          (ii + 1) * (255 / keypoints.size());
-      }
-      // writePGM8("flag.pgm", flagImage);
+	// Load an image with a moderately tricky bullseye in it.
+	std::string inputFileName = inputFileNameVector[jj];
+	Image<GRAY8> inputImage = readPGM8(inputFileName);
 
-      BRICK_TEST_ASSERT(keypoints.size() == 1);
-      BRICK_TEST_ASSERT(
-        brick::test::approximatelyEqual(
-          keypoints[0].row, bullseyePosition.getRow(), 1));
-      BRICK_TEST_ASSERT(
-        brick::test::approximatelyEqual(
-          keypoints[0].column, bullseyePosition.getColumn(), 1));
+	// Make sure the detector finds the target.
+	KeypointSelectorBullseye<double> selector(1, 15, 5);
+	selector.setImage(inputImage);
+	std::vector< KeypointBullseye<int> > keypoints =
+	  selector.getKeypoints();
 
 
-      // Make sure sub-pixel version is plausible.
-      std::vector< KeypointBullseye<double> > keypointsGP =
-        selector.getKeypointsGeneralPosition();
-      BRICK_TEST_ASSERT(keypointsGP.size() == 1);
-      for(brick::common::UInt32 ii = 0; ii < keypointsGP.size(); ++ii) {
-        BRICK_TEST_ASSERT(
+	BRICK_TEST_ASSERT(keypoints.size() == 1);
+	BRICK_TEST_ASSERT(
           brick::test::approximatelyEqual(
-            keypointsGP[ii].row,
-            static_cast<double>(keypoints[ii].row) + 0.5,
-            1.0));
-        BRICK_TEST_ASSERT(
+            keypoints[0].row,
+	    static_cast<int>(bullseyePositionVector[jj].y()),
+	    1));
+	BRICK_TEST_ASSERT(
           brick::test::approximatelyEqual(
-            keypointsGP[ii].column,
-            static_cast<double>(keypoints[ii].column) + 0.5,
-            1.0));
+            keypoints[0].column,
+	    static_cast<int>(bullseyePositionVector[jj].x()),
+	    1));
+
+	// Make sure sub-pixel version is plausible.
+	std::vector< KeypointBullseye<double> > keypointsGP =
+	  selector.getKeypointsGeneralPosition();
+	BRICK_TEST_ASSERT(keypointsGP.size() == 1);
+
+	for(brick::common::UInt32 ii = 0; ii < keypointsGP.size(); ++ii) {
+          BRICK_TEST_ASSERT(
+            brick::test::approximatelyEqual(
+              keypointsGP[0].row, bullseyePositionVector[jj].y(),
+              toleranceVector[jj]));
+          BRICK_TEST_ASSERT(
+            brick::test::approximatelyEqual(
+              keypointsGP[0].column, bullseyePositionVector[jj].x(),
+              toleranceVector[jj]));
+	}
       }
     }
 

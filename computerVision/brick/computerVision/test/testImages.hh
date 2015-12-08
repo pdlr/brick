@@ -32,6 +32,13 @@ namespace brick {
   
 
   inline std::string
+  getBullseyeFileNamePGM1() {
+    return brick::utilities::joinPath(
+      BRICK_TEST_DATA_DIR, "bullseyeTestImage1.pgm");
+  }
+  
+
+  inline std::string
   getConnectedComponentsFileNamePGM0() {
     return brick::utilities::joinPath(
       BRICK_TEST_DATA_DIR, "connectedComponentsTestImage0.pgm");

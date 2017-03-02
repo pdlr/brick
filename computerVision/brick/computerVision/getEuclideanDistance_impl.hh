@@ -33,7 +33,7 @@ namespace brick {
     template<class FloatType, ImageFormat FORMAT>
     brick::numeric::Array2D<FloatType>
     getEuclideanDistance(const Image<FORMAT>& inputImage,
-                         size_t maxNumberOfPasses=10);
+                         size_t maxNumberOfPasses);
 
 
     template<class FloatType, ImageFormat FORMAT>

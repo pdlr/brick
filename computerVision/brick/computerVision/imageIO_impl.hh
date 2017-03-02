@@ -424,7 +424,7 @@ namespace brick {
 
         // This variable is just to let us choreograph nicely with libpng
         // cleanup functions.
-        png_infop* infoPtrPtrForCleanup = png_infopp_NULL;
+        png_infop* volatile infoPtrPtrForCleanup = png_infopp_NULL;
 
         // Make sure we clean up pngPtr (and eventually infoPtr).
         try { 
@@ -497,7 +497,7 @@ namespace brick {
           png_destroy_write_struct(&pngPtr, infoPtrPtrForCleanup);
           throw;
         }
-     
+
         /* clean up after the write, and free any memory allocated */
         png_destroy_write_struct(&pngPtr, infoPtrPtrForCleanup);
 

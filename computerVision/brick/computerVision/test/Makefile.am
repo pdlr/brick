@@ -64,6 +64,7 @@ TESTS = \
 	sobelTest \
 	stereoRectifyTest \
 	threePointAlgorithmTest \
+	thresholderSauvolaTest \
 	utilitiesTest
 
 
@@ -103,6 +104,7 @@ check_PROGRAMS = \
 	sobelTest \
 	stereoRectifyTest \
 	threePointAlgorithmTest \
+	thresholderSauvolaTest \
 	utilitiesTest
 
 
@@ -143,6 +145,7 @@ segmenterFelzenszwalbTest_SOURCES	= segmenterFelzenszwalbTest.cc testImages.hh
 sobelTest_SOURCES		= sobelTest.cc
 stereoRectifyTest_SOURCES	= stereoRectifyTest.cc
 threePointAlgorithmTest_SOURCES	= threePointAlgorithmTest.cc
+thresholderSauvolaTest_SOURCES	= thresholderSauvolaTest.cc
 utilitiesTest_SOURCES		= utilitiesTest.cc testImages.hh
 
 

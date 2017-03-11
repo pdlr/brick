@@ -10,18 +10,17 @@
 ***************************************************************************
 **/
 
+#include <iomanip>
+#include <iostream>
+
 #include <brick/computerVision/imageIO.hh>
-#include <brick/computerVision/kernels.hh>
 #include <brick/computerVision/keypointSelectorBullseye.hh>
 #include <brick/computerVision/utilities.hh>
 #include <brick/computerVision/test/testImages.hh>
 
-#include <brick/random/pseudoRandom.hh>
 #include <brick/test/functors.hh>
 #include <brick/test/testFixture.hh>
 
-#include <brick/utilities/path.hh>
-#include <brick/utilities/stringManipulation.hh>
 #include <brick/utilities/timeUtilities.hh>
 
 #include <brick/numeric/subArray2D.hh>
@@ -62,7 +61,7 @@ namespace brick {
         m_defaultTolerance(1.0E-8)
     {
       BRICK_TEST_REGISTER_MEMBER(testKeypointSelectorBullseye);
-      // BRICK_TEST_REGISTER_MEMBER(testExecutionTime);
+      BRICK_TEST_REGISTER_MEMBER(testExecutionTime);
     }
 
 
@@ -160,12 +159,20 @@ namespace brick {
 
       writePGM8("big.pgm", bigImage);
       
-      // Make sure the detector finds the target.
       KeypointSelectorBullseye<double> selector(1, 15, 5);
+
       std::cout << "Start!" << std::endl;
+
+      double t0 = brick::utilities::getCurrentTime();
       selector.setImage(bigImage);
       std::vector< KeypointBullseye<int> > keypoints = selector.getKeypoints();
+      double t1 = brick::utilities::getCurrentTime();
+
       std::cout << "Stop!" << std::endl;
+      std::cout << "Processed an image of size (" << bigImage.columns()
+                << ", " << bigImage.rows() << ") in "
+                << std::fixed << std::setprecision(5)
+                << t1 - t0 << " seconds" << std::endl;
     }
     
   } // namespace computerVision

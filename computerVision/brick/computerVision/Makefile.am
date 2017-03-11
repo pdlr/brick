@@ -76,6 +76,7 @@ brickComputerVision_HEADERS	= \
 	sobel.hh sobel_impl.hh \
 	stereoRectify.hh stereoRectify_impl.hh \
 	threePointAlgorithm.hh threePointAlgorithm_impl.hh \
+	thresholderSauvola.hh thresholderSauvola_impl.hh \
 	utilities.hh utilities_impl.hh
 
 stillToComeHeaders		= \

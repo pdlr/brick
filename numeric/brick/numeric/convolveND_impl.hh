@@ -57,8 +57,8 @@ namespace brick {
     convolve(const Array1D<KernelType>& kernel,
              const ArrayND<Dimension, SignalType>& signal,
              size_t axis,
-             ConvolutionStrategy strategy = BRICK_CONVOLVE_PAD_RESULT,
-             ConvolutionROI roi = BRICK_CONVOLVE_ROI_SAME)
+             ConvolutionStrategy strategy,
+             ConvolutionROI roi)
     {
       Array1D<AccumulatorType> reversedKernel(kernel.size());
       for(size_t ii = 0; ii < kernel.size(); ++ii) {

@@ -61,7 +61,7 @@ namespace brick {
     {
       std::string inString;
       std::istringstream message0("Foo bar \t\n  baz  hork\n\nspork");
-      Expect::FormatFlag flags(Expect::SkipWhitespace);
+      Expect::FormatFlag flags(Expect::SkipWhitespace());
       message0 >> Expect("Foo", flags) >> Expect("bar ", flags)
                >> Expect("b", flags) >> inString;
       if(!message0) {
@@ -96,8 +96,8 @@ namespace brick {
     {
       std::string inString;
       std::istringstream message0("Foo bar \t\n  baz  hork\n\nspork");
-      Expect::FormatFlag flags(Expect::Sloppy);
-      message0 >> Expect("Foo", Expect::Sloppy) >> Expect("nbyrn", flags)
+      Expect::FormatFlag flags(Expect::Sloppy());
+      message0 >> Expect("Foo", Expect::Sloppy()) >> Expect("nbyrn", flags)
                >> Expect("\t\n  b", flags) >> inString;
       if(!message0) {
         return false;
@@ -128,7 +128,7 @@ namespace brick {
     {
       std::string inString;
       std::istringstream message0("Foo bar \t\n  baz  hork\n\nspork");
-      Expect::FormatFlag flags(Expect::SkipWhitespace | Expect::Sloppy);
+      Expect::FormatFlag flags(Expect::SkipWhitespace() | Expect::Sloppy());
       message0 >> Expect("Foo", flags) >> Expect("nedl", flags)
                >> Expect("g", flags) >> inString;
       if(!message0) {

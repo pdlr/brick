@@ -557,7 +557,7 @@ namespace brick {
         return stream;
       }
 
-      common::Expect::FormatFlag flags = common::Expect::SkipWhitespace;
+      common::Expect::FormatFlag flags = common::Expect::SkipWhitespace();
       stream >> common::Expect("ArrayND", flags)
              >> common::Expect("{", flags);
 

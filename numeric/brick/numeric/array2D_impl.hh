@@ -428,7 +428,7 @@ namespace brick {
 
       // Now on with the show.
       try{
-        common::Expect::FormatFlag flags = common::Expect::SkipWhitespace;
+        common::Expect::FormatFlag flags = common::Expect::SkipWhitespace();
 
         // Skip any preceding whitespace.
         inputStream >> common::Expect("", flags);

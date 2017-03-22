@@ -65,45 +65,58 @@ namespace brick {
        ** Expect(char const*, FormatFlag)).  Instead, we create this
        ** surrogate.
        **/
-      // WARNING(XXX): This exposes us to the static initialization order
-      // fiasco!  Fix this ASAP!
       struct FormatFlag {
         unsigned int value;
         explicit FormatFlag(unsigned int arg = 0) : value(arg) {}
         operator unsigned int() const {return value;}
       };
 
+      // Ugh.  We go through a contortion below (using static functions
+      // instead of static members) to avoid the static initialization
+      // order fiasco.
+      
       /// Default behavior.  Expect target exactly.
-      static const FormatFlag NoFlag;
+      static FormatFlag NoFlag() {
+        static FormatFlag returnValue(0x0);
+        return returnValue;
+      }        
 
       /// Remove any preceding whitespace from the stream input
       /// before comparing against the expectation.
-      static const FormatFlag SkipWhitespace;
+      static FormatFlag SkipWhitespace() {
+        static FormatFlag returnValue(0x1);
+        return returnValue;
+      }
 
       /// Simply read the correct number of bytes from the input
       /// stream, but don't actually verify the that the bytes have
       /// the right value.  This is useful if you need to read from
       /// disk as fast as possible.
-      static const FormatFlag Sloppy;
+      static FormatFlag Sloppy() {
+        static FormatFlag returnValue(0x2);
+        return returnValue;
+      }
       
       
       /**
        * Constructor.
        */
-      Expect(std::string const& expectation, FormatFlag formatFlag = NoFlag);
+      Expect(std::string const& expectation,
+             FormatFlag formatFlag = Expect::NoFlag());
 
       
       /**
        * Constructor.
        */
-      Expect(char const* expectationPtr, FormatFlag formatFlag = NoFlag);
+      Expect(char const* expectationPtr,
+             FormatFlag formatFlag = Expect::NoFlag());
 
 
       /**
        * Constructor.
        */
       Expect(char const* expectationPtr, size_t length,
-             FormatFlag formatFlag = NoFlag);
+             FormatFlag formatFlag = Expect::NoFlag());
       
 
       /**

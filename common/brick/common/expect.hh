@@ -65,6 +65,8 @@ namespace brick {
        ** Expect(char const*, FormatFlag)).  Instead, we create this
        ** surrogate.
        **/
+      // WARNING(XXX): This exposes us to the static initialization order
+      // fiasco!  Fix this ASAP!
       struct FormatFlag {
         unsigned int value;
         explicit FormatFlag(unsigned int arg = 0) : value(arg) {}

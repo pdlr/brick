@@ -293,7 +293,7 @@ namespace brick {
   
   } // namespace numeric
 
-}; // namespace brick
+} // namespace brick
 
 
 // Include file containing definitions of inline and template

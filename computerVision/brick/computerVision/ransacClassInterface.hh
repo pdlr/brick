@@ -335,7 +335,7 @@ namespace brick {
       void
       computeError(ModelType const& model,
                    SampleSequenceType const& sampleSequence,
-                   IterType ouputIter) {};
+                   IterType ouputIter) {}
 
 
       /** 

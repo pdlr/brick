@@ -77,8 +77,8 @@ namespace brick {
         return result;
       }
 
-  
-    }; // namespace privateCode
+    } // namespace privateCode
+
     
     template <class FloatType>
     void

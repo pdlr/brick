@@ -177,7 +177,7 @@ namespace brick {
 
     template <class ARRAY2D, class FLOAT_TYPE, class INT_TYPE>
     AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE, INT_TYPE>::
-    ~AmanatidesWoo2D() {};
+    ~AmanatidesWoo2D() {}
 
     template <class ARRAY2D, class FLOAT_TYPE, class INT_TYPE>
     typename AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE, INT_TYPE>::iterator

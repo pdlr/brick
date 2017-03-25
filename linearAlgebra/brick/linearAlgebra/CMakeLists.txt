@@ -1,20 +1,34 @@
 # Build file for the brickLinearAlgebra support library.
 
-add_library(brickLinearAlgebra
+# For when we get slick enough to track version information inside
+# our CMakeLists.txt files.
+# 
+# set (BRICK_LINEARALGEBRA_VERSION 1.2)
 
+add_library(brickLinearAlgebra
   linearAlgebra.cc
-  
+  )
+
+target_link_libraries (brickLinearAlgebra
+  brickCommon
+  ${LAPACK_LIBRARIES}
   )
 
 install (TARGETS brickLinearAlgebra DESTINATION bin)
 install (FILES
-
   clapack.hh
   linearAlgebra.hh
-  
   DESTINATION include)
 
 
-if (BUILD_BRICK_TESTS)
+# For when we get slick enough to track version information inside
+# our CMakeLists.txt files.
+# 
+# set_target_properties (brickLinearAlgebra PROPERTIES
+#    VERSION ${BRICK_LINEARALGEBRA_VERSION}
+#    SOVERSION ${BRICK_LINEARALGEBRA_VERSION}
+# )
+  
+if (BRICK_BUILD_TESTS)
   add_subdirectory (test)
-endif (BUILD_BRICK_TESTS)
+endif (BRICK_BUILD_TESTS)

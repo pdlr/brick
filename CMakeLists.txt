@@ -48,8 +48,15 @@ option (BRICK_BUILD_COMPUTER_VISION
 
 # Set up compiler flags.
 
-add_definitions (-Wall -Wextra -Wunsafe-loop-optimizations -Wshadow -Werror)
+add_definitions (
+  -Wall
+  -Wextra
+  -Wunsafe-loop-optimizations
+  -Wshadow
+  -Wpedantic
+  -Werror)
 add_definitions (--std=c++11)
+
 if (BRICK_DEBUG_ARRAY_BOUNDS)
   add_definitions (-DBRICK_NUMERIC_CHECKBOUNDS=1)
 endif (BRICK_DEBUG_ARRAY_BOUNDS)

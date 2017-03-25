@@ -2,19 +2,8 @@ include(CTest)
 
 set (BRICK_COMPUTERVISION_TEST_LIBS
   brickComputerVision
-  brickUtilities
-  brickGeometry
-  brickRandom
-  brickLinearAlgebra
-  brickNumeric
-  brickPortability
-  brickCommon
   brickTest
   brickTestAutoMain
-  lapack
-  blas
-  png
-  m
   )
 
 # This macro simplifies building and adding test executables.

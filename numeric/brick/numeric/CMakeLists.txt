@@ -11,6 +11,10 @@ add_library(brickNumeric
 
   )
 
+target_link_libraries (brickNumeric
+  brickCommon
+  )
+
 install (TARGETS brickNumeric DESTINATION bin)
 install (FILES
 

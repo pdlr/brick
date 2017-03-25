@@ -11,6 +11,11 @@ add_library(brickComputerVision
   ransac.cc
   )
 
+target_link_libraries (brickComputerVision
+  brickLinearAlgebra
+  ${PNG_LIBRARIES}
+  )
+
 install (TARGETS brickComputerVision DESTINATION bin)
 install (FILES
 

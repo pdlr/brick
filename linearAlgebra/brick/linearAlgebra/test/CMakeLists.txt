@@ -1,16 +1,9 @@
 include(CTest)
 
 set (BRICK_LINEAR_ALGEBRA_TEST_LIBS
-
   brickLinearAlgebra
-  brickNumeric
-  brickPortability
-  brickCommon
   brickTest
   brickTestAutoMain
-  lapack
-  blas
-
   )
 
 # This macro simplifies building and adding test executables.

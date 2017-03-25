@@ -3,7 +3,6 @@ include(CTest)
 set (BRICK_NUMERIC_TEST_LIBS
   brickNumeric
   brickPortability
-  brickCommon
   brickTest
   brickTestAutoMain
   )

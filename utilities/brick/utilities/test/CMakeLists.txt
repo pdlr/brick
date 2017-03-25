@@ -2,8 +2,6 @@ include(CTest)
 
 set (BRICK_UTILITIES_TEST_LIBS
   brickUtilities
-  brickCommon
-  brickPortability
   brickTest
   brickTestAutoMain
   )

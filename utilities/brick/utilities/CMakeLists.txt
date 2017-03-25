@@ -11,6 +11,11 @@ add_library(brickUtilities
 
   )
 
+target_link_libraries (brickUtilities
+  brickPortability
+  brickCommon
+  )
+
 install (TARGETS brickUtilities DESTINATION bin)
 install (FILES
 

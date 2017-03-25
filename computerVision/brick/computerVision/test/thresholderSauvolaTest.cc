@@ -62,7 +62,7 @@ namespace brick {
         m_kernelSize(64)
     {
       BRICK_TEST_REGISTER_MEMBER(testThresholderSauvola);
-      BRICK_TEST_REGISTER_MEMBER(testExecutionTime);
+      # BRICK_TEST_REGISTER_MEMBER(testExecutionTime);
     }
 
 
@@ -82,7 +82,7 @@ namespace brick {
       BRICK_TEST_ASSERT(outputImage.rows() == inputImage.rows());
       BRICK_TEST_ASSERT(outputImage.columns() == inputImage.columns());
 
-      writePGM8("foo.pgm", outputImage);
+      // writePGM8("foo.pgm", outputImage);
     }
 
 

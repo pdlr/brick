@@ -21,6 +21,8 @@
 // #include <brick/computerVision/connectedComponents.hh>
 
 #include <cmath>
+#include <memory>
+#include <brick/computerVision/disjointSet.hh>
 
 namespace brick {
 
@@ -29,14 +31,12 @@ namespace brick {
     /// @cond privateCode
     namespace privateCode {
 
-      // This function traverses the blob label graph, starting at a
-      // particular node, propagating that node's label so that any blobs
-      // which are connected to the starting node inherit the the starting
-      // nodes label iff the starting nodes label is less than the current
-      // label of the connected blob.
-      bool
-      propagateLabel(size_t label, size_t node, std::vector<size_t>& labelArray,
-                     const std::vector< std::list<size_t> >& neighborsVector);
+      template<ImageFormat FORMAT_OUT>
+      void
+      populateOutputImage(Image<FORMAT_OUT>& outputImage,
+                          brick::numeric::Array2D<size_t> const& labelImage,
+                          std::vector<size_t> const& labelArray);
+      
 
     } // namespace privateCode
     /// @endcond
@@ -61,13 +61,23 @@ namespace brick {
                         unsigned int& numberOfComponents)
     {
       typedef typename Image<FORMAT_IN>::const_iterator InIterator;
-      typedef typename Image<FORMAT_OUT>::iterator OutIterator;
       typedef brick::numeric::Array2D<size_t>::iterator LabelIterator;
-    
+
+      // Allocate storage for intermediate and final results.
       Image<FORMAT_OUT> outputImage(inputImage.rows(), inputImage.columns());
       brick::numeric::Array2D<size_t> labelImage(inputImage.rows(), 
                                                  inputImage.columns());
+
+      // This vector will do the accounting of which components abut
+      // one another.  We use unique_ptr here because DisjointSet is
+      // not copyable.
+      std::vector< std::unique_ptr< DisjointSet<size_t> > >
+        correspondenceVector;
+
+      // We'll label the very first component as 1. Labels of zero
+      // mean background.
       size_t currentLabel = 0;
+      correspondenceVector.emplace_back(new DisjointSet<size_t>(0));
 
       // This variable will be used to keep track of whether or not the
       // previous pixel was part of a blob.
@@ -81,20 +91,25 @@ namespace brick {
       // Label the first row.
       for(size_t columnIndex = 0; columnIndex < inputImage.columns();
           ++columnIndex) {
-        if(*inIter) {
-          // The pixel value is nonzero, we're in a blob.
-          if(!isActive) {
-            // If the previous pixel was zero, we're in what might be a
-            // new blob, so increment the blob label.
-            ++currentLabel;
-            isActive = true;
-          }
-          // Label the pixel with its tentative label.
-          *labelIter = currentLabel;
-        } else {
-          // The pixel value is zero, not in a blob.
+        if(!(*inIter)) {
+          // The current pixel is background.  Mark it as such.
           *labelIter = 0;
           isActive = false;
+        } else if(isActive) {
+          // The current pixel is in a blob, and the previous pixel
+          // was in a blob.  Adopt the same label as the previous
+          // pixel.  Note there's no need to set isActive... it's
+          // already true.
+          *labelIter = currentLabel;
+          // isActive = true;
+        } else {
+          // The current pixel is in a blob, but the previous pixel
+          // was not.  This is a new blob!  Get a new label.
+          ++currentLabel;
+          correspondenceVector.emplace_back(
+            new DisjointSet<size_t>(currentLabel));
+          *labelIter = currentLabel;
+          isActive = true;              
         }
         // Move to the next pixel.
         ++inIter;
@@ -102,114 +117,136 @@ namespace brick {
       }
 
       // Label the remaining rows.
-      std::vector< std::pair<size_t, size_t> > correspondences;
-      LabelIterator chaseIter = labelImage.begin();
-      size_t workingLabel = 0;
-      size_t previousParentLabel = 0;
+      size_t const numberOfColumns = inputImage.columns();
+      size_t previousLabel = 0;
+      
       for(size_t rowIndex = 1; rowIndex < inputImage.rows(); ++rowIndex) {
-        // At the beginning of each row, pretend there was a zero pixel
-        // that we just came from, and update isActive accordingly.
+        // At the beginning of each row, pretend there was a zero
+        // pixel that we just came from, and update isActive
+        // accordingly.  This lets us avoid adding special case code
+        // for the first column.
         isActive = false;
+        previousLabel = 0;
+
+        // Iterate over the current row.
         for(size_t columnIndex = 0; columnIndex < inputImage.columns();
             ++columnIndex) {
-          if(*inIter) {
-            // The pixel value is nonzero, we're in a blob.  Get the
-            // blob label of the pixel in the row above (0 means "not in
-            // a blob").
-            size_t parentLabel = *chaseIter;
-            if(!isActive) {
-              // The pixel in the previous column was zero.  This blob
-              // might be a new one.
-              if((parentLabel != 0)) {
-                // The pixel in the previous row was part of a blob.
-                // Adopt its label.
-                workingLabel = parentLabel;
-                previousParentLabel = parentLabel;
-              } else {
-                // The pixel in the previous row was not part of a blob.
-                // Get a new label.
-                ++currentLabel;
-                workingLabel = currentLabel;
-                previousParentLabel = 0;
-              }
-              isActive = true;
-            } else {
-              // The pixel in the previous column was part of a blob.
-              if((parentLabel != 0)
-                 && (parentLabel != previousParentLabel)) {
-                // We just connected a blob in the previous row with the
-                // blob in the previous column.  Record the
-                // correspondence.
-                correspondences.push_back(
-                  std::make_pair(parentLabel, workingLabel));
-                previousParentLabel = parentLabel;
-              }
-            }
-            // Assign the appropriate label to this pixel.
-            *labelIter = workingLabel;
-          } else {
-            // We're at a zero pixel.  Update its label accordingly.
+
+          // Get the label of the pixel one row above the current
+          // pixel.
+          size_t parentLabel = *(labelIter - numberOfColumns);
+
+          if(!(*inIter)) {
+            // The current pixel is background.  This is one of our
+            // two most likely cases, so handle it as simply as
+            // possible.
             *labelIter = 0;
             isActive = false;
+          } else if(isActive) {
+            // The current pixel is in the interior of a blob, which
+            // is the other most likely case.  Handle it as simply as
+            // possible.
+            *labelIter = previousLabel;
+
+            // No need to set isActive... it's already true.
+            // isActive = true;
+
+            // We may have just joined two blobs.  Record the
+            // correspondence, if appropriate.
+            if(parentLabel && (parentLabel != previousLabel)) {
+              correspondenceVector[previousLabel]->merge(
+                  *(correspondenceVector[parentLabel]));
+            }
+          } else {
+            // The current pixel is in a blob, but the previous pixel
+            // was not.  This puts on the left edge of a blob.  Set
+            // isActive so that we'll remember next iteration that we
+            // just labeled a pixel.
+            isActive = true;
+            
+            // Perhaps the pixel in the row above was also part of
+            // this blob.
+            if(parentLabel) {
+              // The pixel in the previous row was inside a blob.
+              // Adopt its label.
+              *labelIter = parentLabel;
+              previousLabel = parentLabel;
+            } else {
+              // The pixel in the previous row was not in a blob.  The
+              // blob the current pixel is in might be new!  Get a new
+              // label.
+              ++currentLabel;
+              correspondenceVector.emplace_back(
+                new DisjointSet<size_t>(currentLabel));
+              *labelIter = currentLabel;
+              previousLabel = currentLabel;
+            }
           }
           // Move to the next pixel.
           ++inIter;
           ++labelIter;
-          ++chaseIter;
         }
       }
 
       // === Resolve label equivalences. ===
 
-      // Create an look up table which will take tentative labels
-      // (assigned above) and map them to finalized labels.  We'll start
-      // by assigning each element in the lookup table an impossible
-      // value, and then we'll go back and correct each element in turn.
-      std::vector<size_t> labelArray(currentLabel + 1);
-      for(size_t label = 0; label < labelArray.size(); ++label) {
-        labelArray[label] = currentLabel + 1;
-      }
-
-      // Imagine a graph in which each node is a label, and each edge is
-      // an equivalence between labels.  Create a list of edges for each
-      // node in the graph.
-      typedef std::vector< std::pair<size_t, size_t> >::const_iterator
-        CorrespondenceIterator;
-      std::vector< std::list<size_t> > neighborsVector(labelArray.size());
-      CorrespondenceIterator cIter = correspondences.begin();
-      while(cIter != correspondences.end()) {
-        neighborsVector[cIter->first].push_back(cIter->second);
-        neighborsVector[cIter->second].push_back(cIter->first);
-        ++cIter;
-      }
-
-      // Propagate labels over all edges.
-      currentLabel = 0;
-      for(size_t node = 0; node < labelArray.size(); ++node) {
-        if(privateCode::propagateLabel(
-             currentLabel, node, labelArray, neighborsVector)) {
-          ++currentLabel;
+      // Create a look up table which will take tentative labels
+      // (assigned above) and map them to finalized labels.  We arrange
+      // that finalized labels are 1, 2, 3, etc., without any gaps,
+      // but make no guarantees about which blob gets which label.
+      std::vector<size_t> labelArray(correspondenceVector.size(), 0);
+      size_t outputLabel = 0;
+      for(size_t ii = 0; ii < labelArray.size(); ++ii) {
+        if(labelArray[ii] == 0) {
+          size_t headOfFamily = correspondenceVector[ii]->find().getPayload();
+          if(labelArray[headOfFamily] != 0) {
+            labelArray[ii] = labelArray[headOfFamily];
+          } else {
+            labelArray[ii] = outputLabel;
+            labelArray[headOfFamily] = outputLabel;
+            ++outputLabel;
+          }
         }
       }
 
       // Relabel the blobs.
-      labelIter = labelImage.begin();
-      OutIterator outIter = outputImage.begin();
-      while(labelIter != labelImage.end()) {
-		*outIter = static_cast<typename ImageFormatTraits<FORMAT_OUT>::PixelType>(labelArray[*labelIter]);
-        ++outIter;
-        ++labelIter;
-      }
+      privateCode::populateOutputImage(outputImage, labelImage, labelArray);
 
       if(currentLabel != 0) {
         numberOfComponents = static_cast<unsigned int>(currentLabel - 1);
       } else {
+        // This case will never happen, but we leave the code here so
+        // the compiler (and collaborators) won't worry.
         numberOfComponents = 0;
       }
     
       return outputImage;
-    }
+    }    
 
+
+    /// @cond privateCode
+    namespace privateCode {
+
+      template<ImageFormat FORMAT_OUT>
+      void
+      populateOutputImage(Image<FORMAT_OUT>& outputImage,
+                          brick::numeric::Array2D<size_t> const& labelImage,
+                          std::vector<size_t> const& labelArray)
+      {
+        auto labelIter = labelImage.begin();
+        auto outIter = outputImage.begin();
+        
+        while(labelIter != labelImage.end()) {
+          *outIter = static_cast<typename ImageFormatTraits<FORMAT_OUT>::PixelType>(labelArray[*labelIter]);
+          ++outIter;
+          ++labelIter;
+        }
+        
+      }
+      
+    } // namespace privateCode
+    /// @endcond
+    
   } // namespace computerVision
     
 } // namespace brick

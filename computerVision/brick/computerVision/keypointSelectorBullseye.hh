@@ -228,6 +228,27 @@ namespace brick {
 
       typedef brick::common::Int32 AccumulatedType;
 
+      struct ComponentDescription {
+        brick::common::UInt32 minRow;
+        brick::common::UInt32 maxRow;
+        brick::common::Float64 meanRow;
+        brick::common::UInt32 minColumn;
+        brick::common::UInt32 maxColumn;
+        brick::common::Float64 meanColumn;
+        brick::common::UInt32 area;
+        brick::common::UInt32 radius;
+
+        ComponentDescription()
+          : minRow(std::numeric_limits<brick::common::UInt32>::max()),
+            maxRow(0),
+            meanRow(0.0),
+            minColumn(std::numeric_limits<brick::common::UInt32>::max()),
+            maxColumn(0),
+            meanColumn(0.0),
+            area(0),
+            radius(0) {}
+      };
+      
 
       // Accumulate statistics related to the difference between two
       // pixel values.
@@ -269,6 +290,12 @@ namespace brick {
                                      brick::common::UInt32 columns) const;
 
 
+      // Given the result of connected component analysis, compute
+      // statistics about each component.
+      std::vector<ComponentDescription>
+      describeComponents(Image<GRAY32> const& labelImage,
+                         unsigned int const numberOfComponents);
+      
       bool
       estimateBullseye(
         brick::geometry::Bullseye2D<FloatType>& bullseye,
@@ -313,6 +340,15 @@ namespace brick {
                         brick::common::UInt32 row, brick::common::UInt32 column,
                         FloatType& asymmetry) const;
 
+
+      // Uses connected components to limit attention to a small
+      // number of "candidate" points in the image.
+      std::vector<brick::numeric::Index2D>
+      getCandidatePoints(Image<GRAY8> const& inputImage,
+                         brick::common::UInt32 startRow,
+                         brick::common::UInt32 startColumn,
+                         brick::common::UInt32 stopRow,
+                         brick::common::UInt32 stopColumn);
       
       inline bool
       testAndRecordEdges(

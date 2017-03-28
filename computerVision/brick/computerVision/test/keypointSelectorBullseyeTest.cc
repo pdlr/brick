@@ -61,7 +61,7 @@ namespace brick {
         m_defaultTolerance(1.0E-8)
     {
       BRICK_TEST_REGISTER_MEMBER(testKeypointSelectorBullseye);
-      BRICK_TEST_REGISTER_MEMBER(testExecutionTime);
+      // BRICK_TEST_REGISTER_MEMBER(testExecutionTime);
     }
 
 
@@ -140,7 +140,6 @@ namespace brick {
     KeypointSelectorBullseyeTest::
     testExecutionTime()
     {
-      
       // Load an image with a moderately tricky bullseye in it.
       std::string inputFileName = getBullseyeFileNamePGM0();
       Image<GRAY8> inputImage = readPGM8(inputFileName);
@@ -185,7 +184,6 @@ namespace brick {
 int main()
 {
   brick::computerVision::KeypointSelectorBullseyeTest currentTest;
-  // currentTest.testKeypointSelectorBullseye();
   bool result = currentTest.run();
 
   return (result ? 0 : 1);

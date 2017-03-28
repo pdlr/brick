@@ -23,9 +23,12 @@
 #include <brick/common/mathFunctions.hh>
 #include <brick/computerVision/canny.hh>
 #include <brick/computerVision/connectedComponents.hh>
+#include <brick/computerVision/thresholderSauvola.hh>
 
 // Debugging code.
 // #include <brick/utilities/imageIO.hh>
+
+#define CV_KSB_PRINT_STATS 0
 
 namespace brick {
 
@@ -233,7 +236,8 @@ namespace brick {
       }
     }
 #endif
-    
+
+#if 0 /* Previous implementation of setImage, kept here to remind us of a recent change. */
     
     template <class FloatType>
     void
@@ -319,9 +323,13 @@ namespace brick {
         }
       }
 
-      // std::cout << "Tested " << testedPixels
-      //           << " (" << (100.0 * testedPixels) / totalPixels << "%) of "
-      //           << totalPixels << " pixels." << std::endl;
+#if CV_KSB_PRINT_STATS
+      std::cout << "Tested " << testedPixels
+                << " (" << (100.0 * testedPixels) / totalPixels << "%) of "
+                << totalPixels << " pixels." << std::endl;
+      std::cout << "Retained " << m_keypointVector.size() << " keypoints."
+                << std::endl;
+#endif
 
       // Get general position estimates for our
       if(m_isGeneralPositionRequired) {
@@ -332,7 +340,126 @@ namespace brick {
         }
       }
     }
+#endif /* #if 0 */
 
+
+    template <class FloatType>
+    void
+    KeypointSelectorBullseye<FloatType>::
+    setImage(Image<GRAY8> const& inImage,
+             brick::common::UInt32 startRow,
+             brick::common::UInt32 startColumn,
+             brick::common::UInt32 stopRow,
+             brick::common::UInt32 stopColumn)
+    {
+      // Discard last image's keypoints.
+      m_keypointVector.clear();
+      m_keypointGPVector.clear();
+      
+      // Make sure the passed-in image bounds are legal.
+      this->checkAndRepairRegionOfInterest(
+        startRow, startColumn, stopRow, stopColumn,
+        inImage.rows(), inImage.columns());
+
+      // We're going to prune most of the image pixels using a
+      // threshold based on local asymmetry.  Things that aren't
+      // symmetrical aren't bullseyes.  Here we estimate what a normal
+      // amount of asymmetry is for a non-bullseye pixel, so that we
+      // can set the threshold higher than that.
+      //
+      // Figure out how many pixels to sample when estimating.
+      brick::common::UInt32 numberOfPixelsToSample =
+        (stopRow - startRow) * (stopColumn - startColumn) / 1000;
+      numberOfPixelsToSample = std::max(numberOfPixelsToSample,
+                                        static_cast<brick::common::UInt32>(100));
+
+      // Do the sampling and estimate the threshold.
+      FloatType asymmetryThreshold = this->estimateAsymmetryThreshold(
+        inImage, m_minRadius, m_maxRadius, startRow, startColumn,
+        stopRow, stopColumn, numberOfPixelsToSample);
+
+      // Using connected components analysis, find pixels that might
+      // be at the center of bullseyes.
+      std::vector<brick::numeric::Index2D> candidatePoints =
+        this->getCandidatePoints(
+          inImage, startRow, startColumn, stopRow, stopColumn);
+
+#if CV_KSB_PRINT_STATS
+      std::cout << "setImage(): Got " << candidatePoints.size()
+                << " candidate points." << std::endl;
+      std::cout << "  This is "
+                << double(candidatePoints.size()) / inImage.size() * 100.0
+                << "% of image pixels." << std::endl;
+#endif /* #if CV_KSB_PRINT_STATS */
+      
+      // If a pixel has sufficiently good symmetry, it will be tested
+      // with a more expensive bullseye algorithm that needs to know
+      // which pixels are edges.  Compute an edge image here.  For now
+      // we use the expensive Canny algorithm.
+      brick::numeric::Array2D<FloatType> gradientX;
+      brick::numeric::Array2D<FloatType> gradientY;
+      Image<GRAY1> edgeImage = applyCanny<FloatType>(
+        inImage, gradientX, gradientY);
+
+      // Test every candidate pixel!
+      brick::common::UInt32 totalPixels = 0;
+      brick::common::UInt32 testedPixels = 0;
+      for(auto candidateIter = candidatePoints.begin();
+          candidateIter != candidatePoints.end(); ++candidateIter) {
+
+        ++totalPixels;
+        brick::common::UInt32 row = candidateIter->getRow();
+        brick::common::UInt32 column = candidateIter->getColumn();
+
+        // Tailor fiducial size so we don't run off the side of the
+        // image.
+        brick::common::UInt32 minRadius = m_minRadius;
+        brick::common::UInt32 maxRadius = m_maxRadius;
+        if(!this->adjustFiducialSize(minRadius, maxRadius, row, column,
+                                     inImage.rows(), inImage.columns())) {
+          continue;
+        }
+
+        // Create a candidate keypoint.
+        KeypointBullseye<brick::common::Int32, FloatType> keypoint(
+          row, column);
+
+        // Member function evaluateBullseyeMetric() is too expensive
+        // to run at every pixel.  Make absolutely sure this could
+        // be a bullseye before proceeding.
+        if(!this->isPlausibleBullseye(
+             keypoint, inImage, minRadius, maxRadius, asymmetryThreshold)) {
+          continue;
+        }
+
+        // All prescreening passes.  Go ahead with the expensive
+        // bullseye evaluation.
+        this->evaluateBullseyeMetric(keypoint, edgeImage,
+                                     gradientX, gradientY,
+                                     minRadius, maxRadius);
+        if(keypoint.bullseyeMetric >= 0.0) {
+          this->sortedInsert(keypoint, m_keypointVector,
+                             this->m_minRadius, this->m_maxNumberOfBullseyes);
+        }
+        ++testedPixels;
+      }
+
+#if CV_KSB_PRINT_STATS
+      std::cout << "Tested " << testedPixels
+                << " (" << (100.0 * testedPixels) / totalPixels << "%) of "
+                << totalPixels << " pixels." << std::endl;
+#endif /* #if CV_KSB_PRINT_STATS */
+
+      // Get general position estimates for our
+      if(m_isGeneralPositionRequired) {
+        m_keypointGPVector.resize(m_keypointVector.size());
+        for(brick::common::UInt32 ii = 0; ii < m_keypointVector.size(); ++ii) {
+          m_keypointGPVector[ii] = this->fineTuneKeypoint(
+            m_keypointVector[ii], inImage);
+        }
+      }
+    }
+    
 
     // ============== Private member functions below this line ==============
 
@@ -528,6 +655,65 @@ namespace brick {
     }
     
 
+    // Given the result of connected component analysis, compute
+    // statistics about each component.
+    template <class FloatType>
+    std::vector< typename KeypointSelectorBullseye<FloatType>::ComponentDescription >
+    KeypointSelectorBullseye<FloatType>::
+    describeComponents(Image<GRAY32> const& labelImage,
+                       unsigned int const numberOfComponents)
+    {
+      // The default constructor for ComponentDescription is smart
+      // enough to initialize all the member variables as appropriate.
+      // That is, "min" members are initialized to large numbers, and
+      // all other members are initialized to zero.
+      std::vector<ComponentDescription> returnValue(numberOfComponents + 1);
+
+      // Iterate over all labels, accumulating statistics for each
+      // connected component.
+      for(uint32_t rr = 0; rr < labelImage.rows(); ++rr) {
+        for(uint32_t cc = 0; cc < labelImage.columns(); ++cc) {
+          uint32_t componentNumber = labelImage(rr, cc);
+
+          ComponentDescription& description = returnValue[componentNumber];
+          description.minRow = std::min(rr, description.minRow);
+          description.maxRow = std::max(rr, description.maxRow);
+          description.meanRow += rr;
+          description.minColumn = std::min(cc, description.minColumn);
+          description.maxColumn = std::max(cc, description.maxColumn);
+          description.meanColumn += cc;
+          ++(description.area);
+        }
+      }
+
+      // Iterate over each connected component, cleaning up the
+      // accumulated statistics.
+      for(auto descriptionIter = returnValue.begin();
+          descriptionIter != returnValue.end(); ++descriptionIter) {
+
+        descriptionIter->meanRow /=
+          static_cast<brick::common::Float64>(descriptionIter->area);
+        descriptionIter->meanColumn /= 
+          static_cast<brick::common::Float64>(descriptionIter->area);
+
+        brick::common::Float64 radius = 
+          std::min(
+            descriptionIter->meanRow - descriptionIter->minRow,
+            std::min(
+              descriptionIter->maxRow - descriptionIter->meanRow,
+              std::min(
+                descriptionIter->meanColumn - descriptionIter->minColumn,
+                descriptionIter->maxColumn - descriptionIter->meanColumn
+                )
+              )
+            );
+        descriptionIter->radius = static_cast<brick::common::UInt32>(
+          radius + 0.5);
+      }
+      return returnValue;
+    }
+
+        
     template <class FloatType>
     bool
     KeypointSelectorBullseye<FloatType>::
@@ -669,9 +855,11 @@ namespace brick {
 
       // Now that we've pruned our set of input points.  Redo the estimation.
       try {
+        // The final parameter turns off residual calculation, as we
+        // have no use for the calculated residuals here.
         bullseye.estimate(
           inliers.begin(), inliers.end(),
-          m_bullseyeEdgeCounts.begin(), m_bullseyeEdgeCounts.end());
+          m_bullseyeEdgeCounts.begin(), m_bullseyeEdgeCounts.end(), false);
       } catch(brick::common::ValueException) {
         // If this call throws, we'll just return the un-updated
         // bullseye.
@@ -824,7 +1012,7 @@ namespace brick {
       // (perhaps a blank image).
       if(count == 0) {
         BRICK_THROW(brick::common::ValueException,
-                    "KeypointSelectorBullseye::evaluateAsymmetryThreshold()",
+                    "KeypointSelectorBullseye::estimateAsymmetryThreshold()",
                     "Found no valid patches to sample.");
       }
       
@@ -997,7 +1185,6 @@ namespace brick {
       }
     }
 
-#undef BRICK_CV_TESTEVALUATE_BREAK
 
     template <class FloatType>
     bool
@@ -1039,6 +1226,75 @@ namespace brick {
     }
 
 
+    // Uses connected components to limit attention to a small
+    // number of "candidate" points in the image.
+    // TBD(xxx): Make ROI relevant.
+    template <class FloatType>
+    std::vector<brick::numeric::Index2D>
+    KeypointSelectorBullseye<FloatType>::
+    getCandidatePoints(Image<GRAY8> const& inputImage,
+                       brick::common::UInt32 /* startRow */,
+                       brick::common::UInt32 /* startColumn */,
+                       brick::common::UInt32 /* stopRow */,
+                       brick::common::UInt32 /* stopColumn */)
+    {
+      // Originally, every pixel in the the image was considered as a
+      // candidate bullseye.  This was a little slow, so we've
+      // introduced this function to quickly reduce the number of
+      // candidate points.
+      
+      // Convert to black & white for ease of processing.  Choose the
+      // adaptive window size of the thresholder large enough that it
+      // won't average out the bullseyes.  We're not very sensitive to
+      // parameter kappa, so we leave it at its default value.
+      brick::common::UInt32 const windowRadius = this->m_maxRadius;
+      brick::common::Float64 const kappa = 0.5;
+      ThresholderSauvola<GRAY8> thresholder(windowRadius, kappa);
+      Image<GRAY8> binaryImage = thresholder(inputImage);
+
+      // We expect the center of each bullseye to be an "island" of
+      // dark in the image.  Run connected components to identify
+      // candidate bullseye centers.
+      unsigned int numberOfComponents = 0;
+      ConnectedComponentsConfig config;
+      config.mode = ConnectedComponentsConfig::SAME_COLOR;
+      Image<GRAY32> labelImage = connectedComponents<GRAY32>(
+        binaryImage, numberOfComponents, config);
+      std::vector<ComponentDescription> componentDescriptionVector =
+        this->describeComponents(labelImage, numberOfComponents);
+
+#if CV_KSB_PRINT_STATS
+      std::cout << "getCandidatePoints(): found " << numberOfComponents
+                << " components." << std::endl;
+#endif /* #if CV_KSB_PRINT_STATS */
+
+      // We'll discard components that are bigger than our largest
+      // acceptable bullseye, or are tiny.
+      brick::common::UInt32 maxArea = static_cast<brick::common::UInt32>(
+        brick::common::constants::pi * this->m_maxRadius * this->m_maxRadius
+        + 0.5);
+      std::vector<brick::numeric::Index2D> candidatePoints;
+      for(auto componentDescriptionIter = componentDescriptionVector.begin();
+          componentDescriptionIter != componentDescriptionVector.end();
+          ++componentDescriptionIter) {
+        ComponentDescription const& description = *componentDescriptionIter;
+        if(description.area > maxArea) {
+          continue;
+        }
+        if(description.radius > this->m_maxRadius
+          || description.radius == 0) {
+          continue;
+        }
+        brick::numeric::Index2D centroid(
+          static_cast<int>(description.meanRow + 0.5),
+          static_cast<int>(description.meanColumn + 0.5));
+        candidatePoints.push_back(centroid);
+      }
+
+      return candidatePoints;
+    }
+    
+
     template <class FloatType>
     bool
     KeypointSelectorBullseye<FloatType>::
@@ -1062,7 +1318,7 @@ namespace brick {
       keypoint.lightColor = keypoint.darkColor;
 
       // While doing this, we'll also estimate how big the
-      // hypothetical bullseey is.  This will be useful below, when
+      // hypothetical bullseye is.  This will be useful below, when
       // we'll want to check the asymmetry of the hypothetical
       // bullseye.  Remember the radius in each direction using this
       // array.

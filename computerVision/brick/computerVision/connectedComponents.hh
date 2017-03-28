@@ -20,7 +20,32 @@
 namespace brick {
 
   namespace computerVision {
-  
+
+    /**
+     ** This struct controls the operation of the
+     ** connectedComponents() function template.
+     **/
+    struct ConnectedComponentsConfig {
+      enum Mode {
+        /// The input image is considered to be binary, with only
+        /// nonzero pixels being grouped into components.  Zero pixels
+        /// are considered to be background and are ignored.  Nonzero
+        /// pixels of any value can be grouped into a component
+        /// together.
+        FOREGROUND_BACKGROUND,
+
+        /// Pixels that have the same value are grouped together in
+        /// connected components.  Zero pixels can be grouped into
+        /// components (with other zero pixels).  All pixels will be
+        /// assigned to one component or another, i.e., there is no
+        /// explicit background.
+        SAME_COLOR
+      };
+
+      Mode mode = FOREGROUND_BACKGROUND;
+    };
+    
+    
     /**
      * This function does connected components analysis on a previously
      * segmented image.
@@ -41,7 +66,9 @@ namespace brick {
      */
     template<ImageFormat FORMAT_OUT, ImageFormat FORMAT_IN>
     Image<FORMAT_OUT>
-    connectedComponents(const Image<FORMAT_IN>& inputImage);
+    connectedComponents(const Image<FORMAT_IN>& inputImage,
+                        ConnectedComponentsConfig const& config
+                        = ConnectedComponentsConfig());
   
 
     /**
@@ -70,7 +97,9 @@ namespace brick {
     template<ImageFormat FORMAT_OUT, ImageFormat FORMAT_IN>
     Image<FORMAT_OUT>
     connectedComponents(const Image<FORMAT_IN>& inputImage,
-                        unsigned int& numberOfComponents);
+                        unsigned int& numberOfComponents,
+                        ConnectedComponentsConfig const& config
+                        = ConnectedComponentsConfig());
 
   } // namespace computerVision
     

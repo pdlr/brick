@@ -46,6 +46,13 @@ namespace brick {
 
 
   inline std::string
+  getConnectedComponentsFileNamePGM1() {
+    return brick::utilities::joinPath(
+      BRICK_TEST_DATA_DIR, "connectedComponentsTestImage1.pgm");
+  }
+
+
+  inline std::string
   getDilateErodeFileNamePGM0() {
     return brick::utilities::joinPath(
       BRICK_TEST_DATA_DIR, "dilateErodeTestImage0.pgm");

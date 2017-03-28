@@ -211,6 +211,7 @@ namespace brick {
 
 #if HAVE_LIBPNG
 
+#include <png++/png.hpp>
 #include <brick/computerVision/pngReader.hh>
 
 namespace brick {
@@ -219,161 +220,6 @@ namespace brick {
 
     namespace privateCode {
 
-      inline Image<GRAY8>
-      fixPngEndianness(Image<GRAY8> const& outputImage) {
-        return outputImage;
-      }
-
-      inline Image<GRAY16>
-      fixPngEndianness(Image<GRAY16> const& outputImage) {
-        if(brick::common::getByteOrder() != brick::common::BRICK_BIG_ENDIAN) {
-          Image<GRAY16> swappedImage = outputImage.copy();
-          brick::common::switchByteOrder(
-            swappedImage.data(), swappedImage.size(),
-            brick::common::getByteOrder(), brick::common::BRICK_BIG_ENDIAN);
-          return swappedImage;
-        }
-        return outputImage;
-      }
-
-      inline Image<RGB8>
-      fixPngEndianness(Image<RGB8> const& outputImage) {
-        return outputImage;
-      }
-
-      inline Image<RGB16>
-      fixPngEndianness(Image<RGB16> const& outputImage) {
-
-        // Set up a plausible return value, just in case no swapping
-        // is necessary.  This is a shallow copy.
-        Image<RGB16> swappedImage = outputImage;
-
-        // Do we need to swap bytes?
-        if(brick::common::getByteOrder() != brick::common::BRICK_BIG_ENDIAN) {
-
-          // Yes.  Get access to an array of UInt16 (rather than RGB16
-          // structs).
-          typedef ImageFormatTraits<RGB16>::ComponentType ComponentType;
-          brick::numeric::Array2D<ComponentType> componentArray;
-          if(brick::computerVision::dissociateColorComponents(
-               const_cast<Image<RGB16>&>(outputImage), componentArray)) {
-
-            // The array of UInt16 shares data with outputImage.  Copy
-            // it before swapping bytes.
-            componentArray = componentArray.copy();
-
-          }
-
-          // Swap bytes.
-          brick::common::switchByteOrder(
-            componentArray.data(), componentArray.size(),
-            brick::common::getByteOrder(), brick::common::BRICK_BIG_ENDIAN);
-
-          // Repack into an RGB image.
-          // 
-          // TBD(xxx): We could skip this step (and save a copy) by
-          // changing the return value of fixPngEndianness to
-          // Array2D<ComponentType>.
-          
-          if(brick::computerVision::associateColorComponents(
-               componentArray, swappedImage)) {
-
-            // If swappedImage shares data with componentArray, and
-            // this data will become invalid as soon as componentArray
-            // goes out of scope.  Make a copy to avoid this.
-            swappedImage = swappedImage.copy();
-
-          }
-          
-        } // if(getByteOrder...)
-        
-        return swappedImage;
-      }
-
-      
-      inline void
-      setPngHeaderInfo(png_structp pngPtr,
-                       png_infop infoPtr,
-                       Image<GRAY8> const& outputImage) {
-        png_set_IHDR(
-          pngPtr, infoPtr, outputImage.columns(), outputImage.rows(),
-          sizeof(ImageFormatTraits<GRAY8>::PixelType) * 8,
-          PNG_COLOR_TYPE_GRAY, PNG_INTERLACE_NONE,
-          PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
-      }
-      
-      inline void
-      setPngHeaderInfo(png_structp pngPtr,
-                       png_infop infoPtr,
-                       Image<GRAY16> const& outputImage) {
-
-#if 0
-        // Seems like this should be a sane way to handle endianness,
-        // but it doesn't appear to work.
-        
-        // PNG files are natively big-endian, but can be coerced to
-        // store little-endian data without a swap.
-        if(brick::common::getByteOrder()
-           == brick::common::BRICK_LITTLE_ENDIAN) {
-          png_set_swap(pngPtr);
-        }
-#endif /* #if 0 */
-
-        png_set_IHDR(
-          pngPtr, infoPtr, outputImage.columns(), outputImage.rows(),
-          sizeof(ImageFormatTraits<GRAY16>::PixelType) * 8,
-          PNG_COLOR_TYPE_GRAY, PNG_INTERLACE_NONE,
-          PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
-      }
-      
-      inline void
-      setPngHeaderInfo(png_structp pngPtr,
-                       png_infop infoPtr,
-                       Image<RGB8> const& outputImage) {
-        if(!Image<RGB8>::value_type::isContiguous()) {
-          BRICK_THROW(
-            brick::common::NotImplementedException, "setPngHeaderInfo()",
-            "Your compiler appears to pack RGB pixels in an unusual way.  "
-            "Please update brick::computerVision::writePNG() to handle this.");
-        }
-        png_set_IHDR(
-          pngPtr, infoPtr, outputImage.columns(), outputImage.rows(),
-          sizeof(ImageFormatTraits<GRAY8>::PixelType) * 8,
-          PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
-          PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
-      }
-
-      inline void
-      setPngHeaderInfo(png_structp pngPtr,
-                       png_infop infoPtr,
-                       Image<RGB16> const& outputImage) {
-        if(!Image<RGB16>::value_type::isContiguous()) {
-          BRICK_THROW(
-            brick::common::NotImplementedException, "setPngHeaderInfo()",
-            "Your compiler appears to pack RGB pixels in an unusual way.  "
-            "Please update brick::computerVision::writePNG() to handle this.");
-        }
-        
-#if 0
-        // Seems like this should be a sane way to handle endianness,
-        // but it doesn't appear to work.
-        
-        // PNG files are natively big-endian, but can be coerced to
-        // store little-endian data without a swap.
-        if(brick::common::getByteOrder()
-           == brick::common::BRICK_LITTLE_ENDIAN) {
-          png_set_swap(pngPtr);
-        }
-#endif /* #if 0 */
-
-        // Pick reasonable defaults for the rest of the header
-        // configuration.
-        png_set_IHDR(
-          pngPtr, infoPtr, outputImage.columns(), outputImage.rows(),
-          sizeof(ImageFormatTraits<GRAY16>::PixelType) * 8,
-          PNG_COLOR_TYPE_RGB, PNG_INTERLACE_NONE,
-          PNG_COMPRESSION_TYPE_DEFAULT, PNG_FILTER_TYPE_DEFAULT);
-      }
 
     } // namespace privateCode
       
@@ -394,122 +240,109 @@ namespace brick {
              const Image<Format>& outputImage,
              const std::string& /* comment */)
     {
-      // This code is heavily in debt to example.c from the libpng 1.2.1
-      // distribition, which carries the following header comment:
-      // /* example.c - an example of using libpng
-      //  * Last changed in libpng 1.2.1 December 7, 2001.
-      //  * This file has been placed in the public domain by the authors.
-      //  * Maintained 1998-2001 Glenn Randers-Pehrson
-      //  * Maintained 1996, 1997 Andreas Dilger)
-      //  * Written 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
-      //  */
-
-      FILE* fp = fopen(fileName.c_str(), "wb");
-      if (fp == 0) {
-        BRICK_THROW(brick::common::IOException, "ImageIO::writePNG()",
-                    "Couldn't open output file.");
-      }
-
-      // Make sure we clean up open FILE.
-      try {
-
-        // Create and initialize the png_struct with the default stderr and
-        // longjump error handler functions.
-        png_structp pngPtr = png_create_write_struct(
-          PNG_LIBPNG_VER_STRING, 0, 0, 0);
-        if (pngPtr == 0) {
-          BRICK_THROW(brick::common::RunTimeException, "ImageIO::writePng()",
-                      "Couldn't initialize png_structp.");
-        }
-
-        // This variable is just to let us choreograph nicely with libpng
-        // cleanup functions.
-        png_infop* infoPtrPtrForCleanup = png_infopp_NULL;
-
-        // Make sure we clean up pngPtr (and eventually infoPtr).
-        try { 
-
-          // We'll need a place to record details (colorspace, etc.)
-          // about the image.
-          png_infop infoPtr = png_create_info_struct(pngPtr);
-          if (infoPtr == 0) {
-            BRICK_THROW(brick::common::RunTimeException, "ImageIO::writePng()",
-                        "Couldn't initialize png_infop.");
-          }
-          infoPtrPtrForCleanup = &infoPtr;
-     
-          // Set error handling in case libpng calls longjmp().
-          if(setjmp(png_jmpbuf(pngPtr))) {
-            // If we get here, we had a problem reading the file
-            BRICK_THROW(brick::common::IOException, "ImageIO::writePng()",
-                        "Trouble reading from file.");
-          }
-
-          // Set up the output control.
-          png_init_io(pngPtr, fp);
-
-          // Note(xxx): Just in case we need it...
-          // png_set_compression_level(pngPtr, Z_BEST_COMPRESSION);
-
-          // Seems like endianness should be handled by setting pngPtr
-          // options, but that hasn't worked so far, so we brute force
-          // it.
-          Image<Format> savableImage =
-            privateCode::fixPngEndianness(outputImage);
-            
-          privateCode::setPngHeaderInfo(pngPtr, infoPtr, savableImage);
-          
-          // Fill in png structure here.
-          png_bytep* rowPointers = (png_bytep*)png_malloc(
-            pngPtr, outputImage.rows() * png_sizeof(png_bytep));
-          if(rowPointers == 0) {
-            BRICK_THROW(brick::common::RunTimeException, "ImageIO::writePng()",
-                        "Couldn't allocate row pointers.");
-          }
-
-          // Be sure to free rowPointers.
-          try {
-            
-            for(size_t rowIndex = 0; rowIndex < outputImage.rows();
-                ++rowIndex) {
-              rowPointers[rowIndex] =
-                (png_bytep)(savableImage.getRow(rowIndex).data());
-            }
-
-            png_set_rows(pngPtr, infoPtr, rowPointers);
-            png_write_png(
-              pngPtr, infoPtr, PNG_TRANSFORM_IDENTITY, png_voidp_NULL);
-          } catch(...) {
-            png_free(pngPtr, rowPointers);
-          }
-          png_free(pngPtr, rowPointers);
-
-          /* If you png_malloced a palette, free it here (don't free
-             infoPtr->palette, as recommended in versions 1.0.5m and
-             earlier of this example; if libpng mallocs infoPtr->palette,
-             libpng will free it).  If you allocated it with malloc()
-             instead of png_malloc(), use free() instead of
-             png_free(). */
-          // png_free(pngPtr, palette); xxx;
-          // palette=NULL;
-
-        } catch(...) {
-          png_destroy_write_struct(&pngPtr, infoPtrPtrForCleanup);
-          throw;
-        }
-     
-        /* clean up after the write, and free any memory allocated */
-        png_destroy_write_struct(&pngPtr, infoPtrPtrForCleanup);
-
-      } catch(...) {
-        fclose(fp);
-        throw;
-      }
-
-      fclose(fp);
+      BRICK_THROW(brick::common::NotImplementedException, "writePNG()",
+                  "This function template has not been specialized for the "
+                  "requested image format yet.");
     }
 
+    
+    template<>
+    void
+    writePNG<GRAY8>(const std::string& fileName,
+                    const Image<GRAY8>& outputImage,
+                    const std::string& /* comment */)
+    {
+      try {
+        png::image<png::gray_pixel> pngImage(outputImage.columns(),
+                                          outputImage.rows());
+        for (png::uint_32 yy = 0; yy < pngImage.get_height(); ++yy) {
+          for (png::uint_32 xx = 0; xx < pngImage.get_width(); ++xx) {
+            common::UInt8 const& pixel = outputImage(yy, xx);
+            pngImage[yy][xx] = png::gray_pixel(pixel);
+          }
+        }
+        pngImage.write(fileName);
+      } catch(...) {
+        std::ostringstream message;
+        message << "Failed to write png image to " << fileName;
+        BRICK_THROW(brick::common::IOException, "writePNG()",
+                    message.str().c_str());
+      }
+    }
+    
+    template<>
+    void
+    writePNG<GRAY16>(const std::string& fileName,
+                     const Image<GRAY16>& outputImage,
+                     const std::string& /* comment */)
+    {
+      try {
+        png::image<png::gray_pixel_16> pngImage(outputImage.columns(),
+                                              outputImage.rows());
+        for (png::uint_32 yy = 0; yy < pngImage.get_height(); ++yy) {
+          for (png::uint_32 xx = 0; xx < pngImage.get_width(); ++xx) {
+            common::UInt16 const& pixel = outputImage(yy, xx);
+            pngImage[yy][xx] = png::gray_pixel_16(pixel);
+          }
+        }
+        pngImage.write(fileName);
+      } catch(...) {
+        std::ostringstream message;
+        message << "Failed to write png image to " << fileName;
+        BRICK_THROW(brick::common::IOException, "writePNG()",
+                    message.str().c_str());
+      }
+    }
+    
+    template<>
+    void
+    writePNG<RGB8>(const std::string& fileName,
+                   const Image<RGB8>& outputImage,
+                   const std::string& /* comment */)
+    {
+      try {
+        png::image<png::rgb_pixel> pngImage(outputImage.columns(),
+                                            outputImage.rows());
+        for (png::uint_32 yy = 0; yy < pngImage.get_height(); ++yy) {
+          for (png::uint_32 xx = 0; xx < pngImage.get_width(); ++xx) {
+            PixelRGB8 const& pixel = outputImage(yy, xx);
+            pngImage[yy][xx] = png::rgb_pixel(
+              pixel.red, pixel.green, pixel.blue);
+          }
+        }
+        pngImage.write(fileName);
+      } catch(...) {
+        std::ostringstream message;
+        message << "Failed to write png image to " << fileName;
+        BRICK_THROW(brick::common::IOException, "writePNG()",
+                    message.str().c_str());
+      }
+    }
 
+    template<>
+    void
+    writePNG<RGB16>(const std::string& fileName,
+                    const Image<RGB16>& outputImage,
+                    const std::string& /* comment */)
+    {
+      try {
+        png::image<png::rgb_pixel_16> pngImage(outputImage.columns(),
+                                               outputImage.rows());
+        for (png::uint_32 yy = 0; yy < pngImage.get_height(); ++yy) {
+          for (png::uint_32 xx = 0; xx < pngImage.get_width(); ++xx) {
+            PixelRGB16 const& pixel = outputImage(yy, xx);
+            pngImage[yy][xx] = png::rgb_pixel_16(
+              pixel.red, pixel.green, pixel.blue);
+          }
+        }
+        pngImage.write(fileName);
+      } catch(...) {
+        std::ostringstream message;
+        message << "Failed to write png image to " << fileName;
+        BRICK_THROW(brick::common::IOException, "writePNG()",
+                    message.str().c_str());
+      }
+    }
     
   } // namespace computerVision
 

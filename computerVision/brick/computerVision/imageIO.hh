@@ -165,41 +165,6 @@ namespace brick {
     writePNG(const std::string& fileName,
              const Image<Format>& outputImage,
              const std::string& comment = "");
-
-    
-    /** 
-     * WARNING: This routine may not stick around for long.
-     * 
-     * @param fileName This argument ...
-     * 
-     * @param outputImage This argument ...
-     * 
-     * @param comment This argument is currently ignored.
-     */
-    inline void
-    writePNG8(const std::string& fileName,
-              const Image<GRAY8>& outputImage,
-              const std::string& comment = "") {
-      writePNG(fileName, outputImage, comment);
-    }
-
-
-    /** 
-     * WARNING: This routine may not stick around for long.
-     * 
-     * @param fileName This argument ...
-     * 
-     * @param outputImage This argument ...
-     * 
-     * @param comment This argument is currently ignored.
-     */
-    inline void
-    writePNG8(const std::string& fileName,
-              const Image<RGB8>& outputImage,
-              const std::string& comment = "") {
-      writePNG(fileName, outputImage, comment);
-    }
-
     
 #endif /* #if HAVE_LIBPNG */
 

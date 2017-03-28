@@ -62,7 +62,7 @@ namespace brick {
         m_kernelSize(64)
     {
       BRICK_TEST_REGISTER_MEMBER(testThresholderSauvola);
-      # BRICK_TEST_REGISTER_MEMBER(testExecutionTime);
+      // BRICK_TEST_REGISTER_MEMBER(testExecutionTime);
     }
 
 

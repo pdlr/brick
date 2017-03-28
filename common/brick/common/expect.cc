@@ -18,11 +18,6 @@ namespace brick {
 
   namespace common {
 
-    const Expect::FormatFlag Expect::NoFlag(0x0);
-    const Expect::FormatFlag Expect::SkipWhitespace(0x1);
-    const Expect::FormatFlag Expect::Sloppy(0x2);
-    
-    
     // Constructor.
     Expect::
     Expect(std::string const& expectation, FormatFlag formatFlag)
@@ -72,7 +67,7 @@ namespace brick {
       std::istream::char_type inputBuffer[s_chunkSize + 1];
 
       // Remove leading white space, if required.
-      if((m_formatFlag & SkipWhitespace) != 0) {
+      if((m_formatFlag & SkipWhitespace()) != 0) {
         this->skipWhiteSpace(stream);
       }
       
@@ -99,7 +94,7 @@ namespace brick {
           
         // Now evaluate what we've read.
         bool matchFlag = true;
-        if((m_formatFlag & Sloppy) == 0) {
+        if((m_formatFlag & Sloppy()) == 0) {
           // We use memcmp() instead of strncmp() because the caller
           // might conceivably expect a string with a '\0' in the middle.
           matchFlag = (std::memcmp(reinterpret_cast<const void*>(

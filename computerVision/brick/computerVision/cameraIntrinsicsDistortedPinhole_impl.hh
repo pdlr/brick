@@ -89,7 +89,7 @@ namespace brick {
         m_pinholeIntrinsics()
     {
       // Empty.
-    };
+    }
 
     
     // This constructor allows the caller to explicitly set the

@@ -208,6 +208,6 @@ namespace brick {
 
   } // namespace optimization
 
-}; // namespace brick
+} // namespace brick
 
 #endif /* #ifndef BRICK_OPTIMIZATION_OPTIMIZERCOMMON_HH */

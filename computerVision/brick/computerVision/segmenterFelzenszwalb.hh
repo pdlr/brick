@@ -135,7 +135,7 @@ namespace brick {
       
     protected:
 
-      typedef privateCode::DisjointSet<float> Segment;
+      typedef DisjointSet<float> Segment;
 
 
       inline float

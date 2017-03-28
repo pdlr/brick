@@ -20,36 +20,6 @@
 // 
 // #include <brick/computerVision/getEuclideanDistance.hh>
 
-#include <list>
-#include <brick/computerVision/imageFormat.hh>
-#include <brick/computerVision/imageIO.hh>
-#include <brick/computerVision/image.hh>
-#include <brick/numeric/index2D.hh>
-
-namespace brick {
-
-  namespace computerVision {
-    
-    template<class FloatType, ImageFormat FORMAT>
-    brick::numeric::Array2D<FloatType>
-    getEuclideanDistance(const Image<FORMAT>& inputImage,
-                         size_t maxNumberOfPasses=10);
-
-
-    template<class FloatType, ImageFormat FORMAT>
-    brick::numeric::Array2D<FloatType>
-    getEuclideanDistance(const Image<FORMAT>& inputImage,
-                         size_t maxNumberOfPasses,
-                         size_t& numberOfPassesUsed);
-  
-  } // namespace computerVision
-
-} // namespace brick
-
-
-/* ============ Definitions of inline & template functions ============ */
-
-
 #include <cmath>
 #include <brick/numeric/index2D.hh>
 

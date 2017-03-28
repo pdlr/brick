@@ -17,6 +17,7 @@ VPATH			= @srcdir@
 
 EXTRA_DIST              = \
 	bullseyeTestImage0.pgm \
+	bullseyeTestImage1.pgm \
 	connectedComponentsTestImage0.pgm \
 	connectedComponentsTestImage1.pgm \
 	dilateErodeTestImage0.pgm \

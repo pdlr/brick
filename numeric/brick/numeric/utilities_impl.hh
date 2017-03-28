@@ -1257,7 +1257,7 @@ namespace brick {
       //   var = sum_i((x_i - mu)^2) / (N - 1),
       //
       // where sum_i() is summation over i, x_i is the i^th element of
-      // the sequence, ^2 dentoes raising to the power of two, and mu
+      // the sequence, ^2 denotes raising to the power of two, and mu
       // is the estimated mean of the sequence.  Multiplying (x_i -
       // mu)^2 out, and separating terms, we get
       //

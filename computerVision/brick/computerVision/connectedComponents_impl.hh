@@ -103,12 +103,14 @@ namespace brick {
       // (assigned above) and map them to finalized labels.  We arrange
       // that finalized labels are 1, 2, 3, etc., without any gaps,
       // but make no guarantees about which blob gets which label.
-      std::vector<size_t> labelArray(correspondenceVector.size(), 0);
+      size_t indicator = std::numeric_limits<size_t>::max();
+      std::vector<size_t> labelArray(correspondenceVector.size(),
+                                     indicator);
       size_t outputLabel = 0;
       for(size_t ii = 0; ii < labelArray.size(); ++ii) {
-        if(labelArray[ii] == 0) {
+        if(labelArray[ii] == indicator) {
           size_t headOfFamily = correspondenceVector[ii]->find().getPayload();
-          if(labelArray[headOfFamily] != 0) {
+          if(labelArray[headOfFamily] != indicator) {
             labelArray[ii] = labelArray[headOfFamily];
           } else {
             labelArray[ii] = outputLabel;
@@ -121,12 +123,12 @@ namespace brick {
       // Relabel the blobs.
       privateCode::populateOutputImage(outputImage, labelImage, labelArray);
 
-      if(outputLabel != 0) {
-        numberOfComponents = static_cast<unsigned int>(outputLabel - 1);
-      } else {
-        // This case will never happen, but we leave the code here so
-        // the compiler (and collaborators) won't worry.
-        numberOfComponents = 0;
+      // In foreground/background mode, the background doesn't count
+      // as a component.  In other modes it does.
+      numberOfComponents = static_cast<unsigned int>(outputLabel);
+      if(config.mode == ConnectedComponentsConfig::FOREGROUND_BACKGROUND
+         && numberOfComponents != 0) {
+        --numberOfComponents;
       }
     
       return outputImage;

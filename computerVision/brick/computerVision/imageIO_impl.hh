@@ -245,104 +245,30 @@ namespace brick {
                   "requested image format yet.");
     }
 
-    
+    // Definitions of these specializations are found in ImageIO.cc.
     template<>
     void
     writePNG<GRAY8>(const std::string& fileName,
                     const Image<GRAY8>& outputImage,
-                    const std::string& /* comment */)
-    {
-      try {
-        png::image<png::gray_pixel> pngImage(outputImage.columns(),
-                                          outputImage.rows());
-        for (png::uint_32 yy = 0; yy < pngImage.get_height(); ++yy) {
-          for (png::uint_32 xx = 0; xx < pngImage.get_width(); ++xx) {
-            common::UInt8 const& pixel = outputImage(yy, xx);
-            pngImage[yy][xx] = png::gray_pixel(pixel);
-          }
-        }
-        pngImage.write(fileName);
-      } catch(...) {
-        std::ostringstream message;
-        message << "Failed to write png image to " << fileName;
-        BRICK_THROW(brick::common::IOException, "writePNG()",
-                    message.str().c_str());
-      }
-    }
+                    const std::string& /* comment */);
     
     template<>
     void
     writePNG<GRAY16>(const std::string& fileName,
                      const Image<GRAY16>& outputImage,
-                     const std::string& /* comment */)
-    {
-      try {
-        png::image<png::gray_pixel_16> pngImage(outputImage.columns(),
-                                              outputImage.rows());
-        for (png::uint_32 yy = 0; yy < pngImage.get_height(); ++yy) {
-          for (png::uint_32 xx = 0; xx < pngImage.get_width(); ++xx) {
-            common::UInt16 const& pixel = outputImage(yy, xx);
-            pngImage[yy][xx] = png::gray_pixel_16(pixel);
-          }
-        }
-        pngImage.write(fileName);
-      } catch(...) {
-        std::ostringstream message;
-        message << "Failed to write png image to " << fileName;
-        BRICK_THROW(brick::common::IOException, "writePNG()",
-                    message.str().c_str());
-      }
-    }
+                     const std::string& /* comment */);
     
     template<>
     void
     writePNG<RGB8>(const std::string& fileName,
                    const Image<RGB8>& outputImage,
-                   const std::string& /* comment */)
-    {
-      try {
-        png::image<png::rgb_pixel> pngImage(outputImage.columns(),
-                                            outputImage.rows());
-        for (png::uint_32 yy = 0; yy < pngImage.get_height(); ++yy) {
-          for (png::uint_32 xx = 0; xx < pngImage.get_width(); ++xx) {
-            PixelRGB8 const& pixel = outputImage(yy, xx);
-            pngImage[yy][xx] = png::rgb_pixel(
-              pixel.red, pixel.green, pixel.blue);
-          }
-        }
-        pngImage.write(fileName);
-      } catch(...) {
-        std::ostringstream message;
-        message << "Failed to write png image to " << fileName;
-        BRICK_THROW(brick::common::IOException, "writePNG()",
-                    message.str().c_str());
-      }
-    }
+                   const std::string& /* comment */);
 
     template<>
     void
     writePNG<RGB16>(const std::string& fileName,
                     const Image<RGB16>& outputImage,
-                    const std::string& /* comment */)
-    {
-      try {
-        png::image<png::rgb_pixel_16> pngImage(outputImage.columns(),
-                                               outputImage.rows());
-        for (png::uint_32 yy = 0; yy < pngImage.get_height(); ++yy) {
-          for (png::uint_32 xx = 0; xx < pngImage.get_width(); ++xx) {
-            PixelRGB16 const& pixel = outputImage(yy, xx);
-            pngImage[yy][xx] = png::rgb_pixel_16(
-              pixel.red, pixel.green, pixel.blue);
-          }
-        }
-        pngImage.write(fileName);
-      } catch(...) {
-        std::ostringstream message;
-        message << "Failed to write png image to " << fileName;
-        BRICK_THROW(brick::common::IOException, "writePNG()",
-                    message.str().c_str());
-      }
-    }
+                    const std::string& /* comment */);
     
   } // namespace computerVision
 

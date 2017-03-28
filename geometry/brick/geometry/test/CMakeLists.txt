@@ -10,16 +10,16 @@ set (BRICK_GEOMETRY_TEST_LIBS
 
 macro (brick_geometry_set_up_test test_name)
   # Build the test in question.
-  add_executable (${test_name} ${test_name}.cc)
-  target_link_libraries (${test_name} ${BRICK_GEOMETRY_TEST_LIBS})
+  add_executable (geometry_${test_name} ${test_name}.cc)
+  target_link_libraries (geometry_${test_name} ${BRICK_GEOMETRY_TEST_LIBS})
 
   # Arrange for the test to be run when the user executest the ctest command.
-  add_test (${test_name}_target ${test_name})
+  add_test (geometry_${test_name}_target geometry_${test_name})
 
   # All brick unit tests return 0 on success, nonzero otherwise,
   # so no need to set special properties that catch failures.
   # 
-  # # set_tests_properties (${test_name}_target
+  # # set_tests_properties (geometry_${test_name}_target
   # #   PROPERTIES PASS_REGULAR_EXPRESSION "All tests pass")
 endmacro (brick_geometry_set_up_test test_name)
 

@@ -1,5 +1,5 @@
 # Build file for the brickComputerVision support library.
 
-find_package (PNG 1.2 REQUIRED)
+find_package (PNG)
 
 add_subdirectory (brick/computerVision) 

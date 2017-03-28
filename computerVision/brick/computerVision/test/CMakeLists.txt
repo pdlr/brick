@@ -1,7 +1,10 @@
 include(CTest)
 
-set (BRICK_COMPUTERVISION_TEST_LIBS
+set (BRICK_COMPUTER_VISION_TEST_LIBS
   brickComputerVision
+  brickUtilities
+  brickRandom
+  brickPortability
   brickTest
   brickTestAutoMain
   )
@@ -10,11 +13,11 @@ set (BRICK_COMPUTERVISION_TEST_LIBS
 
 macro (brick_computer_vision_set_up_test test_name)
   # Build the test in question.
-  add_executable (${test_name} ${test_name}.cc)
-  target_link_libraries (${test_name} ${BRICK_COMPUTER_VISION_TEST_LIBS})
+  add_executable (computerVision_${test_name} ${test_name}.cc)
+  target_link_libraries (computerVision_${test_name} ${BRICK_COMPUTER_VISION_TEST_LIBS})
 
   # Arrange for the test to be run when the user executest the ctest command.
-  add_test (${test_name}_target ${test_name})
+  add_test (computerVision_${test_name}_target computerVision_${test_name})
 
   # All brick unit tests return 0 on success, nonzero otherwise,
   # so no need to set special properties that catch failures.
@@ -59,4 +62,5 @@ brick_computer_vision_set_up_test (segmenterFelzenszwalbTest)
 brick_computer_vision_set_up_test (sobelTest)
 brick_computer_vision_set_up_test (stereoRectifyTest)
 brick_computer_vision_set_up_test (threePointAlgorithmTest)
+brick_computer_vision_set_up_test (thresholderSauvolaTest)
 brick_computer_vision_set_up_test (utilitiesTest)

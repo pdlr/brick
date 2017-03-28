@@ -10,16 +10,16 @@ set (BRICK_UTILITIES_TEST_LIBS
 
 macro (brick_utilities_set_up_test test_name)
   # Build the test in question.
-  add_executable (${test_name} ${test_name}.cc)
-  target_link_libraries (${test_name} ${BRICK_UTILITIES_TEST_LIBS})
+  add_executable (utilities_${test_name} ${test_name}.cc)
+  target_link_libraries (utilities_${test_name} ${BRICK_UTILITIES_TEST_LIBS})
 
   # Arrange for the test to be run when the user executest the ctest command.
-  add_test (${test_name}_target ${test_name})
+  add_test (utilities_${test_name}_target utilities_${test_name})
 
   # All brick unit tests return 0 on success, nonzero otherwise,
   # so no need to set special properties that catch failures.
   # 
-  # # set_tests_properties (${test_name}_target
+  # # set_tests_properties (utilities_${test_name}_target
   # #   PROPERTIES PASS_REGULAR_EXPRESSION "All tests pass")
 endmacro (brick_utilities_set_up_test test_name)
 

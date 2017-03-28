@@ -13,6 +13,7 @@ add_library(brickComputerVision
 
 target_link_libraries (brickComputerVision
   brickLinearAlgebra
+  brickNumeric
   ${PNG_LIBRARIES}
   )
 
@@ -71,11 +72,12 @@ install (FILES
   sobel.hh sobel_impl.hh
   stereoRectify.hh stereoRectify_impl.hh
   threePointAlgorithm.hh threePointAlgorithm_impl.hh
+  thresholderSauvola.hh thresholderSauvola_impl.hh
   utilities.hh utilities_impl.hh
   
   DESTINATION include)
 
 
-if (BUILD_BRICK_TESTS)
+if (BRICK_BUILD_TESTS)
   add_subdirectory (test)
-endif (BUILD_BRICK_TESTS)
+endif (BRICK_BUILD_TESTS)

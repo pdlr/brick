@@ -11,6 +11,7 @@ add_library(brickLinearAlgebra
 
 target_link_libraries (brickLinearAlgebra
   brickCommon
+  brickNumeric
   ${LAPACK_LIBRARIES}
   )
 

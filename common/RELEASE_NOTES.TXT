@@ -1,7 +1,7 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
-Revision 1.5
+Revision 1.6
 
   WARNING: this update may break existing code.  We now use C++11 to
   build.  In addition, we have changed the interface of
@@ -14,10 +14,13 @@ Revision 1.5
   must be changed to look like this:
     common::Expect::FormatFlag flags = common::Expect::SkipWhitespace();
 - Added a first whack at a CMake build system.
-- Switched over to using C++11.
-- Added a complex number class to stand in for the soon to be available
-  std::complex class template.
-- Added some more constants in constants.hh.
+
+Revision 1.5
+- Switched to using C++11 for builds.
+- Added new ComplexNumber class template to allow complex numbers based
+  on types not supported by std::complex.
+- Added a few more constants.
+- Added missing header versionNumber.hh to the release tarball.
 
 Revision 1.4
 

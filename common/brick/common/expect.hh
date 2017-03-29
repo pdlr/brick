@@ -30,18 +30,18 @@ namespace brick {
      **   myInputStream >> Expect("Number attending:") >> attendeeCount;
      **
      **   // Less strict: accept leading whitespace without issues.
-     **   Expect::FormatFlag flags = Expect::SkipWhitespace
+     **   Expect::FormatFlag flags = Expect::SkipWhitespace()
      **   myInputStream >> Expect("Number attending:", flags) >> attendeeCount;
      **
      **   // Don't actually look at the input.  Just read an
      **   // appropriate number of characters.
-     **   myInputStream >> Expect("Number attending:", Expect::Sloppy)
+     **   myInputStream >> Expect("Number attending:", Expect::Sloppy())
      **                 >> attendeeCount;
      **
      **   // First skip any leading whitespace, then read the required
      **   // number of input characters without actually looking at
      **   // them.
-     **   Expect::FormatFlag flags = Expect::SkipWhitespace | Expect::Sloppy;
+     **   Expect::FormatFlag flags = Expect::SkipWhitespace() | Expect::Sloppy();
      **   myInputStream >> Expect("Number attending:", flags) >> attendeeCount;
      **   
      ** @endCode

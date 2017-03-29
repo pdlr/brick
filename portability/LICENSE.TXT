@@ -1,7 +1,7 @@
 /** @file LICENSE.TXT
 This file describes the license for the brick::portability library.
 
-Copyright (C) 2000 - 2013, David LaRose, Pittsburgh, Pennsylvania, USA.
+Copyright (C) 2000 - 2017, David LaRose, Pittsburgh, Pennsylvania, USA.
 All Rights Reserved
 
 This library is free software; you can redistribute it and/or

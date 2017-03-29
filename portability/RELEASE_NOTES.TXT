@@ -1,6 +1,13 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.2
+
+  WARNING: this update now uses C++11 to build, which may break existing code.
+
+- Added a first whack at a CMake build system.
+- Switched over to using C++11.
+
 Revision 1.1
 
 - Updated portability/standardC.hh to include unistd.h, allowing lockFile.cc 

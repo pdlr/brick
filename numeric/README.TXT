@@ -47,10 +47,21 @@ got this library.
 
 @section installation_sec Installation
 
+@subsection cmake CMake
+
+The distribution now includes CMakeLists.txt files to allow building
+with CMake.  For now, though, these files don't include a top-level
+CMakeLists.txt.  The idea is that you might unpack the brick code into
+your source tree and then include the brick CMakeLists.txt files from
+your own CMake build structure.  If you want to build the brick
+libraries stand-alone, there is an example top-level CMakeLists.txt
+file available from the same place you got brickNumeric.
+
 @subsection autotools GNU Autotools
 
-Building and installing is done via GNU Autotools.  If you're building 
-from a tarball, the simplest possible version looks like this:
+Building and installing has traditionally been done via GNU Autotools.
+If you're building from a tarball, the simplest possible version looks
+like this:
 
 @code
 > tar -xvf bricknumeric-x.y.z.tar.gz

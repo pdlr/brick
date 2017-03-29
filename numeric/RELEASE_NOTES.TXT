@@ -1,6 +1,20 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.8
+
+  WARNING: this update may break existing code.  We now use C++11 to
+  build.  In addition, we have changed the interface of
+  brick::common::Expect.  See below for more information.
+
+- Switched over to using C++11.
+- Updated templatization of Quaternion and rotation conversion functions to
+  work with user-defined types.
+- Added mathFunctions.hh declaring general math function templates to
+  replace abs(), sin(), cos(), etc. in portable code.
+- Added template argument FloatType to BilinearInterpolator.
+- Other minor updates and fixes.
+
 Revision 1.7
 
 - Added new DifferentiableScalar class to help with computing derivatives 

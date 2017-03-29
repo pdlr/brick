@@ -130,7 +130,10 @@ namespace brick {
        * *this.
        */
       template <class OtherType>
+      // Explicit conversion operators require C++11. 
+#if __cplusplus > 199711L 
       explicit
+#endif
       operator OtherType() const {
         return static_cast<OtherType>(this->getValue());
       }

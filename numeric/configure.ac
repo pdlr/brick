@@ -4,7 +4,7 @@ dnl   Process this file with autoconf to produce a configure script.
 dnl
 
 dnl Initialization.
-AC_INIT(bricknumeric, 1.8)
+AC_INIT(bricknumeric, 1.9)
 AC_CONFIG_SRCDIR(brick/numeric/Makefile.am)
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_MACRO_DIR([m4])

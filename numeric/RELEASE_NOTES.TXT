@@ -1,7 +1,7 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
-Revision 1.8
+Revision 1.9
 
   WARNING: this update may break existing code.  We now use C++11 to
   build.  In addition, we have changed the interface of
@@ -10,17 +10,31 @@ Revision 1.8
 - Switched over to using C++11.
 - Updated templatization of Quaternion and rotation conversion functions to
   work with user-defined types.
-- Added mathFunctions.hh declaring general math function templates to
-  replace abs(), sin(), cos(), etc. in portable code.
 - Added template argument FloatType to BilinearInterpolator.
 - Other minor updates and fixes.
+
+Revision 1.8
+
+WARNING: This update breaks compatibility with previous versions of
+         solveQuadratic(), solveCubic(), and solveQuartic().
+WARNING: This update breaks compatibility with previous versions of
+         BSpline2D.
+
+- Updated code to build with C++11.
+- Changed solveQuadratic(), solveCubic(), and solveQuartic() to use the
+  new class template brick::common::ComplexNumber.
+- Added math functions to the brick::numeric namespace, superseding
+  their counterparts in brick::common.
+- Significant updates to BSpline2D class template.
+- Corrected compile errors and warnings in SubArray1D, SubArray2D,
+  DerivativeRidders, quaternionToAngleAxis().
 
 Revision 1.7
 
 - Added new DifferentiableScalar class to help with computing derivatives 
   of functions.
 - Corrected compile errors in Polynomial class.
-- Added new ScatteredDataInterpolator2D class, and fleshed out 
+- Added new ScatteredDataInterpolator2D class template, and fleshed out 
   implementation of BSpline2D class.
 - Other minor updates, including swapping template parameter order in rms().
 

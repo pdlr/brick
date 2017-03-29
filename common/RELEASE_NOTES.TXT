@@ -1,6 +1,24 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.5
+
+  WARNING: this update may break existing code.  We now use C++11 to
+  build.  In addition, we have changed the interface of
+  brick::common::Expect.  See below for more information.
+
+- Made static data members of brick::common::Expect into static member
+  functions to avoid the static initialization order fiasco.
+  Code that previously looked like this:
+    common::Expect::FormatFlag flags = common::Expect::SkipWhitespace;
+  must be changed to look like this:
+    common::Expect::FormatFlag flags = common::Expect::SkipWhitespace();
+- Added a first whack at a CMake build system.
+- Switched over to using C++11.
+- Added a complex number class to stand in for the soon to be available
+  std::complex class template.
+- Added some more constants in constants.hh.
+
 Revision 1.4
 
 - Fixed a compilation error due to missing include directive in 

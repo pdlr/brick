@@ -21,6 +21,7 @@
 // #include <brick/numeric/bilinearInterpolator.hh>
 
 #include <cmath>
+#include <limits>
 
 #include <brick/common/mathFunctions.hh>
 

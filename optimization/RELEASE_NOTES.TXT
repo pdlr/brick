@@ -1,6 +1,14 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.4
+  WARNING: this update may break existing code.  We now use C++11 to
+  build, and Optimizer classes have been additionally templated.
+
+- Switched over to using C++11 for development builds.
+- Added first whack at a CMake build system.
+- Added FloatType template parameters to optimizers.
+
 Revision 1.3
 
 - Updates to build with g++-4.7.

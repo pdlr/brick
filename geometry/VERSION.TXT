@@ -1,3 +1,3 @@
 /** @file VERSION.TXT
-This is brick::geometry version 1.4.
+This is brick::geometry version 1.6.
 **/

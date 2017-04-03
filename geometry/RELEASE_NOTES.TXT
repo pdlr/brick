@@ -1,8 +1,13 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.6
+
+- Added first whack at a CMake build system.
+
 Revision 1.5
 
+- Switched over to building with C++11.
 - Added missing const qualifiers in Bullseye2D.
 - Added a new constructor for LineSegment2D.
 

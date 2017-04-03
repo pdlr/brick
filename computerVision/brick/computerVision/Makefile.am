@@ -16,7 +16,7 @@ SUBDIRS = test
 
 # Set the include path.
 
-AM_CPPFLAGS		= -I$(top_srcdir)
+AM_CPPFLAGS		= -I$(top_srcdir) --std=c++11
 
 
 # Define the list of header files to install and the location to

@@ -1,6 +1,32 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.10
+
+WARNING: There are lots of changes in this release, and they may break
+existing code.
+
+- Updated code to reflect changes in other libraries, for example
+  we now use the new common::Expect interface updates.
+- Added a dependence on libpng++.  This greatly simplifies out image
+  IO code.
+- Sped up KeypointSelectorBullseye (more to do here).
+- Updated and extended connectedComponents() function template.
+- Moved DisjointSet into namespace brick::computerVision, and made it
+  non-copyable.
+- Added an implementation of the adaptive text thresholding algorithm of
+  Sauvola and Pietikainen.
+- Other minor bugfixes and enhancements.
+
+Revision 1.9
+
+- Switched over to building with C++11.
+- Updated calibration code to use newly added template parameters in
+  optimization classes.
+- Added ImagePyramidBinomial class template and made minor updates to
+  the nearly-obselete ImagePyramid class template.
+- Other minor updates and added features.
+
 Revision 1.8
 
 - Added several new colorspace conversions.

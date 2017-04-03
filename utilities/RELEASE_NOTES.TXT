@@ -1,6 +1,13 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 1.5
+- Added a first whack at a CMake build system.
+
+Revision 1.4
+- Switched over to compiling with C++11.
+- Fixed a few compiler warnings and minor build issues.
+
 Revision 1.3
 
 - Added support in OptionParser for non-string default option values.

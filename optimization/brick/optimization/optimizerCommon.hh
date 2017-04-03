@@ -30,7 +30,12 @@ namespace brick {
      * @param point A starting point for use in the scaling calculation.
      * @return A scale factor, always greater than zero.
      */
+    // Default function template parameters require C++11.
+#if __cplusplus <= 199711L 
+    template <class ArgumentType, class FloatType>
+#else
     template <class ArgumentType, class FloatType = double>
+#endif
     FloatType
     contextSensitiveScale(const ArgumentType& vector,
                           const ArgumentType& point);
@@ -60,7 +65,12 @@ namespace brick {
      * @return The sum of the products of corresponding elements of
      * the two arguments.
      */
+    // Default function template parameters require C++11.
+#if __cplusplus <= 199711L 
+    template <class ArgumentType, class FloatType>
+#else
     template <class ArgumentType, class FloatType = double>
+#endif
     FloatType
     dotArgumentType(const ArgumentType& argument0,
                     const ArgumentType& argument1);
@@ -79,7 +89,12 @@ namespace brick {
      * @param result The elements of this argument will be  set to the
      * result of the matrix * vector product.
      */
+    // Default function template parameters require C++11.
+#if __cplusplus <= 199711L 
+    template <class ArgumentType, class FloatType>
+#else
     template <class ArgumentType, class FloatType = double>
+#endif
     void
     matrixMultiplyArgumentType(const brick::numeric::Array2D<FloatType>& matrix0,
                                const ArgumentType& vector0,

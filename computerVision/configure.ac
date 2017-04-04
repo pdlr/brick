@@ -27,6 +27,11 @@ AC_PROG_LIBTOOL
 dnl Use C++ compiler to build programs when running ./configure.
 AC_LANG([C++])
 
+AX_CHECK_COMPILE_FLAG([-std=c++11],
+  [AX_APPEND_FLAG([-std=c++11])],
+  [AC_MSG_WARN([-std=c++11 not supported, you may have to set CFLAGS to enable C++11 support.])
+])
+
 
 dnl Checks for libraries.
 BRICK_HAVE_PNG

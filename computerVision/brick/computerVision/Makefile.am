@@ -64,6 +64,7 @@ brickComputerVision_HEADERS	= \
 	nChooseKSampleSelector.hh nChooseKSampleSelector_impl.hh \
 	pixelBGRA.hh \
 	pixelHSV.hh \
+	pixelOperations.hh \
 	pixelRGB.hh \
 	pixelRGBA.hh \
 	pixelYIQ.hh \

@@ -31,7 +31,8 @@ AUX_DIST		= $(ac_aux_dir)/config.guess \
 EXTRA_DIST              = LICENSE.TXT \
 			  README.TXT \
 			  RELEASE_NOTES.TXT \
-			  VERSION.TXT
+			  VERSION.TXT \
+			  CMakeLists.txt
 
 # Define how to build the documenation.
 

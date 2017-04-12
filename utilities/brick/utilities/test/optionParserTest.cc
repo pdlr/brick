@@ -14,6 +14,7 @@
 
 #include <brick/common/mathFunctions.hh>
 #include <brick/utilities/optionParser.hh>
+#include <brick/test/functors.hh>
 #include <brick/test/testFixture.hh>
 
 using brick::test::TestFixture;
@@ -37,6 +38,7 @@ namespace brick {
       void testAddOption();
       void testAddOptionWithValue();
       void testAddPositionalArgument();
+      void testConvertValue();
       void testGetCount();
       void testGetExtraPositionalArguments();
       void testGetOptionsDescription();
@@ -60,6 +62,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testAddOption);
       BRICK_TEST_REGISTER_MEMBER(testAddOptionWithValue);
       BRICK_TEST_REGISTER_MEMBER(testAddPositionalArgument);
+      BRICK_TEST_REGISTER_MEMBER(testConvertValue);
       BRICK_TEST_REGISTER_MEMBER(testGetCount);
       BRICK_TEST_REGISTER_MEMBER(testGetExtraPositionalArguments);
       BRICK_TEST_REGISTER_MEMBER(testGetOptionsDescription);
@@ -341,6 +344,82 @@ namespace brick {
   
     void
     OptionParserTest::
+    testConvertValue()
+    {
+      double const epsilon = 1.0e-10;
+      int argc0 = 9;
+      const char* argv0[] = {"foo", "-a", "9.0", "-b", "10", "--ccc=-9",
+                             "--bbb=11", "-b", "12"};
+    
+      OptionParser optionParser0;
+      optionParser0.addOptionWithValue(
+        "AA", "-a", "--aaa", "11.0", "Set the aa.");
+      optionParser0.addOptionWithValue(
+        "BB", "-b", "--bbb", "6", "Set the bb.");
+      optionParser0.addOptionWithValue(
+        "CC", "-c", "--ccc", "-10", "Set the cc.");
+      optionParser0.addOptionWithValue(
+        "DD", "-d", "--ddd", "-11", "Set the dd.");
+
+      optionParser0.parseCommandLine(argc0, argv0);
+
+      // Make sure conversion is OK.
+      BRICK_TEST_ASSERT(
+        brick::test::approximatelyEqual(
+          optionParser0.convertValue<double>("AA"), 9.0, epsilon));
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("BB") == 12);
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("CC") == -9);
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("BB", 0) == 10);
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("BB", 0) == 10);
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("BB", 1) == 11);
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("BB", 2) == 12);
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("DD") == -11);
+
+      // Make sure clamping of converted values is OK.
+      BRICK_TEST_ASSERT(
+        brick::test::approximatelyEqual(
+          optionParser0.convertValue<double>("AA", -5.0, 5.0), 5.0, epsilon));
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("BB", -5, 5) == 5);
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("CC", -5, 5) == -5);
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("BB", 0, -5, 5) == 5);
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("BB", 1, -5, 5) == 5);
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("BB", 2, -5, 5) == 5);
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("DD", -5, 5) == -5);
+
+      // ...even when there's no clamping to be done.
+      BRICK_TEST_ASSERT(
+        brick::test::approximatelyEqual(
+          optionParser0.convertValue<double>("AA", -50.0, 50.0), 9.0, epsilon));
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("BB", -50, 50) == 12);
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("CC", -50, 50) == -9);
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("BB", 0, -50, 50) == 10);
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("BB", 1, -50, 50) == 11);
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("BB", 2, -50, 50) == 12);
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("DD", -50, 50) == -11);
+      
+      // Make sure out-of-bounds values throw when we're not clamping.
+      BRICK_TEST_ASSERT_EXCEPTION(
+        brick::utilities::ConversionException,
+        optionParser0.convertValue<double>("AA", -5.0, 5.0, false));
+      BRICK_TEST_ASSERT_EXCEPTION(
+        brick::utilities::ConversionException,
+        optionParser0.convertValue<int>("BB", -5, 5, false));
+      BRICK_TEST_ASSERT_EXCEPTION(
+        brick::utilities::ConversionException,
+        optionParser0.convertValue<int>("CC", -5, 5, false));
+
+      // Make sure in-bounds values don't throw when we're not clamping.
+      BRICK_TEST_ASSERT(
+        brick::test::approximatelyEqual(
+          optionParser0.convertValue<double>("AA", -50.0, 50.0, false),
+          9.0, epsilon));
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("BB", -50, 50) == 12);
+      BRICK_TEST_ASSERT(optionParser0.convertValue<int>("CC", -50, 50) == -9);
+    }
+
+    
+    void
+    OptionParserTest::
     testGetCount()
     {
       // Already tested in testAddOption().
@@ -390,10 +469,13 @@ namespace brick {
   
 } // namespace brick
 
+#ifndef BRICK_TEST_NO_AUTOMATIC_REGISTRATION
+#define BRICK_TEST_NO_AUTOMATIC_REGISTRATION
+#endif
 
 #ifdef BRICK_TEST_NO_AUTOMATIC_REGISTRATION
 
-int main(int argc, char** argv)
+int main(int /* argc */, char** /* argv */)
 {
   brick::utilities::OptionParserTest currentTest;
   bool result = currentTest.run();

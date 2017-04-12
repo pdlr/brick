@@ -64,7 +64,7 @@ namespace brick {
      **   // ...as they can be converted to strings via the output stream
      **   // ...operator.
      **   optionParser.addOptionWithValue(
-     **     "WARNING_LEVEL", "-W", "--warning_level", 3,
+     **     "WARNING_LEVEL", "-W", "--warning_level", "3",
      **     "Add INCLUDE_DIR to include search path.");
      **
      **   // Specify required positional arguments.
@@ -366,7 +366,7 @@ namespace brick {
        * argument whose value is to be queried.  If name does not
        * match the name argument of a previous call to addOption(),
        * addOptionWithValue(), or addPositionalArgument(), then the
-       * returned value will be the empty string.
+       * conversion will fail.
        * 
        * @return The return value is the value for the requested
        * option or positional argument.
@@ -374,6 +374,45 @@ namespace brick {
       template<class Type>
       Type
       convertValue(std::string const& name);
+      template<class Type>
+
+
+      /** 
+       * This member function is just like convertValue(std::string
+       * const&), except that it allows the user to specify min and
+       * max values for the converted value.  If argument clampResult
+       * is true, then the converted value will be clamped to the
+       * range [lowerBound, upperBound].  If argument clampResult is
+       * false, then out-of-range values will result variously exit,
+       * print usage and exit, or throw a ConversionException, as if
+       * command-line parsing had failed, depending on which
+       * constructer arguments were specified.  Note that a converted
+       * value equal to upperBound is acceptable.
+       * 
+       * @param name This argument specifies the option or positional
+       * argument whose value is to be queried.  If name does not
+       * match the name argument of a previous call to addOption(),
+       * addOptionWithValue(), or addPositionalArgument(), then the
+       * conversion will fail.
+       * 
+       * @param lowerBound This argument is the lowest acceptable
+       * value for the converted value.
+       * 
+       * @param upperBound This argument is the highest acceptable
+       * value for the converted value.
+       * 
+       * @param clampResult This argument specifies whether
+       * out-of-range values should be clamped to the acceptable
+       * range, or whether a ConversionException should be thrown.
+       * 
+       * @return The return value is the converted value of the
+       * requested command-line argument.
+       */
+      Type
+      convertValue(std::string const& name,
+                   Type const& lowerBound,
+                   Type const& upperBound,
+                   bool clampResult = true);
 
 
       /** 
@@ -400,6 +439,45 @@ namespace brick {
       template<class Type>
       Type
       convertValue(std::string const& name, int valueIndex);
+
+
+      /** 
+       * This member function is just like convertValue(std::string
+       * const&, int), except that it allows the user to specify min
+       * and max values for the converted value.  If argument
+       * clampResult is true, then the converted value will be clamped
+       * to the range [lowerBound, upperBound].  If argument clampResult
+       * is false, then out-of-range values will result variously exit,
+       * print usage and exit, or throw a ConversionException, as if
+       * command-line parsing had failed, depending on which
+       * constructer arguments were specified.  Note that a converted
+       * value equal to upperBound is acceptable.
+       * 
+       * @param name This argument specifies the option or positional
+       * argument whose value is to be queried.  If name does not
+       * match the name argument of a previous call to addOption(),
+       * addOptionWithValue(), or addPositionalArgument(), then the
+       * conversion will fail.
+       * 
+       * @param lowerBound This argument is the lowest acceptable
+       * value for the converted value.
+       * 
+       * @param upperBound This argument is the highest acceptable
+       * value for the converted value.
+       * 
+       * @param clampResult This argument specifies whether
+       * out-of-range values should be clamped to the acceptable
+       * range, or whether a ConversionException should be thrown.
+       * 
+       * @return The return value is the converted value of the
+       * requested command-line argument.
+       */
+      template<class Type>
+      Type
+      convertValue(std::string const& name, int valueIndex,
+                   Type const& lowerBound,
+                   Type const& upperBound,
+                   bool clampResult = true);
 
 
       /** 
@@ -501,7 +579,8 @@ namespace brick {
       /** 
        * Following a successful parse of a command line, this member
        * function returns the (valueIndex)th value of the requested
-       * option or positional argument.
+       * option or positional argument, where 0 means first, 1 means
+       * second, etc.
        * 
        * @param name This argument specifies the option or positional
        * argument whose value is to be queried.  If name does not
@@ -582,7 +661,18 @@ namespace brick {
       
       void
       recordPositionalArgument(std::string const& argument);
+
       
+      // Depending on constructor arguments, either exit, or print usage
+      // and exit, or do nothing.
+      void
+      usageAndExitIfAppropriate(std::string const& what);
+      
+      void
+      usageAndExitIfAppropriate(brick::common::Exception const& ee) {
+        this->usageAndExitIfAppropriate(std::string(ee.what()));
+      }
+
 
       // Private data members.
       bool m_allowExtraArguments;
@@ -661,16 +751,46 @@ namespace brick {
     OptionParser::
     convertValue(std::string const& name)
     {
+      std::string resultString = this->getValue(name);
+
       try {
-        return convertString<Type>(this->getValue(name));
-      } catch(ConversionException&) {
+        return convertString<Type>(resultString);
+      } catch(ConversionException const&) {
         std::ostringstream message;
         message << "Error when parsing option " << name << ": "
-                << "can't convert \"" << this->getValue(name)
+                << "can't convert \"" << resultString
                 << "\" to appropriate type.";
+        this->usageAndExitIfAppropriate(message.str());
         BRICK_THROW(ConversionException, "OptionParser::convertValue()",
-                  message.str().c_str());
+                    message.str().c_str());
       }
+    }
+    
+    
+    template<class Type>
+    Type
+    OptionParser::
+    convertValue(std::string const& name,
+                 Type const& lowerBound,
+                 Type const& upperBound,
+                 bool clampResult)
+    {
+      Type result = this->convertValue<Type>(name);
+
+      if(clampResult) {
+        result = std::max(result, lowerBound);
+        result = std::min(result, upperBound);
+      } else if(result < lowerBound || result > upperBound) {
+        std::ostringstream message;
+        message << "Error when parsing option " << name << ": "
+                << "result (" << result << ") is outside of the "
+                << "specified range ([" << lowerBound << ", " << upperBound
+                << "]).";
+        this->usageAndExitIfAppropriate(message.str());
+        BRICK_THROW(ConversionException, "OptionParser::convertValue()",
+                    message.str().c_str());
+      }
+      return result;
     }
     
     
@@ -679,16 +799,46 @@ namespace brick {
     OptionParser::
     convertValue(std::string const& name, int valueIndex)
     {
+      std::string resultString = this->getValue(name, valueIndex);
+      
       try {
-        return convertString<Type>(this->getValue(name, valueIndex));
+        return convertString<Type>(resultString);
       } catch(ConversionException&) {
         std::ostringstream message;
         message << "Error when parsing option " << name << ": "
-                << "can't convert \"" << this->getValue(name, valueIndex)
+                << "can't convert \"" << resultString
                 << "\" to appropriate type.";
+        this->usageAndExitIfAppropriate(message.str());
         BRICK_THROW(ConversionException, "OptionParser::convertValue()",
                   message.str().c_str());
       }
+    }
+
+
+    template<class Type>
+    Type
+    OptionParser::
+    convertValue(std::string const& name, int valueIndex,
+                 Type const& lowerBound,
+                 Type const& upperBound,
+                 bool clampResult)
+    {
+      Type result = this->convertValue<Type>(name, valueIndex);
+
+      if(clampResult) {
+        result = std::max(result, lowerBound);
+        result = std::min(result, upperBound);
+      } else if(result < lowerBound || result > upperBound) {
+        std::ostringstream message;
+        message << "Error when parsing option " << name << ": "
+                << "result (" << result << ") is outside of the "
+                << "specified range ([" << lowerBound << ", " << upperBound
+                << "]).";
+        this->usageAndExitIfAppropriate(message.str());
+        BRICK_THROW(ConversionException, "OptionParser::convertValue()",
+                    message.str().c_str());
+      }
+      return result;
     }
     
   } // namespace utilities

@@ -497,22 +497,9 @@ namespace brick {
         }
 
       } catch(const brick::common::IOException& caughtException) {
-        switch(m_errorBehavior) {
-        case UsageAndExitOnError:
-          // Print diagnostic info and usage, then fall through into
-          // ExitOnError code.
-          std::cout << caughtException.what() << "\n\n";
-          std::cout << this->getUsage() << std::endl;
-        case ExitOnError:
-          // Exit with the user specified error code.
-          exit(m_exitCode);
-          break;
-        case ThrowOnError:
-        default:
-          // Default behavior is to rethrow the exception.
-          throw;
-          break;
-        }
+        // If we don't exit, simply re-throw the exception.
+        this->usageAndExitIfAppropriate(caughtException);
+        throw;
       }
     }
 
@@ -591,6 +578,21 @@ namespace brick {
     }
 
 
+    // Depending on constructor arguments, either exit, or print usage
+    // and exit, or do nothing.
+    void
+    OptionParser::
+    usageAndExitIfAppropriate(std::string const& what)
+    {
+      if(m_errorBehavior == UsageAndExitOnError) {
+        std::cout << what << "\n\n";
+        std::cout << this->getUsage() << std::endl;
+        exit(m_exitCode);
+      } else if(m_errorBehavior == ExitOnError) {
+        exit(m_exitCode);
+      }
+    }
+    
   } // namespace utilities
 
 } // namespace brick

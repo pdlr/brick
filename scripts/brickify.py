@@ -1,5 +1,8 @@
 #!/usr/bin/python
 
+# This very old script was useful when we migrated from dlrLibs to brick.
+# We keep it around now only because it has nice exampes of how to use sed.
+
 import os
 import string
 import sys
@@ -37,10 +40,10 @@ def brickify(inputFileName, outputFileName):
   #    macros.
   #  - 3rd command turns macros that start with "DLR" (no underscore)
   #    into macros that start with "DLR_".
-  #  - 4th command turns macros that start with "DLR_" (no underscore)
+  #  - 4th command turns macros that start with "DLR_"
   #    into macros that start with "BRICK_".
   #  - 5th command turns macros that end with "_H" into macros that
-  #    start with "_HH".
+  #    end with "_HH".
   os.system("sed "
             + r"-e 's/_DLR/DLR/' "
             + r"-e 's/\(DLR[^ 	]*\)_$/\1/' "

@@ -1623,7 +1623,7 @@ namespace brick {
               // * majorAxis + sin(theta) * minorAxis.  Major and
               // minor axes are orthogonal.  This means that the dot
               // product of a point on the ellipse with the major axis
-              // gives cos(theat) * magnitudeSquared(majorAxis).  Here
+              // gives cos(theta) * magnitudeSquared(majorAxis).  Here
               // we divide by magnitudeSquared(majorAxis) to get a
               // distance metric that -- for points on the ellipse --
               // is proportional to cos(theta).  Similarly for minor

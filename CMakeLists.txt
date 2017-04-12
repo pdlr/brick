@@ -1,8 +1,14 @@
 # Build file for the brick suite of support libraries.
 #
-# To manually control installation directory, invoke cmake as follows:
-#
-#   cmake -DCMAKE_INSTALL_PREFIX=/foo/bar ..
+# Recipes:
+#  - To manually control installation directory, invoke cmake as follows:
+#      cmake -DCMAKE_INSTALL_PREFIX=/foo/bar ..
+#  - To build with debugging flags and no optimization, invoke cmake as follows:
+#      cmake -DCMAKE_BUILD_TYPE=Debug
+#  - To run tests invoke make as follows:
+#      make test
+#  - To build the source package, use make as follows:
+#      make package_source
 
 cmake_minimum_required (VERSION 3.0)
 project (Brick)
@@ -51,7 +57,6 @@ option (BRICK_BUILD_COMPUTER_VISION
 add_definitions (
   -Wall
   -Wextra
-  -Wunsafe-loop-optimizations
   -Wshadow
   -Wpedantic
   -Werror)
@@ -114,6 +119,33 @@ brick_configure_library (
   computerVision brickComputerVision ${BRICK_BUILD_COMPUTER_VISION}
   )
 
+
+# Packaging.
+
+# We'll need a way to package up releases, but first, a list of files
+# we _don't_ want to include in the source packages.
+
+# Don't package version control files.
+set (CPACK_SOURCE_IGNORE_FILES
+  ${CPACK_SOURCE_IGNORE_FILES}
+  "^${CMAKE_CURRENT_SOURCE_DIR}/\\\\.hg.*"
+  )
+
+# Don't package autotools files (they have their own package building
+# capability).
+set (CPACK_SOURCE_IGNORE_FILES
+  ${CPACK_SOURCE_IGNORE_FILES}
+  "^${CMAKE_CURRENT_SOURCE_DIR}/[^/]+/bootstrap"
+  "^${CMAKE_CURRENT_SOURCE_DIR}/[^/]+/config.*"
+  "^${CMAKE_CURRENT_SOURCE_DIR}/[^/]+/m4"
+  "scripts$"
+  "\\\\.m4$"
+  "Makefile.am$"
+  )
+
+# Including CPack adds build targets that you can invoke with
+# "make package" and "make package_source".
+include (CPack)
 
 # ========= Useful code that we don't need yet ============
 

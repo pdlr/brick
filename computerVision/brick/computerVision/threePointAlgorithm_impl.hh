@@ -184,10 +184,10 @@ namespace brick {
 
       // Sanity check arguments.
       size_t numberOfPoints = worldPointsEnd - worldPointsBegin;
-      if(numberOfPoints < 4) {
+      if(numberOfPoints < 3) {
         BRICK_THROW(brick::common::ValueException,
                     "threePointAlgorithmRobust()",
-                    "Input sequence must have at least four elements.");
+                    "Input sequence must have at least three elements.");
       }
       
       // Copy input points into local buffers.
@@ -255,6 +255,12 @@ namespace brick {
           std::sort(residualVector.begin(), residualVector.end());
           int testIndex = static_cast<int>(
             inlierProportion * (residualVector.size() - 1) + 0.5);
+          if(testIndex >= static_cast<int>(residualVector.size())) {
+            testIndex = residualVector.size() - 1;
+          }
+          if(testIndex < 0) {
+            testIndex = 0;
+          }
           FloatType errorValue = residualVector[testIndex];
 
           // Remember candidate if it's the best so far.

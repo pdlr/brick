@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file brick/utilities/utilities2D.cc
+* @file brick/geometry/utilities2D_impl.hh
 *
 * Source file defining some 2D geometric utilities for finding
 * intersects, etc.

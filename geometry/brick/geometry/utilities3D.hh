@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file brick/utilities/utilities3D.hh
+* @file brick/geometry/utilities3D.hh
 *
 * Header file declaring some 3D geometric utilities for finding
 * intersects, etc.

@@ -6,7 +6,7 @@
 #   foo.cc
 #   )
 # 
-# install (TARGETS brickGeometry DESTINATION bin)
+# install (TARGETS brickGeometry DESTINATION lib)
 
 install (FILES
 

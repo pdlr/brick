@@ -1,20 +1,42 @@
 # Build file for the brick suite of support libraries.
 #
 # Recipes:
-#  - To manually control installation directory, invoke cmake as follows:
+#  - To manually control installation directory:
 #      cmake -DCMAKE_INSTALL_PREFIX=/foo/bar ..
-#  - To build with debugging flags and no optimization, invoke cmake as follows:
-#      cmake -DCMAKE_BUILD_TYPE=Debug
-#  - To run tests invoke make as follows:
+#
+#  - To prevent building tests:
+#      cmake -DBRICK_BUILD_TESTS=OFF ..
+#
+#  - To build with debugging flags and no optimization:
+#      cmake -DCMAKE_BUILD_TYPE=Debug ..
+#
+#  - To run tests:
 #      make test
-#  - To build the source package, use make as follows:
+#
+#  - To run tests and see output from any that fail:
+#      env CTEST_OUTPUT_ON_FAILURE=1 make test
+#
+#  - To build the source package:
+#      cmake -DCPACK_PACKAGE_VERSION=2.0.0 ..
 #      make package_source
+#
+#  - To build brick as an external package in your own project, add this
+#    (or something similar) to your CMakeLists.txt:
+#      ExternalProject_Add(
+#      brickLibraries
+#      URL ${CMAKE_CURRENT_SOURCE_DIR}/external/Brick-2.0.0-Source.tar.gz
+#      CMAKE_ARGS
+#        -DBRICK_BUILD_SHARED_LIBRARIES=ON
+#        -DBRICK_BUILD_TESTS=OFF
+#        -DCMAKE_INSTALL_PREFIX:PATH=${CMAKE_CURRENT_SOURCE_DIR}
+#      )
 
 cmake_minimum_required (VERSION 3.0)
 project (Brick)
 
 # Options for the project build.
 
+option (BRICK_BUILD_SHARED_LIBRARIES "Controls whether generated libraries are static or shared." OFF)
 option (BRICK_BUILD_TESTS "Build tests along with brick library code." ON)
 option (BRICK_DEBUG_ARRAY_BOUNDS "Turn on run-time bounds checks." OFF)
 
@@ -52,15 +74,21 @@ option (BRICK_BUILD_COMPUTER_VISION
   "brickComputerVision depends on all of the other brick libraries."
   ON)
 
-# Set up compiler flags.
+# Set up compiler flags.  Be as strict as possible.  The
+# add_definitions line may not be portable.  We'll look into how to
+# make it generic later.
+# Note that we don't specify --std=c++11 here.  Instead, we use the 
+# target_compile_features() function when setting the properties
+# of the libraries themselves.
 
+set (CMAKE_CXX_EXTENSIONS OFF)
+set (BUILD_SHARED_LIBS ${BRICK_BUILD_SHARED_LIBRARIES})
 add_definitions (
   -Wall
   -Wextra
   -Wshadow
   -Wpedantic
   -Werror)
-add_definitions (--std=c++11)
 
 if (BRICK_DEBUG_ARRAY_BOUNDS)
   add_definitions (-DBRICK_NUMERIC_CHECKBOUNDS=1)

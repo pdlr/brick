@@ -3,8 +3,8 @@
 add_library (brickTest autoregister.cc)
 add_library (brickTestAutoMain automaticMain.cc)
 
-install (TARGETS brickTest DESTINATION bin)
-install (TARGETS brickTestAutoMain DESTINATION bin)
+install (TARGETS brickTest DESTINATION lib)
+install (TARGETS brickTestAutoMain DESTINATION lib)
 install (FILES
 
   autoregister.hh
@@ -14,7 +14,7 @@ install (FILES
   testFixture.hh
   testMacros.hh
 
-  DESTINATION include)
+  DESTINATION include/brick/test)
 
 
 # This library doesn't have any tests yet.

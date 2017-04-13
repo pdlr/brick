@@ -5,7 +5,7 @@
 # 
 #   )
 # 
-# install (TARGETS brickPixelGraphics DESTINATION bin)
+# install (TARGETS brickPixelGraphics DESTINATION lib)
 
 install (FILES
 

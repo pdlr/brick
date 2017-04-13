@@ -17,7 +17,7 @@ target_link_libraries (brickComputerVision
   ${PNG_LIBRARIES}
   )
 
-install (TARGETS brickComputerVision DESTINATION bin)
+install (TARGETS brickComputerVision DESTINATION lib)
 install (FILES
 
   calibrationTools.hh calibrationTools_impl.hh
@@ -75,7 +75,7 @@ install (FILES
   thresholderSauvola.hh thresholderSauvola_impl.hh
   utilities.hh utilities_impl.hh
   
-  DESTINATION include)
+  DESTINATION include/brick/computerVision)
 
 
 if (BRICK_BUILD_TESTS)

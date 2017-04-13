@@ -16,7 +16,7 @@ target_link_libraries (brickUtilities
   brickCommon
   )
 
-install (TARGETS brickUtilities DESTINATION bin)
+install (TARGETS brickUtilities DESTINATION lib)
 install (FILES
 
   date.hh

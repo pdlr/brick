@@ -8,14 +8,14 @@ add_library(brickPortability
 
   )
 
-install (TARGETS brickPortability DESTINATION bin)
+install (TARGETS brickPortability DESTINATION lib)
 install (FILES
 
   filesystem.hh
   standardC.hh
   timeUtilities.hh
   
-  DESTINATION include)
+  DESTINATION include/brick/portability)
 
 
 # This library doesn't have any tests yet.

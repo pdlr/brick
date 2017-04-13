@@ -15,7 +15,7 @@ target_link_libraries (brickNumeric
   brickCommon
   )
 
-install (TARGETS brickNumeric DESTINATION bin)
+install (TARGETS brickNumeric DESTINATION lib)
 install (FILES
 
   amanatidesWoo2D.hh amanatidesWoo2D_impl.hh

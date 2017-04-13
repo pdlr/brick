@@ -7,7 +7,12 @@ add_library(brickCommon
   traceable.cc
   )
 
-install (TARGETS brickCommon DESTINATION bin)
+# Instead of specifying -std=c++11 explicitly, we just tell CMake what
+# features we need, and let it figure out the compiler flags.
+target_compile_features(brickCommon PUBLIC
+  cxx_long_long_type)
+
+install (TARGETS brickCommon DESTINATION lib)
 install (FILES
 
   argumentDescription.hh

@@ -15,11 +15,11 @@ target_link_libraries (brickLinearAlgebra
   ${LAPACK_LIBRARIES}
   )
 
-install (TARGETS brickLinearAlgebra DESTINATION bin)
+install (TARGETS brickLinearAlgebra DESTINATION lib)
 install (FILES
   clapack.hh
   linearAlgebra.hh
-  DESTINATION include)
+  DESTINATION include/brick/linearAlgebra)
 
 
 # For when we get slick enough to track version information inside

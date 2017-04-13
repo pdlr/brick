@@ -6,7 +6,7 @@
 #   foo.cc
 #   )
 # 
-# install (TARGETS brickOptimization DESTINATION bin)
+# install (TARGETS brickOptimization DESTINATION lib)
 
 install (FILES
 

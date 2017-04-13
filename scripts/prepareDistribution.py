@@ -12,7 +12,6 @@ import tempfile
 CMAKE = '/usr/bin/cmake'
 GREP = '/bin/grep'
 HG = '/usr/bin/hg'
-LS = '/bin/ls'
 MAKE = '/usr/bin/make'
 TAR = '/bin/tar'
 # ZIP = '/usr/bin/zip'
@@ -38,12 +37,6 @@ def buildPackage(sourceDir, version, postmortem=False):
   # On with the show.
   os.chdir(sourceDir)
 
-  print 'Testing for build directories.'
-  buildDirList = glob.glob('build*')
-  if len(buildDirList) != 0:
-    raise IOError('Please delete all build files.')
-  # end if
-  
   try:
     runCommand([GREP, version, 'VERSION.TXT'])
   except:

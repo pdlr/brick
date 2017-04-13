@@ -131,16 +131,11 @@ set (CPACK_SOURCE_IGNORE_FILES
   "^${CMAKE_CURRENT_SOURCE_DIR}/\\\\.hg.*"
   )
 
-# Don't package autotools files (they have their own package building
-# capability).
+# Don't package build files.
 set (CPACK_SOURCE_IGNORE_FILES
   ${CPACK_SOURCE_IGNORE_FILES}
-  "^${CMAKE_CURRENT_SOURCE_DIR}/[^/]+/bootstrap"
-  "^${CMAKE_CURRENT_SOURCE_DIR}/[^/]+/config.*"
-  "^${CMAKE_CURRENT_SOURCE_DIR}/[^/]+/m4"
+  "^${CMAKE_CURRENT_SOURCE_DIR}/build.*"
   "scripts$"
-  "\\\\.m4$"
-  "Makefile.am$"
   )
 
 # Including CPack adds build targets that you can invoke with

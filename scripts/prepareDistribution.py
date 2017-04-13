@@ -77,7 +77,7 @@ def buildPackage(sourceDir, version, postmortem=False):
     raise
   # end try
 
-  return packageNames[0]
+  return os.path.join(sourceDir, packageNames[0])
 # end def
 
 

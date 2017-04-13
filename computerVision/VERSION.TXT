@@ -1,3 +1,0 @@
-/** @file VERSION.TXT
-This is brick::computerVision version 1.10.
-**/

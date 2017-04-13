@@ -1,0 +1,440 @@
+/** @file RELEASE_NOTES.TXT
+This file gives a high level overview of recent changes.
+
+Revision 2.0.0
+
+  - Major change: we now use CMake for the build system, and all
+    libraries are now packaged together, rather than being distributed
+    in separate tarballs.
+  - utilities::OptionParser now lets you supply upper and lower bounds
+    on the values of numeric command line arguments.
+  - Other minor bugfixes and updates.
+
+As the libraries were previously distributed separately, historical
+release notes are separated by library.  These separate release notes
+are reproduced below.
+
+@section brickCommon
+
+Revision 1.6
+
+  WARNING: this update may break existing code.  We now use C++11 to
+  build.  In addition, we have changed the interface of
+  brick::common::Expect.  See below for more information.
+
+- Made static data members of brick::common::Expect into static member
+  functions to avoid the static initialization order fiasco.
+  Code that previously looked like this:
+    common::Expect::FormatFlag flags = common::Expect::SkipWhitespace;
+  must be changed to look like this:
+    common::Expect::FormatFlag flags = common::Expect::SkipWhitespace();
+- Added a first whack at a CMake build system.
+
+Revision 1.5
+- Switched to using C++11 for builds.
+- Added new ComplexNumber class template to allow complex numbers based
+  on types not supported by std::complex.
+- Added a few more constants.
+- Added missing header versionNumber.hh to the release tarball.
+
+Revision 1.4
+
+- Fixed a compilation error due to missing include directive in 
+  compileTimestamp.hh.
+- Updated splitFraction() function template to tolerate a wider range
+  of types.
+- Added rough first whack at a version number class to handle "X.Y.Z"
+  style version numbers.
+
+Revision 1.3
+
+- Increased the precision of constants in namespace
+  brick::common::constants.
+
+Revision 1.2
+
+- Added shorter names for integral sized types (Int8, UInt8, etc.).
+- Fixed an issue with switchByteOrder() that led to incorrect results when
+  the beginning and ending byte orders were the same, and the result was
+  _not_ being generated in-place.
+
+Revision 1.1
+
+- Minor update: added arcTangent2() function template.
+
+Revision 1.0
+
+- Created brick::common by adapting dlr::common version 2.3a3.
+
+@section brickComputerVision
+
+Revision 1.10
+
+WARNING: There are lots of changes in this release, and they may break
+existing code.
+
+- Updated code to reflect changes in other libraries, for example
+  we now use the new common::Expect interface updates.
+- Added a dependence on libpng++.  This greatly simplifies out image
+  IO code.
+- Sped up KeypointSelectorBullseye (more to do here).
+- Updated and extended connectedComponents() function template.
+- Moved DisjointSet into namespace brick::computerVision, and made it
+  non-copyable.
+- Added an implementation of the adaptive text thresholding algorithm of
+  Sauvola and Pietikainen.
+- Other minor bugfixes and enhancements.
+
+Revision 1.9
+
+- Switched over to building with C++11.
+- Updated calibration code to use newly added template parameters in
+  optimization classes.
+- Added ImagePyramidBinomial class template and made minor updates to
+  the nearly-obselete ImagePyramid class template.
+- Other minor updates and added features.
+
+Revision 1.8
+
+- Added several new colorspace conversions.
+  WARNING: Colorspace conversion between type of different integer precision
+  now rescales values to reflect the dynamic range of the pixel type, and 
+  output of colorspace conversion from RGB_FLOAT32 to GRAY8 is now scaled
+  differently.
+- Improved to the robustness of KeypointSelectorBullseye.
+- Added routines for reading and writing 16-bit PNG images.
+
+Revision 1.7
+
+- Added routines for reading and writing color PNG images.
+- Added beginIteration() member function to RansacProblem class. 
+
+  WARNING: This change will break any customer code that uses 
+           RansacClassInterface, but does not derive from RansacProblem.
+           If this applies to your code, simple add an empty member 
+           function, void beginIteration(size_t) to your problem class.
+
+Revision 1.6
+
+- Refactored CameraIntrinsics class heirarchy.
+- Added new class CameraIntrinsicsRational.
+- Minor updates to KeypointSelectorBullseye.
+- Other minor cleanup.
+
+Revision 1.5
+
+- Added function estimateProjectedAreaAndCentroid() to facilitate
+  camera calibration with circular fiducials.
+- Added function writePPM16() and added a sanity check to writePPM8().
+- Minor cleanup.
+
+Revision 1.4
+
+- Minor feature additions to the RANSAC class interface and camera 
+  calibration functions.
+- Many updates to KeypointSelectorBullseye class and KeypointBullseye classes.
+- Corrected a bounds error in getHistogram().
+
+Revision 1.3
+
+- Updated build files.
+- Added very slow KeypointSelectorBulleye class (to be improved later).
+- Fixed failing KeypointMatcherFast unit test.
+- Fixed failing KeypointSelectorHarris unit test.
+- Corrected compile issue in connectedComponents_impl.hh.
+- Other minor changes and updates.
+
+Revision 1.2
+
+- Added implementations of three-point, five-point, and eight-point algorithms.
+- Added FloatType template parameter to camera intrinsics classes.
+- Added a weighted version of registerPoints3D().
+- Added routines for stereo rectification and camera calibration.
+- Added Felzenswalb's superpixels segmentation, and a disjoint set
+  implementation.
+- Added KdTree implementation.
+- Added ImageWarper class to allow transforming images.
+- Added basic morphological and image processing operations.
+- Added extended Kalman filter implementation,
+- Added very basic deformable models class (NaiveSnake).
+- Made some updates to image fltering code.
+- Added Harris corner detector implementation.
+- Added (still incomplete) ICP implementation.
+- A few other minor bugfixes and updates.
+
+Revision 1.1
+
+- Added classes and functions relating to camera intrinsics from
+  dlrComputerVision version 2.4b3.  Many more still to come.
+
+Revision 1.0
+
+- Created brick::computerVision by adapting dlrComputerVision version 2.4b3.
+
+@section brickGeometry
+
+Revision 1.6
+
+- Added first whack at a CMake build system.
+
+Revision 1.5
+
+- Switched over to building with C++11.
+- Added missing const qualifiers in Bullseye2D.
+- Added a new constructor for LineSegment2D.
+
+Revision 1.4
+
+- Added Triangle2D and Circle3D class templates, along with some
+  related utility functions.
+- A few minor cleanup items.
+
+Revision 1.3
+
+- Added missing const qualifier in Plane3D:findDistance().
+- Corrected an issue in Ellipse2D and Bullseye2D estimation.
+
+Revision 1.2
+
+- Bugfix to allow building on OS X.
+
+Revision 1.1
+
+- Updated build files.
+- Added Ellipse2D class template.
+- Added Bullseye2D class template.
+
+Revision 1.0
+
+- Created brick::geometry by adapting dlrGeometry version 0.3.
+
+@section brickLinearAlgebra
+
+Revision 1.3
+  WARNING: this update may break existing code.  We now use C++11 to
+  build.
+
+- Switched over to using C++11 for development builds.
+- Added first whack at a CMake build system.
+- Updated code that uses std::complex for compatibility with C++11.
+
+Revision 1.2
+- Updated code to build with C++11.
+
+Revision 1.1
+
+- Updated configure scripts to remove dependence on gfortran.
+- Fixed bug in determinant().
+
+Revision 1.0
+
+- Created brick::linearAlgebra by adapting dlrLinearAlgebra version 2.2.
+
+@section brickNumeric
+
+Revision 1.9
+
+  WARNING: this update may break existing code.  We now use C++11 to
+  build.  In addition, we have changed the interface of
+  brick::common::Expect.  See below for more information.
+
+- Switched over to using C++11.
+- Updated templatization of Quaternion and rotation conversion functions to
+  work with user-defined types.
+- Added template argument FloatType to BilinearInterpolator.
+- Other minor updates and fixes.
+
+Revision 1.8
+
+WARNING: This update breaks compatibility with previous versions of
+         solveQuadratic(), solveCubic(), and solveQuartic().
+WARNING: This update breaks compatibility with previous versions of
+         BSpline2D.
+
+- Updated code to build with C++11.
+- Changed solveQuadratic(), solveCubic(), and solveQuartic() to use the
+  new class template brick::common::ComplexNumber.
+- Added math functions to the brick::numeric namespace, superseding
+  their counterparts in brick::common.
+- Significant updates to BSpline2D class template.
+- Corrected compile errors and warnings in SubArray1D, SubArray2D,
+  DerivativeRidders, quaternionToAngleAxis().
+
+Revision 1.7
+
+- Added new DifferentiableScalar class to help with computing derivatives 
+  of functions.
+- Corrected compile errors in Polynomial class.
+- Added new ScatteredDataInterpolator2D class template, and fleshed out 
+  implementation of BSpline2D class.
+- Other minor updates, including swapping template parameter order in rms().
+
+Revision 1.6
+
+- Added Transform3D::rotate(Vector3D const&) member function.
+
+Revision 1.5
+
+- Corrected typo in Transform3D stream output.
+- Added Quaternion::getMagnitude() member function.
+
+Revision 1.4
+
+- Corrected a typo in transform3DToRodrigues().
+- Corrected use of operator new in Array?D implementation.  This removes a 
+  compiler warning under recent versions of g++, and may have broader 
+  implications as compiler implementations change.
+
+Revision 1.3
+
+- Added missing namespace qualifiers, allowing tests to build under recent 
+  versions of g++.
+- Fixed several multiply-defined symbol errors.
+- Other minor updates and bugfixes.
+
+Revision 1.2
+
+- Fixed compile issues in transform3DTo2D.hh and rotations_impl.hh.
+- Added TypeConverter class to support generic conversion between numeric types.
+- Other minor updates and features.
+- Added, but disabled, a unit test for nonperiodic B-Spline, based on
+  feedback from Eric Kratzer.  This test exercises an issue with the class
+  that has not yet been fixed.
+
+Revision 1.1
+
+- Added all remaining symbols from dlrNumeric.
+
+Revision 1.0
+
+- Created brick::numeric by adapting dlrNumeric version 2.3a4.
+  WARNING: Several types (Vector2D, Vector3D, Transform2D, ...)
+           now have additional template parameters.  This will
+           make porting dlrNumeric code a little annoying.
+
+@section brickOptimization
+
+Revision 1.5
+
+- Added first whack at a CMake build system.
+
+Revision 1.4
+
+WARNING: This code will now build only under C++11.
+
+- Added template arguments to OptimizerLM, OptimizerLineSearch,
+  and OptimizerNelderMead.
+- Fixed minor build issues.
+
+Revision 1.3
+
+- Updates to build with g++-4.7.
+
+Revision 1.2
+
+- Updates to build files.
+- Minor tweaks to comments, etc.
+
+Revision 1.1
+
+- Minor fixes to OptimizerBFGS.  If it has been compiling for you, you do
+  not need to upgrade.
+
+Revision 1.0
+
+- Created brick::optimization by adapting dlrOptimization version 2.1.
+
+@section brickPixelGraphics
+
+Revision 0.2
+
+- Added first whack at a CMake build system.
+
+Revision 0.1
+
+- Created library.
+
+@section brickPortability
+
+Revision 1.2
+
+  WARNING: this update now uses C++11 to build, which may break existing code.
+
+- Added a first whack at a CMake build system.
+- Switched over to using C++11.
+
+Revision 1.1
+
+- Updated portability/standardC.hh to include unistd.h, allowing lockFile.cc 
+  to compile under gcc 4.7.2.
+
+Revision 1.0
+
+- Created brick::portability by adapting dlrPortability version 2.2.
+
+@section brickRandom
+
+Revision 1.3
+  WARNING: this update may break existing code.  We now use C++11 to
+  build.
+
+- Switched over to using C++11 for development builds.
+- Added first whack at a CMake build system.
+
+Revision 1.1
+
+- Updated build files.
+
+Revision 1.0
+
+- Created brick::random by adapting dlrRandom version 2.2.
+
+@section brickSparse
+
+Revision 0.1
+
+- Created library.
+
+@section brickTest
+
+Revision 1.2
+
+- Fixed a compile error when using recent g++.
+
+Revision 1.1
+
+- Updated build files.
+
+Revision 1.0
+
+- Created brick::test by adapting dlrTest version 2.1.
+
+@section brickUtilities
+
+Revision 1.5
+- Added a first whack at a CMake build system.
+
+Revision 1.4
+- Switched over to compiling with C++11.
+- Fixed a few compiler warnings and minor build issues.
+
+Revision 1.3
+
+- Added support in OptionParser for non-string default option values.
+
+Revision 1.2
+
+- Updates to build files.
+- Minor change to LockFile source allows building under recent g++ versions.
+
+Revision 1.1
+
+- Updated timeUtilitiesTest.cc to avoid failing due to register precision
+  issues.
+- Minor change to LockFile source allows building under recent g++ versions.
+
+Revision 1.0
+
+- Created brick::utilities by adapting dlrUtilities version 2.3.
+
+**/

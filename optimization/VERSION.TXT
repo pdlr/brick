@@ -1,3 +1,0 @@
-/** @file VERSION.TXT
-This is brick::optimization version 1.5.
-**/

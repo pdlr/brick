@@ -1,3 +1,0 @@
-/** @file VERSION.TXT
-This is brick::pixelGraphics version 0.2.
-**/

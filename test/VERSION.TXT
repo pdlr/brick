@@ -1,3 +1,0 @@
-/** @file VERSION.TXT
-This is brick::test version 1.2.
-**/

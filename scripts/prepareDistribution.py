@@ -20,44 +20,59 @@ TAR = '/bin/tar'
 MODIFICATION_RE = re.compile('^M|\? .', re.MULTILINE)
 
 
-def announce(message):
+def announce(message, logFile):
   print message
+  logFile.write(message)
+  logFile.write('\n')
+  logFile.flush()
 # end def
 
 
-def runCommand(args):
-  print 'Running command: %s' % string.join(args)
-  return subprocess.check_output(args)
+def runCommand(args, logFile):
+  announce('Running command: %s' % string.join(args), logFile)
+  try:
+    textOutput = subprocess.check_output(args)
+    logFile.write(textOutput)
+    logFile.write('\n')
+    logFile.flush()
+  except subprocess.CalledProcessError as ee:
+    logFile.write(ee.output)
+    logFile.write('\n')
+    logFile.flush()
+    raise
+  # end try
+  return textOutput
 # end def
 
 
-def buildPackage(sourceDir, version, postmortem=False):
-  announce('=== Building package ===')
+def buildPackage(sourceDir, version, logFile, postmortem=True):
+  announce('=== Building package ===', logFile)
 
   # On with the show.
   os.chdir(sourceDir)
 
   try:
-    runCommand([GREP, version, 'VERSION.TXT'])
+    runCommand([GREP, version, 'VERSION.TXT'], logFile)
   except:
     raise IOError('Version number doesn\'t match VERSION.TXT.')
   # end if
 
-  statusString = runCommand([HG, 'status'])
+  statusString = runCommand([HG, 'status'], logFile)
   if MODIFICATION_RE.search(statusString) is not None:
     raise IOError('Repo is not clean.')
   # end if
 
   buildDir = tempfile.mkdtemp(prefix='brick_build_')
-  announce('Build directory is %s' % buildDir)
+  announce('Build directory is %s' % buildDir, logFile)
 
   try:
     os.chdir(buildDir)
 
-    runCommand([CMAKE, '-D', ('CPACK_PACKAGE_VERSION=%s' % version), sourceDir])
-    runCommand([MAKE])
-    runCommand([MAKE, 'test'])
-    runCommand([MAKE, 'package_source'])
+    runCommand([CMAKE, '-D', ('CPACK_PACKAGE_VERSION=%s' % version), sourceDir],
+               logFile)
+    runCommand([MAKE], logFile)
+    runCommand([MAKE, 'test'], logFile)
+    runCommand([MAKE, 'package_source'], logFile)
 
     packageNameBase = 'Brick-%s-Source' % version
     packageNames = [packageNameBase + '.tar.gz',
@@ -106,27 +121,27 @@ def sanitizeVersionInput(version):
 # end def
 
 
-def tagRepository(sourceDir, version):
-  announce('=== Tagging repository ===')
+def tagRepository(sourceDir, version, logFile):
+  announce('=== Tagging repository ===', logFile)
   
   # We need a civilized version of the revision number to use as a tag
   # in the VCS.
   revisionTag = 'brickLibs_version_%s' % string.replace(version, '.', '_')
 
   os.chdir(sourceDir)
-  runCommand([HG, 'tag', '-f', revisionTag])
+  runCommand([HG, 'tag', '-f', revisionTag], logFile)
 # end def
 
 
-def testPackage(packageName, postmortem=True):
-  announce('=== Testing %s ===' % packageName)
+def testPackage(packageName, logFile, postmortem=True):
+  announce('=== Testing %s ===' % packageName, logFile)
   
   testDir = tempfile.mkdtemp(prefix='brick_test_')
-  announce('Test directory is %s' % testDir)
+  announce('Test directory is %s' % testDir, logFile)
   
   try:
     os.chdir(testDir)
-    runCommand([TAR, '-zxf', packageName])
+    runCommand([TAR, '-zxf', packageName], logFile)
     
     buildDir = os.path.join(testDir, 'build')
     os.mkdir(buildDir)
@@ -136,9 +151,9 @@ def testPackage(packageName, postmortem=True):
     baseName = os.path.splitext(fileName)[0]    # Brick-2.0.0-Source.tar
     baseName = os.path.splitext(baseName)[0]    # Brick-2.0.0-Source
     sourceDir = os.path.join(testDir, baseName)
-    runCommand([CMAKE, sourceDir])
-    runCommand([MAKE])
-    runCommand([MAKE, 'test'])
+    runCommand([CMAKE, sourceDir], logFile)
+    runCommand([MAKE], logFile)
+    runCommand([MAKE, 'test'], logFile)
     shutil.rmtree(testDir)
   except:
     # We may want to leave the build dir for debugging.
@@ -151,19 +166,20 @@ def testPackage(packageName, postmortem=True):
 
 
 if __name__ == '__main__':
-  if len(sys.argv) != 2:
-    print 'Usage: %s version' % sys.argv[0]
-    print 'Example: %s 1.11.2' % sys.argv[0]
+  if len(sys.argv) != 3:
+    print 'Usage: %s version logFile' % sys.argv[0]
+    print 'Example: %s 1.11.2 prepareDistribution.log' % sys.argv[0]
     sys.exit(65)
   # end if
 
   version = sys.argv[1]
+  logFile = open(sys.argv[2], 'w')
   sourceDir = os.path.realpath(os.curdir)
 
   # Clean up malformed version numbers.
   version = sanitizeVersionInput(version)
 
-  packageName = buildPackage(sourceDir, version)
-  testPackage(packageName)
-  tagRepository(sourceDir, version)
+  packageName = buildPackage(sourceDir, version, logFile)
+  testPackage(packageName, logFile)
+  tagRepository(sourceDir, version, logFile)
 # end if

@@ -93,6 +93,30 @@ namespace brick {
                   numeric::Transform2D<FloatType>& image0Trimage0,
                   numeric::Transform2D<FloatType>& image1Trimage1)
     {
+      FloatType rectifiedFocalLength =
+        (intrinsics0.getFocalLength() + intrinsics1.getFocalLength()) / 2.0;
+      stereoRectify(intrinsics0, intrinsics1, camera0Tworld, camera1Tworld,
+                    rectifiedFocalLength,
+                    rectifiedIntrinsics0, rectifiedIntrinsics1,
+                    rcamera0Tworld, rcamera1Tworld,
+                    image0Trimage0, image1Trimage1);
+    }
+    
+    
+    template <class FloatType>
+    void
+    stereoRectify(CameraIntrinsicsPinhole<FloatType> const& intrinsics0,
+                  CameraIntrinsicsPinhole<FloatType> const& intrinsics1,
+                  numeric::Transform3D<FloatType> const& camera0Tworld,
+                  numeric::Transform3D<FloatType> const& camera1Tworld,
+                  FloatType const& rectifiedFocalLength,
+                  CameraIntrinsicsPinhole<FloatType>& rectifiedIntrinsics0,
+                  CameraIntrinsicsPinhole<FloatType>& rectifiedIntrinsics1,
+                  numeric::Transform3D<FloatType>& rcamera0Tworld,
+                  numeric::Transform3D<FloatType>& rcamera1Tworld,
+                  numeric::Transform2D<FloatType>& image0Trimage0,
+                  numeric::Transform2D<FloatType>& image1Trimage1)
+    {
       // Hack(xxx): find a principled way to set this threshold.
       FloatType localEpsilon = 1.0E-12;
       
@@ -172,8 +196,7 @@ namespace brick {
       // camera0.
       unsigned int numPixelsX = intrinsics0.getNumPixelsX();
       unsigned int numPixelsY = intrinsics0.getNumPixelsY();
-      FloatType focalLength =
-        (intrinsics0.getFocalLength() + intrinsics1.getFocalLength()) / 2.0;
+      FloatType focalLength = rectifiedFocalLength;
       FloatType pixelSizeX = 
         (intrinsics0.getPixelSizeX() + intrinsics1.getPixelSizeX()) / 2.0;
       FloatType pixelSizeY = 

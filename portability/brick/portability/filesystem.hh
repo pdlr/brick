@@ -74,6 +74,20 @@ namespace brick {
      */
     bool
     isDirectory(const std::string& path);
+
+    
+    /** 
+     * This function reolves references to ".", "..", symbolic links,
+     * etc., and returns the canonicalized absolute pathname
+     * corresponding to its input.
+     * 
+     * @param inputPath The path to be canonicalized.
+     * 
+     * @return The return value is the resolved path, or an empty
+     * string if path resolution fails.
+     */
+    std::string
+    getAbsolutePath(std::string const& inputPath);
     
 
     /** 

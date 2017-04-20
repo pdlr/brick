@@ -167,7 +167,19 @@ namespace brick {
       return delimiter;
     }
 
+    
+    // This function reolves references to ".", "..", symbolic links,
+    // etc., and returns the canonicalized absolute pathname
+    // corresponding to its input.
+    std::string
+    getAbsolutePath(std::string const& inputPath)
+    {
+      BRICK_THROW(brick::common::NotImplementedException, "getAbsolutePath()",
+                  "This function has not yet been implemented.");
+      return "";
+    }
 
+    
     // Returns the names of the entries in the specified directory, in
     // no particular order.
     std::vector<std::string>
@@ -250,6 +262,30 @@ namespace brick {
     }
 
 
+    // This function reolves references to ".", "..", symbolic links,
+    // etc., and returns the canonicalized absolute pathname
+    // corresponding to its input.
+    std::string
+    getAbsolutePath(std::string const& inputPath)
+    {
+      std::string result;
+#ifdef PATH_MAX
+      char pathBuffer[PATH_MAX];
+      char* resolvedPathCstr = realpath(inputPath.c_str(), pathBuffer);
+      if(resolvedPathCstr) {
+        result = resolvedPathCstr;
+      }
+#else
+      char* resolvedPathCstr = realpath(inputPath.c_str(), nullptr);
+      if(resolvedPathCstr) {
+        result = resolvedPathCstr;
+      }
+      free(resolvedPathCstr);
+#endif
+      return result;
+    }
+
+    
     // Returns the names of the entries in the specified directory, in
     // no particular order.
     std::vector<std::string>

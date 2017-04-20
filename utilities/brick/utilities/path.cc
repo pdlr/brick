@@ -66,6 +66,16 @@ namespace brick {
     }
 
 
+    // This function reolves references to ".", "..", symbolic links,
+    // etc., and returns the canonicalized absolute pathname
+    // corresponding to its input.
+    std::string
+    getAbsolutePath(std::string const& inputPath)
+    {
+      return brick::portability::getAbsolutePath(inputPath);
+    }
+    
+    
     // Joins two path elements with the appropriate delimiter.
     std::string
     joinPath(std::string const& part0, std::string const& part1)

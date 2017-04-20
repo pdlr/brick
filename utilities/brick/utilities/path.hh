@@ -51,6 +51,20 @@ namespace brick {
   
 
     /** 
+     * This function reolves references to ".", "..", symbolic links,
+     * etc., and returns the canonicalized absolute pathname
+     * corresponding to its input.
+     * 
+     * @param inputPath The path to be canonicalized.
+     * 
+     * @return The return value is the resolved path, or an empty
+     * string if path resolution fails.
+     */
+    std::string
+    getAbsolutePath(std::string const& inputPath);
+    
+
+    /** 
      * This function returns a bool indicating whether or not the
      * specified file exists and is not a directory or other special
      * file.  If the path is a symbolic link, the return value is

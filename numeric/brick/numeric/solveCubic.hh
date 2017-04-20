@@ -59,7 +59,7 @@ namespace brick {
      * the std::complex API is not stable, so we use
      * brick::common::ComplexNumber instead.
      * 
-     * @param c0 This argument is the cubic coefficient of the
+     * @param c0 This argument is the quadratic coefficient of the
      * polynomial.
      * 
      * @param c1 This argument is the linear coefficient of the

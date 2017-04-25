@@ -34,15 +34,18 @@ namespace brick {
         m_handleHelp(false),
         m_numberOfPosArgRequired(0),
         m_numberOfPosArgParsed(0),
+        m_description(),
         m_optionCounts(),
         m_optionDescriptions(),
+        m_optionDescriptionsBySection(),
         m_optionValues(),
         m_positionalArgumentNames(),
         m_positionalArgumentDefaultValues(),
         m_positionalArgumentDocs(),
         m_programName()
     {
-      // Empty.
+      // Make sure there's a section for global options.
+      this->addSection("", "Options");
     }
 
 
@@ -63,15 +66,18 @@ namespace brick {
         m_handleHelp(handleMinusMinusHelp),
         m_numberOfPosArgRequired(0),
         m_numberOfPosArgParsed(0),
+        m_description(),
         m_optionCounts(),
         m_optionDescriptions(),
+        m_optionDescriptionsBySection(),
         m_optionValues(),
         m_positionalArgumentNames(),
         m_positionalArgumentDefaultValues(),
         m_positionalArgumentDocs(),
         m_programName()
     {
-      // Empty.
+      // Make sure there's a section for global options.
+      this->addSection("", "Options:");
     }
 
     
@@ -83,6 +89,8 @@ namespace brick {
     }
 
 
+    // This member function adds an option to be recognized during
+    // command line parsing.
     void
     OptionParser::
     addOption(std::string const& name,
@@ -91,16 +99,50 @@ namespace brick {
               std::string const& docString,
               bool allowPartialMatch)
     {
+      this->addOption(name, shortVersion, longVersion, docString,
+                      "", "", allowPartialMatch);
+    }
+
+
+    // This member function adds an option to be recognized during
+    // command line parsing.
+    void
+    OptionParser::
+    addOption(std::string const& name,
+              std::string const& shortVersion,
+              std::string const& longVersion,
+              std::string const& docString,
+              std::string const& sectionName,
+              std::string const& prefix,
+              bool allowPartialMatch)
+    {
+      // Does this option already exist?
       if(m_optionDescriptions.find(name) != m_optionDescriptions.end()) {
         std::ostringstream message;
         message << "Option \"" << name << "\" has already been specified.";
         BRICK_THROW(brick::common::StateException, "OptionParser::addOption()",
                     message.str().c_str());
       }
+
+      // Figure out to which section this option belongs.
+      auto optionMapIter = m_optionDescriptionsBySection.find(sectionName);
+      if(optionMapIter == m_optionDescriptionsBySection.end()) {
+        this->addSection(sectionName);
+        optionMapIter = m_optionDescriptionsBySection.find(sectionName);
+      }
+
+      // On with the show.
+      std::string alphabetizeAs = prefix + name;
       OptionDescription newOption(
         name, shortVersion, longVersion, false, allowPartialMatch, docString);
-      m_optionDescriptions[name] = newOption;
-      m_optionCounts[name] = 0;
+
+      // Add the new optionDescription to both
+      // m_optionDescriptionsBySection (via optionMapIter) and
+      // m_optionDescriptions.  This lets us access it conveniently
+      // both by section and by name.
+      optionMapIter->second.insert(std::make_pair(alphabetizeAs, newOption));
+      m_optionDescriptions.insert(std::make_pair(name, newOption));
+      m_optionCounts.insert(std::make_pair(name, 0));
     }
 
 
@@ -112,6 +154,8 @@ namespace brick {
                                     std::string const& longVersion,
                                     std::string const& defaultValue,
                                     std::string const& docString,
+                                    std::string const& sectionName,
+                                    std::string const& prefix,
                                     bool requireArgument,
                                     bool allowPartialMatch,
                                     bool allowOptionishValue)
@@ -126,7 +170,8 @@ namespace brick {
                     "OptionParser::addOptionWithValue()",
                     "Optionish option values are not yet supported.");
       }
-      
+
+      // Does this option already exist?
       if(m_optionDescriptions.find(name) != m_optionDescriptions.end()) {
         std::ostringstream message;
         message << "Option \"" << name << "\" has already been specified.";
@@ -134,11 +179,27 @@ namespace brick {
                     "OptionParser::addOptionWithValue()",
                     message.str().c_str());
       }
+      
+      // Figure out to which section this option belongs.
+      auto optionMapIter = m_optionDescriptionsBySection.find(sectionName);
+      if(optionMapIter == m_optionDescriptionsBySection.end()) {
+        this->addSection(sectionName);
+        optionMapIter = m_optionDescriptionsBySection.find(sectionName);
+      }
+
+      // On with the show.
+      std::string alphabetizeAs = prefix + name;
       OptionDescription newOption(
         name, shortVersion, longVersion, true, allowPartialMatch, docString,
         defaultValue);
-      m_optionDescriptions[name] = newOption;
-      m_optionCounts[name] = 0;
+
+      // Add the new optionDescription to both
+      // m_optionDescriptionsBySection (via optionMapIter) and
+      // m_optionDescriptions.  This lets us access it conveniently
+      // both by section and by name.
+      optionMapIter->second.insert(std::make_pair(alphabetizeAs, newOption));
+      m_optionDescriptions.insert(std::make_pair(name, newOption));
+      m_optionCounts.insert(std::make_pair(name, 0));
     }
 
     
@@ -155,6 +216,37 @@ namespace brick {
       if(isRequired) {
         m_numberOfPosArgRequired = m_positionalArgumentNames.size();
       }
+    }
+
+    
+    // Use this function to group options into sections.
+    void
+    OptionParser::
+    addSection(std::string const& sectionName,
+               std::string const& sectionDescription)
+    {
+      if(m_sectionDescriptions.find(sectionName)
+         != m_sectionDescriptions.end()) {
+        std::ostringstream message;
+        message << "Section \"" << sectionName
+                << "\" has already been specified.";
+        BRICK_THROW(brick::common::StateException,
+                    "OptionParser::addSection()",
+                    message.str().c_str());
+      }
+      
+      if(sectionDescription == "") {
+        // If no sectionDescription is available, substitute the
+        // section name.
+        m_sectionDescriptions.insert(
+          std::make_pair(sectionName, sectionName));
+      } else {
+        m_sectionDescriptions.insert(
+          std::make_pair(sectionName, sectionDescription));
+      }
+      
+      m_optionDescriptionsBySection.insert(
+        std::make_pair(sectionName, OptionMap()));
     }
 
     
@@ -184,15 +276,23 @@ namespace brick {
     
     std::string
     OptionParser::
-    getOptionsDescription()
+    getOptionsDescription(std::string const& sectionName)
     {
       std::ostringstream optionsStream;
-      if(!m_optionDescriptions.empty()) {
-        std::map<std::string, OptionDescription>::const_iterator iter =
-          m_optionDescriptions.begin();
-        while(iter != m_optionDescriptions.end()) {
-          optionsStream << iter->second << "\n";
-          ++iter;
+      auto optionMapIter = m_optionDescriptionsBySection.find(sectionName);
+      if(optionMapIter == m_optionDescriptionsBySection.end()) {
+        std::ostringstream message;
+        message << "Unrecognized section name: " << sectionName;
+        BRICK_THROW(brick::common::ValueException,
+                    "OptionParser::getOptionsDescription()",
+                    message.str().c_str());
+      }
+      
+      if(!optionMapIter->second.empty()) {
+        auto optionIter = optionMapIter->second.begin();
+        while(optionIter != optionMapIter->second.end()) {
+          optionsStream << optionIter->second << "\n";
+          ++optionIter;
         }
       }
       return optionsStream.str();
@@ -219,6 +319,11 @@ namespace brick {
         usageStream << "[" << m_positionalArgumentNames[argIndex] << "] ";
         ++argIndex;
       }
+
+      if(m_description != "") {
+        usageStream << "\n\n" << m_description << "\n";
+      }
+      
       if(!m_positionalArgumentNames.empty()) {
         usageStream << "\n\nPositional arguments:\n";
         for(argIndex = 0; argIndex < m_numberOfPosArgRequired; ++argIndex) {
@@ -242,8 +347,11 @@ namespace brick {
       }
 
       if(!m_optionDescriptions.empty()) {
-        usageStream << "\nOptions:\n"
-                    << this->getOptionsDescription();
+        for(auto sectionIter = m_sectionDescriptions.begin();
+            sectionIter != m_sectionDescriptions.end(); ++sectionIter) {
+          usageStream << "\n" << sectionIter->second << "\n";
+          usageStream << this->getOptionsDescription(sectionIter->first);
+        }
       }
       
       return usageStream.str();

@@ -42,13 +42,15 @@ namespace brick {
                         bool allowPartialMatch,
                         std::string const& docString,
                         std::string const& defaultValue = "");
-
       
       /**
        * Destructor.
        */
       ~OptionDescription();
 
+      std::string const&
+      getAlphabetizationKey() const {return m_key;}
+      
 
       std::string const&
       getDefaultValue() const {return m_defaultValue;}
@@ -76,6 +78,7 @@ namespace brick {
 
     private:
 
+      std::string m_key;
       std::string m_name;
       std::string m_shortAppearance;
       std::string m_longAppearance;
@@ -90,7 +93,6 @@ namespace brick {
     operator<<(std::ostream& stream,
                const OptionDescription& optionDescription);
 
-    
   } // namespace utilities
 
 } // namespace brick

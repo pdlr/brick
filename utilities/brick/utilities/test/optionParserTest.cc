@@ -38,6 +38,7 @@ namespace brick {
       void testAddOption();
       void testAddOptionWithValue();
       void testAddPositionalArgument();
+      void testAlphabetization();
       void testConvertValue();
       void testGetCount();
       void testGetExtraPositionalArguments();
@@ -62,6 +63,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testAddOption);
       BRICK_TEST_REGISTER_MEMBER(testAddOptionWithValue);
       BRICK_TEST_REGISTER_MEMBER(testAddPositionalArgument);
+      BRICK_TEST_REGISTER_MEMBER(testAlphabetization);
       BRICK_TEST_REGISTER_MEMBER(testConvertValue);
       BRICK_TEST_REGISTER_MEMBER(testGetCount);
       BRICK_TEST_REGISTER_MEMBER(testGetExtraPositionalArguments);
@@ -339,6 +341,87 @@ namespace brick {
       BRICK_TEST_ASSERT_EXCEPTION(
         brick::common::IOException,
         optionParser1.parseCommandLine(argc0, argv0));
+    }
+
+  
+    void
+    OptionParserTest::
+    testAlphabetization()
+    {
+      // Set up arguments to be alphabetized.
+      OptionParser optionParser0;
+      optionParser0.addOption("FOO", "-f", "--foo", "Set the foo.");
+      optionParser0.addOption("BAR", "-b", "--bar", "Set the bar.");
+      optionParser0.addOption("BAZ", "", "--baz", "Set the baz.", "", "001");
+      optionParser0.addOption("COW", "", "--cow", "Set the cow.", "", "BARN");
+      
+      optionParser0.addOptionWithValue("FOP", "-F", "--fop", "fop",
+                                       "Set the fop.", "", "003");
+      optionParser0.addOptionWithValue("000", "-z", "--zero", "zero",
+                                       "Set the zero.");
+      optionParser0.addOptionWithValue("DOG", "-d", "--dog", "dog",
+                                       "Set the dog.");
+
+      std::string usage = optionParser0.getUsage();
+      
+      size_t fooPosition = usage.find("--foo");
+      size_t barPosition = usage.find("--bar");
+      size_t bazPosition = usage.find("--baz");
+      size_t cowPosition = usage.find("--cow");
+      size_t fopPosition = usage.find("--fop");
+      size_t zeroPosition = usage.find("--zero");
+      size_t dogPosition = usage.find("--dog");
+
+      BRICK_TEST_ASSERT(zeroPosition < bazPosition);
+      BRICK_TEST_ASSERT(bazPosition < fopPosition);
+      BRICK_TEST_ASSERT(fopPosition < barPosition);
+      BRICK_TEST_ASSERT(barPosition < cowPosition);
+      BRICK_TEST_ASSERT(cowPosition < dogPosition);
+      BRICK_TEST_ASSERT(dogPosition < fooPosition);
+
+
+
+      brick::utilities::OptionParser optionParser1(1);
+      optionParser1.addDescription("A program to do something.");
+      
+      optionParser1.addSection("00");
+      optionParser1.addOptionWithValue(
+        "DD", "-d", "--dd", "", "Doc", "00", "000");
+      optionParser1.addOptionWithValue(
+        "CC", "-c", "--cc", "", "Doc", "00", "001");
+      optionParser1.addOptionWithValue(
+        "EE", "-e", "--ee", "", "Doc", "00", "002");
+      optionParser1.addOptionWithValue(
+        "PP", "-p", "--pp", "", "00", "003");
+
+
+      optionParser1.addSection("01");
+      optionParser1.addOption(
+        "FF", "-f", "--ff", "Doc", "01", "000");
+      optionParser1.addOption(
+        "QQ", "-q", "--qq", "Doc", "01", "001");
+      optionParser1.addOptionWithValue(
+        "MM", "-m", "--mm", "", "Doc", "01", "002");
+      optionParser1.addOption(
+        "RR", "-r", "--rr", "Doc", "01", "003");
+      optionParser1.addOptionWithValue(
+        "VV", "-v", "--vv", "", "Doc", "01", "004");
+
+      optionParser1.addSection("02");
+      optionParser1.addOptionWithValue(
+        "OO", "-o", "--oo", "", "Doc", "02", "000");
+
+      usage = optionParser1.getUsage();
+
+      BRICK_TEST_ASSERT(usage.find("--dd") < usage.find("--cc"));
+      BRICK_TEST_ASSERT(usage.find("--cc") < usage.find("--ee"));
+      BRICK_TEST_ASSERT(usage.find("--ee") < usage.find("--pp"));
+      BRICK_TEST_ASSERT(usage.find("--pp") < usage.find("--ff"));
+      BRICK_TEST_ASSERT(usage.find("--ff") < usage.find("--qq"));
+      BRICK_TEST_ASSERT(usage.find("--qq") < usage.find("--mm"));
+      BRICK_TEST_ASSERT(usage.find("--mm") < usage.find("--rr"));
+      BRICK_TEST_ASSERT(usage.find("--rr") < usage.find("--vv"));
+      BRICK_TEST_ASSERT(usage.find("--vv") < usage.find("--oo"));
     }
 
   

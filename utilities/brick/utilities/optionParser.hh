@@ -216,7 +216,21 @@ namespace brick {
        */
       ~OptionParser();
 
+      
+      /** 
+       * Specifies summary text that will be printed as part of the
+       * usage message after the program synopsis, but before any
+       * option or argument descriptions.
+       * 
+       * @param description This argument should briefly describe the
+       * function of the program.
+       */
+      void
+      addDescription(std::string const& description) {
+        m_description = description;
+      }
 
+      
       /** 
        * This member function adds an option to be recognized during
        * command line parsing.
@@ -254,9 +268,60 @@ namespace brick {
 
       
       /** 
+       * This member function adds an option to be recognized during
+       * command line parsing.  It is like the 5-argument version of
+       * addOption(), but allows greater control over getUsage()
+       * output.
+       * 
+       * @param name This argument specifies a unique name for the
+       * option.  It will be used later to refer to this option when
+       * checking parsing results.
+       * 
+       * @param shortVersion This argument specifies a short version
+       * of the option, such as "-p" or "-rgb".  Setting this argument
+       * to "" indicates that this option does not have a short
+       * version.
+       * 
+       * @param longVersion This argument specifies a long version of
+       * the option, such as "--do_calibration".  Setting this
+       * argument to "" indicates that this option does not have a
+       * long version.
+       * 
+       * @param docString This argument specifies a breif description
+       * for the option.  If the automatic documentation features of
+       * the optionParser are not being used, then this argument can
+       * be safely set to "".
+       *
+       * @param sectionName This specifies in which section of the
+       * getUsage() output this option should be described.  Set this
+       * to the empty string if you are not using sections.
+       *
+       * @param prefix This string will be prepended to the value of
+       * argument name before the option names are alphabetized for in
+       * getUsage() output.  Use it if you want to control the order
+       * in which options are shown to the user.
+       * 
+       * @param allowPartialMatch This argument specifies whether to
+       * allow partial matches for the long version of this option.
+       * For more information, please see the class comment for
+       * OptionParser.
+       */
+      void
+      addOption(std::string const& name,
+                std::string const& shortVersion,
+                std::string const& longVersion,
+                std::string const& docString,
+                std::string const& sectionName,
+                std::string const& prefix = "",
+                bool allowPartialMatch = true);
+
+      
+      /** 
        * This member function adds an option which requires a value to
        * the list which will be recognized during command line
-       * parsing.
+       * parsing.  It is like the 8-argument version of
+       * addOption(), but allows greater control over getUsage()
+       * output.
        * 
        * @param name This argument specifies a unique name for the
        * option.  It will be used later to refer to this option when
@@ -283,6 +348,15 @@ namespace brick {
        * the optionParser are not being used, then this argument can
        * be safely set to "".
        * 
+       * @param sectionName This specifies in which section of the
+       * getUsage() output this option should be described.  Set this
+       * to the empty string if you are not using sections.
+       *
+       * @param prefix This string will be prepended to the value of
+       * argument name before the option names are alphabetized for in
+       * getUsage() output.  Use it if you want to control the order
+       * in which options are shown to the user.
+       * 
        * @param requireArgument This argument is currently not supported.
        * 
        * @param allowPartialMatch This argument specifies whether to
@@ -301,11 +375,13 @@ namespace brick {
                          std::string const& longVersion,
                          Type const& defaultValue,
                          std::string const& docString,
+                         std::string const& sectionName = "",
+                         std::string const& prefix = "",
                          bool requireArgument = true,
                          bool allowPartialMatch = true,
                          bool allowOptionishValue = false);
-      
 
+      
       /** 
        * This member function adds a named positional argument.  The
        * order in which positional arguments are specified is
@@ -350,6 +426,28 @@ namespace brick {
                             std::string const& defaultValue = "");
 
 
+      /** 
+       * Use this function to group options into sections.  This can
+       * make it easier for the user to understand the text returned
+       * by getUsage().
+       *
+       * @param sectionName This argument identifies the section, but
+       * will only be printed in the usage message if argument
+       * sectionDescription is an empty string.  Sections will be
+       * described in alphabetical order by sectionName.
+       *
+       * @param sectionDescription This argument describes the
+       * section, and will be printed at the beginning of the section.
+       * You should make this string include the heading name -- as
+       * you'd like it printed -- and any other important information.
+       * If sectionDescription is specified as the empty string,
+       * argument sectionName will be used instead.
+       */
+      void
+      addSection(std::string const& sectionName,
+                 std::string const& sectionDescription = "");
+
+      
       /** 
        * This member function is like getValue(std::string const&),
        * but attempts to convert the returned string to the specified
@@ -531,7 +629,7 @@ namespace brick {
        * configured options.
        */
       std::string
-      getOptionsDescription();
+      getOptionsDescription(std::string const& sectionName = "");
 
 
       /** 
@@ -647,6 +745,10 @@ namespace brick {
 
     private:
 
+      // Private typedefs.
+      typedef std::map<std::string, OptionDescription> OptionMap;
+      
+
       // Private enum for specifying how to handle illegal commandlines.
       enum ErrorBehavior {ExitOnError, ThrowOnError, UsageAndExitOnError};
 
@@ -673,6 +775,7 @@ namespace brick {
         this->usageAndExitIfAppropriate(std::string(ee.what()));
       }
 
+      
 
       // Private data members.
       bool m_allowExtraArguments;
@@ -684,9 +787,12 @@ namespace brick {
       bool m_handleHelp;
       size_t m_numberOfPosArgRequired;
       size_t m_numberOfPosArgParsed;
+      std::string m_description;
       std::map<std::string, size_t> m_optionCounts;
       std::map<std::string, OptionDescription> m_optionDescriptions;
+      std::map<std::string, OptionMap> m_optionDescriptionsBySection;
       std::map< std::string, std::vector<std::string> > m_optionValues;
+      std::map< std::string, std::string > m_sectionDescriptions;
       std::vector<std::string> m_positionalArgumentNames;
       std::vector<std::string> m_positionalArgumentDefaultValues;
       std::vector<std::string> m_positionalArgumentDocs;
@@ -718,10 +824,12 @@ namespace brick {
                                     std::string const& longVersion,
                                     std::string const& defaultValue,
                                     std::string const& docString,
+                                    std::string const& sectionName,
+                                    std::string const& prefix,
                                     bool requireArgument,
                                     bool allowPartialMatch,
                                     bool allowOptionishValue);
-    
+
     
     // This member function adds an option which requires a value to
     // the list which will be recognized during command line
@@ -734,6 +842,8 @@ namespace brick {
                        std::string const& longVersion,
                        Type const& defaultValue,
                        std::string const& docString,
+                       std::string const& sectionName,
+                       std::string const& prefix,
                        bool requireArgument,
                        bool allowPartialMatch,
                        bool allowOptionishValue)
@@ -742,7 +852,8 @@ namespace brick {
       buffer << defaultValue;
       this->addOptionWithValue(
         name, shortVersion, longVersion, buffer.str(), docString,
-        requireArgument, allowPartialMatch, allowOptionishValue);
+        sectionName, prefix, requireArgument, allowPartialMatch,
+        allowOptionishValue);
     }
 
     

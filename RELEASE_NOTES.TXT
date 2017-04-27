@@ -1,6 +1,16 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 2.0.1
+
+  WARNING: This update may break existing code.  It removes a
+  a little-used part of the brick::utilities::OptionParser API.
+  
+  - Added brick::utilities::getAbsolutePath().
+  - Allowed users to control the focal length of the rectified cameras
+    in brick::computerVision::stereoRectify().
+  - Significant updates to OptionParser to allow clearer messages.
+  
 Revision 2.0.0
 
   - Major change: we now use CMake for the build system, and all

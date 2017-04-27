@@ -216,42 +216,60 @@ namespace brick {
     // to Transform3D representation.
     template <class Type>
     Transform3D<Type>
-    rodriguesToTransform3D(Vector3D<Type> const& rodrigues)
+    rodriguesToTransform3D(Vector3D<Type> const& rodrigues,
+                           Type const& epsilon)
     {
+      Transform3D<Type> result;
+      
       // The length of the input vector encodes the size of the
       // rotation.
-      Type theta = magnitude<Type>(rodrigues);
+      Type thetaSquared = magnitudeSquared<Type>(rodrigues);
+      
+      if(thetaSquared > epsilon) {
 
-      // The input vector points along the axis of rotation.
-      // Normalize it to unit length.  Note that there's not error
-      // checking here.  It's the responsibility of the calling
-      // context not to pass in a vector that's short enough to break
-      // this math.
-      Vector3D<Type> direction = rodrigues / theta;
-      Type cosTheta = brick::numeric::cosine(theta);
-      Type sinTheta = brick::numeric::sine(theta);
-      Type oneMinusCT = Type(1.0) - cosTheta;
-
-      // The rest of this code simply implements
-      // angleAxisToTransform3D(), albeit in a different way.
-      Type omcxx = oneMinusCT * direction.x() * direction.x();
-      Type omcxy = oneMinusCT * direction.x() * direction.y();
-      Type omcxz = oneMinusCT * direction.x() * direction.z();
-      Type omcyy = oneMinusCT * direction.y() * direction.y();
-      Type omcyz = oneMinusCT * direction.y() * direction.z();
-      Type omczz = oneMinusCT * direction.z() * direction.z();
+        Type theta = brick::numeric::squareRoot(thetaSquared);
         
-      return Transform3D<Type>(
-        omcxx + cosTheta, omcxy - sinTheta * direction.z(),
-        omcxz + sinTheta * direction.y(), Type(0.0),
+        // The input vector points along the axis of rotation.
+        // Normalize it to unit length.  Note that there's not error
+        // checking here.  It's the responsibility of the calling
+        // context not to pass in a vector that's short enough to break
+        // this math.
+        Vector3D<Type> direction = rodrigues / theta;
+        Type cosTheta = brick::numeric::cosine(theta);
+        Type sinTheta = brick::numeric::sine(theta);
+        Type oneMinusCT = Type(1.0) - cosTheta;
 
-        omcxy + sinTheta * direction.z(), omcyy + cosTheta,
-        omcyz - sinTheta * direction.x(), Type(0.0),
+        // The rest of this code simply implements
+        // angleAxisToTransform3D(), albeit in a different way.
+        Type omcxx = oneMinusCT * direction.x() * direction.x();
+        Type omcxy = oneMinusCT * direction.x() * direction.y();
+        Type omcxz = oneMinusCT * direction.x() * direction.z();
+        Type omcyy = oneMinusCT * direction.y() * direction.y();
+        Type omcyz = oneMinusCT * direction.y() * direction.z();
+        Type omczz = oneMinusCT * direction.z() * direction.z();
         
-        omcxz - sinTheta * direction.y(), omcyz + sinTheta * direction.x(),
-        omczz + cosTheta, Type(0.0),
+        result.setValue(
+          omcxx + cosTheta, omcxy - sinTheta * direction.z(),
+          omcxz + sinTheta * direction.y(), Type(0.0),
 
-        Type(0.0), Type(0.0), Type(0.0), Type(1.0));
+          omcxy + sinTheta * direction.z(), omcyy + cosTheta,
+          omcyz - sinTheta * direction.x(), Type(0.0),
+        
+          omcxz - sinTheta * direction.y(), omcyz + sinTheta * direction.x(),
+          omczz + cosTheta, Type(0.0),
+
+          Type(0.0), Type(0.0), Type(0.0), Type(1.0));
+
+      } else {
+
+        result.setValue(Type(1.0), -rodrigues.z(), rodrigues.y(), Type(0.0),
+                        rodrigues.z(), Type(1.0), -rodrigues.x(), Type(0.0),
+                        -rodrigues.y(), rodrigues.x(), Type(1.0), Type(0.0),
+                        Type(0.0), Type(0.0), Type(0.0), Type(1.0));
+
+      }
+
+      return result;
     }
 
     

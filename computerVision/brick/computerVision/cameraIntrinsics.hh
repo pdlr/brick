@@ -84,11 +84,38 @@ namespace brick {
        * @param normalize This argument indicates whether the ray
        * should be normalized to unit length before being returned.
        * 
+       * @param maxAzimuthTangent For some types of camera intrinsics,
+       * the reverse projection does not have a unique solution.  In
+       * these types of cameras, it may be necessary to supply limits
+       * on the camera field of view so that out-of-view reverse
+       * projections aren't considered.  These limits are specified as
+       * tangent of the view angle to increase computational
+       * efficiency within the reverse projection code.  For example,
+       * if you had a 90 degree azimuth field of view, you might set
+       * this argument to 1.0 (which is tangent(45degrees)).  Set this
+       * argument and the next one less than or equal to zero to disable
+       * this check.
+       * 
+       * @param maxElevationTangent For some types of camera intrinsics,
+       * the reverse projection does not have a unique solution.  In
+       * these types of cameras, it may be necessary to supply limits
+       * on the camera field of view so that out-of-view reverse
+       * projections aren't considered.  These limits are specified as
+       * tangent of the view angle to increase computational
+       * efficiency within the reverse projection code.  For example,
+       * if you had a 60 degree elevation field of view, you might set
+       * this argument to 0.577 (which is ~tangent(30degrees)).  Set this
+       * argument and the previous one less than or equal to zero to disable
+       * this check.
+       *
        * @return The return value is the resulting ray.
        */
       virtual inline geometry::Ray3D<FloatType>
       reverseProject(const brick::numeric::Index2D& pixelPosition,
-                     bool normalize = true) const;
+                     bool normalize = true,
+                     FloatType const& maxAzimuthTangent = FloatType(0.0),
+                     FloatType const& maxElevationTangent = FloatType(0.0))
+        const;
 
 
       /** 
@@ -102,11 +129,38 @@ namespace brick {
        * @param normalize This argument indicates whether the ray
        * should be normalized to unit length before being returned.
        * 
+       * @param maxAzimuthTangent For some types of camera intrinsics,
+       * the reverse projection does not have a unique solution.  In
+       * these types of cameras, it may be necessary to supply limits
+       * on the camera field of view so that out-of-view reverse
+       * projections aren't considered.  These limits are specified as
+       * tangent of the view angle to increase computational
+       * efficiency within the reverse projection code.  For example,
+       * if you had a 90 degree azimuth field of view, you might set
+       * this argument to 1.0 (which is tangent(45degrees)).  Set this
+       * argument and the next one less than or equal to zero to disable
+       * this check.
+       * 
+       * @param maxElevationTangent For some types of camera intrinsics,
+       * the reverse projection does not have a unique solution.  In
+       * these types of cameras, it may be necessary to supply limits
+       * on the camera field of view so that out-of-view reverse
+       * projections aren't considered.  These limits are specified as
+       * tangent of the view angle to increase computational
+       * efficiency within the reverse projection code.  For example,
+       * if you had a 60 degree elevation field of view, you might set
+       * this argument to 0.577 (which is ~tangent(30degrees)).  Set this
+       * argument and the previous one less than or equal to zero to disable
+       * this check.
+       *
        * @return The return value is the resulting ray.
        */
       virtual geometry::Ray3D<FloatType>
       reverseProject(const brick::numeric::Vector2D<FloatType>& pixelPosition,
-                     bool normalize = true) const = 0;
+                     bool normalize = true,
+                     FloatType const& maxAzimuthTangent = FloatType(0.0),
+                     FloatType const& maxElevationTangent = FloatType(0.0))
+        const = 0;
 
 
     protected:
@@ -134,12 +188,16 @@ namespace brick {
     inline brick::geometry::Ray3D<FloatType>
     CameraIntrinsics<FloatType>::
     reverseProject(const brick::numeric::Index2D& pixelPosition,
-                   bool normalize) const
+                   bool normalize,
+                   FloatType const& maxAzimuthTangent,
+                   FloatType const& maxElevationTangent) const
     {
       return this->reverseProject(
         brick::numeric::Vector2D<FloatType>(pixelPosition.getColumn() + 0.5,
                                             pixelPosition.getRow() + 0.5),
-        normalize);
+        normalize,
+        maxAzimuthTangent,
+        maxElevationTangent);
     }
 
   } // namespace computerVision

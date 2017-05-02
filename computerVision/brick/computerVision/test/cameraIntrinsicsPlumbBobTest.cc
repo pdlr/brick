@@ -113,7 +113,7 @@ testReverseProjectionObjectiveApplicationOperator()
       Vector3D<double> cameraCoord(xCoord, yCoord, 1.0);
       Vector2D<double> pixelCoord = intrinsics.project(cameraCoord);
       brick::computerVision::privateCode::ReverseProjectionObjective<double>
-        objective(intrinsics, pixelCoord);
+        objective(intrinsics, pixelCoord, 0.0, 0.0);
 
       Array1D<double> theta(2);
       double result;
@@ -156,7 +156,7 @@ testReverseProjectionObjectiveGradient()
       Vector3D<double> cameraCoord(xCoord, yCoord, 1.0);
       Vector2D<double> pixelCoord = intrinsics.project(cameraCoord);
       brick::computerVision::privateCode::ReverseProjectionObjective<double>
-        objective(intrinsics, pixelCoord);
+        objective(intrinsics, pixelCoord, 0.0, 0.0);
 
       Array1D<double> theta(2);
       theta[0] = xCoord; theta[1] = yCoord;
@@ -174,7 +174,7 @@ testReverseProjectionObjectiveGradient()
   typedef brick::computerVision::privateCode::ReverseProjectionObjective<double>
     Objective;
 
-  Objective objective(intrinsics, pixelCoord);
+  Objective objective(intrinsics, pixelCoord, 0.0, 0.0);
   GradientFunction<Objective> refObjective(objective);
 
   for(double yCoord = -1.0; yCoord < 1.0; yCoord += 0.1) {
@@ -193,6 +193,35 @@ testReverseProjectionObjectiveGradient()
       BRICK_TEST_ASSERT(
         approximatelyEqual(testGradient[1], refGradient[1],
                            m_gradientTolerance));
+    }
+  }
+
+  Objective objective_fov(intrinsics, pixelCoord, 0.62, 0.43);
+  GradientFunction<Objective> refObjective_fov(objective_fov);
+
+  for(double yCoord = -1.0; yCoord < 1.0; yCoord += 0.1) {
+    for(double xCoord = -1.0; xCoord < 1.0; xCoord += 0.1) {
+      Array1D<double> theta(2);
+      theta[0] = xCoord; theta[1] = yCoord;
+
+      Array1D<double> testGradient = objective_fov.gradient(theta);
+      Array1D<double> refGradient = refObjective_fov.gradient(theta);
+
+      // We scale m_gradientTolerance here because the
+      // field-of-view-bounded errors get huge when you're far out of
+      // bounds.
+      double epsScale = std::max(brick::numeric::absoluteValue(refGradient[0]),
+                                 brick::numeric::absoluteValue(refGradient[1]));
+      epsScale = std::max(epsScale, 1.0);
+
+      BRICK_TEST_ASSERT(testGradient.size() == 2);
+      BRICK_TEST_ASSERT(refGradient.size() == 2);
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(testGradient[0], refGradient[0],
+                           epsScale * m_gradientTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(testGradient[1], refGradient[1],
+                           epsScale * m_gradientTolerance));
     }
   }
 }
@@ -358,9 +387,9 @@ getIntrinsicsInstance()
   
 
 
-#if 0
+#if 1
 
-int main(int argc, char** argv)
+int main(int, char**)
 {
   CameraIntrinsicsPlumbBobTest currentTest;
   bool result = currentTest.run();

@@ -213,9 +213,9 @@ namespace brick {
         // See comments in memberFunction getFieldOfViewPenalty() for
         // an explantation of these two lines.
         this->m_azimuthViolationScale =
-          intrinsics.getImageWidth() / (2 * maxAzimuthTangent);
+          FloatType(10.0) * intrinsics.getImageWidth() / maxAzimuthTangent;
         this->m_elevationViolationScale =
-          intrinsics.getImageHeight() / (2 * maxElevationTangent);
+          FloatType(10.0) * intrinsics.getImageHeight() / maxElevationTangent;
       }
 
         
@@ -429,10 +429,10 @@ namespace brick {
         FloatType penalty(0.0);
         
         // Penalize unrectified points that should project outside the
-        // image.  We make the penalty term be 8th order so it
-        // dominates traditionally 6th order distortion models.  In
-        // the future, we'll provide a way for derived classes to
-        // conveniently control this order.
+        // image.  We make this term be zero at the edge of the field
+        // of view, ramping quadratically to the cost equivalent of
+        // being a whole image off when the azimuth exceeds the max by
+        // 10%.
 
         FloatType azimuthTangent = brick::numeric::absoluteValue(
           candidate.x() / candidate.z());
@@ -441,27 +441,27 @@ namespace brick {
         
         // Are we in violation horizontally?
         if(azimuthTangent > this->m_maxAzimuthTangent) {
-          // Scale the penalty so that it's approximately in "pixels."
-          // The rationale here is that number of pixels grows as
-          // tan(az).
-          // 
+
+          // This is how far out of bounds we are.
+          FloatType azimuthViolation =
+            azimuthTangent - this->m_maxAzimuthTangent;
+
+          // We define our cost to have the form (k * azimuthViolation)^2,
+          // where k is a scaling constant. We want to choose k so
+          // that the cost is equal to imageWidth^2 when
+          // azimuthVioltion is equal to 0.1 * maxAzimuthTangent.
+          // Below, t_max is maxAzimuthTangent and w is imageWidth.
+          // We write:
+          //
           // @verbatim
-          //   pixels_at_boundary = image_width / 2 = k_0 * max_tangent_az
-          //   k_0 = image_width / (2 * max_tangent_az)
-          //   pixels_at_test_point = k_0 * tangent_az
-          //   pixel_violation = pixels_at_test_point - pixels_at_boundary
-          //     = k_0 * tangent_az - k_0 * max_tangent_az
-          //     = k_0 * (tangent_az - max_tangent_az)
+          //   (k * 0.1 * t_max)^2 = w^2
+          //   k * 0.1 * t_max = w
+          //   k = 10 * w / t_max
           // @endverbatim
           // 
-          // We precompute k_0 in the constructor.  We call
-          // it m_azimuthViolationScale.
-          FloatType azimuthViolation =
-            ((azimuthTangent - this->m_maxAzimuthTangent)
-             * this->m_azimuthViolationScale);
-
-          azimuthViolation *= azimuthViolation;
-          azimuthViolation *= azimuthViolation;
+          // We precomputed k in the constructor.  We called it
+          // m_azimuthViolationScale.
+          azimuthViolation *= this->m_azimuthViolationScale;
           azimuthViolation *= azimuthViolation;
           penalty += azimuthViolation;
         }
@@ -470,11 +470,8 @@ namespace brick {
         if(elevationTangent > this->m_maxElevationTangent) {
           // See the comment above regarding azimuthViolation.
           FloatType elevationViolation =
-            ((elevationTangent - this->m_maxElevationTangent)
-             * this->m_elevationViolationScale);
-          
-          elevationViolation *= elevationViolation;
-          elevationViolation *= elevationViolation;
+            elevationTangent - this->m_maxElevationTangent;
+          elevationViolation *= this->m_elevationViolationScale;
           elevationViolation *= elevationViolation;
           penalty += elevationViolation;
         }
@@ -490,15 +487,12 @@ namespace brick {
         const FloatType& xValue, const FloatType& yValue,
         FloatType& dPdX, FloatType& dPdY)
       {
+        // Initialize penalty gradients to zero.
         dPdX = FloatType(0.0);
         dPdY = FloatType(0.0);
         
         // Penalize unrectified points that should project outside the
-        // image.  We make the penalty term be 8th order so it
-        // dominates traditionally 6th order distortion models.  In
-        // the future, we'll provide a way for derived classes to
-        // conveniently control this order.
-
+        // image.
         FloatType azimuthTangent = xValue;
         FloatType elevationTangent = yValue;
         FloatType dAzdX(1.0);
@@ -519,14 +513,7 @@ namespace brick {
           FloatType azimuthViolation =
             ((azimuthTangent - this->m_maxAzimuthTangent)
              * this->m_azimuthViolationScale);
-            
-          FloatType azimuthViolationTo2 =
-            azimuthViolation * azimuthViolation;
-          FloatType azimuthViolationTo4 =
-            azimuthViolationTo2 * azimuthViolationTo2;
-          FloatType azimuthViolationTo7 =
-            azimuthViolationTo4 * azimuthViolationTo2 * azimuthViolation;
-          dPdX = (8 * azimuthViolationTo7 * this->m_azimuthViolationScale
+          dPdX = (2 * azimuthViolation * this->m_azimuthViolationScale
                   * dAzdX);
         }
 
@@ -535,14 +522,7 @@ namespace brick {
           FloatType elevationViolation =
             ((elevationTangent - this->m_maxElevationTangent)
              * this->m_elevationViolationScale);
-          
-          FloatType elevationViolationTo2 =
-            elevationViolation * elevationViolation;
-          FloatType elevationViolationTo4 =
-            elevationViolationTo2 * elevationViolationTo2;
-          FloatType elevationViolationTo7 =
-            elevationViolationTo4 * elevationViolationTo2 * elevationViolation;
-          dPdY = (8 * elevationViolationTo7 * this->m_elevationViolationScale
+          dPdY = (2 * elevationViolation * this->m_elevationViolationScale
                   * dEldY);
         }
       }          

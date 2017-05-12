@@ -220,6 +220,101 @@ namespace brick {
     }
 
 
+    // This function iteratively computes and returns a ray in 3D
+    // camera coordinates starting at the camera focus and passing
+    // through the specified pixel position.
+    template <class FloatType>
+    geometry::Ray3D<FloatType>
+    CameraIntrinsicsRational<FloatType>::
+    reverseProjectEM(
+      const brick::numeric::Vector2D<FloatType>& pixelPosition,
+      bool normalize,
+      FloatType requiredPrecision,
+      std::size_t maximumIterations,
+      std::size_t minimumIterations) const
+    {
+      // We'll want this later to avoid computing a bunch of square roots.
+      FloatType requiredPrecisionSquared =
+        requiredPrecision * requiredPrecision;
+      
+      // First project back through pinhole parameters to get a point
+      // we reverse project through the distortion model.  See
+      // CameraIntrinsicsPinhole::reverseProject() for an explanation
+      // of this line.
+      brick::numeric::Vector2D<FloatType> x0(
+        (pixelPosition.x() - this->getCenterU()) / this->getFocalLengthX(),
+        (pixelPosition.y() - this->getCenterV()) / this->getFocalLengthY());
+
+      // Iterate to find the undistorted point.
+      brick::numeric::Vector2D<FloatType> xHat = x0;
+      std::size_t ii = 1;
+      while(1) {
+        // We have x0 = a(x) * x + b(x).
+        // Approximate as x0 = a(xHat) * x + b(xHat)
+        // Gives us x ~= (x0 - b(xHat)) / a(xHat)
+        // Iterate on this.
+        //
+        // A note about stability.
+        // x = (1/a(xHat)) * x0 + b(xHat) / a(xHat)
+        //
+        // x - x0 > 
+    
+        FloatType xSquared = xHat.x() * xHat.x();
+        FloatType ySquared = xHat.y() * xHat.y();
+        FloatType rSquared = xSquared + ySquared;
+        FloatType rFourth = rSquared * rSquared;
+        FloatType rSixth = rSquared * rFourth;
+    
+        // Compute radial distortion terms.
+        FloatType radialDistortionNumerator =
+          (1.0 + m_radialCoefficient0 * rSquared
+           + m_radialCoefficient1 * rFourth
+           + m_radialCoefficient2 * rSixth);
+        FloatType radialDistortionDenominator = 
+          (1.0 + m_radialCoefficient3 * rSquared
+           + m_radialCoefficient4 * rFourth
+           + m_radialCoefficient5 * rSixth);
+        FloatType oneOverRadialDistortion =
+          radialDistortionDenominator/ radialDistortionNumerator;
+
+        // Compute tangential distortion.
+        FloatType crossTerm = xHat.x() * xHat.y();
+        brick::numeric::Vector2D<FloatType> tangentialDistortion(
+          (2.0 * m_tangentialCoefficient0 * crossTerm
+           + m_tangentialCoefficient1 * (rSquared + 2.0 * xSquared)),
+          (m_tangentialCoefficient0 * (rSquared + 2.0 * ySquared)
+           + 2.0 * m_tangentialCoefficient1 * crossTerm));
+    
+        // Apply distortion.
+        brick::numeric::Vector2D<FloatType> xNext =
+          (x0 - tangentialDistortion) * oneOverRadialDistortion;
+
+        // Check for termination criteria.
+        if(ii >= minimumIterations) {
+          FloatType incrementSquared =
+            brick::numeric::magnitudeSquared<FloatType>(xNext - xHat);
+          if(incrementSquared < requiredPrecisionSquared) {
+            break;
+          }
+        }
+        if(ii > maximumIterations) {
+          BRICK_THROW(
+            brick::common::ValueException,
+            "CameraIntrinsicsRational<FloatType>::reverseProjectEM()",
+            "Reverse projection failed to converge.");
+        }
+
+        // Prepare for the next iteration.
+        xHat = xNext;
+        ++ii;
+      }
+
+      return geometry::Ray3D<FloatType>(
+        brick::numeric::Vector3D<FloatType>(0.0, 0.0, 0.0),
+        brick::numeric::Vector3D<FloatType>(xHat.x(), xHat.y(), 1.0),
+        normalize);
+    }
+
     // This sets the value of a subset of the intrinsic parameters,
     // and is commonly used by in calibration routines.
     template <class FloatType>

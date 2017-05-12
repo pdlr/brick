@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-p* @file cameraIntrinsicsRationalTest.cc
+* @file cameraIntrinsicsRationalTest.cc
 *
 * Source file defining tests for the CameraIntrinsicsRational class.
 *
@@ -41,12 +41,16 @@ public:
   void testConstructor__args();
   void testProject();
   void testReverseProject();
+  void testReverseProjectEM();
   void testStreamOperators();
   
 private:
 
   CameraIntrinsicsRational<double>
   getIntrinsicsInstance();
+
+  CameraIntrinsicsRational<double>
+  getIntrinsicsInstanceMild();
   
   double m_defaultTolerance;
   double m_gradientTolerance;
@@ -89,8 +93,8 @@ CameraIntrinsicsRationalTest()
     m_radialCoefficient0(0.02),
     m_radialCoefficient1(0.0001),
     m_radialCoefficient2(0.000007),
-    m_radialCoefficient3(0.000005),
-    m_radialCoefficient4(-0.000003),
+    m_radialCoefficient3(0.05),
+    m_radialCoefficient4(-0.0003),
     m_radialCoefficient5(0.000002),
     m_tangentialCoefficient0(-0.01),
     m_tangentialCoefficient1(0.005)
@@ -101,6 +105,7 @@ CameraIntrinsicsRationalTest()
   BRICK_TEST_REGISTER_MEMBER(testConstructor__args);
   BRICK_TEST_REGISTER_MEMBER(testProject);
   BRICK_TEST_REGISTER_MEMBER(testReverseProject);
+  BRICK_TEST_REGISTER_MEMBER(testReverseProjectEM);
   BRICK_TEST_REGISTER_MEMBER(testStreamOperators);
 }
 
@@ -299,6 +304,33 @@ testReverseProject()
 
 void
 CameraIntrinsicsRationalTest::
+testReverseProjectEM()
+{
+  // We test by round trip against convertWorldPointToPixel(), which
+  // has its own independent test.
+
+  // Arbitrary camera params.
+  CameraIntrinsicsRational<double> intrinsics =
+    this->getIntrinsicsInstanceMild();
+
+  for(double vCoord = 0.0; vCoord < m_numPixelsY; vCoord += 10.2) {
+    for(double uCoord = 0.0; uCoord < m_numPixelsX; uCoord += 10.2) {
+      Vector2D<double> pixelCoord(uCoord, vCoord);
+      Ray3D<double> ray = intrinsics.reverseProjectEM(
+        pixelCoord, true, 1.0E-7);
+      Vector3D<double> pointOnRay =
+        ray.getOrigin() + 12.0 * ray.getDirectionVector();
+      Vector2D<double> recoveredPixelCoord = intrinsics.project(pointOnRay);
+
+      double residual = magnitude<double>(recoveredPixelCoord - pixelCoord);
+      BRICK_TEST_ASSERT(residual < m_reverseProjectionTolerance);
+    }
+  }
+}
+
+
+void
+CameraIntrinsicsRationalTest::
 testStreamOperators()
 {
   CameraIntrinsicsRational<double> refIntrinsics = this->getIntrinsicsInstance();
@@ -351,12 +383,28 @@ getIntrinsicsInstance()
     m_tangentialCoefficient0, m_tangentialCoefficient1);
   return intrinsics;
 }
-  
+
+CameraIntrinsicsRational<double>
+CameraIntrinsicsRationalTest::
+getIntrinsicsInstanceMild()
+{
+  // Arbitrary camera params.
+  CameraIntrinsicsRational<double> intrinsics(
+    m_numPixelsX, m_numPixelsY, m_focalLengthX, m_focalLengthY,
+    m_centerU, m_centerV,
+    m_radialCoefficient0 * 10,
+    m_radialCoefficient1 / 100.0, m_radialCoefficient2 / 100.0,
+    m_radialCoefficient3 * 10,
+    m_radialCoefficient4 / 100.0, m_radialCoefficient5 / 100.0,
+    m_tangentialCoefficient0 / 200.0, m_tangentialCoefficient1 / 200.0);
+  return intrinsics;
+}
+
 
 
 #if 0
 
-int main(int argc, char** argv)
+int main(int /* argc */, char** /* argv */)
 {
   CameraIntrinsicsRationalTest currentTest;
   bool result = currentTest.run();

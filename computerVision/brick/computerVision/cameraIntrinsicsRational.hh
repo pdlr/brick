@@ -278,6 +278,48 @@ namespace brick {
 
 
       /** 
+       * This function iteratively computes and returns a ray in 3D
+       * camera coordinates starting at the camera focus and passing
+       * through the specified pixel position.  It differs from member
+       * function reverseProject() in that it uses a less general
+       * iterative algorithm that requires the gradient of the
+       * distortion function (from R2 --> R2) to have magnitude less
+       * than 1.0.  This requirement is frequently met by real
+       * cameras.  If you're used to using the OpenCV
+       * undistortPoints() function, then this is what you're looking
+       * for.
+       * 
+       * @param pixelPosition This argument is the point in pixel
+       * coordinates through which the returned ray should pass.
+       * 
+       * @param normalize This argument indicates whether the ray
+       * should be normalized to unit length before being returned.
+       *
+       * @param requiredPrecision This specifies the termination
+       * criterion for the iterative algorithm.  After
+       * minimumIterations has been reached, the algorithm will
+       * terminate when an iteration improves the estimate by less
+       * than this amount.
+       *
+       * @param maximumIterations Limits how long the algorithm can
+       * run.  If requiredPrecision hasn't been satisfied within this
+       * many iterations, an exception is thrown.
+       *
+       * @param minimumIterations Prevents the algorithm from
+       * terminating prematurely.
+       *
+       * @return The return value is the resulting ray.
+       */
+      virtual geometry::Ray3D<FloatType>
+      reverseProjectEM(
+        const brick::numeric::Vector2D<FloatType>& pixelPosition,
+        bool normalize = true,
+        FloatType requiredPrecision = FloatType(1.0E-5),
+        std::size_t maximumIterations = 25,
+        std::size_t minimumIterations = 5) const;
+
+
+      /** 
        * This sets the value of a subset of the intrinsic parameters,
        * and is commonly used by in calibration routines.  Parameters
        * that can generally be calculated closed-form are omitted from

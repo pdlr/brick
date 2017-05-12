@@ -1275,13 +1275,18 @@ namespace brick {
       // 
       // which is implemented below, except that we replace N * mu
       // with sum_i(x_i), because we've already computed that.
-      if(numberOfElements > 2) {
+      if(numberOfElements >= 2) {
         mean = sumOfElements / numberOfElements;
         variance = ((sumOfSquaredElements - sumOfElements * mean)
                     / (numberOfElements - 1));
+      } else if(numberOfElements >= 1) {
+        mean = sumOfElements /* / numberOfElements */;
+        variance = Type(0.0);
+      } else {
+        mean = Type(0.0);
+        variance = Type(0.0);
       }
     }
-
     
     // This function estimates the mean and variance of a sequence of
     // scalar values, discarding values that appear to be outliers.

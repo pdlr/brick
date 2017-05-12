@@ -1,6 +1,13 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 2.0.2
+
+  - CameraIntrinsics::reverseProject() now takes optional arguments
+    describing the camera field of view. This helps with finding
+    the right reverse projection when using nonmonotonic distortion
+    models.
+    
 Revision 2.0.1
 
   WARNING: This update may break existing code.  It removes a

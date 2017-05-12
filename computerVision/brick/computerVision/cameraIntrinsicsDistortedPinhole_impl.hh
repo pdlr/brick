@@ -46,7 +46,9 @@ namespace brick {
         
         ReverseProjectionObjective(
           CameraIntrinsicsDistortedPinhole<FloatType> const& intrinsics,
-          const brick::numeric::Vector2D<FloatType>& uvTarget);
+          const brick::numeric::Vector2D<FloatType>& uvTarget,
+          FloatType const& maxAzimuthTangent,
+          FloatType const& maxElevationTangent);
         
         FloatType
         operator()(const brick::numeric::Array1D<FloatType>& theta);
@@ -69,9 +71,22 @@ namespace brick {
                                      FloatType dVdX, FloatType dVdY,
                                      FloatType& dPdX, FloatType& dPdY);
 
+        FloatType
+        computeFieldOfViewPenalty(
+          const brick::numeric::Vector3D<FloatType>& candidate);
+
+        void
+        computeFieldOfViewPenaltyGradient(
+          const FloatType& xValue, const FloatType& yValue,
+          FloatType& dPdX, FloatType& dPdY);
+        
         CameraIntrinsicsDistortedPinhole<FloatType> const* m_intrinsicsPtr;
         FloatType m_offset;
         brick::numeric::Vector2D<FloatType> m_uvTarget;
+        FloatType m_maxAzimuthTangent;
+        FloatType m_maxElevationTangent;
+        FloatType m_azimuthViolationScale;
+        FloatType m_elevationViolationScale;
       };
 
       // Implementation of ReverseProjectionObjective is at the bottom of this
@@ -119,7 +134,9 @@ namespace brick {
     geometry::Ray3D<FloatType>
     CameraIntrinsicsDistortedPinhole<FloatType>::
     reverseProject(const brick::numeric::Vector2D<FloatType>& pixelPosition,
-                   bool normalize) const
+                   bool normalize,
+                   FloatType const& maxAzimuthTangent,
+                   FloatType const& maxElevationTangent) const
     {
       // We need a starting point for our optimization.  Ostensibly,
       // this is a 3D point that gets projected into the image.  The
@@ -131,11 +148,12 @@ namespace brick {
       // into the image, so we choose the safest start point we can
       // think of... the center of projection.
       brick::numeric::Array1D<FloatType> startPoint(2);
-      startPoint = 0.0;
+      startPoint = FloatType(0.0);
       
       // Now optimize to find a better answer.
       typedef privateCode::ReverseProjectionObjective<FloatType> LocalObjective;
-      LocalObjective objective(*this, pixelPosition);
+      LocalObjective objective(*this, pixelPosition,
+                               maxAzimuthTangent, maxElevationTangent);
       OptimizerBFGS<LocalObjective, FloatType> optimizer(objective);
       optimizer.setStartPoint(startPoint);
       brick::numeric::Array1D<FloatType> endPoint = optimizer.optimum();
@@ -167,7 +185,11 @@ namespace brick {
       ReverseProjectionObjective()
         : m_intrinsicsPtr(0),
           m_offset(0.0),
-          m_uvTarget(0.0, 0.0)
+          m_uvTarget(0.0, 0.0),
+          m_maxAzimuthTangent(0.0),
+          m_maxElevationTangent(0.0),
+          m_azimuthViolationScale(0.0),
+          m_elevationViolationScale(0.0)
       {
         // Empty.
       }
@@ -177,12 +199,23 @@ namespace brick {
       ReverseProjectionObjective<FloatType>::
       ReverseProjectionObjective(
         const CameraIntrinsicsDistortedPinhole<FloatType>& intrinsics,
-        const brick::numeric::Vector2D<FloatType>& uvTarget)
+        const brick::numeric::Vector2D<FloatType>& uvTarget,
+        FloatType const& maxAzimuthTangent,
+        FloatType const& maxElevationTangent)
         : m_intrinsicsPtr(&intrinsics),
           m_offset(0.0001),
-          m_uvTarget(uvTarget)
+          m_uvTarget(uvTarget),
+          m_maxAzimuthTangent(maxAzimuthTangent),
+          m_maxElevationTangent(maxElevationTangent),
+          m_azimuthViolationScale(0.0),
+          m_elevationViolationScale(0.0)
       {
-        // Empty.
+        // See comments in memberFunction getFieldOfViewPenalty() for
+        // an explantation of these two lines.
+        this->m_azimuthViolationScale =
+          FloatType(10.0) * intrinsics.getImageWidth() / maxAzimuthTangent;
+        this->m_elevationViolationScale =
+          FloatType(10.0) * intrinsics.getImageHeight() / maxElevationTangent;
       }
 
         
@@ -199,10 +232,16 @@ namespace brick {
           m_intrinsicsPtr->project(candidate);
 
         // The high order terms of the distortion model can lead to
-        // false minima outside the image boundaries.  We add an even
-        // higher order penalty for projecting outside the image,
-        // hopefully reducing this problem.
-        FloatType boundsPenalty = this->computeBoundsPenalty(projection);
+        // false minima outside the image boundaries.  Depending on
+        // what information is available, we use one of two methods to
+        // mitigate this.
+        FloatType boundsPenalty(0.0);
+        if((m_maxAzimuthTangent > FloatType(0.0))
+           || (m_maxElevationTangent > FloatType(0.0))) {
+          boundsPenalty = this->computeFieldOfViewPenalty(candidate);
+        } else {
+          boundsPenalty = this->computeBoundsPenalty(projection);
+        }
 
         return (brick::numeric::magnitudeSquared<FloatType>(
                   projection - m_uvTarget) + boundsPenalty + m_offset);
@@ -254,8 +293,15 @@ namespace brick {
         // Don't forget to add gradient for bounds penalty.
         FloatType dPdX;
         FloatType dPdY;
-        this->computeBoundsPenaltyGradient(
-          uValue, vValue, dUdX, dUdY, dVdX, dVdY, dPdX, dPdY);
+        if((m_maxAzimuthTangent > FloatType(0.0))
+           || (m_maxElevationTangent > FloatType(0.0))) {
+          this->computeFieldOfViewPenaltyGradient(
+            theta[0], theta[1], dPdX, dPdY);
+        } else {
+          this->computeBoundsPenaltyGradient(
+            uValue, vValue, dUdX, dUdY, dVdX, dVdY, dPdX, dPdY);
+        }
+
         gradientArray[0] += dPdX;
         gradientArray[1] += dPdY;
         
@@ -372,7 +418,115 @@ namespace brick {
         dPdX = 8.0 * uViolationTo7 * dUVdX + 8.0 * vViolationTo7 * dVVdX;
         dPdY = 8.0 * uViolationTo7 * dUVdY + 8.0 * vViolationTo7 * dVVdY;
       }
+
+
+      template <class FloatType>
+      FloatType
+      ReverseProjectionObjective<FloatType>::
+      computeFieldOfViewPenalty(
+        const brick::numeric::Vector3D<FloatType>& candidate)
+      {
+        FloatType penalty(0.0);
         
+        // Penalize unrectified points that should project outside the
+        // image.  We make this term be zero at the edge of the field
+        // of view, ramping quadratically to the cost equivalent of
+        // being a whole image off when the azimuth exceeds the max by
+        // 10%.
+
+        FloatType azimuthTangent = brick::numeric::absoluteValue(
+          candidate.x() / candidate.z());
+        FloatType elevationTangent = brick::numeric::absoluteValue(
+          candidate.y() / candidate.z());
+        
+        // Are we in violation horizontally?
+        if(azimuthTangent > this->m_maxAzimuthTangent) {
+
+          // This is how far out of bounds we are.
+          FloatType azimuthViolation =
+            azimuthTangent - this->m_maxAzimuthTangent;
+
+          // We define our cost to have the form (k * azimuthViolation)^2,
+          // where k is a scaling constant. We want to choose k so
+          // that the cost is equal to imageWidth^2 when
+          // azimuthVioltion is equal to 0.1 * maxAzimuthTangent.
+          // Below, t_max is maxAzimuthTangent and w is imageWidth.
+          // We write:
+          //
+          // @verbatim
+          //   (k * 0.1 * t_max)^2 = w^2
+          //   k * 0.1 * t_max = w
+          //   k = 10 * w / t_max
+          // @endverbatim
+          // 
+          // We precomputed k in the constructor.  We called it
+          // m_azimuthViolationScale.
+          azimuthViolation *= this->m_azimuthViolationScale;
+          azimuthViolation *= azimuthViolation;
+          penalty += azimuthViolation;
+        }
+
+        // Are we in violation vertically?
+        if(elevationTangent > this->m_maxElevationTangent) {
+          // See the comment above regarding azimuthViolation.
+          FloatType elevationViolation =
+            elevationTangent - this->m_maxElevationTangent;
+          elevationViolation *= this->m_elevationViolationScale;
+          elevationViolation *= elevationViolation;
+          penalty += elevationViolation;
+        }
+          
+        return penalty;
+      }
+
+
+      template <class FloatType>
+      void
+      ReverseProjectionObjective<FloatType>::
+      computeFieldOfViewPenaltyGradient(
+        const FloatType& xValue, const FloatType& yValue,
+        FloatType& dPdX, FloatType& dPdY)
+      {
+        // Initialize penalty gradients to zero.
+        dPdX = FloatType(0.0);
+        dPdY = FloatType(0.0);
+        
+        // Penalize unrectified points that should project outside the
+        // image.
+        FloatType azimuthTangent = xValue;
+        FloatType elevationTangent = yValue;
+        FloatType dAzdX(1.0);
+        FloatType dEldY(1.0);
+
+        // We do the absoluteValue operation explicitly.
+        if(azimuthTangent < 0.0) {
+          azimuthTangent = -azimuthTangent;
+          dAzdX = -dAzdX;
+        }
+        if(elevationTangent < 0.0) {
+          elevationTangent = -elevationTangent;
+          dEldY = -dEldY;
+        }
+        
+        // Are we in violation horizontally?
+        if(azimuthTangent > this->m_maxAzimuthTangent) {
+          FloatType azimuthViolation =
+            ((azimuthTangent - this->m_maxAzimuthTangent)
+             * this->m_azimuthViolationScale);
+          dPdX = (2 * azimuthViolation * this->m_azimuthViolationScale
+                  * dAzdX);
+        }
+
+        // Are we in violation vertically?
+        if(elevationTangent > this->m_maxElevationTangent) {
+          FloatType elevationViolation =
+            ((elevationTangent - this->m_maxElevationTangent)
+             * this->m_elevationViolationScale);
+          dPdY = (2 * elevationViolation * this->m_elevationViolationScale
+                  * dEldY);
+        }
+      }          
+      
     } // namespace privateCode;
     
   } // namespace computerVision

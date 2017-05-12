@@ -53,7 +53,8 @@ namespace brick {
     private:
 
       void assertSimilar(Transform3D<double> const& xf0,
-                         Transform3D<double> const& xf1) const;
+                         Transform3D<double> const& xf1,
+                         double tolerance = -1.0) const;
 
       void assertSimilar(Vector3D<double> const& v0,
                          Vector3D<double> const& v1) const;
@@ -188,9 +189,10 @@ namespace brick {
     {
       // We test by comparison to the (presumably known good)
       // angleAxis routine.
+      Vector3D<double> direction(1.0, 0.5, 2.5);
+      direction = direction / magnitude<double>(direction);
+
       for(double theta = -3.0; theta < 3.0; theta += 0.6) {
-        Vector3D<double> direction(1.0, 0.5, 2.5);
-        direction = direction / magnitude<double>(direction);
         Vector3D<double> rodrigues = theta * direction;
 
         Transform3D<double> xf0 = rodriguesToTransform3D(rodrigues);
@@ -198,6 +200,37 @@ namespace brick {
 
         this->assertSimilar(xf0, xf1);
       }
+
+      // Now test with some very small angles.
+      Vector3D<double> xVector(1.0, 0.0, 0.0);
+      Vector3D<double> yVector(0.0, 1.0, 0.0);
+      Vector3D<double> zVector(0.0, 0.0, 1.0);
+      for(double theta = -1.0E-12; theta < 1.0E-12; theta += 1.0E-14) {
+        Vector3D<double> rodrigues = theta * xVector;
+        Transform3D<double> xf0 = rodriguesToTransform3D(rodrigues, 3.0E-25);
+        Transform3D<double> xf1(1.0, 0.0, 0.0, 0.0,
+                                0.0, 1.0, -theta, 0.0,
+                                0.0, theta, 1.0, 0.0,
+                                0.0, 0.0, 0.0, 1.0);
+        this->assertSimilar(xf0, xf1, 1.0E-15);
+
+        rodrigues = theta * yVector;
+        xf0 = rodriguesToTransform3D(rodrigues, 3.0E-25);
+        xf1.setTransform(1.0, 0.0, theta, 0.0,
+                         0.0, 1.0, 0.0, 0.0,
+                         -theta, 0.0, 1.0, 0.0,
+                         0.0, 0.0, 0.0, 1.0);
+        this->assertSimilar(xf0, xf1, 1.0E-15);
+
+        rodrigues = theta * zVector;
+        xf0 = rodriguesToTransform3D(rodrigues, 3.0E-25);
+        xf1.setTransform(1.0, -theta, 0.0, 0.0,
+                         theta, 1.0, 0.0, 0.0,
+                         0.0, 0.0, 1.0, 0.0,
+                         0.0, 0.0, 0.0, 1.0);
+        this->assertSimilar(xf0, xf1, 1.0E-15);
+      }
+      
     }
 
     
@@ -289,13 +322,28 @@ namespace brick {
     void
     RotationsTest::
     assertSimilar(Transform3D<double> const& xf0,
-                  Transform3D<double> const& xf1) const
+                  Transform3D<double> const& xf1,
+                  double tolerance) const
     {
-      for(size_t ii = 0; ii < 4; ++ii) {
-        for(size_t jj = 0; jj < 4; ++jj) {
-          BRICK_TEST_ASSERT(
-            approximatelyEqual(xf0(jj, ii), xf1(jj, ii), m_defaultTolerance));
+      if(tolerance < 0.0) {
+        tolerance = this->m_defaultTolerance;
+      }
+
+      try {
+        for(size_t ii = 0; ii < 4; ++ii) {
+          for(size_t jj = 0; jj < 4; ++jj) {
+            BRICK_TEST_ASSERT(
+              approximatelyEqual(xf0(jj, ii), xf1(jj, ii), tolerance));
+          }
         }
+      } catch(brick::test::TestException& ee) {
+        std::ostringstream message;
+        message << ee.what() << "\n\n"
+                << "xf0 is " << xf0 << "\n\n"
+                << "xf1 is " << xf1 << "\n";
+        BRICK_THROW(brick::test::TestException,
+                    "RotationsTest::assertSimilar()",
+                    message.str().c_str());
       }
     }
 

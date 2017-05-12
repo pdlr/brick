@@ -174,7 +174,9 @@ namespace brick {
     brick::geometry::Ray3D<FloatType>
     CameraIntrinsicsPinhole<FloatType>::
     reverseProject(const brick::numeric::Vector2D<FloatType>& pixelPosition,
-                   bool normalize) const
+                   bool normalize,
+                   FloatType const&,
+                   FloatType const&) const
     {
       // For pinhole camera model, assume 3D point [x_cam, y_cam,
       // z_cam]^T, projection matrix

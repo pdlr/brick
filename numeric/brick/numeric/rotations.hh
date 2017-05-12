@@ -271,6 +271,13 @@ namespace brick {
      * @param rodrigues This argument is a Vector3D instance in which
      * the x, y, and z components specify the first, second, and third
      * Rodrigues parameters, respectively.
+     *
+     * @param epsilon This argument is used to avoid numerical issues
+     * at very small angles.  The default value of zero gives you no
+     * protection -- and therefor numerically unstable results -- near
+     * the identity transform.  We keep this default regardless, for
+     * compatibility with previous versions of this function, which
+     * didn't let you specify epsilon at all.
      * 
      * @return The return value is a Transform3D instance representing
      * the rotation.  For further information, please see the
@@ -278,7 +285,8 @@ namespace brick {
      */
     template <class Type>
     Transform3D<Type>
-    rodriguesToTransform3D(Vector3D<Type> const& rodrigues);
+    rodriguesToTransform3D(Vector3D<Type> const& rodrigues,
+                           Type const& epsilon = Type(0.0));
   
 
     /** 

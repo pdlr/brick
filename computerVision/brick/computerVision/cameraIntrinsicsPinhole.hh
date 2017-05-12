@@ -372,12 +372,19 @@ namespace brick {
        * vector should be normalized to unit length.  Setting this to
        * false saves a few arithmetic operations.
        * 
+       * @param maxAzimuthTangent This argument is ignored.
+       * 
+       * @param maxElevationTangent This argument is ignored.
+       * 
        * @return The return value is the ray in 3D camera coordinates
        * corresponding to the input 2D point.
        */
       virtual brick::geometry::Ray3D<FloatType>
       reverseProject(const brick::numeric::Vector2D<FloatType>& pixelPosition,
-                     bool normalize = true) const;
+                     bool normalize = true,
+                     FloatType const& maxAzimuthTangent = FloatType(0.0),
+                     FloatType const& maxElevationTangent = FloatType(0.0))
+        const;
 
 
       /** 

@@ -294,6 +294,7 @@ namespace brick {
           FloatType incrementSquared =
             brick::numeric::magnitudeSquared<FloatType>(xNext - xHat);
           if(incrementSquared < requiredPrecisionSquared) {
+            xHat = xNext;
             break;
           }
         }

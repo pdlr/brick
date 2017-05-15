@@ -81,6 +81,7 @@ namespace brick {
       // unsigned int getImageWidth();
       // unsigned int getNumPixelsX();
       // unsigned int getNumPixelsY();
+      // geometry::Ray3D<FloatType> reverseProject(...);
       // void setDependentParameters(...);
       // void setNumPixelsX(unsigned int);
       // void setNumPixelsY(unsigned int);

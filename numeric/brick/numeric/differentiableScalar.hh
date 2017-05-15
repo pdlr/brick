@@ -92,7 +92,9 @@ namespace brick {
        * by the second constructor argument.
        * 
        * @param value This argument specifies the scalar value of
-       * *this.  @param partialsBegin This iterator points to a
+       * *this.
+       *
+       * @param partialsBegin This iterator points to a
        * sequence of Type specifying a vector of partial derivatives.
        * The number of values in this sequence must be at least equal
        * to the value of class template argument Dimension.

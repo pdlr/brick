@@ -213,9 +213,11 @@ namespace brick {
         // See comments in memberFunction getFieldOfViewPenalty() for
         // an explantation of these two lines.
         this->m_azimuthViolationScale =
-          FloatType(10.0) * intrinsics.getImageWidth() / maxAzimuthTangent;
+          (FloatType(10.0) * FloatType(intrinsics.getImageWidth())
+           / maxAzimuthTangent);
         this->m_elevationViolationScale =
-          FloatType(10.0) * intrinsics.getImageHeight() / maxElevationTangent;
+          (FloatType(10.0) * FloatType(intrinsics.getImageHeight())
+           / maxElevationTangent);
       }
 
         
@@ -499,11 +501,11 @@ namespace brick {
         FloatType dEldY(1.0);
 
         // We do the absoluteValue operation explicitly.
-        if(azimuthTangent < 0.0) {
+        if(azimuthTangent < FloatType(0.0)) {
           azimuthTangent = -azimuthTangent;
           dAzdX = -dAzdX;
         }
-        if(elevationTangent < 0.0) {
+        if(elevationTangent < FloatType(0.0)) {
           elevationTangent = -elevationTangent;
           dEldY = -dEldY;
         }
@@ -513,8 +515,8 @@ namespace brick {
           FloatType azimuthViolation =
             ((azimuthTangent - this->m_maxAzimuthTangent)
              * this->m_azimuthViolationScale);
-          dPdX = (2 * azimuthViolation * this->m_azimuthViolationScale
-                  * dAzdX);
+          dPdX = (FloatType(2) * azimuthViolation
+                  * this->m_azimuthViolationScale * dAzdX);
         }
 
         // Are we in violation vertically?
@@ -522,8 +524,8 @@ namespace brick {
           FloatType elevationViolation =
             ((elevationTangent - this->m_maxElevationTangent)
              * this->m_elevationViolationScale);
-          dPdY = (2 * elevationViolation * this->m_elevationViolationScale
-                  * dEldY);
+          dPdY = (FloatType(2) * elevationViolation
+                  * this->m_elevationViolationScale * dEldY);
         }
       }          
       

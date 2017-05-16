@@ -176,7 +176,7 @@ namespace brick {
        * coordinate) at which the optical axis intersects the image
        * plane.
        */
-      FloatType
+      FloatType const&
       getCenterU() const {return m_centerU;}
           
 
@@ -188,7 +188,7 @@ namespace brick {
        * coordinate) at which the optical axis intersects the image
        * plane.
        */
-      FloatType
+      FloatType const&
       getCenterV() const {return m_centerV;}
           
 
@@ -201,7 +201,7 @@ namespace brick {
        * @return The return value is the originally specified focal
        * length, or 1.0 if no focal length was specified.
        */
-      FloatType
+      FloatType const&
       getFocalLength() const {return m_focalLength;}
           
 
@@ -212,7 +212,7 @@ namespace brick {
        * @return The return value is the originally specified focal
        * length, measured in units of pixel width.
        */
-      FloatType
+      FloatType const&
       getFocalLengthX() const {return this->getKx();}
           
 
@@ -223,7 +223,7 @@ namespace brick {
        * @return The return value is the originally specified focal
        * length, measured in units of pixel height.
        */
-      FloatType
+      FloatType const&
       getFocalLengthY() const {return this->getKy();}
           
 
@@ -255,7 +255,7 @@ namespace brick {
        * 
        * @return The return value is focalLength / xPixelSize.
        */
-      FloatType
+      FloatType const&
       getKx() const {return m_kX;}
           
 
@@ -265,7 +265,7 @@ namespace brick {
        * 
        * @return The return value is focalLength / yPixelSize.
        */
-      FloatType
+      FloatType const&
       getKy() const {return m_kY;}
           
 
@@ -395,7 +395,7 @@ namespace brick {
        * @param centerU The U coordinate of the center of projection.
        */
       virtual void
-      setCenterU(FloatType centerU) {m_centerU = centerU;}
+      setCenterU(FloatType const& centerU) {m_centerU = centerU;}
 
       
       /** 
@@ -406,7 +406,7 @@ namespace brick {
        * @param centerV The V coordinate of the center of projection.
        */
       virtual void
-      setCenterV(FloatType centerV) {m_centerV = centerV;}
+      setCenterV(FloatType const& centerV) {m_centerV = centerV;}
 
       
       /** 
@@ -419,7 +419,7 @@ namespace brick {
        * pixel width.
        */
       virtual void
-      setFocalLengthX(FloatType focalLengthX) {m_kX = focalLengthX;}
+      setFocalLengthX(FloatType const& focalLengthX) {m_kX = focalLengthX;}
 
       
       /** 
@@ -432,7 +432,7 @@ namespace brick {
        * pixel height.
        */
       virtual void
-      setFocalLengthY(FloatType focalLengthY) {m_kY = focalLengthY;}
+      setFocalLengthY(FloatType const& focalLengthY) {m_kY = focalLengthY;}
 
       
       /** 

@@ -227,7 +227,31 @@ namespace brick {
       getNominalFreeParameters() const;
       
 
-      // TBD(xxx)
+      /** 
+       * Returns a vector of all continuous parameters of the
+       * class. Note that image dimensions (in pixels) are not
+       * included in this vector.  The parameters (in order) are:
+       * 
+       * @verbatim
+       *   // Pinhole parameters
+       *   - FocalLengthX
+       *   - FocalLengthY
+       *   - CenterU
+       *   - CenterV
+       *
+       *   // Distortion coefficients.
+       *   - RadialCoefficient0
+       *   - RadialCoefficient1
+       *   - RadialCoefficient2
+       *   - RadialCoefficient3
+       *   - RadialCoefficient4
+       *   - RadialCoefficient5
+       *   - TangentialCoefficient0
+       *   - TangentialCoefficient1
+       * @endverbatim
+       * 
+       * @return The return value is the parameter vector described above.
+       */
       virtual typename CameraIntrinsicsRational<FloatType>::ParameterVectorType
       getParameters() const;
       
@@ -415,7 +439,30 @@ namespace brick {
         const& parameterVector);
 
 
-      // TBD(xxx)
+      /** 
+       * Sets the internal state of *this based on a parameter vector,
+       * such as the one described in member function getParameters().
+       * Note that image dimensions (in pixels) are not included in
+       * this vector.
+       *
+       * @verbatim
+       *   // Pinhole parameters
+       *   - FocalLengthX
+       *   - FocalLengthY
+       *   - CenterU
+       *   - CenterV
+       *
+       *   // Distortion coefficients.
+       *   - RadialCoefficient0
+       *   - RadialCoefficient1
+       *   - RadialCoefficient2
+       *   - RadialCoefficient3
+       *   - RadialCoefficient4
+       *   - RadialCoefficient5
+       *   - TangentialCoefficient0
+       *   - TangentialCoefficient1
+       * @endverbatim
+       */
       virtual void
       setParameters(
         typename CameraIntrinsicsRational<FloatType>::ParameterVectorType

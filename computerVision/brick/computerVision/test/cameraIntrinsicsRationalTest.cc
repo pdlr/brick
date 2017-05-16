@@ -10,6 +10,8 @@
 ***************************************************************************
 **/
 
+#include <brick/numeric/differentiableScalar.hh>
+
 #include <brick/common/functional.hh>
 #include <brick/computerVision/cameraIntrinsicsRational.hh>
 #include <brick/optimization/gradientFunction.hh>
@@ -43,6 +45,7 @@ public:
   void testReverseProject();
   void testReverseProjectEM();
   void testStreamOperators();
+  void testReverseProjectWithJacobian();
   
 private:
 
@@ -56,6 +59,7 @@ private:
   double m_gradientTolerance;
   double m_reconstructionTolerance;
   double m_reverseProjectionTolerance;
+  double m_reverseProjectionGradTolerance;
 
   const unsigned int m_numPixelsX;
   const unsigned int m_numPixelsY;
@@ -84,6 +88,7 @@ CameraIntrinsicsRationalTest()
     // xxx
     m_reconstructionTolerance(1.0E-12),
     m_reverseProjectionTolerance(1.0E-4),
+    m_reverseProjectionGradTolerance(1.0E-2),
     m_numPixelsX(320),
     m_numPixelsY(240),
     m_focalLengthX(30.0),
@@ -107,6 +112,7 @@ CameraIntrinsicsRationalTest()
   BRICK_TEST_REGISTER_MEMBER(testReverseProject);
   BRICK_TEST_REGISTER_MEMBER(testReverseProjectEM);
   BRICK_TEST_REGISTER_MEMBER(testStreamOperators);
+  BRICK_TEST_REGISTER_MEMBER(testReverseProjectWithJacobian);
 }
 
 
@@ -398,6 +404,135 @@ testStreamOperators()
     BRICK_TEST_ASSERT(approximatelyEqual(testCoefficients[ii],
                                          referenceCoefficients[ii],
                                          m_reconstructionTolerance));
+  }
+}
+
+
+void
+CameraIntrinsicsRationalTest::
+testReverseProjectWithJacobian()
+{
+  // We test by round trip against convertWorldPointToPixel(), which
+  // has its own independent test.
+  double constexpr epsilon = 1.0E-8;
+  double constexpr requiredPrecision = 10E-10;
+  std::size_t constexpr maximumIterations = 150;
+
+  // 4 pinhole parameters + 8 distortion parameters + 2 image coordinates
+  std::size_t constexpr numParameters = 14; 
+  
+  Vector2D<double> const uEpsilon(epsilon, 0.0);
+  Vector2D<double> const vEpsilon(0.0, epsilon);
+
+  // Arbitrary camera params.
+  CameraIntrinsicsRational<double> intrinsics =
+    this->getIntrinsicsInstanceMild();
+
+  for(double vCoord = 0.0; vCoord < m_numPixelsY; vCoord += 10.2) {
+    for(double uCoord = 0.0; uCoord < m_numPixelsX; uCoord += 10.2) {
+      Vector2D<double> imagePoint(uCoord, vCoord);
+      Vector2D<double> rectifiedPoint;
+      Array2D<double> jacobian;
+      bool success = reverseProjectWithJacobian(
+        rectifiedPoint, jacobian,
+        imagePoint, intrinsics, requiredPrecision, maximumIterations);
+
+      BRICK_TEST_ASSERT(success);
+      BRICK_TEST_ASSERT(jacobian.rows() == 2);
+      BRICK_TEST_ASSERT(jacobian.columns() == numParameters);
+
+      // OK, the reverse projection appears to have gone OK.  Get
+      // some ground truth to compare with.  Bear in mind that
+      // reverseProjectEM() is independently tested.
+      Ray3D<double> ray = intrinsics.reverseProjectEM(
+        imagePoint, true, requiredPrecision, maximumIterations);
+      Vector2D<double> rectifiedPointGT(
+        ray.getDirectionVector().x() / ray.getDirectionVector().z(),
+        ray.getDirectionVector().y() / ray.getDirectionVector().z());
+
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(rectifiedPoint.x(), rectifiedPointGT.x(),
+                           m_reverseProjectionTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(rectifiedPoint.y(), rectifiedPointGT.y(),
+                           m_reverseProjectionTolerance));
+      
+      // Fill out most of the ground truth jacobian.
+      Array1D<double> parameterVector = intrinsics.getParameters();
+      Array2D<double> jacobianGT(2, numParameters);
+
+      for(std::size_t ii = 0; ii < parameterVector.size(); ++ii) {
+        Array1D<double> parameterVectorPlus = parameterVector.copy();
+        Array1D<double> parameterVectorMinus = parameterVector.copy();
+        parameterVectorPlus[ii] += epsilon;
+        parameterVectorMinus[ii] -= epsilon;
+
+        intrinsics.setParameters(parameterVectorPlus);
+        Ray3D<double> rayPlus = intrinsics.reverseProjectEM(
+          imagePoint, true, requiredPrecision, maximumIterations);
+
+        intrinsics.setParameters(parameterVectorMinus);
+        Ray3D<double> rayMinus = intrinsics.reverseProjectEM(
+          imagePoint, true, requiredPrecision, maximumIterations);
+        
+        Vector2D<double> rectifiedPointPlus(
+          rayPlus.getDirectionVector().x() / rayPlus.getDirectionVector().z(),
+          rayPlus.getDirectionVector().y() / rayPlus.getDirectionVector().z());
+        Vector2D<double> rectifiedPointMinus(
+          rayMinus.getDirectionVector().x() / rayMinus.getDirectionVector().z(),
+          rayMinus.getDirectionVector().y() / rayMinus.getDirectionVector().z()
+          );
+        jacobianGT(0, ii) =
+          (rectifiedPointPlus.x() - rectifiedPointMinus.x()) / (2.0 * epsilon);
+        jacobianGT(1, ii) =
+          (rectifiedPointPlus.y() - rectifiedPointMinus.y()) / (2.0 * epsilon);
+      }
+      
+      // Final two columns of the ground truth jacobian.
+      Ray3D<double> rayPlus = intrinsics.reverseProjectEM(
+        imagePoint + uEpsilon, true, 150);
+      Ray3D<double> rayMinus = intrinsics.reverseProjectEM(
+        imagePoint - uEpsilon, true, 150);
+      Vector2D<double> rectifiedPointPlus(
+        rayPlus.getDirectionVector().x() / rayPlus.getDirectionVector().z(),
+        rayPlus.getDirectionVector().y() / rayPlus.getDirectionVector().z());
+      Vector2D<double> rectifiedPointMinus(
+        rayMinus.getDirectionVector().x() / rayMinus.getDirectionVector().z(),
+        rayMinus.getDirectionVector().y() / rayMinus.getDirectionVector().z());
+      jacobianGT(0, numParameters - 2) =
+        (rectifiedPointPlus.x() - rectifiedPointMinus.x()) / (2.0 * epsilon);
+      jacobianGT(1, numParameters - 2) =
+        (rectifiedPointPlus.y() - rectifiedPointMinus.y()) / (2.0 * epsilon);
+
+      // Final column of the ground truth jacobian.
+      rayPlus = intrinsics.reverseProjectEM(
+        imagePoint + vEpsilon, true, 150);
+      rayMinus = intrinsics.reverseProjectEM(
+        imagePoint - vEpsilon, true, 150);
+      rectifiedPointPlus.setValue(
+        rayPlus.getDirectionVector().x() / rayPlus.getDirectionVector().z(),
+        rayPlus.getDirectionVector().y() / rayPlus.getDirectionVector().z());
+      rectifiedPointMinus.setValue(
+        rayMinus.getDirectionVector().x() / rayMinus.getDirectionVector().z(),
+        rayMinus.getDirectionVector().y() / rayMinus.getDirectionVector().z());
+      jacobianGT(0, numParameters - 1) =
+        (rectifiedPointPlus.x() - rectifiedPointMinus.x()) / (2.0 * epsilon);
+      jacobianGT(1, numParameters - 1) =
+        (rectifiedPointPlus.y() - rectifiedPointMinus.y()) / (2.0 * epsilon);
+
+      BRICK_TEST_ASSERT(jacobian.rows() == jacobianGT.rows());
+      BRICK_TEST_ASSERT(jacobian.columns() == jacobianGT.columns());
+      for(std::size_t row = 0; row < jacobian.rows(); ++row) {
+        for(std::size_t column = 0; column < jacobian.columns(); ++column) {
+          double threshold = std::max(m_reverseProjectionGradTolerance,
+                                      (std::fabs(jacobianGT(row, column))
+                                       * m_reverseProjectionGradTolerance));;
+          BRICK_TEST_ASSERT(
+            approximatelyEqual(jacobian(row, column), jacobianGT(row, column),
+                               threshold));
+        }
+      }
+    }
   }
 }
 

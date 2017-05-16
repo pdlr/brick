@@ -23,6 +23,7 @@
 #include <brick/common/expect.hh>
 #include <brick/common/types.hh>
 #include <brick/computerVision/cameraIntrinsicsRational.hh>
+#include <brick/numeric/differentiableScalar.hh>
 #include <brick/optimization/optimizerBFGS.hh>
 #include <brick/optimization/optimizerNelderMead.hh>
 
@@ -126,7 +127,37 @@ namespace brick {
       return result;
     }
       
-      
+
+      // TBD(xxx)
+    template <class FloatType>
+    typename CameraIntrinsicsRational<FloatType>::ParameterVectorType
+    CameraIntrinsicsRational<FloatType>::
+    getParameters() const
+    {
+      brick::common::UInt32 const numParameters = 4 + 8;
+      typename CameraIntrinsicsRational<FloatType>::ParameterVectorType
+        result(numParameters);
+      unsigned int resultIndex = 0;
+      result[resultIndex] = this->getFocalLengthX(); ++resultIndex;
+      result[resultIndex] = this->getFocalLengthY(); ++resultIndex;
+      result[resultIndex] = this->getCenterU(); ++resultIndex;
+      result[resultIndex] = this->getCenterV(); ++resultIndex;
+      result[resultIndex] = m_radialCoefficient0; ++resultIndex;
+      result[resultIndex] = m_radialCoefficient1; ++resultIndex;
+      result[resultIndex] = m_radialCoefficient2; ++resultIndex;
+      result[resultIndex] = m_radialCoefficient3; ++resultIndex;
+      result[resultIndex] = m_radialCoefficient4; ++resultIndex;
+      result[resultIndex] = m_radialCoefficient5; ++resultIndex;
+      result[resultIndex] = m_tangentialCoefficient0; ++resultIndex;
+      result[resultIndex] = m_tangentialCoefficient1; ++resultIndex;
+      if(resultIndex != numParameters) {
+        BRICK_THROW(brick::common::LogicException,
+                    "CameraIntrinsicsRational::getFreeParameters()",
+                    "Wrong number of parameters.");
+      }
+      return result;        
+    }
+    
     // This member function takes a point in 3D camera coordinates
     // and projects it into pixel coordinates.
     template <class FloatType>
@@ -336,6 +367,30 @@ namespace brick {
       m_tangentialCoefficient1 = parameterVector[ii]; ++ii;
     }
 
+
+    // TBD(xxx)
+    template <class FloatType>
+    void
+    CameraIntrinsicsRational<FloatType>::
+    setParameters(
+      typename CameraIntrinsicsRational<FloatType>::ParameterVectorType
+      const& parameterVector)
+    {
+      unsigned int ii = 0;
+      this->setFocalLengthX(parameterVector[ii]); ++ii;
+      this->setFocalLengthY(parameterVector[ii]); ++ii;
+      this->setCenterU(parameterVector[ii]); ++ii;
+      this->setCenterV(parameterVector[ii]); ++ii;
+      m_radialCoefficient0 = parameterVector[ii]; ++ii;
+      m_radialCoefficient1 = parameterVector[ii]; ++ii;
+      m_radialCoefficient2 = parameterVector[ii]; ++ii;
+      m_radialCoefficient3 = parameterVector[ii]; ++ii;
+      m_radialCoefficient4 = parameterVector[ii]; ++ii;
+      m_radialCoefficient5 = parameterVector[ii]; ++ii;
+      m_tangentialCoefficient0 = parameterVector[ii]; ++ii;
+      m_tangentialCoefficient1 = parameterVector[ii]; ++ii;
+    }
+    
     
     // This member function writes the calibration to an
     // outputstream in a format that is compatible with member
@@ -381,6 +436,106 @@ namespace brick {
                                   FloatType& dUdY,
                                   FloatType& dVdX,
                                   FloatType& dVdY) const
+    {
+      // First handle distortion.
+      FloatType xDistorted;
+      FloatType yDistorted;
+      FloatType dXDdX;
+      FloatType dXDdY;
+      FloatType dYDdX;
+      FloatType dYDdY;
+      this->projectThroughDistortionWithPartialDerivatives(
+        xNorm, yNorm, xDistorted, yDistorted, dXDdX, dXDdY, dYDdX, dYDdY);
+
+      // Next handle pinhole projection.
+      FloatType kX = this->getFocalLengthX();
+      FloatType kY = this->getFocalLengthY();
+      uValue = kX * xDistorted + this->getCenterU();
+      vValue = kY * yDistorted + this->getCenterV();
+      dUdX = kX * dXDdX;
+      dUdY = kX * dXDdY;
+      dVdX = kY * dYDdX;
+      dVdY = kY * dYDdY;
+    }
+    
+    
+    
+    // This member function takes a 2D point in the Z==1 plane of
+    // camera coordinates, and returns an "distorted" version of
+    // that 2D point.
+    template <class FloatType>
+    inline brick::numeric::Vector2D<FloatType>
+    CameraIntrinsicsRational<FloatType>::
+    projectThroughDistortion(const brick::numeric::Vector2D<FloatType>& point)
+      const
+    {
+      FloatType xSquared = point.x() * point.x();
+      FloatType ySquared = point.y() * point.y();
+      FloatType rSquared = xSquared + ySquared;
+      FloatType rFourth = rSquared * rSquared;
+      FloatType rSixth = rSquared * rFourth;
+    
+      // Compute radial distortion terms.
+      FloatType radialDistortionNumerator =
+        (1.0 + m_radialCoefficient0 * rSquared
+         + m_radialCoefficient1 * rFourth
+         + m_radialCoefficient2 * rSixth);
+      FloatType radialDistortionDenominator = 
+        (1.0 + m_radialCoefficient3 * rSquared
+         + m_radialCoefficient4 * rFourth
+         + m_radialCoefficient5 * rSixth);
+      FloatType radialDistortion =
+        radialDistortionNumerator / radialDistortionDenominator;
+
+      // Compute tangential distortion.
+      FloatType crossTerm = point.x() * point.y();
+      brick::numeric::Vector2D<FloatType> tangentialDistortion(
+        (2.0 * m_tangentialCoefficient0 * crossTerm
+         + m_tangentialCoefficient1 * (rSquared + 2.0 * xSquared)),
+        (m_tangentialCoefficient0 * (rSquared + 2.0 * ySquared)
+         + 2.0 * m_tangentialCoefficient1 * crossTerm));
+    
+      // Apply distortion and return.
+      return brick::numeric::Vector2D<FloatType> (
+        radialDistortion * point + tangentialDistortion);
+    }
+
+    
+    template <class FloatType>
+    inline brick::numeric::Vector3D<FloatType>
+    CameraIntrinsicsRational<FloatType>::
+    projectThroughDistortion(const brick::numeric::Vector3D<FloatType>& point)
+      const
+    {
+      // The if clause here is to avoid Vector2D throwing an exception
+      // if point.z() == 0.
+      brick::numeric::Vector3D<FloatType> result;
+      if(point.z() != static_cast<FloatType>(0.0)) {
+        brick::numeric::Vector2D<FloatType> normalizedPoint;
+        normalizedPoint.setValue(point.x(), point.y(), point.z());
+        brick::numeric::Vector2D<FloatType> distortedPoint =
+          this->projectThroughDistortion(normalizedPoint);
+        result.setValue(distortedPoint.x(), distortedPoint.y(), 1.0);
+      }
+      return result;
+    }
+
+
+    // This member function takes a 2D point in the Z==1 plane of
+    // camera coordinates, and returns an "distorted" version of
+    // that 2D point.
+    template <class FloatType>
+    void
+    CameraIntrinsicsRational<FloatType>::
+    projectThroughDistortionWithPartialDerivatives(
+      FloatType xNorm,
+      FloatType yNorm,
+      FloatType& xDistorted,
+      FloatType& yDistorted,
+      FloatType& dXDdX,
+      FloatType& dXDdY,
+      FloatType& dYDdX,
+      FloatType& dYDdY) const
     {
       FloatType xSquared = xNorm * xNorm;
       FloatType ySquared = yNorm * yNorm;
@@ -460,75 +615,175 @@ namespace brick {
         (m_tangentialCoefficient0 * (dRSquaredDY + 4.0 * yNorm)
          + 2.0 * m_tangentialCoefficient1 * dCrossTermDY);
 
-      // Apply distortion, then project into pixel coordinates.
-      brick::numeric::Vector2D<FloatType> distortedPoint(
-        radialDistortion * xNorm + tangentialDistortion.x(),
-        radialDistortion * yNorm + tangentialDistortion.y());
+      // Apply distortion.
+      xDistorted = radialDistortion * xNorm + tangentialDistortion.x();
+      yDistorted = radialDistortion * yNorm + tangentialDistortion.y();
 
-      FloatType dDistortedXDX =
-        dRadialDistortionDX * xNorm + radialDistortion + dTangXDX;
-      FloatType dDistortedXDY = dRadialDistortionDY * xNorm + dTangXDY;
-      FloatType dDistortedYDX = dRadialDistortionDX * yNorm + dTangYDX;
-      FloatType dDistortedYDY =
-        dRadialDistortionDY * yNorm + radialDistortion + dTangYDY;
-
-      FloatType kX = this->getFocalLengthX();
-      FloatType kY = this->getFocalLengthY();
-
-      uValue = kX * distortedPoint.x() + this->getCenterU();
-      vValue = kY * distortedPoint.y() + this->getCenterV();
-      dUdX = kX * dDistortedXDX;
-      dUdY = kX * dDistortedXDY;
-      dVdX = kY * dDistortedYDX;
-      dVdY = kY * dDistortedYDY;
+      dXDdX = dRadialDistortionDX * xNorm + radialDistortion + dTangXDX;
+      dXDdY = dRadialDistortionDY * xNorm + dTangXDY;
+      dYDdX = dRadialDistortionDX * yNorm + dTangYDX;
+      dYDdY = dRadialDistortionDY * yNorm + radialDistortion + dTangYDY;
     }
-    
-    
-    
-    template <class FloatType>
-    inline brick::numeric::Vector3D<FloatType>
-    CameraIntrinsicsRational<FloatType>::
-    projectThroughDistortion(const brick::numeric::Vector3D<FloatType>& point)
-      const
-    {
-      // The if clause here is to avoid Vector2D throwing an exception
-      // if point.z() == 0.
-      brick::numeric::Vector2D<FloatType> normalizedPoint;
-      if(point.z() != static_cast<FloatType>(0.0)) {
-        normalizedPoint.setValue(point.x(), point.y(), point.z());
-      }
-    
-      FloatType xSquared = normalizedPoint.x() * normalizedPoint.x();
-      FloatType ySquared = normalizedPoint.y() * normalizedPoint.y();
-      FloatType rSquared = xSquared + ySquared;
-      FloatType rFourth = rSquared * rSquared;
-      FloatType rSixth = rSquared * rFourth;
-    
-      // Compute radial distortion terms.
-      FloatType radialDistortionNumerator =
-        (1.0 + m_radialCoefficient0 * rSquared
-         + m_radialCoefficient1 * rFourth
-         + m_radialCoefficient2 * rSixth);
-      FloatType radialDistortionDenominator = 
-        (1.0 + m_radialCoefficient3 * rSquared
-         + m_radialCoefficient4 * rFourth
-         + m_radialCoefficient5 * rSixth);
-      FloatType radialDistortion =
-        radialDistortionNumerator / radialDistortionDenominator;
 
-      // Compute tangential distortion.
-      FloatType crossTerm = normalizedPoint.x() * normalizedPoint.y();
-      brick::numeric::Vector2D<FloatType> tangentialDistortion(
-        (2.0 * m_tangentialCoefficient0 * crossTerm
-         + m_tangentialCoefficient1 * (rSquared + 2.0 * xSquared)),
-        (m_tangentialCoefficient0 * (rSquared + 2.0 * ySquared)
-         + 2.0 * m_tangentialCoefficient1 * crossTerm));
-    
-      // Apply distortion and return.
-      brick::numeric::Vector2D<FloatType> distortedPoint(
-        radialDistortion * normalizedPoint + tangentialDistortion);
-      return brick::numeric::Vector3D<FloatType>(
-        distortedPoint.x(), distortedPoint.y(), 1.0);
+
+    template <class FloatType>
+    bool
+    reverseProjectWithJacobian(
+      brick::numeric::Vector2D<FloatType>& rectifiedPoint,
+      brick::numeric::Array2D<FloatType>& jacobian,
+      brick::numeric::Vector2D<FloatType> imagePoint,
+      CameraIntrinsicsRational<FloatType> intrinsics,
+      FloatType requiredPrecision,
+      std::size_t maximumIterations)
+    {
+      // Number of parameters is 4 pinhole parameters + 8 distortion
+      // parameters + 2 image coordinates == 14.
+      std::size_t constexpr numParameters = 14;
+
+      typedef brick::numeric::DifferentiableScalar<FloatType, numParameters>
+        DiffScalar;
+      typedef CameraIntrinsicsRational<DiffScalar> DiffIntrinsics;
+
+      // Make a CameraIntrinsics instance that matches intrinsics, but
+      // has machinery for doing automatic differentiation.
+      typename CameraIntrinsicsRational<FloatType>::ParameterVectorType
+        parameters = intrinsics.getParameters();
+      typename DiffIntrinsics::ParameterVectorType diffParameters(
+        parameters.size());
+      for(std::size_t ii = 0; ii < parameters.size(); ++ii) {
+        diffParameters[ii].setValue(parameters[ii]);
+        diffParameters[ii].setPartialDerivative(ii, FloatType(1.0));
+      }
+      DiffIntrinsics diffIntrinsics;
+      diffIntrinsics.setNumPixelsX(intrinsics.getNumPixelsX());
+      diffIntrinsics.setNumPixelsY(intrinsics.getNumPixelsY());
+      diffIntrinsics.setParameters(diffParameters);
+
+      // Start by reverse-projecting through the pinhole parameters,
+      // tracking derivatives, but leaving the distortion model for
+      // later.
+      DiffScalar imageX = imagePoint.x();
+      DiffScalar imageY = imagePoint.y();
+      imageX.setPartialDerivative(numParameters - 2, 1.0);
+      imageY.setPartialDerivative(numParameters - 1, 1.0);
+      DiffScalar distortedX = ((imageX - diffIntrinsics.getCenterU())
+                               / diffIntrinsics.getFocalLengthX());
+      DiffScalar distortedY = ((imageY - diffIntrinsics.getCenterV())
+                               / diffIntrinsics.getFocalLengthY());
+      
+      // Reverse projection is done iteratively, in a way that doesn't
+      // lend itself to automatic differentiation.  Here we do the
+      // reverse projection _without_ derivatives.
+      brick::geometry::Ray3D<FloatType> reprojection =
+        intrinsics.reverseProjectEM(imagePoint, true, requiredPrecision,
+                                    maximumIterations);
+
+      // Now _forward_ project, tracking derivatives.  This should
+      // give us our original image point back, plus a bunch of
+      // jacobian information.  We do something sneaky here... we've
+      // previously used the last two partial derivatives to refer
+      // to partials with respect to the image point U and V.  Here
+      // we reuse those slots to track partials with respect to
+      // rectified X and Y.
+      DiffScalar rectifiedX(reprojection.getDirectionVector().x()/
+                            reprojection.getDirectionVector().z());
+      DiffScalar rectifiedY(reprojection.getDirectionVector().y()/
+                            reprojection.getDirectionVector().z());
+      rectifiedX.setPartialDerivative(numParameters - 2, FloatType(1.0));
+      rectifiedY.setPartialDerivative(numParameters - 1, FloatType(1.0));
+      brick::numeric::Vector2D<DiffScalar> rectifiedVector2D(
+        rectifiedX, rectifiedY);
+      brick::numeric::Vector2D<DiffScalar> distortedPoint =
+        diffIntrinsics.projectThroughDistortion(rectifiedVector2D);
+        
+      // Now that we know the partial derivatives of the forward
+      // projection, Use the inverse function theorem to recover
+      // partials of the rectified point (the point we just found) wrt
+      // the distorted point (the point that came directly from our
+      // input argument (via pinhole parameters)).  Let matrix A be
+      // the jacobian of distorted point x, y wrt rectified point.
+      // Let aij be the element of matrix A at row i, column j.
+      FloatType a00 =
+        distortedPoint.x().getPartialDerivative(numParameters - 2);
+      FloatType a01 =
+        distortedPoint.x().getPartialDerivative(numParameters - 1);
+      FloatType a10 =
+        distortedPoint.y().getPartialDerivative(numParameters - 2);
+      FloatType a11 =
+        distortedPoint.y().getPartialDerivative(numParameters - 1);
+
+      // Here we do a quick cofactor inverse to get the jacobian of
+      // the rectified point with respect to the distorted point.
+      FloatType determinant = a00 * a11 - a01 * a10;
+      if(determinant < std::numeric_limits<FloatType>::epsilon()) {
+        return false;
+      }
+      FloatType b00 = a11 / determinant;
+      FloatType b01 = -a01 / determinant;
+      FloatType b10 = -a10 / determinant;
+      FloatType b11 = a00 / determinant;
+      
+      // Now we use this jacobian to propagate all our other partial
+      // derivatives (including those we got from the forward
+      // projection) through the reverse projection.
+      brick::numeric::Array2D<FloatType> dRectdDist(2, 2);
+      dRectdDist(0, 0) = b00;
+      dRectdDist(0, 1) = b01;
+      dRectdDist(1, 0) = b10;
+      dRectdDist(1, 1) = b11;
+
+      // We also need the jacobian of the distorted point wrt all of
+      // our parameters.  We allocate space for this here.
+      brick::numeric::Array2D<FloatType> dDistdParams(2, numParameters);
+      
+      // The first four columns describe derivatives with respect to
+      // pinhole parameters.  For these parameters, the jacobian we're
+      // after is a straightforward composition of [the partial
+      // derivative of the distorted point wrt parameters] and [the
+      // partial derivative of rectified point wrt distorted point].
+      // Accordingly, we copy partials of the distorted point directly
+      // into dDistdParams, where it will be multiplied with
+      // dRectdDist, below.
+      std::size_t ii = 0;
+      while(ii < 4) {
+        dDistdParams(0, ii) = distortedX.getPartialDerivative(ii);
+        dDistdParams(1, ii) = distortedY.getPartialDerivative(ii);
+        ++ii;
+      }
+
+      // The next 8 columns describe derivatives wrt distortion
+      // parameters.  There's a little cheat here... we negate the
+      // partial derivatives we copy into dDistdParams.  This is
+      // because the partials reported by distortedPoint describe the
+      // same function as dRectdDist.  Here's one way to think about it:
+      //   - Consider a differential change to distorted coordinates due
+      //     to differential changes in distortion parameters.
+      //   - We're looking for the change in rectified coordinates that
+      //     exactly cancels this change.
+      //   - Following this through, we're looking for the negative of the
+      //     composition of the partials from distortedPoint and the
+      //     partials in dRectdDist.  We make this happen by including a
+      //     factor of -1 here.
+      while(ii < (numParameters - 2)) {
+        dDistdParams(0, ii) = -distortedPoint.x().getPartialDerivative(ii);
+        dDistdParams(1, ii) = -distortedPoint.y().getPartialDerivative(ii);
+        ++ii;
+      }
+
+      // The last two columns describe derivatives with respect to the
+      // input image point, and are reflected in our original reverse
+      // projection through pinhole parameters.
+      while(ii < numParameters) {
+        dDistdParams(0, ii) = distortedX.getPartialDerivative(ii);
+        dDistdParams(1, ii) = distortedY.getPartialDerivative(ii);
+        ++ii;
+      }
+
+      jacobian = brick::numeric::matrixMultiply<FloatType>(
+        dRectdDist, dDistdParams);
+      rectifiedPoint.setValue(rectifiedX.getValue(), rectifiedY.getValue());
+
+      return true;
     }
     
   } // namespace computerVision

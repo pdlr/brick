@@ -14,6 +14,8 @@
 #ifndef BRICK_NUMERIC_NUMERICTRAITS_HH
 #define BRICK_NUMERIC_NUMERICTRAITS_HH
 
+#include <limits>
+
 #include <brick/common/exception.hh>
 #include <brick/common/types.hh>
 
@@ -51,15 +53,14 @@ namespace brick {
       typedef Type0 SumType;
     };
 
-      
+
     /**
-     ** This class template allows generic numerical code to be
-     ** written by providing information about the numeric type of its
-     ** template argument.  It is specialized explicitly for several
-     ** numeric types below.
+     ** This is a base class for NumericTraits, and should generally
+     ** not be used directly in client code.
      **/
     template <class Type>
-    struct NumericTraits {
+    struct NumericTraitsBase {
+
       /**
        * This typedef is used to control the way arrays of Type are
        * printed by operator<<().  For example, when a char is
@@ -81,6 +82,19 @@ namespace brick {
 
 
       /** 
+       * Returns the a very small number, the positive difference
+       * between 1 and the next biggest representable value.  Use this
+       * in place of FLT_EPSILON, DBL_EPSILON, etc.
+       * 
+       * @return The return value is the epsilon value.
+       */
+      static inline Type
+      epsilon() {
+        return std::numeric_limits<Type>::epsilon();
+      }
+      
+
+      /** 
        * This member function indicates whether the specified type is an
        * integer type or not.  It is not implemented for the general case,
        * so NumericTraits must be specialized for every class which requires
@@ -90,7 +104,7 @@ namespace brick {
        * type, false other wise.  The general version of this function just
        * throws and exception.
        */
-      inline bool
+      static inline bool
       isIntegral() {
         BRICK_THROW(common::NotImplementedException,
                     "NumericTraits::isIntegral()",
@@ -98,7 +112,19 @@ namespace brick {
                     "specialized for each type.");
         return true; // Appease the compiler.
       }
-      
+
+    };
+    
+    /**
+     ** This class template allows generic numerical code to be
+     ** written by providing information about the numeric type of its
+     ** template argument.  It is specialized explicitly for several
+     ** numeric types below.
+     **/
+    template <class Type>
+    struct NumericTraits : public NumericTraitsBase<Type> {
+      // Specializations will override inherited members from
+      // NumericTraitsBase.  See specializations below for examples.
     };
 
 
@@ -173,76 +199,87 @@ namespace brick {
     };
     
     
-    // == Specializations of ArithmeticTriats == 
+    // == Specializations of NumericTriats == 
 
     template <>
-    struct NumericTraits<char> {
-    public:
+    struct NumericTraits<char>
+      : public NumericTraitsBase<char>
+    {
       typedef int TextOutputType;
-      inline bool isIntegral() {return true;}
+      static inline bool isIntegral() {return true;}
     };
 
     
     template <>
-    struct NumericTraits<unsigned char> {
+    struct NumericTraits<unsigned char>
+      : public NumericTraitsBase<unsigned char>
+    {
       typedef unsigned int TextOutputType;
-      inline bool isIntegral() {return true;}
+      static inline bool isIntegral() {return true;}
     };
 
   
     template <>
-    struct NumericTraits<common::Int16> {
-      typedef common::Int16 TextOutputType;
-      inline bool isIntegral() {return true;}
+    struct NumericTraits<common::Int16>
+      : public NumericTraitsBase<common::Int16>
+    {
+      static inline bool isIntegral() {return true;}
     };
 
 
     template <>
-    struct NumericTraits<common::UnsignedInt16> {
-      typedef common::UnsignedInt16 TextOutputType;
-      inline bool isIntegral() {return true;}
+    struct NumericTraits<common::UnsignedInt16>
+      : public NumericTraitsBase<common::UnsignedInt16>
+    {
+      static inline bool isIntegral() {return true;}
     };
 
 
     template <>
-    struct NumericTraits<common::Int32> {
-      typedef common::Int32 TextOutputType;
-      inline bool isIntegral() {return true;}
+    struct NumericTraits<common::Int32>
+      : public NumericTraitsBase<common::Int32>
+    {
+      static inline bool isIntegral() {return true;}
     };
 
 
     template <>
-    struct NumericTraits<common::UnsignedInt32> {
-      typedef common::UnsignedInt32 TextOutputType;
-      inline bool isIntegral() {return true;}
+    struct NumericTraits<common::UnsignedInt32>
+      : public NumericTraitsBase<common::UnsignedInt32>
+    {
+      static inline bool isIntegral() {return true;}
     };
 
 
     template <>
-    struct NumericTraits<common::Int64> {
-      typedef common::Int64 TextOutputType;
-      inline bool isIntegral() {return true;}
+    struct NumericTraits<common::Int64>
+      : public NumericTraitsBase<common::Int64>
+    {
+      static inline bool isIntegral() {return true;}
     };
 
 
     template <>
-    struct NumericTraits<common::UnsignedInt64> {
-      typedef common::UnsignedInt64 TextOutputType;
-      inline bool isIntegral() {return true;}
+    struct NumericTraits<common::UnsignedInt64>
+      : public NumericTraitsBase<common::UnsignedInt64>
+    {
+      static inline bool isIntegral() {return true;}
     };
 
 
     template <>
-    struct NumericTraits<common::Float32> {
-      typedef common::Float32 TextOutputType;
-      inline bool isIntegral() {return false;}
+    struct NumericTraits<common::Float32>
+      : public NumericTraitsBase<common::Float32>
+    {
+      static inline bool isIntegral() {return false;}
     };
 
 
     template <>
-    struct NumericTraits<common::Float64> {
-      typedef common::Float64 TextOutputType;
-      inline bool isIntegral() {return false;}
+    struct NumericTraits<common::Float64>
+      : public NumericTraitsBase<common::Float64>
+    {
+      static inline bool isIntegral() {return false;}
     };
 
   } // namespace numeric

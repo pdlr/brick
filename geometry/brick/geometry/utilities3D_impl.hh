@@ -24,11 +24,49 @@
 #include <brick/common/types.hh>
 #include <brick/linearAlgebra/linearAlgebra.hh>
 #include <brick/numeric/array2D.hh>
+#include <brick/numeric/numericTraits.hh>
+#include <brick/numeric/mathFunctions.hh>
 #include <brick/numeric/utilities.hh>
 
 namespace brick {
 
   namespace geometry {
+
+    namespace privateCode {
+
+      template <class FloatType>
+      brick::numeric::Array2D<FloatType>
+      pseudoinverse(brick::numeric::Array2D<FloatType> const& A)
+      {
+        brick::numeric::Array2D<FloatType> ATranspose = A.transpose();
+        brick::numeric::Array2D<FloatType> ATA =
+          brick::numeric::matrixMultiply<FloatType>(ATranspose, A);
+        if(ATA.rows() != 2 || ATA.columns() != 2) {
+          BRICK_THROW(brick::common::NotImplementedException,
+                      "geometry::privateCode::psuedoInverse()",
+                      "Currently only matrices of rank 2 are supported.");
+        }
+
+        // Use cofactor inverse, rather than lapack, because it
+        // generalizes to more floating point types.
+        FloatType determinant = ATA(0, 0) * ATA(1, 1) - ATA(0, 1) * ATA(1, 0);
+        if(brick::numeric::absoluteValue(determinant)
+           < brick::numeric::NumericTraits<FloatType>::epsilon()) {
+          
+          BRICK_THROW(brick::common::ValueException,
+                      "geometry::privateCode::psuedoInverse()",
+                      "Matrix is not full rank");
+        }
+        
+        brick::numeric::Array2D<FloatType> ATAInv(2, 2);
+        ATAInv(0, 0) = ATA(1, 1) / determinant;
+        ATAInv(0, 1) = -(ATA(0, 1) / determinant);
+        ATAInv(1, 0) = -(ATA(1, 0) / determinant);
+        ATAInv(1, 1) = ATA(0, 0) / determinant;
+        return brick::numeric::matrixMultiply<FloatType>(ATAInv, ATranspose);
+      }
+      
+    } // namespace privateCode
 
 
     template <class Type>
@@ -219,7 +257,7 @@ namespace brick {
 
       brick::numeric::Array2D<Type> APinv;
       try {
-        APinv = linearAlgebra::pseudoinverse(AMatrix);
+        APinv = privateCode::pseudoinverse(AMatrix);
       } catch(brick::common::ValueException ) {
         BRICK_THROW(brick::common::ValueException, "findIntersect()",
                   "Trouble inverting matrix.  "
@@ -235,7 +273,7 @@ namespace brick {
       brick::numeric::Vector3D<Type> point1 =
         ray1.getOrigin() + distance1 * ray1.getDirectionVector();
       residual = brick::numeric::magnitude<Type>(point1 - point0) / 2.0;
-      return 0.5 * (point0 + point1);
+      return Type(0.5) * (point0 + point1);
     }
     
 

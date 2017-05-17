@@ -47,6 +47,9 @@ namespace brick {
       void testGetPartialDerivative();
       void testGetValue();
 
+      // Tests of associated classes.
+      void testNumericTraits();
+      
       // Tests of non-member functions.
       void testOperatorTimes();
       void testOperatorDivide();
@@ -99,6 +102,8 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testGetDerivative);
       BRICK_TEST_REGISTER_MEMBER(testGetPartialDerivative);
       BRICK_TEST_REGISTER_MEMBER(testGetValue);
+
+      BRICK_TEST_REGISTER_MEMBER(testNumericTraits);
       
       BRICK_TEST_REGISTER_MEMBER(testOperatorTimes);
       BRICK_TEST_REGISTER_MEMBER(testOperatorDivide);
@@ -419,6 +424,25 @@ namespace brick {
     DifferentiableScalarTest::
     testGetValue()
     {
+      // Tested above.
+    }
+    
+    
+    void
+    DifferentiableScalarTest::
+    testNumericTraits()
+    {
+      BRICK_TEST_ASSERT(
+        NumericTraits< DifferentiableScalar<int> >::epsilon().getValue()
+        == NumericTraits<int>::epsilon());
+      BRICK_TEST_ASSERT(
+        NumericTraits< DifferentiableScalar<double> >::epsilon().getValue()
+        == NumericTraits<double>::epsilon());
+
+      BRICK_TEST_ASSERT(
+        NumericTraits< DifferentiableScalar<int> >::isIntegral() == true);
+      BRICK_TEST_ASSERT(
+        NumericTraits< DifferentiableScalar<double> >::isIntegral() == false);
       // Tested above.
     }
     

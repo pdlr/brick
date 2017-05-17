@@ -18,6 +18,7 @@
 #include <iostream>
 
 #include <brick/numeric/mathFunctions.hh>
+#include <brick/numeric/numericTraits.hh>
 
 namespace brick {
 
@@ -266,7 +267,23 @@ namespace brick {
       
     };
 
-    
+
+    /* ============  Associated class declarations   ============ */
+
+    template <class Type>
+    struct NumericTraits< DifferentiableScalar<Type> >
+      : public NumericTraitsBase< DifferentiableScalar<Type> > {
+    public:
+
+      static inline DifferentiableScalar<Type>
+      epsilon() {
+        return DifferentiableScalar<Type>(NumericTraits<Type>::epsilon());
+      }
+      
+      static inline bool
+      isIntegral() {return NumericTraits<Type>::isIntegral();}
+    };
+
     /* ============ Non-member function declarations ============ */
 
   

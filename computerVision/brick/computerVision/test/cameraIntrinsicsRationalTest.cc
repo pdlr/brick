@@ -412,8 +412,6 @@ void
 CameraIntrinsicsRationalTest::
 testReverseProjectWithJacobian()
 {
-  // We test by round trip against convertWorldPointToPixel(), which
-  // has its own independent test.
   double constexpr epsilon = 1.0E-8;
   double constexpr requiredPrecision = 10E-10;
   std::size_t constexpr maximumIterations = 150;
@@ -536,6 +534,7 @@ testReverseProjectWithJacobian()
   }
 }
 
+
 CameraIntrinsicsRational<double>
 CameraIntrinsicsRationalTest::
 getIntrinsicsInstance()
@@ -549,6 +548,7 @@ getIntrinsicsInstance()
     m_tangentialCoefficient0, m_tangentialCoefficient1);
   return intrinsics;
 }
+  
 
 CameraIntrinsicsRational<double>
 CameraIntrinsicsRationalTest::

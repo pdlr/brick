@@ -315,10 +315,6 @@ namespace brick {
       projectThroughDistortion(numeric::Vector3D<FloatType> const& point) const;
 
 
-    // This member function takes a 2D point in the Z==1 plane of
-    // camera coordinates, and returns an "distorted" version of
-    // that 2D point.
-
       /** 
        * This member function takes a 2D point in the Z==1 plane of
        * camera coordinates, and returns an "distorted" version of

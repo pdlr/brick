@@ -24,8 +24,6 @@
 #include <brick/common/types.hh>
 #include <brick/computerVision/cameraIntrinsicsRational.hh>
 #include <brick/numeric/differentiableScalar.hh>
-#include <brick/optimization/optimizerBFGS.hh>
-#include <brick/optimization/optimizerNelderMead.hh>
 
 namespace brick {
 
@@ -105,7 +103,7 @@ namespace brick {
       result[resultIndex] = m_tangentialCoefficient1; ++resultIndex;
       if(resultIndex != numParameters) {
         BRICK_THROW(brick::common::LogicException,
-                    "CameraIntrinsicsRational::getFreeParameters()",
+                    "CameraIntrinsicsRational::getDistortionCoefficients()",
                     "Wrong number of parameters.");
       }
       return result;        
@@ -270,7 +268,7 @@ namespace brick {
         requiredPrecision * requiredPrecision;
       
       // First project back through pinhole parameters to get a point
-      // we reverse project through the distortion model.  See
+      // we can reverse project through the distortion model.  See
       // CameraIntrinsicsPinhole::reverseProject() for an explanation
       // of this line.
       brick::numeric::Vector2D<FloatType> x0(
@@ -281,15 +279,14 @@ namespace brick {
       brick::numeric::Vector2D<FloatType> xHat = x0;
       std::size_t ii = 1;
       while(1) {
-        // We have x0 = a(x) * x + b(x).
-        // Approximate as x0 = a(xHat) * x + b(xHat)
+        // We have x0 = a(x) * x + b(x),
+        // where a(x) is radial distortion, and b(x) is tangential distortion.
+        // 
+        // Approximate that as x0 ~= a(xHat) * x + b(xHat)
         // Gives us x ~= (x0 - b(xHat)) / a(xHat)
-        // Iterate on this.
-        //
-        // A note about stability.
-        // x = (1/a(xHat)) * x0 + b(xHat) / a(xHat)
-        //
-        // x - x0 > 
+        // 
+        // Iterate on this.  This converges as long as the gradient of
+        // the distortion field has magnitude less than 1.0.
     
         FloatType xSquared = xHat.x() * xHat.x();
         FloatType ySquared = xHat.y() * xHat.y();
@@ -395,7 +392,7 @@ namespace brick {
       m_tangentialCoefficient1 = parameterVector[ii]; ++ii;
       if(ii != numParameters) {
         BRICK_THROW(brick::common::LogicException,
-                    "CameraIntrinsicsRational::setFreeParameters()",
+                    "CameraIntrinsicsRational::setParameters()",
                     "Wrong number of parameters.");
       }
     }
@@ -466,7 +463,6 @@ namespace brick {
       dVdX = kY * dYDdX;
       dVdY = kY * dYDdY;
     }
-    
     
     
     // This member function takes a 2D point in the Z==1 plane of
@@ -657,7 +653,8 @@ namespace brick {
       // == 14 total.
       std::size_t constexpr numParameters = 14;
 
-      
+      // We'll use automatic differentiation for some of this work.
+      // These typedefs give us easy access to the necessary types.
       typedef brick::numeric::DifferentiableScalar<FloatType, numParameters0>
         DiffScalar0;
       typedef brick::numeric::DifferentiableScalar<FloatType, numParameters1>

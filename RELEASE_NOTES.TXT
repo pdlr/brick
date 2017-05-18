@@ -1,6 +1,21 @@
 /** @file RELEASE_NOTES.TXT
 This file gives a high level overview of recent changes.
 
+Revision 2.0.3
+
+  - Made brick::numeric::getMeanAndVariance() work with sequences of
+    length 1 and 2.
+  - Added member and non-member functions to
+    brick::computerVision::CameraIntrinsicsPlumbBob and
+    brick::computerVision::CameraIntrinsicsRational that extend parameter
+    access, as well as forward and reverse projection with and without
+    derivatives.
+  - Added brick::numeric::NumericTraits::epsilon() static member function
+    and made isIntegral() static as well.
+  - Added NumericTraits specializations for DifferentiableScalar, and
+    extended brick::geometry::findIntersect(Ray3D const&, Ray3D const&, ...)
+    to work with user-defined types. 
+
 Revision 2.0.2
 
   - CameraIntrinsics::reverseProject() now takes optional arguments

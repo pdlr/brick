@@ -88,7 +88,7 @@ namespace brick {
        * over the image.
        * 
        * @param kappa This argument specifies the threshold
-       * sensitivity.  Larger values of kappa make there be more text
+       * sensitivity.  Larger values of kappa make there be less text
        * (black) in the output image.
        */
       ThresholderSauvola(uint32_t windowRadius, FloatType kappa = 0.5);

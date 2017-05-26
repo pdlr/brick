@@ -132,7 +132,7 @@ namespace brick {
        * 
        * @return The return value is the requested parameter.
        */
-      FloatType
+      FloatType const&
       getCenterU() const {return m_pinholeIntrinsics.getCenterU();}
 
 
@@ -143,7 +143,7 @@ namespace brick {
        * 
        * @return The return value is the requested parameter.
        */
-      FloatType
+      FloatType const&
       getCenterV() const {return m_pinholeIntrinsics.getCenterV();}
 
 
@@ -154,7 +154,7 @@ namespace brick {
        * 
        * @return The return value is the requested parameter.
        */
-      FloatType
+      FloatType const&
       getFocalLengthX() const {return m_pinholeIntrinsics.getFocalLengthX();}
 
 
@@ -165,7 +165,7 @@ namespace brick {
        * 
        * @return The return value is the requested parameter.
        */
-      FloatType
+      FloatType const&
       getFocalLengthY() const {return m_pinholeIntrinsics.getFocalLengthY();}
 
 
@@ -243,11 +243,11 @@ namespace brick {
       
       /** 
        * This member function takes a point in camera coordinates, and
-       * returns an "undistorted" version of that 3D point.  The
-       * undistorted point is not guaranteed to be similar to the
-       * input point at all, but will project through the idealized
-       * pinhole parameters associated with *this in such a way that
-       * its projection is coincident with the projection of the input
+       * returns an "distorted" version of that 3D point.  The
+       * distorted point is not guaranteed to be similar to the input
+       * point at all, but will project through the idealized pinhole
+       * parameters associated with *this in such a way that its
+       * projection is coincident with the projection of the input
        * point.  This member function is generally not useful for user
        * code.  It is provided here to help with camera calibration
        * algorithms.
@@ -313,6 +313,32 @@ namespace brick {
       
 
       /** 
+       * This member function specifies the U coordinate of the center
+       * of projection of the camera.  See the class documentation for
+       * discussion of this coordinate system.
+       * 
+       * @param centerU The U coordinate of the center of projection.
+       */
+      virtual void
+      setCenterU(FloatType const& centerU) {
+        this->m_pinholeIntrinsics.setCenterU(centerU);
+      }
+
+      
+      /** 
+       * This member function specifies the V coordinate of the center
+       * of projection of the camera.  See the class documentation for
+       * discussion of this coordinate system.
+       * 
+       * @param centerV The V coordinate of the center of projection.
+       */
+      virtual void
+      setCenterV(FloatType const& centerV) {
+        this->m_pinholeIntrinsics.setCenterV(centerV);
+      }
+
+      
+      /** 
        * This function is the counterpart to setFreeParameters().  It
        * allows the calling context to specify pinhole parameters that
        * are normally estimated closed-form.
@@ -346,10 +372,10 @@ namespace brick {
       virtual void
       setDependentParameters(unsigned int numPixelsX,
                              unsigned int numPixelsY,
-                             FloatType focalLengthX,
-                             FloatType focalLengthY,
-                             FloatType centerU,
-                             FloatType centerV) {
+                             FloatType const& focalLengthX,
+                             FloatType const& focalLengthY,
+                             FloatType const& centerU,
+                             FloatType const& centerV) {
         m_pinholeIntrinsics.setNumPixelsX(numPixelsX);
         m_pinholeIntrinsics.setNumPixelsY(numPixelsY);
         m_pinholeIntrinsics.setFocalLengthX(focalLengthX);
@@ -358,6 +384,36 @@ namespace brick {
         m_pinholeIntrinsics.setCenterV(centerV);
       }
 
+
+      /** 
+       * This member function specifies the focal length of the imager
+       * in units of pixel width.  Or conversely, you can think of
+       * focal length as being fixed, and this member function as as
+       * indirectly specifying the width of a pixel.
+       * 
+       * @param focalLengthX The focal length of the lens in units of
+       * pixel width.
+       */
+      virtual void
+      setFocalLengthX(FloatType const& focalLengthX) {
+        this->m_pinholeIntrinsics.setFocalLengthX(focalLengthX);
+      }
+
+      
+      /** 
+       * This member function specifies the focal length of the imager
+       * in units of pixel height.  Or conversely, you can think of
+       * focal length as being fixed, and this member function as as
+       * indirectly specifying the height of a pixel.
+       * 
+       * @param focalLengthY The focal length of the lens in units of
+       * pixel height.
+       */
+      virtual void
+      setFocalLengthY(FloatType const& focalLengthY) {
+        this->m_pinholeIntrinsics.setFocalLengthY(focalLengthY);
+      }
+      
       
       /** 
        * This sets the value of a subset of the intrinsic parameters,

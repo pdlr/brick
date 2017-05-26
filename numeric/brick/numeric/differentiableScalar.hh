@@ -18,6 +18,7 @@
 #include <iostream>
 
 #include <brick/numeric/mathFunctions.hh>
+#include <brick/numeric/numericTraits.hh>
 
 namespace brick {
 
@@ -92,7 +93,9 @@ namespace brick {
        * by the second constructor argument.
        * 
        * @param value This argument specifies the scalar value of
-       * *this.  @param partialsBegin This iterator points to a
+       * *this.
+       *
+       * @param partialsBegin This iterator points to a
        * sequence of Type specifying a vector of partial derivatives.
        * The number of values in this sequence must be at least equal
        * to the value of class template argument Dimension.
@@ -264,7 +267,23 @@ namespace brick {
       
     };
 
-    
+
+    /* ============  Associated class declarations   ============ */
+
+    template <class Type>
+    struct NumericTraits< DifferentiableScalar<Type> >
+      : public NumericTraitsBase< DifferentiableScalar<Type> > {
+    public:
+
+      static inline DifferentiableScalar<Type>
+      epsilon() {
+        return DifferentiableScalar<Type>(NumericTraits<Type>::epsilon());
+      }
+      
+      static inline bool
+      isIntegral() {return NumericTraits<Type>::isIntegral();}
+    };
+
     /* ============ Non-member function declarations ============ */
 
   

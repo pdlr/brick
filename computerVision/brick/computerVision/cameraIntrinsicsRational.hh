@@ -81,6 +81,7 @@ namespace brick {
       // unsigned int getImageWidth();
       // unsigned int getNumPixelsX();
       // unsigned int getNumPixelsY();
+      // geometry::Ray3D<FloatType> reverseProject(...);
       // void setDependentParameters(...);
       // void setNumPixelsX(unsigned int);
       // void setNumPixelsY(unsigned int);
@@ -225,6 +226,35 @@ namespace brick {
       virtual typename CameraIntrinsicsRational<FloatType>::ParameterVectorType
       getNominalFreeParameters() const;
       
+
+      /** 
+       * Returns a vector of all continuous parameters of the
+       * class. Note that image dimensions (in pixels) are not
+       * included in this vector.  The parameters (in order) are:
+       * 
+       * @verbatim
+       *   // Pinhole parameters
+       *   - FocalLengthX
+       *   - FocalLengthY
+       *   - CenterU
+       *   - CenterV
+       *
+       *   // Distortion coefficients.
+       *   - RadialCoefficient0
+       *   - RadialCoefficient1
+       *   - RadialCoefficient2
+       *   - RadialCoefficient3
+       *   - RadialCoefficient4
+       *   - RadialCoefficient5
+       *   - TangentialCoefficient0
+       *   - TangentialCoefficient1
+       * @endverbatim
+       * 
+       * @return The return value is the parameter vector described above.
+       */
+      virtual typename CameraIntrinsicsRational<FloatType>::ParameterVectorType
+      getParameters() const;
+      
       
       /** 
        * This member function takes a point in 3D camera coordinates
@@ -240,12 +270,35 @@ namespace brick {
 
 
       /** 
+       * This member function takes a 2D point in the Z==1 plane of
+       * camera coordinates, and returns an "distorted" version of
+       * that 2D point.  The distorted point is not guaranteed to be
+       * similar to the input point at all, but will project through
+       * the idealized pinhole parameters associated with *this in
+       * such a way that its projection is coincident with the
+       * projection of the input point.  This member function is
+       * generally not useful for user code.  It is provided here to
+       * help with camera calibration algorithms.
+       * 
+       * @param point This argument is the point to be projected,
+       * represented in world coordinates.
+       * 
+       * @return The return value is represented in a fictional
+       * undistorted 3D world coordinate system, and is one of the
+       * infinitely many points that lie on the ray projecting to the
+       * 2D image point that corresponds to the input argument.
+       */
+      inline virtual numeric::Vector2D<FloatType>
+      projectThroughDistortion(numeric::Vector2D<FloatType> const& point) const;
+      
+
+      /** 
        * This member function takes a point in camera coordinates, and
-       * returns an "undistorted" version of that 3D point.  The
-       * undistorted point is not guaranteed to be similar to the
-       * input point at all, but will project through the idealized
-       * pinhole parameters associated with *this in such a way that
-       * its projection is coincident with the projection of the input
+       * returns an "distorted" version of that 3D point.  The
+       * distorted point is not guaranteed to be similar to the input
+       * point at all, but will project through the idealized pinhole
+       * parameters associated with *this in such a way that its
+       * projection is coincident with the projection of the input
        * point.  This member function is generally not useful for user
        * code.  It is provided here to help with camera calibration
        * algorithms.
@@ -260,7 +313,51 @@ namespace brick {
        */
       inline virtual numeric::Vector3D<FloatType>
       projectThroughDistortion(numeric::Vector3D<FloatType> const& point) const;
-      
+
+
+      /** 
+       * This member function takes a 2D point in the Z==1 plane of
+       * camera coordinates, and returns an "distorted" version of
+       * that 2D point, along with partial derivatives of the result
+       * with respect to the input X and Y position.
+       * 
+       * @param xNorm This argument is the X coordinate of the input
+       * point.  Z is implicitly set to 1.0.
+       * 
+       * @param yNorm This argument is the Y coordinate of the input
+       * point.  Z is implicitly set to 1.0.
+       * 
+       * @param xDistorted This argument returns the distorted X
+       * coordinate by reference.  The distorted Z coordinate is
+       * always equal to 1.0.
+       * 
+       * @param yDistorted This argument returns the distorted Y
+       * coordinate by reference.  The distorted Z coordinate is
+       * always equal to 1.0.
+       * 
+       * @param dXDdX This argument returns by reference the partial
+       * derivative of the returned X coordinate with respect to the
+       * input X coordinate.
+       * 
+       * @param dXDdY This argument returns by reference the partial
+       * derivative of the returned X coordinate with respect to the
+       * input Y coordinate.
+       * 
+       * @param dYDdX This argument returns by reference the partial
+       * derivative of the returned Y coordinate with respect to the
+       * input X coordinate.
+       * 
+       * @param dYDdY This argument returns by reference the partial
+       * derivative of the returned Y coordinate with respect to the
+       * input Y coordinate.
+       */
+      void
+      projectThroughDistortionWithPartialDerivatives(
+        FloatType xNorm, FloatType yNorm,
+        FloatType& xDistorted, FloatType& yDistorted,
+        FloatType& dXDdX, FloatType& dXDdY,
+        FloatType& dYDdX, FloatType& dYDdY) const;
+
 
       /** 
        * This member function sets the calibration from an input
@@ -336,7 +433,37 @@ namespace brick {
       setFreeParameters(
         typename CameraIntrinsicsRational<FloatType>::ParameterVectorType
         const& parameterVector);
-  
+
+
+      /** 
+       * Sets the internal state of *this based on a parameter vector,
+       * such as the one described in member function getParameters().
+       * Note that image dimensions (in pixels) are not included in
+       * this vector.
+       *
+       * @verbatim
+       *   // Pinhole parameters
+       *   - FocalLengthX
+       *   - FocalLengthY
+       *   - CenterU
+       *   - CenterV
+       *
+       *   // Distortion coefficients.
+       *   - RadialCoefficient0
+       *   - RadialCoefficient1
+       *   - RadialCoefficient2
+       *   - RadialCoefficient3
+       *   - RadialCoefficient4
+       *   - RadialCoefficient5
+       *   - TangentialCoefficient0
+       *   - TangentialCoefficient1
+       * @endverbatim
+       */
+      virtual void
+      setParameters(
+        typename CameraIntrinsicsRational<FloatType>::ParameterVectorType
+        const& parameterVector);
+      
 
       /** 
        * This member function writes the calibration to an
@@ -427,6 +554,16 @@ namespace brick {
       return intrinsics.readFromStream(stream);
     }
 
+
+    template <class FloatType>
+    bool
+    reverseProjectWithJacobian(
+      brick::numeric::Vector2D<FloatType>& rectifiedPoint,
+      brick::numeric::Array2D<FloatType>& jacobian,
+      brick::numeric::Vector2D<FloatType> imagePoint,
+      CameraIntrinsicsRational<FloatType> intrinsics,
+      FloatType requiredPrecision,
+      std::size_t maximumIterations = 25);
 
   } // namespace computerVision
   

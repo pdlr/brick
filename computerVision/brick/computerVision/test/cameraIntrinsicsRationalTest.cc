@@ -486,7 +486,7 @@ testReverseProjectWithJacobian()
           (rectifiedPointPlus.y() - rectifiedPointMinus.y()) / (2.0 * epsilon);
       }
       
-      // Final two columns of the ground truth jacobian.
+      // Penultimate columns of the ground truth jacobian.
       Ray3D<double> rayPlus = intrinsics.reverseProjectEM(
         imagePoint + uEpsilon, true, 150);
       Ray3D<double> rayMinus = intrinsics.reverseProjectEM(

@@ -52,18 +52,25 @@ namespace brick {
     TeeTest::
     testTee()
     {
-#if 0
-      TeeBuffer<char> teeBuffer;
-      teeBuffer.add(std::cout.rdbuf());
-      teeBuffer.add(std::cerr.rdbuf());
-      std::ostream testStream(&teeBuffer);
-      testStream << "This is a test" << std::endl;
-#else
       Tee<char> tee;
-      tee.add(std::cout);
-      tee.add(std::cerr);
-      tee << "This is a test" << std::endl;
-#endif
+      std::ostringstream stream0;
+      std::ostringstream stream1;
+      std::ostringstream stream2;
+
+      std::size_t ii = 0;
+      tee.add(stream0);
+      tee << "Test Number " << ++ii << " " << std::endl;
+      tee.add(stream1);
+      tee << "Test Number " << ++ii << " " << std::endl;
+      tee.add(stream2);
+      tee << "Test Number " << ++ii << " " << std::endl;
+
+      BRICK_TEST_ASSERT(
+        stream0.str() == "Test Number 1 \nTest Number 2 \nTest Number 3 \n");
+      BRICK_TEST_ASSERT(
+        stream1.str() == "Test Number 2 \nTest Number 3 \n");
+      BRICK_TEST_ASSERT(
+        stream2.str() == "Test Number 3 \n");
     }
 
   } // namespace utilities

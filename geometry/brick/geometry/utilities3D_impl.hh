@@ -242,6 +242,30 @@ namespace brick {
     findIntersect(Ray3D<Type> const& ray0, Ray3D<Type> const& ray1,
                   Type& distance0, Type& distance1, Type& residual)
     {
+      // Let z_0 and v_0 be the origin and direction vector of ray0,
+      // respectively.  Let z_1 and v_1 be the origin and direction
+      // vector of ray1.  Every point, p0, on ray0 can be expressed as:
+      //
+      // @verbatim
+      //   p0 = z_0 + a_0 * v_0
+      // @endverbatim
+      //
+      // Where a_0 is a scalar.  We can write points on ray1
+      // similarly.  We're looking for the scalars a_0 and a_1 that
+      // minimize (in the least squares sense) `the length of the
+      // residual vector (p0 - p1).
+      //
+      // @verbatim
+      //   p0 - p1 = (z_0 + a_0 * v_0) - (z_1 + a_1 * v_1) ~= 0
+      // @endverbatim
+      //
+      // This is easily rearranged into a homogeneous linear system of
+      // equations:
+      //
+      // @verbatim
+      //   [v_0; -v_1] * [a_0; a_1]^T = [z_1 - z_0]
+      // @endverbatim
+      
       brick::numeric::Array2D<Type> AMatrix(3, 2);
       AMatrix(0, 0) = ray0.getDirectionVector().x();
       AMatrix(1, 0) = ray0.getDirectionVector().y();
@@ -261,7 +285,7 @@ namespace brick {
       } catch(brick::common::ValueException ) {
         BRICK_THROW(brick::common::ValueException, "findIntersect()",
                   "Trouble inverting matrix.  "
-                  "Input rays must not be parallel. ");
+                  "Perhaps input rays are parallel.");
       }
       brick::numeric::Array1D<Type> parameters =
         brick::numeric::matrixMultiply<Type>(APinv, bVector);

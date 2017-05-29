@@ -77,10 +77,6 @@ namespace brick {
   
 } // namespace brick
 
-// xxx
-#ifndef BRICK_TEST_NO_AUTOMATIC_REGISTRATION
-#define BRICK_TEST_NO_AUTOMATIC_REGISTRATION 1
-#endif
 
 #ifdef BRICK_TEST_NO_AUTOMATIC_REGISTRATION
 

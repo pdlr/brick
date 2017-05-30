@@ -225,7 +225,7 @@ namespace brick {
        * 
        * @param rowStep Number of elements between the start of
        * consecutive rows in the array.  Setting this argument to zero
-       * has the same effect as setting it ot the same value as
+       * has the same effect as setting it to the same value as
        * arrayColumns.  This argument is useful for creating arrays
        * with rows aligned on, for example, 16 byte boundaries.
        * 
@@ -235,6 +235,20 @@ namespace brick {
       Array2D(size_t arrayRows, size_t arrayColumns, Type* const dataPtr,
               size_t rowStep, common::ReferenceCount const& referenceCount);
 
+
+      /**
+       * Construct an array using an initializer list.  This lets users
+       * build arrays using the following syntax:
+       *
+       * @code
+       *    Array1D<double> {0.5, 2.0, 11.0, -0.1};
+       * @endCode
+       * 
+       * @param initializer This argument is generated automatically
+       * by the compiler.
+       */
+      Array2D(std::initializer_list< std::initializer_list<Type> > initializer);
+      
       
       /**
        * Destroys the Array2D instance and deletes the internal data

@@ -114,6 +114,9 @@ namespace brick {
       void testIndexOperator();
       void testIndexOperatorConst();
 
+      // C++11 tests.
+      void testInitializerList();
+
 
     private:
       size_t m_defaultArraySize;
@@ -180,6 +183,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testIndexOperatorConst);
       BRICK_TEST_REGISTER_MEMBER(testOutputOperator);
       BRICK_TEST_REGISTER_MEMBER(testInputOperator);
+      BRICK_TEST_REGISTER_MEMBER(testInitializerList);
 
     
       // Set up fibonacci data for tests.
@@ -746,6 +750,20 @@ namespace brick {
         BRICK_TEST_ASSERT(array0[index] == m_fibonacciCArray[index]);
       }
     }
+
+
+    template <class Type>
+    void
+    Array1DTest<Type>::
+    testInitializerList()
+    {
+      Array1D<Type> array0 {Type(0), Type(1), Type(2), Type(3)};
+      BRICK_TEST_ASSERT(array0.size() == 4);
+      for(std::size_t ii = 0; ii < 4; ++ii) {
+        BRICK_TEST_ASSERT(array0[ii] == Type(ii));
+      }
+    }
+    
 
   } // namespace numeric
   

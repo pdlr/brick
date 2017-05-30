@@ -177,6 +177,18 @@ namespace brick {
 
 
     template <class Type>
+    Array1D<Type>::
+    Array1D(std::initializer_list<Type> initializer)
+      : m_size(0),          // This will be set in the call to allocate().
+        m_dataPtr(0),       // This will be set in the call to allocate().
+        m_referenceCount(0) // This will be set in the call to allocate().
+    {
+      this->allocate(initializer.size());
+      std::copy(initializer.begin(), initializer.end(), this->begin());
+    }
+
+    
+    template <class Type>
     Array1D<Type>::~Array1D()
     {
       deAllocate();

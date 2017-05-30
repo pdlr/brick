@@ -130,6 +130,9 @@ namespace brick {
       void testIndexOperator();
       void testIndexOperatorConst();
 
+      // C++11 tests.
+      void testInitializerList();
+
       // Tests of non-member functions.
       void testSquareRoot__Array2D();
       void testSqrt__Array2D();
@@ -218,6 +221,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testApplicationOperatorConst__size_t__size_t);
       BRICK_TEST_REGISTER_MEMBER(testIndexOperator);
       BRICK_TEST_REGISTER_MEMBER(testIndexOperatorConst);
+      BRICK_TEST_REGISTER_MEMBER(testInitializerList);
 
       // Tests of non-member functions.
       BRICK_TEST_REGISTER_MEMBER(testSquareRoot__Array2D);
@@ -1163,6 +1167,28 @@ namespace brick {
     }
 
 
+    template <class Type>
+    void
+    Array2DTest<Type>::
+    testInitializerList()
+    {
+      Array2D<Type> array0 {
+        {Type(0), Type(1), Type(2), Type(3)},
+        {Type(4), Type(5), Type(6), Type(7)},
+        {Type(8), Type(9), Type(10), Type(11)}};
+      BRICK_TEST_ASSERT(array0.rows() == 3);
+      BRICK_TEST_ASSERT(array0.columns() == 4);
+
+      std::size_t cc = 0;
+      for(std::size_t ii = 0; ii < array0.rows(); ++ii) {
+        for(std::size_t jj = 0; jj < array0.columns(); ++jj) {
+          BRICK_TEST_ASSERT(array0(ii, jj) == Type(cc));
+          ++cc;
+        }
+      }
+    }
+
+    
     // General test of square root is not performed, since square root
     // only makes sense for certain types.
     template <class Type>

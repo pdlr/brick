@@ -229,6 +229,49 @@ namespace brick {
     }
     
   
+    // Construct an array using an initializer list.
+    template <class Type>
+    Array2D<Type>::
+    Array2D(std::initializer_list< std::initializer_list<Type> > initializer)
+      : m_rows(0),
+        m_columns(0),
+        m_rowStep(0),
+        m_size(0),           // This will be set in the call to allocate().
+        m_storageSize(0),    // This will be set in the call to allocate().
+        m_dataPtr(0),        // This will be set in the call to allocate().
+        m_referenceCount(0)  // This will be set in the call to allocate().
+    {
+      this->m_rows = initializer.size();
+      if(this->m_rows == 0) {
+        return;
+      }
+      this->m_columns = initializer.begin()->size();
+
+      // Sanity check the input.
+      for(auto rowInitializer : initializer) {
+        if(rowInitializer.size() != this->m_columns) {
+          BRICK_THROW(common::ValueException,
+                      "Array2D::Array2D(std::initializer)",
+                      "All rows in the initializer must have the same size.");
+        }
+      }
+
+      // Do we have any data to copy?
+      if(this->m_columns == 0) {
+        return;
+      }
+
+      // Copy in the initializer data.
+      this->allocate(this->m_rows, this->m_columns, this->m_rowStep);
+      std::size_t ii = 0;
+      for(auto rowInitializer : initializer) {
+        std::copy(rowInitializer.begin(), rowInitializer.end(),
+                  this->getRow(ii).begin());
+        ++ii;
+      }
+    }
+
+    
     template <class Type>
     Array2D<Type>::
     ~Array2D()

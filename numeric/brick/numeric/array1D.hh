@@ -152,6 +152,20 @@ namespace brick {
       Array1D(size_t arraySize, Type* const dataPtr,
               common::ReferenceCount const& referenceCount);
 
+
+      /**
+       * Construct an array using an initializer list.  This lets users
+       * build arrays using the following syntax:
+       *
+       * @code
+       *    Array1D<double> {0.5, 2.0, 11.0, -0.1};
+       * @endCode
+       * 
+       * @param initializer This argument is generated automatically
+       * by the compiler.
+       */
+      Array1D(std::initializer_list<Type> initializer);
+      
       
       /**
        * Destroys the Array1D instance and deletes the internal data

@@ -29,6 +29,7 @@ install (FILES
   path.hh
   pythonIO.hh
   stringManipulation.hh
+  tee.hh
   timeUtilities.hh
 
   DESTINATION include/brick/utilities)

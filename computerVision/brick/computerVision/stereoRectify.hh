@@ -5,7 +5,7 @@
 * Header file declaring code to compute image rectification parameters
 * for stereo image pairs.
 *
-* Copyright (C) 2009,2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2009-2017 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
@@ -49,7 +49,7 @@ namespace brick {
      * transformation taking world coordinates and returning the
      * corresponding coordinates in the camera coordinate system
      * corresponding to intrinsics1.  The rotation component of this
-     * tranform must be identical to the rotation component of
+     * transform must be identical to the rotation component of
      * camera0Tworld, although the translation components may differ.
      * 
      * @return The return value is the calculated reprojection matrix.
@@ -63,11 +63,13 @@ namespace brick {
       numeric::Transform3D<FloatType> const& camera1Tworld,
       FloatType epsilon);
 
+#endif /* #if 0 */
 
     /** 
      * Given rectified intrinsics and a stereo baseline for a camera pair,
      * calculate the reprojection matrix Q that transforms image
-     * coordinates and disparities into 3D coordinates.  That is:
+     * coordinates and disparities into 3D coordinates.  That is,
+     * calculate the matrix Q, such that:
      *
      * @code
      *    |a*x|       |u|
@@ -76,10 +78,17 @@ namespace brick {
      *    | a |       |1|
      * @endcode
      *
-     * where 'a' is a projective scale factor, and 'd' is along-row
-     * disparity between the two images.  This routine assumes that
-     * the cameras are displaced in a direction parallel to the image
-     * rows, as is normally the case for conventional stereo pairs.
+     * where [x, y, z]^T is the reconstructed 3D point, [u, v]^T is
+     * the image position of the projected point in the image
+     * corresponding to intrinsics0, 'a' is a projective scale factor,
+     * and 'd' is along-row disparity between the two images (U
+     * coordinate in image 0 minus U coordinate in image 1).  Note
+     * that for traditional left-right stereo pairs, where intrinsics0
+     * describes the left camera, and the X coordinate points to the
+     * right, d will be positive for all points with positive z
+     * coordinate.  This routine assumes that the cameras are
+     * displaced only in a direction parallel to the image rows, as is
+     * normally the case for conventional rectified stereo pairs.
      *
      * Note that it is permissible to have non-square image pixels.
      * 
@@ -96,19 +105,19 @@ namespace brick {
      * 
      * @param This argument specifies the offset between left and
      * right cameras, which is assumed to be exactly in the direction
-     * of the camera X axis.
+     * of the camera X axis.  Positive numbers mean that the right
+     * camera is displaced from the left camera in the positive X
+     * direction.
      * 
      * @return The return value is the calculated reprojection matrix.
      */
     template <class FloatType>
     brick::numeric::Transform3D<FloatType>
-    calculateReprojectionMatrix(
+    getReprojectionMatrix(
       CameraIntrinsicsPinhole<FloatType> const& intrinsics0,
       CameraIntrinsicsPinhole<FloatType> const& intrinsics1,
       FloatType baseline);
     
-#endif /* #if 0 */
-
     
     /**
      * This function implements the stereo rectification algorithm of

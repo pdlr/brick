@@ -4,7 +4,7 @@
 *
 * Source file defining tests for stereoRectify().
 *
-* Copyright (C) 2009,2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2009-2017 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
@@ -33,6 +33,7 @@ namespace brick {
       void tearDown(const std::string& /* testName */) {}
 
       // Tests.
+      void testGetReprojectionMatrix();
       void testStereoRectify();
 
     private:
@@ -49,10 +50,71 @@ namespace brick {
       : brick::test::TestFixture<StereoRectifyTest>("StereoRectifyTest"),
         m_defaultTolerance(1.0E-10)
     {
+      BRICK_TEST_REGISTER_MEMBER(testGetReprojectionMatrix);
       BRICK_TEST_REGISTER_MEMBER(testStereoRectify);
     }
 
 
+    void
+    StereoRectifyTest::
+    testGetReprojectionMatrix()
+    {
+      // Set up an arbitrary stereo pair.
+      CameraIntrinsicsPinhole<double> intrinsics0(
+        640, 480, 300.0, 250.0, 310.0, 220.0);
+      CameraIntrinsicsPinhole<double> intrinsics1(
+        640, 480, 300.0, 250.0, 325.0, 220.0);
+      double baseline = 0.21;  // meters.
+      
+      // Compute the Q matrix.
+      brick::numeric::Transform3D<double> QQ = getReprojectionMatrix(
+        intrinsics0, intrinsics1, baseline);
+
+      // Pick some points against which to test.
+      std::vector< brick::numeric::Vector3D<double> > testPoints;
+      testPoints.push_back(brick::numeric::Vector3D<double>(0.0, 0.0, 1.0));
+      testPoints.push_back(brick::numeric::Vector3D<double>(1.0, 0.0, 1.5));
+      testPoints.push_back(brick::numeric::Vector3D<double>(-1.0, 1.0, 2.0));
+      testPoints.push_back(brick::numeric::Vector3D<double>(0.0, 1.0, 1.5));
+      testPoints.push_back(brick::numeric::Vector3D<double>(1.0, -1.0, 3.0));
+      testPoints.push_back(brick::numeric::Vector3D<double>(-1.0, 1.0, 1.0));
+      testPoints.push_back(brick::numeric::Vector3D<double>(0.0, 1.0, 2.0));
+      testPoints.push_back(brick::numeric::Vector3D<double>(1.0, 1.0, 1.5));
+      testPoints.push_back(brick::numeric::Vector3D<double>(-1.0, -1.0, 4.0));
+
+      // Check against each point in turn.
+      for(size_t ii = 0; ii < testPoints.size(); ++ii) {
+        brick::numeric::Vector3D<double> testPoint_c0 = testPoints[ii];
+        brick::numeric::Vector3D<double> testPoint_c1(
+          testPoint_c0.x() - baseline, testPoint_c0.y(), testPoint_c0.z());
+
+        // Project into both cameras.
+        brick::numeric::Vector2D<double> p0 = intrinsics0.project(testPoint_c0);
+        brick::numeric::Vector2D<double> p1 = intrinsics1.project(testPoint_c1);
+
+        // Check that our projection assumtions are met.
+        BRICK_TEST_ASSERT(
+          approximatelyEqual(p0.y(), p1.y(), m_defaultTolerance));
+
+        // Reconstruct the 3D point.
+        double disparity = p0.x() - p1.x();
+        Vector3D<double> uvd(p0.x(), p0.y(), disparity);
+        Vector3D<double> reconstructedPoint = QQ * uvd;
+
+        // Check that reprojected point matches expectations.
+        BRICK_TEST_ASSERT(
+          approximatelyEqual(reconstructedPoint.x(), testPoint_c0.x(),
+                             m_defaultTolerance));
+        BRICK_TEST_ASSERT(
+          approximatelyEqual(reconstructedPoint.y(), testPoint_c0.y(),
+                             m_defaultTolerance));
+        BRICK_TEST_ASSERT(
+          approximatelyEqual(reconstructedPoint.z(), testPoint_c0.z(),
+                             m_defaultTolerance));
+      }
+    }
+
+    
     void
     StereoRectifyTest::
     testStereoRectify()
@@ -220,9 +282,9 @@ namespace brick {
 } // namespace brick
 
 
-#if 0
+#if 1
 
-int main(int argc, char** argv)
+int main(int /* argc */, char** /* argv */)
 {
   brick::computerVision::StereoRectifyTest currentTest;
   bool result = currentTest.run();

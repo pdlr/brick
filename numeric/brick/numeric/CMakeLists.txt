@@ -41,6 +41,7 @@ install (FILES
   ieeeFloat32.hh
   index2D.hh
   index3D.hh
+  fft.hh fft_impl.hh
   filter.hh filter_impl.hh
   geometry2D.hh geometry2D_impl.hh
   mathFunctions.hh

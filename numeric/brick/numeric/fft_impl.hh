@@ -65,8 +65,6 @@ namespace brick {
                          std::size_t const stride,
                          Array1D<ComplexType> const& twiddleFactors)
       {
-        std::cout << "In..." << std::endl;
-        
         // Handle the trivial case.
         if(count == 1) {
           result[outputIndex] = inputSignal[inputIndex];
@@ -82,8 +80,6 @@ namespace brick {
         recursiveRadix2FFT(result, outputIndex + countOver2,
                            inputSignal, inputIndex + stride,
                            countOver2, strideTimes2, twiddleFactors);
-
-        std::cout << "rr" << result << std::endl;
 
         // Combine the divided parts.
         for(std::size_t ii = 0; ii < countOver2; ++ii) {

@@ -14,6 +14,7 @@
 
 #include <brick/common/functional.hh>
 #include <brick/numeric/fft.hh>
+#include <brick/numeric/numericTraits.hh>
 #include <brick/test/testFixture.hh>
 
 namespace brick {
@@ -49,7 +50,7 @@ namespace brick {
     FFTTest::
     FFTTest()
       : brick::test::TestFixture<FFTTest>("FFTTest"),
-        m_defaultTolerance(1.0E-11),
+        m_defaultTolerance(1.0E-10),
         m_relaxedTolerance(1.0E-5)
     {
       // Register all tests.
@@ -62,21 +63,23 @@ namespace brick {
     testComputeFFT()
     {
       double constexpr twoPi = brick::common::constants::twoPi;
-      std::size_t constexpr signalLength = 4;
+      std::size_t constexpr signalLength = 1024;
 
       // Define the fourier representation of a signal.  For now all
       // phases are zero.
       Array1D<double> referenceAmplitudes(signalLength);
       Array1D<double> referencePhases(signalLength);
 
-      // for(std::size_t ii = 0; ii < signalLength; ++ii) {
-      // referenceAmplitudes[ii] = (1.0 - double(ii) / signalLength);
-      // }
+      for(std::size_t ii = 0; ii < signalLength; ++ii) {
+        referenceAmplitudes[ii] = (1.0 - double(ii) / signalLength);
+        referencePhases[ii] = (double(ii) / signalLength) * twoPi;
+      }
       // referenceAmplitudes[signalLength / 2] = 1.0;
-      referenceAmplitudes = 0.0;
-      referenceAmplitudes[0] = 0.0;
-      referenceAmplitudes[1] = 1.0;
-      referencePhases = 0.0;
+      // referenceAmplitudes = 0.0;
+      // referenceAmplitudes[3] = 1.0;
+      // referencePhases = 0.0;
+      // referencePhases[1] = twoPi / 4.0;
+      // referencePhases[1] = 1.0;
 
       // Compute a signal that has the fourier representation we just
       // defined.
@@ -91,32 +94,60 @@ namespace brick {
           // What's the frequency in radians per sample.
           double frequency = twoPi * double(jj) / signalLength;
 
-          // And what's the amplitude of the sine wave.  Notice that
-          // we're just Naively doing an inverse DFT here, so we need
-          // a factor of 1/N to make the amplitudes work out.
-          double amplitude = (referenceAmplitudes[jj] *
-                              brick::common::cosine(ii * frequency));
-          amplitude /= static_cast<double>(signalLength);
+          // And what are the real and imaginary parts of this component.
+          double theta = ii * frequency + referencePhases[jj];
+          double realPart = (referenceAmplitudes[jj] *
+                             brick::common::cosine(theta));
+          double imaginaryPart = (referenceAmplitudes[jj] *
+                                  brick::common::sine(theta));
+          
+          // Notice that we're just Naively (O(N^2)) doing an inverse
+          // DFT here, so we need a factor of 1/N to make the
+          // amplitudes work out.
+          realPart /= static_cast<double>(signalLength);
+          imaginaryPart /= static_cast<double>(signalLength);
 
           // Fill in the relevant signal element.
-          inputSignal[ii] += std::complex<double>(amplitude, 0.0);
+          inputSignal[ii] += std::complex<double>(realPart, imaginaryPart);
         }
       }
 
-      std::cout << "\nSignal: " << inputSignal << std::endl;
+      // std::cout << "\nSignal: " << inputSignal << std::endl;
       
       // Now do the FFT.
       Array1D< std::complex<double> > fft = computeFFT(inputSignal);
 
-      std::cout << "\nFFT: " << fft << std::endl;
+      // std::cout << "\nFFT: " << fft << std::endl;
+      
       // Check that the result is correct.
       for(std::size_t ii = 0; ii < signalLength; ++ii) {
-        BRICK_TEST_ASSERT(
-          approximatelyEqual(fft[ii].real(), referenceAmplitudes[ii],
-                             this->m_defaultTolerance));
-        BRICK_TEST_ASSERT(
-          approximatelyEqual(fft[ii].imag(), 0.0, 
-                             this->m_defaultTolerance));
+        double amplitude = std::abs(fft[ii]);
+        double phase = brick::common::arctangent2(
+          fft[ii].imag(), fft[ii].real());
+        while(phase < 0.0) {phase += twoPi;}
+        while(phase >= twoPi) {phase -= twoPi;}
+
+        try {
+          BRICK_TEST_ASSERT(
+            approximatelyEqual(amplitude, referenceAmplitudes[ii],
+                               this->m_defaultTolerance));
+          if(amplitude > brick::numeric::NumericTraits<double>::epsilon()) {
+            BRICK_TEST_ASSERT(
+              approximatelyEqual(phase, referencePhases[ii], 
+                                 this->m_defaultTolerance));
+          }
+        } catch(...) {
+          std::cout << "Element " << ii << ":\n"
+                    << "  amplitude " << amplitude
+                    << " at phase " << phase << " vs. reference: \n"
+                    << "  amplitude " << referenceAmplitudes[ii]
+                    << " at phase " << referencePhases[ii]
+                    << "  differences: "
+                    << amplitude - referenceAmplitudes[ii]
+                    << ", " << phase - referencePhases[ii]
+                    << std::endl;
+          throw;
+        }
       }
     }
   

@@ -74,14 +74,20 @@ namespace brick {
         // Divide and conquer.
         std::size_t countOver2 = count / 2;
         std::size_t strideTimes2 = stride * 2;
+
+        // Compute the FFT of the even elements.
         recursiveRadix2FFT(result, outputIndex,
                            inputSignal, inputIndex,
                            countOver2, strideTimes2, twiddleFactors);
+
+        // Compute the FFT of the odd elements.
         recursiveRadix2FFT(result, outputIndex + countOver2,
                            inputSignal, inputIndex + stride,
                            countOver2, strideTimes2, twiddleFactors);
 
-        // Combine the divided parts.
+        // Apply a frequency-dependent phase shift ("twiddle factor")
+        // to the odd FFT, and combine with the Even FFT to get the
+        // whole.
         for(std::size_t ii = 0; ii < countOver2; ++ii) {
           std::size_t evenIndex = outputIndex + ii;
           std::size_t oddIndex = evenIndex + countOver2;
@@ -110,10 +116,21 @@ namespace brick {
       }
 
       // This code implements the recursive radix-2 decimation-in-time
-      // algorithm of Cooley and Tukey.  The goal here isn't to make an
-      // FFT implementation that competes with with the more optimized
-      // versions available, just to have a quick and easy FFT for use
-      // when other libraries aren't handy.
+      // algorithm of Cooley and Tukey.  This algorithm recognizes
+      // that the naive FFT calculation (which is O(N^2), where N
+      // is the number of elements of the input signal), can be
+      // written as the sum of two sub-FFTs.  The first of these is
+      // the FFT of the even elements of the input sequence, and the
+      // second is the FFT of the odd elements of the input sequence,
+      // with a frequency-dependent phase offset.  These phase offsets
+      // are traditionally called "twiddle factors," and are computed
+      // up-front.
+      //
+      // These two sub-FFTs have half as many elements (each) as the
+      // whole FFT.  FFTs are periodic, though, so only N/2 FFT values
+      // need be computed for each sub-FFT.  Repeating this trick for
+      // each sub-FFT gives a recursive algorithm with O(N*log(N))
+      // complexity.
       Array1D<ComplexType> result(inputSignal.size());
       std::size_t inputIndex = 0;
       std::size_t outputIndex = 0;

@@ -33,7 +33,8 @@ namespace brick {
       void tearDown(const std::string& /* testName */) {}
 
       // Tests.
-      void testComputeFFT();
+      void testComputeFFT_radix2();
+      void testComputeFFT_result();
     
     private:
 
@@ -54,32 +55,36 @@ namespace brick {
         m_relaxedTolerance(1.0E-5)
     {
       // Register all tests.
-      BRICK_TEST_REGISTER_MEMBER(testComputeFFT);
+      BRICK_TEST_REGISTER_MEMBER(testComputeFFT_radix2);
+      BRICK_TEST_REGISTER_MEMBER(testComputeFFT_result);
     }
 
 
     void
     FFTTest::
-    testComputeFFT()
+    testComputeFFT_radix2()
+    {
+      Array1D< std::complex<double> > inputSignal(96);
+      inputSignal = 0.0;
+      BRICK_TEST_ASSERT_EXCEPTION(common::NotImplementedException,
+                                  computeFFT(inputSignal));
+    }
+    
+      
+    void
+    FFTTest::
+    testComputeFFT_result()
     {
       double constexpr twoPi = brick::common::constants::twoPi;
       std::size_t constexpr signalLength = 1024;
 
-      // Define the fourier representation of a signal.  For now all
-      // phases are zero.
+      // Define the fourier representation of a signal.
       Array1D<double> referenceAmplitudes(signalLength);
       Array1D<double> referencePhases(signalLength);
-
       for(std::size_t ii = 0; ii < signalLength; ++ii) {
         referenceAmplitudes[ii] = (1.0 - double(ii) / signalLength);
         referencePhases[ii] = (double(ii) / signalLength) * twoPi;
       }
-      // referenceAmplitudes[signalLength / 2] = 1.0;
-      // referenceAmplitudes = 0.0;
-      // referenceAmplitudes[3] = 1.0;
-      // referencePhases = 0.0;
-      // referencePhases[1] = twoPi / 4.0;
-      // referencePhases[1] = 1.0;
 
       // Compute a signal that has the fourier representation we just
       // defined.
@@ -137,7 +142,8 @@ namespace brick {
                                  this->m_defaultTolerance));
           }
         } catch(...) {
-          std::cout << "Element " << ii << ":\n"
+          std::cout << "FFTTest::testComputeFFT failure at element " << ii
+                    << ":\n"
                     << "  amplitude " << amplitude
                     << " at phase " << phase << " vs. reference: \n"
                     << "  amplitude " << referenceAmplitudes[ii]

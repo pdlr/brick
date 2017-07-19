@@ -22,6 +22,14 @@ namespace brick {
 
   namespace linearAlgebra {
 
+    /**
+     ** This exception class is thrown when the rank of a matrix is
+     ** not as expected.
+     **/
+    class RankException;  // Forward declaration to help Doxygen.
+    BRICK_DECLARE_EXCEPTION_TYPE(RankException, brick::common::ValueException);
+
+
     /** 
      * This function computes the Cholesky factorization of a
      * symmetric, positive definite matrix.  That is, for a symmetric,
@@ -166,9 +174,10 @@ namespace brick {
      * @return The return value is a pair of Float64s in which the first
      * element is the variable a and the second is the variable b.
      */
-    std::pair<brick::common::Float64, brick::common::Float64>
-    linearFit(brick::numeric::Array1D<brick::common::Float64> const& array0,
-              brick::numeric::Array1D<brick::common::Float64> const& array1);
+    template <class FloatType>
+    std::pair<FloatType, FloatType>
+    linearFit(brick::numeric::Array1D<FloatType> const& array0,
+              brick::numeric::Array1D<FloatType> const& array1);
 
   
     /** 
@@ -374,5 +383,9 @@ namespace brick {
   } // namespace linearAlgebra
   
 } // namespace brick
+
+// Include file containing definitions of inline and template
+// functions.
+#include <brick/linearAlgebra/linearAlgebra_impl.hh>
 
 #endif // #ifndef BRICK_LINEARALGEBRA_LINEARALGEBRA_HH

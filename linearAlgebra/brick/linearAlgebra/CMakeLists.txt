@@ -18,7 +18,7 @@ target_link_libraries (brickLinearAlgebra
 install (TARGETS brickLinearAlgebra DESTINATION lib)
 install (FILES
   clapack.hh
-  linearAlgebra.hh
+  linearAlgebra.hh linearAlgebra_impl.hh
   DESTINATION include/brick/linearAlgebra)
 
 

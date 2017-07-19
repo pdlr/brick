@@ -14,6 +14,7 @@
 #include <brick/linearAlgebra/linearAlgebra.hh>
 #include <brick/linearAlgebra/clapack.hh>
 #include <brick/numeric/utilities.hh>
+#include <brick/numeric/numericTraits.hh>
 
 // Using directives for this source file only.
 using namespace brick::common;
@@ -517,64 +518,6 @@ namespace brick {
       // And solve for the inverse matrix.
       linearSolveInPlace(AA, AInverse); //Modifies AInverse.
       return AInverse;
-    }
-
-
-    // This function computes the best linear fit between the two input
-    // arrays.
-    std::pair<Float64, Float64>
-    linearFit(Array1D<Float64> const& array0,
-              Array1D<Float64> const& array1)
-    {
-      // We're looking for constants a and b which most nearly (in the
-      // least squares sense) satisfy the equation
-      //
-      //   a * array0 + b = array1
-      //
-      // Which can be rewritten
-      //
-      //   [array0[0], 1]   [a] = [array1[0]]
-      //   [array0[1], 1] * [b]   [array1[1]]
-      //   [array0[2], 1]         [array1[2]]
-      //   ...                    ...
-      // 
-      // Solving this using the Moore-Penrose pseudoinverse gives
-      //
-      //                                             -1
-      //   [a]  =  [dot(array0, array0), sum(array0)]  * [dot(array0, array1)]
-      //   [b]     [sum(array0),         N          ]    [sum(array1)        ]
-
-      // First some argument checking.
-      if(array0.size() != array1.size()) {
-        std::ostringstream message;
-        message << "Arguments array0 and array1 must have the same size, "
-                << "but are of size " << array0.size()
-                << " and " << array1.size() << " respectively." << std::endl;
-        BRICK_THROW(brick::common::ValueException,
-                    "linearFit(Array1D<Float64> const&, Array1D<Float64> const&)",
-                    message.str().c_str());                 
-      }
-      if(array0.size() == 0) {
-        BRICK_THROW(brick::common::ValueException,
-                    "linearFit(Array1D<Float64> const&, Array1D<Float64> const&)",
-                    "Arguments cannot have zero size.");
-      }
-
-      // Do linear regression.
-      Array2D<Float64> AMatrix(2, 2);
-      AMatrix(0, 0) = dot<Float64>(array0, array0);
-      AMatrix(0, 1) = sum<Float64>(array0);
-      AMatrix(1, 0) = sum<Float64>(array0);
-      AMatrix(1, 1) = array0.size();
-
-      Array1D<Float64> bVector(2);
-      bVector(0) = dot<Float64>(array0, array1);
-      bVector(1) = sum<Float64>(array1);
-    
-      Array2D<Float64> AInverse = inverse(AMatrix);
-
-      Array1D<Float64> result = matrixMultiply<Float64>(AInverse, bVector);
-      return std::make_pair(result(0), result(1));
     }
 
   

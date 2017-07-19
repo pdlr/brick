@@ -38,6 +38,7 @@ namespace brick {
       void testEigenvectors();
       void testEigenvectorsSymmetric();
       void testInverse();
+      void testLinearFit();
       void testLinearLeastSquares();
       void testLinearSolveInPlace();
       void testQrFactorization();
@@ -116,6 +117,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testEigenvectors);
       BRICK_TEST_REGISTER_MEMBER(testEigenvectorsSymmetric);
       BRICK_TEST_REGISTER_MEMBER(testInverse);
+      BRICK_TEST_REGISTER_MEMBER(testLinearFit);
       BRICK_TEST_REGISTER_MEMBER(testLinearLeastSquares);
       BRICK_TEST_REGISTER_MEMBER(testLinearSolveInPlace);
       BRICK_TEST_REGISTER_MEMBER(testQrFactorization);
@@ -527,6 +529,62 @@ namespace brick {
       }
     }
 
+
+    void
+    LinearAlgebraTest::
+    testLinearFit()
+    {
+      // Make sure we throw and exception if input is incorrectly sized.
+      numeric::Array1D<double> xx = m_bVectors[0].copy();
+      numeric::Array1D<double> yy(xx.size() + 1);
+      yy = 0.0;
+      BRICK_TEST_ASSERT_EXCEPTION(brick::common::ValueException,
+                                  linearFit(xx, yy));
+
+      // Zero size arrays should throw, too.
+      xx = numeric::Array1D<double>();
+      yy = numeric::Array1D<double>();
+      BRICK_TEST_ASSERT_EXCEPTION(brick::common::ValueException,
+                                  linearFit(xx, yy));
+
+      // Check function on good inputs.
+      for(size_t index0 = 0;
+          index0 < LinearAlgebraTest::numberOfTestMatrixSets;
+          ++index0) {
+        
+        xx = m_bVectors[index0].copy();
+        
+        for(int slope = -5; slope < 6; ++slope) {
+          for(int offset = -5; offset < 6; ++offset) {
+
+            yy = static_cast<double>(slope) * xx + static_cast<double>(offset);
+
+            std::pair<double, double> slope_offset = linearFit(xx, yy);
+
+            // Check that input is unchanged.
+            BRICK_TEST_ASSERT(
+              this->approximatelyEqual(xx, m_bVectors[index0]));
+
+            // Check that results are correct.
+            BRICK_TEST_ASSERT(
+              brick::common::approximatelyEqual(
+                slope_offset.first, static_cast<double>(slope),
+                this->m_defaultTolerance));
+            BRICK_TEST_ASSERT(
+              brick::common::approximatelyEqual(
+                slope_offset.second, static_cast<double>(offset),
+                this->m_defaultTolerance));
+          }
+        }
+      }
+
+      // Make sure we throw if the problem is ill-posed.  Inherit
+      // whatever yy was previously set.
+      xx = 0.0;
+      BRICK_TEST_ASSERT_EXCEPTION(brick::common::ValueException,
+                                  linearFit(xx, yy));
+    }
+  
 
     void
     LinearAlgebraTest::

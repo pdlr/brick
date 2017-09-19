@@ -10,6 +10,7 @@
 ***************************************************************************
 **/
 
+#include <brick/numeric/numericTraits.hh>
 #include <brick/numeric/sampledFunctions.hh>
 #include <brick/numeric/utilities.hh>
 
@@ -32,6 +33,7 @@ namespace brick {
       void tearDown(const std::string& /* testName */) {}
 
       void testGetGaussian1D();
+      void testGetHammingWindow1D();
 
     private:
 
@@ -49,6 +51,7 @@ namespace brick {
     {
       // Register all tests.
       BRICK_TEST_REGISTER_MEMBER(testGetGaussian1D);
+      BRICK_TEST_REGISTER_MEMBER(testGetHammingWindow1D);
     }
 
 
@@ -95,6 +98,37 @@ namespace brick {
            * std::exp(exponent) / sum);
         BRICK_TEST_ASSERT(
           approximatelyEqual(kernel[ii], referenceValue, m_defaultTolerance));
+      }
+    }
+
+
+    void
+    SampledFunctionsTest::
+    testGetHammingWindow1D()
+    {
+      constexpr std::size_t windowSize = 10;
+      Array1D<double> hamming = getHammingWindow1D<double>(windowSize);
+
+      // Minimal test just makes sure the window is unimodal in the
+      // center.
+      std::size_t ii = 1;
+      while(ii < (hamming.size() / 2)) {
+        BRICK_TEST_ASSERT(hamming[ii] > hamming[ii - 1]);
+        ++ii;
+      }
+
+      // Even windows will have two identical values in the middle.
+      if(windowSize % 2 == 0) {
+        double difference = hamming[ii] - hamming[ii - 1];
+        BRICK_TEST_ASSERT(absoluteValue(difference)
+                          < NumericTraits<double>::epsilon());
+        ++ii;
+      }
+
+      // Now down the slope to the other side.
+      while(ii < hamming.size()) {
+        BRICK_TEST_ASSERT(hamming[ii] < hamming[ii - 1]);
+        ++ii;
       }
     }
 

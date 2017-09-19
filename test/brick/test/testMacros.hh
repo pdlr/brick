@@ -34,7 +34,7 @@
  ** This macro throws a TestException if its argument does not throw
  ** the specified exception when evaluated.
  **
- ** Example: BRICK_TEST_ASSERT_EXCEPTION(ValueException, functionWhichThrows());
+ ** Example: BRICK_TEST_ASSERT_EXCEPTION(ValueException, functionThatThrows());
  **/
 #define BRICK_TEST_ASSERT_EXCEPTION(exceptionType, assertion) { \
   try { \

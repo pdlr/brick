@@ -73,6 +73,9 @@ option (BRICK_BUILD_GEOMETRY
 option (BRICK_BUILD_COMPUTER_VISION
   "brickComputerVision depends on all of the other brick libraries."
   ON)
+option (BRICK_BUILD_ISO12233
+  "brickIso12233 depends on all of the other brick libraries."
+  ON)
 
 # Set up compiler flags.  Be as strict as possible.  The
 # add_definitions line may not be portable.  We'll look into how to
@@ -145,6 +148,9 @@ brick_configure_library (
   )
 brick_configure_library (
   computerVision brickComputerVision ${BRICK_BUILD_COMPUTER_VISION}
+  )
+brick_configure_library (
+  iso12233 brickIso12233 ${BRICK_BUILD_ISO12233}
   )
 
 

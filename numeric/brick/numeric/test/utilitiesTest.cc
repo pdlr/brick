@@ -58,6 +58,7 @@ namespace brick {
       void testCompress0();
       void testCompress1();
       void testCount();
+      void testGetCentroid();
       void testGetMeanAndCovariance();
       void testMaximum();
       void testNormalizedCorrelation();
@@ -120,6 +121,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testCompress0);
       BRICK_TEST_REGISTER_MEMBER(testCompress1);
       BRICK_TEST_REGISTER_MEMBER(testCount);
+      BRICK_TEST_REGISTER_MEMBER(testGetCentroid);
       BRICK_TEST_REGISTER_MEMBER(testGetMeanAndCovariance);
       BRICK_TEST_REGISTER_MEMBER(testMaximum);
       BRICK_TEST_REGISTER_MEMBER(testSum0);
@@ -551,6 +553,21 @@ namespace brick {
       Array1D<Type> inputArray("[1, 2, 0, 4, 0, 5, -1, 0]");
       size_t numTrue = 5;
       BRICK_TEST_ASSERT(count(inputArray) == numTrue);
+    }
+
+
+    template <class Type>
+    void
+    UtilitiesTest<Type>::
+    testGetCentroid()
+    {
+      Array1D<Type> inputArray0("[0, 2, 0, 2, 0, 0, 0, 0]");
+      double centroid = getCentroid<double>(inputArray0);
+      BRICK_TEST_ASSERT(approximatelyEqual(centroid, 2.0, m_defaultTolerance));
+      
+      Array1D<Type> inputArray1("[-5, -1, 2, 6, 6, 2, -1, -5]");
+      centroid = getCentroid<double>(inputArray1);
+      BRICK_TEST_ASSERT(approximatelyEqual(centroid, 3.5, m_defaultTolerance));
     }
 
 

@@ -781,6 +781,44 @@ namespace brick {
   
 
     /** 
+     * This function returns the centroid of a 1D array.  That is, it
+     * returns the value
+     *
+     * @code
+     *   centroid = sum_i(f[i] * i) / sum_i(f[i])
+     * @endcode
+     *
+     * where f[i] is the i^th element of the input sequence.
+     *
+     * @param signal This argument is the input sequence.
+     * 
+     * @return The return value is the computed centroid.
+     */
+    template <class FloatType, class Type>
+    FloatType
+    getCentroid(Array1D<Type> const& signal);
+
+
+    /** 
+     * This function returns the centroid of a 1D array.  That is, it
+     * returns the value
+     *
+     * @code
+     *   centroid = sum_i(f[i] * i) / sum_i(f[i])
+     * @endcode
+     *
+     * where f[i] is the i^th element of the input sequence.
+     *
+     * @param signal This argument is the input sequence.
+     * 
+     * @return The return value is the computed centroid.
+     */
+    template <class FloatType, class IterType>
+    FloatType
+    getCentroid(IterType beginIter, IterType endIter);
+    
+    
+    /** 
      * This function estimates the mean and covariance of a set of
      * vectors, which are represented by the rows (or columns) of the
      * input 2D array.  Estimated mean and covariance are returned via

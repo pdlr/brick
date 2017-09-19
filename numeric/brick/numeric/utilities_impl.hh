@@ -1115,6 +1115,41 @@ namespace brick {
     }
   
 
+    // This function returns the centroid of a 1D array.
+    template <class FloatType, class Type>
+    FloatType
+    getCentroid(Array1D<Type> const& signal) {
+      return getCentroid<FloatType>(signal.begin(), signal.end());
+    }
+
+    
+    // This function returns the centroid of a 1D array.
+    template <class FloatType, class IterType>
+    FloatType
+    getCentroid(IterType beginIter, IterType endIter)
+    {
+      FloatType weightedAccumulator = FloatType(0);
+      FloatType accumulator = FloatType(0);
+      std::size_t ii = 1;
+      while(beginIter != endIter) {
+        accumulator += *beginIter;
+        weightedAccumulator += static_cast<FloatType>(ii) * *beginIter;
+        ++ii;
+        ++beginIter;
+      }
+
+      if(accumulator < NumericTraits<FloatType>::epsilon()) {
+        BRICK_THROW(brick::common::ValueException,
+                    "getCentroid()",
+                    "Sum of input sequence is too small to reliably "
+                    "compute centroid.");
+      }
+
+      // Remember that indices here are zero-based.
+      return (weightedAccumulator / accumulator) - 1;
+    }
+    
+    
     // This function estimates the mean and covariance of a set of
     // vectors, which are represented by the rows (or columns) of the
     // input 2D array.

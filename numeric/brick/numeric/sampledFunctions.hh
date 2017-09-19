@@ -139,7 +139,7 @@ namespace brick {
      * @param endIter This argument and the previous specify a
      * sequence into which the sampled window values will be copied.
      */
-    template <class Iter, class Type>
+    template <class Type, class Iter>
     void
     getHammingWindow1D(Iter beginIter, Iter endIter);
 

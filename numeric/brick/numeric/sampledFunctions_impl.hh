@@ -139,7 +139,7 @@ namespace brick {
 
     
     // This function generates a Hamming window of the specified size.
-    template <class Iter, class Type>
+    template <class Type, class Iter>
     void
     getHammingWindow1D(Iter beginIter, Iter endIter)
     {

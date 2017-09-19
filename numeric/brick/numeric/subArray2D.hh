@@ -30,9 +30,13 @@ namespace brick {
      **
      ** or
      **
-     **  Array2D<double> array0 = subArray(array1, Slice(0, 6, 2), Slice(1, 4));
+     **  Array2D<double> array0 = subArray(array1, Slice(0, 6, 2), Slice());
      **
-     ** Note that this class has deep copy semantics.
+     ** Note that this class has deep copy semantics.  The first
+     ** example, above, requires that array0 have 3 rows and 3
+     ** columns, and copies elements 1, 2, and 3 from rows 0, 2, and 4
+     ** of array1.  The second example creates a new array from the
+     ** same (copied) columns of every row in array1.
      **/
     template <class Type>
     class SubArray2D {

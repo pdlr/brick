@@ -309,44 +309,71 @@ namespace brick {
 			       int boundary0,
 			       int boundary1)
       {
+        // Result size matches the size of the input region.
         Array1D<OutputType> result(boundary1 - boundary0);
 
-	// Constants specified without reference to signal or result.
+        // Here we have the amount of overlap over the side of the
+        // input ROI.  The Kernel will extend this far past the
+        // boundary at the first and last element of the convolution.
 	const int kSizeOverTwo = static_cast<int>(kernel.size()) / 2;
 	
-	// Constants specified with respect to argument signal.
+        // At this input sequence element (ignoring the input window
+        // specified by boundary0 and boundary1), the kernel will no
+        // longer overlap the beginning of the input sequence, and
+        // reflecting the input sequence is no longer necessary..
 	const int transitionIndex0 = kSizeOverTwo;
-	const int transitionIndex1 = static_cast<int>(signal.size()) - kSizeOverTwo;
+
+        // At this input element, the kernel will begin to overlap the
+        // end of the input window, and we'll have to begin reflecting
+        // again.
+	const int transitionIndex1 =
+          static_cast<int>(signal.size()) - kSizeOverTwo;
+
+        // We only care about elements between boundary0 and
+        // boundary1, so we move our two transition indices so that
+        // they lie within that inclusive range.
 	const int clippedTransitionIndex0 =
 	  brick::common::clip(transitionIndex0, boundary0, boundary1);
 	const int clippedTransitionIndex1 =
 	  brick::common::clip(transitionIndex1, boundary0, boundary1);
 
-	// Constants specified with respect to result.
+	// This tells us at which output element we can stop worrying
+	// about reflecting the input signal around the beginning of
+	// the input sequence.
 	const int resultTransitionIndex0 =
 	  clippedTransitionIndex0 - boundary0;
+        const int resultTransitionIndex1 =
+          resultTransitionIndex0
+          + (clippedTransitionIndex1 - clippedTransitionIndex0);
 
+        // Do only the part of the correlation that involves
+        // reflecting around the beginning of the input sequence.
 	int inputIndex = boundary0;
 	int outputIndex = 0;
 	while(inputIndex < clippedTransitionIndex0) {
           OutputType dotProduct0 = static_cast<OutputType>(0);
 
-          int kernelIndex = clippedTransitionIndex0 - inputIndex;
-          size_t signalIndex = boundary0 + kSizeOverTwo;
-          while(kernelIndex < static_cast<int>(kernel.size())) {
-            dotProduct0 += static_cast<OutputType>(
-	      kernel[kernelIndex]
-	      * static_cast<OutputType>(signal[signalIndex]));
-            ++kernelIndex;
-            ++signalIndex;
-	  }
-          kernelIndex = clippedTransitionIndex0 - inputIndex - 1;
-          signalIndex = boundary0 + kSizeOverTwo;
+          // Do the reflection part first.  This is the part of the
+          // kernel that extends past the beginning of the input
+          // sequence.
+          int kernelIndex = clippedTransitionIndex0 - inputIndex - 1;
+          size_t signalIndex = 0;
           while(kernelIndex >= 0) {
             dotProduct0 += static_cast<OutputType>(
-	      kernel[kernelIndex]
-	      * static_cast<OutputType>(signal[signalIndex]));
+              kernel[kernelIndex]
+              * static_cast<OutputType>(signal[signalIndex]));
             --kernelIndex;
+            ++signalIndex;
+	  }
+
+          // Now do the normal, in-bounds, part.
+          kernelIndex = clippedTransitionIndex0 - inputIndex;
+          signalIndex = 0;
+          while(kernelIndex < static_cast<int>(kernel.size())) {
+            dotProduct0 += static_cast<OutputType>(
+              kernel[kernelIndex]
+              * static_cast<OutputType>(signal[signalIndex]));
+            ++kernelIndex;
             ++signalIndex;
 	  }
           result[outputIndex] = dotProduct0;
@@ -354,22 +381,32 @@ namespace brick {
 	  ++outputIndex;
 	}
 
+        // Do the non-wrapped "standard" correlation.
+        correlate1DCommon<OutputType, KernelType, SignalType>(
+	  kernel,
+	  signal.begin() + clippedTransitionIndex0 - kSizeOverTwo,
+	  signal.begin() + clippedTransitionIndex1 - kSizeOverTwo,
+	  result.begin() + resultTransitionIndex0);
 
+        // Now finish up the end bit of the correlation, where the
+        // kernel overlaps the end of the input sequence.
 	inputIndex = clippedTransitionIndex1;
-	outputIndex += clippedTransitionIndex1 - clippedTransitionIndex0;
+	outputIndex = resultTransitionIndex1;
 	while(inputIndex < boundary1) {
           OutputType dotProduct0 = static_cast<OutputType>(0);
 
-          int kernelStopIndex = boundary1 - inputIndex;
+          // Do the normal, in-bounds part of the correlation.
           int kernelIndex = 0;
           size_t signalIndex = inputIndex - kSizeOverTwo;
-          while(kernelIndex < kernelStopIndex) {
+          while(signalIndex < signal.size()) {
             dotProduct0 += static_cast<OutputType>(
 	      kernel[kernelIndex]
 	      * static_cast<OutputType>(signal[signalIndex]));
             ++kernelIndex;
             ++signalIndex;
           }
+
+          // Now do the reflected part of the correlation.
 	  --signalIndex;
           while(kernelIndex < static_cast<int>(kernel.size())) {
             dotProduct0 += static_cast<OutputType>(
@@ -378,16 +415,12 @@ namespace brick {
             ++kernelIndex;
             --signalIndex;
           }
+          
           result[outputIndex] = dotProduct0;
 	  ++inputIndex;
 	  ++outputIndex;
         }
-	
-        correlate1DCommon<OutputType, KernelType, SignalType>(
-	  kernel,
-	  signal.begin() + clippedTransitionIndex0 - kSizeOverTwo,
-	  signal.begin() + clippedTransitionIndex1 - kSizeOverTwo,
-	  result.begin() + resultTransitionIndex0);
+
 	return result;
       }
 

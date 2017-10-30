@@ -180,6 +180,21 @@ namespace brick {
         Array1D<FloatType> outputRow(inputRow.size());
         if(newFromOld > 0) {
           // Maximum is on the "left" half of inputRow.
+          std::size_t newColumn = newFromOld;
+          std::size_t oldColumn = 0;
+          while(newColumn < outputRow.size()) {
+            outputRow[newColumn] = inputRow[oldColumn];
+            ++newColumn;
+            ++oldColumn;
+          }
+          newColumn = 0;
+          while(oldColumn < inputRow.size()) {
+            outputRow[newColumn] = inputRow[oldColumn];
+            ++newColumn;
+            ++oldColumn;
+          }
+        } else {
+          // Maximum is on the "right" half of inputRow.
           std::size_t newColumn = 0;
           std::size_t oldColumn = inputRow.size() - newFromOld;
           while(oldColumn < inputRow.size()) {
@@ -530,18 +545,16 @@ namespace brick {
           //
           // The factor of 4 is required by the standard.  Now that we
           // have edge location in this row, we can solve for delta.
-          FloatType delta = outputEdgeLocation - (FloatType(4.0) * edgeLocation);
+          FloatType delta = (outputEdgeLocation
+                             - (FloatType(4.0) * edgeLocation));
 
           // Invert the linear equation to find out where the first and
-          // last pixels of outputRow project to in inputRow.  The extra
-          // 0.5 added in each row is to make the static cast round to
-          // the nearest integer, rather than truncating.
+          // last pixels of outputRow project to in inputRow.
           std::size_t inputStartColumn = static_cast<size_t>(
-            ((FloatType(0.0) - delta) / FloatType(4.0))
-            + FloatType(0.5));
+            std::round((FloatType(0.0) - delta) / FloatType(4.0)));
           std::size_t inputStopColumn = static_cast<size_t>(
-            ((FloatType(outputWindowSize - 1) - delta) / FloatType(4.0))
-            + FloatType(0.5));
+            std::round((FloatType(outputWindowSize - 1) - delta)
+                       / FloatType(4.0)));
 
           // Make sure no indexing issues in the input patch.  Remember
           // that size_t is unsigned, so negative numbers roll over to
@@ -556,35 +569,32 @@ namespace brick {
                         "input image patch.");
           }
 
-          // Adjust start and stop columns to avoid indexing issues in
-          // the output row.  Remember that size_t is unsigned, so
+          // We've found the input pixel to which the first output
+          // pixel most nearly maps, but remember that there are 4x as
+          // many output pixels as input pixels.  The center of this
+          // input pixel does not necessarily map to the first output
+          // pixel.  We project in the other direction now to find out
+          // which output pixel gets the contents of this first pixel.
+          // If the result is out of bounds, we increment the input
+          // pixel index.  Remember that size_t is unsigned, so
           // negative numbers roll over to large positive numbers.
           std::size_t outputStartColumn = 0;
           while(1) {
             outputStartColumn = static_cast<std::size_t>(
-              inputStartColumn * 4 + delta + 0.5);
+              std::round(inputStartColumn * 4 + delta));
             if(outputStartColumn < outputWindowSize) {break;}
             ++inputStartColumn;
           }
-          std::size_t outputStopColumn = 0;
-          while(1) {
-            outputStopColumn = static_cast<std::size_t>(
-              inputStopColumn * 4 + delta + 0.5);
-            if(outputStopColumn < outputWindowSize) {break;}
-            --inputStopColumn;
-          }
-          if(inputStartColumn >= inputStopColumn) {
-            BRICK_THROW(brick::common::LogicException,
-                        "shiftAndCombineRows()",
-                        "Start and stop columns are not strictly ordered.");
-          }
-        
+
           // Now copy and accumulate this row's data.
           std::size_t occ = outputStartColumn;
-          for(std::size_t cc = inputStartColumn; cc < inputStopColumn; ++cc) {
+          std::size_t cc = inputStartColumn;
+          while(cc < reflectanceImage.columns()
+                && occ < outputRow.size()) {
             outputRow[occ] += reflectanceImage(rr, cc);
             counts[occ] += 1;
             occ += 4;
+            ++cc;
           }
         }
 

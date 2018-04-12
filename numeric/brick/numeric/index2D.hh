@@ -41,7 +41,7 @@ namespace brick {
      **   Index2D exampleIndex(1, 2);
      **   assert(exampleIndex[0] == exampleIndex.getU());
      **   assert(exampleIndex[0] == 2);
-     **   assert(exampleIndex[1] == exampleIndex.getU());
+     **   assert(exampleIndex[1] == exampleIndex.getV());
      **   assert(exampleIndex[1] == 1);
      ** @endcode
      **/

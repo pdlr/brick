@@ -21,7 +21,7 @@ namespace brick {
   namespace computerVision {
   
     /**
-     * Using Horn's method [1], find the Rigid body tranform which
+     * Using Horn's method [1], find the Rigid body transform that
      * takes one set of points (represented as
      * brick::numeric::Vector3D<FloatType>) and most nearly registers
      * them with a second set.

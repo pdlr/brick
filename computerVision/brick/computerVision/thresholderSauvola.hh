@@ -65,7 +65,7 @@ namespace brick {
      **   Image<GRAY8> binaryImage = thresholder(inputImage0);
      ** @endcode
      **
-     ** J.  Sauvola and M. Pietikainen, “Adaptive document image
+     ** [1] J. Sauvola and M. Pietikainen, “Adaptive document image
      ** binarization,” Pattern Recognition 33(2), pp. 225–236, 2000.
      **/
     template < ImageFormat Format,

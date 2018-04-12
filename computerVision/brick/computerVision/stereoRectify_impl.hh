@@ -154,15 +154,16 @@ namespace brick {
       // @endverbatim
       // 
       // If we invert the 4x4 matrix in this last equation using the
-      // cofactor method, and discard a scale factor of (-f_x /
-      // determinant) because it simply changes the projective scale
-      // factor (which we've called "a" above, but call "b" below), we get:
+      // cofactor method, and discard a scale factor of
+      // (-f_x / determinant) because it simply changes the projective
+      // scale factor (which we've called "a" above, but call "alpha"
+      // below), we get:
       //
       // @verbatim
-      //       |x|   |f_y * b,       0,   0,     -f_y * c_u * b|   |u|
-      //   b * |y| = |0,       f_x * b,   0,     -f_x * c_v * b| * |v|
-      //       |z|   |0,             0,   0,      f_x * f_y * b|   |d|
-      //       |1|   |0,             0, f_y, f_y * (c_u' - c_u)|   |1|
+      //           |x|   |f_y * b,       0,   0,     -f_y * c_u * b|   |u|
+      //   alpha * |y| = |0,       f_x * b,   0,     -f_x * c_v * b| * |v|
+      //           |z|   |0,             0,   0,      f_x * f_y * b|   |d|
+      //           |1|   |0,             0, f_y, f_y * (c_u' - c_u)|   |1|
       // @endverbatim
 
       FloatType fX = intrinsics0.getFocalLengthX();

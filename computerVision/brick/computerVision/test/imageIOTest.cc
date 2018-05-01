@@ -37,11 +37,13 @@ namespace brick {
 
       // Tests of member functions.
       void testReadPGM16();
+
+#if HAVE_LIBPNG
       void testWritePNG_GRAY8();
       void testWritePNG_RGB8();
       void testWritePNG_GRAY16();
       void testWritePNG_RGB16();
-
+#endif
     private:
 
     }; // class ImageIOTest
@@ -54,10 +56,12 @@ namespace brick {
       : brick::test::TestFixture<ImageIOTest>("ImageIOTest")
     {
       BRICK_TEST_REGISTER_MEMBER(testReadPGM16);
+#if HAVE_LIBPNG
       BRICK_TEST_REGISTER_MEMBER(testWritePNG_GRAY8);
       BRICK_TEST_REGISTER_MEMBER(testWritePNG_RGB8);
       BRICK_TEST_REGISTER_MEMBER(testWritePNG_GRAY16);
       BRICK_TEST_REGISTER_MEMBER(testWritePNG_RGB16);
+#endif
     }
 
 
@@ -102,7 +106,7 @@ namespace brick {
       }
     }
 
-
+#if HAVE_LIBPNG
     void
     ImageIOTest::
     testWritePNG_GRAY8()
@@ -175,7 +179,7 @@ namespace brick {
       BRICK_TEST_ASSERT(std::equal(resultImage.begin(), resultImage.end(),
                                    referenceImage16.begin()));
     }
-    
+#endif
   } // namespace computerVision
 
 } // namespace brick

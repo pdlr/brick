@@ -23,7 +23,7 @@ namespace brick {
     // The constructor opens a png image file and reads its contents.
     PngReader::
     PngReader(std::string const& fileName)
-      : m_pngPtr(png_structp_NULL),
+      : m_pngPtr(((png_structp)NULL)),
         m_infoPtr(0),
         m_width(0),
         m_height(0),
@@ -118,7 +118,7 @@ namespace brick {
           
           // Read entire image into pngPtr.
           png_read_png(this->m_pngPtr, this->m_infoPtr,
-                       PNG_TRANSFORM_IDENTITY, png_voidp_NULL);
+                       PNG_TRANSFORM_IDENTITY, ((png_voidp)NULL));
 
           // Find out about our image.
           png_get_IHDR(this->m_pngPtr, this->m_infoPtr,
@@ -152,7 +152,7 @@ namespace brick {
             
         } catch(...) {
           png_destroy_read_struct(
-            &(this->m_pngPtr), &(this->m_infoPtr), png_infopp_NULL);
+            &(this->m_pngPtr), &(this->m_infoPtr), ((png_infopp)NULL));
           throw;
         }
         
@@ -169,7 +169,7 @@ namespace brick {
     ~PngReader()
     {
       png_destroy_read_struct(&(this->m_pngPtr), &(this->m_infoPtr),
-                              png_infopp_NULL);
+                              ((png_infopp)NULL));
     }
     
 

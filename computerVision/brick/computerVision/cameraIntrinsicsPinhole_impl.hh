@@ -133,7 +133,7 @@ namespace brick {
       }
 
       // We'll silently skip whitespace.
-      common::Expect::FormatFlag flags = common::Expect::SkipWhitespace;
+      common::Expect::FormatFlag flags = common::Expect::SkipWhitespace();
 
       // Read input data into temporary variables.
       FloatType centerU, centerV, kX, kY;

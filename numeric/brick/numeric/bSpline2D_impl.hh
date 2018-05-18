@@ -175,7 +175,7 @@ namespace brick {
 
       if(this->m_isIsotropic) {
         FloatType cellSize = std::max(this->m_xyCellSize.x(),
-                                      this->m_xyCellSize.x());
+                                      this->m_xyCellSize.y());
         this->m_xyCellSize.setValue(cellSize, cellSize);
       }
 
@@ -446,7 +446,7 @@ namespace brick {
 
       if(this->m_isIsotropic) {
         FloatType cellSize = std::max(this->m_xyCellSize.x(),
-                                      this->m_xyCellSize.x());
+                                      this->m_xyCellSize.y());
         this->m_xyCellSize.setValue(cellSize, cellSize);
       }
 

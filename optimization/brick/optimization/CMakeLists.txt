@@ -10,6 +10,7 @@
 
 install (FILES
 
+  autoGradientFunctionLM.hh
   gradientFunction.hh
   gradientFunctionLM.hh
   optimizer.hh
@@ -21,9 +22,6 @@ install (FILES
   
   DESTINATION include/brick/optimization)
 
-
-# This library doesn't have any tests yet.
-# 
-# if (BUILD_BRICK_TESTS)
-#   add_subdirectory (test)
-# endif (BUILD_BRICK_TESTS)
+if (BRICK_BUILD_TESTS)
+  add_subdirectory (test)
+endif (BRICK_BUILD_TESTS)

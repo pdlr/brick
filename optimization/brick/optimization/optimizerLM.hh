@@ -4,7 +4,7 @@
 *
 * Header file declaring OptimizerLM class.
 *
-* (C) Copyright 2003-2011 David LaRose, dlr@cs.cmu.edu
+* (C) Copyright 2003-2018 David LaRose, dlr@cs.cmu.edu
 * See accompanying LICENSE file for details.
 *
 ***************************************************************************
@@ -30,8 +30,59 @@ namespace brick {
      ** algorithm seeks the parameter value which minimizes the
      ** objective function.  The template parameter (Functor) defines
      ** the type to use as the objective function of the minimization,
-     ** and must support the GradientFunction interface.
+     ** and must support the following interface:
      **
+     ** @code
+     **   struct MyFunctor
+     **     : public std::unary_function<ArrayType, ScalarType>
+     **   {
+     **     // This operator evaluates and returns the sum-of-squares
+     **     // error at the specified value of parameter vector theta.
+     **     ScalarType operator()(ArrayType const& theta);
+     **
+     **     // This method computes the gradient and Hessian matrix of
+     **     // this->operator(), where dEdX is the gradient, and
+     **     // d2EdX2 is the Hessian (second derivative) matrix.
+     **     void
+     **     computeGradientAndHessian(
+     **       ArrayType const& theta,
+     **       brick::numeric::Array1D<ScalarType>& dEdX,
+     **       brick::numeric::Array2D<ScalarType>& d2EdX2);
+     **   };
+     ** @endcode
+     **
+     ** In the example above, ArrayType is a vector or 1D array type that
+     ** supports the following interface:
+     **
+     **   ArrayType(std::size_t N): construct an N-element vector.
+     **   std::size_t size(): return the number of elements in the vector.
+     **   ArrayType::element_type& operator[](size_t ii): return a
+     **                        reference to the (ii)th element of the array.
+     **   const ArrayType::element_type& operator[](size_t ii) const:
+     **                        return a const reference to the (ii)th element
+     **                        of the array.
+     **
+     ** In the example above, ScalarType and the element_type of ArrayType
+     ** must both continuous scalar types, such as double or float, and
+     ** it must be possible to implicitly cast between them.
+     **
+     ** Here's an example of how you might use this OptimizerLM:
+     **
+     ** @code
+     **   MyFunctor ssdFunction;
+     **   OptimizerLM<MyFunctor> optimizer(ssdFunction);
+     **   optimizer.setStartPoint(myStartPoint);
+     **   myResult = optimizer.optimum();
+     ** @endcode
+     **
+     ** For code that implements automatic differentiation, and
+     ** removes the burden of computing gradient and Hessian, see the
+     ** AutoGradientFunctionLM class template.
+     **
+     ** For some old (and numerically poor) code that implements divided-
+     ** differences differentiation, see the GradientFunctionLM class
+     ** template.
+     ** 
      ** [1] W. H. Press et al., Numerical Recipes in C The Art of
      ** Scientific Computing, Cambridge University Press, 1988.
      **/

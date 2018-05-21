@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file transform2DTest.cpp
+* @file brick/numeric/test/transform2DTest.cpp
 * 
 * Source file defining Transform2DTest class.
 *

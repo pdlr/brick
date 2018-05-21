@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file array2DTest.cpp
+* @file brick/numeric/test/array2DTest.cpp
 * 
 * Source file defining Array2DTest class.
 *

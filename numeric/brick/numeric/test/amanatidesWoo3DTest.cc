@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file amanatidesWoo3DTest.cc
+* @file brick/numeric/test/amanatidesWoo3DTest.cc
 * 
 * Source file defining AmanatidesWoo3DTest class.
 *

@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file fftTest.cc
+* @file brick/numeric/test/fftTest.cc
 * 
 * Source file defining FFTTest class.
 *

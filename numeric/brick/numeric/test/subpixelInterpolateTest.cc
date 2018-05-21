@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file subpixelInterpolateTest.cc
+* @file brick/numeric/test/subpixelInterpolateTest.cc
 *
 * Source file defining tests for the subpixelInterpolate() function
 * template.

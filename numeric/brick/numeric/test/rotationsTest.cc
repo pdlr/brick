@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file rotationsTest.cpp
+* @file brick/numeric/test/rotationsTest.cpp
 * 
 * Source file defining rotationsTest class.
 *

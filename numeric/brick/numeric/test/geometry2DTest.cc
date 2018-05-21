@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file geometry2DTest.cc
+* @file brick/numeric/test/geometry2DTest.cc
 * 
 * Source file defining tests for the geometry2DTest class.
 *

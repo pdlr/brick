@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file array1DTest.cpp
+* @file brick/numeric/test/array1DTest.cpp
 * 
 * Source file defining Array1DTest class.
 *

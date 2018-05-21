@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file polynomialTest.cc
+* @file brick/numeric/test/polynomialTest.cc
 * 
 * Source file defining PolynomialTest class.
 *

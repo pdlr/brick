@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file index3DTest.cpp
+* @file brick/numeric/test/index3DTest.cpp
 *
 * Source file defining tests for the Index3D data structure.
 *

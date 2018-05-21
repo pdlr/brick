@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file solveQuadraticTest.cpp
+* @file brick/numeric/test/solveQuadraticTest.cpp
 *
 * Source file tests for solveQuadratic function templates.
 *

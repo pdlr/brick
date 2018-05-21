@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file scatteredDataInterpolator2DTest.cpp
+* @file brick/numeric/test/scatteredDataInterpolator2DTest.cpp
 * 
 * Source file defining ScatteredDataInterpolator2DTest class.
 *

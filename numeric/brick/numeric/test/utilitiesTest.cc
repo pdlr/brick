@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file utilitiesTest.cpp
+* @file brick/numeric/test/utilitiesTest.cpp
 *
 * Source file defining UtilitiesTest class.
 *

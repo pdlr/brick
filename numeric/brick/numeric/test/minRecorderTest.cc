@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file minRecorderTest.cpp
+* @file brick/numeric/test/minRecorderTest.cpp
 * 
 * Source file defining minRecorderTest class.
 *

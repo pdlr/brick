@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file derivativeRiddersTest.cpp
+* @file brick/numeric/test/derivativeRiddersTest.cpp
 *
 * Source file defining tests for numerical differentiation.
 *

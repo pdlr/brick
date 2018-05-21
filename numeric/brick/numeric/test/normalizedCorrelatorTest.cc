@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file normalizedCorrelatorTest.cc
+* @file brick/numeric/test/normalizedCorrelatorTest.cc
 * 
 * Source file defining NormalizedCorrelatorTest class.
 *

@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file differentiableScalarTest.cc
+* @file brick/numeric/test/differentiableScalarTest.cc
 * 
 * Source file defining DifferentiableScalarTest class.
 *

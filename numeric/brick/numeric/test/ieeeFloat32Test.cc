@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file IEEEFloat32Test.cc
+* @file brick/numeric/test/IEEEFloat32Test.cc
 * 
 * Source file defining IEEEFloat32Test class.
 *

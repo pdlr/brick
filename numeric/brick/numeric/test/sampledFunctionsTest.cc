@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file sampledFunctionsTest.cpp
+* @file brick/numeric/test/sampledFunctionsTest.cpp
 * 
 * Source file defining sampledFunctionsTest class.
 *

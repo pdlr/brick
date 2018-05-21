@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file maxRecorderTest.cpp
+* @file brick/numeric/test/maxRecorderTest.cpp
 * 
 * Source file defining maxRecorderTest class.
 *

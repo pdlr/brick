@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file bSpline2DTest.cpp
+* @file brick/numeric/test/bSpline2DTest.cpp
 * 
 * Source file defining BSpline2DTest class.
 *

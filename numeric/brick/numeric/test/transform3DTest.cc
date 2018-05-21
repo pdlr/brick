@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file transform3DTest.cpp
+* @file brick/numeric/test/transform3DTest.cpp
 * 
 * Source file defining Transform3DTest class.
 *

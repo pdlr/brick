@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file array3DTest.cpp
+* @file brick/numeric/test/array3DTest.cpp
 * 
 * Source file defining Array3DTest class.
 *

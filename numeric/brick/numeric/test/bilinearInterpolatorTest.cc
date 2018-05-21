@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file bilinearInterpolatorTest.cc
+* @file brick/numeric/test/bilinearInterpolatorTest.cc
 * 
 * Source file defining BilinearInterpolatorTest class.
 *

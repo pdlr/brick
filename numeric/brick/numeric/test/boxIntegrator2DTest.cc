@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file boxIntegrator2DTest.cc
+* @file brick/numeric/test/boxIntegrator2DTest.cc
 * 
 * Source file defining BoxIntegrator2DTest class.
 *

@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file solveCubicTest.cpp
+* @file brick/numeric/test/solveCubicTest.cpp
 *
 * Source file tests for solveCubic functions.
 *

@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file convolveNDTest.cpp
+* @file brick/numeric/test/convolveNDTest.cpp
 *
 * Source file defining ConvolveNDTest class.
 *

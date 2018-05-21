@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file stencil2DTest.cpp
+* @file brick/numeric/test/stencil2DTest.cpp
 * 
 * Source file defining Stencil2DTest class.
 *

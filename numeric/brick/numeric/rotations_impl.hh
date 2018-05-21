@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file rotations_impl.cc
+* @file brick/numeric/rotations_impl.cc
 *
 * Source file declaring functions which convert between different
 * representations of 3D rotation.

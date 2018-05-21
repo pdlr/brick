@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file quaternion.cpp
+* @file brick/numeric/quaternion.cpp
 *
 * Source file defining Quaternion class.
 *

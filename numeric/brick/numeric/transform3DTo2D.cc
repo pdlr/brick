@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file transform3DTo2D_impl.hh
+* @file brick/numeric/transform3DTo2D_impl.hh
 *
 * Source file providing implementations for symbols declared in
 * transform3DTo2D.hh.

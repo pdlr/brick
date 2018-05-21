@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file transform3D_impl.hh
+* @file brick/numeric/transform3D_impl.hh
 *
 * Header file providing implementations for inline and template
 * functions declared in transform3D.hh.

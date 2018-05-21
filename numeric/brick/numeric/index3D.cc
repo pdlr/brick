@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file index3D.cpp
+* @file brick/numeric/index3D.cpp
 *
 * Source file defining Index3D class.
 *

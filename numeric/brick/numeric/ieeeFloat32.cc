@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file IEEEFloat32.cpp
+* @file brick/numeric/IEEEFloat32.cpp
 *
 * Source file defining the IEEEFloat32 class.
 *

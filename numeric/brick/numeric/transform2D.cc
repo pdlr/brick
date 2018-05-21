@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file transform2D.cc
+* @file brick/numeric/transform2D.cc
 *
 * Source file defining symbols declared in transform2D.hh.
 *

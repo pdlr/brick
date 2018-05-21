@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file index2D.cpp
+* @file brick/numeric/index2D.cpp
 *
 * Source file defining Index2D class.
 *

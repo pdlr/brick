@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file transform3D.cc
+* @file brick/numeric/transform3D.cc
 *
 * Source file providing implementations for symbols declared in
 * transform3D.hh.

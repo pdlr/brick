@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file transform2D_impl.hh
+* @file brick/numeric/transform2D_impl.hh
 *
 * Header file providing implementations for inline and template
 * functions declared in transform2D.hh.

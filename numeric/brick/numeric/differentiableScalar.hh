@@ -643,6 +643,20 @@ namespace brick {
 
 
     /** 
+     * This function computes the natural log of a
+     * DifferentiableScalar instance, with partial derivatives.
+     * 
+     * @param arg0 The natural logarithm of this argument will be
+     * computed.
+     * 
+     * @return The return value is the result of the calculation.
+     */
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    logarithm(DifferentiableScalar<Type, Dimension> const& arg0);
+
+
+    /** 
      * This function computes the sine of a DifferentiableScalar
      * instance, with partial derivatives.
      * 

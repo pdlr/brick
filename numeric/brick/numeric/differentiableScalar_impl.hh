@@ -388,6 +388,25 @@ namespace brick {
       return result;
     }
 
+
+    // This function computes the natural log of a
+    // DifferentiableScalar instance, with partial derivatives.
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    logarithm(DifferentiableScalar<Type, Dimension> const& arg0)
+    {
+      DifferentiableScalar<Type, Dimension> result(
+        brick::numeric::logarithm(arg0.getValue()));
+
+      // Derivative of log(f(x)) is (1/f(x)) * f'(x).
+      for(uint32_t ii = 0; ii < Dimension; ++ii) {
+        result.setPartialDerivative(
+          ii, arg0.getPartialDerivative(ii) / arg0.getValue());
+      }
+
+      return result;
+    }
+
     
     // This function computes the sine of a DifferentiableScalar
     // instance, with partial derivatives.

@@ -152,7 +152,7 @@ namespace brick {
 
 #if 0
 
-int main(int argc, char** argv)
+int main(int /* argc */, char** /* argv */)
 {
   brick::optimization::AutoGradientFunctionLMTest currentTest;
   bool result = currentTest.run();

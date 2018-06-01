@@ -165,7 +165,7 @@ namespace brick {
        * the shape of the loss function switches from quadratic to
        * linear.
        */
-      LossFunctionHuber(FloatType const& delta);
+      LossFunctionHuber(FloatType const& delta = FloatType(1.0));
 
       
       /** 
@@ -259,7 +259,7 @@ namespace brick {
        * @param delta This argument specifies the value of delta in
        * the equation described above.
        */
-      LossFunctionHuber(FloatType const& delta);
+      LossFunctionPseudoHuber(FloatType const& delta = FloatType(1.0));
 
       
       /** 
@@ -430,8 +430,9 @@ namespace brick {
  * if it weren't templated.
  *******************************************************************/
 
+#include <brick/common/constants.hh>
 #include <brick/numeric/differentiableScalar.hh>
-#include <brick/numeric/utilities.hh>
+#include <brick/numeric/mathFunctions.hh>
 
 namespace brick {
 
@@ -442,7 +443,7 @@ namespace brick {
     template <class FloatType>
     LossFunctionCauchy<FloatType>::
     LossFunctionCauchy()
-      : public std::unary_function<FloatType, FloatType>()
+      : std::unary_function<FloatType, FloatType>()
     {
       // Empty.
     }
@@ -455,7 +456,7 @@ namespace brick {
     LossFunctionCauchy<FloatType>::
     getValue(FloatType const& argument)
     {
-      return brick::common::logarithm(
+      return brick::numeric::logarithm(
         FloatType(1.0) + argument * argument / FloatType(2.0));
     }
 
@@ -477,7 +478,7 @@ namespace brick {
     LossFunctionCauchy<FloatType>::
     getL2Equivalent(FloatType const& argument)
     {
-      return brick::common::squareRoot(this->getValue());
+      return brick::numeric::squareRoot(this->getValue(argument));
     }
 
     
@@ -500,7 +501,7 @@ namespace brick {
     LossFunctionHuber<FloatType>::
     getValue(FloatType const& argument)
     {
-      FloatType argMagnitude = brick::common::absoluteValue(argument);
+      FloatType argMagnitude = brick::numeric::absoluteValue(argument);
       if(argMagnitude <= m_delta) {
         return argument * argument * FloatType(0.5);
       }
@@ -515,10 +516,10 @@ namespace brick {
     LossFunctionHuber<FloatType>::
     getWeight(FloatType const& argument)
     {
-      FloatType argMagnitude = brick::common::absoluteValue(argument);
+      FloatType argMagnitude = brick::numeric::absoluteValue(argument);
       if(argMagnitude <= m_delta) {
         return argument;
-      } else if(argument < 0.0) {
+      } else if(argument < FloatType(0.0)) {
         return -m_delta;
       }
       return m_delta;
@@ -529,13 +530,13 @@ namespace brick {
     template <class FloatType>
     FloatType
     LossFunctionHuber<FloatType>::
-    FloatType getL2Equivalent(FloatType const& argument)
+    getL2Equivalent(FloatType const& argument)
     {
-      FloatType argMagnitude = brick::common::absoluteValue(argument);
+      FloatType argMagnitude = brick::numeric::absoluteValue(argument);
       if(argMagnitude <= m_delta) {
         return brick::common::constants::rootTwoOverTwo * argument;
       }
-      return brick::common::squareRoot(
+      return brick::numeric::squareRoot(
         m_delta * argMagnitude - m_deltaSquaredOverTwo);
     }
     
@@ -554,11 +555,12 @@ namespace brick {
 
     // Applies the loss function.
     template <class FloatType>
+    FloatType
     LossFunctionPseudoHuber<FloatType>::
-    FloatType getValue(FloatType const& argument)
+    getValue(FloatType const& argument)
     {
       return m_deltaSquared *
-        (brick::common::squareRoot(
+        (brick::numeric::squareRoot(
           FloatType(1.0) + argument * argument / m_deltaSquared)
          - FloatType(1.0));
     }
@@ -571,7 +573,7 @@ namespace brick {
     LossFunctionPseudoHuber<FloatType>::
     getWeight(FloatType const& argument)
     {
-      return argument / brick::common::squareRoot(
+      return argument / brick::numeric::squareRoot(
         FloatType(1.0) + argument * argument / m_deltaSquared);
     }
 
@@ -580,9 +582,9 @@ namespace brick {
     template <class FloatType>
     FloatType
     LossFunctionPseudoHuber<FloatType>::
-    FloatType getL2Equivalent(FloatType const& argument)
+    getL2Equivalent(FloatType const& argument)
     {
-      return brick::common::squareRoot(
+      return brick::numeric::squareRoot(
         this->getValue(argument));
     }
 
@@ -607,11 +609,15 @@ namespace brick {
     LossFunctionTukeyBiweight<FloatType>::
     getValue(FloatType const& argument)
     {
-      FloatType x2MinusC2 = argument * argument - m_cSquared;
-      FloatType numerator = x2MinusC2 * x2MinusC2 * x2MinusC2;
-      FloatType denominator = FloatType(6) * m_cSquared * m_cSquared;
       FloatType integrationConstant = m_cSquared / FloatType(6.0);
-      return numerator / denominator + integrationConstant;
+      FloatType argMagnitude = brick::numeric::absoluteValue(argument);
+      if(argMagnitude <= m_c) {
+        FloatType x2MinusC2 = argument * argument - m_cSquared;
+        FloatType numerator = x2MinusC2 * x2MinusC2 * x2MinusC2;
+        FloatType denominator = FloatType(6) * m_cSquared * m_cSquared;
+        return numerator / denominator + integrationConstant;
+      }
+      return integrationConstant;
     }
 
 
@@ -622,7 +628,7 @@ namespace brick {
     LossFunctionTukeyBiweight<FloatType>::
     getWeight(FloatType const& argument)
     {
-      FloatType argMagnitude = brick::common::absoluteValue(argument);
+      FloatType argMagnitude = brick::numeric::absoluteValue(argument);
       if(argMagnitude <= m_c) {
         FloatType temp0 = FloatType(1.0) - argument * argument / m_cSquared;
         return argument * temp0 * temp0;
@@ -636,12 +642,7 @@ namespace brick {
     LossFunctionTukeyBiweight<FloatType>::
     getL2Equivalent(FloatType const& argument)
     {
-      FloatType argMagnitude = brick::common::absoluteValue(argument);
-      if(argMagnitude <= m_c) {
-        FloatType temp0 = FloatType(1.0) - argument * argument / m_cSquared;
-        brick::squareRoot(argument * temp0 * temp0);
-      }
-      return FloatType(0.0);
+      return brick::numeric::squareRoot(this->getValue(argument));
     }
     
   } // namespace optimization

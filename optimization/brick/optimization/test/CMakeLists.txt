@@ -26,3 +26,4 @@ endmacro (brick_optimization_set_up_test test_name)
 # Here are all the tests to be run.
 
 brick_optimization_set_up_test (autoGradientFunctionLMTest)
+brick_optimization_set_up_test (lossFunctionsTest)

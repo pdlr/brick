@@ -151,11 +151,17 @@ namespace brick {
     {
     public:
       /** 
+       * The default constructor simply uses the default SSDFunction.
+       */
+      AutoGradientFunctionLM();
+      
+
+      /** 
        * Constructor.
        *
        * @param ssdFunction This argument is the function object to be
        * adapted.
-        */
+       */
       AutoGradientFunctionLM(SSDFunction const& ssdFunction);
       
 
@@ -179,16 +185,11 @@ namespace brick {
       /** 
        * This method approximates the gradient and Hessian matrix of
        * this->operator().  The Jacobian of SSDFunction::operator()()
-       * is computed by divided differences, the gradient is computed
-       * directly from the Jacobian, and the Hessian matrix is
-       * computed from the Jacobian using the Levenberg-Marquardt
-       * approximation.  This method should often be overridden by a
-       * subclass.
+       * is computed by automatic differentiation, the gradient is
+       * computed directly from the Jacobian, and the Hessian matrix
+       * is computed from the Jacobian using the Levenberg-Marquardt
+       * approximation.
        *
-       * This function will throw ValueException if you set
-       * constructor argument epsilon small enough that, when added to
-       * the elements of theta, it gets completely rounded away.
-       * 
        * @param theta The point around which to compute the gradient
        * and hessian.
        *
@@ -232,6 +233,16 @@ namespace brick {
 
   namespace optimization {
 
+    // Default constructor.
+    template <class SSDFunction, int NumberOfArguments, class Scalar>
+    AutoGradientFunctionLM<SSDFunction, NumberOfArguments, Scalar>::
+    AutoGradientFunctionLM()
+      : m_ssdFunction()
+    {
+      // Empty.
+    }
+
+    
     // Constructor.
     template <class SSDFunction, int NumberOfArguments, class Scalar>
     AutoGradientFunctionLM<SSDFunction, NumberOfArguments, Scalar>::

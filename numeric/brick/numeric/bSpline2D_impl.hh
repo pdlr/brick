@@ -170,8 +170,10 @@ namespace brick {
 
       // Chose the origin and spacing of the control grid.
       this->m_xyCellSize.setValue(
-        (m_maximumXY.x() - m_minimumXY.x()) / (numberOfNodesS - 3),
-        (m_maximumXY.y() - m_minimumXY.y()) / (numberOfNodesT - 3));
+        ((m_maximumXY.x() - m_minimumXY.x())
+         / static_cast<FloatType>(numberOfNodesS - 3)),
+        ((m_maximumXY.y() - m_minimumXY.y())
+         / static_cast<FloatType>(numberOfNodesT - 3)));
 
       if(this->m_isIsotropic) {
         FloatType cellSize = std::max(this->m_xyCellSize.x(),
@@ -292,7 +294,7 @@ namespace brick {
       // Final averaging step in case neighboring input points want
       // different control grid values.
       for(size_t index0 = 0; index0 < m_controlGrid.size(); ++index0) {
-        if(omegaGrid[index0] == 0.0) {
+        if(omegaGrid[index0] == static_cast<FloatType>(0.0)) {
           this->m_controlGrid[index0] = static_cast<Type>(0.0);
         } else {
           this->m_controlGrid[index0] = deltaGrid[index0] / omegaGrid[index0];
@@ -441,8 +443,10 @@ namespace brick {
       // New cell size is dictated by the new resolution, and should
       // be exactly half of the previous cell size.
       m_xyCellSize.setValue(
-        (m_maximumXY.x() - m_minimumXY.x()) / (newNumberOfNodesS - 3),
-        (m_maximumXY.y() - m_minimumXY.y()) / (newNumberOfNodesT - 3));
+        ((m_maximumXY.x() - m_minimumXY.x())
+         / static_cast<FloatType>(newNumberOfNodesS - 3)),
+        ((m_maximumXY.y() - m_minimumXY.y())
+         / static_cast<FloatType>(newNumberOfNodesT - 3)));
 
       if(this->m_isIsotropic) {
         FloatType cellSize = std::max(this->m_xyCellSize.x(),
@@ -610,18 +614,19 @@ namespace brick {
       // input point lies.
       FloatType iTmp = (sValue - m_xyCellOrigin.x()) / m_xyCellSize.x();
       FloatType jTmp = (tValue - m_xyCellOrigin.y()) / m_xyCellSize.y();
-      int iCoord = static_cast<int>(std::floor(iTmp));
-      int jCoord = static_cast<int>(std::floor(jTmp));
+
+      int iCoord = static_cast<int>(roundToFloor(iTmp));
+      int jCoord = static_cast<int>(roundToFloor(jTmp));
 
       // Find real valued coords within the cell, along with all of
       // the powers of those coords we'll be wanting to plug into
       // spline basis functions.
-      powersOfS[0] = 1.0;
-      powersOfS[1] = iTmp - iCoord;
+      powersOfS[0] = FloatType(1.0);
+      powersOfS[1] = iTmp - FloatType(iCoord);
       powersOfS[2] = powersOfS[1] * powersOfS[1];
       powersOfS[3] = powersOfS[2] * powersOfS[1];
-      powersOfT[0] = 1.0;
-      powersOfT[1] = jTmp - jCoord;
+      powersOfT[0] = FloatType(1.0);
+      powersOfT[1] = jTmp - FloatType(jCoord);
       powersOfT[2] = powersOfT[1] * powersOfT[1];
       powersOfT[3] = powersOfT[2] * powersOfT[1];
 

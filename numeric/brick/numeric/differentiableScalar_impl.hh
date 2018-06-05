@@ -408,6 +408,28 @@ namespace brick {
     }
 
     
+    // This function returns the largest integral value not less than
+    // than its argument, zeroing all partial derivatives.
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    roundToCeiling(DifferentiableScalar<Type, Dimension> const& arg0)
+    {
+      return DifferentiableScalar<Type, Dimension>(
+        roundToCeiling(static_cast<Type>(arg0)));
+    }
+
+
+    // This function returns the largest integral value not greater
+    // than than its argument, zeroing all partial derivatives.
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    roundToFloor(DifferentiableScalar<Type, Dimension> const& arg0)
+    {
+      return DifferentiableScalar<Type, Dimension>(
+        roundToFloor(static_cast<Type>(arg0)));
+    }
+
+
     // This function computes the sine of a DifferentiableScalar
     // instance, with partial derivatives.
     template<class Type, uint32_t Dimension>

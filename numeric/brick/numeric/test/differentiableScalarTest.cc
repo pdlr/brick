@@ -57,6 +57,9 @@ namespace brick {
       void testOperatorMinus();
       void testAbsoluteValue();
       void testCosine();
+      void testLogarithm();
+      void testRoundToCeiling();
+      void testRoundToFloor();
       void testSine();
       void testSquareRoot();
 
@@ -111,6 +114,9 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testOperatorMinus);
       BRICK_TEST_REGISTER_MEMBER(testAbsoluteValue);
       BRICK_TEST_REGISTER_MEMBER(testCosine);
+      BRICK_TEST_REGISTER_MEMBER(testLogarithm);
+      BRICK_TEST_REGISTER_MEMBER(testRoundToCeiling);
+      BRICK_TEST_REGISTER_MEMBER(testRoundToFloor);
       BRICK_TEST_REGISTER_MEMBER(testSine);
       BRICK_TEST_REGISTER_MEMBER(testSquareRoot);
 
@@ -651,6 +657,120 @@ namespace brick {
       BRICK_TEST_ASSERT(
         approximatelyEqual(cosStuff.getPartialDerivative(1),
                            referencePartial1,
+                           this->m_defaultTolerance));
+    }
+
+
+    void
+    DifferentiableScalarTest::
+    testLogarithm()
+    {
+      double theta0 = 2.5;
+      double theta1 = -3.0;
+
+      // This variable represents 5.0*theta0^2 + 2.0*theta1.
+      DifferentiableScalar<double, 2> fiveTheta0SqPlusTwoTheta1;
+      fiveTheta0SqPlusTwoTheta1.setValue(5.0 * theta0 * theta0 + 2.0 * theta1);
+      fiveTheta0SqPlusTwoTheta1.setPartialDerivative(0, 25.0);
+      fiveTheta0SqPlusTwoTheta1.setPartialDerivative(1, 2.0);
+
+      // Do the operation under test. 
+      DifferentiableScalar<double, 2> logStuff = logarithm(
+        fiveTheta0SqPlusTwoTheta1);
+
+      // Check the result.
+      double omega = 5.0 * theta0 * theta0 + 2.0 * theta1;
+      double referenceValue = brick::common::logarithm(omega);
+      double referencePartial0 = 10.0 * theta0 / omega;
+      double referencePartial1 = 2.0 / omega;
+      
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(logStuff.getValue(),
+                           referenceValue,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(logStuff.getPartialDerivative(0),
+                           referencePartial0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(logStuff.getPartialDerivative(1),
+                           referencePartial1,
+                           this->m_defaultTolerance));
+    }
+
+
+    void
+    DifferentiableScalarTest::
+    testRoundToCeiling()
+    {
+      DifferentiableScalar<double, 2> testValue0(1.5);
+      testValue0.setPartialDerivative(0, 5.0);
+      testValue0.setPartialDerivative(1, 2.0);
+
+      DifferentiableScalar<double, 2> testValue1(-1.5);
+      testValue1.setPartialDerivative(0, 5.0);
+      testValue1.setPartialDerivative(1, 2.0);
+
+      // Do the operation under test. 
+      DifferentiableScalar<double, 2> myCeiling0 = roundToCeiling(testValue0);
+      DifferentiableScalar<double, 2> myCeiling1 = roundToCeiling(testValue1);
+
+      // Check the result.
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myCeiling0.getValue(), 2.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myCeiling0.getPartialDerivative(0), 0.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myCeiling0.getPartialDerivative(1), 0.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myCeiling1.getValue(), -1.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myCeiling1.getPartialDerivative(0), 0.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myCeiling1.getPartialDerivative(1), 0.0,
+                           this->m_defaultTolerance));
+    }
+
+
+    void
+    DifferentiableScalarTest::
+    testRoundToFloor()
+    {
+      DifferentiableScalar<double, 2> testValue0(1.5);
+      testValue0.setPartialDerivative(0, 5.0);
+      testValue0.setPartialDerivative(1, 2.0);
+
+      DifferentiableScalar<double, 2> testValue1(-1.5);
+      testValue1.setPartialDerivative(0, 5.0);
+      testValue1.setPartialDerivative(1, 2.0);
+
+      // Do the operation under test. 
+      DifferentiableScalar<double, 2> myFloor0 = roundToFloor(testValue0);
+      DifferentiableScalar<double, 2> myFloor1 = roundToFloor(testValue1);
+
+      // Check the result.
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myFloor0.getValue(), 1.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myFloor0.getPartialDerivative(0), 0.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myFloor0.getPartialDerivative(1), 0.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myFloor1.getValue(), -2.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myFloor1.getPartialDerivative(0), 0.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myFloor1.getPartialDerivative(1), 0.0,
                            this->m_defaultTolerance));
     }
 

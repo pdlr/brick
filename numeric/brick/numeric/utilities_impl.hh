@@ -24,6 +24,7 @@
 #include <numeric>
 
 #include <brick/numeric/mathFunctions.hh>
+#include <brick/numeric/differentiableScalar.hh>
 
 namespace brick {
 

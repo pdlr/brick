@@ -10,8 +10,8 @@
 **********************************************************************
 **/
 
-#ifndef BRICK_OPTIMIZATION_GRADIENTFUNCTIONLM_HH
-#define BRICK_OPTIMIZATION_GRADIENTFUNCTIONLM_HH
+#ifndef BRICK_OPTIMIZATION_AUTOGRADIENTFUNCTIONLM_HH
+#define BRICK_OPTIMIZATION_AUTOGRADIENTFUNCTIONLM_HH
 
 #include <functional>
 #include <brick/numeric/array1D.hh>
@@ -372,4 +372,4 @@ namespace brick {
 
 } // namespace brick
 
-#endif /* #ifndef BRICK_OPTIMIZATION_GRADIENTFUNCTION_HH */
+#endif /* #ifndef BRICK_OPTIMIZATION_AUTOGRADIENTFUNCTION_HH */

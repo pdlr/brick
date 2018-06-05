@@ -13,6 +13,7 @@ install (FILES
   autoGradientFunctionLM.hh
   gradientFunction.hh
   gradientFunctionLM.hh
+  lossFunctions.hh
   optimizer.hh
   optimizerBFGS.hh
   optimizerCommon.hh

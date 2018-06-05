@@ -93,6 +93,48 @@ namespace brick {
 
     
     /** 
+     * This function template takes the place of std::log(),
+     * std::logf(), std::logl(), etc., hopefully enabling generic
+     * code.
+     * 
+     * @param arg This argument will have its natural logarithm
+     * computed.
+     * 
+     * @return The return value is the natural log of arg.
+     */
+    template <class Type>
+    inline Type logarithm(Type arg);
+
+    
+    /** 
+     * This function template takes the place of std::ceil(),
+     * std::ceilf(), std::ceill(), etc., hopefully enabling generic
+     * code.
+     * 
+     * @param arg This argument will be rounded down to the nearest
+     * integer.
+     * 
+     * @return The return value is the ceil of arg.
+     */
+    template <class Type>
+    inline Type roundToCeiling(Type arg);
+    
+    
+    /** 
+     * This function template takes the place of std::floor(),
+     * std::floorf(), std::floorl(), etc., hopefully enabling generic
+     * code.
+     * 
+     * @param arg This argument will be rounded down to the nearest
+     * integer.
+     * 
+     * @return The return value is the floor of arg.
+     */
+    template <class Type>
+    inline Type roundToFloor(Type arg);
+    
+    
+    /** 
      * This function template takes the place of std::sin(),
      * std::sinf(), std::sinl(), etc., hopefully enabling generic
      * code.
@@ -254,6 +296,52 @@ namespace brick {
     //
     // template<>
     // inline long double cosine(long double arg) {return std::cosl(arg);}
+
+
+    template <class Type>
+    inline Type logarithm(Type arg) {
+      return static_cast<Type>(std::log(static_cast<double>(arg)));
+    }
+
+    /* ======== Need to figure out how to test for logf()  ======== */
+    /* ======== and logl() availability                    ======== */
+    // template<>
+    // inline float logarithm(float arg) {return std::cosf(arg);}
+    //
+    // template<>
+    // inline long double logarithm(long double arg) {return std::cosl(arg);}
+
+
+    template <class Type>
+    inline Type roundToCeiling(Type arg) {
+      return static_cast<Type>(std::ceil(static_cast<double>(arg)));
+    }
+
+    /* ======== Need to figure out how to test for ceilf()  ======== */
+    /* ======== and ceill() availability                    ======== */
+    // template<>
+    // inline float roundToCeiling(float arg) {return std::ceilf(arg);}
+    // 
+    // template<>
+    // inline long double roundToCeiling(long double arg) {
+    //   return std::ceill(arg);
+    // }
+
+
+    template <class Type>
+    inline Type roundToFloor(Type arg) {
+      return static_cast<Type>(std::floor(static_cast<double>(arg)));
+    }
+
+    /* ======== Need to figure out how to test for floorf()  ======== */
+    /* ======== and floorl() availability                    ======== */
+    // template<>
+    // inline float roundToFloor(float arg) {return std::floorf(arg);}
+    // 
+    // template<>
+    // inline long double roundToFloor(long double arg) {
+    //   return std::floorl(arg);
+    // }
 
 
     template <class Type>

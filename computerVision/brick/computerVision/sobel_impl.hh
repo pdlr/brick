@@ -15,7 +15,7 @@
 
 // This file is included by sobel.hh, and should not be directly included
 // by user code, so no need to include sobel.hh here.
-// 
+//
 // #include <brick/computerVision/sobel.hh>
 
 namespace brick {
@@ -52,12 +52,12 @@ namespace brick {
       // out-of-bounds rows and columns.  This has the somewhat
       // surprising effect of making the first row of convolution
       // results independent of the second image row.
-      
+
       // Use a very reduced kernel for the upper-left corner.
       gradientImage[index0] = (
         8 * (inputImage[index0 + 1] - inputImage[index0]));
       ++index0;
-      
+
       // Use a reduced kernel for the first row.
       for(size_t column = 1; column < colsMinusOne; ++column) {
         gradientImage[index0] = (
@@ -69,7 +69,7 @@ namespace brick {
       gradientImage[index0] = (
         8 * (inputImage[index0] - inputImage[index0 - 1]));
       ++index0;
-      
+
       // Convolve the bulk of the image.
       for(size_t row = 1; row < rows - 1; ++row) {
 
@@ -79,7 +79,7 @@ namespace brick {
           + 4 * (inputImage[index0 + 1] - inputImage[index0])
           + 2 * (inputImage[index0 + cols + 1] - inputImage[index0 + cols]));
         ++index0;
-        
+
         // Convolve the bulk of the row.
         for(size_t column = 1; column < colsMinusOne; ++column) {
           gradientImage[index0] = (
@@ -101,7 +101,7 @@ namespace brick {
       gradientImage[index0] = (
         8 * (inputImage[index0 + 1] - inputImage[index0]));
       ++index0;
-      
+
       // Use a reduced kernel for the last row.
       for(size_t column = 1; column < colsMinusOne; ++column) {
         gradientImage[index0] = (
@@ -148,12 +148,12 @@ namespace brick {
       // out-of-bounds rows and columns.  This has the somewhat
       // surprising effect of making the first row of convolution
       // results independent of the second image row.
-      
+
       // Use a very reduced kernel for the upper-left corner.
       gradientImage[index0] = (
         8 * (inputImage[index0 + cols] - inputImage[index0]));
       ++index0;
-      
+
       // Use a reduced kernel for the first row.
       for(size_t column = 1; column < colsMinusOne; ++column) {
         gradientImage[index0] = (
@@ -167,7 +167,7 @@ namespace brick {
       gradientImage[index0] = (
         8 * (inputImage[index0 + cols] - inputImage[index0]));
       ++index0;
-      
+
       // Convolve the bulk of the image.
       for(size_t row = 1; row < rows - 1; ++row) {
 
@@ -175,7 +175,7 @@ namespace brick {
         gradientImage[index0] = (
           4 * (inputImage[index0 + cols] - inputImage[index0 - cols]));
         ++index0;
-        
+
         // Convolve the bulk of the row.
         for(size_t column = 1; column < colsMinusOne; ++column) {
           gradientImage[index0] = (
@@ -195,7 +195,7 @@ namespace brick {
       gradientImage[index0] = (
         8 * (inputImage[index0] - inputImage[index0 - cols]));
       ++index0;
-      
+
       // Use a reduced kernel for the last row.
       for(size_t column = 1; column < colsMinusOne; ++column) {
         gradientImage[index0] = (
@@ -215,7 +215,7 @@ namespace brick {
 
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_KERNEL_IMPL_HH */

@@ -19,7 +19,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     /**
      ** The Vector3D class template represents a 3D vector in which
      ** the elements are of a user specified type.
@@ -27,15 +27,15 @@ namespace brick {
     template <class Type>
     class Vector3D {
     public:
-      /** 
+      /**
        *  Default constructor initializes to (0, 0, 0).
        */
       inline
       Vector3D();
 
-      /** 
+      /**
        * Explicitly sets 3D coordinates.
-       * 
+       *
        * @param xCoord After construction, the vector will have this value as
        * its X coordinate.
        * @param yCoord After construction, the vector will have this value as
@@ -46,13 +46,13 @@ namespace brick {
       inline
       Vector3D(Type const& xCoord, Type const& yCoord, Type const& zCoord);
 
-      
-      /** 
+
+      /**
        * Explicitly sets 3D homogeneous coordinates.  A 3D homogeneous
        * vector has the form (xCoord, yCoord, zCoord, alpha), and
        * corresponds to the 3D point (xCoord/alpha, yCoord/alpha,
        * zCoord/alpha).
-       * 
+       *
        * @param xCoord The homogeneous X coordinate.
        * @param yCoord The homogeneous Y coordinate.
        * @param zCoord The homogeneous Z coordinate.
@@ -62,24 +62,24 @@ namespace brick {
       Vector3D(Type const& xCoord, Type const& yCoord, Type const& zCoord,
                Type const& alpha);
 
-      
-      /** 
+
+      /**
        * Copy constructor.
-       * 
+       *
        * @param source The Vector3D to be copied.
        */
       inline
       Vector3D(const Vector3D<Type>& source);
 
 
-      /** 
+      /**
        * Destructor.
        */
       inline
       ~Vector3D();
 
-      
-      /** 
+
+      /**
        * Resets the vector to (0.0, 0.0, 0.0).
        *
        * @return A reference to *this.
@@ -87,37 +87,37 @@ namespace brick {
       inline Vector3D<Type>&
       clear();
 
-      
-      /** 
+
+      /**
        * This member function returns the X component of the Vector2D.
-       * 
+       *
        * @return The return value is the X coordinate.
        */
       inline Type const&
       getX() const {return m_x;}
 
 
-      /** 
+      /**
        * This member function returns the Y component of the Vector2D.
-       * 
+       *
        * @return The return value is the Y coordinate.
        */
       inline Type const&
       getY() const {return m_y;}
 
-    
-      /** 
+
+      /**
        * This member function returns the Y component of the Vector2D.
-       * 
+       *
        * @return The return value is the Y coordinate.
        */
       inline Type const&
       getZ() const {return m_z;}
 
-    
-      /** 
+
+      /**
        * Explicitly sets 3D coordinates.
-       * 
+       *
        * @param xCoord The desired X coordinate.
        * @param yCoord The desired Y coordinate.
        * @param zCoord The desired Z coordinate.
@@ -126,9 +126,9 @@ namespace brick {
       setValue(Type const& xCoord, Type const& yCoord, Type const& zCoord);
 
 
-      /** 
+      /**
        * Explicitly sets 3D homogeneous coordinates.
-       * 
+       *
        * @param xCoord The homogeneous X coordinate.
        * @param yCoord The homogeneous Y coordinate.
        * @param zCoord The homogeneous Z coordinate.
@@ -139,9 +139,9 @@ namespace brick {
                Type const& yCoord,
                Type const& zCoord,
                Type const& alpha);
-      
 
-      /** 
+
+      /**
        * This member function sets the X component of the Vector2D.
        *
        * @param newX This parameter is the value to which the X
@@ -153,7 +153,7 @@ namespace brick {
       setX(Type const& newX) {m_x = newX; return m_x;}
 
 
-      /** 
+      /**
        * This member function sets the Y component of the Vector2D.
        *
        * @param newY This parameter is the value to which the Y
@@ -165,7 +165,7 @@ namespace brick {
       setY(Type const& newY) {m_y = newY; return m_y;}
 
 
-      /** 
+      /**
        * This member function sets the Y component of the Vector2D.
        *
        * @param newY This parameter is the value to which the Y
@@ -175,106 +175,106 @@ namespace brick {
        */
       inline Type const&
       setZ(Type const& newZ) {m_z = newZ; return m_z;}
-      
+
 #if 0
-      /** 
+      /**
        * Returns the x component of the vector by reference.
-       * 
+       *
        * @return A reference to the x component of the vector.
        */
       inline Type& x() {return m_x;}
 #endif /* #if 0 */
 
 
-      /** 
+      /**
        * Returns the x component of the vector by value.
-       * 
+       *
        * @return The value of the x component of the vector.
        */
       inline Type const& x() const;
 
 #if 0
-      /** 
+      /**
        * Returns the y component of the vector by reference.
-       * 
+       *
        * @return A reference to the y component of the vector.
        */
       inline Type& y() {return m_y;}
 #endif /* #if 0 */
 
-      /** 
+      /**
        * Returns the y component of the vector by value.
-       * 
+       *
        * @return The value of the y component of the vector.
        */
       inline Type const& y() const;
-    
+
 #if 0
-      /** 
+      /**
        * Returns the z component of the vector by reference.
-       * 
+       *
        * @return A reference to the z component of the vector.
        */
       inline Type& z() {return m_z;}
 #endif /* #if 0 */
 
-      
-      /** 
+
+      /**
        * Returns the z component of the vector by value.
-       * 
+       *
        * @return The value of the z component of the vector.
        */
       inline Type const& z() const;
 
-      
+
       /**
        * Assignment operator.
-       * 
+       *
        * @param source The vector to be copied.
        * @return Reference to *this.
        */
       inline Vector3D<Type>&
       operator=(const Vector3D<Type>& source);
-      
 
-      /** 
+
+      /**
        * The indexing operator returns a reference to the x, y, or z
        * component of *this as if *this were a three element array.
        * Out of bounds indices will return this->z().
-       * 
+       *
        * @param index This argument is the index into *this.
-       * 
+       *
        * @return The return value is the selected component of *this.
        */
       inline Type&
       operator[](size_t index);
 
-          
-      /** 
+
+      /**
        * The indexing operator returns the value of the x, y, or z
        * component of *this as if *this were a three element array.
        * Out of bounds indices will return this-z().
-       * 
+       *
        * @param index This argument is the index into *this.
-       * 
+       *
        * @return The return value is the selected component of *this.
        */
       inline Type const& operator[](size_t index) const;
 
-          
-      /** 
+
+      /**
        * Multiplies each element by a scalar.
-       * 
+       *
        * @param scalar X, Y, and Z values will be multiplied by this value.
        * @return Reference to *this.
        */
       inline Vector3D<Type>&
       operator*=(Type const& scalar);
 
-      
-      /** 
+
+      /**
        * Divides each element by a scalar.
-       * 
+       *
        * @param scalar X, Y, and Z values will be divided by this value.
        * @return Reference to *this.
        */
@@ -282,9 +282,9 @@ namespace brick {
       operator/=(Type const& scalar);
 
 
-      /** 
+      /**
        * Adds the elements of another Vector3D.
-       * 
+       *
        * @param vec The elements of vec will be added to *this.
        * @return Reference to *this.
        */
@@ -292,9 +292,9 @@ namespace brick {
       operator+=(const Vector3D<Type>& vec);
 
 
-      /** 
+      /**
        * Subtracts the elements of another Vector3D.
-       * 
+       *
        * @param vec The elements of vec will be subtracted from *this.
        * @return Reference to *this.
        */
@@ -302,9 +302,9 @@ namespace brick {
       operator-=(const Vector3D<Type>& vec);
 
 
-      /** 
+      /**
        * Returns a Vector3D equal to *this, but with each element negated.
-       * 
+       *
        * @return The result of the negation.
        */
       inline Vector3D<Type>
@@ -323,10 +323,10 @@ namespace brick {
 
 
     /* ============== Non-member function declarations ============== */
-  
-    /** 
+
+    /**
      * This operator returns the elementwise sum of two Vector3D instances.
-     * 
+     *
      * @param vector0 This is the first of the two Vector3D instances to
      * be added.
      * @param vector1 This is the second of the two Vector3D instances to
@@ -338,11 +338,11 @@ namespace brick {
     Vector3D<Type>
     operator+(const Vector3D<Type>& vector0, const Vector3D<Type>& vector1);
 
-    
-    /** 
+
+    /**
      * This operator returns the elementwise difference of two Vector3D
      * instances.
-     * 
+     *
      * @param vector0 This is the first of the two Vector3D instances to
      * be subtracted.
      * @param vector1 This is the second of the two Vector3D instances to
@@ -355,10 +355,10 @@ namespace brick {
     Vector3D<Type>
     operator-(const Vector3D<Type>& vector0, const Vector3D<Type>& vector1);
 
-    
-    /** 
+
+    /**
      * This operator returns the elementwise product of two Vector3D instances.
-     * 
+     *
      * @param vector0 This is the first of the two Vector3D instances to
      * be multiplied.
      * @param vector1 This is the second of the two Vector3D instances to
@@ -370,10 +370,10 @@ namespace brick {
     Vector3D<Type>
     operator*(const Vector3D<Type>& vector0, const Vector3D<Type>& vector1);
 
-    
-    /** 
+
+    /**
      * This operator returns the elementwise dividend of two Vector3D instances.
-     * 
+     *
      * @param vector0 This is the Vector3D instance whose element values
      * are to be divided.
      * @param vector1 This is the Vector3D instance by whose elements
@@ -386,10 +386,10 @@ namespace brick {
     Vector3D<Type>
     operator/(const Vector3D<Type>& vector0, const Vector3D<Type>& vector1);
 
-    
-    /** 
+
+    /**
      * This operator adds a scalar and a Vector3D.
-     * 
+     *
      * @param vector0 This is the Vector3D instance to which the scalar
      * should be added.
      * @param scalar0 This is amount which should be added to each
@@ -402,10 +402,10 @@ namespace brick {
     Vector3D<Type>
     operator+(const Vector3D<Type>& vector0, Type const& scalar0);
 
-    
-    /** 
+
+    /**
      * This operator subtracts a scalar from a Vector3D.
-     * 
+     *
      * @param vector0 This is the Vector3D instance from which the scalar
      * should be subtracted.
      * @param scalar0 This is amount which should be subtracted from each
@@ -418,10 +418,10 @@ namespace brick {
     Vector3D<Type>
     operator-(const Vector3D<Type>& vector0, Type const& scalar0);
 
-    
-    /** 
+
+    /**
      * This operator multiplies a Vector3D by scalar.
-     * 
+     *
      * @param vector0 This is the Vector3D instance which is to be
      * multiplied by the scalar.
      * @param scalar0 This is amount by which should argument vector0 is
@@ -434,10 +434,10 @@ namespace brick {
     Vector3D<Type>
     operator*(const Vector3D<Type>& vector0, Type const& scalar0);
 
-    
-    /** 
+
+    /**
      * This operator divides a Vector3D by scalar.
-     * 
+     *
      * @param vector0 This is the Vector3D instance which is to be
      * divided by the scalar.
      * @param scalar0 This is amount by which should argument vector0 is
@@ -450,7 +450,7 @@ namespace brick {
     Vector3D<Type>
     operator/(const Vector3D<Type>& vector0, Type const& scalar0);
 
-    
+
     /**
      * This operator checks the supplied vectors for equality.
      *
@@ -462,7 +462,7 @@ namespace brick {
     bool
     operator==(const Vector3D<Type>& vector0, const Vector3D<Type>& vector1);
 
-    
+
     /**
      * This operator checks the supplied vectors for inequality.
      *
@@ -476,10 +476,10 @@ namespace brick {
     operator!=(const Vector3D<Type>& vector0, const Vector3D<Type>& vector1);
 
 
-    /** 
+    /**
      * This operator adds a scalar value to each element of a Vector3D
      * instance.
-     * 
+     *
      * @param scalar0 Scalar argument of the addition.
      *
      * @param vector0 Vector argument of the addition.
@@ -493,10 +493,10 @@ namespace brick {
     operator+(Type const& scalar0, const Vector3D<Type>& vector0);
 
 
-    /** 
+    /**
      * This operator multiplies a scalar value with each element of a
      * Vector3D instance.
-     * 
+     *
      * @param scalar0 Scalar argument of the multiplication.
      *
      * @param vector0 Vector argument of the multiplication.
@@ -510,7 +510,7 @@ namespace brick {
     operator*(Type const& scalar0, const Vector3D<Type>& vector0);
 
 
-    /** 
+    /**
      * This function outputs a text representation of a Vector3D
      * instance to a std::ostream.  The output format looks like this:
      *
@@ -530,11 +530,11 @@ namespace brick {
     operator<<(std::ostream& stream, const Vector3D<Type>& vector0);
 
 
-    /** 
+    /**
      * This function sets the value of a Vector3D instance from a
      * std::istream.  The input format is as described for
      * operator<<(std::ostream&, const Vector3D&) above.
-     * 
+     *
      * @param stream This argument is a reference to the the input
      * stream from which to read.
      *

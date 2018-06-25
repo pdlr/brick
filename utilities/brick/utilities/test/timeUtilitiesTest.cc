@@ -25,7 +25,7 @@ namespace brick {
     public:
 
       typedef TimeUtilitiesTest TestFixtureType;
-    
+
 
       TimeUtilitiesTest();
       ~TimeUtilitiesTest() {}
@@ -37,7 +37,7 @@ namespace brick {
 
     private:
 
-    
+
     }; // class TimeUtilitiesTest
 
 
@@ -83,7 +83,7 @@ namespace brick {
     }
 
   } // namespace utilities
-  
+
 } // namespace brick
 
 
@@ -100,7 +100,7 @@ int main(int argc, char** argv)
 namespace {
 
   brick::utilities::TimeUtilitiesTest currentTest;
-  
+
 }
 
 #endif

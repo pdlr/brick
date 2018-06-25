@@ -15,7 +15,7 @@
 
 // This file is included by array3D.hh, and should not be directly included
 // by user code, so no need to include array3D.hh here.
-// 
+//
 // #include <brick/numeric/array3D.hh>
 
 #include <algorithm>
@@ -27,7 +27,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     // Static constant describing how the string representation of an
     // Array3D should start.
     template <class Type>
@@ -104,7 +104,7 @@ namespace brick {
       // Empty.
     }
 
-  
+
     template <class Type>
     Array3D<Type>::
     Array3D(size_t arrayShape0, size_t arrayShape1, size_t arrayShape2)
@@ -120,7 +120,7 @@ namespace brick {
       this->allocate();
     }
 
-  
+
     // Construct from an initialization string.
     template <class Type>
     Array3D<Type>::
@@ -144,7 +144,7 @@ namespace brick {
         std::ostringstream message;
         message << "Couldn't parse input string: \"" << inputString << "\".";
         BRICK_THROW(common::ValueException, "Array3D::Array3D(const std::string&)",
-                   message.str().c_str());                 
+                   message.str().c_str());
       }
 
       // If all went well, copy into *this.
@@ -152,7 +152,7 @@ namespace brick {
     }
 
 
-  
+
     /* When copying from a Array3D do a shallow copy */
     /* Update reference count if the array we're copying has */
     /* valid data. */
@@ -191,7 +191,7 @@ namespace brick {
       // empty
     }
 
-  
+
     template <class Type>
     Array3D<Type>::
     ~Array3D()
@@ -236,7 +236,7 @@ namespace brick {
       return newArray;
     }
 
-  
+
     template <class Type> template <class Type2>
     void Array3D<Type>::
     copy(const Array3D<Type2>& source)
@@ -254,7 +254,7 @@ namespace brick {
       }
     }
 
-  
+
     template <class Type> template <class Type2>
     void Array3D<Type>::
     copy(const Type2* dataPtr)
@@ -266,7 +266,7 @@ namespace brick {
       std::copy(dataPtr, dataPtr + m_size, m_dataPtr);
     }
 
-  
+
     // This member function sets the value of the array from an input
     // stream.
     template <class Type>
@@ -281,7 +281,7 @@ namespace brick {
       if (!inputStream){
         return inputStream;
       }
-    
+
       // It's a lot easier to use a try block than to be constantly
       // testing whether the IO has succeeded, so we tell inputStream to
       // complain if anything goes wrong.
@@ -330,7 +330,7 @@ namespace brick {
             inputStream.clear(std::ios_base::failbit);
           }
         }
-    
+
         // If we found an intro, we expect the corresponding outro.
         if(foundIntro) {
           inputStream >> common::Expect(&(ioOutro()), 1, flags);
@@ -363,7 +363,7 @@ namespace brick {
       return inputStream;
     }
 
-  
+
     template <class Type>
     void Array3D<Type>::
     reinit(size_t arrayShape0, size_t arrayShape1, size_t arrayShape2)
@@ -397,7 +397,7 @@ namespace brick {
     reshape(int arrayShape0, int arrayShape1, int arrayShape2)
     {
       if ((arrayShape0 * arrayShape1 * arrayShape2 != 0)){
-        // If one axis is specified as -1, it will be automatically 
+        // If one axis is specified as -1, it will be automatically
         // chosen to match the number of elements in the array.
         if((arrayShape0 == -1) && (arrayShape1 != -1) && (arrayShape2 != -1)) {
           arrayShape0 = static_cast<int>(this->size()) / (arrayShape1 * arrayShape2);
@@ -421,7 +421,7 @@ namespace brick {
       m_shape1Times2 = arrayShape1 * arrayShape2;
     }
 
-  
+
     template <class Type>
     Array1D<size_t> Array3D<Type>::
     shape() const
@@ -469,7 +469,7 @@ namespace brick {
         m_shape1, m_shape2, m_dataPtr + (index0 * m_shape1Times2));
     }
 
-  
+
     template <class Type>
     const Array2D<Type>
     Array3D<Type>::
@@ -480,7 +480,7 @@ namespace brick {
         m_shape1, m_shape2, m_dataPtr + (index0 * m_shape1Times2));
     }
 
-  
+
     template <class Type>
     Array3D<Type>& Array3D<Type>::
     operator=(const Array3D<Type>& source)
@@ -666,7 +666,7 @@ namespace brick {
 #endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
     }
 
-  
+
     template <class Type>
     inline void Array3D<Type>::
     checkBounds(
@@ -702,7 +702,7 @@ namespace brick {
 #endif
     }
 
-  
+
     template <class Type>
     void Array3D<Type>::
     deAllocate()
@@ -721,33 +721,33 @@ namespace brick {
       }
     }
 
-  
+
     /* Non-member functions which will ultimately wind up in a different file */
-//   template <class Type> 
+//   template <class Type>
 //   Type maximum(const Array3D<Type>& array)
 //   {
 //     return *std::max_element(array.data(), array.data() + array.size());
 //   }
 
-//   template <class Type> 
+//   template <class Type>
 //   Type minimum(const Array3D<Type>& array)
 //   {
 //     return *std::min_element(array.data(), array.data() + array.size());
 //   }
 
-//   template <class Type> 
+//   template <class Type>
 //   Type sum(const Array3D<Type>& array)
 //   {
 //     return std::accumulate(array.data(), array.data() + array.size(),
 //                            static_cast<Type>(0));
 //   }
-  
+
     template <class Type>
     Array3D<Type> operator+(const Array3D<Type>& array0,
                             const Array3D<Type>& array1)
     {
       if((array0.shape0() != array1.shape0())
-         || (array0.shape1() != array1.shape1())	
+         || (array0.shape1() != array1.shape1())
          || (array0.shape2() != array1.shape2())) {
         std::ostringstream message;
         message << "Array sizes do not match.  Array0 is "
@@ -770,7 +770,7 @@ namespace brick {
                             const Array3D<Type>& array1)
     {
       if((array0.shape0() != array1.shape0())
-         || (array0.shape1() != array1.shape1())	
+         || (array0.shape1() != array1.shape1())
          || (array0.shape2() != array1.shape2())) {
         std::ostringstream message;
         message << "Array sizes do not match.  Array0 is "
@@ -787,13 +787,13 @@ namespace brick {
       return result;
     }
 
-  
+
     template <class Type>
     Array3D<Type> operator*(const Array3D<Type>& array0,
                             const Array3D<Type>& array1)
     {
       if((array0.shape0() != array1.shape0())
-         || (array0.shape1() != array1.shape1())	
+         || (array0.shape1() != array1.shape1())
          || (array0.shape2() != array1.shape2())) {
         std::ostringstream message;
         message << "Array sizes do not match.  Array0 is "
@@ -809,14 +809,14 @@ namespace brick {
                      result.begin(), std::multiplies<Type>());
       return result;
     }
-  
+
 
     template <class Type>
     Array3D<Type> operator/(const Array3D<Type>& array0,
                             const Array3D<Type>& array1)
     {
       if((array0.shape0() != array1.shape0())
-         || (array0.shape1() != array1.shape1())	
+         || (array0.shape1() != array1.shape1())
          || (array0.shape2() != array1.shape2())) {
         std::ostringstream message;
         message << "Array sizes do not match.  Array0 is "
@@ -847,7 +847,7 @@ namespace brick {
     template <class Type>
     Array3D<Type> operator-(const Array3D<Type>& array0, Type scalar)
     {
-      Array3D<Type> result(array0.shape0(), array0.shape1(), array0.shape2()); 
+      Array3D<Type> result(array0.shape0(), array0.shape1(), array0.shape2());
       std::transform(array0.begin(), array0.end(), result.begin(),
                      std::bind2nd(std::minus<Type>(), scalar));
       return result;
@@ -857,7 +857,7 @@ namespace brick {
     template <class Type>
     Array3D<Type> operator*(const Array3D<Type>& array0, Type scalar)
     {
-      Array3D<Type> result(array0.shape0(), array0.shape1(), array0.shape2()); 
+      Array3D<Type> result(array0.shape0(), array0.shape1(), array0.shape2());
       std::transform(array0.begin(), array0.end(), result.begin(),
                      std::bind2nd(std::multiplies<Type>(), scalar));
       return result;
@@ -867,7 +867,7 @@ namespace brick {
     template <class Type>
     Array3D<Type> operator/(const Array3D<Type>& array0, Type scalar)
     {
-      Array3D<Type> result(array0.shape0(), array0.shape1(), array0.shape2()); 
+      Array3D<Type> result(array0.shape0(), array0.shape1(), array0.shape2());
       std::transform(array0.begin(), array0.end(), result.begin(),
                      std::bind2nd(std::divides<Type>(), scalar));
       return result;
@@ -899,7 +899,7 @@ namespace brick {
       return result;
     }
 
-    
+
     // Elementwise comparison of an Array3D with another array.
     template <class Type>
     Array3D<bool>
@@ -912,11 +912,11 @@ namespace brick {
       return result;
     }
 
-    
+
     template <class Type>
     Array3D<bool> operator>(const Array3D<Type>& array0, Type arg)
     {
-      Array3D<bool> result(array0.shape0(), array0.shape1(), array0.shape2()); 
+      Array3D<bool> result(array0.shape0(), array0.shape1(), array0.shape2());
       std::transform(array0.begin(), array0.end(), result.begin(),
                      std::bind2nd(std::greater<Type>(), arg));
       return result;
@@ -926,27 +926,27 @@ namespace brick {
     template <class Type>
     Array3D<bool> operator<(const Array3D<Type>& array0, Type arg)
     {
-      Array3D<bool> result(array0.shape0(), array0.shape1(), array0.shape2()); 
+      Array3D<bool> result(array0.shape0(), array0.shape1(), array0.shape2());
       std::transform(array0.begin(), array0.end(), result.begin(),
                      std::bind2nd(std::less<Type>(), arg));
       return result;
     }
 
-  
+
     template <class Type>
     Array3D<bool> operator>=(const Array3D<Type>& array0, Type arg)
     {
-      Array3D<bool> result(array0.shape0(), array0.shape1(), array0.shape2()); 
+      Array3D<bool> result(array0.shape0(), array0.shape1(), array0.shape2());
       std::transform(array0.begin(), array0.end(), result.begin(),
                      std::bind2nd(std::greater_equal<Type>(), arg));
       return result;
     }
 
-  
+
     template <class Type>
     Array3D<bool> operator<=(const Array3D<Type>& array0, Type arg)
     {
-      Array3D<bool> result(array0.shape0(), array0.shape1(), array0.shape2()); 
+      Array3D<bool> result(array0.shape0(), array0.shape1(), array0.shape2());
       std::transform(array0.begin(), array0.end(), result.begin(),
                      std::bind2nd(std::less_equal<Type>(), arg));
       return result;
@@ -955,7 +955,7 @@ namespace brick {
 
     // This operator outputs a text representation of an Array3D
     // instance to a std::ostream.
-    template <class Type>  
+    template <class Type>
     std::ostream& operator<<(std::ostream& stream, const Array3D<Type>& array0)
     {
       // Most of the time, OutputType will be the same as Type.
@@ -970,7 +970,7 @@ namespace brick {
         stream << "[";
         for(index1 = 0; index1 < array0.shape1(); ++index1) {
           if(index1 != 0) {
-            stream << "          ";	
+            stream << "          ";
           }
           stream << "[";
           for(index2 = 0; index2 < array0.shape2(); ++index2) {
@@ -982,7 +982,7 @@ namespace brick {
           stream << "]";
           if(index1 != array0.shape1() - 1) {
             stream << ",\n";
-          }	
+          }
         }
         stream << "]";
         if(index0 != array0.shape0() - 1) {
@@ -1001,7 +1001,7 @@ namespace brick {
     {
       return array0.readFromStream(inputStream);
     }
-  
+
   } // namespace numeric
 
 } // namespace brick

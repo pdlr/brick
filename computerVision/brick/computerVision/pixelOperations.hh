@@ -24,14 +24,14 @@
 namespace brick {
 
   namespace computerVision {
-    
-    /** 
+
+    /**
      * This function is equivalent to operator*, but can be
      * specialized for specific values (e.g., when Multiplier is a
      * power of two) to improve efficiency.
-     * 
+     *
      * @param pixel0 This argument is the pixel to be multiplied.
-     * 
+     *
      * @return The return value is a copy of pixel0 in which each
      * element has been multiplied by Multiplier.
      */
@@ -54,23 +54,23 @@ namespace brick {
     template<int Multiplier>
     inline PixelRGB8
     multiplyPixel(PixelRGB8 const& pixel0);
-    
+
     template<int Multiplier>
     inline PixelRGB16
     multiplyPixel(PixelRGB16 const& pixel0);
-    
+
     template<int Multiplier>
     inline PixelRGBFloat32
     multiplyPixel(PixelRGBFloat32 const& pixel0);
 
-    
-    /** 
+
+    /**
      * This function is equivalent to operator/, but can be
      * specialized for specific values (e.g., when Divisor is a
      * power of two) to improve efficiency.
-     * 
+     *
      * @param pixel0 This argument is the pixel to be divided.
-     * 
+     *
      * @return The return value is a copy of pixel0 in which each
      * element has been divided by Divisor.
      */
@@ -102,17 +102,17 @@ namespace brick {
     inline PixelRGBFloat32
     dividePixel(PixelRGBFloat32 const& pixel0);
 
-  } // namespace computerVision    
+  } // namespace computerVision
 
 } // namespace brick
-  
+
 /* ============ Definitions of inline & template functions ============ */
 
 
 namespace brick {
 
   namespace computerVision {
-    
+
 
     // This function is equivalent to operator*, but can be
     // specialized for specific values (e.g., when Multiplier is a
@@ -188,7 +188,7 @@ namespace brick {
         pixel0.green * static_cast<brick::common::Float32>(Multiplier),
         pixel0.blue * static_cast<brick::common::Float32>(Multiplier));
     }
-    
+
 
     // This function is equivalent to operator/, but can be
     // specialized for specific values (e.g., when Divisor is a
@@ -237,7 +237,7 @@ namespace brick {
         pixel0.green / static_cast<brick::common::UInt8>(Divisor),
         pixel0.blue / static_cast<brick::common::UInt8>(Divisor));
     }
-    
+
     template<int Divisor>
     inline PixelRGB16
     dividePixel(PixelRGB16 const& pixel0)
@@ -247,14 +247,14 @@ namespace brick {
         pixel0.green / static_cast<brick::common::UInt16>(Divisor),
         pixel0.blue / static_cast<brick::common::UInt16>(Divisor));
     }
-    
+
     template<>
     inline PixelRGB16
     dividePixel<4>(PixelRGB16 const& pixel0)
     {
       return PixelRGB16(pixel0.red >> 2, pixel0.green >> 2, pixel0.blue >> 2);
     }
-    
+
     template<int Divisor>
     inline PixelRGBFloat32
     dividePixel(PixelRGBFloat32 const& pixel0)
@@ -264,9 +264,9 @@ namespace brick {
         pixel0.green / static_cast<brick::common::Float32>(Divisor),
         pixel0.blue / static_cast<brick::common::Float32>(Divisor));
     }
-    
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_PIXELOPERATIONS_HH */

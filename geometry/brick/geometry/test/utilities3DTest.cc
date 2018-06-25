@@ -20,7 +20,7 @@
 namespace brick {
 
   namespace geometry {
-    
+
     class Utilities3DTest : public brick::test::TestFixture<Utilities3DTest> {
 
     public:
@@ -42,7 +42,7 @@ namespace brick {
     private:
 
       const double m_defaultTolerance;
-      
+
     }; // class Utilities3DTest
 
 
@@ -91,7 +91,7 @@ namespace brick {
       rayOrigins.push_back(Vector3D<double>(1.0, 2.0, 10.0));
       rayOrigins.push_back(Vector3D<double>(1.0, 2.0, -10.0));
       rayOrigins.push_back(Vector3D<double>(-14.0, 2.0, 2.0));
-      
+
       Vector3D<double> intersect;
       for(size_t triangleIndex = 0; triangleIndex < triangles.size();
           ++triangleIndex) {
@@ -120,7 +120,7 @@ namespace brick {
       }
     }
 
-    
+
     void
     Utilities3DTest::
     testFindIntersect__ray__plane__doubleRef()
@@ -144,7 +144,7 @@ namespace brick {
         brick::numeric::magnitude<double>(ray0.getOrigin() - referencePoint0);
       double referenceDistance1 =
         brick::numeric::magnitude<double>(ray1.getOrigin() - referencePoint1);
-      
+
       BRICK_TEST_ASSERT(approximatelyEqual(point0.x(), referencePoint0.x(),
                                          m_defaultTolerance));
       BRICK_TEST_ASSERT(approximatelyEqual(point0.x(), referencePoint0.x(),
@@ -184,7 +184,7 @@ namespace brick {
       double referenceDistance0 = 15.0;
       double referenceDistance1 = 2.0;
       double referenceResidual(0.5);
-      
+
       BRICK_TEST_ASSERT(approximatelyEqual(point0.x(), referencePoint0.x(),
                                          m_defaultTolerance));
       BRICK_TEST_ASSERT(approximatelyEqual(point0.y(), referencePoint0.y(),
@@ -199,7 +199,7 @@ namespace brick {
                                          m_defaultTolerance));
     }
 
-    
+
     void
     Utilities3DTest::
     testOperatorTimes__Transform3D__Circle3D()
@@ -300,7 +300,7 @@ namespace brick {
         < m_defaultTolerance);
     }
 
-    
+
   } // namespace geometry
 
 } // namespace brick

@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/numeric/test/amanatidesWoo2DTest.cc
-* 
+*
 * Source file defining AmanatidesWoo2DTest class.
 *
 * Copyright (C) 2004-2007,2012 David LaRose, dlr@cs.cmu.edu
@@ -54,7 +54,7 @@ namespace brick {
       void
       traverseImage(AmanatidesWoo2D< Array2D<double> >& aw2D);
 
-    
+
       Vector2D<double> m_directionXY0;
       Vector2D<double> m_directionXY1;
       Vector2D<double> m_directionXY2;
@@ -66,7 +66,7 @@ namespace brick {
       Vector2D<double> m_startXY2;
       double m_testEpsilon;
       Array2D<double> m_zeroImage;
-    
+
     }; // class AmanatidesWoo2DTest
 
 
@@ -137,7 +137,7 @@ namespace brick {
       Vector2D<double> endXY2(6.0, 6.0);
       m_directionXY2 = endXY2 - m_startXY2;
       m_directionXY2 /= magnitude<double>(m_directionXY2);
-    
+
       // Coordinate transformation which converts world coordinates to pixel
       // coordinates.
       m_pixelTworld = Transform2D<double>(0.5, 0.0, -4.0,
@@ -191,7 +191,7 @@ namespace brick {
       // No independent test for destructor.
     }
 
-  
+
     void
     AmanatidesWoo2DTest::
     testBegin0()
@@ -310,7 +310,7 @@ namespace brick {
       this->compareImages(aw2D.getData(), traceImage);
     }
 
-  
+
     void
     AmanatidesWoo2DTest::
     testValidIntersection0()
@@ -346,7 +346,7 @@ namespace brick {
       BRICK_TEST_ASSERT(!(aw2D.validIntersection()));
     }
 
-  
+
     void
     AmanatidesWoo2DTest::
     testAssignmentOperator()
@@ -364,7 +364,7 @@ namespace brick {
       AmanatidesWoo2D< Array2D<double> >
         aw2DCopy(traceImageCopy, m_pixelTworld, m_startXY2, m_directionXY2,
                  false);
-    
+
       // Copy using the assignment operator.
       aw2DCopy = aw2D;
 
@@ -374,7 +374,7 @@ namespace brick {
       this->compareImages(traceImage, m_downStreamImage);
     }
 
-  
+
     void
     AmanatidesWoo2DTest::
     compareImages(const Array2D<double>& testImage,

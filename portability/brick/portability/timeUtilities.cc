@@ -48,7 +48,7 @@ namespace brick {
   namespace portability {
 
     // Pass.
-    
+
   } // namespace portability
 
 } // namespace brick
@@ -71,8 +71,8 @@ namespace brick {
       _ftime64(&tp);
       return tp.time + (tp.millitm * 0.001);
     }
-    
-    
+
+
     void
     portableSleep(double seconds) {
       if(seconds > 0.0) {
@@ -80,9 +80,9 @@ namespace brick {
         Sleep(milliseconds);
       }
     }
-    
+
   } // namespace portability
-  
+
 } // namespace brick
 
 /* ===================== End Windows code ===================== */
@@ -109,7 +109,7 @@ namespace brick {
     getISOTimeString(TimeZone timeZone) {
       // 20 characters is enough for "YYYY-MM-DD hh:mm:ss\0".
       const int bufferSize = 20;
-      char buffer[bufferSize]; 
+      char buffer[bufferSize];
       time_t timeSinceEpoch;
       time_t returnValue = time(&timeSinceEpoch);
       if(returnValue == -1) {
@@ -134,7 +134,7 @@ namespace brick {
       strftime(buffer, bufferSize, "%Y-%m-%d %H:%M:%S", &brokenDownTime);
       return std::string(buffer);
     }
-    
+
 
     void
     portableSleep(double seconds) {

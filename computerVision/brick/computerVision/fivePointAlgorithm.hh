@@ -24,7 +24,7 @@ namespace brick {
 
   namespace computerVision {
 
-    /** 
+    /**
      * WARNING(xxx): The essential matrix returned by this function is
      * currently not normalized to reasonable magnitude.  You can
      * easily get back a matrix in which the average element magnitude
@@ -81,17 +81,17 @@ namespace brick {
      * image (the q points in the equation above).  You might generate
      * this sequence of points by taking raw image coordinates and
      * then left-multiplying them by inverse(K).
-     * 
+     *
      * @param sequence0End This argument is the end (in the STL sense)
      * of a sequence begun by sequence0Begin.
-     * 
+     *
      * @param sequence1Begin This argument is the beginning (in the STL
      * sense) of a sequence of calibrated feature points, represented
      * as brick::numeric::Vector2D instances, from the second image (the
      * q' points in the equation above).  You might generate this
      * sequence of points by taking raw image coordinates and then
      * left-multiplying them by inverse(K').
-     * 
+     *
      * @return The return value is the recovered essential matrix.
      */
     template<class FloatType, class Iterator>
@@ -100,12 +100,12 @@ namespace brick {
                        Iterator sequence1Begin);
 
 
-    /** 
+    /**
      * WARNING(xxx): The essential matrix returned by this funtion is
      * currently not normalized to reasonable magnitude.  You can
      * easily get back a matrix in which the average element magnitude
      * is on the order of 1.0E12.
-     * 
+     *
      * Warning: this interface may change.
      *
      * This function implements the two-view robust five-point
@@ -114,46 +114,46 @@ namespace brick {
      * essential matrix involves testing feature point pairs against
      * the (image-space) epipolar constraint.  We do not project
      * features into 3D space and compute errors there.
-     * 
+     *
      * [2] David Nister, "An Efficient Solution to the Five-Point
      * Relative Pose Problem."  IEEE Transactions on Pattern Analysis
      * and Machine Intelligence (PAMI), vol. 26, no. 6, pp. 756-770,
      * June 2004.
-     * 
+     *
      * @param sequence0Begin This argument is the beginning (in the
      * STL sense) of a sequence of calibrated feature points,
      * represented as brick::numeric::Vector2D instances, from the first
      * image (the q points in the equation above).  You might generate
      * this sequence of points by taking raw image coordinates and
      * then left-multiplying them by inverse(K).
-     * 
+     *
      * @param sequence0End This argument is the end (in the STL sense)
      * of a sequence begun by sequence0Begin.
-     * 
+     *
      * @param sequence1Begin This argument is the beginning (in the
      * STL sense) of a sequence of calibrated feature points,
      * represented as brick::numeric::Vector2D instances, from the
      * second image (the q' points in the equation above).  You might
      * generate this sequence of points by taking raw image
      * coordinates and then left-multiplying them by inverse(K').
-     * 
+     *
      * @param iterations This argument specifies how many random
      * samples of five points each should be used to generate
      * hypothetical essential matrices.  Setting this number high
      * increases the chances that you'll find the right answer,
      * however runtime is directly proportional to the number of
      * iterations.
-     * 
+     *
      * @param inlierProportion This argument specifies what proportion
      * of the input point pairs you expect to be correctly matched.
      * Set this a little low, so that you're confident there are at
      * least inlierProportion * (sequence0End - sequence0Begin)
      * correct feature matches in the input data.
-     * 
+     *
      * @param score This argument returns a value indicating how good
      * the returned essential matrix is.  0.0 is perfect.  1.0 is
      * terrible.
-     * 
+     *
      * @return The return value is the recovered "best-fit" essential
      * matrix.
      */
@@ -168,60 +168,60 @@ namespace brick {
                              = brick::random::PseudoRandom());
 
 
-    /** 
+    /**
      * Warning: this interface may change.
      *
      * This function implements the three-view robust five-point
      * algorithm described in section 5 of [2].
-     * 
+     *
      * @param sequence0Begin This argument is the beginning (in the
      * STL sense) of a sequence of calibrated feature points,
      * represented as brick::numeric::Vector2D instances, from the first
      * image (the q points in the equation above).  You might generate
      * this sequence of points by taking raw image coordinates and
      * then left-multiplying them by inverse(K).
-     * 
+     *
      * @param sequence0End This argument is the end (in the STL sense)
      * of a sequence begun by sequence0Begin.
-     * 
+     *
      * @param sequence1Begin This argument is the beginning (in the
      * STL sense) of a sequence of calibrated feature points,
      * represented as brick::numeric::Vector2D instances, from the
      * second image (the q' points in the equation above).  You might
      * generate this sequence of points by taking raw image
      * coordinates and then left-multiplying them by inverse(K').
-     * 
+     *
      * @param sequence2Begin This argument is the beginning (in the STL
      * sense) of a sequence of calibrated feature points, represented
      * as brick::numeric::Vector2D instances, from the third image.
-     * 
+     *
      * @param iterations This argument specifies how many random
      * samples of fiv points each should be used to generate
      * hypothetical essential matrices.  Setting this number high
      * increases the chances that you'll find the right answer,
      * however runtime is directly proportional to the number of
      * iterations.
-     * 
+     *
      * @param inlierProportion This argument specifies what proportion
      * of the input point pairs you expect to be correctly matched.
      * Set this a little low, so that you're confident there are at
      * least inlierProportion * (sequence0End - sequence0Begin)
      * correct feature matches in the input data.
-     * 
+     *
      * @param cam2Ecam0 This argument returns by reference the
      * recovered Essential matrix between the third image and the
      * first image, so that transpose(q'') * cam2Ecam0 * q = 0.
-     * 
+     *
      * @param cam0Tcam2 This argument returns by reference a recovered
      * coordinate transformation taking 3D points from the coordinate
      * frame of third camera and converting them to the coordinate
      * frame of first camera.
-     * 
+     *
      * @param cam1Tcam2 This argument returns by reference a recovered
      * coordinate transformation taking 3D points from the coordinate
      * frame of third camera and converting them to the coordinate
      * frame of second camera.
-     * 
+     *
      * @param score This argument returns a value indicating how good
      * the returned parameters are.  0.0 is perfect.  1.0 is
      * terrible.
@@ -242,8 +242,8 @@ namespace brick {
                              FloatType& score,
                              brick::random::PseudoRandom pRandom
                              = brick::random::PseudoRandom());
-    
-    
+
+
     // Return value is residual in pix^2.
     template <class FloatType>
     FloatType
@@ -256,7 +256,7 @@ namespace brick {
     // WARNING(xxx): We have observed at least one case in which the
     // return value from this function is fishy.  We currently do not
     // trust it.
-    // 
+    //
     // Warning Think of this function as being "private."  Gets cam1Tcam0.
     // Might throw if test points are on parallel rays.
     template <class FloatType>
@@ -277,32 +277,32 @@ namespace brick {
       brick::numeric::Transform3D<FloatType> const& c0Tc1,
       brick::numeric::Vector2D<FloatType> const& testPointCamera0,
       brick::numeric::Vector2D<FloatType> const& testPointCamera1);
-    
 
-    /** 
+
+    /**
      * This function is used internally by fivePointAlgorithm() to
      * generate a 10x20 matrix of coefficients of polynomial
      * constraints.  It will normally not be useful unless you happen
      * to be implementing a similar five point algorithm solver (such
      * as the one described in [2], which is faster, but slightly less
      * accurate.
-     * 
+     *
      * @param E0Array This argument is the first basis element of the
      * null space of the system of linear constraints on the essential
      * matrix.
-     * 
+     *
      * @param E1Array This argument is the first basis element of the
      * null space of the system of linear constraints on the essential
      * matrix.
-     * 
+     *
      * @param E2Array This argument is the first basis element of the
      * null space of the system of linear constraints on the essential
      * matrix.
-     * 
+     *
      * @param E3Array This argument is the first basis element of the
      * null space of the system of linear constraints on the essential
      * matrix.
-     * 
+     *
      * @return The return value is the coefficient matrix, M,
      * described in [1].
      */
@@ -315,7 +315,7 @@ namespace brick {
       brick::numeric::Array2D<FloatType> const& E3Array);
 
   } // namespace computerVision
-    
+
 } // namespace brick
 
 

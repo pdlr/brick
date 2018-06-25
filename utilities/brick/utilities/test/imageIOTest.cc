@@ -21,7 +21,7 @@ using brick::test::TestFixture;
 namespace brick {
 
   namespace utilities {
-    
+
     class ImageIOTest : public TestFixture<ImageIOTest> {
 
     public:
@@ -107,7 +107,7 @@ namespace brick {
     }
 
   } // namespace utilities
-  
+
 } // namespace brick
 
 
@@ -126,7 +126,7 @@ int main(int argc, char** argv)
 namespace {
 
   brick::utilities::ImageIOTest currentTest;
-  
+
 }
 
 #endif /* #ifdef BRICK_TEST_NO_AUTOMATIC_REGISTRATION */

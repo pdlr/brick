@@ -70,7 +70,7 @@ namespace brick {
                       "brick::computerVision::readPng8()",
                       "File doesn't seem to be a PNG image.");
         }
-        
+
         // Create and initialize the png_struct with the default stderr
         // and longjump error functions.
         this->m_pngPtr = png_create_read_struct(
@@ -91,14 +91,14 @@ namespace brick {
                         "brick::computerVision::readPng8()",
                         "Couldn't initialize png_infop.");
           }
-       
+
           // Set error handling in case libpng calls longjmp().
           if(setjmp(png_jmpbuf(this->m_pngPtr))) {
             BRICK_THROW(brick::common::IOException,
                         "dlr::computerVision::readPng8()",
                         "Trouble reading from file.");
           }
-        
+
           // Set up the input control.
           png_init_io(this->m_pngPtr, fp);
 
@@ -107,7 +107,7 @@ namespace brick {
 
 #if 0
           // Seems like this should work, but it doesn't.
-          
+
           // PNG files are natively big-endian, but can be coerced to
           // provide little-endian data without a swap.
           if(brick::common::getByteOrder()
@@ -115,7 +115,7 @@ namespace brick {
             png_set_swap(this->m_pngPtr);
           }
 #endif /* #if 0 */
-          
+
           // Read entire image into pngPtr.
           png_read_png(this->m_pngPtr, this->m_infoPtr,
                        PNG_TRANSFORM_IDENTITY, ((png_voidp)NULL));
@@ -135,7 +135,7 @@ namespace brick {
             if(this->m_colorType == PNG_COLOR_TYPE_RGB) {
               numberOfComponents = 3;
             }
-            
+
             // Swap each row individually.
             png_bytep* rowPointers = png_get_rows(
               this->m_pngPtr, this->m_infoPtr);
@@ -149,21 +149,21 @@ namespace brick {
             }
 
           } // if(this->m_bitDepth == 16)
-            
+
         } catch(...) {
           png_destroy_read_struct(
             &(this->m_pngPtr), &(this->m_infoPtr), ((png_infopp)NULL));
           throw;
         }
-        
+
       } catch(...) {
         fclose(fp);
         throw;
       }
       fclose(fp);
     }
-    
-    
+
+
     // Destructor.
     PngReader::
     ~PngReader()
@@ -171,7 +171,7 @@ namespace brick {
       png_destroy_read_struct(&(this->m_pngPtr), &(this->m_infoPtr),
                               ((png_infopp)NULL));
     }
-    
+
 
     // Returns the contents of the the image file in the requested
     // image format.
@@ -201,7 +201,7 @@ namespace brick {
 
         return result;
       }
-    
+
       return this->convertImage<GRAY8>();
     }
 
@@ -217,7 +217,7 @@ namespace brick {
           this->m_pngPtr, this->m_infoPtr);
         for(size_t rowIndex = 0; rowIndex < this->m_height; ++rowIndex) {
           std::copy(rowPointers[rowIndex],
-                    rowPointers[rowIndex] + this->m_width * 2, 
+                    rowPointers[rowIndex] + this->m_width * 2,
                     reinterpret_cast<common::UInt8*>(
                       result.getRow(rowIndex).data()));
         }
@@ -227,7 +227,7 @@ namespace brick {
 
       return this->convertImage<GRAY16>();
     }
-  
+
 
     template <>
     Image<RGB8>
@@ -240,14 +240,14 @@ namespace brick {
                     "This function currently only works with compilers that "
                     "don't add padding to the PixelRGB8 memory layout.");
       }
-        
+
       if(this->getNativeImageFormat() == RGB8) {
         Image<RGB8> result(this->m_height, this->m_width);
         png_bytep* rowPointers = png_get_rows(
           this->m_pngPtr, this->m_infoPtr);
         for(size_t rowIndex = 0; rowIndex < this->m_height; ++rowIndex) {
           std::copy(rowPointers[rowIndex],
-                    rowPointers[rowIndex] + this->m_width * 3, 
+                    rowPointers[rowIndex] + this->m_width * 3,
                     reinterpret_cast<common::UInt8*>(
                       result.getRow(rowIndex).data()));
         }
@@ -270,14 +270,14 @@ namespace brick {
                     "This function currently only works with compilers that "
                     "don't add padding to the PixelRGB16 memory layout.");
       }
-        
+
       if(this->getNativeImageFormat() == RGB16) {
         Image<RGB16> result(this->m_height, this->m_width);
         png_bytep* rowPointers = png_get_rows(
           this->m_pngPtr, this->m_infoPtr);
         for(size_t rowIndex = 0; rowIndex < this->m_height; ++rowIndex) {
           std::copy(rowPointers[rowIndex],
-                    rowPointers[rowIndex] + this->m_width * 6, 
+                    rowPointers[rowIndex] + this->m_width * 6,
                     reinterpret_cast<common::UInt8*>(
                       result.getRow(rowIndex).data()));
         }
@@ -287,7 +287,7 @@ namespace brick {
 
       return this->convertImage<RGB16>();
     }
-      
+
 
     // Returns the native image format of the .png file.
     ImageFormat
@@ -313,7 +313,7 @@ namespace brick {
                   "Unsupported image format.");
       return GRAY8;  // Keep the compiler happy.
     }
-      
+
 
     // Indicates whether the image data in the file is interlaced.
     bool
@@ -325,7 +325,7 @@ namespace brick {
 
 
     // ---- Private members below this line. ----
-      
+
     // Helper function for getImage().
     template <ImageFormat Format>
     Image<Format>
@@ -367,7 +367,7 @@ namespace brick {
 
       return result;
     }
-  
+
   } // namespace computerVision
 
 } // namespace brick

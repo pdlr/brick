@@ -24,7 +24,7 @@ namespace brick {
 
   namespace numeric {
 
-    /** 
+    /**
      * Warning: this interface is not yet stable.
      *
      * This function currently implements an un-optimized version of
@@ -32,21 +32,21 @@ namespace brick {
      * algorithm.  Over time it may grow to dispatch to other FFT
      * algorithms as well, based on the input signal or a
      * configuration argument.
-     * 
+     *
      * The goal here isn't to make an FFT implementation that competes
      * with with the more optimized versions available, just to have a
      * quick and easy FFT for use when other libraries aren't handy.
      *
      * @param inputSignal This argument is the complex-valued signal
      * from which to compute the Fourier transform.
-     * 
+     *
      * @return The return value is the Fourier transform of argument
      * inputSignal.
      */
     template <class ComplexType>
     Array1D<ComplexType>
     computeFFT(Array1D<ComplexType> const& inputSignal);
-    
+
   } // namespace numeric
 
 } // namespace brick

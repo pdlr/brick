@@ -61,7 +61,7 @@ namespace brick {
 
 
       static const size_t numberOfTestMatrixSets = 2;
-    
+
       std::vector< numeric::Array2D<common::Float64> > m_aMatrices;
       std::vector< numeric::Array1D<common::Float64> > m_bVectors;
       std::vector< numeric::Array2D<common::Float64> > m_inverseMatrices;
@@ -82,7 +82,7 @@ namespace brick {
       std::vector< numeric::Array1D<common::Float64> > m_xVectors;
 
       common::Float64 m_defaultTolerance;
-      
+
     }; // class LinearAlgebraTest
 
 
@@ -137,20 +137,20 @@ namespace brick {
         " [10.0, 3.0, 1.0],"
         " [1.0, 5.0, 9.0],"
         " [6.0, 6.0, 6.0]]");
-      
+
       m_aMatrices[1] = numeric::Array2D<common::Float64>(
         "[[1.0, 2.0, 3.0, 4.0],"
         " [4.0, 2.0, 6.0, 1.0],"
         " [10.0, 3.0, 1.0, 1.0]]");
 
-    
+
       m_bVectors[0] = numeric::Array1D<common::Float64>(
         "[14.0, 32.0, 19.0, 38.0, 36.0]");
 
       m_bVectors[1] = numeric::Array1D<common::Float64>(
         "[23.5, 20.5, 21.0]");
 
-    
+
       m_inverseMatrices[0] = numeric::Array2D<common::Float64>(
         "[[-1.47619048,  0.61904762, -0.14285714],"
         " [ 1.28571429, -0.57142857,  0.28571429],"
@@ -191,7 +191,7 @@ namespace brick {
         "[[ 0.,  1.,  2.],"
         " [ 3.,  4.,  5.],"
         " [ 6.,  7.,  1.]]");
-      
+
       m_squareMatrices[1] = numeric::Array2D<common::Float64>(
         "[[ 4.,  3.,  2.,  7.],"
         " [ 4.,  1.,  1.,  8.],"
@@ -201,7 +201,7 @@ namespace brick {
       m_squareMatrixDeterminants[0] = 21.0;
 
       m_squareMatrixDeterminants[1] = -15.0;
-      
+
       m_squareXVectors[0] = numeric::Array1D<common::Float64>(
         "[-5.66666667, 6., -1.]");
 
@@ -209,7 +209,7 @@ namespace brick {
       m_squareXVectors[1] = numeric::Array1D<common::Float64>(
         "[-10.66666667, -9.66666667, 22.33333333, 4.]");
 
-    
+
       m_symmetricEigenvalues[0] = numeric::Array1D<common::Float64>(
         "[24.06253512, 0.5580362, 0.18491359, -0.80548492]");
 
@@ -229,7 +229,7 @@ namespace brick {
         " [ -0.48540238, -0.84196315, -0.16831305, -0.16478259],"
         " [ 0.01064409, -0.2369218, 0.23055064, 0.94371668]]");
 
-    
+
       m_symmetricMatrices[0] = numeric::Array2D<common::Float64>(
         "[[  1.,   2.,   3.,   4.],"
         " [  2.,   5.,   6.,   7.],"
@@ -241,7 +241,7 @@ namespace brick {
         " [ 11.,   9.,  -5.,   0.],"
         " [ -3.,  -5.,  12.,   4.],"
         " [  4.,   0.,   4., -11.]]");
-    
+
 
       m_upperTriangularMatrices[0] = numeric::Array2D<common::Float64>(
         "[[  1.,   2.,   3.,   4.],"
@@ -254,7 +254,7 @@ namespace brick {
         " [  0.,   9.,  -5.,   0.],"
         " [  0.,   0.,  12.,   4.],"
         " [  0.,   0.,   0., -11.]]");
-    
+
 
       m_sVectors[0] = numeric::Array1D<common::Float64>(
         "[ 18.52607955,   6.51255861,   0.60906229]");
@@ -262,7 +262,7 @@ namespace brick {
       m_sVectors[1] = numeric::Array1D<common::Float64>(
         "[ 18.67643567,   6.03617265,   0.86912045]");
 
-    
+
       m_testMatrices[0] = numeric::Array2D<common::Float64>(
         "[[  0.,   1.,   2.],"
         " [  3.,   4.,   5.],"
@@ -286,7 +286,7 @@ namespace brick {
         " [-0.55423802,  0.71674227,  0.42320295],"
         " [-0.82027642, -0.55664029, -0.13152259]]");
 
-    
+
       m_vtMatrices[0] = numeric::Array2D<common::Float64>(
         "[[-0.5942732 , -0.68894578, -0.41496154],"
         " [ 0.32896694,  0.26259542, -0.90709669],"
@@ -297,7 +297,7 @@ namespace brick {
         " [-0.26277466, -0.16666405, -0.07055345,  0.94773139],"
         " [ 0.73710275,  0.04127557, -0.65455161,  0.16290502]]");
 
-    
+
       m_xVectors[0] = numeric::Array1D<common::Float64>(
         "[1.0, 2.0, 3.0]");
 
@@ -322,8 +322,8 @@ namespace brick {
             (m_upperTriangularMatrices[index0]).transpose(),
             m_upperTriangularMatrices[index0]);
         numeric::Array2D<common::Float64> aMatrixCopy = aMatrix.copy();
-      
-      
+
+
         // Do the computation once for upper triangular.
         numeric::Array2D<common::Float64> kMatrix;
         choleskyFactorization(aMatrix, kMatrix, true);
@@ -333,7 +333,7 @@ namespace brick {
         // Instead we reconstruct aMatrix using kMatrix.
         numeric::Array2D<common::Float64> kTk = numeric::matrixMultiply<common::Float64>(
           kMatrix.transpose(), kMatrix);
-        
+
         // Check that input is unchanged.
         BRICK_TEST_ASSERT(
           this->approximatelyEqual(aMatrix, aMatrixCopy));
@@ -346,7 +346,7 @@ namespace brick {
         choleskyFactorization(aMatrix, kMatrix, false);
         numeric::Array2D<common::Float64> kkT = numeric::matrixMultiply<common::Float64>(
           kMatrix, kMatrix.transpose());
-        
+
         // Check that input is unchanged.
         BRICK_TEST_ASSERT(
           this->approximatelyEqual(aMatrix, aMatrixCopy));
@@ -372,7 +372,7 @@ namespace brick {
           determinant(m_squareMatrices[index0]);
         common::Float64 referenceDeterminant =
           m_squareMatrixDeterminants[index0];
-        
+
         // Check that results are correct.
         BRICK_TEST_ASSERT(
           brick::test::approximatelyEqual(
@@ -412,7 +412,7 @@ namespace brick {
       }
     }
 
-  
+
     void
     LinearAlgebraTest::
     testEigenvectors()
@@ -463,7 +463,7 @@ namespace brick {
             }
           }
         }
-            
+
 
         // Check eigenvectors
         for(size_t ii = 0; ii < eigenvectorArray.size(); ++ii) {
@@ -478,7 +478,7 @@ namespace brick {
         }
       }
     }
-    
+
 
     void
     LinearAlgebraTest::
@@ -551,9 +551,9 @@ namespace brick {
       for(size_t index0 = 0;
           index0 < LinearAlgebraTest::numberOfTestMatrixSets;
           ++index0) {
-        
+
         xx = m_bVectors[index0].copy();
-        
+
         for(int slope = -5; slope < 6; ++slope) {
           for(int offset = -5; offset < 6; ++offset) {
 
@@ -584,7 +584,7 @@ namespace brick {
       BRICK_TEST_ASSERT_EXCEPTION(brick::common::ValueException,
                                   linearFit(xx, yy));
     }
-  
+
 
     void
     LinearAlgebraTest::
@@ -597,7 +597,7 @@ namespace brick {
         numeric::Array2D<common::Float64> aMatrix = m_aMatrices[index0].copy();
         numeric::Array1D<common::Float64> bVector = m_bVectors[index0].copy();
         numeric::Array1D<common::Float64> xVector = linearLeastSquares(aMatrix, bVector);
-      
+
         // Check that input is unchanged.
         BRICK_TEST_ASSERT(
           this->approximatelyEqual(aMatrix, m_aMatrices[index0]));
@@ -609,7 +609,7 @@ namespace brick {
           this->approximatelyEqual(xVector, m_xVectors[index0]));
       }
     }
-  
+
 
     void
     LinearAlgebraTest::
@@ -622,13 +622,13 @@ namespace brick {
         numeric::Array2D<common::Float64> aMatrix = m_squareMatrices[index0].copy();
         numeric::Array1D<common::Float64> bVector = m_squareBVectors[index0].copy();
         linearSolveInPlace(aMatrix, bVector);
-      
+
         // Check that results are correct.
         BRICK_TEST_ASSERT(
           this->approximatelyEqual(bVector, m_squareXVectors[index0]));
       }
     }
-  
+
 
     void
     LinearAlgebraTest::
@@ -648,7 +648,7 @@ namespace brick {
         // Start with a general matrix
         numeric::Array2D<common::Float64> aMatrix = testMatrices[index0];
         numeric::Array2D<common::Float64> aMatrixCopy = aMatrix.copy();
-      
+
         // Do the factorization.
         numeric::Array2D<common::Float64> qMatrix;
         numeric::Array2D<common::Float64> rMatrix;
@@ -659,7 +659,7 @@ namespace brick {
         // which to compare.
         numeric::Array2D<common::Float64> qTq = numeric::matrixMultiply<common::Float64>(
           qMatrix.transpose(), qMatrix);
-        
+
         // numeric::Array2D<common::Float64> iMatrix = num::identity<common::Float64>(
         //   aMatrix.rows(), aMatrix.rows());
         numeric::Array2D<common::Float64> iMatrix =
@@ -674,14 +674,14 @@ namespace brick {
         BRICK_TEST_ASSERT(qMatrix.columns() == aMatrix.rows());
         BRICK_TEST_ASSERT(rMatrix.rows() == rMatrix.rows());
         BRICK_TEST_ASSERT(rMatrix.columns() == rMatrix.columns());
-        
+
         // Check that rMatrix is upper triangular with non-negative diagonal.
         BRICK_TEST_ASSERT(this->isUpperTriangular(rMatrix));
         for(size_t ii = 0; ii < std::min(rMatrix.rows(), rMatrix.columns());
             ++ii) {
           BRICK_TEST_ASSERT(rMatrix(ii, ii) >= 0.0);
         }
-        
+
         // Check that input is unchanged.
         BRICK_TEST_ASSERT(
           this->approximatelyEqual(aMatrix, aMatrixCopy));
@@ -755,7 +755,7 @@ namespace brick {
                         ApproximatelyEqualFunctor<common::Float64>(1.0E-5));
     }
 
-  
+
     bool
     LinearAlgebraTest::
     approximatelyEqual(const numeric::Array2D<common::Float64>& array0,
@@ -771,7 +771,7 @@ namespace brick {
                         ApproximatelyEqualFunctor<common::Float64>(1.0E-5));
     }
 
-    
+
     bool
     LinearAlgebraTest::
     isUpperTriangular(const numeric::Array2D<common::Float64>& array0)
@@ -785,10 +785,10 @@ namespace brick {
       }
       return true;
     }
-    
+
 
   } // namespace linearAlgebra
-    
+
 } // namespace brick
 
 

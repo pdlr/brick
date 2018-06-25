@@ -25,7 +25,7 @@
 namespace brick {
 
   namespace utilities {
-    
+
     // The constructor attempts to create the lock file.
     LockFile::
     LockFile(std::string const& fileName,
@@ -54,7 +54,7 @@ namespace brick {
         close(m_fileDescriptor);
       }
     }
-  
+
 
     // The constructor attempts to create a non-empty lock file.
     LockFile::
@@ -91,7 +91,7 @@ namespace brick {
         this->m_returnCode |= chmod(m_fileName.c_str(), S_IRUSR);
       }
     }
-      
+
 
     // The destructor destroys the LockFile instance and deletes any
     // file created by the constructor, thereby releasing the lock.
@@ -118,5 +118,5 @@ namespace brick {
     }
 
   } // namespace utilities
-  
+
 } // namespace brick

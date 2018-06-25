@@ -29,7 +29,7 @@ namespace brick {
     class CompileTimestamp
     {
     public:
-      /** 
+      /**
        * The default constructor sets the internal state to reflect the
        * time at which the compileTimestamp.hh> header was compiled.
        */
@@ -41,33 +41,33 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * Destroys the CompileTimestamp instance.
        */
       ~CompileTimestamp() {}
 
 
-      /** 
+      /**
        * This member function returns a string of the form
        * "YYYY-MM-DD hh:mm:ss" indicating the local time at which the
        * file was compiled.
-       * 
+       *
        * @return The return value is a string in ISO date/time format.
        */
       std::string
       getISOString();
-    
+
 
     private:
 
       void
       parseCompilerDateString(const std::string& compilerTimeString);
 
-    
+
       void
       parseCompilerTimeString(const std::string& compilerTimeString);
 
-    
+
       int m_day;
       int m_hour;
       int m_minute;
@@ -77,7 +77,7 @@ namespace brick {
     };
 
   } // namespace common
-    
+
 } // namespace brick
 
 

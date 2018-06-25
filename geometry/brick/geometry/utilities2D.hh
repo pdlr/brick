@@ -36,7 +36,7 @@ namespace brick {
     checkIntersect(LineSegment2D<Type> const& lineSegment0,
                    LineSegment2D<Type> const& lineSegment1,
                    brick::numeric::Vector2D<Type>& intersect);
-    
+
 
     template <class Type>
     bool
@@ -49,7 +49,7 @@ namespace brick {
     checkIntersect(Ray2D<Type> const& ray,
                    LineSegment2D<Type> const& lineSegment,
                    brick::numeric::Vector2D<Type>& intersect);
-    
+
 
     template <class Type>
     bool
@@ -57,7 +57,7 @@ namespace brick {
                    LineSegment2D<Type> const& lineSegment,
                    double& lambda);
 
-    
+
     template <class Type>
     bool
     checkIntersect(Ray2D<Type> const& ray,
@@ -65,8 +65,8 @@ namespace brick {
                    brick::numeric::Vector2D<Type>& intersect,
                    double& lambda);
 
-    
-    /** 
+
+    /**
      * Return the centroid of triangle, which is coincident with the
      * intersection of its three medians.
      *
@@ -79,27 +79,27 @@ namespace brick {
     brick::numeric::Vector2D<Type>
     getCentroid(Triangle2D<Type> const& triangle);
 
-    
+
     template <class Type>
     brick::numeric::Vector2D<Type>
     findClosestPoint(brick::numeric::Vector2D<Type> const& point,
                      Ray2D<Type> const& ray);
 
-    
+
     template <class Type>
     LineSegment2D<Type>
     operator*(brick::numeric::Transform2D<Type> const& transform,
               LineSegment2D<Type> const& inputSegment);
-    
-    
+
+
     template <class Type>
     Ray2D<Type>
     operator*(brick::numeric::Transform2D<Type> const& transform,
               Ray2D<Type> const& inputRay);
-    
-    
+
+
   } // namespace utilities
-    
+
 } // namespace brick
 
 // Include definitions of inline and template functions.

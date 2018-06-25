@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/utilities/optionDescription.cc
-* 
+*
 * Source file defining the OptionDescription class.
 *
 * Copyright (C) 2006-2011 David LaRose, dlr@cs.cmu.edu
@@ -17,7 +17,7 @@
 namespace brick {
 
   namespace utilities {
-  
+
     // Constructor.
     OptionDescription::
     OptionDescription()
@@ -31,8 +31,8 @@ namespace brick {
     {
       // Empty.
     }
-    
-      
+
+
     // Constructor.
     OptionDescription::
     OptionDescription(std::string const& name,
@@ -146,7 +146,7 @@ namespace brick {
       return docStream.str();
     }
 
-    
+
     bool
     OptionDescription::
     isMatch(std::string const& argument) const
@@ -155,7 +155,7 @@ namespace brick {
       return (this->getMatchLength(argument, dummy) != 0);
     }
 
-    
+
     std::ostream&
     operator<<(std::ostream& stream,
                const OptionDescription& optionDescription)
@@ -163,8 +163,8 @@ namespace brick {
       stream << "  " << optionDescription.getOptionDoc();
       return stream;
     }
-    
-      
+
+
   } // namespace utilities
 
 } // namespace brick

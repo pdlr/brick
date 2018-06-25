@@ -21,7 +21,7 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     /**
      * This function returns by reference an image which either shares
      * or copies the data from the input array.
@@ -58,10 +58,10 @@ namespace brick {
      * in the original array.  If data sharing isn't possible, then the
      * two functions will take care of copying back and forth between
      * the image and the flat array.
-     * 
+     *
      * @param inputArray This argument is the array from which to
      * construct the return image.
-     * 
+     *
      * @param outputImage This argument is the image which will be
      * modified or copied to.
      *
@@ -85,13 +85,13 @@ namespace brick {
      * If it is not possible to do so, then this function will throw a
      * LogicException.  This function is deprecated.  Instead, ues the
      * two-argument form of associateColorComponents().
-     * 
+     *
      * WARNING: The returned image does no memory management.  It is only
      * valid until the original input image is destroyed.
-     * 
+     *
      * @param inputArray This argument is the array from which to
      * construct the return image.
-     * 
+     *
      * @return The return value is an image pointing to the input array
      * data, but in which the color components are lumped into pixels.
      */
@@ -101,7 +101,7 @@ namespace brick {
       brick::numeric::Array2D<typename ImageFormatTraits<FORMAT>::ComponentType>& inputArray);
 
 
-    /** 
+    /**
      * This function takes an image in one colorspace and generates a
      * corresponding image in a second colorspace.  Use this function as
      * follows:
@@ -119,7 +119,7 @@ namespace brick {
      * different routine.
      *
      * @param inputImage This argument is the image to be converted.
-     * 
+     *
      * @return The return value is an image in the converted colorspace.
      */
     template<ImageFormat OUTPUT_FORMAT, ImageFormat INPUT_FORMAT>
@@ -163,10 +163,10 @@ namespace brick {
      * in the original array.  If data sharing isn't possible, then the
      * two functions will take care of copying back and forth between
      * the image and the flat array.
-     * 
+     *
      * @param inputImage This argument is the image from which to
      * construct the return array.
-     * 
+     *
      * @outputArray This argument is the array which will be modified or
      * copied to.
      *
@@ -180,7 +180,7 @@ namespace brick {
       brick::numeric::Array2D<typename ImageFormatTraits<FORMAT>::ComponentType>& outputArray);
 
 
-    /** 
+    /**
      * @deprecated {Please use the two-argument version of
      * dissociateColorComponents() instead.}
      *
@@ -191,13 +191,13 @@ namespace brick {
      * possible to do so, then this function will throw a
      * LogicException.  This function is deprecated.  Instead, ues the
      * two-argument form of dissociateColorComponents().
-     * 
+     *
      * WARNING: The returned array does no memory management.  It is only
      * valid until the original input image is destroyed.
-     * 
+     *
      * @param inputImage This argument is the image from which to
      * construct the return array.
-     * 
+     *
      * @return The return value is a 2D array pointing to the input
      * image data, but in which the color components are not lumped into
      * pixels.
@@ -207,24 +207,24 @@ namespace brick {
     dissociateColorComponents(Image<FORMAT>& inputImage);
 
 
-    /** 
+    /**
      * Return the transform that, in the least-squares sense, most
      * nearly transforms each point in fromPoints to the corresponding
      * point in toPoints.  All of the iterator arguments must come
      * from sequences of numeric::Vector2D<Type>.  This function
      * currently only works with Type set to Float64 (double).
-     * 
+     *
      * @param toPointsBegin This argument and the next define a
      * sequence of Vector2D<Type> to which fromPoints correspond.
-     * 
+     *
      * @param toPointsEnd This argument and the previous define a
      * sequence of Vector2D<Type> to which fromPoints correspond.
-     * 
+     *
      * @param fromPointsBegin This argument begins a sequence of
      * Vector2D<Type> that we imagine can be mapped onto toPoints by
      * an affine transform.  This sequence must have at least the same
      * number of elements as toPoints.
-     * 
+     *
      * @return The return value is the affine transform that most
      * nearly transforms each element of fromPoints to the
      * corresponding element of toPoints.
@@ -234,7 +234,7 @@ namespace brick {
     estimateAffineTransform(Iter0 toPointsBegin, Iter0 toPointsEnd,
                             Iter1 fromPointsBegin);
 
-    
+
     /**
      * This function subsamples its input to create a new, smaller
      * image.  The number of rows in the resulting image is the
@@ -298,9 +298,9 @@ namespace brick {
              ImageFormat IntermediateFormat>
     Image<OutputFormat>
     supersample(const Image<InputFormat>& inputImage);
-  
-    
-    /** 
+
+
+    /**
      * This function creates a new array and copies into it the pixel
      * data from the input image.  If the image format is one which has
      * multiple interleaved color components, such as RGB8, then the
@@ -309,16 +309,16 @@ namespace brick {
      * [{h0, s0, v0}, {h1, s1, v1}, {h2, s2, v2}, ... ], then the first
      * row of the array returned by toArray will be [h0, s0, v0, h1, s1,
      * v1, h2, s2, v2, ...].
-     * 
+     *
      * @param inputImage This argument is the image to be copied.
-     * 
+     *
      * @return The return value is an array containing the copied data.
      */
     template <class Type, ImageFormat FORMAT>
     brick::numeric::Array2D<Type>
     toArray(const Image<FORMAT>& inputImage);
 
-  } // namespace computerVision    
+  } // namespace computerVision
 
 } // namespace brick
 

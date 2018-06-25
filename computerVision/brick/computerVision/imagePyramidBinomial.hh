@@ -51,7 +51,7 @@ namespace brick {
 
       // ========= Public member functions. =========
 
-      /** 
+      /**
        * Construct an image pyramid from an input image.  The input
        * image will be stored as the base of the pyramid, then
        * low-pass filtered and to create subsequent levels.  If
@@ -69,12 +69,12 @@ namespace brick {
        * un-subtracted pixels in the Laplacian-of-Gaussian
        * approximation.  The width of this border is reported by
        * member function getBorderSize().
-       * 
+       *
        * @param inputImage This argument is the image to be
        * downsampled.  It is either shallow-copied or deep-copied into
        * the base of the pyramid, depending on the value of
        * constructor argument isDeepCopyImage.
-       * 
+       *
        * @param levels This argument specifies how many pyramid levels
        * should be created.  Sitting this argument to zero tells the
        * pyramid to generate as many levels as possible.  Regardless
@@ -89,7 +89,7 @@ namespace brick {
        * to the size of the smallest image of the pyramid.  Levels
        * will be added to the pyramid only to the extent that the
        * smallest image is larger than this in both axes.
-       * 
+       *
        * @param isBandPass Setting this argument to true enables the
        * Difference-of-Gaussians approximation to Laplacian of
        * Guassian scale space.  If this argument is false, only
@@ -109,7 +109,7 @@ namespace brick {
                            bool isDeepCopyImage = true);
 
 
-      /** 
+      /**
        * This member function accepts pixel coordinates at one level
        * of the image and returns the matching coordinates in any
        * other level.  Pixel [0, 0] is in the upper left corner of the
@@ -117,16 +117,16 @@ namespace brick {
        * to a later level, it is possible to input coordinates that
        * fall between pixels on the smaller image.  In this case, the
        * resulting coordinates will be rounded down.
-       * 
+       *
        * @param inCoords This argument specifies the coordinates to be
        * converted.
-       * 
+       *
        * @param fromLevel This argument specifies what pyramid level
        * the input coordinates apply to.
-       * 
+       *
        * @param toLevel This argument specifies to which pyramid level
        * the input coordinates should be converted.
-       * 
+       *
        * @return The return value is the converted coordinate pair.
        */
       brick::numeric::Index2D
@@ -135,23 +135,23 @@ namespace brick {
                               unsigned int toLevel);
 
 
-      /** 
+      /**
        * This member function accepts pixel coordinates at one level
        * of the image and returns the matching coordinates in any
        * other level.  Pixel coordinate (0, 0) is the upper left
        * corner of the upper left pixel (at each level).  The center
        * of the upper left pixel is (0.5, 0.5), and the X coordinate
        * increases along the top row of the image.
-       * 
+       *
        * @param inCoords This argument specifies the coordinates to be
        * converted.
-       * 
+       *
        * @param fromLevel This argument specifies what pyramid level
        * the input coordinates apply to.
-       * 
+       *
        * @param toLevel This argument specifies to which pyramid level
        * the input coordinates should be converted.
-       * 
+       *
        * @return The return value is the converted coordinate pair.
        */
       template <class Type>
@@ -161,42 +161,42 @@ namespace brick {
                               unsigned int toLevel);
 
 
-      /** 
+      /**
        * Returns the number of columns at each of the left and right
        * borders of the image in which the filtered image data is
        * invalid due to the filter kernel overlapping the edge of the
        * image.
-       * 
+       *
        * @return The return value is the width, in pixels, of the
        * invalid region.
        */
       unsigned int
       getBorderSizeLeftRight();
 
-      
-      /** 
+
+      /**
        * Returns the number of rows at each of the top and bottom
        * borders of the image in which the filtered image data is
        * invalid due to the filter kernel overlapping the edge of the
        * image.
-       * 
+       *
        * @return The return value is the heigh, in pixels, of the
        * invalid region.
        */
       unsigned int
       getBorderSizeTopBottom();
 
-      
-      /** 
+
+      /**
        * This member function returns a shallow-copy of the specified
        * pyramid level.  If you need a deep copy, you can use
        * "myPyramid.getLevel().copy()."  The returned image is a
        * low-pass filtered and subsampled version of the original.
-       * 
+       *
        * @param levelIndex This argument is the requested level.
        * Level 0 is full resolution, with subsequent levels being more
        * and more subsampled.
-       * 
+       *
        * @return The return value is a shallow-copy of the requested
        * image.
        */
@@ -204,13 +204,13 @@ namespace brick {
       getLevel(unsigned int levelIndex);
 
 
-      /** 
+      /**
        * Returns the number of levels in the pyramid.
-       * 
+       *
        * @return The return value specifies how many levels there are
        * in the pyramid.
        */
-      unsigned int 
+      unsigned int
       getNumberOfLevels();
 
 
@@ -227,19 +227,19 @@ namespace brick {
         brick::numeric::Array1D<PixelType> outputRow,
         std::deque< brick::numeric::Array1D<InternalPixelType> > const&
           inputRowBuffer);
-      
+
       Image<Format>
       filterImage(Image<Format> const& inputImage);
-      
+
       brick::numeric::Array1D<InternalPixelType>
       filterRow(brick::numeric::Array1D<PixelType> const& inputRow);
-      
+
       Image<Format>
       filterAndSubsampleImage(Image<Format> const& inputImage);
-      
+
       brick::numeric::Array1D<InternalPixelType>
       filterAndSubsampleRow(brick::numeric::Array1D<PixelType> const& inputRow);
-      
+
       Image<Format>
       subsampleImage(Image<Format> const& inputImage);
 
@@ -249,7 +249,7 @@ namespace brick {
     };
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

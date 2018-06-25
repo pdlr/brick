@@ -36,7 +36,7 @@ namespace brick {
     private:
 
       double m_defaultTolerance;
-    
+
     }; // class SolveQuarticTest
 
 
@@ -108,7 +108,7 @@ namespace brick {
       BRICK_TEST_ASSERT(
         approximatelyEqual(root3.getImaginaryPart(), 0.0, m_defaultTolerance));
 
-      
+
       // Test for (2x + 4i)(4x - 8i)(3x + 9)(x - 3) = 0
       //   : (8x^2 + 32)(3x + 9)(x - 3) = 0
       //   : (24x^3 + 72x^2 + 96x + 288)(x - 3) = 0
@@ -130,7 +130,7 @@ namespace brick {
       if(r1Tag > r2Tag) {std::swap(root1, root2); std::swap(r1Tag, r2Tag);}
       if(r1Tag > r3Tag) {std::swap(root1, root3); std::swap(r1Tag, r3Tag);}
       if(r2Tag > r3Tag) {std::swap(root2, root3); std::swap(r2Tag, r3Tag);}
-      
+
       BRICK_TEST_ASSERT(
         approximatelyEqual(root0.getRealPart(), -3.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(
@@ -199,7 +199,7 @@ namespace brick {
     }
 
   } // namespace numeric
-  
+
 } // namespace brick
 
 

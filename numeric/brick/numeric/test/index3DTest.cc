@@ -22,7 +22,7 @@ namespace num = brick::numeric;
 
 // Anonymous namespace for local functions and classes.
 namespace {
-  
+
   class cmp : public std::binary_function<num::Index3D, num::Index3D, bool> {
   public:
 
@@ -37,7 +37,7 @@ namespace {
 namespace brick {
 
   namespace numeric {
-    
+
     class Index3DTest
       : public test::TestFixture<Index3DTest> {
 
@@ -51,11 +51,11 @@ namespace brick {
 
       // Tests.
       void testIndex3D();
-    
+
     private:
 
       double m_defaultTolerance;
-    
+
     }; // class Index3DTest
 
 
@@ -91,16 +91,16 @@ namespace brick {
       sortedPoints.push_back(num::Index3D(3, 1, 2));
       sortedPoints.push_back(num::Index3D(5, 3, 3));
       sortedPoints.push_back(num::Index3D(7, 4, 2));
-    
+
       std::sort(testPoints.begin(), testPoints.end(), cmp());
-    
+
       for(size_t ii = 0; ii < testPoints.size(); ++ii) {
         BRICK_TEST_ASSERT(testPoints[ii] == sortedPoints[ii]);
       }
     }
 
   } // namespace numeric
-  
+
 } // namespace brick
 
 #if 0
@@ -117,7 +117,7 @@ int main(int argc, char** argv)
 namespace {
 
   brick::numeric::Index3DTest currentTest;
-  
+
 }
 
 #endif

@@ -18,8 +18,8 @@
 namespace brick {
 
   namespace computerVision {
-    
-    /** 
+
+    /**
      * This function zeros any pixels of the input image that are not
      * plausible edges.
      */

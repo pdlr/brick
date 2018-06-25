@@ -15,7 +15,7 @@
 
 // This file is included by stencil2D.hh, and should not be directly included
 // by user code, so no need to include stencil2D.hh here.
-// 
+//
 // #include <brick/numeric/stencil2D.hh>
 
 #include <cmath>
@@ -23,7 +23,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     template <class Type, int Size>
     Stencil2D<Type, Size>::
     Stencil2D()
@@ -85,8 +85,8 @@ namespace brick {
         ++index0;
       }
     }
-  
-    
+
+
     template <class Type, int Size>
     Stencil2D<Type, Size>::
     Stencil2D(const Array2D<bool>& pattern)
@@ -132,7 +132,7 @@ namespace brick {
       }
     }
 
-  
+
     template <class Type, int Size>
     Type&
     Stencil2D<Type, Size>::
@@ -141,7 +141,7 @@ namespace brick {
       this->checkBounds(elementNumber);
       return *(m_ptr + m_offsetArray[elementNumber]);
     }
-      
+
 
     template <class Type, int Size>
     Type
@@ -208,7 +208,7 @@ namespace brick {
       }
     }
 
-    
+
     template <class Type, int Size> template <class Type2>
     void
     Stencil2D<Type, Size>::
@@ -299,7 +299,7 @@ namespace brick {
       }
 #endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
     }
-  
+
   } // namespace numeric
 
 } // namespace brick

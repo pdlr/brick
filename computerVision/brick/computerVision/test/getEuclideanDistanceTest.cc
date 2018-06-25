@@ -16,7 +16,7 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     class GetEuclideanDistanceTest
       : public brick::test::TestFixture<GetEuclideanDistanceTest> {
 
@@ -63,7 +63,7 @@ namespace brick {
 
       uCoords.push_back(85);
       vCoords.push_back(170);
-    
+
       uCoords.push_back(175);
       vCoords.push_back(165);
 
@@ -82,7 +82,7 @@ namespace brick {
           referenceDistances(row, column) = distance;
         }
       }
-    
+
       numeric::Array2D<double> distances = getEuclideanDistance<double>(
         testImage, 10);
 
@@ -124,7 +124,7 @@ namespace brick {
           approximatelyEqual(distances[index0], referenceDistances[index0],
                              1.0E-6));
       }
-    
+
     }
 
   } // namespace computerVision

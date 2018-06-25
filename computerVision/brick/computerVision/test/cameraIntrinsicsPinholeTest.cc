@@ -39,12 +39,12 @@ public:
   void testGetProjectionMatrix();
   void testProject();
   void testReverseProject();
-  
+
 private:
 
   double m_defaultTolerance;
   double m_relaxedTolerance;
-  
+
 }; // class CameraIntrinsicsPinholeTest
 
 

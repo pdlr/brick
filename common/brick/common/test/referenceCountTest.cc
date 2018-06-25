@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file byteOrderTest.cc
-* 
+*
 * Source file defining tests for exception trace code.
 *
 * Copyright (C) 2005 David LaRose, dlr@cs.cmu.edu
@@ -41,7 +41,7 @@ namespace brick {
       return true;
     }
 
-    
+
     bool
     testConstructor()
     {
@@ -100,7 +100,7 @@ namespace brick {
       if(!checkState(count4, true, true, 3)) {
         return false;
       }
-      
+
       // If we get this far, then all is well.
       return true;
     }
@@ -119,7 +119,7 @@ namespace brick {
       if(!checkState(count0, false, false, 0)) {
         return false;
       }
-      
+
       ReferenceCount count2(1);
       {
         ReferenceCount count3(count2);
@@ -145,11 +145,11 @@ namespace brick {
       if(!checkState(count2, true, false, 1)) {
         return false;
       }
-      
+
       // If we get this far, then all is well.
       return true;
     }
-    
+
   } // namespace common
 
 } // namespace brick

@@ -21,7 +21,7 @@
 namespace brick {
 
   namespace common {
-    
+
     /**
      ** Functor template for composing one binary function,
      ** functor0(x, y), and two unary functions functor1(x) and functor2(x)
@@ -34,7 +34,7 @@ namespace brick {
                                     typename Functor0::result_type>
     {
     public:
-      /** 
+      /**
        * The constructor accepts instances of the three functor types to
        * be composed, and makes local copies of them for use in
        * operator()(...).
@@ -62,7 +62,7 @@ namespace brick {
                            const Functor2& functor2)
         : m_functor0(functor0), m_functor1(functor1), m_functor2(functor2) {}
 
-      /** 
+      /**
        * This operator passes its first argument to the operator()(...)
        * method of a copy of constructor argument functor1, passes its
        * second argument to the operator()(...) method of a copy of
@@ -111,7 +111,7 @@ namespace brick {
                                     typename Functor0::result_type>
     {
     public:
-      /** 
+      /**
        * The constructor accepts instances of the two functor types to
        * be composed, and makes local copies of them for use in
        * operator()(...).
@@ -131,8 +131,8 @@ namespace brick {
       ComposeFunctor_1_2(const Functor0& functor0, const Functor1& functor1)
         : m_functor0(functor0), m_functor1(functor1) {}
 
-    
-      /** 
+
+      /**
        * This operator passes its arguments to the operator()(...)
        * method of a copy of constructor argument functor1, then passes
        * the result of this call as the argument of the operator()(...)
@@ -173,13 +173,13 @@ namespace brick {
       : public std::unary_function<std::pair<Type0, Type1>, Type0>
     {
     public:
-      /** 
+      /**
        * This is a very lightweight class.  The constructor does nothing.
        */
       ExtractFirstFunctor() {}
 
-    
-      /** 
+
+      /**
        * This version of the application operator returns the value of
        * the first component of its argument.
        *
@@ -193,7 +193,7 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This version of the application operator returns a reference to
        * the first component of its argument.
        *
@@ -217,13 +217,13 @@ namespace brick {
       : public std::unary_function<std::pair<Type0, Type1>, Type1>
     {
     public:
-      /** 
+      /**
        * This is a very lightweight class.  The constructor does nothing.
        */
       ExtractSecondFunctor() {}
 
-    
-      /** 
+
+      /**
        * This version of the application operator returns the value of
        * the second component of its argument.
        *
@@ -237,7 +237,7 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This version of the application operator returns a reference to
        * the second component of its argument.
        *
@@ -250,7 +250,7 @@ namespace brick {
         return argument.second;
       }
     };
-  
+
 
     /**
      ** Functor template for comparing two values to determine
@@ -263,7 +263,7 @@ namespace brick {
       : public std::binary_function<Type, Type, bool>
     {
     public:
-      /** 
+      /**
        * The constructor sets the threshold for what is considered
        * approximately equal.  For example, if the constructor argument
        * is 1.0E-6, then two values will be considered equal if the
@@ -276,7 +276,7 @@ namespace brick {
       ApproximatelyEqualFunctor(const Type& epsilon=static_cast<Type>(0))
         : m_epsilon(epsilon) {}
 
-      /** 
+      /**
        * The application operator returns true if the difference between
        * its two arguments is less than epsilon and greater than
        * -(epsilon), where epsilon is specified in the constructor.
@@ -298,11 +298,11 @@ namespace brick {
 
     protected:
 
-      /// This protected member function stores the comparison tolerance.   
+      /// This protected member function stores the comparison tolerance.
       Type m_epsilon;
     };
 
-  
+
     /**
      ** Functor template much like std::pointer_to_binary_function, but
      ** specifically for functions that take const reference arguments.
@@ -315,20 +315,20 @@ namespace brick {
     {
     public:
       /// Typedef describing what type of function is to be wrapped by this
-      /// class. 
+      /// class.
       typedef ResultType (*FunctionPtrType)(const ArgumentType0&,
                                             const ArgumentType1&);
 
-      /** 
+      /**
        * Constructor requires a function pointer to wrap.
        */
       explicit
       PointerToBinaryFunctionRA(FunctionPtrType functionPtr)
         : m_functionPtr(functionPtr) {}
 
-      /** 
+      /**
        * Call the wrapped function pointer and return the result.
-       * 
+       *
        * @param argument0 Will be passed as an argument to the function pointer.
        *
        * @param argument1 Will be passed as an argument to the function pointer.
@@ -345,7 +345,7 @@ namespace brick {
       FunctionPtrType m_functionPtr;
     };
 
-  
+
     /**
      ** Functor template that uses static_cast to convert instances
      ** of one type into instances of another.
@@ -353,9 +353,9 @@ namespace brick {
     template <class TypeIn, class TypeOut>
     struct StaticCastFunctor : public std::unary_function<TypeIn, TypeOut> {
 
-      /** 
+      /**
        * Static cast the input argument to TypeOut, and return the result.
-       * 
+       *
        * @param input Will be cast to type TypeOut.
        *
        * @return The result of the cast.
@@ -366,7 +366,7 @@ namespace brick {
       }
     };
 
-  
+
     /**
      ** Functor template for composing two unary functions functor0(x)
      ** and functor1(x) so that the result is functor0(functor1(x)).
@@ -377,11 +377,11 @@ namespace brick {
                                    typename Functor0::result_type>
     {
     public:
-      /** 
+      /**
        * Constructor accepts instances of the two functor types to be
        * composed, and makes local copies of them for use in
        * operator()(...).
-       * 
+       *
        * @param functor0 During evaluation of operator()(...), the
        * return value of a copy of functor1 will be passed to this
        * functor (or rather, a copy of this functor) and the return
@@ -397,7 +397,7 @@ namespace brick {
       UnaryComposeFunctor(const Functor0& functor0, const Functor1& functor1)
         : m_functor0(functor0), m_functor1(functor1) {}
 
-      /** 
+      /**
        * This operator passes its argument to the operator()(...) method
        * of a copy of constructor argument functor1, then passes the
        * result to the operator()(...) method of a copy of constructor
@@ -405,7 +405,7 @@ namespace brick {
        *
        * @param argument This argument will be passed as input to the
        * functor1 copy.  @return The result of processing the argument
-       * with the two composed functors: 
+       * with the two composed functors:
        * returnValue = functor0(functor1(argument)).
        */
       typename Functor0::result_type
@@ -422,17 +422,17 @@ namespace brick {
       Functor1 m_functor1;
     };
 
-  
+
     // =================== Helper functions =================== //
 
-    /** 
+    /**
      * This convenience function constructs an ApproximatelyEqualFunctor<Type>
      * functor and applies it two the first two arguments.  The third
      * argument sets the threshold for approximate equality.  For
      * example,
      * approximatelyEqual(1.0003, 1.0005, 1.0E-6) will return false, while
      * approximatelyEqual(1.0003, 1.0005, 1.0E-3) will return true.
-     * 
+     *
      * @param argument0 This argument is the first value to be compared.
      *
      * @param argument1 This argument is the second value to be compared.
@@ -451,17 +451,17 @@ namespace brick {
       return (ApproximatelyEqualFunctor<Type>(epsilon))(argument0, argument1);
     }
 
-    
-    /** 
+
+    /**
      * This is a convenience function that makes it easy to create
      * BinaryComposeFunctor instances.
-     * 
+     *
      * @param functor0 This will be passed as the first constructor
      * argument of the returned BinaryComposeFunctor instance.
-     * 
+     *
      * @param functor1 This will be passed as the second constructor
      * argument of the returned BinaryComposeFunctor instance.
-     * 
+     *
      * @param functor2 This will be passed as the third constructor
      * argument of the returned BinaryComposeFunctor instance.
      *
@@ -478,18 +478,18 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This convenience function clips its first argument to lie
      * within the closed range defined by it's remaining arguments.
-     * 
+     *
      * @param value This argument is the value to be clipped.
-     * 
+     *
      * @param lowerBound The value will be clipped so that it is
      * greater than or equal to this argument.
-     * 
+     *
      * @param upperBound The value will be clipped so that it is less
      * than or equal to this argument.
-     * 
+     *
      * @return The clipped value is returned.
      */
     template <class Type>
@@ -502,17 +502,17 @@ namespace brick {
 #endif
     }
 
-    
-    /** 
+
+    /**
      * This is a convenience function that makes it easy to create
      * ComposeFunctor_1_2 instances.
-     * 
+     *
      * @param functor0 This will be passed as the first constructor
      * argument of the returned functor.
-     * 
+     *
      * @param functor1 This will be passed as the second constructor
      * argument of the returned functor.
-     * 
+     *
      * @return A ComposeFunctor_1_2 template instantiation of the
      * appropriate type.
      */
@@ -523,14 +523,14 @@ namespace brick {
       return ComposeFunctor_1_2<Functor0, Functor1>(functor0, functor1);
     }
 
-  
-    /** 
+
+    /**
      * This is a convenience function that makes it easy to create
      * UnaryComposeFunctor instances.
-     * 
+     *
      * @param functor0 This will be passed as the first constructor
      * argument of the returned UnaryComposeFunctor instance.
-     * 
+     *
      * @param functor1 This will be passed as the second constructor
      * argument of the returned UnaryComposeFunctor instance.
      *
@@ -544,9 +544,9 @@ namespace brick {
       return UnaryComposeFunctor<Functor0, Functor1>(functor0, functor1);
     }
 
-    
+
   } // namespace common
-    
+
 }  // namespace brick
 
 
@@ -568,7 +568,7 @@ namespace brick {
   using common::unaryComposeFunctor;
 
 } // namespace brick
-  
+
 /* ================= Specializations =================== */
 
 #include <brick/common/types.hh>
@@ -576,7 +576,7 @@ namespace brick {
 namespace brick {
 
   namespace common {
-    
+
     template <>
     inline bool
 	ApproximatelyEqualFunctor<bool>::
@@ -590,12 +590,12 @@ namespace brick {
 	ApproximatelyEqualFunctor<size_t>::
 	operator()(const size_t& argument0, const size_t& argument1) {
         Int64 difference = static_cast<Int64>(argument0) - static_cast<Int64>(argument1);
-        return ((difference <= static_cast<Int64>(m_epsilon)) 
+        return ((difference <= static_cast<Int64>(m_epsilon))
 			&& (difference >= (-static_cast<Int64>(m_epsilon))));
       }
 
   } // namespace common
-  
+
 }  // namespace brick
 
 #endif /* #ifndef BRICK_COMMON_FUNCTIONAL_HH */

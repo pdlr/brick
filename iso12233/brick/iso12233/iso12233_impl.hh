@@ -16,7 +16,7 @@
 
 // This file is included by iso12233.hh, and should not be directly included
 // by user code, so no need to include iso12233.hh here.
-// 
+//
 // #include <brick/iso12233/iso12233.hh>
 
 #include <complex>
@@ -35,7 +35,7 @@ namespace brick {
   namespace iso12233 {
 
     namespace privateCode {
-      
+
       // Circularly rotate the input signal so that its maximum is
       // (nearly) at the center.
       template <class FloatType>
@@ -51,13 +51,13 @@ namespace brick {
       template <class FloatType>
       Array1D<FloatType>
       computeSFR(Array1D<FloatType> const& lineSpreadFunction);
-      
+
       // Approximate the derivative along each row using [-1/2, 1/2]
       // FIR filter.
       template <class FloatType>
       Array2D<FloatType>
       computeTwoElementDerivative(Array2D<FloatType> const& inputImage);
-      
+
       template <class FloatType>
       void
       estimateEdgeSlopeAndOffset(FloatType& slope, FloatType& offset,
@@ -74,7 +74,7 @@ namespace brick {
                         Array1D<FloatType> const& centroidArray,
                         std::size_t windowSize);
 
-      
+
       // Align the rows of reflectanceImage and combine them into a
       // single supersampled version of the (nearly vertical) edge.
       template <class FloatType>
@@ -83,13 +83,13 @@ namespace brick {
                           std::size_t const windowSize,
                           FloatType const slope,
                           FloatType const offset);
-      
+
     } // namespace privateCode
-  
+
   } // namespace iso12233
 
 } // namespace brick
-    
+
 
 namespace brick {
 
@@ -105,7 +105,7 @@ namespace brick {
     {
       // Argument checking.
       // TBD(xxx): initial check on windowSize.
-      
+
       // Paragraph 6.2.2 of the standard: undo the effects of gamma
       // correction, etc.
       Array2D<FloatType> reflectanceImage(inputPatch.rows(),
@@ -124,7 +124,7 @@ namespace brick {
       FloatType offset = 0.0;
       privateCode::estimateEdgeSlopeAndOffset(
         slope, offset, reflectanceImage, windowSize);
-      
+
       // Paragraph 6.2.4 of the standard: align the edges in all of (or a
       // plurality of) the rows.  Because the line crosses each row at a
       // different (non-integer) column location, this alignment gives us
@@ -138,7 +138,7 @@ namespace brick {
         reflectanceImage, windowSize, slope, offset);
       Array1D<FloatType> lineSpreadFunction = privateCode::computeDerivative(
         edgeSpreadFunction);
-  
+
       // Paragraph 6.2.5 of the standard: Compute spectral frequency response.
       Array1D<FloatType> centeredLineSpreadFunction =
         privateCode::centerMaximum(lineSpreadFunction);
@@ -162,7 +162,7 @@ namespace brick {
   namespace iso12233 {
 
     namespace privateCode {
-      
+
       // Circularly rotate the input signal so that its maximum is
       // (nearly) at the center.
       template <class FloatType>
@@ -193,8 +193,8 @@ namespace brick {
         }
         return outputRow;
       }
-      
-    
+
+
       // Approximate the derivative along a row using [-1/2, 0, 1/2]
       // FIR filter.
       template <class FloatType>
@@ -213,8 +213,8 @@ namespace brick {
         derivativeRow[inputRow.size() - 1] = derivativeRow[inputRow.size() - 2];
         return derivativeRow;
       }
-    
-    
+
+
       template <class FloatType>
       Array1D<FloatType>
       computeSFR(Array1D<FloatType> const& lineSpreadFunction)
@@ -266,7 +266,7 @@ namespace brick {
         return sfr;
       }
 
-    
+
       // Approximate the derivative along each row using [-1/2, 1/2]
       // FIR filter.
       template <class FloatType>
@@ -287,8 +287,8 @@ namespace brick {
         }
         return derivativeImage;
       }
-    
-    
+
+
       template <class FloatType>
       void
       estimateEdgeSlopeAndOffset(FloatType& slope, FloatType& offset,
@@ -301,7 +301,7 @@ namespace brick {
         std::size_t windowStartColumn =
           (reflectanceImage.columns() - windowSize) / 2;
         std::size_t windowStopColumn = windowStartColumn + windowSize;
-      
+
         // Paragraph 6.2.3.2 of the standard.
 
         // Each line is multiplied by a Hamming window.  Note that we
@@ -451,7 +451,7 @@ namespace brick {
         return outputImage;
       }
 
-      
+
       // Align the rows of reflectanceImage and combine them into a
       // single supersampled version of the (nearly vertical) edge.
       template <class FloatType>
@@ -477,7 +477,7 @@ namespace brick {
         // Now iterate over each input row, copying the pixel values
         // into the accumulater arrays we just created.
         for(std::size_t rr = 0; rr < reflectanceImage.rows(); ++rr) {
-        
+
           // Variable edgeLocation will be a number like "55.21"
           FloatType edgeLocation = offset + slope * rr;
 
@@ -538,7 +538,7 @@ namespace brick {
                         "shiftAndCombineRows()",
                         "Start and stop columns are not strictly ordered.");
           }
-        
+
           // Now copy and accumulate this row's data.
           std::size_t occ = outputStartColumn;
           for(std::size_t cc = inputStartColumn; cc < inputStopColumn; ++cc) {
@@ -563,7 +563,7 @@ namespace brick {
       }
 
     } // namespace privateCode
-  
+
   } // namespace iso12233
 
 } // namespace brick

@@ -23,7 +23,7 @@
 namespace brick {
 
   namespace geometry {
-    
+
     class Bullseye2DTest : public brick::test::TestFixture<Bullseye2DTest> {
 
     public:
@@ -37,12 +37,12 @@ namespace brick {
       // Tests.
       void testEstimate();
 
-      
+
     private:
 
       // xxx
       void drawGraphs();
-      
+
       // Given an algebraic parameterization of an bullseye and an X
       // coordinate, find the corresponding Y coordinates (if the X
       // coordinate is within the range of the bullseye, else return
@@ -53,9 +53,9 @@ namespace brick {
         brick::numeric::Array1D<double> const& algebraicParameters,
         double& yy0,
         double& yy1);
-      
+
       const double m_defaultTolerance;
-      
+
     }; // class Bullseye2DTest
 
 
@@ -104,7 +104,7 @@ namespace brick {
         }
         counts.push_back(count);
       }
-      
+
       // Recover the bullseye from the sample points.
       Bullseye2D<double> bullseye2D;
       bullseye2D.estimate(samplePoints.begin(), samplePoints.end(),
@@ -145,7 +145,7 @@ namespace brick {
           recoveredSemimajor);
         double recoveredMinorMagnitude = brick::numeric::magnitude<double>(
           recoveredSemiminor);
-        
+
         double majorMagnitude =
           brick::numeric::magnitude<double>(semimajorAxis) * scales[ii];
         double minorMagnitude =
@@ -159,7 +159,7 @@ namespace brick {
       }
     }
 
-    
+
     void
     Bullseye2DTest::
     drawGraphs()
@@ -176,7 +176,7 @@ namespace brick {
 
       brick::numeric::Array2D<unsigned char> graph(500, 500);
       graph = static_cast<unsigned char>(0);
-      
+
       for(unsigned int rr = 0; rr < algebraicParameters.rows(); ++rr) {
         // Make a wild assumption about where on the X axis, this
         // ellipse lives.  We'd like a nicer way to do this.
@@ -256,7 +256,7 @@ namespace brick {
                    + algebraicParameters[5]);
       return brick::numeric::solveQuadratic(c0, c1, c2, yy0, yy1);
     }
-    
+
   } // namespace geometry
 
 } // namespace brick

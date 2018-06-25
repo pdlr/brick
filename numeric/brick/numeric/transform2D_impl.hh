@@ -16,13 +16,13 @@
 
 // This file is included by transform2D.hh, and should not be directly
 // included by user code, so no need to include transform2D.hh here.
-// 
+//
 // #include <brick/numeric/transform2D.hh>
 
 namespace brick {
 
   namespace numeric {
-    
+
     // Default constructor.  Initializes to identity.
     template <class Type>
     inline
@@ -54,7 +54,7 @@ namespace brick {
       }
     }
 
-    
+
     // Build a Transform2D from a homogeneous 3x3 matrix.
     template <class Type>
     Transform2D<Type>::
@@ -88,7 +88,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // This member function returns a functor which makes it easier to
     // transform arrays of points using algorithms such as
     // std::transform().
@@ -98,9 +98,9 @@ namespace brick {
     getFunctor() const
     {
       return Transform2DFunctor<Type>(*this);
-    }    
-  
-  
+    }
+
+
     // This operator returns one element from the matrix
     // representation of the coordinate transform by value.
     // The case statements should optimize away, since row and column
@@ -148,7 +148,7 @@ namespace brick {
       return m_22; // Dummy return to keep the compiler happy.
     }
 
-    
+
     // This member function returns the inverse of *this.
     template <class Type>
     Transform2D<Type>
@@ -158,7 +158,7 @@ namespace brick {
       // We use the cofactor method for now, since it's easier to code
       // than Gauss-Jordan elimination.  We suspect that it's less
       // efficient, however.
-    
+
       // Notation for determinant values is detRRCC, where the
       // Rs indicate the involved rows, from top to bottom, and the Cs
       // indicate the involved columns, from left to right.
@@ -176,21 +176,21 @@ namespace brick {
       Type det1212 = m_11 * m_22 - m_12 * m_21;
 
       Type det012012 =  m_00 * det1212 - m_01 * det1202 + m_02 * det1201;
-    
+
       // Note that in general, roundoff error will make us pass this
       // test, even for singular matrices.
       if(det012012 == Type(0.0)) {
         BRICK_THROW(common::ValueException, "Transform2D::invert()",
                   "Transform is not invertible.");
       }
-    
+
       return Transform2D(
         det1212 / det012012, -det0212 / det012012, det0112 / det012012,
         -det1202 / det012012, det0202 / det012012, -det0102 / det012012,
         det1201 / det012012, -det0201 / det012012, det0101 / det012012);
     }
 
-  
+
     // Change the Transform2D value by explicitly setting element values
     // as if setting the elements of a 3x3 transformation matrix:
     //    [[a00, a01, a02],
@@ -300,7 +300,7 @@ namespace brick {
                   message.str().c_str());
     }
 
-    
+
     // This operator returns one element from the matrix
     // representation of the coordinate transform by value.
     template <class Type>
@@ -345,7 +345,7 @@ namespace brick {
       return m_22; // Dummy return to keep the compiler happy.
     }
 
-    
+
     // This operator takes a point and applies the coordinate
     // transform, returning the result.
     template <class Type>
@@ -359,7 +359,7 @@ namespace brick {
         m_20 * vector0.x() + m_21 * vector0.y() + m_22);
     }
 
-    
+
     // The assignment operator simply duplicates its argument.
     template <class Type>
     Transform2D<Type>&
@@ -374,7 +374,7 @@ namespace brick {
       return *this;
     }
 
-    
+
     template <class Type>
     void
     Transform2D<Type>::
@@ -399,9 +399,9 @@ namespace brick {
       }
     }
 
-    
+
     /* ============== Non-member functions  ============== */
-  
+
     // This operator composes two Transform2D instances.  The resulting
     // transform satisfies the equation:
     //   (transform0 * transform1) * v0 = transform0 * (transform1 * v0),
@@ -478,7 +478,7 @@ namespace brick {
                          a20, a21, a22);
     }
 
-    
+
     template <class Type>
     std::ostream&
     operator<<(std::ostream& stream, const Transform2D<Type>& transform0)
@@ -496,7 +496,7 @@ namespace brick {
       return stream;
     }
 
-  
+
     template <class Type>
     std::istream&
     operator>>(std::istream& stream, Transform2D<Type>& transform0)
@@ -505,7 +505,7 @@ namespace brick {
       if (!stream){
         return stream;
       }
-    
+
       // It's a lot easier to use a try block than to be constantly
       // testing whether the IO has succeeded, so we tell stream to
       // complain if anything goes wrong.
@@ -519,7 +519,7 @@ namespace brick {
 
         // Skip any preceding whitespace.
         stream >> common::Expect("", flags);
-      
+
         // Read the "Transform2D(" part.
         stream >> common::Expect("Transform2D(", flags);
 
@@ -551,7 +551,7 @@ namespace brick {
       stream.exceptions(oldExceptionState);
       return stream;
     }
-    
+
   } // namespace numeric
 
 } // namespace brick

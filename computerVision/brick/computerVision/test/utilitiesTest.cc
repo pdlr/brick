@@ -23,7 +23,7 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     class UtilitiesTest : public brick::test::TestFixture<UtilitiesTest> {
 
     public:
@@ -42,7 +42,7 @@ namespace brick {
       void testSubsample();
       void testSupersample();
       void testToArray();
-    
+
     private:
 
     }; // class UtilitiesTest
@@ -153,7 +153,7 @@ namespace brick {
       }
 
     }
-  
+
 
     void
     UtilitiesTest::
@@ -161,7 +161,7 @@ namespace brick {
     {
       const unsigned int numberOfPoints = 4;
       const common::Float64 defaultTolerance = 1.0E-8;
-      
+
       std::vector< numeric::Vector2D<common::Float64> > fromPoints(
         numberOfPoints);
       std::vector< numeric::Vector2D<common::Float64> > toPoints(
@@ -192,7 +192,7 @@ namespace brick {
       }
     }
 
-    
+
     void
     UtilitiesTest::
     testSubsample()
@@ -227,7 +227,7 @@ namespace brick {
           BRICK_TEST_ASSERT(
             (outputImage0.columns() - 1) * columnStep + 1
             > inputImage.columns() - columnStep);
-          
+
           for(size_t rowIndex = 0; rowIndex < outputImage0.rows();
               ++rowIndex) {
             for(size_t columnIndex = 0; columnIndex < outputImage0.columns();
@@ -255,7 +255,7 @@ namespace brick {
         for(size_t columnIndex = 0; columnIndex < imageColumns; ++columnIndex) {
           inputImage0(rowIndex, columnIndex) =
             static_cast<brick::common::UnsignedInt8>(rowIndex + columnIndex);
-            
+
           PixelRGB8 inputPixel1(static_cast<brick::common::UnsignedInt8>(rowIndex),
                                 static_cast<brick::common::UnsignedInt8>(columnIndex),
                                 static_cast<brick::common::UnsignedInt8>(0));
@@ -315,7 +315,7 @@ namespace brick {
           inputImage[pixelIndex].blue == dataArray[dataArrayIndex++]);
       }
     }
-  
+
   } // namespace computerVision
 
 } // namespace brick

@@ -40,13 +40,13 @@ namespace {
     }
     return result;
   }
-  
+
 } // namespace
 
 namespace brick {
 
   namespace computerVision {
-    
+
     class FivePointAlgorithmTest
       : public brick::test::TestFixture<FivePointAlgorithmTest> {
 
@@ -64,7 +64,7 @@ namespace brick {
       void testFivePointAlgorithmRobust__Iter_Iter_Iter_Iter_size_t();
       void testGetCameraMotionFromEssentialMatrix();
       void testTriangulateCalibratedImagePoint();
-      
+
     private:
 
       void
@@ -79,16 +79,16 @@ namespace brick {
       void
       getTestPoints3D(std::vector< num::Vector3D<cmn::Float64> >& pVector,
                       bool isExtraPoints = false);
-      
+
       void
       getTestPoints(std::vector< num::Vector2D<cmn::Float64> >& qVector,
                     std::vector< num::Vector2D<cmn::Float64> >& qPrimeVector);
-      
+
       void
       getTestPoints(std::vector< num::Vector2D<cmn::Float64> >& qVector,
                     std::vector< num::Vector2D<cmn::Float64> >& qPrimeVector,
                     size_t transformNumber);
-      
+
       void
       getTestPoints(std::vector< num::Vector2D<cmn::Float64> >& qVector,
                     std::vector< num::Vector2D<cmn::Float64> >& qPrimeVector,
@@ -106,10 +106,10 @@ namespace brick {
       bool
       isApproximatelyEqual(const Vector3D<cmn::Float64>& vector0,
                            const Vector3D<cmn::Float64>& vector1);
-      
-      
+
+
       cmn::Float64 m_defaultTolerance;
-      
+
     }; // class FivePointAlgorithmTest
 
 
@@ -138,7 +138,7 @@ namespace brick {
       std::vector< num::Vector2D<cmn::Float64> > qVector;
       std::vector< num::Vector2D<cmn::Float64> > qPrimeVector;
       this->getTestPoints(qVector, qPrimeVector);
-      
+
       std::vector< num::Array2D<cmn::Float64> > EVector = fivePointAlgorithm<cmn::Float64>(
         qVector.begin(), qVector.end(), qPrimeVector.begin());
 
@@ -150,7 +150,7 @@ namespace brick {
         cmn::Float64 det = linalg::determinant(EE);
         // xxx std::cout << "Det: " << det << std::endl;
         BRICK_TEST_ASSERT(approximatelyEqual(det, 0.0, m_defaultTolerance));
-        
+
         // Check that linear constraints are satisfied.
         for(size_t jj = 0; jj < qVector.size(); ++jj) {
           num::Array1D<cmn::Float64> qq(3);
@@ -191,7 +191,7 @@ namespace brick {
       } else {
         std::cout << "Seed0: " << pRandom.getCurrentSeed() << std::endl;
       }
-      
+
       std::vector< num::Vector2D<cmn::Float64> > qVector;
       std::vector< num::Vector2D<cmn::Float64> > qPrimeVector;
       this->getTestPoints(qVector, qPrimeVector, 0);
@@ -205,10 +205,10 @@ namespace brick {
       cmn::Float64 det = linalg::determinant(EE);
       // xxx std::cout << "Det: " << det << std::endl;
       BRICK_TEST_ASSERT(approximatelyEqual(det, 0.0, m_defaultTolerance));
-        
+
       // Shouldn't have significant residuals for this simple test case.
       BRICK_TEST_ASSERT(score < 0.1);
-      
+
       // Check that linear constraints are satisfied.
       for(size_t jj = 0; jj < qVector.size(); ++jj) {
         num::Array1D<cmn::Float64> qq(3);
@@ -235,7 +235,7 @@ namespace brick {
           approximatelyEqual(residualArray[kk], 0.0, m_defaultTolerance));
       }
     }
-    
+
 
     void
     FivePointAlgorithmTest::
@@ -247,7 +247,7 @@ namespace brick {
       } else {
         std::cout << "Seed1: " << pRandom.getCurrentSeed() << std::endl;
       }
-      
+
       std::vector< num::Vector2D<cmn::Float64> > qVector;
       std::vector< num::Vector2D<cmn::Float64> > qPrimeVector;
       std::vector< num::Vector2D<cmn::Float64> > qPrimePrimeVector;
@@ -266,10 +266,10 @@ namespace brick {
       cmn::Float64 det = linalg::determinant(EE);
       // xxx std::cout << "Det: " << det << std::endl;
       BRICK_TEST_ASSERT(approximatelyEqual(det, 0.0, m_defaultTolerance));
-        
+
       // Shouldn't have significant residuals for this simple test case.
       BRICK_TEST_ASSERT(score < 0.1);
-      
+
       // Check that linear constraints are satisfied.
       for(size_t jj = 0; jj < qVector.size(); ++jj) {
         num::Array1D<cmn::Float64> qq(3);
@@ -297,7 +297,7 @@ namespace brick {
       }
     }
 
-    
+
     void
     FivePointAlgorithmTest::
     testGetCameraMotionFromEssentialMatrix()
@@ -334,7 +334,7 @@ namespace brick {
 
         // Shouldn't have significant residuals for this simple test case.
         BRICK_TEST_ASSERT(score < 0.1);
-      
+
         num::Transform3D<cmn::Float64> recoveredCam1Tcam0 =
           getCameraMotionFromEssentialMatrix(EE, qVector[0], qPrimeVector[0]);
         num::Vector3D<cmn::Float64> recoveredTranslation(
@@ -345,15 +345,15 @@ namespace brick {
         recoveredCam1Rcam0.setValue(0, 3, 0.0);
         recoveredCam1Rcam0.setValue(1, 3, 0.0);
         recoveredCam1Rcam0.setValue(2, 3, 0.0);
-        
+
         num::Vector3D<cmn::Float64> translation(
           cam1Tcam0(0, 3), cam1Tcam0(1, 3), cam1Tcam0(2, 3));
-      
+
         num::Transform3D<cmn::Float64> cam0Rcam1 = cam0Tcam1;
         cam0Rcam1.setValue(0, 3, 0.0);
         cam0Rcam1.setValue(1, 3, 0.0);
         cam0Rcam1.setValue(2, 3, 0.0);
-        
+
         cmn::Float64 transDot = num::dot<cmn::Float64>(recoveredTranslation, translation);
         num::Vector3D<cmn::Float64> transCross = num::cross(
           recoveredTranslation, translation);
@@ -382,8 +382,8 @@ namespace brick {
           std::fabs(recoveredIdentity(2, 1) < m_defaultTolerance));
       }
     }
-    
-    
+
+
     void
     FivePointAlgorithmTest::
     testTriangulateCalibratedImagePoint()
@@ -395,7 +395,7 @@ namespace brick {
       std::vector< num::Transform3D<cmn::Float64> > worldTcam0Vector;
       std::vector< num::Transform3D<cmn::Float64> > worldTcam1Vector;
       this->getCameraPoses(worldTcam0Vector, worldTcam1Vector);
-      
+
       for(size_t ii = 0; ii < targetVector.size(); ++ii) {
         // Set up cameras and target points in world coordinates.
         num::Transform3D<cmn::Float64> worldTcam0 = worldTcam0Vector[ii];
@@ -425,7 +425,7 @@ namespace brick {
       }
     }
 
-    
+
     void
     FivePointAlgorithmTest::
     getCameraPoses(std::vector< num::Transform3D<cmn::Float64> >& worldTcam0Vector,
@@ -434,7 +434,7 @@ namespace brick {
       std::vector< num::Transform3D<cmn::Float64> > worldTcam2Vector;
       this->getCameraPoses(worldTcam0Vector,worldTcam1Vector, worldTcam2Vector);
     }
-    
+
 
     void
     FivePointAlgorithmTest::
@@ -445,7 +445,7 @@ namespace brick {
       worldTcam0Vector.clear();
       worldTcam1Vector.clear();
       worldTcam2Vector.clear();
-      
+
       std::vector< num::Vector3D<cmn::Float64> > center0Vector;
       std::vector< num::Vector3D<cmn::Float64> > center1Vector;
       std::vector< num::Vector3D<cmn::Float64> > center2Vector;
@@ -513,7 +513,7 @@ namespace brick {
                            0.0,   0.0, 0.0, 1.0));
       }
     }
-    
+
 
     void
     FivePointAlgorithmTest::
@@ -540,7 +540,7 @@ namespace brick {
       qPrimeVector.push_back(num::Vector2D<cmn::Float64>(-1.0, 5.0));
       qPrimeVector.push_back(num::Vector2D<cmn::Float64>(3.0, 6.0));
     }
-    
+
 
     void
     FivePointAlgorithmTest::
@@ -553,7 +553,7 @@ namespace brick {
                           transformNumber);
     }
 
-    
+
     void
     FivePointAlgorithmTest::
     getTestPoints(std::vector< num::Vector2D<cmn::Float64> >& qVector,
@@ -564,7 +564,7 @@ namespace brick {
       qVector.clear();
       qPrimeVector.clear();
       qPrimePrimeVector.clear();
-      
+
       std::vector< num::Vector3D<cmn::Float64> > targetVector;
       this->getTestPoints3D(targetVector, true);
 
@@ -573,7 +573,7 @@ namespace brick {
       std::vector< num::Transform3D<cmn::Float64> > worldTcam2Vector;
       this->getCameraPoses(worldTcam0Vector, worldTcam1Vector,
                            worldTcam2Vector);
-      
+
       num::Transform3D<cmn::Float64> worldTcam0 = worldTcam0Vector[transformNumber];
       num::Transform3D<cmn::Float64> worldTcam1 = worldTcam1Vector[transformNumber];
       num::Transform3D<cmn::Float64> worldTcam2 = worldTcam2Vector[transformNumber];
@@ -586,7 +586,7 @@ namespace brick {
       num::Transform3D<cmn::Float64> cam0Tcam2 = cam0Tworld * worldTcam2;
       num::Transform3D<cmn::Float64> cam2Tcam1 = cam2Tworld * worldTcam1;
       num::Transform3D<cmn::Float64> cam1Tcam2 = cam1Tworld * worldTcam2;
-      
+
       for(size_t ii = 0; ii < targetVector.size(); ++ii) {
         // Find target point in camera coordinates.
         num::Vector3D<cmn::Float64> target0 = cam0Tworld * targetVector[ii];
@@ -602,7 +602,7 @@ namespace brick {
         qPrimePrimeVector.push_back(q2);
       }
     }
-    
+
 
     void
     FivePointAlgorithmTest::
@@ -636,7 +636,7 @@ namespace brick {
         pVector.push_back(num::Vector3D<cmn::Float64>(4, -9, 18));
       }
     }
-    
+
 
     bool
     FivePointAlgorithmTest::
@@ -650,7 +650,7 @@ namespace brick {
                         ApproximatelyEqualFunctor<cmn::Float64>(m_defaultTolerance));
     }
 
-  
+
     bool
     FivePointAlgorithmTest::
     isApproximatelyEqual(const Array2D<cmn::Float64>& array0,
@@ -677,7 +677,7 @@ namespace brick {
          && approximatelyEqual(vector0.y(), vector1.y(), m_defaultTolerance)
          && approximatelyEqual(vector0.z(), vector1.z(), m_defaultTolerance));
     }
-    
+
   } // namespace computerVision
 
 } // namespace brick

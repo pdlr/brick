@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/numeric/test/array3DTest.cpp
-* 
+*
 * Source file defining Array3DTest class.
 *
 * Copyright (C) 2004,2011 David LaRose, dlr@cs.cmu.edu
@@ -21,7 +21,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     template <class Type>
     class Array3DTest
       : public ArrayTestCommon< Array3DTest<Type>, Array3D<Type>,
@@ -45,46 +45,46 @@ namespace brick {
       checkShapeEquality(const Array3D<Type>& array0,
                          const Array3D<Type>& array1);
 
-    
+
       virtual void
       checkShapeEquality(const Array3D<Type>& array0,
                          const Array3D<bool>& array1);
 
-    
+
       virtual void
       checkValueEquality(const Array3D<Type>& array0,
                          const Array3D<Type>& array1,
                          typename Array3D<Type>::value_type tolerance);
 
-    
+
       virtual typename Array3D<Type>::value_type
       getComparisonOperatorThreshold() {
         return m_fibonacciCArray[m_defaultArraySize / 2];
       }
 
-    
+
       virtual typename Array3D<Type>::value_type
       getEqualityOperatorTarget() {
         return m_squaresCArray[m_defaultArraySize / 2];
       }
 
-    
+
       virtual Array3D<Type>
       getFibonacciArray() {return Array3D<Type>(m_fibonacciString);}
 
-    
+
       virtual typename Array3D<Type>::value_type
       getIncrementOperatorArgument() {return static_cast<Type>(4);}
 
-    
+
       virtual typename Array3D<Type>::value_type
       getMultiplicationOperatorArgument() {return static_cast<Type>(2);}
 
-    
+
       virtual Array3D<Type>
       getSquaresArray() {return Array3D<Type>(m_fibonacciString);}
 
-    
+
       // Tests of member functions.
       void testConstructor__void();
       void testConstructor__size_t__size_t__size_t();
@@ -129,7 +129,7 @@ namespace brick {
       // Tests of non-member functions.
 
     private:
-    
+
       size_t m_defaultArrayShape0;
       size_t m_defaultArrayShape1;
       size_t m_defaultArrayShape2;
@@ -143,7 +143,7 @@ namespace brick {
       Type* m_squaresCArray;
       std::string m_squaresString;
       double m_testEpsilon;
-    
+
     }; // class Array3DTest
 
 
@@ -163,7 +163,7 @@ namespace brick {
         m_defaultMultiplier(2),
         m_fibonacciCArray(0),
         m_fibonacciString(""),
-        m_illegalString(""),      
+        m_illegalString(""),
         m_squaresCArray(0),
         m_squaresString(""),
         m_testEpsilon(1.0e-8)
@@ -211,7 +211,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testIndexOperator);
       BRICK_TEST_REGISTER_MEMBER(testIndexOperatorConst);
 
-    
+
       // Set up fibonacci data for tests.
       m_fibonacciCArray = new Type[m_defaultArraySize];
       m_fibonacciCArray[0] = static_cast<Type>(1);
@@ -322,7 +322,7 @@ namespace brick {
                                    ApproximatelyEqualFunctor<Type>(tolerance)));
     }
 
-  
+
     template <class Type>
     void
     Array3DTest<Type>::
@@ -335,7 +335,7 @@ namespace brick {
       BRICK_TEST_ASSERT(array0.shape2() == 0);
       BRICK_TEST_ASSERT(array0.size() == 0);
     }
-  
+
 
     template <class Type>
     void
@@ -351,7 +351,7 @@ namespace brick {
       BRICK_TEST_ASSERT(array0.shape2() == m_defaultArrayShape2);
       BRICK_TEST_ASSERT(array0.size() == m_defaultArraySize);
     }
-  
+
 
     template <class Type>
     void
@@ -374,7 +374,7 @@ namespace brick {
                                   Array3D<Type> array1(m_illegalString));
 
     }
-  
+
 
     template <class Type>
     void
@@ -398,7 +398,7 @@ namespace brick {
       BRICK_TEST_ASSERT(std::equal(array1.begin(), array1.end(),
                                    m_fibonacciCArray));
     }
-  
+
 
     template <class Type>
     void
@@ -411,7 +411,7 @@ namespace brick {
       Type* cArray = new Type[m_defaultArraySize];
       std::copy(m_fibonacciCArray, m_fibonacciCArray + m_defaultArraySize,
                 cArray);
-    
+
       // Create an array using the constructor under test.
       Array3D<Type>* array0Ptr = new Array3D<Type>(
         m_defaultArrayShape0, m_defaultArrayShape1, m_defaultArrayShape2,
@@ -431,7 +431,7 @@ namespace brick {
       // Clean up.
       delete[] cArray;
     }
-  
+
 
     template <class Type>
     void
@@ -519,7 +519,7 @@ namespace brick {
       BRICK_TEST_ASSERT(array1.shape1() == array0.shape1());
       BRICK_TEST_ASSERT(array1.shape2() == array0.shape2());
       BRICK_TEST_ASSERT(std::equal(array1.begin(), array1.end(), array0.begin()));
-      BRICK_TEST_ASSERT(array1.data() != array0.data());    
+      BRICK_TEST_ASSERT(array1.data() != array0.data());
     }
 
 
@@ -645,21 +645,21 @@ namespace brick {
         m_fibonacciCArray);
       BRICK_TEST_ASSERT(array0.data(0, 0, 0) == m_fibonacciCArray);
       BRICK_TEST_ASSERT(array0.data(0, 0, 1) == (m_fibonacciCArray + 1));
-      BRICK_TEST_ASSERT(array0.data(0, 1, 0) 
+      BRICK_TEST_ASSERT(array0.data(0, 1, 0)
                         == (m_fibonacciCArray + m_defaultArrayShape2));
-      BRICK_TEST_ASSERT(array0.data(0, 1, 1) 
+      BRICK_TEST_ASSERT(array0.data(0, 1, 1)
                         == (m_fibonacciCArray + m_defaultArrayShape2 + 1));
-      BRICK_TEST_ASSERT(array0.data(1, 0, 0) 
+      BRICK_TEST_ASSERT(array0.data(1, 0, 0)
                         == (m_fibonacciCArray
                             + m_defaultArrayShape1 * m_defaultArrayShape2));
-      BRICK_TEST_ASSERT(array0.data(1, 0, 1) 
+      BRICK_TEST_ASSERT(array0.data(1, 0, 1)
                         == (m_fibonacciCArray
                             + m_defaultArrayShape1 * m_defaultArrayShape2 + 1));
-      BRICK_TEST_ASSERT(array0.data(1, 1, 0) 
+      BRICK_TEST_ASSERT(array0.data(1, 1, 0)
                         == (m_fibonacciCArray
                             + m_defaultArrayShape1 * m_defaultArrayShape2
                             + m_defaultArrayShape2));
-      BRICK_TEST_ASSERT(array0.data(1, 1, 1) 
+      BRICK_TEST_ASSERT(array0.data(1, 1, 1)
                         == (m_fibonacciCArray
                             + m_defaultArrayShape1 * m_defaultArrayShape2
                             + m_defaultArrayShape2 + 1));
@@ -668,7 +668,7 @@ namespace brick {
                                     m_defaultArrayShape2 - 1)
                         == (m_fibonacciCArray + m_defaultArraySize - 1));
     }
-  
+
 
     template <class Type>
     void
@@ -682,21 +682,21 @@ namespace brick {
         m_fibonacciCArray);
       BRICK_TEST_ASSERT(array0.data(0, 0, 0) == m_fibonacciCArray);
       BRICK_TEST_ASSERT(array0.data(0, 0, 1) == (m_fibonacciCArray + 1));
-      BRICK_TEST_ASSERT(array0.data(0, 1, 0) 
+      BRICK_TEST_ASSERT(array0.data(0, 1, 0)
                         == (m_fibonacciCArray + m_defaultArrayShape2));
-      BRICK_TEST_ASSERT(array0.data(0, 1, 1) 
+      BRICK_TEST_ASSERT(array0.data(0, 1, 1)
                         == (m_fibonacciCArray + m_defaultArrayShape2 + 1));
-      BRICK_TEST_ASSERT(array0.data(1, 0, 0) 
+      BRICK_TEST_ASSERT(array0.data(1, 0, 0)
                         == (m_fibonacciCArray
                             + m_defaultArrayShape1 * m_defaultArrayShape2));
-      BRICK_TEST_ASSERT(array0.data(1, 0, 1) 
+      BRICK_TEST_ASSERT(array0.data(1, 0, 1)
                         == (m_fibonacciCArray
                             + m_defaultArrayShape1 * m_defaultArrayShape2 + 1));
-      BRICK_TEST_ASSERT(array0.data(1, 1, 0) 
+      BRICK_TEST_ASSERT(array0.data(1, 1, 0)
                         == (m_fibonacciCArray
                             + m_defaultArrayShape1 * m_defaultArrayShape2
                             + m_defaultArrayShape2));
-      BRICK_TEST_ASSERT(array0.data(1, 1, 1) 
+      BRICK_TEST_ASSERT(array0.data(1, 1, 1)
                         == (m_fibonacciCArray
                             + m_defaultArrayShape1 * m_defaultArrayShape2
                             + m_defaultArrayShape2 + 1));
@@ -720,7 +720,7 @@ namespace brick {
       Type* finalElementPtr = m_fibonacciCArray + m_defaultArraySize;
       BRICK_TEST_ASSERT(&(*(array0.end())) == finalElementPtr);
     }
-    
+
 
     template <class Type>
     void
@@ -794,7 +794,7 @@ namespace brick {
       BRICK_TEST_ASSERT(array0.data() != m_fibonacciCArray);
     }
 
-  
+
     template <class Type>
     void
     Array3DTest<Type>::
@@ -808,7 +808,7 @@ namespace brick {
 
       // Test that size is checked.
       BRICK_TEST_ASSERT_EXCEPTION(
-        common::ValueException, 
+        common::ValueException,
         array0.reshape(static_cast<int>(m_defaultArrayShape0) + 1,
                        static_cast<int>(m_defaultArrayShape1) + 2,
                        static_cast<int>(m_defaultArrayShape2) + 3));
@@ -861,7 +861,7 @@ namespace brick {
       // No explicit test.
     }
 
-  
+
     template <class Type>
     void
     Array3DTest<Type>::
@@ -870,7 +870,7 @@ namespace brick {
       // No explicit test.
     }
 
-  
+
     template <class Type>
     void
     Array3DTest<Type>::
@@ -878,7 +878,7 @@ namespace brick {
     {
       // No explicit test.
     }
-  
+
 
     template <class Type>
     void
@@ -913,7 +913,7 @@ namespace brick {
       }
     }
 
-  
+
     template <class Type>
     void
     Array3DTest<Type>::
@@ -938,7 +938,7 @@ namespace brick {
       }
     }
 
-  
+
     template <class Type>
     void
     Array3DTest<Type>::
@@ -963,7 +963,7 @@ namespace brick {
                                    m_fibonacciCArray));
     }
 
-  
+
     template <class Type>
     void
     Array3DTest<Type>::
@@ -992,7 +992,7 @@ namespace brick {
       BRICK_TEST_ASSERT(firstRenegade == array0.end());
     }
 
-  
+
     template <class Type>
     void
     Array3DTest<Type>::
@@ -1089,7 +1089,7 @@ namespace brick {
     }
 
   } // namespace numeric
-  
+
 } // namespace brick
 
 
@@ -1116,7 +1116,7 @@ namespace {
   brick::numeric::Array3DTest<float> currentTest1("float");
   brick::numeric::Array3DTest<int> currentTest2("int");
   // brick::numeric::Array3DTest<size_t> currentTest3("size_t");
-  
+
 }
 
 #endif

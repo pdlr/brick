@@ -18,7 +18,7 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     class NChooseKSampleSelectorTest
       : public brick::test::TestFixture<NChooseKSampleSelectorTest> {
 
@@ -35,7 +35,7 @@ namespace brick {
       void testGetPool();
       void testGetPoolSize();
       void testGetSample();
-      
+
     private:
 
       std::vector<int>
@@ -70,13 +70,13 @@ namespace brick {
         4, testVector.begin(), testVector.end());
       NChooseKSampleSelector<int> selector2(
         5, testVector.begin(), testVector.end());
-      
+
       BRICK_TEST_ASSERT(selector0.getNumberOfSamples() == 10);
       BRICK_TEST_ASSERT(selector1.getNumberOfSamples() == 5);
       BRICK_TEST_ASSERT(selector2.getNumberOfSamples() == 1);
     }
 
-    
+
     void
     NChooseKSampleSelectorTest::
     testGetPool()
@@ -86,7 +86,7 @@ namespace brick {
         NChooseKSampleSelector<int> selector(
           3, testVector.begin(), testVector.end());
         testVector.clear();
-      
+
 
         std::vector<int> referenceVector = this->getTestVector(poolSize);
         NChooseKSampleSelector<int>::SampleSequenceType pool =
@@ -98,7 +98,7 @@ namespace brick {
           std::equal(pool.first, pool.second, referenceVector.begin()));
       }
     }
-    
+
 
     void
     NChooseKSampleSelectorTest::
@@ -113,7 +113,7 @@ namespace brick {
         BRICK_TEST_ASSERT(selector.getPoolSize() == poolSize);
       }
     }
-    
+
 
     void
     NChooseKSampleSelectorTest::
@@ -198,8 +198,8 @@ namespace brick {
       }
       return result;
     }
-      
-    
+
+
   } // namespace computerVision
 
 } // namespace brick

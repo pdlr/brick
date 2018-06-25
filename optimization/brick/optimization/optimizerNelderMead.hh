@@ -44,7 +44,7 @@ namespace brick {
       typedef typename Functor::argument_type argument_type;
       typedef typename Functor::result_type result_type;
 
-    
+
       /**
        * Default constructor sets parameters to reasonable values for
        * functions which take values and arguments in the "normal" range
@@ -52,7 +52,7 @@ namespace brick {
        */
       OptimizerNelderMead();
 
-    
+
       /**
        * Constructor which specifies the specific Functor instance to
        * use.  Using this constructor exclusively avoids the danger of
@@ -64,22 +64,22 @@ namespace brick {
        */
       explicit OptimizerNelderMead(const Functor& functor);
 
-    
-      /** 
+
+      /**
        * Copy constructor.
-       * 
+       *
        * @param source The OptimizerNelderMead instance to be copied.
        */
       OptimizerNelderMead(const OptimizerNelderMead& source);
 
-    
+
       /**
        * Destructor.
        */
       ~OptimizerNelderMead();
 
-    
-      /** 
+
+      /**
        * Queries the number of iterations required to complete the
        * previous minimization.  If the minimization parameter
        * "restarts" is 0, there will be only one number to report.  If
@@ -109,21 +109,21 @@ namespace brick {
       void
       setDelta(const argument_type& delta);
 
-    
-      /** 
+
+      /**
        * Sets how many times the optimization will be restarted.  No smaller
        * than 1 unless your objective function is very simple, since
        * downhill simplex search often benefits from a restart or two.
-       * 
-       * @param numberOfRestarts 
+       *
+       * @param numberOfRestarts
        */
       void
       setNumberOfRestarts(size_t numberOfRestarts) {
         this->m_numberOfRestarts = numberOfRestarts;
       }
 
-    
-      /** 
+
+      /**
        * Sets minimization parameters.  Default values are reasonable
        * for functions which take values and arguments in the "normal"
        * range of 0 to 100 or so.
@@ -179,8 +179,8 @@ namespace brick {
                     FloatType minimumSimplexValueSpan=0.0001,
                     size_t verbosity=0);
 
-    
-      /** 
+
+      /**
        * Sets the initial conditions for the minimization.  Gradient
        * based search will start at this location in parameter space.
        *
@@ -193,7 +193,7 @@ namespace brick {
       /**
        * This function sets the level of text sent to standard
        * output by the class.
-       * 
+       *
        * @param verbosity This argument specifies how verbose to be.  0
        * means no output, 3 means lots.
        */
@@ -202,7 +202,7 @@ namespace brick {
 
       /**
        * Assignment operator.
-       * 
+       *
        * @param source The OptimizerNelderMead instance to be copied.
        * @return Reference to *this.
        */
@@ -211,13 +211,13 @@ namespace brick {
 
     protected:
 
-      /** 
+      /**
        * This protected member function collapses a vector of points by
        * summing the corresponding elements of each point (useful for
        * averaging a bunch of locations in parameter space).
-       * 
+       *
        * @param currentPoints This argument specifies the points to sum.
-       * 
+       *
        * @param axisSums This argument is used to return the result.
        */
       void
@@ -226,17 +226,17 @@ namespace brick {
         argument_type& axisSums);
 
 
-      /** 
+      /**
        * This protected member function runs the actual simplex search.
        * It modifies all arguments.
-       * 
+       *
        * @param currentPoints This argument specifies the initial set of
        * points, and is used to return the final set of points.
-       * 
+       *
        * @param currentValues This argument specifies the initial set of
        * function values, and is used to return the final set of
        * function values.
-       * 
+       *
        * @param numberOfFunctionCalls This argument returns the total
        * number of function calls required by the minimization.
        */
@@ -246,23 +246,23 @@ namespace brick {
                    size_t& numberOfFunctionCalls);
 
 
-      /** 
+      /**
        * This protected member function is used to decide whether a
        * proposed step is in fact a good one, and also updates its
        * arguments if the move is accepted.
-       * 
+       *
        * @param currentPoints This argument specifies the current set of
        * points in parameter space.
-       * 
+       *
        * @param currentValues This argument specifies the function value
        * at each of the points in currentPoints.
-       * 
+       *
        * @param axisSums This argument passes in the sums of the
        * elements of currentPoints.  See protected member function
        * computeAxisSums().
-       * 
+       *
        * @param factor This argument specifies the size of the step.
-       * 
+       *
        * @return This function returns the objective function value at
        * the evaluated point.
        */
@@ -273,9 +273,9 @@ namespace brick {
                    FloatType factor);
 
 
-      /** 
+      /**
        * This protected member function performs the minimization.
-       * 
+       *
        * @return A std::pair of the vector parameter which brings the
        * specified Functor to a minimum, and the corresponding Functor
        * value.
@@ -352,7 +352,7 @@ namespace brick {
         std::sort(sortVector.begin(), sortVector.end());
         std::transform(sortVector.begin(), sortVector.end(), resultVector.begin(),
                        extractSecond<Type, size_t>());
-        return resultVector;    
+        return resultVector;
       }
 
       template <class Type>
@@ -386,7 +386,7 @@ namespace brick {
     /// @endcond
 
   } // namespace optimization
-  
+
 } // namespace brick
 
 
@@ -473,8 +473,8 @@ namespace brick {
     {
       copyArgumentType(delta, this->m_delta);
     }
-  
-  
+
+
     // Sets minimization parameters.
     // template <std::unary_function Functor>
     template <class Functor, class FloatType>
@@ -515,7 +515,7 @@ namespace brick {
       // Inherited member
       Optimizer<Functor>::m_needsOptimization = true;
     }
-                  
+
     // Assignment operator.
     // template <std::unary_function Functor>
     template <class Functor, class FloatType>
@@ -545,7 +545,7 @@ namespace brick {
       typename OptimizerNelderMead<Functor, FloatType>::argument_type& axisSums)
     {
       if(currentPoints.size() == 0) {
-        BRICK_THROW(brick::common::LogicException, 
+        BRICK_THROW(brick::common::LogicException,
 		    "OptimizerNelderMead::computeAxisSums()",
 		    "Vector Size of Current Points is 0... "
 		    "something's not right.");
@@ -556,7 +556,7 @@ namespace brick {
         axisSums += currentPoints[index];
       }
     }
-  
+
     // Run the actual simplex search.  Modifies all arguments.
     // template <std::unary_function Functor>
     template <class Functor, class FloatType>
@@ -609,18 +609,18 @@ namespace brick {
           break;
         }
         result_type newValue =
-          this->evaluateMove(currentPoints, currentValues, axisSums, 
+          this->evaluateMove(currentPoints, currentValues, axisSums,
                              (-1.0 * this->m_alpha));
         numberOfFunctionCalls += 1;
         this->computeAxisSums(currentPoints, axisSums);
         if(newValue <= currentValues[0]) {
-          newValue = evaluateMove(currentPoints, currentValues, axisSums, 
+          newValue = evaluateMove(currentPoints, currentValues, axisSums,
                                   this->m_gamma);
           numberOfFunctionCalls += 1;
           this->computeAxisSums(currentPoints, axisSums);
         } else if (newValue >= currentValues[dimension - 1]) {
           result_type oldMaxValue = currentValues[dimension];
-          newValue = evaluateMove(currentPoints, currentValues, axisSums, 
+          newValue = evaluateMove(currentPoints, currentValues, axisSums,
                                   this->m_beta);
           numberOfFunctionCalls += 1;
           if(newValue >= oldMaxValue) {
@@ -638,7 +638,7 @@ namespace brick {
 
     // Evaluate, and maybe accept, a new point.  You'll want to believe
     // the following math before reading this code.
-    // 
+    //
     // xMean + factor*(xMax - xMean)
     // = xMean + factor*xMax - factor*xMean
     // = (1 - factor)*xMean + factor*xMax
@@ -687,7 +687,7 @@ namespace brick {
         this->m_delta = (this->m_theta0 * 0.0) + 1.0;
         this->m_deltaValueHack = false;
       }
-    
+
       // The algorithm requires dimension + 1 initial points and values.
       std::vector<argument_type> currentPoints(dimension + 1);
       std::vector<result_type> currentValues(dimension + 1);

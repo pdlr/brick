@@ -19,7 +19,7 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     class ExtendedKalmanFilterTest
       : public brick::test::TestFixture<ExtendedKalmanFilterTest> {
 
@@ -44,7 +44,7 @@ namespace brick {
       class LinearProcessFilter
         : public ExtendedKalmanFilter<double> {
       public:
-        
+
         LinearProcessFilter(
           numeric::Array2D<double> const& AMatrix,
           numeric::Array2D<double> const& BMatrix,
@@ -98,7 +98,7 @@ namespace brick {
           }
         }
 
-        
+
         virtual
         void
         getProcessJacobians(double /* currentTime */,
@@ -123,7 +123,7 @@ namespace brick {
           return m_measurementCovariance.copy();
         }
 
-      
+
         virtual
         numeric::Array2D<double>
         getProcessNoiseCovariance(double /* currentTime */,
@@ -134,7 +134,7 @@ namespace brick {
 
 
       private:
-        
+
         numeric::Array2D<double> m_AMatrix;
         numeric::Array2D<double> m_BMatrix;
         numeric::Array2D<double> m_HHMatrix;
@@ -153,7 +153,7 @@ namespace brick {
       // Member variables.
       double m_estimateTolerance;
       numeric::Array2D<double> m_whiteNoiseArray;
-      
+
     }; // class ExtendedKalmanFilterTest
 
 
@@ -262,7 +262,7 @@ namespace brick {
       numeric::Array2D<double> measurementCovariance(1, 1);
       processCovariance(0, 0) = processVariance;
       measurementCovariance(0, 0) = measurementSigma * measurementSigma;
-      
+
       // Put initial state in appropriate form for the filter.
       numeric::Array1D<double> initialState(1);
       initialState[0] = x0;
@@ -274,7 +274,7 @@ namespace brick {
         m_whiteNoiseArray.getRow(0) * measurementSigma;
       numeric::Array1D<double> measurementArray =
         measurementNoiseArray + HMatrix[0] * xActual;
-      
+
       LinearProcessFilter filter(AMatrix, BMatrix, HMatrix,
                                  processCovariance, measurementCovariance);
       filter.setStateEstimate(0, initialState, initialVariance);
@@ -344,7 +344,7 @@ namespace brick {
       numeric::Array2D<double> measurementNoiseArray;
       LinearProcessFilter filter = this->initialize2DFilter(
         initialState, AMatrix, HMatrix, measurementNoiseArray);
-      
+
       // Run the filter.
       numeric::Array1D<double> timestampArray(m_whiteNoiseArray.columns());
       numeric::Array2D<double> referenceArray(
@@ -370,7 +370,7 @@ namespace brick {
         for(unsigned int jj = 0; jj < measurement.size(); ++jj) {
           measurement[jj] += measurementNoiseArray(jj, count);
         }
-        
+
         // Update the filter
         filter.addMeasurement(0, count + 1, measurement, dummyControlInput);
 
@@ -393,7 +393,7 @@ namespace brick {
             referenceArray(jj, count) - estimateArray(jj, count);
           sqErrorArray[count] += residual * residual;
         }
-        
+
       }
 
       // Make sure we converged.
@@ -517,7 +517,7 @@ namespace brick {
       const numeric::Array2D<double> initialVariance("[[1.0, 0.0], [0.0, 1.0]]");
 
       // Process model: rotate by 10 degrees every timestep.
-      // 
+      //
       //   x_k = A * x_(k-1) + w_k
       AMatrix = numeric::Array2D<double>(
         "[[0.99619469809174555, 0.087155742747658166], "
@@ -565,9 +565,9 @@ namespace brick {
       filter.setStateEstimate(0, initialState, initialVariance);
       return filter;
     }
-    
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

@@ -18,8 +18,8 @@
 namespace brick {
 
   namespace numeric {
-    
-    /** 
+
+    /**
      * This function finds a 2D point, given two other points and
      * distance between each of those points and the point to be
      * recovered.  That is, it answers the question "what point is at
@@ -27,27 +27,27 @@ namespace brick {
      * there may be two points that satisfy this constraint, or there
      * may be none if the sum of range0 and range1 is less than the
      * distance between point0 and point1.
-     * 
+     *
      * @param point0 This argument specifies the first known point.
-     * 
+     *
      * @param point1 This argument specifies the second known point.
-     * 
+     *
      * @param range0 This argument specifies the distance from point0 to
      * the target point.
-     * 
+     *
      * @param range1 This argument specifies the distance from point1 to
      * the target point.
-     * 
+     *
      * @param intersection0 This argument returns the first of the two
      * points which is at range0 from point0 and at range1 from point1.
      * If no solution is found, then this argument will not be touched.
-     * 
+     *
      * @param intersection1 This argument returns the second of the two
      * points which is at range0 from point0 and at range1 from point1.
      * In degenerate cases, intersection1 will be identical to
      * intersection0.  If no solution is found, then this argument will
      * not be touched.
-     * 
+     *
      * @return The return value is true if a solution was found, false
      * otherwise.
      */

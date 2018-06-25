@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/utilties/test/lockFileTest.cc
-* 
+*
 * Source file defining tests for lock file handling.
 *
 * Copyright (C) 2006-2011 David LaRose, dlr@cs.cmu.edu
@@ -24,7 +24,7 @@ using brick::test::TestFixture;
 namespace brick {
 
   namespace utilities {
-    
+
     class LockFileTest : public TestFixture<LockFileTest> {
 
     public:
@@ -46,10 +46,10 @@ namespace brick {
       std::string
       getInvalidLockFileName();
 
-    
+
       std::string
       getLockFileName();
-    
+
     }; // class LockFileTest
 
 
@@ -109,7 +109,7 @@ namespace brick {
       BRICK_TEST_ASSERT(!isRegularFile(lockFileName));
     }
 
-  
+
     void
     LockFileTest::
     testConstructor__string__string()
@@ -120,7 +120,7 @@ namespace brick {
 
       // Crate string for lock file contents.
       std::string contents = "It's not unusual\nto be loved by anyone.";
-    
+
       if(isExistingPath(lockFileName) || isExistingPath(invalidLockFileName)) {
         BRICK_THROW(brick::common::IOException,
                     "LockFileTest::testConstructor__string()",
@@ -159,7 +159,7 @@ namespace brick {
       // Tested by constructor tests.
     }
 
-  
+
     void
     LockFileTest::
     testIsValid()
@@ -167,7 +167,7 @@ namespace brick {
       // Tested by constructor tests.
     }
 
-  
+
     std::string
     LockFileTest::
     getInvalidLockFileName()
@@ -192,7 +192,7 @@ namespace brick {
       return fileName;
     }
 
-  
+
     std::string
     LockFileTest::
     getLockFileName()
@@ -209,9 +209,9 @@ namespace brick {
       }
       return lockFileName;
     }
-  
+
   } // namespace utilities
-  
+
 } // namespace brick
 
 
@@ -229,7 +229,7 @@ int main(int argc, char** argv)
 namespace {
 
   brick::utilities::LockFileTest currentTest;
-  
+
 }
 
 #endif /* #ifdef BRICK_TEST_NO_AUTOMATIC_REGISTRATION */

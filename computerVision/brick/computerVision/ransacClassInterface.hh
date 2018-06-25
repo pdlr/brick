@@ -29,8 +29,8 @@ namespace brick {
     enum RansacInlierStrategy {
       BRICK_CV_NAIVE_ERROR_THRESHOLD
     };
-      
-    
+
+
     /**
      ** This class template implements the RANSAC algorithm[1].
      **
@@ -55,7 +55,7 @@ namespace brick {
        **/
       typedef Problem ProblemType;
 
-      
+
       /**
        ** This typedef indicates the type of model that will be
        ** estimated by the RANSAC algorithm.  Its value is controlled
@@ -63,30 +63,30 @@ namespace brick {
        **/
       typedef typename Problem::ModelType ResultType;
 
-      
-      /** 
+
+      /**
        * This constructor sets up the Ransac instance so that it is
        * ready to solve the model fitting problem, but does not run
        * the RANSAC algorithm.
-       * 
+       *
        * @param problem This argument is a class instance implementing
        * the RansacProblem interface, which provides all of the
        * problem-specific code.
-       * 
+       *
        * @param minimumConsensusSize This argument specifies the
        * smallest set of "agreeing" samples that should be taken as
        * proof that the correct model has been found (and grounds for
        * terminating the algorithm).  Setting this value to zero will
        * make the Ransac constructor compute an appropriate value
        * using arguments requiredConfidence and inlierProbability.
-       * 
+       *
        * @param requiredConfidence This argument indicates how
        * confident we need to be that one run of the RANSAC algorithm
        * will find the correct model.  It affects the number of
        * iterations that the RANSAC algorithm will be allowed to run,
        * as well as the automatically computed value for
        * minimumConsensusSize (see above).
-       * 
+       *
        * @param inlierProbability This argument indicates the
        * likelihood that any particular input value (data point,
        * sample, whatever) is an "inlier" for the purpose of
@@ -109,17 +109,17 @@ namespace brick {
       ~Ransac() {}
 
 
-      /** 
+      /**
        * Calculate which input samples are consistent with the
        * specified model, and return them to the calling context as a
        * SampleSequenceType instance.  This member function is not
        * used by Ransac, but allows users of the Ransac class to
        * figure out which samples contributed to the calculation of
        * the model.
-       * 
+       *
        * @param model This argument is normally the result of a call
        * to Ransac::getResult().
-       * 
+       *
        * @return The return value is an instance of
        * ProblemType::SampleSequenceType that contains only those
        * input samples that are consistent with the model.
@@ -127,11 +127,11 @@ namespace brick {
       typename ProblemType::SampleSequenceType
       getConsensusSet(ResultType model);
 
-      
-      /** 
+
+      /**
        * This member function runs the RANSAC algorithm and returns
        * the computed model.
-       * 
+       *
        * @return The return value is the best model estimate returned
        * by the RANSAC algorithm.
        */
@@ -139,13 +139,13 @@ namespace brick {
       getResult();
 
 
-      /** 
+      /**
        * Overrides the computed number of RANSAC iterations to be
        * ultimately run if no compelling solution is found.  You may
        * want to use this function if your model estimation algorithm
        * has local minima, and you think you need to boost how many
        * RANSAC iterations get run.
-       * 
+       *
        * @param numberOfRandomSampleSets This argument specifies the
        * maximum number of allowable RANSAC iterations.
        */
@@ -154,14 +154,14 @@ namespace brick {
         m_numberOfRandomSampleSets = numberOfRandomSampleSets;
       }
 
-      
-      /** 
+
+      /**
        * Controls how many times a model may be refined on each rasac
        * iteration.  Normally, in each iteration, the model is
        * repeatedly recomputed using the consensus set until it stops
        * improving.  This function allow the user to limit how many
        * refinements can happen during each iteration.
-       * 
+       *
        * @param numberOfRefinements This argument specifies the
        * maximum number of allowable refinements per iteration.
        * Setting this to a negative number allows the refinements to
@@ -222,7 +222,7 @@ namespace brick {
       : public RandomSampleSelector<Sample>
     {
     public:
-      
+
       // ========= Typedefs that must be present in order   =========
       // ========= to work with the Ransac class template.  =========
       // ========= You probably don't need to change these. =========
@@ -269,12 +269,12 @@ namespace brick {
        **/
       typedef typename RandomSampleSelector<SampleType>::SampleSequenceType
         SampleSequenceType;
-      
+
 
       // ========= Member functions that must be provided by user =========
       // ========= You definitely do need to change these.        =========
 
-      /** 
+      /**
        * Subclasses may override this member function to reset
        * internal state prior to the beginning of each iteration of
        * the RANSAC algorithm.  Consider a problem that uses nonlinear
@@ -294,18 +294,18 @@ namespace brick {
       virtual void
       beginIteration(size_t /* iterationNumber */) {}
 
-      
-      /** 
+
+      /**
        * This member function should take a sequence of samples, and
        * compute the best fit model based on the sample values.  The
        * number of sample values contained in argument sampleSequence
        * will be equal to the value of constructor argument
        * sampleSize.
-       * 
+       *
        * @param sampleSequence This argument specifies the sequence of
        * samples.  See the documentation for typedef
        * SampleSequenceType, above.
-       * 
+       *
        * @return The return value is a model instance based on the
        * input data.
        */
@@ -313,18 +313,18 @@ namespace brick {
       estimateModel(SampleSequenceType const& sampleSequence) = 0;
 
 
-      /** 
+      /**
        * This function should take a model and a sequence of samples,
        * and fill in the output sequence with error values reflecting
        * how well each member of the sample sequence matches the
        * model.
-       * 
+       *
        * @param model This argument specifies the model against which
        * to test.
-       * 
+       *
        * @param sampleSequence This argument specifies the sequence of
        * samples to be tested.
-       * 
+       *
        * @param ouputIter This argument is an iterator pointing to the
        * first element of the sequence of doubles that should be
        * filled with error values.  The sequence will have at least
@@ -338,7 +338,7 @@ namespace brick {
                    IterType ouputIter) {}
 
 
-      /** 
+      /**
        * This member function should return a threshold against which
        * error values (computed by this->computeError()) should be
        * compared in order to determine whether a particular sample is
@@ -350,31 +350,31 @@ namespace brick {
        * threshold that will be applied to each sample error value.
        * Samples with error larger than this threshold will be
        * considered to be outliers.
-       * 
+       *
        * @return The return value is the inlier/outlier threshold.
        */
-      virtual double 
+      virtual double
       getNaiveErrorThreshold() = 0;
-      
+
 
       // ========= Public constructors, destructors, and    =========
       // ========= predefined member functions.             =========
       // ========= You probably don't need to change these. =========
 
-      /** 
+      /**
        * This constructor instantiate the RansacProblem instance using
        * a sequence of samples from which to randomly draw populations
        * and compute models.
-       * 
+       *
        * @param sampleSize This argument specifies how many individual
        * samples are required by member function estimateModel() to
        * compute a model, and is used to control the length of the
        * sample sequence passed to estimateModel().
-       * 
+       *
        * @param beginIter This argument is an iterator pointing to the
        * first element of a sequence of samples against which the
        * RANSAC algorithm will be run.
-       * 
+       *
        * @param endIter This argument points, in the normal STL way,
        * one element past the end of the sequence started by argument
        * beginIter.
@@ -384,7 +384,7 @@ namespace brick {
         : RandomSampleSelector<SampleType>(beginIter, endIter),
           m_sampleSize(sampleSize) {}
 
-      
+
       /**
        * The destructor cleans up any system resources and destroys *this.
        */
@@ -392,12 +392,12 @@ namespace brick {
       ~RansacProblem() {}
 
 
-      /** 
+      /**
        * This member function returns how many individual samples are
        * required by member function estimateModel() to compute a
        * model, and is used by the Ransac class to control the length
        * of the sample sequence passed to estimateModel().
-       * 
+       *
        * @return The return value specifies the required length of the
        * sample sequence.
        */
@@ -405,12 +405,12 @@ namespace brick {
       getSampleSize() {return m_sampleSize;}
 
 
-      /** 
+      /**
        * This member function controls how the inlier/outlier decision
        * is made during RANSAC operation.  For now, the only thing you
        * can return is Ransac::BRICK_CV_NAIVE_ERROR_THRESHOLD.
-       * 
-       * @return The return value 
+       *
+       * @return The return value
        */
       RansacInlierStrategy
       getInlierStrategy() {
@@ -420,11 +420,11 @@ namespace brick {
     protected:
 
       size_t m_sampleSize;
-      
+
     }; // class RansacProblem
-    
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

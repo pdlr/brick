@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/numeric/test/boxIntegrator2DTest.cc
-* 
+*
 * Source file defining BoxIntegrator2DTest class.
 *
 * Copyright (C) 2006,2012 David LaRose, dlr@cs.cmu.edu
@@ -41,7 +41,7 @@ namespace brick {
       void testGetIntegral__Index2D__Index2D__bool();
       void testSetArray__Array2D();
       void testSetArray__Array2D__Index2D__Index2D();
-    
+
     private:
 
       const double m_defaultTolerance;
@@ -87,8 +87,8 @@ namespace brick {
         }
       }
     }
-    
-    
+
+
     void
     BoxIntegrator2DTest::
     testConstructor__void()
@@ -98,7 +98,7 @@ namespace brick {
       BRICK_TEST_ASSERT(true);
     }
 
-    
+
     void
     BoxIntegrator2DTest::
     testConstructor__Array2D()
@@ -131,7 +131,7 @@ namespace brick {
       }
     }
 
-    
+
     void
     BoxIntegrator2DTest::
     testConstructor__Array2D__Index2D__Index2D()
@@ -149,7 +149,7 @@ namespace brick {
               BoxIntegrator2D<double, double> boxIntegrator2D(
                 m_testArray0, Index2D(rowOffset, columnOffset),
                 Index2D(m_testArray0.rows(), m_testArray0.columns()));
-              
+
               for(size_t row0 = 0;
                   row0 < (m_testArray0.rows() - rowOffset
                           - regionRows);
@@ -158,7 +158,7 @@ namespace brick {
                     column0 < (m_testArray0.columns() - columnOffset
                                - regionColumns);
                     column0 += m_testArray0.columns() / 10) {
-                  
+
                   Array2D<double> roi = subArray(
                     m_testArray0,
                     Slice(row0 + rowOffset, row0 + rowOffset + regionRows),
@@ -180,7 +180,7 @@ namespace brick {
       }
     }
 
-    
+
     void
     BoxIntegrator2DTest::
     testConstructor__BoxIntegrator2D()
@@ -212,7 +212,7 @@ namespace brick {
       }
     }
 
-    
+
     void
     BoxIntegrator2DTest::
     testGetIntegral__Index2D__Index2D()
@@ -220,7 +220,7 @@ namespace brick {
       // Already tested by constructor tests.
     }
 
-    
+
     void
     BoxIntegrator2DTest::
     testGetIntegral__Index2D__Index2D__bool()
@@ -238,14 +238,14 @@ namespace brick {
               BoxIntegrator2D<double, double> boxIntegrator2D(
                 m_testArray0, Index2D(rowOffset, columnOffset),
                 Index2D(m_testArray0.rows(), m_testArray0.columns()));
-              
+
               for(size_t row0 = rowOffset;
                   row0 < (m_testArray0.rows() - regionRows);
                   row0 += m_testArray0.rows() / 10) {
                 for(size_t column0 = columnOffset;
                     column0 < (m_testArray0.columns() - regionColumns);
                     column0 += m_testArray0.columns() / 10) {
-                  
+
                   Array2D<double> roi = subArray(
                     m_testArray0, Slice(row0, row0 + regionRows),
                     Slice(column0, column0 + regionColumns));
@@ -266,7 +266,7 @@ namespace brick {
       }
     }
 
-    
+
     void
     BoxIntegrator2DTest::
     testSetArray__Array2D()
@@ -310,7 +310,7 @@ namespace brick {
       }
     }
 
-    
+
     void
     BoxIntegrator2DTest::
     testSetArray__Array2D__Index2D__Index2D()
@@ -331,7 +331,7 @@ namespace brick {
               boxIntegrator2D1.setArray(
                 m_testArray0, Index2D(rowOffset, columnOffset),
                 Index2D(m_testArray0.rows(), m_testArray0.columns()));
-              
+
               for(size_t row0 = 0;
                   row0 < (m_testArray0.rows() - rowOffset
                           - regionRows);
@@ -340,7 +340,7 @@ namespace brick {
                     column0 < (m_testArray0.columns() - columnOffset
                                - regionColumns);
                     column0 += m_testArray0.columns() / 10) {
-                  
+
                   Array2D<double> roi = subArray(
                     m_testArray0,
                     Slice(row0 + rowOffset, row0 + rowOffset + regionRows),
@@ -387,4 +387,3 @@ namespace {
 }
 
 #endif
-

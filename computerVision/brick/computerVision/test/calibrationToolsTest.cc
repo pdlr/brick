@@ -49,7 +49,7 @@ public:
   void testEstimateCameraParametersPinhole();
   void testEstimateTransform3DTo2D();
   void testEstimateProjectedAreaAndCentroid();
-  
+
 private:
 
   bool
@@ -61,7 +61,7 @@ private:
   checkIntrinsicsEqual(CameraIntrinsicsPlumbBob<double> const& intrinsics0,
                        CameraIntrinsicsPlumbBob<double> const& intrinsics1,
                        double tolerance);
-  
+
 
   bool
   checkTransformEqual(Transform3D<double> const& transform0,
@@ -72,8 +72,8 @@ private:
   checkVectorEqual(Array1D<double> const& vector0,
                    Array1D<double> const& vector1,
                    double tolerance);
-  
-  
+
+
   template <class Intrinsics>
   void
   compute2DTestData(std::vector< Vector2D<double> >& points2D,
@@ -88,12 +88,12 @@ private:
   void
   getTestIntrinsicsPlumbBob(CameraIntrinsicsPlumbBob<double>& intrinsics,
                             double resolutionFactor = 1.0);
-  
-  
+
+
   double m_defaultTolerance;
   double m_relaxedTolerance;
   double m_stringentTolerance;
-  
+
 }; // class CalibrationToolsTest
 
 
@@ -134,7 +134,7 @@ testCameraParametersObjectiveFunction()
   this->get3DTestData(points3D_world, points3D_camera, cameraTworld);
   this->compute2DTestData(points2D, points3D_camera, referenceIntrinsics);
   Quaternion<double> cameraQworld = transform3DToQuaternion(cameraTworld);
-  
+
   // Verify that, given perfect parameters, we get nearly-zero error.
   CameraIntrinsicsPlumbBob<double> zeroTestIntrinsics = referenceIntrinsics;
   CameraIntrinsicsPlumbBob<double>::ParameterVectorType intrinsicsFreeParameters =
@@ -157,7 +157,7 @@ testCameraParametersObjectiveFunction()
     GradientFunctionLM;
   GradientFunctionLM gradientFunction(objectiveFunction);
   double nominalZeroValue = gradientFunction(allFreeParameters);
-  
+
   // In addition to calculating error values, we need
   // objectiveFunction to expose an interface for finding the
   // intrinsics and extrinsics that correspond to the minimum
@@ -200,7 +200,7 @@ testCameraParametersObjectiveFunction()
     // std::cout << ii << "(-): " << nonzeroValue << std::endl;
     BRICK_TEST_ASSERT(nonzeroValue > m_defaultTolerance);
   }
-  
+
 }
 
 
@@ -210,14 +210,14 @@ testEstimateCameraIntrinsics()
 {
   CameraIntrinsicsPlumbBob<double> referenceIntrinsics;
   this->getTestIntrinsicsPlumbBob(referenceIntrinsics);
-    
+
   std::vector< Vector3D<double> > points3D_world;
   std::vector< Vector3D<double> > points3D_camera;
   std::vector< Vector2D<double> > points2D;
   Transform3D<double> cameraTworld;
   this->get3DTestData(points3D_world, points3D_camera, cameraTworld);
   this->compute2DTestData(points2D, points3D_camera, referenceIntrinsics);
-  
+
   CameraIntrinsicsPlumbBob<double> recoveredIntrinsics =
     estimateCameraIntrinsics< CameraIntrinsicsPlumbBob<double> >(
       referenceIntrinsics.getNumPixelsX(), referenceIntrinsics.getNumPixelsY(),
@@ -251,7 +251,7 @@ testEstimateCameraIntrinsicsPinhole()
   Transform3D<double> cameraTworld;
   this->get3DTestData(points3D_world, points3D_camera, cameraTworld);
   this->compute2DTestData(points2D, points3D_camera, intrinsics);
-  
+
   CameraIntrinsicsPinhole<double> recoveredIntrinsics =
     estimateCameraIntrinsicsPinhole<double>(
       intrinsics.getNumPixelsX(), intrinsics.getNumPixelsY(),
@@ -269,14 +269,14 @@ testEstimateCameraParameters()
 {
   CameraIntrinsicsPlumbBob<double> referenceIntrinsics;
   this->getTestIntrinsicsPlumbBob(referenceIntrinsics);
-    
+
   std::vector< Vector3D<double> > points3D_world;
   std::vector< Vector3D<double> > points3D_camera;
   std::vector< Vector2D<double> > points2D;
   Transform3D<double> cameraTworld;
   this->get3DTestData(points3D_world, points3D_camera, cameraTworld);
   this->compute2DTestData(points2D, points3D_camera, referenceIntrinsics);
-  
+
   // Now run the estimation code.
   CameraIntrinsicsPlumbBob<double> recoveredIntrinsics;
   Transform3D<double> recoveredCameraTworld;
@@ -315,14 +315,14 @@ testEstimateCameraParametersConstrained()
   this->getTestIntrinsicsPlumbBob(referenceIntrinsics);
   referenceIntrinsics.allowSixthOrderRadial(false);
   referenceIntrinsics.allowSkew(false);
-    
+
   std::vector< Vector3D<double> > points3D_world;
   std::vector< Vector3D<double> > points3D_camera;
   std::vector< Vector2D<double> > points2D;
   Transform3D<double> cameraTworld;
   this->get3DTestData(points3D_world, points3D_camera, cameraTworld);
   this->compute2DTestData(points2D, points3D_camera, referenceIntrinsics);
-  
+
   // Now run the estimation code.
   CameraIntrinsicsPlumbBob<double> recoveredIntrinsics;
   Transform3D<double> recoveredCameraTworld;
@@ -428,7 +428,7 @@ testEstimateTransform3DTo2D()
   std::vector< Vector3D<double> > points3D_world;
   std::vector< Vector3D<double> > points3D_camera;
   std::vector< Vector2D<double> > points2D;
-  Transform3D<double> cameraTworld;  
+  Transform3D<double> cameraTworld;
   this->get3DTestData(points3D_world, points3D_camera, cameraTworld);
   this->compute2DTestData(points2D, points3D_camera, intrinsics);
 
@@ -441,7 +441,7 @@ testEstimateTransform3DTo2D()
     double residual = magnitude<double>(projectedPoint - points2D[ii]);
     BRICK_TEST_ASSERT(approximatelyEqual(residual, 0.0, m_relaxedTolerance));
   }
-  
+
   // Next test: recover projection comprised of rigid xf + camera params.
   Transform3DTo2D<double> projection1 =
     brick::computerVision::privateCode::estimateTransform3DTo2D<double>(
@@ -451,7 +451,7 @@ testEstimateTransform3DTo2D()
     double residual = magnitude<double>(projectedPoint - points2D[ii]);
     BRICK_TEST_ASSERT(approximatelyEqual(residual, 0.0, m_relaxedTolerance));
   }
-  
+
 }
 
 
@@ -511,7 +511,7 @@ testEstimateProjectedAreaAndCentroid()
       radiusVector, plane.getNormal()) * measuredRadius;
     BRICK_TEST_ASSERT(planeOffset < m_defaultTolerance);
   }
-  
+
   brick::common::Int32 startRow = std::floor(rowMin) - 5;
   brick::common::Int32 stopRow = std::ceil(rowMax) + 5;
   brick::common::Int32 startColumn = std::floor(columnMin) - 5;
@@ -544,7 +544,7 @@ testEstimateProjectedAreaAndCentroid()
       double residual = brick::numeric::magnitude<double>(
         reprojection - pixelCenter);
       BRICK_TEST_ASSERT(residual < 1.0E-3);
-      
+
       // Is the intersect within the circle?
       double radius = brick::numeric::magnitude<double>(
         intersect - circleCenter);
@@ -553,7 +553,7 @@ testEstimateProjectedAreaAndCentroid()
         referenceArea += 1.0;
         testImage(row - startRow, column - startColumn) =
           brick::common::UInt8(255);
-      } 
+      }
     }
   }
   brick::numeric::Vector2D<double> referenceCentroid =
@@ -570,24 +570,24 @@ testEstimateProjectedAreaAndCentroid()
     largestNumberOfTriangles - smallestNumberOfTriangles);
   for(brick::common::UInt32 numberOfTriangles = smallestNumberOfTriangles;
       numberOfTriangles < largestNumberOfTriangles; ++numberOfTriangles) {
-    
+
     // Recover the same quantities using the function under test.
     double area;
     brick::numeric::Vector2D<double> centroid;
     estimateProjectedAreaAndCentroid(area, centroid, circle, intrinsics,
                                      numberOfTriangles);
-    
+
     // And remember errors.
     projectionErrors[numberOfTriangles - smallestNumberOfTriangles] =
       brick::numeric::magnitude<double>(centroid - referenceCentroid);
     areaErrors[numberOfTriangles - smallestNumberOfTriangles] =
       referenceArea - area;
   }
-  
+
   // For comparison, see where the circle centroid projects to.
   brick::numeric::Vector2D<double> projectedCenter =
     intrinsics.project(circle.getOrigin());
-  
+
   // Make sure this was actually a difficult test.
   double asymmetryMetric = brick::numeric::magnitude<double>(
     projectedCenter - referenceCentroid);
@@ -736,14 +736,14 @@ checkVectorEqual(Array1D<double> const& vector0,
   return true;
 }
 
-    
+
 template<class Intrinsics>
 void
 CalibrationToolsTest::
 compute2DTestData(std::vector< Vector2D<double> >& points2D,
                   std::vector< Vector3D<double> >& points3D_camera,
                   Intrinsics const& intrinsics)
-{                  
+{
   // Generate corresponding 2D poinst.
   points2D.resize(points3D_camera.size());
   for(unsigned int ii = 0; ii < points3D_camera.size(); ++ii) {

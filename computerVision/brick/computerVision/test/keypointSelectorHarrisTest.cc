@@ -28,8 +28,8 @@ namespace brick {
 
   namespace computerVision {
 
-    
-    // This test is copied 
+
+    // This test is copied
     class KeypointSelectorHarrisTest
       : public brick::test::TestFixture<KeypointSelectorHarrisTest> {
 
@@ -47,11 +47,11 @@ namespace brick {
       // Legacy functions.
       void exerciseKeypointSelectorHarris(std::string const& fileName,
                                           double threshold = 0.0);
-        
+
     private:
 
       double m_defaultTolerance;
-      
+
     }; // class KeypointSelectorHarrisTest
 
 
@@ -90,7 +90,7 @@ namespace brick {
       referencePoints[1].setValue(58, 31);
       referencePoints[2].setValue(21, 68);
       referencePoints[3].setValue(21, 31);
-      
+
       // Make sure the detector picks up these four corners.
       KeypointSelectorHarris<double> selector;
       selector.setImage(inputImage);
@@ -128,7 +128,7 @@ namespace brick {
     {
       Image<GRAY8> inputImage;
       if(utilities::splitExtension(fileName).second == ".pgm") {
-        inputImage = readPGM8(fileName);    
+        inputImage = readPGM8(fileName);
       } else {
         Image<RGB8> colorImage = readPPM8(fileName);
         inputImage = convertColorspace<GRAY8>(colorImage);
@@ -145,10 +145,10 @@ namespace brick {
       Image<GRAY_FLOAT64> blurredImage = filter2D<GRAY_FLOAT64>(
         gaussian, inputImage, 0.0);
       Image<GRAY8> blurredImage8 = convertColorspace<GRAY8>(blurredImage);
-      
+
       selector.setImage(inputImage);
       // selector.setImage(blurredImage8);
-      
+
       // keypoints = selector.getKeypoints();
       selector.getKeypoints(std::back_inserter(keypoints), threshold);
       double time1 = utilities::getCurrentTime();

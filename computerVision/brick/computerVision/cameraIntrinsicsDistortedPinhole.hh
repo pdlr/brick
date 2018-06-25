@@ -30,7 +30,7 @@ namespace brick {
 
     } // namespace privateCode;
 
-    
+
     /**
      ** This abstract base class defines an interface for classes that
      ** describe camera projection parameters involving distortion
@@ -65,35 +65,35 @@ namespace brick {
       // This class is defined externally so that it can be more
       // easily unit tested.
       friend class privateCode::ReverseProjectionObjective<FloatType>;
-      
-      /** 
+
+      /**
        * Default constructor.
        */
       CameraIntrinsicsDistortedPinhole();
 
 
-      /** 
+      /**
        * This constructor allows the caller to explicitly set the
        * camera pinhole intrinsic parameters.
-       * 
+       *
        * @param numPixelsX This argument specifies how many columns
        * there are in the camera images.
-       * 
+       *
        * @param numPixelsY This argument specifies how many rows there
        * are in the camera images.
-       * 
+       *
        * @param focalLengthX This argument the distance from the
        * camera focus to the image plane, expressed in pixel-width
        * sized units.  Generally this number should be positive,
        * indicating that the the image plane lies at a positive Z
        * coordinate in the 3D camera coordinate frame.
-       * 
+       *
        * @param focalLengthY This argument the distance from the
        * camera focus to the image plane, expressed in pixel-height
        * sized units.  Generally this number should be positive,
        * indicating that the the image plane lies at a positive Z
        * coordinate in the 3D camera coordinate frame.
-       * 
+       *
        * @param centerU This argument and the next specify the
        * position in pixel coordinates at which the Z axis passes
        * through the image plane.  If you are calling the constructor
@@ -101,7 +101,7 @@ namespace brick {
        * first principal point value to get the correct value for this
        * argument (see the documentation for CameraIntrinsicsPlumbBob
        * for more information).
-       * 
+       *
        * @param centerV This argument and the previous specify the
        * position in pixel coordinates at which the Z axis passes
        * through the image plane.  If you are calling the construtor
@@ -117,65 +117,65 @@ namespace brick {
                                        FloatType centerU,
                                        FloatType centerV);
 
-      
-      /** 
+
+      /**
        * Destructor.
        */
       virtual
       ~CameraIntrinsicsDistortedPinhole() {}
 
 
-      /** 
+      /**
        * This member function provides access to the value of
        * parameter centerU, as described in the constructor
        * documentation.
-       * 
+       *
        * @return The return value is the requested parameter.
        */
       FloatType const&
       getCenterU() const {return m_pinholeIntrinsics.getCenterU();}
 
 
-      /** 
+      /**
        * This member function provides access to the value of
        * parameter centerV, as described in the constructor
        * documentation.
-       * 
+       *
        * @return The return value is the requested parameter.
        */
       FloatType const&
       getCenterV() const {return m_pinholeIntrinsics.getCenterV();}
 
 
-      /** 
+      /**
        * This member function provides access to the value of
        * parameter focalLengthX, as described in the constructor
        * documentation.
-       * 
+       *
        * @return The return value is the requested parameter.
        */
       FloatType const&
       getFocalLengthX() const {return m_pinholeIntrinsics.getFocalLengthX();}
 
 
-      /** 
+      /**
        * This member function provides access to the value of
        * parameter focalLengthY, as described in the constructor
        * documentation.
-       * 
+       *
        * @return The return value is the requested parameter.
        */
       FloatType const&
       getFocalLengthY() const {return m_pinholeIntrinsics.getFocalLengthY();}
 
 
-      /** 
+      /**
        * This function exposes a subset of the intrinsic parameters
        * for use in calibration routines.  Parameters that can
        * generally be calculated closed-form are omitted from this
        * return vector, leaving only those that are normally estimated
        * using nonlinear optimization.
-       * 
+       *
        * @return The return value is a vector of free parameters.  For
        * example, if the subclass implements the Brown-Conrady model,
        * it might be a vector containing radial coefficients and
@@ -185,21 +185,21 @@ namespace brick {
       getFreeParameters() const = 0;
 
 
-      /** 
+      /**
        * This member function returns the number of rows in images
        * produced by the camera corresponding to *this.
-       * 
+       *
        * @return The return value is the number of pixels in each
        * image column.
        */
       virtual unsigned int
       getImageHeight() const {return m_pinholeIntrinsics.getImageHeight();}
 
-      
-      /** 
+
+      /**
        * This member function returns the number of columns in images
        * produced by the camera corresponding to *this.
-       * 
+       *
        * @return The return value is the number of pixels in each
        * image row.
        */
@@ -207,7 +207,7 @@ namespace brick {
       getImageWidth() const {return m_pinholeIntrinsics.getImageWidth();}
 
 
-      /** 
+      /**
        * This function provides a reasonable starting point for
        * intrinsic parameters that are generally estimated by
        * nonlinear optimization.  See getFreeParameters().
@@ -219,10 +219,10 @@ namespace brick {
       getNominalFreeParameters() const = 0;
 
 
-      /** 
+      /**
        * This member function returns the number of columns in images
        * produced by the camera corresponding to *this.
-       * 
+       *
        * @return The return value is the number of pixels in each
        * image row.
        */
@@ -230,18 +230,18 @@ namespace brick {
       getNumPixelsX() const {return m_pinholeIntrinsics.getNumPixelsX();}
 
 
-      /** 
+      /**
        * This member function returns the number of rows in images
        * produced by the camera corresponding to *this.
-       * 
+       *
        * @return The return value is the number of pixels in each
        * image column.
        */
       virtual unsigned int
       getNumPixelsY() const {return m_pinholeIntrinsics.getNumPixelsY();}
 
-      
-      /** 
+
+      /**
        * This member function takes a point in camera coordinates, and
        * returns an "distorted" version of that 3D point.  The
        * distorted point is not guaranteed to be similar to the input
@@ -251,10 +251,10 @@ namespace brick {
        * point.  This member function is generally not useful for user
        * code.  It is provided here to help with camera calibration
        * algorithms.
-       * 
+       *
        * @param point This argument is the point to be projected,
        * represented in world coordinates.
-       * 
+       *
        * @return The return value is represented in a fictional
        * undistorted 3D world coordinate system, and is one of the
        * infinitely many points that lie on the ray projecting to the
@@ -264,20 +264,20 @@ namespace brick {
       projectThroughDistortion(numeric::Vector3D<FloatType> const& inputPoint)
         const = 0;
 
-      
-      /** 
+
+      /**
        * This function iteratively computes and returns a ray in 3D
        * camera coordinates starting at the camera focus and passing
        * through the specified pixel position.  Derived classes may
        * choose to implement closed-form (or simply more efficient)
        * versions of this function.
-       * 
+       *
        * @param pixelPosition This argument is the point in pixel
        * coordinates through which the returned ray should pass.
-       * 
+       *
        * @param normalize This argument indicates whether the ray
        * should be normalized to unit length before being returned.
-       * 
+       *
        * @param maxAzimuthTangent For some types of camera intrinsics,
        * the reverse projection does not have a unique solution.  In
        * these types of cameras, it may be necessary to supply limits
@@ -289,7 +289,7 @@ namespace brick {
        * this argument to 1.0 (which is tangent(45degrees)).  Set this
        * argument and the next one less than or equal to zero to disable
        * this check.
-       * 
+       *
        * @param maxElevationTangent For some types of camera intrinsics,
        * the reverse projection does not have a unique solution.  In
        * these types of cameras, it may be necessary to supply limits
@@ -310,13 +310,13 @@ namespace brick {
                      FloatType const& maxAzimuthTangent = FloatType(0.0),
                      FloatType const& maxElevationTangent = FloatType(0.0))
         const;
-      
 
-      /** 
+
+      /**
        * This member function specifies the U coordinate of the center
        * of projection of the camera.  See the class documentation for
        * discussion of this coordinate system.
-       * 
+       *
        * @param centerU The U coordinate of the center of projection.
        */
       virtual void
@@ -324,12 +324,12 @@ namespace brick {
         this->m_pinholeIntrinsics.setCenterU(centerU);
       }
 
-      
-      /** 
+
+      /**
        * This member function specifies the V coordinate of the center
        * of projection of the camera.  See the class documentation for
        * discussion of this coordinate system.
-       * 
+       *
        * @param centerV The V coordinate of the center of projection.
        */
       virtual void
@@ -337,34 +337,34 @@ namespace brick {
         this->m_pinholeIntrinsics.setCenterV(centerV);
       }
 
-      
-      /** 
+
+      /**
        * This function is the counterpart to setFreeParameters().  It
        * allows the calling context to specify pinhole parameters that
        * are normally estimated closed-form.
-       * 
+       *
        * @param numPixelsX This argument specifies how many columns
        * there are in the camera images.
-       * 
+       *
        * @param numPixelsY This argument specifies how many rows there
        * are in the camera images.
-       * 
+       *
        * @param focalLengthX This argument the distance from the
        * camera focus to the image plane in units of "pixel width."
        * Generally this number should be positive, indicating that the
        * the image plane lies at a positive Z coordinate in the 3D
        * camera coordinate frame.
-       * 
+       *
        * @param focalLengthY This argument the distance from the
        * camera focus to the image plane in units of "pixel height."
        * Generally this number should be positive, indicating that the
        * the image plane lies at a positive Z coordinate in the 3D
        * camera coordinate frame.
-       * 
+       *
        * @param centerU This argument and the next specify the
        * position in pixel coordinates at which the Z axis passes
        * through the image plane.
-       * 
+       *
        * @param centerV This argument and the previous specify the
        * position in pixel coordinates at which the Z axis passes
        * through the image plane.
@@ -385,12 +385,12 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This member function specifies the focal length of the imager
        * in units of pixel width.  Or conversely, you can think of
        * focal length as being fixed, and this member function as as
        * indirectly specifying the width of a pixel.
-       * 
+       *
        * @param focalLengthX The focal length of the lens in units of
        * pixel width.
        */
@@ -399,13 +399,13 @@ namespace brick {
         this->m_pinholeIntrinsics.setFocalLengthX(focalLengthX);
       }
 
-      
-      /** 
+
+      /**
        * This member function specifies the focal length of the imager
        * in units of pixel height.  Or conversely, you can think of
        * focal length as being fixed, and this member function as as
        * indirectly specifying the height of a pixel.
-       * 
+       *
        * @param focalLengthY The focal length of the lens in units of
        * pixel height.
        */
@@ -413,16 +413,16 @@ namespace brick {
       setFocalLengthY(FloatType const& focalLengthY) {
         this->m_pinholeIntrinsics.setFocalLengthY(focalLengthY);
       }
-      
-      
-      /** 
+
+
+      /**
        * This sets the value of a subset of the intrinsic parameters,
        * and is commonly used by in calibration routines.  Parameters
        * that can generally be calculated closed-form are omitted from
        * this return vector, leaving only those that are normally
        * estimated using nonlinear optimization.  The omitted
        * parameters are generally pinhole projection parameters.
-       * 
+       *
        * @param parameterVector This argument specifies values for the
        * free parameters as a vector of free parameters containing, in
        * order, the three radial coefficients, the skew coefficient,
@@ -435,10 +435,10 @@ namespace brick {
       setFreeParameters(ParameterVectorType const& parameterVector) = 0;
 
 
-      /** 
+      /**
        * This member function specifies the width of the image in
        * pixels.
-       * 
+       *
        * @param numPixelsX The width of the image.
        */
       virtual void
@@ -447,10 +447,10 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This member function specifies the height of the image in
        * pixels.
-       * 
+       *
        * @param numPixelsY The height of the image.
        */
       virtual void
@@ -458,7 +458,7 @@ namespace brick {
         m_pinholeIntrinsics.setNumPixelsY(numPixelsY);
       }
 
-      
+
     protected:
 
       // By default, we require reverse projection accuracy of better
@@ -483,14 +483,14 @@ namespace brick {
                                     FloatType& dVdX,
                                     FloatType& dVdY) const = 0;
 
-      
+
       // Protected data members below this line.
       CameraIntrinsicsPinhole<FloatType> m_pinholeIntrinsics;
     };
 
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

@@ -22,7 +22,7 @@
 namespace brick {
 
   namespace utilities {
-    
+
     /**
      ** The OptionParser class parses program options.  It supports
      ** the following features.
@@ -128,12 +128,12 @@ namespace brick {
     class OptionParser {
     public:
 
-      /** 
+      /**
        * Default constructor.  OptionParser instances constructed in
        * this way will throw an IOException from parseCommandLine() if
        * the command line doesn't match the specified options.  You
        * can catch the exception and the print usage, etc.
-       * 
+       *
        * @param allowExtraArguments This argument specifies whether
        * extra positional argument should be permitted.  If
        * allowExtraArguments is false, then member function
@@ -144,7 +144,7 @@ namespace brick {
        * then any extra positional arguments will be recorded without
        * throwing an exception.  These arguments can then be recovered
        * using member function getExtraPositionalArguments().
-       * 
+       *
        * @param allowStackedShortOptions This argument specifies
        * whether it is permissible to decompose arguments such as
        * "-plr" into "-p -l -r".  If allowStackedShortOptions is true,
@@ -158,7 +158,7 @@ namespace brick {
        * are longer than a dash plus a single character, then you may
        * wish disable stacked short options by setting
        * allowStackedShortOptions to false.
-       * 
+       *
        * @param allowOptionishArguments This argument specifies how to
        * handle command line arguments which start with "-", but which
        * don't correspond to any of the specified options.  If
@@ -172,32 +172,32 @@ namespace brick {
                    bool allowOptionishArguments = false);
 
 
-      /** 
+      /**
        * This constructor specifies that if a malformed commandline is
        * parsed, the OptionParser should exit instead of throwing an
        * exception, optionally printing a usage message first.
-       * 
+       *
        * @param exitCode This argument specifies the exit code which
        * should be used to report a bad command line.
-       * 
+       *
        * @param handleMinusMinusHelp This argument specifies whether
        * the parser should automatically watch of "--help" arguments.
        * If handleMinusMinusHelp is true, the parser will print a
        * usage message and then exit(0) when a "--help" option is
        * encountered.
-       * 
+       *
        * @param printUsage This argument specifies whether, when a
        * malformed commandline is parsed, a usage message should be
        * printed before exiting with the specified exit code.
-       * 
+       *
        * @param allowExtraArguments Please refer to the documentation
        * for the default constructor to find a description of this
        * argument.
-       * 
+       *
        * @param allowStackedShortOptions Please refer to the
        * documentation for the default constructor to find a
        * description of this argument.
-       * 
+       *
        * @param allowOptionishArguments Please refer to the
        * documentation for the default constructor to find a
        * description of this argument.
@@ -216,12 +216,12 @@ namespace brick {
        */
       ~OptionParser();
 
-      
-      /** 
+
+      /**
        * Specifies summary text that will be printed as part of the
        * usage message after the program synopsis, but before any
        * option or argument descriptions.
-       * 
+       *
        * @param description This argument should briefly describe the
        * function of the program.
        */
@@ -230,30 +230,30 @@ namespace brick {
         m_description = description;
       }
 
-      
-      /** 
+
+      /**
        * This member function adds an option to be recognized during
        * command line parsing.
-       * 
+       *
        * @param name This argument specifies a unique name for the
        * option.  It will be used later to refer to this option when
        * checking parsing results.
-       * 
+       *
        * @param shortVersion This argument specifies a short version
        * of the option, such as "-p" or "-rgb".  Setting this argument
        * to "" indicates that this option does not have a short
        * version.
-       * 
+       *
        * @param longVersion This argument specifies a long version of
        * the option, such as "--do_calibration".  Setting this
        * argument to "" indicates that this option does not have a
        * long version.
-       * 
+       *
        * @param docString This argument specifies a breif description
        * for the option.  If the automatic documentation features of
        * the optionParser are not being used, then this argument can
        * be safely set to "".
-       * 
+       *
        * @param allowPartialMatch This argument specifies whether to
        * allow partial matches for the long version of this option.
        * For more information, please see the class comment for
@@ -266,27 +266,27 @@ namespace brick {
                 std::string const& docString,
                 bool allowPartialMatch = true);
 
-      
-      /** 
+
+      /**
        * This member function adds an option to be recognized during
        * command line parsing.  It is like the 5-argument version of
        * addOption(), but allows greater control over getUsage()
        * output.
-       * 
+       *
        * @param name This argument specifies a unique name for the
        * option.  It will be used later to refer to this option when
        * checking parsing results.
-       * 
+       *
        * @param shortVersion This argument specifies a short version
        * of the option, such as "-p" or "-rgb".  Setting this argument
        * to "" indicates that this option does not have a short
        * version.
-       * 
+       *
        * @param longVersion This argument specifies a long version of
        * the option, such as "--do_calibration".  Setting this
        * argument to "" indicates that this option does not have a
        * long version.
-       * 
+       *
        * @param docString This argument specifies a breif description
        * for the option.  If the automatic documentation features of
        * the optionParser are not being used, then this argument can
@@ -300,7 +300,7 @@ namespace brick {
        * argument name before the option names are alphabetized for in
        * getUsage() output.  Use it if you want to control the order
        * in which options are shown to the user.
-       * 
+       *
        * @param allowPartialMatch This argument specifies whether to
        * allow partial matches for the long version of this option.
        * For more information, please see the class comment for
@@ -315,39 +315,39 @@ namespace brick {
                 std::string const& prefix = "",
                 bool allowPartialMatch = true);
 
-      
-      /** 
+
+      /**
        * This member function adds an option which requires a value to
        * the list which will be recognized during command line
        * parsing.  It is like the 8-argument version of
        * addOption(), but allows greater control over getUsage()
        * output.
-       * 
+       *
        * @param name This argument specifies a unique name for the
        * option.  It will be used later to refer to this option when
        * checking parsing results.
-       * 
+       *
        * @param shortVersion This argument specifies a short version
        * of the option, such as "-p" or "-rgb".  Setting this argument
        * to "" indicates that this option does not have a short
        * version.
-       * 
+       *
        * @param longVersion This argument specifies a long version of
        * the option, such as "--do_calibration".  Setting this
        * argument to "" indicates that this option does not have a
        * long version.
-       * 
+       *
        * @param defaultValue This argument specifies the default value
        * for the option.  If the option is not found on the command
        * line, then the default value will be used.  If the default
        * value is not a std:string, it will be converted to a string
        * using a std::ostringstream and the stream output operator.
-       * 
+       *
        * @param docString This argument specifies a breif description
        * for the option.  If the automatic documentation features of
        * the optionParser are not being used, then this argument can
        * be safely set to "".
-       * 
+       *
        * @param sectionName This specifies in which section of the
        * getUsage() output this option should be described.  Set this
        * to the empty string if you are not using sections.
@@ -356,14 +356,14 @@ namespace brick {
        * argument name before the option names are alphabetized for in
        * getUsage() output.  Use it if you want to control the order
        * in which options are shown to the user.
-       * 
+       *
        * @param requireArgument This argument is currently not supported.
-       * 
+       *
        * @param allowPartialMatch This argument specifies whether to
        * allow partial matches for the long version of this option.
        * For more information, please see the class comment for
        * OptionParser.
-       * 
+       *
        * @param allowOptionishValue This argument specifies whether or
        * not the supplied value (on the command line) is permitted to
        * begin with the character '-'.
@@ -381,8 +381,8 @@ namespace brick {
                          bool allowPartialMatch = true,
                          bool allowOptionishValue = false);
 
-      
-      /** 
+
+      /**
        * This member function adds a named positional argument.  The
        * order in which positional arguments are specified is
        * important.  This is most clearly illustrated with an example:
@@ -406,12 +406,12 @@ namespace brick {
        * @param name This argument specifies a unique name for the
        * positional argument.  It will be used later to refer to this
        * argument when checking parsing results.
-       * 
+       *
        * @param docString This argument specifies a breif description
        * for the argument.  If the automatic documentation features of
        * the optionParser are not being used, then this argument can
        * be safely set to "".
-       * 
+       *
        * @param isRequired This argument specifies whether the absence
        * of this positional argument should cause the parsing of a
        * command line to fail.  If isRequired is set to false, and
@@ -426,7 +426,7 @@ namespace brick {
                             std::string const& defaultValue = "");
 
 
-      /** 
+      /**
        * Use this function to group options into sections.  This can
        * make it easier for the user to understand the text returned
        * by getUsage().
@@ -447,8 +447,8 @@ namespace brick {
       addSection(std::string const& sectionName,
                  std::string const& sectionDescription = "");
 
-      
-      /** 
+
+      /**
        * This member function is like getValue(std::string const&),
        * but attempts to convert the returned string to the specified
        * type.  It works for all built-in types, and for user-defined
@@ -459,13 +459,13 @@ namespace brick {
        * and calling exit() as appropriate.  If the conversion fails
        * and the non-exit code constructor was used, then getValue()
        * will throw a ConversionException.
-       * 
+       *
        * @param name This argument specifies the option or positional
        * argument whose value is to be queried.  If name does not
        * match the name argument of a previous call to addOption(),
        * addOptionWithValue(), or addPositionalArgument(), then the
        * conversion will fail.
-       * 
+       *
        * @return The return value is the value for the requested
        * option or positional argument.
        */
@@ -475,7 +475,7 @@ namespace brick {
       template<class Type>
 
 
-      /** 
+      /**
        * This member function is just like convertValue(std::string
        * const&), except that it allows the user to specify min and
        * max values for the converted value.  If argument clampResult
@@ -486,23 +486,23 @@ namespace brick {
        * command-line parsing had failed, depending on which
        * constructer arguments were specified.  Note that a converted
        * value equal to upperBound is acceptable.
-       * 
+       *
        * @param name This argument specifies the option or positional
        * argument whose value is to be queried.  If name does not
        * match the name argument of a previous call to addOption(),
        * addOptionWithValue(), or addPositionalArgument(), then the
        * conversion will fail.
-       * 
+       *
        * @param lowerBound This argument is the lowest acceptable
        * value for the converted value.
-       * 
+       *
        * @param upperBound This argument is the highest acceptable
        * value for the converted value.
-       * 
+       *
        * @param clampResult This argument specifies whether
        * out-of-range values should be clamped to the acceptable
        * range, or whether a ConversionException should be thrown.
-       * 
+       *
        * @return The return value is the converted value of the
        * requested command-line argument.
        */
@@ -513,7 +513,7 @@ namespace brick {
                    bool clampResult = true);
 
 
-      /** 
+      /**
        * This member function is like getValue(std::string const&, int),
        * but attempts to convert the returned string to the specified
        * type.  It works for all built-in types, and for user-defined
@@ -524,13 +524,13 @@ namespace brick {
        * and calling exit() as appropriate.  If the conversion fails
        * and the non-exit code constructor was used, then getValue()
        * will throw a ConversionException.
-       * 
+       *
        * @param name This argument is as described in the
        * documentation for getValue(std::string const&, int).
-       * 
+       *
        * @param valueIndex This argument is as described in the
        * documentation for getValue(std::string const&, int).
-       * 
+       *
        * @return The return value is the value for the requested
        * option or positional argument.
        */
@@ -539,7 +539,7 @@ namespace brick {
       convertValue(std::string const& name, int valueIndex);
 
 
-      /** 
+      /**
        * This member function is just like convertValue(std::string
        * const&, int), except that it allows the user to specify min
        * and max values for the converted value.  If argument
@@ -550,23 +550,23 @@ namespace brick {
        * command-line parsing had failed, depending on which
        * constructer arguments were specified.  Note that a converted
        * value equal to upperBound is acceptable.
-       * 
+       *
        * @param name This argument specifies the option or positional
        * argument whose value is to be queried.  If name does not
        * match the name argument of a previous call to addOption(),
        * addOptionWithValue(), or addPositionalArgument(), then the
        * conversion will fail.
-       * 
+       *
        * @param lowerBound This argument is the lowest acceptable
        * value for the converted value.
-       * 
+       *
        * @param upperBound This argument is the highest acceptable
        * value for the converted value.
-       * 
+       *
        * @param clampResult This argument specifies whether
        * out-of-range values should be clamped to the acceptable
        * range, or whether a ConversionException should be thrown.
-       * 
+       *
        * @return The return value is the converted value of the
        * requested command-line argument.
        */
@@ -578,16 +578,16 @@ namespace brick {
                    bool clampResult = true);
 
 
-      /** 
+      /**
        * This member function indicates how many times the specified
        * option or positional argument was specified in the most
        * recently parsed command line.  For positional arguments, the
        * return value is always 0 or 1.  For options, the return value
        * may be higher, since options may be specified more than once.
-       * 
+       *
        * @param name This argument is as described in the
        * documentation for getValue(std::string const&, int).
-       * 
+       *
        * @return The return value is the value specified on the
        * commandline for the indicated option or positional argument.
        * If the command line did not provide that option or argument,
@@ -597,7 +597,7 @@ namespace brick {
       getCount(std::string const& name) const;
 
 
-      /** 
+      /**
        * If constructor argument allowExtraArguments was set to true,
        * and if number of positional arguments on the most recently
        * parsed command line exceeds the number of named positional
@@ -605,7 +605,7 @@ namespace brick {
        * member function will return the extra positional arguments,
        * in the order they were found on the command line, as a vector
        * of strings.
-       * 
+       *
        * @return The return value is a vector of extra positional
        * arguments.
        */
@@ -613,7 +613,7 @@ namespace brick {
       getExtraPositionalArguments();
 
 
-      /** 
+      /**
        * This member function returns a formatted string describing
        * the available command line options, as specified using
        * addOption() and addOptionWithValue().  It is useful for
@@ -624,7 +624,7 @@ namespace brick {
        * getOptionsDescription() will be much more informative if the
        * docString arguments of the addOption() and
        * addOptionWithValue() calls were not empty.
-       * 
+       *
        * @return The return value is a formatted string describing the
        * configured options.
        */
@@ -632,7 +632,7 @@ namespace brick {
       getOptionsDescription(std::string const& sectionName = "");
 
 
-      /** 
+      /**
        * This member function returns a formatted string suitable for
        * a usage message.  It includes the string returned by
        * getOptionsDescription(), so if you call getUsage(), you
@@ -642,14 +642,14 @@ namespace brick {
        * getOptionsDescription() will be much more informative if the
        * docString arguments of addOption(), addOptionWithValue(), and
        * addPositionalArgument() calls were not empty.
-       * 
+       *
        * @return The return value is a formatted usage message.
        */
       std::string
       getUsage();
 
 
-      /** 
+      /**
        * Following a successful parse of a command line, this member
        * function returns the requested option value or positional
        * argument value as a string.  If an option was specified more
@@ -659,13 +659,13 @@ namespace brick {
        * with the int argument set to -1.  If name does not match any
        * specified option or positional argument, then a
        * ValueException will be thrown.
-       * 
+       *
        * @param name This argument specifies the option or positional
        * argument whose value is to be queried.  If name does not
        * match the name argument of a previous call to addOption(),
        * addOptionWithValue(), or addPositionalArgument(), then the
        * returned value will be the empty string.
-       * 
+       *
        * @return The return value is the value for the requested
        * option or positional argument, or the empty string if no such
        * value was specified on the most recently parsed command line.
@@ -674,18 +674,18 @@ namespace brick {
       getValue(std::string const& name);
 
 
-      /** 
+      /**
        * Following a successful parse of a command line, this member
        * function returns the (valueIndex)th value of the requested
        * option or positional argument, where 0 means first, 1 means
        * second, etc.
-       * 
+       *
        * @param name This argument specifies the option or positional
        * argument whose value is to be queried.  If name does not
        * match the name argument of a previous call to addOption(),
        * addOptionWithValue(), or addPositionalArgument(), then the
        * returned value will be the empty string.
-       * 
+       *
        * @param valueIndex This argument specifies which occurrence of
        * the option/argument is being queried.  If valueIndex is set
        * to -1, than the last occurrence of the option will be
@@ -701,7 +701,7 @@ namespace brick {
       getValue(std::string const& name, int valueIndex);
 
 
-      /** 
+      /**
        * This member function should be called after all calls to
        * addOption(), addOptionWithValue(), and
        * addPositionalArgument() are completed in order to parse a
@@ -717,37 +717,37 @@ namespace brick {
        * allowMinusMinusHelp constructor argument was specified, and a
        * "--help" option is encountered, then the OptionParser
        * instance will print a usage message and then call exit(0).
-       * 
+       *
        * @param argc This argument can be taken directly from the argc
        * argument to main().
-       * 
+       *
        * @param argv This argument can be taken directly from the argv
        * argument to main().
        */
       void
       parseCommandLine(int argc, const char* argv[]);
-    
 
-      /** 
+
+      /**
        * This member function is identical to parseCommandLine(int
        * argc, const char* argv[]), except that it does not require a
        * const qualifier on its second argument.
-       * 
+       *
        * @param argc This argument can be taken directly from the argc
        * argument to main().
-       * 
+       *
        * @param argv This argument can be taken directly from the argv
        * argument to main().
        */
       void
       parseCommandLine(int argc, char* argv[]);
-    
+
 
     private:
 
       // Private typedefs.
       typedef std::map<std::string, OptionDescription> OptionMap;
-      
+
 
       // Private enum for specifying how to handle illegal commandlines.
       enum ErrorBehavior {ExitOnError, ThrowOnError, UsageAndExitOnError};
@@ -760,22 +760,22 @@ namespace brick {
                             size_t& typedLength,
                             bool& isShortMatch);
 
-      
+
       void
       recordPositionalArgument(std::string const& argument);
 
-      
+
       // Depending on constructor arguments, either exit, or print usage
       // and exit, or do nothing.
       void
       usageAndExitIfAppropriate(std::string const& what);
-      
+
       void
       usageAndExitIfAppropriate(brick::common::Exception const& ee) {
         this->usageAndExitIfAppropriate(std::string(ee.what()));
       }
 
-      
+
 
       // Private data members.
       bool m_allowExtraArguments;
@@ -812,7 +812,7 @@ namespace brick {
 
   namespace utilities {
 
-    
+
     // This member function adds an option which requires a value to
     // the list which will be recognized during command line
     // parsing.  This template is specialized for std::string.
@@ -830,10 +830,10 @@ namespace brick {
                                     bool allowPartialMatch,
                                     bool allowOptionishValue);
 
-    
+
     // This member function adds an option which requires a value to
     // the list which will be recognized during command line
-    // parsing.  
+    // parsing.
     template<class Type>
     void
     OptionParser::
@@ -856,7 +856,7 @@ namespace brick {
         allowOptionishValue);
     }
 
-    
+
     template<class Type>
     Type
     OptionParser::
@@ -876,8 +876,8 @@ namespace brick {
                     message.str().c_str());
       }
     }
-    
-    
+
+
     template<class Type>
     Type
     OptionParser::
@@ -903,15 +903,15 @@ namespace brick {
       }
       return result;
     }
-    
-    
+
+
     template<class Type>
     Type
     OptionParser::
     convertValue(std::string const& name, int valueIndex)
     {
       std::string resultString = this->getValue(name, valueIndex);
-      
+
       try {
         return convertString<Type>(resultString);
       } catch(ConversionException&) {
@@ -951,7 +951,7 @@ namespace brick {
       }
       return result;
     }
-    
+
   } // namespace utilities
 
 } // namespace brick

@@ -46,8 +46,8 @@ namespace brick {
     public:
 
       typedef Float_type FloatType;
-      
-      /** 
+
+      /**
        * The default constructor currently does nothing.
        */
       CameraIntrinsics() {};
@@ -60,30 +60,30 @@ namespace brick {
       ~CameraIntrinsics() {}
 
 
-      /** 
+      /**
        * This function should be overridden by derived classes so that
        * it takes points in 3D camera coordinates and projects them
        * into image pixel coordinates.
-       * 
+       *
        * @param point This argument is the 3D point to be projected.
-       * 
+       *
        * @return The return value is the resulting pixel coordinate.
        */
       virtual brick::numeric::Vector2D<FloatType>
       project(const brick::numeric::Vector3D<FloatType>& point) const = 0;
 
 
-      /** 
+      /**
        * This function returns a ray in 3D camera coordinates starting
        * at the camera focus, and passing through the center of the
        * specified pixel.
-       * 
+       *
        * @param pixelPosition This argument is the pixel through which
        * the ray should pass.
-       * 
+       *
        * @param normalize This argument indicates whether the ray
        * should be normalized to unit length before being returned.
-       * 
+       *
        * @param maxAzimuthTangent For some types of camera intrinsics,
        * the reverse projection does not have a unique solution.  In
        * these types of cameras, it may be necessary to supply limits
@@ -95,7 +95,7 @@ namespace brick {
        * this argument to 1.0 (which is tangent(45degrees)).  Set this
        * argument and the next one less than or equal to zero to disable
        * this check.
-       * 
+       *
        * @param maxElevationTangent For some types of camera intrinsics,
        * the reverse projection does not have a unique solution.  In
        * these types of cameras, it may be necessary to supply limits
@@ -118,17 +118,17 @@ namespace brick {
         const;
 
 
-      /** 
+      /**
        * This function should be overridden by derived classes to
        * return a ray in 3D camera coordinates starting at the camera
        * focus and passing through the specified pixel position.
-       * 
+       *
        * @param pixelPosition This argument is the point in pixel
        * coordinates through which the returned ray should pass.
-       * 
+       *
        * @param normalize This argument indicates whether the ray
        * should be normalized to unit length before being returned.
-       * 
+       *
        * @param maxAzimuthTangent For some types of camera intrinsics,
        * the reverse projection does not have a unique solution.  In
        * these types of cameras, it may be necessary to supply limits
@@ -140,7 +140,7 @@ namespace brick {
        * this argument to 1.0 (which is tangent(45degrees)).  Set this
        * argument and the next one less than or equal to zero to disable
        * this check.
-       * 
+       *
        * @param maxElevationTangent For some types of camera intrinsics,
        * the reverse projection does not have a unique solution.  In
        * these types of cameras, it may be necessary to supply limits
@@ -168,7 +168,7 @@ namespace brick {
     };
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 
@@ -201,7 +201,7 @@ namespace brick {
     }
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_CAMERAINTRINSICS_HH */

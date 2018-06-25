@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/numeric/test/maxRecorderTest.cpp
-* 
+*
 * Source file defining maxRecorderTest class.
 *
 * Copyright (C) 2005, 2011 David LaRose, dlr@cs.cmu.edu
@@ -38,7 +38,7 @@ namespace brick {
       void testReset();
 
     private:
-    
+
     }; // class MaxRecorderTest
 
 
@@ -71,10 +71,10 @@ namespace brick {
 
       MaxRecorder<unsigned int, int> maxRecorder1;
       BRICK_TEST_ASSERT(maxRecorder1.getMaximum() == 0);
-      BRICK_TEST_ASSERT(maxRecorder1.getPayload() == 0);      
+      BRICK_TEST_ASSERT(maxRecorder1.getPayload() == 0);
     }
 
-  
+
     void
     MaxRecorderTest::
     testConstructor__Type__Payload()
@@ -109,7 +109,7 @@ namespace brick {
               BRICK_TEST_ASSERT(maxRecorder0.getMax() == ii);
               BRICK_TEST_ASSERT(maxRecorder0.getMaximum() == ii);
               BRICK_TEST_ASSERT(maxRecorder0.getPayload() == jj);
-            }            
+            }
           }
           for(kk = kBound; kk >= -kBound; --kk) {
             unsigned int payload = static_cast<unsigned int>(kk + 2 * kBound);
@@ -122,13 +122,13 @@ namespace brick {
               BRICK_TEST_ASSERT(maxRecorder0.getMax() == ii);
               BRICK_TEST_ASSERT(maxRecorder0.getMaximum() == ii);
               BRICK_TEST_ASSERT(maxRecorder0.getPayload() == jj);
-            }            
+            }
           }
         }
       }
     }
 
-  
+
     void
     MaxRecorderTest::
     testGetMax()
@@ -136,7 +136,7 @@ namespace brick {
       // Already tested in testTest().
     }
 
-  
+
     void
     MaxRecorderTest::
     testGetMaximum()
@@ -144,7 +144,7 @@ namespace brick {
       // Already tested in testTest().
     }
 
-  
+
     void
     MaxRecorderTest::
     testGetPayload()
@@ -152,7 +152,7 @@ namespace brick {
       // Already tested in testTest().
     }
 
-  
+
     void
     MaxRecorderTest::
     testReset()
@@ -169,13 +169,13 @@ namespace brick {
           MaxRecorder<unsigned int, int> maxRecorder1(ii, int(jj));
           maxRecorder1.reset();
           BRICK_TEST_ASSERT(maxRecorder1.getMaximum() == 0);
-          BRICK_TEST_ASSERT(maxRecorder1.getPayload() == 0);      
+          BRICK_TEST_ASSERT(maxRecorder1.getPayload() == 0);
         }
       }
     }
 
   } // namespace numeric
-  
+
 } // namespace brick
 
 

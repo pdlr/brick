@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file inputStreamTest.cc
-* 
+*
 * Source file defining tests for exception trace code.
 *
 * Copyright (C) 2005 David LaRose, dlr@cs.cmu.edu
@@ -139,7 +139,7 @@ namespace brick {
       }
       return true;
     }
-    
+
   } // namespace common
 
 } // namespace brick

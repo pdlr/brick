@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file traceableTest.cc
-* 
+*
 * Source file defining tests for exception trace code.
 *
 * Copyright (C) 2005-2011 David LaRose, dlr@cs.cmu.edu
@@ -38,7 +38,7 @@ namespace {
     }
   }
 
-  
+
   void
   traceFunction(size_t count, const std::string& message, size_t& lineNumber)
   {
@@ -57,7 +57,7 @@ namespace {
   testEllipsis()
   {
     std::cout << "Testing ellipsis..." << std::endl;
-    
+
     size_t lineNumber = 0;
     std::ostringstream messageStream;
     for(size_t count = 0; count < BRICK_COMMON_TRACE_MESSAGE_LENGTH;
@@ -104,7 +104,7 @@ namespace {
   testLongTrace()
   {
     std::cout << "Testing long trace..." << std::endl;
-    
+
     size_t lineNumber = 0;
     std::ostringstream messageStream;
     for(size_t count = 0; count < BRICK_COMMON_TRACE_MESSAGE_LENGTH;
@@ -129,7 +129,7 @@ namespace {
           << "  (" << fileName << ", " << lineNumber << "): traceFunction()\n"
           << "    (arg0): " << count << "\n"
           << "    (arg1): ";
-        size_t remainingLength = 
+        size_t remainingLength =
           (BRICK_COMMON_TRACE_MESSAGE_LENGTH
            - subMessageStream.str().size()
            - ellipsis.size());

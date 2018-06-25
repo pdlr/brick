@@ -21,16 +21,16 @@ namespace brick {
   namespace computerVision {
 
 #if 0  /* Here's the interface I think we ultimately want. */
-    
+
     class ImageReader {
     public:
-      
+
       /**
        * Constructor.
        */
       ImageReader();
-      
-      
+
+
       /**
        * Destructor.
        */
@@ -49,7 +49,7 @@ namespace brick {
       template<ImageFormat format>
       Image<format>
       getImage() {return Image<format>();}
-      
+
     private:
 
       bool
@@ -60,26 +60,26 @@ namespace brick {
 
       bool
       readPPM(std::string const& fileName);
-      
+
     };
 
 #endif
 
     /* ================ Non-member function declarations. ================ */
-  
+
     Image<GRAY8>
     readPGM8(const std::string& fileName);
 
-  
+
     Image<GRAY8>
     readPGM8(const std::string& fileName,
              std::string& commentString);
 
-  
+
     Image<GRAY16>
     readPGM16(const std::string& fileName);
 
-  
+
     Image<RGB8>
     readPPM8(const std::string& fileName);
 
@@ -87,19 +87,19 @@ namespace brick {
     Image<RGB8>
     readPPM8(const std::string& fileName,
              std::string& commentString);
-    
-  
+
+
     void
     writePGM8(const std::string& fileName,
               const Image<GRAY8>& outputImage,
               const std::string& comment = "");
-  
-  
+
+
     void
     writePGM16(const std::string& fileName,
                const Image<GRAY16>& outputImage,
                const std::string& comment = "");
-  
+
 
     void
     writePPM8(const std::string& fileName,
@@ -111,21 +111,21 @@ namespace brick {
     writePPM16(const std::string& fileName,
                const Image<RGB16>& outputImage,
                const std::string& comment = "");
-    
-    
+
+
 #ifndef HAVE_LIBPNG
 #define HAVE_LIBPNG 1
 #endif
-    
+
 #if HAVE_LIBPNG
 
-    /** 
+    /**
      * WARNING: This routine may not stick around for long.
-     * 
+     *
      * @param fileName This argument ...
-     * 
+     *
      * @param commentString This argument is currently ignored.
-     * 
+     *
      * @return The return value ...
      */
     template <ImageFormat FORMAT>
@@ -133,14 +133,14 @@ namespace brick {
     readPNG(const std::string& fileName,
             std::string& commentString);
 
-    
-    /** 
+
+    /**
      * WARNING: This routine may not stick around for long.
-     * 
+     *
      * @param fileName This argument ...
-     * 
+     *
      * @param commentString This argument is currently ignored.
-     * 
+     *
      * @return The return value ...
      */
     template <ImageFormat FORMAT>
@@ -151,13 +151,13 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * WARNING: This routine may not stick around for long.
-     * 
+     *
      * @param fileName This argument ...
-     * 
+     *
      * @param outputImage This argument ...
-     * 
+     *
      * @param comment This argument is currently ignored.
      */
     template<ImageFormat Format>
@@ -165,7 +165,7 @@ namespace brick {
     writePNG(const std::string& fileName,
              const Image<Format>& outputImage,
              const std::string& comment = "");
-    
+
 #endif /* #if HAVE_LIBPNG */
 
 
@@ -182,7 +182,7 @@ namespace brick {
              bool rawFormat=true,
              int bitsPerPixel=8);
 
-  
+
     template<class Type>
     void
     writePPM(const std::string& fileName,
@@ -192,8 +192,8 @@ namespace brick {
              bool normalize=false,
              bool rawFormat=true,
              int bitsPerPixel=8);
-    
-      
+
+
   } // namespace computerVision
 
 } // namespace brick

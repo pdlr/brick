@@ -15,7 +15,7 @@
 
 // This file is included by array2D.hh, and should not be directly included
 // by user code, so no need to include array2D.hh here.
-// 
+//
 // #include <brick/numeric/array2D.hh>
 
 #include <algorithm>
@@ -30,7 +30,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     // Static constant describing how the string representation of an
     // Array2D should start.
     template <class Type>
@@ -120,7 +120,7 @@ namespace brick {
       this->allocate(arrayRows, arrayColumns, rowStep);
     }
 
-  
+
     // Construct from an initialization string.
     template <class Type>
     Array2D<Type>::
@@ -144,7 +144,7 @@ namespace brick {
         message << "Couldn't parse input string: \"" << inputString << "\".";
         BRICK_THROW(common::ValueException,
                     "Array2D::Array2D(const std::string&)",
-                    message.str().c_str());                 
+                    message.str().c_str());
       }
 
       // If all went well, copy into *this.
@@ -174,7 +174,7 @@ namespace brick {
       // Empty.
     }
 
-  
+
     /* Here's a constructor for getting image data into the array */
     /* cheaply. */
     template <class Type>
@@ -192,7 +192,7 @@ namespace brick {
       // Empty
     }
 
-  
+
     // Construct an array around external data that was allocated by
     // an Array?D instance.
     template <class Type>
@@ -227,8 +227,8 @@ namespace brick {
     {
       // Empty.
     }
-    
-  
+
+
     // Construct an array using an initializer list.
     template <class Type>
     Array2D<Type>::
@@ -271,7 +271,7 @@ namespace brick {
       }
     }
 
-    
+
     template <class Type>
     Array2D<Type>::
     ~Array2D()
@@ -279,7 +279,7 @@ namespace brick {
       deAllocate();
     }
 
-  
+
     template <class Type>
     inline void Array2D<Type>::
     checkDimension(size_t
@@ -316,7 +316,7 @@ namespace brick {
       return newArray;
     }
 
-    
+
     template <class Type> template <class Type2>
     void Array2D<Type>::
     copy(const Array2D<Type2>& source)
@@ -331,7 +331,7 @@ namespace brick {
       }
       if(m_size != 0) {
         if(this->isContiguous() && source.isContiguous()) {
-          this->copy(source.data());          
+          this->copy(source.data());
         } else {
           for(unsigned int rr = 0; rr < this->rows(); ++rr) {
             this->getRow(rr).copy(source.getRow(rr));
@@ -351,7 +351,7 @@ namespace brick {
       }
       if(this->isContiguous()) {
         std::transform(dataPtr, dataPtr + m_size, m_dataPtr,
-                       StaticCastFunctor<Type2, Type>());        
+                       StaticCastFunctor<Type2, Type>());
       } else {
         for(unsigned int rr = 0; rr < this->rows(); ++rr) {
           this->getRow(rr).copy(dataPtr);
@@ -395,7 +395,7 @@ namespace brick {
                            this->getRowStep());
     }
 
-    
+
     template <class Type>
     Array1D<Type> Array2D<Type>::
     getRow(size_t index)
@@ -405,7 +405,7 @@ namespace brick {
                            m_dataPtr + (index * this->m_rowStep));
     }
 
-  
+
     template <class Type>
     const Array1D<Type> Array2D<Type>::
     getRow(size_t index) const
@@ -430,7 +430,7 @@ namespace brick {
       return Array1D<Type>(m_size, m_dataPtr);
     }
 
-    
+
     template <class Type>
     Array1D<Type> Array2D<Type>::
     ravel()
@@ -461,7 +461,7 @@ namespace brick {
       if (!inputStream){
         return inputStream;
       }
-    
+
       // It's a lot easier to use a try block than to be constantly
       // testing whether the IO has succeeded, so we tell inputStream to
       // complain if anything goes wrong.
@@ -475,7 +475,7 @@ namespace brick {
 
         // Skip any preceding whitespace.
         inputStream >> common::Expect("", flags);
-              
+
         // We won't require the input format to start with "Array2D(", but
         // if it does we read it here.
         bool foundIntro = false;
@@ -510,7 +510,7 @@ namespace brick {
             inputStream.clear(std::ios_base::failbit);
           }
         }
-    
+
         // If we found an intro, we expect the corresponding outro.
         if(foundIntro) {
           inputStream >> common::Expect(&(ioOutro()), 1, flags);
@@ -540,7 +540,7 @@ namespace brick {
       inputStream.exceptions(oldExceptionState);
       return inputStream;
     }
-  
+
 
     template <class Type>
     void Array2D<Type>::
@@ -571,7 +571,7 @@ namespace brick {
     void Array2D<Type>::
     reshape(int arrayRows, int arrayColumns, int rowStep)
     {
-      // If one axis is specified as -1, it will be automatically 
+      // If one axis is specified as -1, it will be automatically
       // chosen to match the number of elements in the array.
       if((arrayRows == -1) && (arrayColumns != 0)) {
         arrayRows = static_cast<int>(this->size()) / arrayColumns;
@@ -604,7 +604,7 @@ namespace brick {
       m_rowStep = rowStep;
     }
 
-  
+
     template <class Type>
     Array1D<size_t> Array2D<Type>::
     shape() const
@@ -654,7 +654,7 @@ namespace brick {
       return *this;
     }
 
-  
+
     template <class Type>
     Array2D<Type>& Array2D<Type>::
     operator=(const Array2D<Type>& source)
@@ -695,7 +695,7 @@ namespace brick {
         for(unsigned int rr = 0; rr < this->rows(); ++rr) {
           this->getRow(rr) += arg.getRow(rr);
         }
-      }      
+      }
       return *this;
     }
 
@@ -721,7 +721,7 @@ namespace brick {
         for(unsigned int rr = 0; rr < this->rows(); ++rr) {
           this->getRow(rr) -= arg.getRow(rr);
         }
-      }      
+      }
       return *this;
     }
 
@@ -747,7 +747,7 @@ namespace brick {
         for(unsigned int rr = 0; rr < this->rows(); ++rr) {
           this->getRow(rr) *= arg.getRow(rr);
         }
-      }      
+      }
       return *this;
     }
 
@@ -773,7 +773,7 @@ namespace brick {
         for(unsigned int rr = 0; rr < this->rows(); ++rr) {
           this->getRow(rr) /= arg.getRow(rr);
         }
-      }      
+      }
       return *this;
     }
 
@@ -790,7 +790,7 @@ namespace brick {
         for(unsigned int rr = 0; rr < this->rows(); ++rr) {
           this->getRow(rr) *= arg;
         }
-      }      
+      }
       return *this;
     }
 
@@ -807,7 +807,7 @@ namespace brick {
         for(unsigned int rr = 0; rr < this->rows(); ++rr) {
           this->getRow(rr) /= arg;
         }
-      }      
+      }
       return *this;
     }
 
@@ -824,7 +824,7 @@ namespace brick {
         for(unsigned int rr = 0; rr < this->rows(); ++rr) {
           this->getRow(rr) += arg;
         }
-      }      
+      }
       return *this;
     }
 
@@ -841,7 +841,7 @@ namespace brick {
         for(unsigned int rr = 0; rr < this->rows(); ++rr) {
           this->getRow(rr) -= arg;
         }
-      }      
+      }
       return *this;
     }
 
@@ -853,11 +853,11 @@ namespace brick {
     {
       for(unsigned int rr = 0; rr < this->rows(); ++rr) {
         this->getRow(rr) <<= numberOfBits;
-      }      
+      }
       return *this;
     }
 
-    
+
     template <class Type>
     Array2D<Type>&
     Array2D<Type>::
@@ -865,11 +865,11 @@ namespace brick {
     {
       for(unsigned int rr = 0; rr < this->rows(); ++rr) {
         this->getRow(rr) >>= numberOfBits;
-      }      
+      }
       return *this;
     }
 
-    
+
     template <class Type>
     Array2D<Type> Array2D<Type>::
     transpose() const
@@ -897,7 +897,7 @@ namespace brick {
     {
       // Make sure to release any shared resources.
       this->deAllocate();
-      
+
       // Check array size.  It doesn't make sense to allocate memory
       // for a zero size array.
       m_rows = arrayRows;
@@ -1023,12 +1023,12 @@ namespace brick {
           std::transform(inRow.begin(), inRow.end(), outRow.begin(),
                          SquareRootFunctor<Type>());
         }
-      }      
-        
+      }
+
       return result;
     }
 
-     
+
     template <class Type>
     Array2D<Type> operator+(const Array2D<Type>& array0,
                             const Array2D<Type>& array1)
@@ -1059,8 +1059,8 @@ namespace brick {
       }
       return result;
     }
-    
-      
+
+
     template <class Type>
     Array2D<Type> operator-(const Array2D<Type>& array0,
                             const Array2D<Type>& array1)
@@ -1163,7 +1163,7 @@ namespace brick {
         for(unsigned int row = 0; row < array0.rows(); ++row) {
           Array1D<Type> inRow = array0.getRow(row);
           Array1D<Type> outRow = result.getRow(row);
-          std::transform(inRow.begin(), inRow.end(), outRow.begin(), 
+          std::transform(inRow.begin(), inRow.end(), outRow.begin(),
                          std::bind2nd(std::plus<Type>(), scalar));
         }
       }
@@ -1182,7 +1182,7 @@ namespace brick {
         for(unsigned int row = 0; row < array0.rows(); ++row) {
           Array1D<Type> inRow = array0.getRow(row);
           Array1D<Type> outRow = result.getRow(row);
-          std::transform(inRow.begin(), inRow.end(), outRow.begin(), 
+          std::transform(inRow.begin(), inRow.end(), outRow.begin(),
                          std::bind2nd(std::minus<Type>(), scalar));
         }
       }
@@ -1201,7 +1201,7 @@ namespace brick {
         for(unsigned int row = 0; row < array0.rows(); ++row) {
           Array1D<Type> inRow = array0.getRow(row);
           Array1D<Type> outRow = result.getRow(row);
-          std::transform(inRow.begin(), inRow.end(), outRow.begin(), 
+          std::transform(inRow.begin(), inRow.end(), outRow.begin(),
                          std::bind2nd(std::multiplies<Type>(), scalar));
         }
       }
@@ -1220,7 +1220,7 @@ namespace brick {
         for(unsigned int row = 0; row < array0.rows(); ++row) {
           Array1D<Type> inRow = array0.getRow(row);
           Array1D<Type> outRow = result.getRow(row);
-          std::transform(inRow.begin(), inRow.end(), outRow.begin(), 
+          std::transform(inRow.begin(), inRow.end(), outRow.begin(),
                          std::bind2nd(std::divides<Type>(), scalar));
         }
       }
@@ -1254,14 +1254,14 @@ namespace brick {
         for(unsigned int row = 0; row < array0.rows(); ++row) {
           Array1D<Type> inRow = array0.getRow(row);
           Array1D<bool> outRow = result.getRow(row);
-          std::transform(inRow.begin(), inRow.end(), outRow.begin(), 
+          std::transform(inRow.begin(), inRow.end(), outRow.begin(),
                          std::bind2nd(std::equal_to<Type>(), arg));
         }
       }
       return result;
     }
 
-    
+
     // Elementwise comparison of an Array2D with another array.
     template <class Type>
     Array2D<bool>
@@ -1285,7 +1285,7 @@ namespace brick {
       return result;
     }
 
-  
+
     template <class Type>
     Array2D<bool> operator>(const Array2D<Type>& array0, Type arg)
     {
@@ -1298,7 +1298,7 @@ namespace brick {
         for(unsigned int row = 0; row < array0.rows(); ++row) {
           Array1D<Type> inRow = array0.getRow(row);
           Array1D<bool> outRow = result.getRow(row);
-          std::transform(inRow.begin(), inRow.end(), outRow.begin(), 
+          std::transform(inRow.begin(), inRow.end(), outRow.begin(),
                          std::bind2nd(std::greater<Type>(), arg));
         }
       }
@@ -1317,7 +1317,7 @@ namespace brick {
         for(unsigned int row = 0; row < array0.rows(); ++row) {
           Array1D<Type> inRow = array0.getRow(row);
           Array1D<bool> outRow = result.getRow(row);
-          std::transform(inRow.begin(), inRow.end(), outRow.begin(), 
+          std::transform(inRow.begin(), inRow.end(), outRow.begin(),
                          std::bind2nd(std::less<Type>(), arg));
         }
       }
@@ -1336,7 +1336,7 @@ namespace brick {
         for(unsigned int row = 0; row < array0.rows(); ++row) {
           Array1D<Type> inRow = array0.getRow(row);
           Array1D<bool> outRow = result.getRow(row);
-          std::transform(inRow.begin(), inRow.end(), outRow.begin(), 
+          std::transform(inRow.begin(), inRow.end(), outRow.begin(),
                          std::bind2nd(std::greater_equal<Type>(), arg));
         }
       }
@@ -1355,7 +1355,7 @@ namespace brick {
         for(unsigned int row = 0; row < array0.rows(); ++row) {
           Array1D<Type> inRow = array0.getRow(row);
           Array1D<bool> outRow = result.getRow(row);
-          std::transform(inRow.begin(), inRow.end(), outRow.begin(), 
+          std::transform(inRow.begin(), inRow.end(), outRow.begin(),
                          std::bind2nd(std::less_equal<Type>(), arg));
         }
       }
@@ -1380,22 +1380,21 @@ namespace brick {
             stream << "         [";
           }
         }
-      }	
+      }
       stream << "]])";
       stream.flush();
       return stream;
     }
 
-  
+
     template <class Type>
     std::istream& operator>>(std::istream& inputStream, Array2D<Type>& array0)
     {
       return array0.readFromStream(inputStream);
     }
-  
+
   } // namespace numeric
 
 } // namespace brick
 
 #endif  /* #ifndef BRICK_NUMERIC_ARRAY2D_IMPL_HH */
-

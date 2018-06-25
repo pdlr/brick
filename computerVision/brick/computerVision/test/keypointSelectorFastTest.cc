@@ -24,8 +24,8 @@ namespace brick {
 
   namespace computerVision {
 
-    
-    // This test is copied 
+
+    // This test is copied
     class KeypointSelectorFastTest
       : public brick::test::TestFixture<KeypointSelectorFastTest> {
 
@@ -42,11 +42,11 @@ namespace brick {
 
       // Legacy functions.
       void exerciseKeypointSelectorFast(std::string const& fileName);
-        
+
     private:
 
       double m_defaultTolerance;
-      
+
     }; // class KeypointSelectorFastTest
 
 
@@ -113,7 +113,7 @@ namespace brick {
         BRICK_TEST_ASSERT(keypoints[ii].column == points[ii].getColumn());
         BRICK_TEST_ASSERT(keypoints[ii].isPositive == ((ii % 2) != 0));
         for(unsigned int jj = 0; jj < 16; ++jj) {
-          common::UnsignedInt8 pixelValue = 
+          common::UnsignedInt8 pixelValue =
             inputImage(points[ii].getRow() + bressenhamRows[jj],
                        points[ii].getColumn() + bressenhamColumns[jj]);
           BRICK_TEST_ASSERT(keypoints[ii].featureVector[jj] == pixelValue);
@@ -128,7 +128,7 @@ namespace brick {
     {
       Image<GRAY8> inputImage;
       if(utilities::splitExtension(fileName).second == ".pgm") {
-        inputImage = readPGM8(fileName);    
+        inputImage = readPGM8(fileName);
       } else {
         Image<RGB8> colorImage = readPPM8(fileName);
         inputImage = convertColorspace<GRAY8>(colorImage);
@@ -183,7 +183,7 @@ int main(/* int argc, char** argv */)
   bool result = currentTest.run();
 
   currentTest.exerciseKeypointSelectorFast("testImagePGM0.pgm");
-  
+
   return (result ? 0 : 1);
 }
 
@@ -192,7 +192,7 @@ int main(/* int argc, char** argv */)
 namespace {
 
   brick::computerVision::KeypointSelectorFastTest currentTest;
-  
+
 }
 
 #endif

@@ -16,7 +16,7 @@
 
 // This file is included by transform3DTo2D.hh, and should not be directly
 // included by user code, so no need to include transform3DTo2D.hh here.
-// 
+//
 // #include <brick/numeric/transform3DTo2D.hh>
 
 #include <brick/common/expect.hh>
@@ -24,7 +24,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     // Default constructor
     template <class Type>
     Transform3DTo2D<Type>::
@@ -37,7 +37,7 @@ namespace brick {
     }
 
 
-    // Build a Transform3DTo2D instance by explicitly setting element 
+    // Build a Transform3DTo2D instance by explicitly setting element
     // values as if setting the elements of a 3x4 transformation matrix.
     template <class Type>
     inline
@@ -53,7 +53,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // Build a Transform3DTo2D from a homogeneous 3x4 matrix.
     template <class Type>
     Transform3DTo2D<Type>::
@@ -95,9 +95,9 @@ namespace brick {
     getFunctor() const
     {
       return Transform3DTo2DFunctor<Type>(*this);
-    }    
-  
-  
+    }
+
+
     // Change the Transform3DTo2D value by explicitly setting element values
     // as if setting the elements of a 4x4 transformation matrix:
     //    [[a00, a01, a02, a03],
@@ -169,7 +169,7 @@ namespace brick {
       return m_23; // Dummy return to keep the compiler happy.
     }
 
-    
+
     // This operator returns one element from the matrix
     // representation of the coordinate transform by value.
     template <class Type>
@@ -218,7 +218,7 @@ namespace brick {
       return m_23; // Dummy return to keep the compiler happy.
     }
 
-    
+
     // This operator takes a point and applies the coordinate
     // transform, returning the result.
     template <class Type>
@@ -232,7 +232,7 @@ namespace brick {
         m_20 * vector0.x() + m_21 * vector0.y() + m_22 * vector0.z() + m_23);
     }
 
-    
+
     // The assignment operator simply duplicates its argument.
     template <class Type>
     Transform3DTo2D<Type>&
@@ -250,7 +250,7 @@ namespace brick {
       return *this;
     }
 
-    
+
     /* ================ Non member functions below ================ */
 
 
@@ -407,7 +407,7 @@ namespace brick {
       return stream;
     }
 
-    
+
     template <class Type>
     std::istream&
     operator>>(std::istream& stream, Transform3DTo2D<Type>& transform0)
@@ -416,7 +416,7 @@ namespace brick {
       if (!stream){
         return stream;
       }
-    
+
       // It's a lot easier to use a try block than to be constantly
       // testing whether the IO has succeeded, so we tell stream to
       // complain if anything goes wrong.
@@ -430,7 +430,7 @@ namespace brick {
 
         // Skip any preceding whitespace.
         stream >> common::Expect("", flags);
-      
+
         // Read the "Transform3DTo2D(" part.
         stream >> common::Expect("Transform3D(", flags);
 
@@ -452,10 +452,10 @@ namespace brick {
 
         // And update the transform.
         transform0.setTransform(inputValues[0], inputValues[1],
-                                inputValues[2], inputValues[3], 
-                                inputValues[4], inputValues[5], 
-                                inputValues[6], inputValues[7], 
-                                inputValues[8], inputValues[9], 
+                                inputValues[2], inputValues[3],
+                                inputValues[4], inputValues[5],
+                                inputValues[6], inputValues[7],
+                                inputValues[8], inputValues[9],
                                 inputValues[10], inputValues[11]);
       } catch(std::ios_base::failure) {
         // Empty

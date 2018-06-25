@@ -19,7 +19,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     /**
      ** The Index2D class represents a 2 dimensional index in (row,
      ** column) format, such as (0, 1), (23, 7), or (-4, 2).  An
@@ -48,27 +48,27 @@ namespace brick {
     class Index2D {
     public:
 
-      /** 
+      /**
        * The default constructor initializes to (0, 0).
        */
       Index2D()
         : m_column(0), m_row(0) {}
-    
 
-      /** 
+
+      /**
        * This constructor explicitly sets the indices.
-       * 
+       *
        * @param uIndex The first component of the Index2D.
-       * 
+       *
        * @param uIndex The second component of the Index2D.
        */
       Index2D(int row, int column)
         : m_column(column), m_row(row) {}
 
 
-      /** 
+      /**
        * The copy constructor deep copies its argument.
-       * 
+       *
        * @param other This argument is the Index2D instance to be
        * copied.
        */
@@ -76,17 +76,17 @@ namespace brick {
         : m_column(other.m_column), m_row(other.m_row) {}
 
 
-      /** 
+      /**
        * The destructor destroys the Index2D instance.
        */
       ~Index2D() {}
 
 
-      /** 
+      /**
        * This member function explicitly sets the sets the indices.
-       * 
+       *
        * @param row The first component of the Index2D.
-       * 
+       *
        * @param column The second component of the Index2D.
        */
       inline void setValue(int row, int column) {
@@ -94,45 +94,45 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This member function returns the first component of the Index2D
        * by value.
-       * 
+       *
        * @return The return value is the first (U) coordinate.
        */
       inline int getColumn() const {return m_column;}
 
 
-      /** 
+      /**
        * This member function returns the second component of the
        * Index2D by value.
-       * 
+       *
        * @return The return value is the second (V) coordinate.
        */
       inline int getRow() const {return m_row;}
 
-    
-      /** 
+
+      /**
        * This member function returns the first component of the Index2D
        * by value.  It is a synonym for member function getColumn().
-       * 
+       *
        * @return The return value is the first (U) coordinate.
        */
       inline int getU() const {return this->getColumn();}
 
 
-      /** 
+      /**
        * This member function returns the second component of the
        * Index2D by value.  It is a synonym for member function getRow().
-       * 
+       *
        * @return The return value is the second (V) coordinate.
        */
       inline int getV() const {return this->getRow();}
 
-    
-      /** 
+
+      /**
        * The assignment operator deep copies its argument.
-       * 
+       *
        * @param other This argument is the Index2D instance to be
        * copied.
        *
@@ -145,7 +145,7 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * WARNING: this operator has confusing semantics, as
        * illustrated by this example, in which all assertions pass:
        *
@@ -156,16 +156,16 @@ namespace brick {
        *   assert(exampleIndex[1] == exampleIndex.getU());
        *   assert(exampleIndex[1] == 1);
        * @endcode
-       * 
+       *
        * The indexing operator returns a reference to the U or V
        * component of *this as if *this were a two element array.
        * Out of bounds indices will return the V component.
-       * 
+       *
        * @param index This argument is the index into *this.  An index
        * of 0 means to return the "U" component, where the U axis is
        * parallel to the first row of the indexed array.  In other
        * words, an index of 0 means to return the column value.
-       * 
+       *
        * @return The return value is the selected component of *this.
        */
       int operator[](size_t index) const {
@@ -174,14 +174,14 @@ namespace brick {
         }
         return this->getRow();
       }
-        
 
-      /** 
+
+      /**
        * This operator multiplies each component of the Index2D instance
        * by a scalar.
-       * 
+       *
        * @param scalar This argument is the scalar by which to multiply.
-       * 
+       *
        * @return The return value is a reference to *this after the
        * operation has been performed.
        */
@@ -190,12 +190,12 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This operator divides each component of the Index2D instance
        * by a scalar.
-       * 
+       *
        * @param scalar This argument is the scalar by which to divide.
-       * 
+       *
        * @return The return value is a reference to *this after the
        * operation has been performed.
        */
@@ -208,12 +208,12 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This operator adds a scalar to each component of the Index2D
        * instance.
-       * 
+       *
        * @param scalar This argument is the scalar to be added.
-       * 
+       *
        * @return The return value is a reference to *this after the
        * operation has been performed.
        */
@@ -222,12 +222,12 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This operator subtracts a scalar from each component of the
        * Index2D instance.
-       * 
+       *
        * @param scalar This argument is the scalar to be subtracted.
-       * 
+       *
        * @return The return value is a reference to *this after the
        * operation has been performed.
        */
@@ -235,17 +235,17 @@ namespace brick {
         m_column -= other.m_column; m_row -= other.m_row; return *this;
       }
 
-    
-      /** 
+
+      /**
        * This operator returns an Index2D equal to *this, but with each
        * element negated.
-       * 
+       *
        * @return The return value is a negated copy of *this.
        */
       Index2D operator-() {
         return Index2D(-m_row, -m_column);
       }
-    
+
     private:
 
       // Private data members.
@@ -255,10 +255,10 @@ namespace brick {
 
 
     /* ============== Non-member function declarations ============== */
-  
-    /** 
+
+    /**
      * This operator returns the elementwise sum of two Index2D instances.
-     * 
+     *
      * @param index0 This is the first of the two Index2D instances to
      * be added.
      * @param index1 This is the second of the two Index2D instances to
@@ -269,10 +269,10 @@ namespace brick {
     Index2D
     operator+(const Index2D& index0, const Index2D& index1);
 
-    /** 
+    /**
      * This operator returns the elementwise difference of two Index2D
      * instances.
-     * 
+     *
      * @param index0 This is the first of the two Index2D instances to
      * be subtracted.
      * @param index1 This is the second of the two Index2D instances to
@@ -283,10 +283,10 @@ namespace brick {
      */
     Index2D
     operator-(const Index2D& index0, const Index2D& index1);
-  
-    /** 
+
+    /**
      * This operator returns the elementwise product of two Index2D instances.
-     * 
+     *
      * @param index0 This is the first of the two Index2D instances to
      * be multiplied.
      * @param index1 This is the second of the two Index2D instances to
@@ -297,9 +297,9 @@ namespace brick {
     Index2D
     operator*(const Index2D& index0, const Index2D& index1);
 
-    /** 
+    /**
      * This operator returns the elementwise dividend of two Index2D instances.
-     * 
+     *
      * @param index0 This is the Index2D instance whose element values
      * are to be divided.
      * @param index1 This is the Index2D instance by whose elements
@@ -311,9 +311,9 @@ namespace brick {
     Index2D
     operator/(const Index2D& index0, const Index2D& index1);
 
-    /** 
+    /**
      * This operator adds a scalar and an Index2D.
-     * 
+     *
      * @param index0 This is the Index2D instance to which the scalar
      * should be added.
      * @param scalar0 This is amount which should be added to each
@@ -324,9 +324,9 @@ namespace brick {
      */
     Index2D operator+(const Index2D& index0, int scalar0);
 
-    /** 
+    /**
      * This operator subtracts a scalar from an Index2D.
-     * 
+     *
      * @param index0 This is the Index2D instance from which the scalar
      * should be subtracted.
      * @param scalar0 This is amount which should be subtracted from each
@@ -337,9 +337,9 @@ namespace brick {
      */
     Index2D operator-(const Index2D& index0, int scalar0);
 
-    /** 
+    /**
      * This operator multiplies an Index2D by scalar.
-     * 
+     *
      * @param index0 This is the Index2D instance which is to be
      * multiplied by the scalar.
      * @param scalar0 This is amount by which should argument index0 is
@@ -350,9 +350,9 @@ namespace brick {
      */
     Index2D operator*(const Index2D& index0, int scalar0);
 
-    /** 
+    /**
      * This operator divides an Index2D by scalar.
-     * 
+     *
      * @param index0 This is the Index2D instance which is to be
      * divided by the scalar.
      * @param scalar0 This is amount by which should argument index0 is
@@ -383,10 +383,10 @@ namespace brick {
     bool operator!=(const Index2D& index0, const Index2D& index1);
 
 
-    /** 
+    /**
      * This operator adds a scalar value to each element of an Index2D
      * instance.
-     * 
+     *
      * @param scalar0 Scalar argument of the addition.
      *
      * @param index0 Index2D argument of the addition.
@@ -398,10 +398,10 @@ namespace brick {
     Index2D operator+(int scalar0, const Index2D& index0);
 
 
-    /** 
+    /**
      * This operator multiplies a scalar value with each element of a
      * Index2D instance.
-     * 
+     *
      * @param scalar0 Scalar argument of the multiplication.
      *
      * @param index0 Index2D argument of the multiplication.
@@ -412,8 +412,8 @@ namespace brick {
      */
     Index2D operator*(int scalar0, const Index2D& index0);
 
-  
-    /** 
+
+    /**
      * This function outputs a text representation of an Index2D
      * instance to a std::ostream.  The output format looks like this:
      *
@@ -430,12 +430,12 @@ namespace brick {
      */
     std::ostream& operator<<(std::ostream& stream, const Index2D& index0);
 
-  
-    /** 
+
+    /**
      * This function sets the value of an Index2D instance from a
      * std::istream.  The input format is as described for
      * operator<<(std::ostream&, const Index2D&) above.
-     * 
+     *
      * @param stream This argument is a reference to the the input
      * stream from which to read.
      *
@@ -457,12 +457,12 @@ namespace brick {
 namespace brick {
 
   namespace numeric {
-    
+
     inline Index2D operator+(int scalar0, const Index2D& index0)
     {
       return index0 + scalar0;
     }
-  
+
     inline Index2D operator*(int scalar0, const Index2D& index0)
     {
       return index0 * scalar0;

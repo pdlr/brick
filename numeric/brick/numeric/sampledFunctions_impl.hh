@@ -17,7 +17,7 @@
 // This file is included by sampledFunctions.hh, and should not be
 // directly included by user code, so no need to include
 // sampledFunctions.hh here.
-// 
+//
 // #include <brick/numeric/sampledFunctions.hh>
 
 #include <cmath>
@@ -41,7 +41,7 @@ namespace brick {
       return result;
     }
 
-    
+
     // This function generates a Blackman-Harris window of the specified
     // size.
     template <class Iter, class Type>
@@ -69,8 +69,8 @@ namespace brick {
         ++beginIter;
       }
     }
-    
-      
+
+
     // This function returns an array in which the elements are
     // sampled from a 1D Gaussian.
     template <class Type>
@@ -98,7 +98,7 @@ namespace brick {
         endIter - beginIter);
       const Type increment = static_cast<Type>(1.0);
       Type xx = static_cast<Type>((1.0 - windowSize)/2.0);
-      
+
       if(sigma <= 0.0) {
         sigma = windowSize / static_cast<Type>(6.0);
       }
@@ -125,8 +125,8 @@ namespace brick {
         }
       }
     }
-    
-      
+
+
     // This function returns a Hamming window of the specified size.
     template <class Type>
     Array1D<Type>
@@ -137,7 +137,7 @@ namespace brick {
       return result;
     }
 
-    
+
     // This function generates a Hamming window of the specified size.
     template <class Type, class Iter>
     void
@@ -150,7 +150,7 @@ namespace brick {
       const Type k0 = 2 * piOverNMinus1;
       const Type c0 = static_cast<Type>(-0.46);
       const Type c1 = static_cast<Type>(0.54);
-      
+
       unsigned int ii = 0;
       while(beginIter != endIter) {
         *beginIter = (c0 * brick::common::cosine(k0 * ii) + c1);
@@ -158,7 +158,7 @@ namespace brick {
         ++beginIter;
       }
     }
-    
+
 
     // This function returns a Hann window of the specified size.
     template <class Type>
@@ -170,7 +170,7 @@ namespace brick {
       return result;
     }
 
-    
+
     // This function generates a Hann window of the specified size.
     template <class Iter, class Type>
     void
@@ -183,7 +183,7 @@ namespace brick {
       const Type k0 = 2 * piOverNMinus1;
       const Type c0 = static_cast<Type>(-0.5);
       const Type c1 = static_cast<Type>(0.5);
-      
+
       unsigned int ii = 0;
       while(beginIter != endIter) {
         *beginIter = (c0 * brick::common::cosine(k0 * ii) + c1);
@@ -191,9 +191,9 @@ namespace brick {
         ++beginIter;
       }
     }
-    
+
   } // namespace numeric
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_NUMERIC_SAMPLEDFUNCTIONS_IMPL_HH */

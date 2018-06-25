@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/numeric/test/bilinearInterpolatorTest.cc
-* 
+*
 * Source file defining BilinearInterpolatorTest class.
 *
 * Copyright (C) 2004-2005 David LaRose, dlr@cs.cmu.edu
@@ -18,7 +18,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     class BilinearInterpolatorTest :
       public brick::test::TestFixture<BilinearInterpolatorTest> {
 
@@ -32,11 +32,11 @@ namespace brick {
 
       // Tests of member functions.
       void testIndexOperator();
-    
+
     private:
 
      double m_defaultTolerance;
-      
+
     }; // class BilinearInterpolatorTest
 
 
@@ -80,7 +80,7 @@ namespace brick {
         }
       }
     }
-    
+
   } //  namespace numeric
 
 } // namespace brick

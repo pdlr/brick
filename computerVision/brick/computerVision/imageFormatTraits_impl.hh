@@ -16,7 +16,7 @@
 // This file is included by imageFormatTraits.hh, and should not be
 // directly included by user code, so no need to include
 // imageFormatTraits.hh here.
-// 
+//
 // #include <brick/computerVision/imageFormatTraits.hh>
 
 #include <stdlib.h>
@@ -31,7 +31,7 @@
 namespace brick {
 
   namespace computerVision {
-  
+
     template<>
     class ImageFormatTraits<GRAY1> {
     public:
@@ -41,7 +41,7 @@ namespace brick {
       static PixelType getZeroPixel() {return false;}
       static bool isIntegral() {return true;}
     };
-    
+
 
     template<>
     class ImageFormatTraits<GRAY8> {
@@ -52,7 +52,7 @@ namespace brick {
       static PixelType getZeroPixel() {return PixelType(0);}
       static bool isIntegral() {return true;}
     };
-    
+
 
     template<>
     class ImageFormatTraits<GRAY16> {
@@ -63,7 +63,7 @@ namespace brick {
       static PixelType getZeroPixel() {return PixelType(0);}
       static bool isIntegral() {return true;}
     };
-    
+
 
     template<>
     class ImageFormatTraits<GRAY32> {
@@ -74,7 +74,7 @@ namespace brick {
       static PixelType getZeroPixel() {return PixelType(0);}
       static bool isIntegral() {return true;}
     };
-    
+
 
     template<>
     class ImageFormatTraits<GRAY64> {
@@ -85,7 +85,7 @@ namespace brick {
       static PixelType getZeroPixel() {return PixelType(0);}
       static bool isIntegral() {return true;}
     };
-    
+
 
     template<>
     class ImageFormatTraits<GRAY_SIGNED16> {
@@ -96,7 +96,7 @@ namespace brick {
       static PixelType getZeroPixel() {return PixelType(0);}
       static bool isIntegral() {return true;}
     };
-    
+
 
     template<>
     class ImageFormatTraits<GRAY_SIGNED32> {
@@ -107,7 +107,7 @@ namespace brick {
       static PixelType getZeroPixel() {return PixelType(0);}
       static bool isIntegral() {return true;}
     };
-    
+
 
     template<>
     class ImageFormatTraits<GRAY_FLOAT32> {
@@ -118,7 +118,7 @@ namespace brick {
       static PixelType getZeroPixel() {return PixelType(0);}
       static bool isIntegral() {return false;}
     };
-    
+
 
     template<>
     class ImageFormatTraits<GRAY_FLOAT64> {
@@ -129,7 +129,7 @@ namespace brick {
       static PixelType getZeroPixel() {return PixelType(0);}
       static bool isIntegral() {return false;}
     };
-    
+
 
     template<>
     class ImageFormatTraits<RGB8> {
@@ -140,7 +140,7 @@ namespace brick {
       static PixelType getZeroPixel() {return PixelType(0, 0, 0);}
       static bool isIntegral() {return true;}
     };
-    
+
 
     template<>
     class ImageFormatTraits<RGB16> {
@@ -163,7 +163,7 @@ namespace brick {
       static bool isIntegral() {return true;}
     };
 
-  
+
     template<>
     class ImageFormatTraits<RGB_SIGNED32> {
     public:
@@ -174,7 +174,7 @@ namespace brick {
       static bool isIntegral() {return true;}
     };
 
-  
+
     template<>
     class ImageFormatTraits<RGB_FLOAT32> {
     public:
@@ -206,8 +206,8 @@ namespace brick {
       static PixelType getZeroPixel() {return PixelType(0, 0, 0);}
       static bool isIntegral() {return false;}
     };
-  
-  
+
+
     template<>
     class ImageFormatTraits<YIQ_FLOAT64> {
     public:
@@ -217,8 +217,8 @@ namespace brick {
       static PixelType getZeroPixel() {return PixelType(0, 0, 0);}
       static bool isIntegral() {return false;}
     };
-  
-  
+
+
     template<>
     class ImageFormatTraits<RGBA8> {
     public:
@@ -228,7 +228,7 @@ namespace brick {
       static PixelType getZeroPixel() {return PixelType(0, 0, 0, 0);}
       static bool isIntegral() {return true;}
     };
-    
+
 
     template<>
     class ImageFormatTraits<BGRA8> {
@@ -281,28 +281,28 @@ namespace brick {
     public:
       static ImageFormat const Format = GRAY_SIGNED16;
     };
-    
+
 
     template <>
     class ImageFormatIdentifierGray<brick::common::Int32> {
     public:
       static ImageFormat const Format = GRAY_SIGNED32;
     };
-    
+
 
     template <>
     class ImageFormatIdentifierGray<brick::common::Float32> {
     public:
       static ImageFormat const Format = GRAY_FLOAT32;
     };
-    
+
 
     template <>
     class ImageFormatIdentifierGray<brick::common::Float64> {
     public:
       static ImageFormat const Format = GRAY_FLOAT64;
     };
-    
+
   } // namespace computerVision
 
 } // namespace brick

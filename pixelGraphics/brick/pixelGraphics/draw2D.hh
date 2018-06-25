@@ -27,7 +27,7 @@ namespace brick {
            typename ArrayType::value_type const& color,
            brick::numeric::Transform2D<double> const& pixelFromWorld =
              brick::numeric::Transform2D<double>());
-    
+
   } // namespace pixelGraphics
 
 } // namespace brick

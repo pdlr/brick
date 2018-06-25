@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/test/testMacros.hh
-* 
+*
 * Header file declaring macros for brick::test library.
 *
 * Copyright (C) 2004-2011 David LaRose, dlr@cs.cmu.edu
@@ -45,7 +45,7 @@
 }
 
 
-/** 
+/**
  ** This macro makes it easier to call the
  ** TestFixture<>::registerTest() member function.  It only makes
  ** sense to use this macro from within a member function of a

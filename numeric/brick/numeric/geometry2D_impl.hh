@@ -16,7 +16,7 @@
 
 // This file is included by geometry2D.hh, and should not be directly included
 // by user code, so no need to include geometry2D.hh here.
-// 
+//
 // #include <brick/numeric/geometry2D.hh>
 
 #include <brick/numeric/utilities.hh>
@@ -37,11 +37,11 @@ namespace brick {
       // the original coordinate system.
 
       Vector2D<Type> baselineVector(point1 - point0);
-    
+
       // Coordinates for the translated input points will be (0, 0), and
       // (x0, 0);
       Type x0 = magnitude<Type>(baselineVector);
-    
+
       // Compute direction vectors for the new X and Y axis.
       Vector2D<Type> e0(baselineVector / x0);
       Vector2D<Type> e1(-e0.y(), e0.x());
@@ -68,7 +68,7 @@ namespace brick {
       intersection1 = point0 + xComponent - yComponent;
       return true;
     }
-  
+
   } // namespace numeric
 
 } // namespace brick

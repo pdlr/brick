@@ -16,7 +16,7 @@
 // This file is included by lineSegment2D.hh, and should not be
 // directly included by user code, so no need to include
 // lineSegment2D.hh here.
-// 
+//
 // #include <brick/geometry/lineSegment2D.hh>
 
 #include <brick/common/expect.hh>
@@ -36,7 +36,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // This constructor initializes the line segment using a pair of points.
     template <class Type>
     LineSegment2D<Type>::
@@ -64,7 +64,7 @@ namespace brick {
     template <class Type>
     LineSegment2D<Type>::
     LineSegment2D(LineSegment2D<Type> const& source)
-      : m_startPoint(source.m_startPoint), m_endPoint(source.m_endPoint) 
+      : m_startPoint(source.m_startPoint), m_endPoint(source.m_endPoint)
     {
       // Empty.
     }
@@ -77,8 +77,8 @@ namespace brick {
     {
       // Empty.
     }
-      
-      
+
+
     // The assignment operator deep copies its argument.
     template <class Type>
     LineSegment2D<Type>&
@@ -145,7 +145,7 @@ namespace brick {
       return *this;
     }
 
-      
+
     // This member function changes the start point and end point of
     // the line segment.
     template <class Type>
@@ -168,12 +168,12 @@ namespace brick {
       if (!stream){
         return stream;
       }
-    
+
       double startPointX;
       double startPointY;
       double endPointX;
       double endPointY;
-        
+
       brick::common::Expect::FormatFlag flags =
         brick::common::Expect::SkipWhitespace;
       stream >> brick::common::Expect("LineSegment2D", flags)
@@ -191,12 +191,12 @@ namespace brick {
       if (!stream){
         return stream;
       }
-      
+
       lineSegment.setValue(startPointX, startPointY,
                            endPointX, endPointY);
       return stream;
     }
-    
+
 
     template <class Type>
     std::ostream&
@@ -210,9 +210,9 @@ namespace brick {
       return stream;
     }
 
-    
+
   } // namespace geometry
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_GEOMETRY_LINESEGMENT2D_IMPL_HH */

@@ -135,7 +135,7 @@ namespace brick {
      **   constexpr int numberOfArguments = 3;
      **   typedef AutoGradientFunctionLM<MySSDFunction, numberOfArguments>
      **     GradientFunction;
-     **   
+     **
      **   MySSDFunction ssdFunction;
      **   assert(numberOfArguments >= ssdFunction.getNumberOfArguments());
      **   GradientFunction gradientFunction(ssdFunction);
@@ -150,39 +150,39 @@ namespace brick {
       : public std::unary_function<brick::numeric::Array1D<Scalar>, Scalar>
     {
     public:
-      /** 
+      /**
        * The default constructor simply uses the default SSDFunction.
        */
       AutoGradientFunctionLM();
-      
 
-      /** 
+
+      /**
        * Constructor.
        *
        * @param ssdFunction This argument is the function object to be
        * adapted.
        */
       AutoGradientFunctionLM(SSDFunction const& ssdFunction);
-      
 
-      /** 
+
+      /**
        * Destructor.
        */
       virtual ~AutoGradientFunctionLM() {}
 
-      
-      /** 
+
+      /**
        * This operator evaluates the sum-of-squares error at the
        * specified point.
-       * 
+       *
        * @param theta The point at which to evaluate the function.
        * @return The function value at theta.
        */
       Scalar
       operator()(brick::numeric::Array1D<Scalar> const& theta);
 
-      
-      /** 
+
+      /**
        * This method approximates the gradient and Hessian matrix of
        * this->operator().  The Jacobian of SSDFunction::operator()()
        * is computed by automatic differentiation, the gradient is
@@ -198,7 +198,7 @@ namespace brick {
        * argument should be controlled by a template parameter.  This
        * will be fixed when we finally get around to overhauling the
        * Optimizer* template parameters.
-       * 
+       *
        * @param d2EdX2 This argument is used to return the computed
        * Hessian matrix to the calling context.  Note that the type if
        * this argument should be controlled by a template parameter.
@@ -209,7 +209,7 @@ namespace brick {
       computeGradientAndHessian(brick::numeric::Array1D<Scalar> const& theta,
                                 brick::numeric::Array1D<Scalar>& dEdX,
                                 brick::numeric::Array2D<Scalar>& d2EdX2);
-      
+
     private:
       SSDFunction m_ssdFunction;
       Scalar m_epsilon;
@@ -242,7 +242,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // Constructor.
     template <class SSDFunction, int NumberOfArguments, class Scalar>
     AutoGradientFunctionLM<SSDFunction, NumberOfArguments, Scalar>::
@@ -252,7 +252,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // This operator evaluates the sum-of-squares error at the
     // specified point.
     template <class SSDFunction, int NumberOfArguments, class Scalar>
@@ -272,7 +272,7 @@ namespace brick {
                     "AutoGradientFunctionLM::operator()()",
                     message.str().c_str());
       }
-      
+
       unsigned int const numTerms = this->m_ssdFunction.getNumberOfErrorTerms();
       brick::numeric::Array1D<Scalar> errorTerms(numTerms);
       this->m_ssdFunction.apply(theta.begin(), errorTerms.begin());
@@ -316,7 +316,7 @@ namespace brick {
                     "AutoGradientFunctionLM::computeGradientAndHessian()",
                     message.str().c_str());
       }
-      
+
       // Get oriented.
       unsigned int const numTerms = this->m_ssdFunction.getNumberOfErrorTerms();
 
@@ -357,17 +357,17 @@ namespace brick {
       for(unsigned int cc = 0; cc < numTerms; ++cc) {
         errorTermsNoDerivative[cc] = errorTerms[cc].getValue();
       }
-      
+
       dEdX = brick::numeric::matrixMultiply<Scalar>(
         jacobian, errorTermsNoDerivative);
       dEdX *= 2.0;
-      
+
       // Compute Hession estimate.
       d2EdX2 = brick::numeric::matrixMultiply<Scalar>(
         jacobian, jacobian.transpose());
       d2EdX2 *= 2.0;
     }
-    
+
   } // namespace optimization
 
 } // namespace brick

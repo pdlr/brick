@@ -16,13 +16,13 @@
 
 // This file is included by vector3D.hh, and should not be directly included
 // by user code, so no need to include vector3D.hh here.
-// 
+//
 // #include <brick/numeric/vector3D.hh>
 
 namespace brick {
 
   namespace numeric {
-    
+
     //  Default constructor initializes to (0, 0, 0).
     template <class Type>
     Vector3D<Type>::
@@ -45,7 +45,7 @@ namespace brick {
     Vector3D<Type>::
     Vector3D(Type const& xCoord, Type const& yCoord, Type const& zCoord, Type const& alpha)
       : m_x(xCoord), m_y(yCoord), m_z(zCoord) {this->normalize(alpha);}
-    
+
 
     // Copy constructor.
     template <class Type>
@@ -59,7 +59,7 @@ namespace brick {
     Vector3D<Type>::
     ~Vector3D() {}
 
-      
+
     // Resets the vector to (0.0, 0.0, 0.0).
     template <class Type>
     inline Vector3D<Type>&
@@ -69,7 +69,7 @@ namespace brick {
       return *this;
     }
 
-      
+
     // Explicitly sets 3D coordinates.
     template <class Type>
     inline Vector3D<Type> const&
@@ -111,7 +111,7 @@ namespace brick {
     {
       return m_y;
     }
-    
+
 
     // Returns the z component of the vector by value.
     template <class Type>
@@ -122,7 +122,7 @@ namespace brick {
       return m_z;
     }
 
-    
+
     // Assignment operator.
     template <class Type>
     Vector3D<Type>&
@@ -135,7 +135,7 @@ namespace brick {
       return *this;
     }
 
-    
+
     // The indexing operator returns a reference to the x, y, or z
     // component of *this as if *this were a three element array.
     template <class Type>
@@ -149,7 +149,7 @@ namespace brick {
       }
       return this->m_z;
     }
-          
+
 
     // The indexing operator returns the value of the x, y, or z
     // component of *this as if *this were a three element array.
@@ -164,7 +164,7 @@ namespace brick {
       }
       return this->z();
     }
-          
+
 
     // Multiplies each element by a scalar.
     template <class Type>
@@ -218,7 +218,7 @@ namespace brick {
     {
       return Vector3D<Type>(-m_x, -m_y, -m_z);
     }
-    
+
 
     // Private member functions.
     template <class Type>
@@ -245,7 +245,7 @@ namespace brick {
                       vector0.y() + vector1.y(),
                       vector0.z() + vector1.z());
     }
-  
+
 
     // This operator returns the elementwise difference of two Vector3D
     // instances.
@@ -289,7 +289,7 @@ namespace brick {
                             vector0.y() + scalar0,
                             vector0.z() + scalar0);
     }
-    
+
 
     // This operator subtracts a scalar from a Vector3D.
     template <class Type>
@@ -310,7 +310,7 @@ namespace brick {
                             vector0.z() * scalar0);
     }
 
-    
+
     // This operator divides a Vector3D by scalar.
     template <class Type>
     Vector3D<Type> operator/(const Vector3D<Type>& vector0, Type const& scalar0)

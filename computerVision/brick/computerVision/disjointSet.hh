@@ -48,17 +48,17 @@ namespace brick {
     class DisjointSet {
     public:
 
-      /** 
+      /**
        * The default constructor creates a leaf in a disjoint set
        * tree.
        */
       DisjointSet();
 
 
-      /** 
+      /**
        * This constructor allows you to explicitly set the payload
        * value.
-       * 
+       *
        * @param payload This argument will be copied into the
        * payload, and then ignored until you call
        * this->getPayload().
@@ -66,22 +66,22 @@ namespace brick {
       DisjointSet(const Type& payload);
 
 
-      /** 
+      /**
        * Copying is disallowed because copying a DisjointSet instance
        * violates assumptions that each DisjointSet instance uniquely
        * represents a tree in a forest of disjoint sets.  Furthermore,
        * if you copy a DisjointSet instance, and then the original
        * instance goes out of scope, internal bookkeeping gets messed
        * up.
-       * 
+       *
        * @param other This function is disallowed.
        */
       DisjointSet(const DisjointSet<Type>& other) = delete;
 
 
-      /** 
+      /**
        * Moving is disallowed (see copy constructor documentation).
-       * 
+       *
        * @param other This function is disallowed.
        */
       DisjointSet(const DisjointSet<Type>&& other) = delete;
@@ -92,29 +92,29 @@ namespace brick {
        */
       virtual
       ~DisjointSet();
-        
 
-      /** 
+
+      /**
        * Copying is disallowed (see copy constructor documentation).
-       * 
+       *
        * @param other This function is disallowed.
        * @return Nothing, because this function is disallowed.
        */
       DisjointSet<Type>&
       operator=(const DisjointSet<Type>& other) = delete;
 
-      
-      /** 
+
+      /**
        * Moving is disallowed (see copy constructor documentation).
-       * 
+       *
        * @param other This function is disallowed.
        * @return Nothing, because this function is disallowed.
        */
       DisjointSet<Type>&
       operator=(const DisjointSet<Type>&& other) = delete;
 
-      
-      /** 
+
+      /**
        * This member function returns a reference to the head of the
        * set to which *this belongs.  Although which member of a set
        * gets to be "head" is a little arbitrary, all members of the
@@ -123,14 +123,14 @@ namespace brick {
        * implementation does not use recursion.  This makes it less
        * compact than a recursive implementation, but possibly
        * faster.
-       * 
+       *
        * @return The return value is the head of the set.
        */
       DisjointSet&
       find();
 
 
-      /** 
+      /**
        * This member function implements a crippled version of find
        * that doesn't fully update parent pointers.  It follows the
        * implementation in Pedro Felzenszwalb's segmentation example
@@ -149,7 +149,7 @@ namespace brick {
       findNoUpdate();
 
 
-      /** 
+      /**
        * This member function returns a reference to the head of the
        * set to which *this belongs.  It is equivalent to member
        * function find().  Although which member of a set gets to be
@@ -158,14 +158,14 @@ namespace brick {
        * set, when the head may change).  This implementation is
        * taken directly from the Wikipedia page on disjoint sets,
        * and uses recursion.
-       * 
+       *
        * @return The return value is the head of the set.
        */
       DisjointSet&
       findRecursive();
 
 
-      /** 
+      /**
        * This member function merges two sets.  It doesn't matter
        * whether you call x.merge(y), or y.merge(x); both will get
        * the job done.  After merging, all members of both sets will
@@ -173,29 +173,29 @@ namespace brick {
        * one of the two sets before merging.  The head reported by
        * the other of the two sets before merging will stop being a
        * head.
-       * 
+       *
        * @param other This argument is the set with which to merge.
        */
       void
       merge(DisjointSet& other);
-      
 
-      /** 
+
+      /**
        * This member function returns the payload associated with
        * *this.  The payload has no affect on the functioning of
        * *this.  It's just along for the ride.
-       * 
+       *
        * @return The return value is a const reference to the copy
        * that was made when the payload was specified.
        */
       const Type&
       getPayload() const;
-        
 
-      /** 
+
+      /**
        * This member function returns the number of members in the set
        * of which *this is a member.
-       * 
+       *
        * @return The return value is a count of the number of members
        * in the set.
        */
@@ -203,16 +203,16 @@ namespace brick {
       getSize();
 
 
-      /** 
+      /**
        * This member function associates a payload vaule with *this.
-       * 
+       *
        * @param payload This argument is copied into *this as a
        * payload, and then ignored until you call member function
        * getPayload().
        */
       void
       setPayload(const Type& payload);
-        
+
     protected:
 
       DisjointSet* m_parentPtr;
@@ -221,9 +221,9 @@ namespace brick {
 
       Type m_payload;
     };
-      
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

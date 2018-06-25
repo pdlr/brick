@@ -30,7 +30,7 @@ namespace {
 namespace brick {
 
   namespace numeric {
-    
+
     class FilterTest
       : public brick::test::TestFixture<FilterTest> {
 
@@ -50,7 +50,7 @@ namespace brick {
       void timeFilterColumns();
       void timeFilterRows();
 #endif /* #if BRICK_NUMERIC_DEVELOPER */
-      
+
     private:
 
       Array2D<common::Float64>
@@ -75,7 +75,7 @@ namespace brick {
 
 
       common::Float64 m_defaultTolerance;
-      
+
     }; // class FilterTest
 
 
@@ -107,7 +107,7 @@ namespace brick {
         Array2D<common::Float64> reference(signal.rows(), signal.columns());
         reference = 0.0;
         this->referenceFilterColumns(reference, signal, kernel);
-      
+
         Array2D<common::Float64> result(signal.rows(), signal.columns());
         result = 0.0;
         filterColumns(result, signal, kernel);
@@ -115,7 +115,7 @@ namespace brick {
         BRICK_TEST_ASSERT(this->isApproximatelyEqual(result, reference));
       }
     }
-    
+
 
     void
     FilterTest::
@@ -128,7 +128,7 @@ namespace brick {
         Array2D<common::Float64> reference(signal.rows(), signal.columns());
         reference = 0.0;
         this->referenceFilterRows(reference, signal, kernel);
-      
+
         Array2D<common::Float64> result(signal.rows(), signal.columns());
         result = 0.0;
         filterRows(result, signal, kernel);
@@ -150,7 +150,7 @@ namespace brick {
         Array1D<common::Float64> kernel = this->getKernel(ii);
 
         Array2D<common::Float64> result(signal.rows(), signal.columns());
-      
+
         double t0 = utilities::getCurrentTime();
         for(unsigned int jj = 0; jj < iterations; ++jj) {
           filterColumns(result, signal, kernel);
@@ -162,19 +162,19 @@ namespace brick {
       }
     }
 
-    
+
     void
     FilterTest::
     timeFilterRows()
     {
       unsigned int const iterations = 100;
-      
-      for(unsigned int ii = 1; ii < 15; ii += 2) {      
+
+      for(unsigned int ii = 1; ii < 15; ii += 2) {
         Array2D<common::Float64> signal = this->getSignal();
         Array1D<common::Float64> kernel = this->getKernel(ii);
 
         Array2D<common::Float64> result(signal.rows(), signal.columns());
-      
+
         double t0 = utilities::getCurrentTime();
         for(unsigned int jj = 0; jj < iterations; ++jj) {
           filterRows(result, signal, kernel);
@@ -201,7 +201,7 @@ namespace brick {
       return signal;
     }
 
-    
+
     Array1D<common::Float64>
     FilterTest::
     getKernel(unsigned int size)
@@ -213,7 +213,7 @@ namespace brick {
       return kernel;
     }
 
-    
+
     bool
     FilterTest::
     isApproximatelyEqual(const Array2D<common::Float64>& array0,
@@ -248,7 +248,7 @@ namespace brick {
         }
       }
     }
-    
+
 
     void
     FilterTest::
@@ -267,7 +267,7 @@ namespace brick {
         }
       }
     }
-    
+
   } // namespace numeric
 
 } // namespace brick

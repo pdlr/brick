@@ -41,7 +41,7 @@ public:
   // Tests.
   void testEstimateCameraParametersRobust();
   void testEstimateCameraParametersPinholeRobust();
-  
+
 private:
 
   bool
@@ -53,7 +53,7 @@ private:
   checkIntrinsicsEqual(CameraIntrinsicsPlumbBob<double> const& intrinsics0,
                        CameraIntrinsicsPlumbBob<double> const& intrinsics1,
                        double tolerance);
-  
+
 
   bool
   checkTransformEqual(Transform3D<double> const& transform0,
@@ -64,8 +64,8 @@ private:
   checkVectorEqual(Array1D<double> const& vector0,
                    Array1D<double> const& vector1,
                    double tolerance);
-  
-  
+
+
   template <class Intrinsics>
   void
   compute2DTestData(std::vector< Vector2D<double> >& points2D,
@@ -79,12 +79,12 @@ private:
 
   void
   getTestIntrinsicsPlumbBob(CameraIntrinsicsPlumbBob<double>& intrinsics);
-  
-  
+
+
   double m_defaultTolerance;
   double m_relaxedTolerance;
   double m_stringentTolerance;
-  
+
 }; // class CalibrationToolsRobustTest
 
 
@@ -108,7 +108,7 @@ testEstimateCameraParametersRobust()
 {
   CameraIntrinsicsPlumbBob<double> referenceIntrinsics;
   this->getTestIntrinsicsPlumbBob(referenceIntrinsics);
-    
+
   std::vector< Vector3D<double> > points3D_world;
   std::vector< Vector3D<double> > points3D_camera;
   std::vector< Vector2D<double> > points2D;
@@ -129,7 +129,7 @@ testEstimateCameraParametersRobust()
   //   This is a unit test... we'd rather it not fail.  Require
   //   confidence of 10,000,000 to one.
   double requiredConfidence = 0.9999999;
-  
+
   // Now run the estimation code.
   CameraIntrinsicsPlumbBob<double> recoveredIntrinsics;
   Transform3D<double> recoveredCameraTworld;
@@ -348,14 +348,14 @@ checkVectorEqual(Array1D<double> const& vector0,
   return true;
 }
 
-    
+
 template<class Intrinsics>
 void
 CalibrationToolsRobustTest::
 compute2DTestData(std::vector< Vector2D<double> >& points2D,
                   std::vector< Vector3D<double> >& points3D_camera,
                   Intrinsics const& intrinsics)
-{                  
+{
   // Generate corresponding 2D poinst.
   points2D.resize(points3D_camera.size());
   for(unsigned int ii = 0; ii < points3D_camera.size(); ++ii) {

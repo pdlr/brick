@@ -20,7 +20,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     /**
      ** A simple class template to help you avoid writing "if(myVar <
      ** minVal) {minVal = myVar; bestIndex = ii;} all over your code.
@@ -31,7 +31,7 @@ namespace brick {
     {
     public:
 
-      /** 
+      /**
        * Default constructor initializes min to a very large number
        * (std::numeric_limits<Type>::max()), and sets the payload to
        * it's default value.
@@ -43,7 +43,7 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This constructor allows the user to explicitly set the starting
        * minValue, and the default payload.
        */
@@ -58,10 +58,10 @@ namespace brick {
       // bool evaluate(const Type& value, const Payload& payload);
       // bool test(const Type& value, const Payload& payload);
 
-      
-      /** 
+
+      /**
        * This member function returns the saved minimum.
-       * 
+       *
        * @return The return value is the largest value passed to
        * member function test() since construction, or since the last
        * call to member function reset().
@@ -70,9 +70,9 @@ namespace brick {
       getMin() {return this->getMinimum();}
 
 
-      /** 
+      /**
        * This member function returns the saved minimum.
-       * 
+       *
        * @return The return value is the largest value passed to
        * member function test() since construction, or since the last
        * call to member function reset().
@@ -87,7 +87,7 @@ namespace brick {
       // const Payload& getPayload();
 
 
-      /** 
+      /**
        * This member function resets the saved minimum just as if
        * *this were freshly constructed with the default constructor.
        */
@@ -97,7 +97,7 @@ namespace brick {
           std::numeric_limits<Type>::max(), Payload());
       }
     };
-    
+
   } // namespace numeric
 
 } // namespace brick

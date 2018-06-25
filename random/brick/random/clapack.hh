@@ -19,7 +19,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-  
+
   /**
    * This is a declaration for the LAPACK routine dlarnv(), which
    * computes a vector of random real numbers from a uniform

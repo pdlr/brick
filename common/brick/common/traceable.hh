@@ -131,17 +131,17 @@ namespace brick {
 
   namespace common {
 
-    /** 
+    /**
      * This function is used by BEGIN_TRACEABLE to add
      * levels to an automatically generated stack trace.
-     * 
+     *
      * WARNING: This function uses the setPayload()/getPayload()
      * feature of brick::common::Exception.  If you are already using
      * the payload in some other way, you cannot use addTrace().
-     * 
+     *
      * @param caughtException This argument is the exception whose
      * payload is to be updated.
-     * 
+     *
      * @param traceMessage This argument is the text to be added to
      * the stack trace.
      */
@@ -150,25 +150,25 @@ namespace brick {
              std::string const& message);
 
 
-    /** 
+    /**
      * This function returns the stack trace accumulated by
      * BEGIN_TRACEABLE/END_TRACEABLE.
-     * 
+     *
      * @param caughtException This argument is the exception from
      * which to read the trace.
-     * 
+     *
      * @return The return value is a string representation of the
      * stack trace.
      */
     std::string
     getTrace(brick::common::Exception const& caughtException);
-    
-    
-    /** 
+
+
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @return Since this function has no arguments, the return value is
      * an empty string.
      */
@@ -179,14 +179,14 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
-     * 
+     *
      * @return The return value is a string describing the argument list.
      */
     template <class Type0>
@@ -200,17 +200,17 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
      *
      * @param argument1 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @return The return value is a string describing the argument list.
      */
     template <class Type0, class Type1>
@@ -227,20 +227,20 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
      *
      * @param argument1 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument2 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @return The return value is a string describing the argument list.
      */
     template <class Type0, class Type1, class Type2>
@@ -260,20 +260,20 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
      *
      * @param argument1 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument2 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument3 This argument is the second argument to be included
      * in the formatted output.
      *
@@ -299,26 +299,26 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
      *
      * @param argument1 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument2 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument3 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument4 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @return The return value is a string describing the argument list.
      */
     template <class Type0, class Type1, class Type2, class Type3, class Type4>
@@ -344,29 +344,29 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
      *
      * @param argument1 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument2 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument3 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument4 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument5 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @return The return value is a string describing the argument list.
      */
     template <class Type0, class Type1, class Type2, class Type3, class Type4,
@@ -396,32 +396,32 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
      *
      * @param argument1 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument2 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument3 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument4 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument5 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument6 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @return The return value is a string describing the argument list.
      */
     template <class Type0, class Type1, class Type2, class Type3, class Type4,
@@ -454,39 +454,39 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
      *
      * @param argument1 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument2 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument3 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument4 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument5 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument6 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument7 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @return The return value is a string describing the argument list.
      */
     template <class Type0, class Type1, class Type2, class Type3, class Type4,
-              class Type5, class Type6, class Type7>          
+              class Type5, class Type6, class Type7>
     std::string
     describeArguments(const Type0& argument0,
 		      const Type1& argument1,
@@ -518,38 +518,38 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
      *
      * @param argument1 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument2 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument3 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument4 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument5 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument6 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument7 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument8 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @return The return value is a string describing the argument list.
      */
     template <class Type0, class Type1, class Type2, class Type3, class Type4,
@@ -588,38 +588,38 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
      *
      * @param argument1 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument2 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument3 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument4 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument5 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument6 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument7 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument8 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument9 This argument is the second argument to be included
      * in the formatted output.
      *
@@ -664,38 +664,38 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
      *
      * @param argument1 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument2 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument3 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument4 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument5 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument6 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument7 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument8 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument9 This argument is the second argument to be included
      * in the formatted output.
      *
@@ -747,38 +747,38 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
      *
      * @param argument1 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument2 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument3 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument4 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument5 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument6 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument7 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument8 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument9 This argument is the second argument to be included
      * in the formatted output.
      *
@@ -836,38 +836,38 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
      *
      * @param argument1 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument2 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument3 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument4 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument5 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument6 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument7 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument8 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument9 This argument is the second argument to be included
      * in the formatted output.
      *
@@ -931,38 +931,38 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
      *
      * @param argument1 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument2 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument3 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument4 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument5 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument6 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument7 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument8 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument9 This argument is the second argument to be included
      * in the formatted output.
      *
@@ -1032,38 +1032,38 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
      *
      * @param argument1 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument2 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument3 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument4 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument5 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument6 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument7 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument8 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument9 This argument is the second argument to be included
      * in the formatted output.
      *
@@ -1139,38 +1139,38 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
      *
      * @param argument1 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument2 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument3 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument4 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument5 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument6 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument7 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument8 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument9 This argument is the second argument to be included
      * in the formatted output.
      *
@@ -1253,38 +1253,38 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
      *
      * @param argument1 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument2 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument3 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument4 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument5 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument6 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument7 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument8 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument9 This argument is the second argument to be included
      * in the formatted output.
      *
@@ -1373,38 +1373,38 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
      *
      * @param argument1 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument2 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument3 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument4 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument5 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument6 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument7 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument8 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument9 This argument is the second argument to be included
      * in the formatted output.
      *
@@ -1499,38 +1499,38 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
      *
      * @param argument1 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument2 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument3 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument4 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument5 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument6 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument7 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument8 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument9 This argument is the second argument to be included
      * in the formatted output.
      *
@@ -1631,38 +1631,38 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function template formats its entire argument list for
      * inclusion in a stack trace.  You'll need to have templates like
      * this defined which take 1, 2, 3, 4, etc., arguments.
-     * 
+     *
      * @param argument0 This argument is the first argument to be included
      * in the formatted output.
      *
      * @param argument1 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument2 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument3 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument4 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument5 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument6 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument7 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument8 This argument is the second argument to be included
      * in the formatted output.
-     * 
+     *
      * @param argument9 This argument is the second argument to be included
      * in the formatted output.
      *
@@ -1769,7 +1769,7 @@ namespace brick {
     }
 
   } // namespace common
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMMON_TRACEABLE_HH */

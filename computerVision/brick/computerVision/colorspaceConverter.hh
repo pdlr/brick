@@ -27,8 +27,8 @@ namespace brick {
                                    typename Image<FORMAT1>::PixelType>
     {
     public:
-    
-      /** 
+
+      /**
        * The default constructor simply dispatches to the
        * std::unary_function constructor.
        */
@@ -38,17 +38,17 @@ namespace brick {
         {}
 
 
-      /** 
+      /**
        * The destructor destroys the class instnace and cleans up any
        * resources.
-       * 
-       * @return The return value 
+       *
+       * @return The return value
        */
       virtual ~ColorspaceConverter()
         {}
 
 
-      /** 
+      /**
        * The application operator does the format conversion for one
        * pixel.  We somewhat awkwardly dispatch to the two-argument
        * application operator because of the unfortunate way we've had
@@ -63,7 +63,7 @@ namespace brick {
        * it could be for scalar types.
        *
        * @param inputPixel The pixel to be converted.
-       * 
+       *
        * @return The return value is the converted pixel.
        */
       inline
@@ -73,15 +73,15 @@ namespace brick {
         this->operator()(inputPixel, outputPixel);
         return outputPixel;
       }
-    
 
-      /** 
+
+      /**
        * The application operator does the format conversion for one
        * pixel, returning the result through a reference argument.  This
        * is the fastest way to do a pixel conversion.
-       * 
+       *
        * @param inputPixel The pixel to be converted.
-       * 
+       *
        * @param outputPixel This reference argument is set to the result
        * of the conversion.
        */
@@ -98,11 +98,11 @@ namespace brick {
         outputPixel =
           static_cast<typename Image<FORMAT1>::PixelType>(inputPixel);
       }
-    
+
     };
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

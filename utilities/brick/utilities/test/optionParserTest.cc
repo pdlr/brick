@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/utilities/test/optionParserTest.cc
-* 
+*
 * Source file defining tests command line parsing.
 *
 * Copyright (C) 2004-2011 David LaRose, dlr@cs.cmu.edu
@@ -101,13 +101,13 @@ namespace brick {
           optionParser0.parseCommandLine(argc0, argv0));
       }
 
-    
+
       {
         // Test "allowExtraArguments".
         OptionParser optionParser0;
         OptionParser optionParser1(false);
         optionParser0.parseCommandLine(argc1, argv1);
-        std::vector<std::string> extraArguments = 
+        std::vector<std::string> extraArguments =
           optionParser0.getExtraPositionalArguments();
         BRICK_TEST_ASSERT(extraArguments.size() == 1);
         BRICK_TEST_ASSERT(extraArguments[0] == "bar");
@@ -116,7 +116,7 @@ namespace brick {
           optionParser1.parseCommandLine(argc1, argv1));
       }
 
-    
+
       {
         // Test allowStackedShortOptions.
 
@@ -137,20 +137,20 @@ namespace brick {
         optionParser1.addOption("Rar", "-r", "--rar", "Specify rar.");
         optionParser1.addOptionWithValue(
           "Par", "-p", "--par", "", "Specify par.");
-      
+
         optionParser0.parseCommandLine(argc2, argv2);
         BRICK_TEST_ASSERT(optionParser0.getCount("Bar") == 1);
         BRICK_TEST_ASSERT(optionParser0.getCount("Lar") == 1);
         BRICK_TEST_ASSERT(optionParser0.getCount("Rar") == 1);
         BRICK_TEST_ASSERT(optionParser0.getCount("Par") == 1);
         BRICK_TEST_ASSERT(optionParser0.getValue("Par") == "rl");
-      
+
         BRICK_TEST_ASSERT_EXCEPTION(
           brick::common::IOException,
           optionParser1.parseCommandLine(argc2, argv2));
       }
 
-    
+
       {
         // Test allowOptionishArguments.
         // This parser should allow positional arguments that start with "-".
@@ -173,7 +173,7 @@ namespace brick {
       }
     }
 
-  
+
     void
     OptionParserTest::
     testDestructor()
@@ -181,7 +181,7 @@ namespace brick {
       // No explicit test for destructor.
     }
 
-  
+
     void
     OptionParserTest::
     testAddOption()
@@ -192,7 +192,7 @@ namespace brick {
       const char* argv1[] = {"foo", "-b", "10", "--bar", "--baz", "baz"};
       int argc2 = 6;
       const char* argv2[] = {"foo", "-bbl", "10", "--bar", "--baz", "baz"};
-    
+
       OptionParser optionParser0;
       optionParser0.addOption("BAR", "-b", "--bar", "Set the bar.");
       optionParser0.addOption("BAZ", "", "--baz", "Set the baz.");
@@ -226,7 +226,7 @@ namespace brick {
         optionParser1.parseCommandLine(argc2, argv2));
     }
 
-  
+
     void
     OptionParserTest::
     testAddOptionWithValue()
@@ -237,7 +237,7 @@ namespace brick {
       const char* argv1[] = {"foo", "-bbl", "10", "--bar=Ten", "--baz", "baz"};
       int argc2 = 1;
       const char* argv2[] = {"foo"};
-    
+
       OptionParser optionParser0;
       optionParser0.addOptionWithValue(
         "BAR", "-b", "--bar", "7", "Set the bar.");
@@ -257,7 +257,7 @@ namespace brick {
       // Check that multiple occurrences of the same option are saved.
       BRICK_TEST_ASSERT(optionParser0.getValue("BAR", 0) == "10");
       BRICK_TEST_ASSERT(optionParser0.getValue("BAR", 1) == "Ten");
-    
+
       OptionParser optionParser1;
       optionParser1.addOptionWithValue(
         "BAR", "", "--bar", "", "Set the bar.");
@@ -266,7 +266,7 @@ namespace brick {
       optionParser1.addOptionWithValue(
         "BASTE", "-b", "--baste", "7", "Set the baste.");
       optionParser1.parseCommandLine(argc0, argv0);
- 
+
       BRICK_TEST_ASSERT(optionParser1.getCount("BAR") == 1);
       BRICK_TEST_ASSERT(optionParser1.getCount("BAZ") == 1);
       BRICK_TEST_ASSERT(optionParser1.getCount("BASTE") == 1);
@@ -280,7 +280,7 @@ namespace brick {
       optionParser1.parseCommandLine(argc1, argv1);
       std::vector<std::string> extraArguments =
         optionParser1.getExtraPositionalArguments();
- 
+
       BRICK_TEST_ASSERT(optionParser1.getCount("BAR") == 1);
       BRICK_TEST_ASSERT(optionParser1.getCount("BAZ") == 1);
       BRICK_TEST_ASSERT(optionParser1.getCount("BASTE") == 1);
@@ -306,14 +306,14 @@ namespace brick {
                                      - 6.5) < 1.0e-9);
     }
 
-  
+
     void
     OptionParserTest::
     testAddPositionalArgument()
     {
       int argc0 = 6;
       const char* argv0[] = {"foo", "-b", "10", "--bar", "--baz", "baz"};
-    
+
       // Test parsing with required and optional arguments.
       OptionParser optionParser0;
       optionParser0.addOption("BAR", "-b", "--bar", "Set the bar.");
@@ -343,7 +343,7 @@ namespace brick {
         optionParser1.parseCommandLine(argc0, argv0));
     }
 
-  
+
     void
     OptionParserTest::
     testAlphabetization()
@@ -354,7 +354,7 @@ namespace brick {
       optionParser0.addOption("BAR", "-b", "--bar", "Set the bar.");
       optionParser0.addOption("BAZ", "", "--baz", "Set the baz.", "", "001");
       optionParser0.addOption("COW", "", "--cow", "Set the cow.", "", "BARN");
-      
+
       optionParser0.addOptionWithValue("FOP", "-F", "--fop", "fop",
                                        "Set the fop.", "", "003");
       optionParser0.addOptionWithValue("000", "-z", "--zero", "zero",
@@ -363,7 +363,7 @@ namespace brick {
                                        "Set the dog.");
 
       std::string usage = optionParser0.getUsage();
-      
+
       size_t fooPosition = usage.find("--foo");
       size_t barPosition = usage.find("--bar");
       size_t bazPosition = usage.find("--baz");
@@ -383,7 +383,7 @@ namespace brick {
 
       brick::utilities::OptionParser optionParser1(1);
       optionParser1.addDescription("A program to do something.");
-      
+
       optionParser1.addSection("00");
       optionParser1.addOptionWithValue(
         "DD", "-d", "--dd", "", "Doc", "00", "000");
@@ -424,7 +424,7 @@ namespace brick {
       BRICK_TEST_ASSERT(usage.find("--vv") < usage.find("--oo"));
     }
 
-  
+
     void
     OptionParserTest::
     testConvertValue()
@@ -433,7 +433,7 @@ namespace brick {
       int argc0 = 9;
       const char* argv0[] = {"foo", "-a", "9.0", "-b", "10", "--ccc=-9",
                              "--bbb=11", "-b", "12"};
-    
+
       OptionParser optionParser0;
       optionParser0.addOptionWithValue(
         "AA", "-a", "--aaa", "11.0", "Set the aa.");
@@ -479,7 +479,7 @@ namespace brick {
       BRICK_TEST_ASSERT(optionParser0.convertValue<int>("BB", 1, -50, 50) == 11);
       BRICK_TEST_ASSERT(optionParser0.convertValue<int>("BB", 2, -50, 50) == 12);
       BRICK_TEST_ASSERT(optionParser0.convertValue<int>("DD", -50, 50) == -11);
-      
+
       // Make sure out-of-bounds values throw when we're not clamping.
       BRICK_TEST_ASSERT_EXCEPTION(
         brick::utilities::ConversionException,
@@ -500,7 +500,7 @@ namespace brick {
       BRICK_TEST_ASSERT(optionParser0.convertValue<int>("CC", -50, 50) == -9);
     }
 
-    
+
     void
     OptionParserTest::
     testGetCount()
@@ -508,7 +508,7 @@ namespace brick {
       // Already tested in testAddOption().
     }
 
-  
+
     void
     OptionParserTest::
     testGetExtraPositionalArguments()
@@ -516,7 +516,7 @@ namespace brick {
       // Already tested in testConstructor().
     }
 
-  
+
     void
     OptionParserTest::
     testGetOptionsDescription()
@@ -524,7 +524,7 @@ namespace brick {
       // No explicit test.
     }
 
-  
+
     void
     OptionParserTest::
     testGetUsage()
@@ -532,7 +532,7 @@ namespace brick {
       // No explicit test.
     }
 
-  
+
     void
     OptionParserTest::
     testGetValue()
@@ -540,7 +540,7 @@ namespace brick {
       // Already tested in testAddOptionWithValue().
     }
 
-  
+
     void
     OptionParserTest::
     testParseCommandLine()
@@ -549,7 +549,7 @@ namespace brick {
     }
 
   } // namespace utilities
-  
+
 } // namespace brick
 
 #ifndef BRICK_TEST_NO_AUTOMATIC_REGISTRATION

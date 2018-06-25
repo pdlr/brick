@@ -19,7 +19,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     /** Unstable: interface subject to change. **/
     template <class OutputType, class KernelType, class SignalType>
     inline Array1D<OutputType>
@@ -38,7 +38,7 @@ namespace brick {
 	       ConvolutionStrategy strategy,
 	       ConvolutionROI roi,
 	       const FillType& fillValue);
-  
+
 
     /** Unstable: interface subject to change. **/
     template <class OutputType, class KernelType, class SignalType>
@@ -49,7 +49,7 @@ namespace brick {
 	       int boundary0,
 	       int boundary1);
 
-    
+
     /** Unstable: interface subject to change. **/
     template <class OutputType, class KernelType, class SignalType,
 	      class FillType>
@@ -61,7 +61,7 @@ namespace brick {
 	       int boundary1,
 	       const FillType& fillValue);
 
-    
+
     /** Unstable: interface subject to change. **/
     template <class OutputType, class KernelType, class SignalType>
     inline Array1D<OutputType>
@@ -81,7 +81,7 @@ namespace brick {
 		ConvolutionROI roi,
 		const FillType& fillValue);
 
-    
+
     /** Unstable: interface subject to change. **/
     template <class OutputType, class KernelType, class SignalType>
     Array1D<OutputType>
@@ -91,7 +91,7 @@ namespace brick {
 		int boundary0,
 		int boundary1);
 
-    
+
     /** Unstable: interface subject to change. **/
     template <class OutputType, class KernelType, class SignalType,
 	      class FillType>

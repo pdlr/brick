@@ -17,7 +17,7 @@
 // This file is included by nonMaximumSuppress.hh, and should not be
 // directly included by user code, so no need to include
 // nonMaximumSuppress.hh here.
-// 
+//
 // #include <brick/computerVision/nonMaximumSuppress.hh>
 
 #include <brick/common/mathFunctions.hh>
@@ -26,7 +26,7 @@ namespace brick {
 
   namespace computerVision {
 
-    
+
     // This function zeros any pixels of the input image which are not
     // plausible edges.
     template <class FloatType, ImageFormat FORMAT>
@@ -108,9 +108,9 @@ namespace brick {
       return suppressedImage;
     } // nonMaximumSuppress()
 
-    
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_KERNEL_IMPL_HH */

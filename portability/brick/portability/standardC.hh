@@ -44,35 +44,35 @@ namespace brick {
    ** possible, making the other libraries more readable.
    **/
   namespace portability {
-    
+
 #if HAVE_SNPRINTF
   using std::snprintf;
 #else
 
-  /** 
+  /**
    * This function is a crippled replacement for std::snprintf.  It is
    * useful on architectures which do not supply a fully featured
    * version.
-   * 
+   *
    * @param targetString This argument is the buffer into which the
    * formatted string should be written.
-   * 
+   *
    * @param targetSize This argument Is the size of the target buffer
    * in bytes.
-   * 
+   *
    * @param format This argument is the format string in normal printf
    * style.
-   * 
+   *
    * @return The return value is an integer indicating how many bytes
    * were written.
    */
   int snprintf(char* targetString, size_t targetSize, const char* format,
                ...);
-  
+
 #endif
 
   } // namespace portability
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_PORTABILITY_STANDARDC_HH */

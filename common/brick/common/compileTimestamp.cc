@@ -34,7 +34,7 @@ namespace brick {
 		<< std::setw(2) << m_second;
       return isoStream.str();
     }
-    
+
 
     void
     CompileTimestamp::
@@ -80,7 +80,7 @@ namespace brick {
       }
     }
 
-  
+
     void
     CompileTimestamp::
     parseCompilerTimeString(const std::string& compilerTimeString)
@@ -98,7 +98,7 @@ namespace brick {
 		  message.str().c_str());
       }
     }
-  
+
   } // namespace common
 
 } // namespace brick

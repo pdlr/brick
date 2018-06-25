@@ -15,7 +15,7 @@
 
 // This file is included by ransac.hh, and should not be directly included
 // by user code, so no need to include ransac.hh here.
-// 
+//
 // #include <brick/computerVision/ransac.hh>
 
 #include <cmath>
@@ -46,7 +46,7 @@ namespace brick {
       return count;
     }
 
-    
+
     // This is a convenience function that functions just like
     // ransacGetConsensusSet, except that the output of the functor
     // argument is passed to a second functor for evaluation.
@@ -137,7 +137,7 @@ namespace brick {
     }
 
 
-    
+
     // Randomly (or rather, pseudo-randomly) selects elements of the
     // input sequence for use in RANSAC estimation.
     template <class Type>
@@ -182,8 +182,8 @@ namespace brick {
       }
       return result;
     }
-    
-    
+
+
     template <class Type>
     brick::numeric::Array2D<Type>
     ransacSelectRows(brick::numeric::Array2D<Type> const& sampleArray,
@@ -193,7 +193,7 @@ namespace brick {
       return ransacSelectRows(sampleArray, numberOfSamplesRequired,
                               pseudoRandom);
     }
-    
+
 
     // This function is just like ransacSelectRows, except that a
     // third argument allows the calling context to control the
@@ -210,8 +210,8 @@ namespace brick {
       seed = pseudoRandom.getCurrentSeed();
       return result;
     }
-    
-    
+
+
     // This function is just like ransacSelectRows, except that a
     // third argument allows the calling context to control the
     // pseudo-random sequence.
@@ -259,9 +259,9 @@ namespace brick {
       }
       return result;
     }
-    
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_RANSAC_IMPL_HH */

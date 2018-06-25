@@ -47,13 +47,13 @@ namespace brick {
     class BSpline {
     public:
 
-      /** 
+      /**
        * This constructor builds a BSpline instance of unspecified length.
-       * 
+       *
        * @param order This argument sets the order of the spline.  For
        * a quadratic spline, set order to 2.  For a cubic spline, set
        * order to 3.
-       * 
+       *
        * @param isPeriodic If this argument is true, the spline will
        * be periodic.  That is, its last node will overlap its first,
        * and the spline parameter will wrap around from its maximum
@@ -62,15 +62,15 @@ namespace brick {
       BSpline(size_t order=2, bool isPeriodic=true);
 
 
-      /** 
+      /**
        * The copy constructor does a deep copy.
-       * 
+       *
        * @param other This argument is the BSpline instance to be copied.
        */
       BSpline(const BSpline& other);
 
 
-      /** 
+      /**
        * This member function returns the maximum value for the spline
        * parameter S.  For a non-periodic spline, calling
        * operator()(double) with an argument greater than or equal to
@@ -79,7 +79,7 @@ namespace brick {
        * than or equal to the result of getMaximumSValue() is not an
        * error, but the parameter will be wrapped around to the
        * beginning of the spline.
-       * 
+       *
        * @return The return value is the position of the last node in
        * the spline.
        */
@@ -87,7 +87,7 @@ namespace brick {
       getMaximumSValue();
 
 
-      /** 
+      /**
        * This member function returns the minimum value for the spline
        * parameter S.  For a non-periodic spline, calling
        * operator()(double) with an argument less than the result of
@@ -95,21 +95,21 @@ namespace brick {
        * calling operator()(double) with an argument less than the
        * result of getMinimumSValue() is not an error, but the
        * parameter will be wrapped around to the end of the spline.
-       * 
+       *
        * @return The return value is the position of the first node in
        * the spline.
        */
       double
       getMinimumSValue();
-      
 
-      /** 
+
+      /**
        * This member function sets the values of the control points of
        * the spline.  If the spline is periodic, then the value of the
        * final control point should be omitted; it will be
        * automatically copied from the value of the first control
        * point.
-       * 
+       *
        * @param controlPoints This argument specifies the control
        * point values for the spline.
        */
@@ -117,7 +117,7 @@ namespace brick {
       setControlPoints(const std::vector<Type>& controlPoints);
 
 
-      /** 
+      /**
        * This member function sets the knot multiplicity at each node
        * of the spline.  Setting the knot multiplicity of a node to N
        * will introduce, at that node, a discontinuity in the ((order
@@ -128,7 +128,7 @@ namespace brick {
        * the spline.  By default, all knot multiplicities are set to
        * 1, except for the first and last nodes of a non-periodic
        * spline, which are set to (order + 1).
-       * 
+       *
        * @param knotMultiplicities This argument specifies the knot
        * multipicity at each node in the spline.  For a periodic
        * spline, the first and last nodes overlap, and must have the
@@ -139,7 +139,7 @@ namespace brick {
       setKnotMultiplicities(const std::vector<size_t>& knotMultiplicities);
 
 
-      /** 
+      /**
        * This member function both specifies the number of nodes in
        * the spline and sets the node positions so that the spline is
        * "uniform".  The node positions will be set so that the first
@@ -149,11 +149,11 @@ namespace brick {
        * same control point.  For both periodic and non-periodic
        * splines, the number of spans will be equal to numberOfNodes -
        * 1.
-       * 
+       *
        * @param numberOfNodes This argument specifies how many nodes
        * the spline should have.  For periodic splines, the first and
        * last nodes represent the same physical point on the spline.
-       * 
+       *
        * @param setKnotMultiplicitiesFlag This argument is used to
        * avoid redundant calculations if the knot multiplicities will
        * be explicitly set later.  If this argument is set to true,
@@ -168,9 +168,9 @@ namespace brick {
       void
       setNumberOfNodes(size_t numberOfNodes,
                        bool setKnotMultiplicitiesFlag=true);
-      
 
-      /** 
+
+      /**
        * This member function specifies the number of nodes in the
        * spline and allows the user to set the position of each node.
        * The node position values must be monotonically increasing
@@ -182,15 +182,15 @@ namespace brick {
        * if it were actually set to the position of the first node.
        * For both periodic and non-periodic splines, the number of
        * spans will be equal to numberOfNodes - 1.
-       * 
+       *
        * @param numberOfNodes This argument specifies how many nodes
        * the spline should have.  For periodic splines, the first and
        * last nodes represent the same physical point on the spline.
-       * 
+       *
        * @param nodePositions This argument specifies the positions
        * (in spline parameter space) of the nodes.  This argument can
        * be used to create non-uniform splines.
-       * 
+       *
        * @param setKnotMultiplicitiesFlag This argument is used to
        * avoid redundant calculations if the knot multiplicities will
        * be explicitly set later.  If this argument is set to true,
@@ -206,53 +206,53 @@ namespace brick {
       setNumberOfNodes(size_t numberOfNodes,
                        const std::vector<double>& nodePositions,
                        bool setKnotMultiplicitiesFlag=true);
-      
 
-      
-      /** 
+
+
+      /**
        * The assigment operator does a deep copy.
-       * 
+       *
        * @param other This argument is the BSpline instance to be copied.
        */
       BSpline<Type>&
       operator=(const BSpline<Type>& other);
 
-      
-      /** 
+
+      /**
        * This operator evaluates the spline at the specified value of
        * spline parameter s.
-       * 
+       *
        * @return The return value is the calculated spline value.
        */
       Type
       operator()(double sValue);
-      
+
 
     protected:
 
-      /** 
+      /**
        * This protected member function computes one spline basis
        * function for use in calculating spline values.
-       * 
+       *
        * @param order This argument specifies the order of the spline
        * (2 for quadratic, 3 for cubic, etc.)
-       * 
+       *
        * @param spanNumber This argument specifies the span for which
        * the basis function is being computed.
-       * 
+       *
        * @param componentNumber This argument specifies which of the
        * (order + 1) basis functions that overlap the span is to be
        * computed.
-       * 
+       *
        * @param cumulativeKnotCounts This argument specifies, for each
        * node, the total number of knots at that node plus the total
        * number of knots at preceding nodes.
-       * 
+       *
        * @param knotPositions This argument specifies the position
        * (spline parameter) of each knot.  If the spline contains
        * nodes with multiple knots, then the argument will contain
        * consecutive entries with the same value.
-       * 
+       *
        * @return The return value is the requested polynomial.
        */
       Polynomial<double>
@@ -262,26 +262,26 @@ namespace brick {
                            const Array1D<size_t>& cumulativeKnotCounts,
                            const Array1D<double>& knotPositions);
 
-      
-      /** 
+
+      /**
        * This protected member function returns an array in which each
        * element corresponds to one span of the spline, and contains
        * the control-point values that affect the spline values
        * within that span.  This function is used to allow efficient
        * calculation of spline values.
-       * 
+       *
        * @param order This argument is the order of the spline.
-       * 
+       *
        * @param numberOfNodes This argument specifies the number of
        * nodes in the spline.
-       * 
+       *
        * @param cumulativeKnotCounts This argument specifies, for each
        * node, the total number of knots at that node plus the total
        * number of knots at preceding nodes.
-       * 
+       *
        * @param controlPoints This argument specifies the actual
        * control point values.
-       * 
+       *
        * @return The return value is an array of arrays of
        * pre-selected control point values.
        */
@@ -291,17 +291,17 @@ namespace brick {
                              const Array1D<size_t>& cumulativeKnotCounts,
                              const std::vector<Type>& controlPoints);
 
-      
-      /** 
+
+      /**
        * This protected member function returns an array in which each
        * element corresponds to one span of the spline, and contains a
        * matrix of the polynomial coefficients of the basis functions
        * that affect the spline values within that span.  This
        * function is used to allow efficient calculation of spline
        * values.
-       * 
+       *
        * @param order This argument is the order of the spline.
-       * 
+       *
        * @param numberOfNodes This argument specifies the number of
        * nodes in the spline.
        *
@@ -317,7 +317,7 @@ namespace brick {
        * @param cumulativeKnotCounts This argument specifies, for each
        * node, the total number of knots at that node plus the total
        * number of knots at preceding nodes.
-       * 
+       *
        * @return The return value is an array of 2D arrays of
        * coefficient values.
        */
@@ -329,16 +329,16 @@ namespace brick {
                              const Array1D<size_t>& cumulativeKnotCounts);
 
 
-      /** 
+      /**
        * This protected member function wraps argument knotNumber so
        * that it is in the range [0, knotPositions.size() - 1], and
        * then returns the corresponding value from knotPositions.
-       * 
+       *
        * @param knotNumber This argument is the number of the knot,
        * possibly out-of-range and needing to be wrapped.
-       * 
+       *
        * @param knotPositions This argument is an array of knot positions.
-       * 
+       *
        * @return The return value is the appropriate value from
        * argument knotPositions.
        */
@@ -347,23 +347,23 @@ namespace brick {
                       const Array1D<double>& knotPositions);
 
 
-      /** 
+      /**
        * This protected member function returns the number of the span
        * in which the specified spline parameter value lies.
-       * 
+       *
        * @param sValue This argument indicates the point of interest
        * along the spline.
-       * 
+       *
        * @return The return value is the corresponding span number.
        */
       size_t
       getSpanNumber(double sValue);
-      
 
-      /** 
+
+      /**
        * This protected member function sets the positions of the
        * nodes in the spline.
-       * 
+       *
        * @param nodePositions This argument is a vector of node
        * positions.
        */
@@ -387,7 +387,7 @@ namespace brick {
 
 
   } // namespace numeric
-  
+
 } // namespace brick
 
 // Include file containing definitions of inline and template

@@ -17,7 +17,7 @@
 // This file is included by connectedComponents.hh, and should not be
 // directly included by user code, so no need to include
 // connectedComponents.hh here.
-// 
+//
 // #include <brick/computerVision/connectedComponents.hh>
 
 #include <cmath>
@@ -34,14 +34,14 @@ namespace brick {
       template<ImageFormat FORMAT_IN>
       void
       labelImageSameColor4Connectedected(
-        brick::numeric::Array2D<size_t>& labelImage,        
+        brick::numeric::Array2D<size_t>& labelImage,
         std::vector< std::unique_ptr< DisjointSet<size_t> > >& correspondenceVector,
         Image<FORMAT_IN> const& inputImage);
 
       template<ImageFormat FORMAT_IN>
       void
       labelImageFgBg4Connected(
-        brick::numeric::Array2D<size_t>& labelImage,        
+        brick::numeric::Array2D<size_t>& labelImage,
         std::vector< std::unique_ptr< DisjointSet<size_t> > >& correspondenceVector,
         Image<FORMAT_IN> const& inputImage);
 
@@ -50,12 +50,12 @@ namespace brick {
       populateOutputImage(Image<FORMAT_OUT>& outputImage,
                           brick::numeric::Array2D<size_t> const& labelImage,
                           std::vector<size_t> const& labelArray);
-      
+
 
     } // namespace privateCode
     /// @endcond
 
-  
+
     // This function does connected components analysis on a previously
     // segmented image.
     template<ImageFormat FORMAT_OUT, ImageFormat FORMAT_IN>
@@ -79,7 +79,7 @@ namespace brick {
     {
       // Allocate storage for the intermediate and final results.
       Image<FORMAT_OUT> outputImage(inputImage.rows(), inputImage.columns());
-      brick::numeric::Array2D<size_t> labelImage(inputImage.rows(), 
+      brick::numeric::Array2D<size_t> labelImage(inputImage.rows(),
                                                  inputImage.columns());
 
       // This vector will do the accounting of which components abut
@@ -96,7 +96,7 @@ namespace brick {
         privateCode::labelImageSameColor4Connectedected(
           labelImage, correspondenceVector, inputImage);
       }
-      
+
       // === Resolve label equivalences. ===
 
       // Create a look up table which will take tentative labels
@@ -130,9 +130,9 @@ namespace brick {
          && numberOfComponents != 0) {
         --numberOfComponents;
       }
-    
+
       return outputImage;
-    }    
+    }
 
 
     /// @cond privateCode
@@ -141,7 +141,7 @@ namespace brick {
       template<ImageFormat FORMAT_IN>
       void
       labelImageSameColor4Connectedected(
-        brick::numeric::Array2D<size_t>& labelImage,        
+        brick::numeric::Array2D<size_t>& labelImage,
         std::vector< std::unique_ptr< DisjointSet<size_t> > >& correspondenceVector,
         Image<FORMAT_IN> const& inputImage)
       {
@@ -161,7 +161,7 @@ namespace brick {
         *labelIter = currentLabel;
         ++inIter;
         ++labelIter;
-        
+
         // Label the rest of the first row.
         size_t const numberOfColumns = inputImage.columns();
         for(size_t columnIndex = 1; columnIndex < numberOfColumns;
@@ -199,7 +199,7 @@ namespace brick {
           size_t previousLabel = *labelIter;
           ++inIter;
           ++labelIter;
-          
+
           // Iterate over the rest of the current row.
           for(size_t columnIndex = 1; columnIndex < inputImage.columns();
               ++columnIndex) {
@@ -209,7 +209,7 @@ namespace brick {
             size_t parentLabel = *(labelIter - numberOfColumns);
             bool matchesPrevious = ((*inIter) == (*(inIter - 1)));
             bool matchesParent = ((*inIter) == (*(inIter - numberOfColumns)));
-            
+
             if(matchesPrevious) {
               // The current pixel is in the same blob as the previous pixel.
               *labelIter = previousLabel;
@@ -238,11 +238,11 @@ namespace brick {
         }
       }
 
-      
+
       template<ImageFormat FORMAT_IN>
       void
       labelImageFgBg4Connected(
-        brick::numeric::Array2D<size_t>& labelImage,        
+        brick::numeric::Array2D<size_t>& labelImage,
         std::vector< std::unique_ptr< DisjointSet<size_t> > >& correspondenceVector,
         Image<FORMAT_IN> const& inputImage)
       {
@@ -257,7 +257,7 @@ namespace brick {
         // This variable will be used to keep track of whether or not the
         // previous pixel was part of a blob.
         bool isActive = false;
-    
+
         // Get iterators pointing to the first pixel of the input image, and
         // the first pixel of the label image.
         InIterator inIter = inputImage.begin();
@@ -285,7 +285,7 @@ namespace brick {
             correspondenceVector.emplace_back(
               new DisjointSet<size_t>(currentLabel));
             *labelIter = currentLabel;
-            isActive = true;              
+            isActive = true;
           }
           // Move to the next pixel.
           ++inIter;
@@ -336,7 +336,7 @@ namespace brick {
               // isActive so that we'll remember next iteration that we
               // just labeled a pixel.
               isActive = true;
-            
+
               // Perhaps the pixel in the row above was also part of
               // this blob.
               if(parentLabel) {
@@ -362,7 +362,7 @@ namespace brick {
         }
       }
 
-      
+
       template<ImageFormat FORMAT_OUT>
       void
       populateOutputImage(Image<FORMAT_OUT>& outputImage,
@@ -371,20 +371,20 @@ namespace brick {
       {
         auto labelIter = labelImage.begin();
         auto outIter = outputImage.begin();
-        
+
         while(labelIter != labelImage.end()) {
           *outIter = static_cast<typename ImageFormatTraits<FORMAT_OUT>::PixelType>(labelArray[*labelIter]);
           ++outIter;
           ++labelIter;
         }
-        
+
       }
-      
+
     } // namespace privateCode
     /// @endcond
-    
+
   } // namespace computerVision
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_CONNECTEDCOMPONENTS_IMPL_HH */

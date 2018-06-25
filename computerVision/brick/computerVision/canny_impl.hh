@@ -15,7 +15,7 @@
 
 // This file is included by canny.hh, and should not be directly included
 // by user code, so no need to include canny.hh here.
-// 
+//
 // #include <brick/computerVision/canny.hh>
 
 #include <limits>
@@ -140,11 +140,11 @@ namespace brick {
         }
         return edgeImage;
       }
-      
+
     } // namespace privateCode
     /// @endcond
 
-    
+
     // This function applies the canny edge operator.
     template <class FloatType, ImageFormat FORMAT>
     Image<GRAY1>
@@ -253,7 +253,7 @@ namespace brick {
           BRICK_THROW(brick::common::ValueException, "applyCanny()",
                     "Filter kernel is too large for image.");
         }
-        
+
         // Hack(xxx): Zero out borders of images to avoid spurious edges.
         for(size_t row = 0; row < startRow; ++row) {
           for(size_t column = 0; column < gradMagnitude.columns(); ++column) {
@@ -306,7 +306,7 @@ namespace brick {
           upperThreshold = std::max(upperThreshold, 0.0);
         }
         if(lowerThreshold <= 0.0) {
-          lowerThreshold = 
+          lowerThreshold =
             gradientMean + autoLowerThresholdFactor * gradientSigma;
           lowerThreshold = std::min(lowerThreshold, upperThreshold);
           lowerThreshold = std::max(lowerThreshold, 0.0);
@@ -318,7 +318,7 @@ namespace brick {
           gradMagnitude[index0] = (tmpVal > lowerThreshold) ? tmpVal : 0.0;
         }
       }
-          
+
       // Step 3: Non-maximum suppression.
       Image<ImageFormatIdentifierGray<FloatType>::Format> edgeCandidates =
         nonMaximumSuppress(gradMagnitude, gradX, gradY);
@@ -330,7 +330,7 @@ namespace brick {
     }
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_CANNY_IMPL_HH */

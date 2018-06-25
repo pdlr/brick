@@ -26,8 +26,8 @@ namespace brick {
 
   namespace computerVision {
 
-    
-    // This test is copied 
+
+    // This test is copied
     class RansacTest
       : public brick::test::TestFixture<RansacTest> {
 
@@ -45,7 +45,7 @@ namespace brick {
     private:
 
       double m_defaultTolerance;
-      
+
     }; // class RansacTest
 
 
@@ -113,7 +113,7 @@ namespace brick {
         // We have to copy sampleSequence so that we can increment the
         // "begin iterator" part of it.
         SampleSequenceType mutableSequence = sampleSequence;
-        
+
         while(mutableSequence.first != mutableSequence.second) {
           num::Vector2D<double> const& xy_n = *mutableSequence.first;
           dotXX += xy_n.x() * xy_n.x();
@@ -144,7 +144,7 @@ namespace brick {
                    IterType outputIter) {
         SampleSequenceType mutableSequence = sampleSequence;
         while(mutableSequence.first != mutableSequence.second) {
-          
+
           // We're looking for the point that minimizes squared error.
           // We parameterize this point by its x coord, and minimize
           // over x:
@@ -184,9 +184,9 @@ namespace brick {
 
       // How close must a point be to the line in order to not be
       // considered an outlier.
-      double 
+      double
       getNaiveErrorThreshold() {return 0.5;}
-    
+
     };
 
 

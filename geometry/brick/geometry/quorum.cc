@@ -15,9 +15,9 @@ namespace brick {
 
   namespace geometry {
 
-    /// Unused. 
+    /// Unused.
     unsigned int representative = 0;
-    
+
   } // namespace geometry
-  
+
 } // namespace brick

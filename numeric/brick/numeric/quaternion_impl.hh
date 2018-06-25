@@ -13,7 +13,7 @@
 
 // This file is included by quaternion.hh, and should not be directly
 // included by user code, so no need to include quaternion.hh here.
-// 
+//
 // #include <brick/numeric/quaternion.hh>
 
 #include <cmath>
@@ -35,7 +35,7 @@ namespace brick {
       return brick::numeric::squareRoot(m_s*m_s + m_i*m_i + m_j*m_j + m_k*m_k);
     }
 
-    
+
     // This member function normalizes the Quaternion, first computing
     // the magnitude of the Quaternion, and then dividing each element
     // by that value.
@@ -71,5 +71,5 @@ namespace brick {
     }
 
   } // namespace numeric
-  
+
 } // namespace brick

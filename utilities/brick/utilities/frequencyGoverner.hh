@@ -18,7 +18,7 @@
 namespace brick {
 
   namespace utilities {
-    
+
     /**
      ** The FrequencyGoverner class allows you to conveniently throttle
      ** a loop so that it runs at a specific speed.  Here's an example
@@ -38,10 +38,10 @@ namespace brick {
     class FrequencyGoverner {
     public:
 
-      /** 
+      /**
        * The constructor initializes the FrequencyGoverner and starts
        * the internal timer.
-       * 
+       *
        * @param frequency This argument specifies how fast you'd like
        * the loop to run.  Setting this argument to zero indicates no
        * throttling of loop speed.
@@ -63,7 +63,7 @@ namespace brick {
       ~FrequencyGoverner() {}
 
 
-      /** 
+      /**
        * This method returns the average frequency at which method
        * sleepIfNecessary() has been called.  This average includes
        * any time spent between the constructor and the first call to
@@ -71,7 +71,7 @@ namespace brick {
        * frequency-governed loop isn't too heavy, the return value
        * should be approximately equal to the frequency specified in
        * the constructor call.
-       * 
+       *
        * @return The return value is an estimage of the actual
        * frequency at which the sleepIfNecessary is being called.
        */
@@ -81,34 +81,34 @@ namespace brick {
         return (getCurrentTime() - m_startTime) / m_count;
       }
 
-      
-      /** 
+
+      /**
        * This method returns the number of times that method
        * sleepIfNecessary() has been called.
-       * 
+       *
        * @return The return value indicates the totall number of calls
        * to sleepIfNecessary().
        */
-      unsigned int 
+      unsigned int
       getCount() {return static_cast<unsigned int>(m_count);}
 
 
-      /** 
+      /**
        * This method returns how long, in seconds, method
        * sleepIfNecessary() would have slept if it had been called
        * instead of getSlack().
-       * 
+       *
        * @return The return value is positive if we are ahead of
        * schedule, negative otherwise.
        */
       double
       getSlack() {return m_startTime + m_count * m_period - getCurrentTime();}
-      
-      
-      /** 
+
+
+      /**
        * This method reports whether or not the specified period (from
        * constructor argument "duration") has elapsed.
-       * 
+       *
        * @return The return value is true if the FrequencyGoverner was
        * instantiated more than "duration" seconds ago, false otherwise.
        */
@@ -119,7 +119,7 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This method sleeps just long enough to prevent a loop from
        * running faster than the specifed frequency.
        */
@@ -130,7 +130,7 @@ namespace brick {
         portableSleep(this->getSlack());
         ++m_count;
       }
-      
+
     private:
 
       int m_count;
@@ -141,7 +141,7 @@ namespace brick {
     }; // class FrequencyGoverner
 
   } // namespace utilities
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_UTILITES_FREQUENCYGOVERNER_HH */

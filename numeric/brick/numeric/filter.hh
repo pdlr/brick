@@ -20,7 +20,7 @@ namespace brick {
 
   namespace numeric {
 
-    /** 
+    /**
      * This function filters each column of an array by convolving
      * (correlating, actually) with the specified filter kernel.  The
      * result is returned through the pre-allocated outputArray
@@ -32,7 +32,7 @@ namespace brick {
      * convolution will be performed using the math with precision
      * specified by KernelType, and the result will be cast to
      * OutputType.
-     * 
+     *
      * @param outputArray The result of the filtering will be returned
      * through this argument, which must have the same number of rows
      * and columns as inputArray.
@@ -50,7 +50,7 @@ namespace brick {
       Array1D<KernelType> const& kernel);
 
 
-    /** 
+    /**
      * This function filters each column of an array by convolving
      * (correlating, actually) with the specified filter kernel.  The
      * result is returned through the pre-allocated outputArray
@@ -62,7 +62,7 @@ namespace brick {
      * convolution will be performed using the math with precision
      * specified by KernelType, and the result will be cast to
      * OutputType.
-     * 
+     *
      * @param outputArray The result of the filtering will be returned
      * through this argument, which must have the same number of rows
      * and columns as inputArray.
@@ -78,9 +78,9 @@ namespace brick {
       Array2D<OutputType>& outputArray,
       Array2D<InputType> const& inputArray,
       Array1D<KernelType> const& kernel);
-    
+
   } // namespace numeric
-  
+
 } // namespace brick
 
 

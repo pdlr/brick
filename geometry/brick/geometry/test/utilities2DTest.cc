@@ -19,7 +19,7 @@
 namespace brick {
 
   namespace geometry {
-    
+
     class Utilities2DTest : public brick::test::TestFixture<Utilities2DTest> {
 
     public:
@@ -45,9 +45,9 @@ namespace brick {
       bool isApproximatelyEqual(brick::numeric::Vector2D<double> const& point0,
                                 brick::numeric::Vector2D<double> const& point1,
                                 double tolerance = 1.0E-12);
-        
+
       const double m_defaultTolerance;
-      
+
     }; // class Utilities2DTest
 
 
@@ -70,7 +70,7 @@ namespace brick {
 
 
     void
-    Utilities2DTest::    
+    Utilities2DTest::
     testCheckIntersect__lineSegment2D__lineSegment2D__vector2DRef()
     {
       // Define a few test segments.
@@ -223,7 +223,7 @@ namespace brick {
               + area1 * getCentroid(subtriangle1)
               + area2 * getCentroid(subtriangle2);
             testCentroid /= (area0 + area1 + area2);
-            
+
             BRICK_TEST_ASSERT(
               !approximatelyEqual(testCentroid.getX(), 0.0,
                                   m_defaultTolerance));
@@ -241,7 +241,7 @@ namespace brick {
       }
     }
 
-    
+
     void
     Utilities2DTest::
     testFindClosestPoint__vector2D__ray2D()
@@ -272,7 +272,7 @@ namespace brick {
       Ray2D<double> topEdge(upperLeft, brick::numeric::Vector2D<double>(1.0, 0.0));
       Ray2D<double> rightEdge(upperRight, brick::numeric::Vector2D<double>(0.0, -1.0));
       Ray2D<double> bottomEdge(lowerRight, brick::numeric::Vector2D<double>(-1.0, 0.0));
-      
+
       // Now find the closest point on each edge to the center.
       // Should be the previously defined center points.
       brick::numeric::Vector2D<double> testPoint;
@@ -312,7 +312,7 @@ namespace brick {
         < m_defaultTolerance);
     }
 
-        
+
     void
     Utilities2DTest::
     testOperatorTimes__Transform2D__Ray2D()
@@ -338,7 +338,7 @@ namespace brick {
         < m_defaultTolerance);
     }
 
-        
+
     bool
     Utilities2DTest::
     isApproximatelyEqual(double val0,
@@ -348,7 +348,7 @@ namespace brick {
       return (std::fabs(val0 - val1) < tolerance);
     }
 
-    
+
     bool
     Utilities2DTest::
     isApproximatelyEqual(brick::numeric::Vector2D<double> const& point0,
@@ -358,7 +358,7 @@ namespace brick {
       return ((std::fabs(point0.x() - point1.x()) < tolerance)
               && (std::fabs(point0.y() - point1.y()) < tolerance));
     }
-    
+
   } // namespace geometry
 
 } // namespace brick

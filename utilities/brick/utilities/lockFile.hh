@@ -18,7 +18,7 @@
 namespace brick {
 
   namespace utilities {
-    
+
     /**
      ** The LockFile class tries to create a file that is uniquely
      ** owned by the calling process.  If a file with the specified
@@ -46,7 +46,7 @@ namespace brick {
      **   myFunctionThatRequiresLocking();
      ** } // LockFile destructor releases lock here.
      ** @endcode
-     ** 
+     **
      ** Here's another way to use LockFile:
      **
      ** @code
@@ -59,14 +59,14 @@ namespace brick {
      **   myFunctionThatRequiresLocking();
      ** } // LockFile destructor releases lock here.
      ** @endcode
-     ** 
+     **
      **/
     class LockFile {
     public:
 
-      /** 
+      /**
        * The constructor attempts to create the lock file.
-       * 
+       *
        * @param fileName This argument specifies the file to be created.
        *
        * @param timeout The constructor will wait this long (in
@@ -84,11 +84,11 @@ namespace brick {
                double timeout = 0.0);
 
 
-      /** 
+      /**
        * The constructor attempts to create a non-empty lock file.  If
        * the lock file is successfully created, then the specified
        * contents string will be written to the file.
-       * 
+       *
        * @param fileName This argument specifies the file to be created.
        *
        * @param contents This string is to be written to the lock file
@@ -118,12 +118,12 @@ namespace brick {
       ~LockFile();
 
 
-      /** 
+      /**
        * This member function reports whether or not the lock was
        * successfully obtained.  That is, it reports whether or not
        * the constructor or retry() method was successful in asserting
        * the lock.
-       * 
+       *
        * @return The return value is true if the lock was obtained,
        * false otherwise.
        */
@@ -131,12 +131,12 @@ namespace brick {
       isValid();
 
 
-      /** 
+      /**
        * This member function tries to obtain the lock, and is useful
        * for cases where the constructor failed to obtain the lock.
        * Calling this function when the file has already been locked
        * has no effect.
-       * 
+       *
        * @param timeout This argument controls how long the call to
        * retry() is allowed to wait for a lock to be established.  Its
        * meaning is just like that of the identically named
@@ -147,7 +147,7 @@ namespace brick {
        */
       bool
       retry(double timeout = 0.0);
-      
+
     private:
 
       int m_fileDescriptor;
@@ -155,11 +155,11 @@ namespace brick {
 
       // This member is currently only to soothe compiler warnings.
       int m_returnCode;
-      
+
     }; // class LockFile
 
   } // namespace utilities
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_UTILITES_LOCKFILE_HH */

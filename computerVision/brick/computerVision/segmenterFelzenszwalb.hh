@@ -34,7 +34,7 @@ namespace brick {
         return (result < 0.0) ? -result : result;
       }
     };
-      
+
 
     template <class FloatType>
     struct Edge {
@@ -68,7 +68,7 @@ namespace brick {
      **   Image<GRAY8> inputImage0 = readPGM8(getTestImageFileNamePGM0());
      **   SegmenterFelzenszwalb<MyEdgeFunctor> segmenter(
      **     kappa, sigma, minSegmentSize);
-     **   
+     **
      **   // Generate graph edges for segmentation.
      **   Image<HSV8> hsvImage = myPreprocessingRoutine(inputImage0);
      **   std::vector< Edge<Float32> > edges = segmenter.getEdges(hsvImage);
@@ -93,7 +93,7 @@ namespace brick {
         size_t minSegmentSize = 20,
         EdgeFunctor const& edgeFunctor = EdgeFunctor());
 
-      
+
       virtual
       ~SegmenterFelzenszwalb() {}
 
@@ -102,7 +102,7 @@ namespace brick {
       std::vector< Edge<FloatType> >
       getEdges(const Image<FORMAT>& inImage);
 
-      
+
       template <ImageFormat FORMAT>
       std::vector< Edge<FloatType> >
       getEdges4Connected(const Image<FORMAT>& inImage);
@@ -116,7 +116,7 @@ namespace brick {
       virtual brick::numeric::Array2D<brick::common::UnsignedInt32>
       getLabelArray();
 
-      
+
       virtual brick::numeric::Array2D<brick::common::UnsignedInt32>
       getLabelArray(brick::common::UnsignedInt32& numberOfSegments,
                     std::vector<size_t>& segmentSizes);
@@ -132,7 +132,7 @@ namespace brick {
       segmentFromEdges(size_t imageRows, size_t imageColumns,
                        ITER edgeBegin, ITER edgeEnd);
 
-      
+
     protected:
 
       typedef DisjointSet<float> Segment;
@@ -147,7 +147,7 @@ namespace brick {
       setEdge(Edge<FloatType>& edge, size_t index0, size_t index1,
               Image<FORMAT> inImage);
 
-      
+
       inline void
       updateCost(Segment& C_i, float weight);
 
@@ -159,16 +159,16 @@ namespace brick {
       brick::numeric::Array1D<Segment> m_segmentation;
       float m_sigma;
       size_t m_smoothSize;
-      
+
     };
 
 
     template <class FloatType>
     inline bool
     operator<(Edge<FloatType> const& arg0, Edge<FloatType> const& arg1);
-    
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

@@ -21,8 +21,8 @@ namespace brick {
 
   namespace computerVision {
 
-    
-    // This test is copied 
+
+    // This test is copied
     class KeypointSelectorLepetitTest
       : public brick::test::TestFixture<KeypointSelectorLepetitTest> {
 
@@ -40,7 +40,7 @@ namespace brick {
     private:
 
       double m_defaultTolerance;
-      
+
     }; // class KeypointSelectorLepetitTest
 
 

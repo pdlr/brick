@@ -17,7 +17,7 @@
 // This file is included by solveQuartic.hh, and should not be
 // directly included by user code, so no need to include
 // solveQuartic.hh here.
-// 
+//
 // #include <brick/numeric/solveQuartic.hh>
 
 #include <cmath>
@@ -75,12 +75,12 @@ namespace brick {
       //   alpha = s - p^2 + q
       //   beta = p * (s - q)
       //   gamma = sq
-      // 
+      //
       // From which we get:
       //
       //   alpha + p^2 = s + q
       //   (alpha + p^2)^2 = (s + q)^2
-      // 
+      //
       //   beta / p = s - q
       //   (beta / p)^2 = (s - q)^2
       //
@@ -90,9 +90,9 @@ namespace brick {
       // Substituting P = p^2 gives:
       //
       //   P^2 + 2*alpha*P + alpha^2 - (beta^2 / P) = 4*gamma
-      // 
+      //
       // or equivalently
-      // 
+      //
       //   P^3 + 2*alpha*P^2 +(alpha^2 - 4*gamma)*P - beta^2 = 0
       //
       // which we solve for P.
@@ -137,10 +137,10 @@ namespace brick {
 
       // Now find the roots of the polynomial in u, and change
       // variables back to x:
-      // 
+      //
       //   (u^2 + p*u + q) * (u^2 + r*u + s) = 0,
       //   x = u - c0/4
-      
+
       solveQuadratic(pp, qq, r0, r1);
       root0 = r0 - c0 / Type(4.0);
       root1 = r1 - c0 / Type(4.0);

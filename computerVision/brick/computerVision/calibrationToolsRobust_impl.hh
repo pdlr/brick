@@ -17,7 +17,7 @@
 // This file is included by calibrationToolsRobust.hh, and should not be
 // directly included by user code, so no need to include
 // calibrationToolsRobust.hh here.
-// 
+//
 // #include <brick/computerVision/calibrationToolsRobust.hh>
 
 
@@ -38,7 +38,7 @@ namespace brick {
 
         CTRSamplePair()
           : point3D(), point2D() {}
-        
+
         CTRSamplePair(brick::numeric::Vector3D<FloatType> a_point3D,
                       brick::numeric::Vector2D<FloatType> a_point2D)
           : point3D(a_point3D), point2D(a_point2D) {}
@@ -82,7 +82,7 @@ namespace brick {
         typedef typename MyRansacProblem::SampleSequenceType
           MySampleSequenceType;
 
-        
+
         // When constructing the EstimateCameraParametersProblemParent
         // instance, we have to pass in a sequence of CTRSamplePair
         // instances so that the RANSAC implementation can later ask
@@ -107,7 +107,7 @@ namespace brick {
         // point correspondences.
         virtual CTRResult<Intrinsics>
         estimateModel(MySampleSequenceType const& sampleSequence) = 0;
-        
+
 
         // Given camera parameters, compute the residual for each
         // 3D-2D sample pair of the input sampleSequence.
@@ -135,7 +135,7 @@ namespace brick {
         // How closely (in pixels) must a world point project to its
         // corresponding image point in order to not be considered an
         // outlier.
-        FloatType 
+        FloatType
         getNaiveErrorThreshold() {return m_maxResidual;}
 
       protected:
@@ -145,7 +145,7 @@ namespace brick {
           MySampleSequenceType const& sampleSequence,
           std::vector< brick::numeric::Vector3D<FloatType> >& worldPoints,
           std::vector< brick::numeric::Vector2D<FloatType> >& imagePoints) {
-          
+
           // We have to copy sampleSequence so that we can increment the
           // "begin iterator" part of it.
           MySampleSequenceType mutableSequence = sampleSequence;
@@ -179,7 +179,7 @@ namespace brick {
         typedef typename Intrinsics::FloatType FloatType;
         typedef typename EstimateCameraParametersProblemParent<Intrinsics>
           ::MySampleSequenceType MyMySampleSequenceType;
-        
+
         // See EstimateCameraParametersProblemParent for documentation.
         template <class IterType>
         EstimateCameraParametersProblem(
@@ -188,7 +188,7 @@ namespace brick {
           : EstimateCameraParametersProblemParent<Intrinsics>(
               intrinsics, maxResidual, numSamplesRequired,
               beginIter, endIter) {}
-          
+
 
         // See EstimateCameraParametersProblemParent for documentation.
         CTRResult<Intrinsics>
@@ -196,7 +196,7 @@ namespace brick {
           std::vector< brick::numeric::Vector3D<FloatType> > worldPoints;
           std::vector< brick::numeric::Vector2D<FloatType> > imagePoints;
           this->unpackSampleSequence(sampleSequence, worldPoints, imagePoints);
-          
+
           CTRResult<Intrinsics> result;
           result.intrinsics = this->m_intrinsics;
           estimateCameraParameters(
@@ -217,13 +217,13 @@ namespace brick {
             CameraIntrinsicsPinhole<FloatType> >
       {
       public:
-      
+
         typedef CameraIntrinsicsPinhole<FloatType> MyIntrinsics;
         typedef EstimateCameraParametersProblemParent<MyIntrinsics>
           MyParentType;
         typedef typename MyParentType::MySampleSequenceType
           MySampleSequenceType;
-      
+
         // See EstimateCameraParametersProblemParent for documentation.
         template <class IterType>
         EstimateCameraParametersPinholeProblem(
@@ -232,7 +232,7 @@ namespace brick {
           IterType beginIter, IterType endIter)
           : EstimateCameraParametersProblemParent<MyIntrinsics>(
             intrinsics, maxResidual, 6, beginIter, endIter) {}
-          
+
 
         // See EstimateCameraParametersProblemParent for documentation.
         CTRResult<MyIntrinsics>
@@ -240,7 +240,7 @@ namespace brick {
           std::vector< brick::numeric::Vector3D<FloatType> > worldPoints;
           std::vector< brick::numeric::Vector2D<FloatType> > imagePoints;
           this->unpackSampleSequence(sampleSequence, worldPoints, imagePoints);
-          
+
           CTRResult<MyIntrinsics> result;
           estimateCameraParametersPinhole(
             result.intrinsics, result.cameraTworld,
@@ -302,7 +302,7 @@ namespace brick {
         cameraTworld = result.cameraTworld;
         intrinsics = result.intrinsics;
       }
-      
+
     } // namespace privateCode
 
 
@@ -388,7 +388,7 @@ namespace brick {
     }
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_CALIBRATIONTOOLSROBUST_IMPL_HH */

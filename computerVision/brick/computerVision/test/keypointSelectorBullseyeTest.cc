@@ -29,8 +29,8 @@ namespace brick {
 
   namespace computerVision {
 
-    
-    // This test is copied 
+
+    // This test is copied
     class KeypointSelectorBullseyeTest
       : public brick::test::TestFixture<KeypointSelectorBullseyeTest> {
 
@@ -45,11 +45,11 @@ namespace brick {
       // Tests.
       void testKeypointSelectorBullseye();
       void testExecutionTime();
-      
+
     private:
 
       double m_defaultTolerance;
-      
+
     }; // class KeypointSelectorBullseyeTest
 
 
@@ -95,13 +95,13 @@ namespace brick {
       minRadiuses.push_back(5);
       // minRadiuses.push_back(3);
       // minRadiuses.push_back(30);
-      
+
       std::vector<std::size_t> maxRadiuses;
       maxRadiuses.push_back(15);
       maxRadiuses.push_back(15);
       // maxRadiuses.push_back(15);
       // maxRadiuses.push_back(50);
-      
+
       // These tolerances control how precisely the general position
       // output of the keypoint selector must match the nominal
       // position of the bullseye.  The tolerance is much tighter on
@@ -144,7 +144,7 @@ namespace brick {
       //     numeric::Vector2D<double>(1078.5, 787.0)
       //   }
       // );
-      
+
       for(brick::common::UInt32 jj = 0; jj < inputFileNameVector.size();
 	  ++jj) {
 
@@ -235,7 +235,7 @@ namespace brick {
       }
 
       writePGM8("big.pgm", bigImage);
-      
+
       KeypointSelectorBullseye<double> selector(1, 15, 5);
 
       std::cout << "Start!" << std::endl;
@@ -251,7 +251,7 @@ namespace brick {
                 << std::fixed << std::setprecision(5)
                 << t1 - t0 << " seconds" << std::endl;
     }
-    
+
   } // namespace computerVision
 
 } // namespace brick

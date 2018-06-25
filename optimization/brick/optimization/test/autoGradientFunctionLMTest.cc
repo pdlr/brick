@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/optimization/test/autoGradientFunctionLMTest.cc
-* 
+*
 * Source file defining autoGradientFunctionLMTest class.
 *
 * Copyright (C) 2018 David LaRose, dlr@cs.cmu.edu
@@ -41,16 +41,16 @@ namespace brick {
         void apply(InputIter argsBegin, OutputIter resultBegin) {
           typedef typename std::remove_reference<decltype(*resultBegin)>::type
             Scalar;
-          
+
           Scalar result0 = 5.0 * (*argsBegin) * (*argsBegin);
           Scalar result1 = 0.0;
           Scalar result2 = -2.0 * (*argsBegin);
-          
+
           ++argsBegin;
           result0 += 2.0 * (*argsBegin) * (*argsBegin) * (*argsBegin);
           result1 += 8.0 * (*argsBegin);
           result2 *= (*argsBegin);
-          
+
           *resultBegin = result0;
           ++resultBegin;
           *resultBegin = result1;
@@ -63,7 +63,7 @@ namespace brick {
       };
 
       double m_defaultTolerance;
-      
+
     }; // class AutoGradientFunctionLMTest
 
 
@@ -89,7 +89,7 @@ namespace brick {
       // Tested implicitly by testApplicationOperator().
     }
 
-  
+
     void
     AutoGradientFunctionLMTest::
     testApplicationOperator()
@@ -146,7 +146,7 @@ namespace brick {
     }
 
   } // namespace optimization
-  
+
 } // namespace brick
 
 

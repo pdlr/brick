@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/common/exception.cc
-* 
+*
 * Source file defining some exception types.
 *
 * Copyright (C) 2003-2011, David LaRose, dlr@cs.cmu.edu
@@ -23,7 +23,7 @@ namespace {
   // std::snprintf() doesn't seem to be supported on some
   // architectures, so we define a crippled version here which fills
   // our needs.
-  int l_snprintf(char* targetPtr, size_t targetSize, 
+  int l_snprintf(char* targetPtr, size_t targetSize,
                  const char* formatPtr, ...) {
     char workingBuffer[1024];
     va_list varArgsList;
@@ -197,7 +197,7 @@ namespace brick {
       memcpy(m_payload + skipBytes, buffer, bufferSize);
       m_payloadSize = skipBytes + bufferSize;
     }
-      
+
 
     // Assignment operator.
     Exception& Exception::
@@ -252,5 +252,5 @@ namespace brick {
     }
 
   } // namespace common
-  
+
 } // namespace brick

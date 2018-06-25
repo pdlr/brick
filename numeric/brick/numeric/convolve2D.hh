@@ -40,7 +40,7 @@ namespace brick {
 	       ConvolutionStrategy strategy,
 	       ConvolutionROI roi,
 	       const FillType& fillValue);
-  
+
 
     /** Unstable: interface subject to change. **/
     template <class OutputType, class AccumulatorType,
@@ -52,7 +52,7 @@ namespace brick {
 	       const Index2D& corner0,
 	       const Index2D& corner1);
 
-    
+
     /** Unstable: interface subject to change. **/
     template <class OutputType, class AccumulatorType,
 	      class KernelType, class SignalType, class FillType>
@@ -64,7 +64,7 @@ namespace brick {
 	       const Index2D& corner1,
 	       const FillType& fillValue);
 
-    
+
     /** Unstable: interface subject to change. **/
     template <class OutputType, class AccumulatorType,
 	      class KernelType, class SignalType>
@@ -85,7 +85,7 @@ namespace brick {
 		ConvolutionROI roi,
 		const FillType& fillValue);
 
-    
+
     /** Unstable: interface subject to change. **/
     template <class OutputType, class AccumulatorType,
 	      class KernelType, class SignalType>
@@ -96,7 +96,7 @@ namespace brick {
 		const Index2D& corner0,
 		const Index2D& corner1);
 
-    
+
     /** Unstable: interface subject to change. **/
     template <class OutputType, class AccumulatorType,
 	      class KernelType, class SignalType, class FillType>
@@ -108,7 +108,7 @@ namespace brick {
 		const Index2D& corner1,
 		const FillType& fillValue);
 
-    
+
   } // namespace numeric
 
 } // namespace brick

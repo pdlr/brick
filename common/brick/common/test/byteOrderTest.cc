@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file byteOrderTest.cc
-* 
+*
 * Source file defining tests for exception trace code.
 *
 * Copyright (C) 2005 David LaRose, dlr@cs.cmu.edu
@@ -36,8 +36,8 @@ namespace brick {
       }
       return testSequence;
     }
-    
-      
+
+
     bool
     testGetByteOrder()
     {
@@ -45,7 +45,7 @@ namespace brick {
 
       std::vector<UnsignedInt16> testSequence =
         getTestSequence<UnsignedInt16>(2000, 27);
-      
+
       for(unsigned int ii = 0; ii < testSequence.size(); ++ii) {
         UnsignedInt16 const testVal = testSequence[ii];
         UnsignedInt8 const highByte(testVal >> 8);
@@ -78,7 +78,7 @@ namespace brick {
 
       // OK, the code below is duplicated and tedious, but we're going
       // for understandable, not elegant.
-      
+
       // Get test sequences.
       unsigned int const numElements = 2000;
       UnsignedInt16 increment16 =
@@ -96,7 +96,7 @@ namespace brick {
       std::vector<UnsignedInt64> testSequence64 =
         getTestSequence<UnsignedInt64>(numElements, increment64);
 
-      
+
       // Byte-swap the test sequences manually.
       std::vector<UnsignedInt16> swappedSequence16(testSequence16.size());
       for(unsigned int ii = 0; ii < testSequence16.size(); ++ii) {
@@ -106,7 +106,7 @@ namespace brick {
         UnsignedInt16 const swappedVal = (byte0 << 8) + byte1;
         swappedSequence16[ii] = swappedVal;
       }
-      
+
       std::vector<UnsignedInt32> swappedSequence32(testSequence32.size());
       for(unsigned int ii = 0; ii < testSequence32.size(); ++ii) {
         UnsignedInt32 const testVal = testSequence32[ii];
@@ -118,7 +118,7 @@ namespace brick {
           (byte0 << 24) + (byte1 << 16) + (byte2 << 8) + byte3;
         swappedSequence32[ii] = swappedVal;
       }
-      
+
       std::vector<UnsignedInt64> swappedSequence64(testSequence64.size());
       for(unsigned int ii = 0; ii < testSequence64.size(); ++ii) {
         UnsignedInt64 const testVal = testSequence64[ii];
@@ -153,7 +153,7 @@ namespace brick {
                      swappedSequence16.begin())) {
         return false;
       }
-      
+
       std::vector<UnsignedInt32> workspace32 = testSequence32;
       std::vector<UnsignedInt32> resultSequence32(testSequence32.size());
       switchByteOrder(&(workspace32[0]), workspace32.size(),
@@ -162,7 +162,7 @@ namespace brick {
                      swappedSequence32.begin())) {
         return false;
       }
-      
+
       std::vector<UnsignedInt64> workspace64 = testSequence64;
       std::vector<UnsignedInt64> resultSequence64(testSequence64.size());
       switchByteOrder(&(workspace64[0]), workspace64.size(),
@@ -194,14 +194,14 @@ namespace brick {
                      testSequence16.begin())) {
         return false;
       }
-      
+
       switchByteOrder(&(workspace32[0]), workspace32.size(),
                       &(resultSequence32[0]), fromOrder, fromOrder);
       if(!std::equal(resultSequence32.begin(), resultSequence32.end(),
                      testSequence32.begin())) {
         return false;
       }
-      
+
       switchByteOrder(&(workspace64[0]), workspace64.size(),
                       &(resultSequence64[0]), fromOrder, fromOrder);
       if(!std::equal(resultSequence64.begin(), resultSequence64.end(),

@@ -19,7 +19,7 @@ namespace brick {
 
     constexpr bool iExist = true;
     constexpr long long int iAmCxx11 = true;
-    
+
   } // namespace iso12233
 
 } // namespace brick

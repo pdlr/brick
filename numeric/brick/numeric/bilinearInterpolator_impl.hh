@@ -17,7 +17,7 @@
 // This file is included by bilinearInterpolator.hh, and should not be
 // directly included by user code, so no need to include
 // bilinearInterpolator.hh here.
-// 
+//
 // #include <brick/numeric/bilinearInterpolator.hh>
 
 #include <cmath>
@@ -28,7 +28,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     template <class TypeIn, class TypeOut, class FloatType>
     inline TypeOut
     BilinearInterpolator<TypeIn, TypeOut, FloatType>::
@@ -40,11 +40,11 @@ namespace brick {
       FloatType x1;
       brick::common::splitFraction(column, temporaryFloat, x1);
       size_t i0 = static_cast<size_t>(temporaryFloat);
-      
+
       FloatType y1;
       brick::common::splitFraction(row, temporaryFloat, y1);
       size_t j0 = static_cast<size_t>(temporaryFloat);
-      
+
       FloatType x0 = 1.0 - x1;
       FloatType y0 = 1.0 - y1;
       size_t index0 = m_array.columns() * j0 + i0;

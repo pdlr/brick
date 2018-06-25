@@ -16,7 +16,7 @@
 
 // This file is included by keypointSelectorHarris.hh, and should not be directly included
 // by user code, so no need to include keypointSelectorHarris.hh here.
-// 
+//
 // #include <brick/computerVision/keypointSelectorHarris.hh>
 
 #include <brick/common/mathFunctions.hh>
@@ -46,7 +46,7 @@ namespace brick {
       c11 = FloatType(m_yy) / determinant;
     }
 
-    
+
     template <class FloatType>
     KeypointSelectorHarris<FloatType>::
     KeypointSelectorHarris(FloatType kappa,
@@ -107,7 +107,7 @@ namespace brick {
         for(unsigned int column = stopColumn - 1; column >= startColumn;
             --column) {
           FloatType* candidatePtr = &(harrisRow[column]);
-          if(// (*candidatePtr > threshold) && 
+          if(// (*candidatePtr > threshold) &&
             (*candidatePtr > *(candidatePtr + 1))
              && (*candidatePtr > *(candidatePtr - 1))
              && (*candidatePtr > *(candidatePtr + rowStep))
@@ -137,7 +137,7 @@ namespace brick {
       return keypointVector;
     }
 
-  
+
     // Return the keypoints detected during the most recent call to
     // member function setImage().
     template <class FloatType>
@@ -148,7 +148,7 @@ namespace brick {
     {
       // Sanity check region to make sure shrinking the search region
       // isn't going to break anything.
-      if(0 == m_searchRegionCorner1.getRow() 
+      if(0 == m_searchRegionCorner1.getRow()
          || 0 == m_searchRegionCorner1.getColumn()) {
         return;
       }
@@ -216,7 +216,7 @@ namespace brick {
                   xxInterpolator(rowCoordinate, columnCoordinate),
                   xyInterpolator(rowCoordinate, columnCoordinate),
                   yyInterpolator(rowCoordinate, columnCoordinate));
-                
+
               }
             }
           }
@@ -237,7 +237,7 @@ namespace brick {
       // 65536.  The size of this filter affects the region of the
       // image for which the Harris corner metric will be valid, so we
       // update the search region here as well.
-      Kernel<brick::common::Int32> gaussian = 
+      Kernel<brick::common::Int32> gaussian =
         getGaussianKernelBySize<brick::common::Int32>(
           size_t(5), size_t(5), -1.0, -1.0, true, 256, 256);
       m_searchRegionCorner0.setValue(2, 2);
@@ -317,8 +317,8 @@ namespace brick {
         m_searchRegionCorner0.getColumn() + radius);
       m_searchRegionCorner1.setValue(
         m_searchRegionCorner1.getRow() - radius,
-        m_searchRegionCorner1.getColumn() - radius);      
-      
+        m_searchRegionCorner1.getColumn() - radius);
+
       // Again we have to worry about overflow.  Rather than guessing,
       // just search to find the max value, and rescale based on that.
       // Ideally, this search would be done during the convolution
@@ -389,7 +389,7 @@ namespace brick {
       gradientXY = 0;
       gradientYY = 0;
 #endif /* #if BRICK_COMPUTERVISION_HARRIS_PEDANTIC */
-      
+
       for(int row = stopRow - 1; row >= startRow; --row) {
         brick::numeric::Array1D<brick::common::Int32> imageRow =
           inImage.getRow(row);
@@ -442,8 +442,8 @@ namespace brick {
       corner0.setValue(startRow + 1, startColumn + 1);
       corner1.setValue(stopRow  - 1, stopColumn  - 1);
     }
-    
-    
+
+
     template <class FloatType>
     void
     KeypointSelectorHarris<FloatType>::
@@ -486,9 +486,9 @@ namespace brick {
         }
       }
     }
-      
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_KEYPOINTSELECTORHARRIS_IMPL_HH */

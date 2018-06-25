@@ -16,7 +16,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     template <>
     inline Transform3D<double>
     operator*(const Transform3D<double>& transform0,
@@ -169,7 +169,7 @@ namespace brick {
     }
 
 
-#if 0    
+#if 0
     template <>
     std::ostream&
     operator<<(std::ostream& stream, const Transform3D<double>& transform0)
@@ -218,9 +218,9 @@ namespace brick {
              << transform0.value<3, 3>() << ")";
       return stream;
     }
-#endif /* #if 0 */    
+#endif /* #if 0 */
 
-    
+
   } // namespace numeric
 
 } // namespace brick

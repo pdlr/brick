@@ -17,7 +17,7 @@
 // This file is included by solveQuadratic.hh, and should not be
 // directly included by user code, so no need to include
 // solveQuadratic.hh here.
-// 
+//
 // #include <brick/numeric/solveQuadratic.hh>
 
 #include <cmath>
@@ -103,8 +103,8 @@ namespace brick {
       } else {
         root1.setValue(Type(0.0), Type(0.0));
       }
-    } 
-    
+    }
+
   } // namespace numeric
 
 } // namespace brick

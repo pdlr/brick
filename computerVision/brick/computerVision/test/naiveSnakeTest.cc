@@ -31,7 +31,7 @@ namespace brick {
       NaiveSnakeTest();
       ~NaiveSnakeTest() {}
       void setVerboseOutput() {m_verbose = true;}
-    
+
       void setUp(const std::string& /* testName */) {}
       void tearDown(const std::string& /* testName */) {}
 
@@ -44,8 +44,8 @@ namespace brick {
       void writeOutputFile(const std::vector< numeric::Vector2D<double> >& snakePoints,
                            const std::string& fileNameBase,
                            size_t iterationCount);
-    
-    
+
+
       std::vector<bool> m_cornerFlags1;
       Image<GRAY1> m_interestImage0;
       std::vector< numeric::Vector2D<double> > m_seedPoints0;
@@ -54,7 +54,7 @@ namespace brick {
       size_t m_testImageColumns;
       size_t m_testImageRows;
       bool m_verbose;
-    
+
     }; // class NaiveSnakeTest
 
 
@@ -73,7 +73,7 @@ namespace brick {
     {
       BRICK_TEST_REGISTER_MEMBER(testExternalForce);
       BRICK_TEST_REGISTER_MEMBER(testStretchingAndBendingForces);
-    
+
       // Build an interest image.
       m_interestImage0.reinit(m_testImageRows, m_testImageColumns);
       m_interestImage0 = false;
@@ -96,7 +96,7 @@ namespace brick {
       m_cornerFlags1.push_back(true);
       m_cornerFlags1.push_back(true);
       m_cornerFlags1.push_back(true);
-    
+
       m_seedPoints2.push_back(numeric::Vector2D<double>(145, 22));
       m_seedPoints2.push_back(numeric::Vector2D<double>(137, 217));
       m_seedPoints2.push_back(numeric::Vector2D<double>(166, 222));
@@ -116,7 +116,7 @@ namespace brick {
       snake.setStretchingConstant(0.0);
       snake.setBendingConstant(0.0);
 
-      std::vector< numeric::Vector2D<double> > snakePoints;    
+      std::vector< numeric::Vector2D<double> > snakePoints;
       if(m_verbose) {
         // snake.setStepsPerIteration(1);
         // snake.setMinimumSpanLength(10);
@@ -158,7 +158,7 @@ namespace brick {
       snake.setCornerAdditionAngle(0.25);
       snake.setCornerDeletionAngle(0.20);
 
-      std::vector< numeric::Vector2D<double> > snakePoints;    
+      std::vector< numeric::Vector2D<double> > snakePoints;
       if(m_verbose) {
         // snake.setStepsPerIteration(1);
         // snake.setMinimumSpanLength(10);
@@ -207,7 +207,7 @@ namespace brick {
     }
 
   } // namespace computervision
-  
+
 } // namespace brick
 
 

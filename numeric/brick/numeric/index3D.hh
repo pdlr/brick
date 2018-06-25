@@ -29,18 +29,18 @@ namespace brick {
     class Index3D {
     public:
 
-      /** 
+      /**
        * The default constructor initializes to (0, 0, 0).
        */
       Index3D()
         : m_column(0), m_row(0), m_slice(0) {}
-    
 
-      /** 
+
+      /**
        * This constructor explicitly sets the indices.
-       * 
+       *
        * @param slice The third (W) component of the Index3D.
-       * 
+       *
        * @param row The second (U) component of the Index3D.
        *
        * @param column The first (U) component of the Index3D.
@@ -49,9 +49,9 @@ namespace brick {
         : m_column(column), m_row(row), m_slice(slice) {}
 
 
-      /** 
+      /**
        * The copy constructor deep copies its argument.
-       * 
+       *
        * @param other This argument is the Index3D instance to be
        * copied.
        */
@@ -60,17 +60,17 @@ namespace brick {
         {}
 
 
-      /** 
+      /**
        * The destructor destroys the Index3D instance.
        */
       ~Index3D() {}
 
 
-      /** 
+      /**
        * This member function explicitly sets the sets the indices.
-       * 
+       *
        * @param slice The third (W) component of the Index3D.
-       * 
+       *
        * @param row The second (U) component of the Index3D.
        *
        * @param column The first (U) component of the Index3D.
@@ -80,64 +80,64 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This member function returns the first component of the Index3D
        * by value.
-       * 
+       *
        * @return The return value is the first (U) coordinate.
        */
       inline int getColumn() const {return m_column;}
 
 
-      /** 
+      /**
        * This member function returns the second component of the
        * Index3D by value.
-       * 
+       *
        * @return The return value is the second (V) coordinate.
        */
       inline int getRow() const {return m_row;}
 
-    
-      /** 
+
+      /**
        * This member function returns the third component of the
        * Index3D by value.
-       * 
+       *
        * @return The return value is the third (W) coordinate.
        */
       inline int getSlice() const {return m_slice;}
 
-    
-      /** 
+
+      /**
        * This member function returns the first component of the Index3D
        * by value.  It is a synonym for member function getColumn().
-       * 
+       *
        * @return The return value is the first (U) coordinate.
        */
       inline int getU() const {return this->getColumn();}
 
 
-      /** 
+      /**
        * This member function returns the second component of the
        * Index3D by value.  It is a synonym for member function getRow().
-       * 
+       *
        * @return The return value is the second (V) coordinate.
        */
       inline int getV() const {return this->getRow();}
 
-    
-      /** 
+
+      /**
        * This member function returns the third component of the
        * Index3D by value.  It is a synonym for member function
        * getSlice().
-       * 
+       *
        * @return The return value is the third (W) coordinate.
        */
       inline int getW() const {return this->getSlice();}
 
-    
-      /** 
+
+      /**
        * The assignment operator deep copies its argument.
-       * 
+       *
        * @param other This argument is the Index3D instance to be
        * copied.
        *
@@ -151,14 +151,14 @@ namespace brick {
       }
 
 
-      
-      /** 
+
+      /**
        * The indexing operator returns a reference to the U, V, or W
        * component of *this as if *this were a three element array.
        * Out of bounds indices will return the W component.
-       * 
+       *
        * @param index This argument is the index into *this.
-       * 
+       *
        * @return The return value is the selected component of *this.
        */
       int operator[](size_t index) const {
@@ -168,14 +168,14 @@ namespace brick {
         }
         return this->getSlice();
       }
-        
 
-      /** 
+
+      /**
        * This operator multiplies each component of the Index3D instance
        * by a scalar.
-       * 
+       *
        * @param scalar This argument is the scalar by which to multiply.
-       * 
+       *
        * @return The return value is a reference to *this after the
        * operation has been performed.
        */
@@ -184,12 +184,12 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This operator divides each component of the Index3D instance
        * by a scalar.
-       * 
+       *
        * @param scalar This argument is the scalar by which to divide.
-       * 
+       *
        * @return The return value is a reference to *this after the
        * operation has been performed.
        */
@@ -202,12 +202,12 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This operator adds a scalar to each component of the Index3D
        * instance.
-       * 
+       *
        * @param scalar This argument is the scalar to be added.
-       * 
+       *
        * @return The return value is a reference to *this after the
        * operation has been performed.
        */
@@ -217,12 +217,12 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This operator subtracts a scalar from each component of the
        * Index3D instance.
-       * 
+       *
        * @param scalar This argument is the scalar to be subtracted.
-       * 
+       *
        * @return The return value is a reference to *this after the
        * operation has been performed.
        */
@@ -231,17 +231,17 @@ namespace brick {
         m_slice -= other.m_slice; return *this;
       }
 
-    
-      /** 
+
+      /**
        * This operator returns an Index3D equal to *this, but with each
        * element negated.
-       * 
+       *
        * @return The return value is a negated copy of *this.
        */
       Index3D operator-() {
         return Index3D(-m_row, -m_column, -m_slice);
       }
-    
+
     private:
 
       // Private data members.
@@ -252,10 +252,10 @@ namespace brick {
 
 
     /* ============== Non-member function declarations ============== */
-  
-    /** 
+
+    /**
      * This operator returns the elementwise sum of two Index3D instances.
-     * 
+     *
      * @param index0 This is the first of the two Index3D instances to
      * be added.
      * @param index1 This is the second of the two Index3D instances to
@@ -266,10 +266,10 @@ namespace brick {
     Index3D
     operator+(const Index3D& index0, const Index3D& index1);
 
-    /** 
+    /**
      * This operator returns the elementwise difference of two Index3D
      * instances.
-     * 
+     *
      * @param index0 This is the first of the two Index3D instances to
      * be subtracted.
      * @param index1 This is the second of the two Index3D instances to
@@ -280,10 +280,10 @@ namespace brick {
      */
     Index3D
     operator-(const Index3D& index0, const Index3D& index1);
-  
-    /** 
+
+    /**
      * This operator returns the elementwise product of two Index3D instances.
-     * 
+     *
      * @param index0 This is the first of the two Index3D instances to
      * be multiplied.
      * @param index1 This is the second of the two Index3D instances to
@@ -294,9 +294,9 @@ namespace brick {
     Index3D
     operator*(const Index3D& index0, const Index3D& index1);
 
-    /** 
+    /**
      * This operator returns the elementwise dividend of two Index3D instances.
-     * 
+     *
      * @param index0 This is the Index3D instance whose element values
      * are to be divided.
      * @param index1 This is the Index3D instance by whose elements
@@ -308,9 +308,9 @@ namespace brick {
     Index3D
     operator/(const Index3D& index0, const Index3D& index1);
 
-    /** 
+    /**
      * This operator adds a scalar and an Index3D.
-     * 
+     *
      * @param index0 This is the Index3D instance to which the scalar
      * should be added.
      * @param scalar0 This is amount which should be added to each
@@ -321,9 +321,9 @@ namespace brick {
      */
     Index3D operator+(const Index3D& index0, int scalar0);
 
-    /** 
+    /**
      * This operator subtracts a scalar from an Index3D.
-     * 
+     *
      * @param index0 This is the Index3D instance from which the scalar
      * should be subtracted.
      * @param scalar0 This is amount which should be subtracted from each
@@ -334,9 +334,9 @@ namespace brick {
      */
     Index3D operator-(const Index3D& index0, int scalar0);
 
-    /** 
+    /**
      * This operator multiplies an Index3D by scalar.
-     * 
+     *
      * @param index0 This is the Index3D instance which is to be
      * multiplied by the scalar.
      * @param scalar0 This is amount by which should argument index0 is
@@ -347,9 +347,9 @@ namespace brick {
      */
     Index3D operator*(const Index3D& index0, int scalar0);
 
-    /** 
+    /**
      * This operator divides an Index3D by scalar.
-     * 
+     *
      * @param index0 This is the Index3D instance which is to be
      * divided by the scalar.
      * @param scalar0 This is amount by which should argument index0 is
@@ -380,10 +380,10 @@ namespace brick {
     bool operator!=(const Index3D& index0, const Index3D& index1);
 
 
-    /** 
+    /**
      * This operator adds a scalar value to each element of an Index3D
      * instance.
-     * 
+     *
      * @param scalar0 Scalar argument of the addition.
      *
      * @param index0 Index3D argument of the addition.
@@ -395,10 +395,10 @@ namespace brick {
     Index3D operator+(int scalar0, const Index3D& index0);
 
 
-    /** 
+    /**
      * This operator multiplies a scalar value with each element of a
      * Index3D instance.
-     * 
+     *
      * @param scalar0 Scalar argument of the multiplication.
      *
      * @param index0 Index3D argument of the multiplication.
@@ -409,8 +409,8 @@ namespace brick {
      */
     Index3D operator*(int scalar0, const Index3D& index0);
 
-  
-    /** 
+
+    /**
      * This function outputs a text representation of an Index3D
      * instance to a std::ostream.  The output format looks like this:
      *
@@ -427,12 +427,12 @@ namespace brick {
      */
     std::ostream& operator<<(std::ostream& stream, const Index3D& index0);
 
-  
-    /** 
+
+    /**
      * This function sets the value of an Index3D instance from a
      * std::istream.  The input format is as described for
      * operator<<(std::ostream&, const Index3D&) above.
-     * 
+     *
      * @param stream This argument is a reference to the the input
      * stream from which to read.
      *
@@ -454,12 +454,12 @@ namespace brick {
 namespace brick {
 
   namespace numeric {
-    
+
     inline Index3D operator+(int scalar0, const Index3D& index0)
     {
       return index0 + scalar0;
     }
-  
+
     inline Index3D operator*(int scalar0, const Index3D& index0)
     {
       return index0 * scalar0;

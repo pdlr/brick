@@ -64,24 +64,24 @@ namespace brick {
     class CameraIntrinsicsPinhole : public CameraIntrinsics<FloatType> {
     public:
 
-      /** 
+      /**
        * The default constructor initializes the
        * CameraIntrinsicsPinhole instance to a consistent (but not
        * terribly useful) state.
        */
       CameraIntrinsicsPinhole();
 
-      
-      /** 
+
+      /**
        * This constructor allows the caller to explicitly set the
        * camera intrinsic parameters.
-       * 
+       *
        * @param numPixelsX This argument specifies how many columns
        * there are in the camera images.
-       * 
+       *
        * @param numPixelsY This argument specifies how many rows there
        * are in the camera images.
-       * 
+       *
        * @param focalLength This argument the distance from the camera
        * focus to the image plane.  Generally this number should be
        * positive, indicating that the the image plane lies at a
@@ -89,25 +89,25 @@ namespace brick {
        * convention is to specify it in units of meters, but you can
        * use whatever unit you like, provided you use the same unit
        * for arguments pixelSizeX and pixelSizeY.
-       * 
+       *
        * @param pixelSizeX This argument specifies the width of an
        * individual pixel.  In other words, pixelSizeX is the distance
        * between the centers of adjacent pixels in the same row.  Our
        * convention is to specify it in units of meters, but you can
        * use whatever unit you like, provided you use the same unit
        * for arguments focalLength and pixelSizeY.
-       * 
+       *
        * @param pixelSizeY This argument specifies the height of an
        * individual pixel.  In other words, pixelSizeX is the distance
        * between the centers of adjacent pixels in the same column.
        * Our convention is to specify it in units of meters, but you
        * can use whatever unit you like, provided you use the same
        * unit for arguments focalLength and pixelSizeX.
-       * 
+       *
        * @param centerU This argument and the next specify the
        * position in pixel coordinates at which the Z axis passes
        * through the image plane.
-       * 
+       *
        * @param centerV This argument and the previous specify the
        * position in pixel coordinates at which the Z axis passes
        * through the image plane.
@@ -121,34 +121,34 @@ namespace brick {
                               FloatType centerV);
 
 
-      /** 
+      /**
        * This constructor allows the caller to explicitly set the
        * camera intrinsic parameters.  It differs from the 7-argument
        * constructor in that focal length is specified in units of
        * pixel size, rather than in units of length.
-       * 
+       *
        * @param numPixelsX This argument specifies how many columns
        * there are in the camera images.
-       * 
+       *
        * @param numPixelsY This argument specifies how many rows there
        * are in the camera images.
-       * 
+       *
        * @param focalLengthX This argument specifies the distance from
        * the camera focus to the image plane in units of pixel width.
        * Generally this number should be positive, indicating that the
        * the image plane lies at a positive Z coordinate in the 3D
        * camera coordinate frame.
-       * 
+       *
        * @param focalLengthY This argument specifies the distance from
        * the camera focus to the image plane in units of pixel height.
        * Generally this number should be positive, indicating that the
        * the image plane lies at a positive Z coordinate in the 3D
        * camera coordinate frame.
-       * 
+       *
        * @param centerU This argument and the next specify the
        * position in pixel coordinates at which the Z axis passes
        * through the image plane.
-       * 
+       *
        * @param centerV This argument and the previous specify the
        * position in pixel coordinates at which the Z axis passes
        * through the image plane.
@@ -161,182 +161,182 @@ namespace brick {
                               FloatType centerV);
 
 
-      /** 
+      /**
        * Destructor.
        */
       virtual
       ~CameraIntrinsicsPinhole() {}
 
 
-      /** 
+      /**
        * This member function returns the U coordinate of the
        * projection center (principle point) of the image.
-       * 
+       *
        * @return The return value is the U coordinate (pixel
        * coordinate) at which the optical axis intersects the image
        * plane.
        */
       FloatType const&
       getCenterU() const {return m_centerU;}
-          
 
-      /** 
+
+      /**
        * This member function returns the V coordinate of the
        * projection center (principle point) of the image.
-       * 
+       *
        * @return The return value is the V coordinate (pixel
        * coordinate) at which the optical axis intersects the image
        * plane.
        */
       FloatType const&
       getCenterV() const {return m_centerV;}
-          
 
-      /** 
+
+      /**
        * This member function returns the focal length of the camera,
        * as passed to the CameraIntrinsicsPinhole constructor.  If the
        * 6-element constructor was used, then a return value will be
        * 1.0.
-       * 
+       *
        * @return The return value is the originally specified focal
        * length, or 1.0 if no focal length was specified.
        */
       FloatType const&
       getFocalLength() const {return m_focalLength;}
-          
 
-      /** 
+
+      /**
        * This member function returns the focal length of the camera
        * in units of pixel width.
-       * 
+       *
        * @return The return value is the originally specified focal
        * length, measured in units of pixel width.
        */
       FloatType const&
       getFocalLengthX() const {return this->getKx();}
-          
 
-      /** 
+
+      /**
        * This member function returns the focal length of the camera
        * in units of pixel height.
-       * 
+       *
        * @return The return value is the originally specified focal
        * length, measured in units of pixel height.
        */
       FloatType const&
       getFocalLengthY() const {return this->getKy();}
-          
 
-      /** 
+
+      /**
        * This member function returns the height of the image in
        * pixels.
-       * 
+       *
        * @return The return value is the number of pixels in the Y
        * direction.
        */
       unsigned int
       getImageHeight() const {return m_numPixelsY;}
-          
 
-      /** 
+
+      /**
        * This member function returns the width of the image in
        * pixels.
-       * 
+       *
        * @return The return value is the number of pixels in the X
        * direction.
        */
       unsigned int
       getImageWidth() const {return m_numPixelsX;}
-          
 
-      /** 
+
+      /**
        * This member function returns the camera focal length
        * expressed in units of pixel width.
-       * 
+       *
        * @return The return value is focalLength / xPixelSize.
        */
       FloatType const&
       getKx() const {return m_kX;}
-          
 
-      /** 
+
+      /**
        * This member function returns the camera focal length
        * expressed in units of pixel height.
-       * 
+       *
        * @return The return value is focalLength / yPixelSize.
        */
       FloatType const&
       getKy() const {return m_kY;}
-          
 
-      /** 
+
+      /**
        * This member function returns the width of the image in
        * pixels.
-       * 
+       *
        * @return The return value is the number of pixels in the X
        * direction.
        */
       unsigned int
       getNumPixelsX() const {return m_numPixelsX;}
-          
 
-      /** 
+
+      /**
        * This member function returns the height of the image in
        * pixels.
-       * 
+       *
        * @return The return value is the number of pixels in the Y
        * direction.
        */
       unsigned int
       getNumPixelsY() const {return m_numPixelsY;}
-          
 
-      /** 
+
+      /**
        * This member function returns the width of the image pixels in
        * whatever units were used in the constructor call.  If the
        * 6-element constructor was used, then the returned value will
        * be 1.0 / focalLengthX.
-       * 
+       *
        * @return The return value is the size of each pixel in the X
        * direction, or 1.0 / focalLengthX if no pixel size was
        * specified.
        */
       FloatType
       getPixelSizeX() const {return m_focalLength / m_kX;}
-          
 
-      /** 
+
+      /**
        * This member function returns the height of the image pixels in
        * whatever units were used in the constructor call.  If the
        * 6-element constructor was used, then the returned value will
        * be 1.0 / focalLengthX.
-       * 
+       *
        * @return The return value is the size of each pixel in the Y
        * direction, or 1.0 / focalLengthY if no pixel size was
        * specified.
        */
       FloatType
       getPixelSizeY() const {return m_focalLength / m_kY;}
-          
 
-      /** 
+
+      /**
        * This member function returns a coordinate transform that
        * "matches" *this.  That is, projecting a world point using the
        * returned coordinate transform has the same effect as passing
        * that world point as an argument to this->project().
-       * 
+       *
        * @return The return value is the relevant projection matrix.
        */
       brick::numeric::Array2D<FloatType>
       getProjectionMatrix() const;
 
-      
-      /** 
+
+      /**
        * This member function takes a point in 3D camera coordinates
        * and projects it into pixel coordinates.
-       * 
+       *
        * @param point This argument specifies the 3D point to be projected.
-       * 
+       *
        * @return The return value gives the point in pixel coordinates
        * to which the input point will project.
        */
@@ -344,38 +344,38 @@ namespace brick {
       project(const brick::numeric::Vector3D<FloatType>& point) const;
 
 
-      /** 
+      /**
        * This member function sets the calibration from an input
        * stream.  *this is modified only if the read was successful,
        * otherwise it is not modified, and failbit is set in the
        * stream state.
-       * 
+       *
        * @param inputStream This is the stream from which to read the
        * data.
-       * 
+       *
        * @return The return value is a reference to inputStream.
        */
       std::istream&
       readFromStream(std::istream& inputStream);
 
 
-      /** 
+      /**
        * This member function takes a point in 2D pixel coordinates
        * and returns a ray in 3D camera coordinates passing through
        * all of the 3D points that project to the specified 2D
        * position.
-       * 
+       *
        * @param pixelPosition This argument is the point to be
        * projected out into 3D camera coordinates.
-       * 
+       *
        * @param normalize This argument indicates whether the returned
        * vector should be normalized to unit length.  Setting this to
        * false saves a few arithmetic operations.
-       * 
+       *
        * @param maxAzimuthTangent This argument is ignored.
-       * 
+       *
        * @param maxElevationTangent This argument is ignored.
-       * 
+       *
        * @return The return value is the ray in 3D camera coordinates
        * corresponding to the input 2D point.
        */
@@ -387,88 +387,88 @@ namespace brick {
         const;
 
 
-      /** 
+      /**
        * This member function specifies the U coordinate of the center
        * of projection of the camera.  See the class documentation for
        * discussion of this coordinate system.
-       * 
+       *
        * @param centerU The U coordinate of the center of projection.
        */
       virtual void
       setCenterU(FloatType const& centerU) {m_centerU = centerU;}
 
-      
-      /** 
+
+      /**
        * This member function specifies the V coordinate of the center
        * of projection of the camera.  See the class documentation for
        * discussion of this coordinate system.
-       * 
+       *
        * @param centerV The V coordinate of the center of projection.
        */
       virtual void
       setCenterV(FloatType const& centerV) {m_centerV = centerV;}
 
-      
-      /** 
+
+      /**
        * This member function specifies the focal length of the imager
        * in units of pixel width.  Or conversely, you can think of
        * focal length as being fixed, and this member function as as
        * indirectly specifying the width of a pixel.
-       * 
+       *
        * @param focalLengthX The focal length of the lens in units of
        * pixel width.
        */
       virtual void
       setFocalLengthX(FloatType const& focalLengthX) {m_kX = focalLengthX;}
 
-      
-      /** 
+
+      /**
        * This member function specifies the focal length of the imager
        * in units of pixel height.  Or conversely, you can think of
        * focal length as being fixed, and this member function as as
        * indirectly specifying the height of a pixel.
-       * 
+       *
        * @param focalLengthY The focal length of the lens in units of
        * pixel height.
        */
       virtual void
       setFocalLengthY(FloatType const& focalLengthY) {m_kY = focalLengthY;}
 
-      
-      /** 
+
+      /**
        * This member function specifies the width of the image in
        * pixels.
-       * 
+       *
        * @param numPixelsX The width of the image.
        */
       virtual void
       setNumPixelsX(unsigned int numPixelsX) {m_numPixelsX = numPixelsX;}
 
 
-      /** 
+      /**
        * This member function specifies the height of the image in
        * pixels.
-       * 
+       *
        * @param numPixelsX The height of the image.
        */
       virtual void
       setNumPixelsY(unsigned int numPixelsY) {m_numPixelsY = numPixelsY;}
 
-      
-      /** 
+
+      /**
        * This member function writes the calibration to an
        * outputstream in a format which is compatible with member
        * function readFromStream().
-       * 
+       *
        * @param outputStream This is the stream to which to write the
        * data.
-       * 
+       *
        * @return The return value is a reference to outputStream.
        */
       std::ostream&
       writeToStream(std::ostream& outputStream) const;
 
-      
+
     protected:
 
       FloatType m_centerU;
@@ -482,7 +482,7 @@ namespace brick {
     };
 
 
-    /** 
+    /**
      * This function outputs a text representation of a
      * CameraIntrinsicsPinhole instance to a std::ostream.  The output
      * format looks like this:
@@ -507,11 +507,11 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function sets the value of a CameraIntrinsicsPinhole instance from a
      * std::istream.  The input format is as described for
      * operator<<(std::ostream&, const CameraIntrinsicsPinhole&) above.
-     * 
+     *
      * @param stream This argument is a reference to the the input
      * stream from which to read.
      *
@@ -529,9 +529,9 @@ namespace brick {
       return intrinsics.readFromStream(stream);
     }
 
-    
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

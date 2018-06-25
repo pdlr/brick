@@ -17,7 +17,7 @@
 // This file is included by draw2D.hh, and should not be
 // directly included by user code, so no need to include
 // draw2D.hh here.
-// 
+//
 // #include <brick/pixelGraphics/draw2D.hh>
 
 #include <brick/numeric/amanatidesWoo2D.hh>
@@ -43,7 +43,7 @@ namespace brick {
       // draw the line.
       AmanatidesWoo2D<ArrayType> rayTracer(
         canvas, pixelFromWorld, lineSegment.getVertex0(), direction, true);
-      awIterator iterator0 = rayTracer.begin(); 
+      awIterator iterator0 = rayTracer.begin();
       awIterator iterator1 = rayTracer.end();
 
       // This loop terminates if we iterate off the edge of the image,
@@ -66,10 +66,10 @@ namespace brick {
         }
       }
     }
-    
-    
+
+
   } // namespace pixelGraphics
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_PIXELGRAPHICS_DRAW2D_IMPL_HH */

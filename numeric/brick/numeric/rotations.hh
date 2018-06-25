@@ -51,7 +51,7 @@
 * around the rotation axis.  Note the similarity to Angle-Axis
 * representation.  Rodrigues parameters are useful for interacting
 * with OpenCV.
-* 
+*
 ***************************************************************************
 **/
 
@@ -74,16 +74,16 @@ namespace brick {
       BRICK_AXIS_Y,
       BRICK_AXIS_Z
     };
-    
-      
-    /** 
+
+
+    /**
      * This function converts a rotation from angle-axis representation
      * to unit quaternion representation.
-     * 
+     *
      * @param angle This argument specifies the size of the rotation in
      * radians.  For further information, please see the rotations.hh
      * file comment.
-     * 
+     *
      * @param axis This argument specifies the axis of rotation.  For
      * further information, please see the rotations.hh file comment.
      *
@@ -91,7 +91,7 @@ namespace brick {
      * normalization of the axis prior to use.  You should only set it
      * to true if you know that the magnitude of argument axis is equal
      * to 1.0.
-     * 
+     *
      * @return The return value is a unit quaternion representing the
      * specified rotation.  For further information, please see the
      * rotations.hh file comment.
@@ -100,19 +100,19 @@ namespace brick {
     Quaternion<Type>
     angleAxisToQuaternion(Type const& angle, const Vector3D<Type>& axis,
                           bool isNormalized=false);
-  
 
-    /** 
+
+    /**
      * This function converts a rotation from angle-axis representation
      * to roll-pitch-yaw representation.
-     * 
+     *
      * @param angle This argument specifies the size of the rotation in
      * radians.  For further information, please see the rotations.hh
      * file comment.
-     * 
+     *
      * @param axis This argument specifies the axis of rotation.  For
      * further information, please see the rotations.hh file comment.
-     * 
+     *
      * @param isNormalized If set to true, this argument disables
      * normalization of the axis prior to use.  You should only set it
      * to true if you know that the magnitude of argument axis is equal
@@ -126,19 +126,19 @@ namespace brick {
     Vector3D<Type>
     angleAxisToRollPitchYaw(Type const& angle, const Vector3D<Type>& axis,
                             bool isNormalized=false);
-  
 
-    /** 
+
+    /**
      * This function converts a rotation from angle-axis representation
      * to Transform3D representation.
-     * 
+     *
      * @param angle This argument specifies the size of the rotation in
      * radians.  For further information, please see the rotations.hh
      * file comment.
-     * 
+     *
      * @param axis This argument specifies the axis of rotation.  For
      * further information, please see the rotations.hh file comment.
-     * 
+     *
      * @param isNormalized If set to true, this argument disables
      * normalization of the axis prior to use.  You should only set it
      * to true if you know that the magnitude of argument axis is equal
@@ -152,9 +152,9 @@ namespace brick {
     Transform3D<Type>
     angleAxisToTransform3D(Type const& angle, const Vector3D<Type>& axis,
                            bool isNormalized=false);
-  
 
-    /** 
+
+    /**
      * This function converts a rotation from general euler angle
      * representation to Transform3D representation.  The resulting
      * transform will take points in the "from" coordinate system,
@@ -181,25 +181,25 @@ namespace brick {
      *     * eulerToTransform3D(0.0, anyAxis, angle1, axis1, 0.0, anyAxis)
      *     * eulerToTransform3D(angle0, axis0, 0.0, anyAxis, 0.0, anyAxis));
      * @code
-     * 
+     *
      * @param angle0 This argument indicates the angle of rotation, in
      * radians, around the first axis.
-     * 
+     *
      * @param axis0 This argument specifies which axis should be
      * rotated around first.
-     * 
+     *
      * @param angle1 This argument indicates the angle of rotation, in
      * radians, around the second axis.
-     * 
+     *
      * @param axis1 This argument specifies which axis should be
      * rotated around second.
-     * 
+     *
      * @param angle2 This argument indicates the angle of rotation, in
      * radians, around the third axis.
-     * 
+     *
      * @param axis2 This argument specifies which axis should be
      * rotated around third.
-     * 
+     *
      * @return The return value is a rotation matrix equivalent to the
      * composition of the three euler components.
      */
@@ -208,9 +208,9 @@ namespace brick {
     eulerToTransform3D(Type const& angle0, Axis axis0,
                        Type const& angle1, Axis axis1,
                        Type const& angle2, Axis axis2);
-  
 
-    /** 
+
+    /**
      * This function converts a rotation from Quaternion representation
      * to Angle-Axis representation.
      *
@@ -218,7 +218,7 @@ namespace brick {
      * Quaternion instance.  If the Quaternion is not normalized, the
      * normalization will be done inside the function. For further
      * information, please see the rotations.hh file comment.
-     * 
+     *
      * @return The return value is a pair which specifies the Angle-Axis
      * representation of the input rotation.  For further information,
      * please see the rotations.hh file comment.
@@ -226,17 +226,17 @@ namespace brick {
     template <class Type>
     std::pair< Type, Vector3D<Type> >
     quaternionToAngleAxis(const Quaternion<Type>& quaternion);
-  
 
-    /** 
+
+    /**
      * This function converts a rotation from Quaternion representation
      * to Roll-Pitch-Yaw representation.
-     * 
+     *
      * @param quaternion This argument specifies the rotation using a
      * Quaternion instance.  If the Quaternion is not normalized, the
      * normalization will be done inside the function. For further
      * information, please see the rotations.hh file comment.
-     * 
+     *
      * @return The return value is a Vector3D instance containing roll,
      * pitch, and yaw.  For further information, please see the
      * rotations.hh file comment.
@@ -246,15 +246,15 @@ namespace brick {
     quaternionToRollPitchYaw(const Quaternion<Type>& quaternion);
 
 
-    /** 
+    /**
      * This function converts a rotation from Quaternion representation
      * to Transform3D representation.
-     * 
+     *
      * @param quaternion This argument specifies the rotation using a
      * Quaternion instance.  If the Quaternion is not normalized, the
      * normalization will be done inside the function. For further
      * information, please see the rotations.hh file comment.
-     * 
+     *
      * @return The return value is a Transform3D instance representing
      * the rotation.  For further information, please see the
      * rotations.hh file comment.
@@ -263,11 +263,11 @@ namespace brick {
     Transform3D<Type>
     quaternionToTransform3D(const Quaternion<Type>& quaternion);
 
-    
-    /** 
+
+    /**
      * This function converts a rotation from Rodrigues representation
      * to Transform3D representation.
-     * 
+     *
      * @param rodrigues This argument is a Vector3D instance in which
      * the x, y, and z components specify the first, second, and third
      * Rodrigues parameters, respectively.
@@ -278,7 +278,7 @@ namespace brick {
      * the identity transform.  We keep this default regardless, for
      * compatibility with previous versions of this function, which
      * didn't let you specify epsilon at all.
-     * 
+     *
      * @return The return value is a Transform3D instance representing
      * the rotation.  For further information, please see the
      * rotations.hh file comment.
@@ -287,9 +287,9 @@ namespace brick {
     Transform3D<Type>
     rodriguesToTransform3D(Vector3D<Type> const& rodrigues,
                            Type const& epsilon = Type(0.0));
-  
 
-    /** 
+
+    /**
      * This function converts a rotation from Roll-Pitch-Yaw representation
      * to Angle-Axis representation.
      *
@@ -305,15 +305,15 @@ namespace brick {
     std::pair< Type, Vector3D<Type> >
     rollPitchYawToAngleAxis(const Vector3D<Type>& rollPitchYaw);
 
-  
-    /** 
+
+    /**
      * This function converts a rotation from Roll-Pitch-Yaw representation
      * to Quaternion representation.
-     * 
+     *
      * @param rollPitchYaw This argument specifies the rotation using a
      * Vector3D instance representing Roll, Pitch, and Yaw.  For further
      * information, please see the rotations.hh file comment.
-     * 
+     *
      * @return The return value is a unit quaternion representing the
      * specified rotation.  For further information, please see the
      * rotations.hh file comment.
@@ -322,15 +322,15 @@ namespace brick {
     Quaternion<Type>
     rollPitchYawToQuaternion(const Vector3D<Type>& rollPitchYaw);
 
-  
-    /** 
+
+    /**
      * This function converts a rotation from Roll-Pitch-Yaw representation
      * to Transform3D representation.
-     * 
+     *
      * @param rollPitchYaw This argument specifies the rotation using a
      * Vector3D instance representing Roll, Pitch, and Yaw.  For further
      * information, please see the rotations.hh file comment.
-     * 
+     *
      * @return The return value is a Transform3D instance representing
      * the rotation.  For further information, please see the
      * rotations.hh file comment.
@@ -340,7 +340,7 @@ namespace brick {
     rollPitchYawToTransform3D(const Vector3D<Type>& rollPitchYaw);
 
 
-    /** 
+    /**
      * This function converts a rotation from Transform3D representation
      * to Angle-Axis representation.
      *
@@ -357,10 +357,10 @@ namespace brick {
     transform3DToAngleAxis(const Transform3D<Type>& transform3D);
 
 
-    /** 
+    /**
      * This function converts a rotation from Transform3D representation
      * to Quaternion representation.
-     * 
+     *
      * This routine draws from _On Homogeneous Transforms, Quaternions,
      * and Computation Efficiency_, by Funda, Taylor, and Paul, IEEE R&A,
      * June 1990.
@@ -368,7 +368,7 @@ namespace brick {
      * @param transform3D This argument specifies the rotation using a
      * Transform3D instance.  For further information, please see the
      * rotations.hh file comment.
-     * 
+     *
      * @return The return value is a unit quaternion representing the
      * specified rotation.  For further information, please see the
      * rotations.hh file comment.
@@ -378,14 +378,14 @@ namespace brick {
     transform3DToQuaternion(const Transform3D<Type>& transform3D);
 
 
-    /** 
+    /**
      * This function converts a rotation from Transform3D representation
      * to Rodrigues representation.
-     * 
+     *
      * @param transform3D This argument specifies the rotation using a
      * Transform3D instance.  For further information, please see the
      * rotations.hh file comment.
-     * 
+     *
      * @return The return value is a Vector3D instance in which the x,
      * y, and z components represent the first, second, and third
      * Rodrigues parameters, respectively.  For further information,
@@ -396,14 +396,14 @@ namespace brick {
     transform3DToRodrigues(const Transform3D<Type>& transform3D);
 
 
-    /** 
+    /**
      * This function converts a rotation from Transform3D representation
      * to Roll-Pitch-Yaw representation.
      *
      * @param transform3D This argument specifies the rotation using a
      * Transform3D instance.  For further information, please see the
      * rotations.hh file comment.
-     * 
+     *
      * @return The return value is a Vector3D instance containing roll,
      * pitch, and yaw.  For further information, please see the
      * rotations.hh file comment.

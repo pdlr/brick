@@ -20,13 +20,13 @@
 // This file is included by amanatidesWoo3DIterator.hh, and should not
 // be directly included by user code, so no need to include
 // amanatidesWoo3DIterator.hh here.
-// 
+//
 // #include <brick/numeric/amanatidesWoo3DIterator.hh>
 
 namespace brick {
 
   namespace numeric {
-    
+
     // The class constructor is initialized with all of the internal
     // variables of the voxel traversal algorithm, plus the starting
     // value of the ray parameter.
@@ -63,7 +63,7 @@ namespace brick {
          || (m_U >= static_cast<INT_TYPE>(data.shape()[2]))
          || (m_V >= static_cast<INT_TYPE>(data.shape()[1]))
          || (m_W >= static_cast<INT_TYPE>(data.shape()[0]))) {
-        m_inBounds = false;      
+        m_inBounds = false;
       }
     }
 
@@ -218,7 +218,7 @@ namespace brick {
     {
       return !(this->operator==(other));
     }
-  
+
   } // namespace numeric
 
 } // namespace brick

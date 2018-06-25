@@ -36,9 +36,9 @@ namespace brick {
     class KeypointMatcherFast {
     public:
 
-      /** 
+      /**
        * Default constructor.
-       * 
+       *
        * @param expectedRotation Set this argument to an angle, in
        * radians, over which you'd like to search (something like 0.5
        * is reasonable).  This is not part of Rosten's algorithm, but
@@ -51,24 +51,24 @@ namespace brick {
       explicit
       KeypointMatcherFast(double expectedRotation = 0.0);
 
-      
-      /** 
+
+      /**
        * Destructor.
        */
       virtual
       ~KeypointMatcherFast();
 
 
-      /** 
+      /**
        * Search the set of stored keypoints and find the one most
        * similar to the input "query" keypoint.  See member function
        * setKeypoints().
-       * 
+       *
        * @param query This argument is the keypoint to be matched.
-       * 
+       *
        * @param bestMatch If a match is found, it is returned via this
        * argument.
-       * 
+       *
        * @return The return value is true if a match was found, false
        * othrwise.
        */
@@ -76,15 +76,15 @@ namespace brick {
       matchKeypoint(KeypointFast const& query, KeypointFast& bestMatch) const;
 
 
-      /** 
+      /**
        * Specify the set of keypoints from which to draw matches when
        * member function matchKeypoint() is subsequently called.  All
        * previously set points will be discarded prior to adding the
        * new set.
-       * 
+       *
        * @param sequenceBegin This argument is the beginning of a
        * sequence of keypoints to be added.
-       * 
+       *
        * @param sequenceEnd This argument is the end of a sequence of
        * keypoints to be added.
        */
@@ -125,9 +125,9 @@ namespace brick {
       std::map<double, KeypointFast> m_keypointMapNegative;
       std::map<double, KeypointFast> m_keypointMapPositive;
     };
-    
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

@@ -46,7 +46,7 @@ public:
   void testReverseProjectEM();
   void testStreamOperators();
   void testReverseProjectWithJacobian();
-  
+
 private:
 
   CameraIntrinsicsRational<double>
@@ -54,7 +54,7 @@ private:
 
   CameraIntrinsicsRational<double>
   getIntrinsicsInstanceMild();
-  
+
   double m_defaultTolerance;
   double m_gradientTolerance;
   double m_reconstructionTolerance;
@@ -133,7 +133,7 @@ testReverseProjectionObjectiveApplicationOperator()
       Array1D<double> theta(2);
       double result;
       double offset;
-      
+
       theta[0] = xCoord; theta[1] = yCoord;
       result = objective(theta);
       offset = objective.getOffset();
@@ -146,7 +146,7 @@ testReverseProjectionObjectiveApplicationOperator()
       theta[0] = xCoord - 0.1; theta[1] = yCoord;
       result = objective(theta);
       BRICK_TEST_ASSERT(result > offset + m_defaultTolerance);
-      
+
       theta[0] = xCoord; theta[1] = yCoord + 0.1;
       result = objective(theta);
       BRICK_TEST_ASSERT(result > offset + m_defaultTolerance);
@@ -176,7 +176,7 @@ testReverseProjectionObjectiveGradient()
       Array1D<double> theta(2);
       theta[0] = xCoord; theta[1] = yCoord;
       Array1D<double> gradient = objective.gradient(theta);
-      
+
       BRICK_TEST_ASSERT(gradient.size() == 2);
       BRICK_TEST_ASSERT(approximatelyEqual(gradient[0], 0.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(approximatelyEqual(gradient[1], 0.0, m_defaultTolerance));
@@ -199,7 +199,7 @@ testReverseProjectionObjectiveGradient()
 
       Array1D<double> testGradient = objective.gradient(theta);
       Array1D<double> refGradient = refObjective.gradient(theta);
-    
+
       BRICK_TEST_ASSERT(testGradient.size() == 2);
       BRICK_TEST_ASSERT(refGradient.size() == 2);
       BRICK_TEST_ASSERT(
@@ -229,7 +229,7 @@ testReverseProjectionObjectiveGradient()
                                   brick::numeric::absoluteValue(refGradient[1]))
                          * 10.0);
       epsScale = std::max(epsScale, 1.0);
-      
+
       BRICK_TEST_ASSERT(testGradient.size() == 2);
       BRICK_TEST_ASSERT(refGradient.size() == 2);
       BRICK_TEST_ASSERT(
@@ -240,9 +240,9 @@ testReverseProjectionObjectiveGradient()
                            epsScale * m_defaultTolerance));
     }
   }
-  
+
 }
-      
+
 
 void
 CameraIntrinsicsRationalTest::
@@ -288,7 +288,7 @@ testProject()
               + m_radialCoefficient5 * r6));
         double xDistorted0 = xNorm * radialDistortion;
         double yDistorted0 = yNorm * radialDistortion;
- 
+
         // Tangential distortion.
         double a1 = 2.0 * xNorm * yNorm;
         double a2 = r2 + 2 * xNorm * xNorm;
@@ -372,7 +372,7 @@ testStreamOperators()
 {
   CameraIntrinsicsRational<double> refIntrinsics = this->getIntrinsicsInstance();
   CameraIntrinsicsRational<double> testIntrinsics;
-  
+
   std::ostringstream outputStream;
   outputStream << refIntrinsics;
   std::istringstream inputStream(outputStream.str());
@@ -417,8 +417,8 @@ testReverseProjectWithJacobian()
   std::size_t constexpr maximumIterations = 150;
 
   // 4 pinhole parameters + 8 distortion parameters + 2 image coordinates
-  std::size_t constexpr numParameters = 14; 
-  
+  std::size_t constexpr numParameters = 14;
+
   Vector2D<double> const uEpsilon(epsilon, 0.0);
   Vector2D<double> const vEpsilon(0.0, epsilon);
 
@@ -454,7 +454,7 @@ testReverseProjectWithJacobian()
       BRICK_TEST_ASSERT(
         approximatelyEqual(rectifiedPoint.y(), rectifiedPointGT.y(),
                            m_reverseProjectionTolerance));
-      
+
       // Fill out most of the ground truth jacobian.
       Array1D<double> parameterVector = intrinsics.getParameters();
       Array2D<double> jacobianGT(2, numParameters);
@@ -472,7 +472,7 @@ testReverseProjectWithJacobian()
         intrinsics.setParameters(parameterVectorMinus);
         Ray3D<double> rayMinus = intrinsics.reverseProjectEM(
           imagePoint, true, requiredPrecision, maximumIterations);
-        
+
         Vector2D<double> rectifiedPointPlus(
           rayPlus.getDirectionVector().x() / rayPlus.getDirectionVector().z(),
           rayPlus.getDirectionVector().y() / rayPlus.getDirectionVector().z());
@@ -485,7 +485,7 @@ testReverseProjectWithJacobian()
         jacobianGT(1, ii) =
           (rectifiedPointPlus.y() - rectifiedPointMinus.y()) / (2.0 * epsilon);
       }
-      
+
       // Penultimate columns of the ground truth jacobian.
       Ray3D<double> rayPlus = intrinsics.reverseProjectEM(
         imagePoint + uEpsilon, true, 150);
@@ -548,7 +548,7 @@ getIntrinsicsInstance()
     m_tangentialCoefficient0, m_tangentialCoefficient1);
   return intrinsics;
 }
-  
+
 
 CameraIntrinsicsRational<double>
 CameraIntrinsicsRationalTest::

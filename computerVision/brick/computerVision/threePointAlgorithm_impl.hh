@@ -17,7 +17,7 @@
 // This file is included by threePointAlgorithm.hh, and should not be
 // directly included by user code, so no need to include
 // threePointAlgorithm.hh here.
-// 
+//
 // #include <brick/computerVision/threePointAlgorithm.hh>
 
 #include <cmath>
@@ -77,7 +77,7 @@ namespace brick {
       FloatType a2 = brick::numeric::magnitudeSquared<FloatType>(w1 - w2);
       FloatType b2 = brick::numeric::magnitudeSquared<FloatType>(w0 - w2);
       FloatType c2 = brick::numeric::magnitudeSquared<FloatType>(w0 - w1);
-      
+
       // If we define s0, s1, and s2 to be the distances from the
       // camera focus to each of the three points, then we have:
       //
@@ -155,7 +155,7 @@ namespace brick {
         *p0OutputIter = s0Array[ii] * j0;
         *p1OutputIter = s1Array[ii] * j1;
         *p2OutputIter = s2Array[ii] * j2;
-        
+
         ++p0OutputIter;
         ++p1OutputIter;
         ++p2OutputIter;
@@ -189,7 +189,7 @@ namespace brick {
                     "threePointAlgorithmRobust()",
                     "Input sequence must have at least three elements.");
       }
-      
+
       // Copy input points into local buffers.
       std::vector< brick::numeric::Vector3D<FloatType> > worldPoints(numberOfPoints);
       std::vector< brick::numeric::Vector2D<FloatType> > imagePoints(numberOfPoints);
@@ -286,7 +286,7 @@ namespace brick {
     {
       unsigned int numberOfSolutions = 0;
       condition = std::numeric_limits<FloatType>::max();
-      
+
       FloatType cos2Alpha = cosAlpha * cosAlpha;
       FloatType cos2Beta = cosBeta * cosBeta;
       FloatType cos2Gamma = cosGamma * cosGamma;
@@ -301,7 +301,7 @@ namespace brick {
       FloatType oneMinusA2PlusC2OverB2 = (1.0 - a2PlusC2OverB2);
       FloatType oneMinusA2MinusC2OverB2 = (1.0 - a2MinusC2OverB2);
       FloatType onePlusA2MinusC2OverB2 = (1.0 + a2MinusC2OverB2);
-      
+
       FloatType A0 = (onePlusA2MinusC2OverB2 * onePlusA2MinusC2OverB2
                    - 4.0 * a2OverB2 * cos2Gamma);
 
@@ -374,7 +374,7 @@ namespace brick {
     }
 
   } // namespace computerVision
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_THREEPOINTALGORITHM_IMPL_HH */

@@ -18,29 +18,29 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     template<class TYPE>
     struct PixelBGRA
     {
     public:
 
-      /** 
+      /**
        * This constructor makes no guarantees about the color of the
        * pixel.
        */
       PixelBGRA()
         : blue(), green(), red(), alpha() {}
 
-    
-      /** 
+
+      /**
        * This constructor explicitly sets the pixel value.
-       * 
+       *
        * @param blueValue This argument specifies the blue value for
        * the new pixel.
-       * 
+       *
        * @param greenValue This argument specifies the green value for
        * the new pixel.
-       * 
+       *
        * @param redValue This argument specifies the red value for the
        * new pixel.
        *
@@ -53,20 +53,20 @@ namespace brick {
           alpha(alphaValue) {}
 
 
-      /** 
+      /**
        * The destructor deletes cleans up for deletion.
        */
       ~PixelBGRA() {}
 
 
-      /** 
+      /**
        * This member function copies the pixel component values, in
        * order, from consecutive iterator targets, incrementing the
        * iterator after each copy.
-       * 
+       *
        * @param iter This argument is the iterator from which to copy the
        * pixel components.
-       * 
+       *
        * @return The return value is a reference to iter after the
        * copying and incrementing is done.
        */
@@ -75,14 +75,14 @@ namespace brick {
       copyFromIterator(Iter& iter);
 
 
-      /** 
+      /**
        * This member function assigns the pixel component values, in
        * order, to consecutive iterator targets, incrementing the
        * iterator after each assignment.
-       * 
+       *
        * @param iter This argument is the iterator to which to copy the
        * pixel components.
-       * 
+       *
        * @return The return value is a reference to iter after the
        * copying and incrementing is done.
        */
@@ -101,11 +101,11 @@ namespace brick {
 
       /* ====== Static member functions ====== */
 
-      /** 
+      /**
        * This static member function indicates whether or not a pixel
        * instance is memory identical to a contiguous array of Component
        * type.
-       * 
+       *
        * @return The return value is true if the pixel structure is not
        * padded by the compiler.
        */
@@ -123,16 +123,16 @@ namespace brick {
     typedef PixelBGRA<brick::common::Float64> PixelBGRAFloat64;
 
 
-    /** 
+    /**
      * This operator subtracts the values of the individual color
      * components of its arguments.
-     * 
+     *
      * @param pixel0 The color component values of pixel1 will be
      * subtracted from the color component values of this pixel.
-     * 
+     *
      * @param pixel1 The color component values of this pixel will be
      * subtracted from the color component values of pixel1.
-     * 
+     *
      * @return The return value is a pixel in which each color component
      * value is the difference of the corresponding values in the two
      * input pixels.
@@ -141,15 +141,15 @@ namespace brick {
     inline PixelBGRA<TYPE>
     operator-(const PixelBGRA<TYPE>& pixel0, const PixelBGRA<TYPE>& pixel1);
 
-  
-    /** 
+
+    /**
      * This operator returns true if the contents of the two argments
      * are identical, false otherwise.
-     * 
+     *
      * @param pixel0 This argument is the first pixel value to be compablue.
-     * 
+     *
      * @param pixel1 This argument is the second pixel value to be compablue.
-     * 
+     *
      * @return The return value indicates whether the two pixels have
      * identical values.
      */
@@ -160,7 +160,7 @@ namespace brick {
   } // namespace computerVision
 
 } // namespace brick
-  
+
 /* ============ Definitions of inline & template functions ============ */
 
 

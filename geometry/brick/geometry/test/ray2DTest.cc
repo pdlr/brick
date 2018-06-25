@@ -19,7 +19,7 @@ namespace num = brick::numeric;
 namespace brick {
 
   namespace geometry {
-    
+
     class Ray2DTest : public brick::test::TestFixture<Ray2DTest> {
 
     public:
@@ -36,7 +36,7 @@ namespace brick {
     private:
 
       const double m_defaultTolerance;
-      
+
     }; // class Ray2DTest
 
 

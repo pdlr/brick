@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/numeric/test/polynomialTest.cc
-* 
+*
 * Source file defining PolynomialTest class.
 *
 * Copyright (C) 2004-2005 David LaRose, dlr@cs.cmu.edu
@@ -18,7 +18,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     class PolynomialTest : public brick::test::TestFixture<PolynomialTest> {
 
     public:
@@ -49,7 +49,7 @@ namespace brick {
       void testOperatorTimes();
       void testOperatorPlus();
       void testOperatorMinus();
-    
+
     private:
 
     }; // class PolynomialTest
@@ -92,7 +92,7 @@ namespace brick {
       }
     }
 
-  
+
     void
     PolynomialTest::
     testConstructor__Type()
@@ -106,7 +106,7 @@ namespace brick {
       }
     }
 
-  
+
     void
     PolynomialTest::
     testConstructor__Type__Type()
@@ -121,7 +121,7 @@ namespace brick {
       }
     }
 
-  
+
     void
     PolynomialTest::
     testConstructor__Type__Type__Type()
@@ -137,7 +137,7 @@ namespace brick {
       }
     }
 
-  
+
     void
     PolynomialTest::
     testConstructor__Array1D()
@@ -164,7 +164,7 @@ namespace brick {
     PolynomialTest::
     testConstructor__Iter__Iter__bool()
     {
-#if BRICK_NUMERIC_POLYNOMIAL_TEMPLATED_CONSTRUCTORS 
+#if BRICK_NUMERIC_POLYNOMIAL_TEMPLATED_CONSTRUCTORS
       std::vector<double> coefficientArray(4);
       coefficientArray[0] = 2.3;
       coefficientArray[1] = -1.5;
@@ -183,8 +183,8 @@ namespace brick {
       }
 #endif /* BRICK_NUMERIC_POLYNOMIAL_TEMPLATED_CONSTRUCTORS */
     }
-    
-  
+
+
     void
     PolynomialTest::
     testConstructor__Polynomial()
@@ -206,7 +206,7 @@ namespace brick {
           approximatelyEqual(polynomial1(xValue), referenceValue, 1.0E-11));
       }
     }
-  
+
 
     void
     PolynomialTest::
@@ -225,7 +225,7 @@ namespace brick {
                    coefficientArray2.begin()));
     }
 
-  
+
     void
     PolynomialTest::
     testGetOrder()
@@ -235,7 +235,7 @@ namespace brick {
       BRICK_TEST_ASSERT(Polynomial<double>(1.0, 1.0, 1.0).getOrder() == 2);
     }
 
-  
+
     void
     PolynomialTest::
     testAssignmentOperator()
@@ -259,7 +259,7 @@ namespace brick {
       }
     }
 
-  
+
     void
     PolynomialTest::
     testApplicationOperator()
@@ -267,7 +267,7 @@ namespace brick {
       // Already handled in constructor tests.
     }
 
-  
+
     void
     PolynomialTest::
     testTimesEqualsOperator()
@@ -284,7 +284,7 @@ namespace brick {
       BRICK_TEST_ASSERT(approximatelyEqual(coefficientArray[3], 8.0, 1.0E-10));
     }
 
-  
+
     void
     PolynomialTest::
     testPlusEqualsOperator()
@@ -300,7 +300,7 @@ namespace brick {
       BRICK_TEST_ASSERT(approximatelyEqual(coefficientArray[2], 2.0, 1.0E-10));
     }
 
-  
+
     void
     PolynomialTest::
     testMinusEqualsOperator()
@@ -316,7 +316,7 @@ namespace brick {
       BRICK_TEST_ASSERT(approximatelyEqual(coefficientArray[2], 2.0, 1.0E-10));
     }
 
-  
+
     void
     PolynomialTest::
     testOperatorTimes()
@@ -362,7 +362,7 @@ namespace brick {
           approximatelyEqual(polynomial2(xValue), referenceValue, 1.0E-11));
       }
     }
-  
+
 
     void
     PolynomialTest::
@@ -385,7 +385,7 @@ namespace brick {
           approximatelyEqual(polynomial2(xValue), referenceValue, 1.0E-11));
       }
     }
-  
+
   } //  namespace numeric
 
 } // namespace brick

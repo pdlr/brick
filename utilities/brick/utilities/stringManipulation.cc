@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file stringManipulation.cc
-* 
+*
 * Source file defining routines for working with strings.
 *
 * Copyright (C) 2003-2011, David LaRose, dlr@cs.cmu.edu
@@ -64,7 +64,7 @@ namespace brick {
           outputString += quoteCharacter;
           outputString += inputString[nextIndex];
         }
-      
+
         // And start the next search from one past the last character we
         // added.
         index = nextIndex + 1;
@@ -90,15 +90,15 @@ namespace brick {
         outputStream << *inputIterator;
         ++inputIterator;
       }
-    
+
       while(inputIterator != inputStringVector.end()) {
         outputStream << separator << *inputIterator;
-        ++inputIterator;      
+        ++inputIterator;
       }
       return outputStream.str();
     }
 
-  
+
     // This function returns a copy of the input argument in which every
     // uppercase character has been replaced with its lowercase
     // equivalent.
@@ -110,8 +110,8 @@ namespace brick {
                      result.begin(), ::tolower);
       return result;
     }
-  
-  
+
+
     // This function returns a copy of the input argument in which every
     // lowercase character has been replaced with its uppercase
     // equivalent.
@@ -153,7 +153,7 @@ namespace brick {
       return outputString;
     }
 
-    
+
     // Divides inputString around instances of delimiter.
     std::vector<std::string>
     splitString(std::string const& inputString,
@@ -190,7 +190,7 @@ namespace brick {
       return stringParts;
     }
 
-    
+
     // This function removes whitespace from the beginning and end of
     // a string.
     std::string
@@ -388,7 +388,7 @@ namespace brick {
         case BRICK_WS_EATING_ENDING_WHITESPACE:
           // This state happens immediately before we print a line break
           // that wasn't part of the original string.
-          // 
+          //
           // Find next non-whitespace character.
           if(nonWhitespaceIndex <= startIndex) {
             nonWhitespaceIndex =
@@ -416,5 +416,5 @@ namespace brick {
     }
 
   } // namespace utilities
-  
+
 } // namespace brick

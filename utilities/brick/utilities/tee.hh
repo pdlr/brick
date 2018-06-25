@@ -50,7 +50,7 @@ namespace brick {
       TeeBuffer(TeeBuffer const&&) = delete;
       TeeBuffer& operator=(TeeBuffer const&) = delete;
       TeeBuffer& operator=(TeeBuffer const&&) = delete;
-      
+
       // Private member functions.
 
       /// Override std::basic_streambuf<CharType>::overflow().
@@ -67,7 +67,7 @@ namespace brick {
 
       // Private data members.
       std::vector<std::basic_streambuf<CharType>*> m_sinkVector;
-      
+
     }; // class TeeBuffer
 
 
@@ -93,7 +93,7 @@ namespace brick {
     {
     public:
 
-      /** 
+      /**
        * After default construction, output goes nowhere.  Output directed
        * to a Tee instance in it's default state is simply ignored.
        */
@@ -104,12 +104,12 @@ namespace brick {
           std::ostream::rdbuf(&m_buffer);
         }
 
-      /** 
+      /**
        * Arrange for output sent to *this to be implicitly sent to
        * another stream.  If you call add() with multiple ostreams,
        * then any stream output sent to *this will be directed to each
        * of those ostreams.
-       * 
+       *
        * @param sink This argument is the ostream that should receive
        * output from *this.
        */
@@ -124,16 +124,16 @@ namespace brick {
       Tee(Tee const&&) = delete;
       Tee& operator=(Tee const&) = delete;
       Tee& operator=(Tee const&&) = delete;
-      
+
       // Private member functions.
 
       // Private data members.
       TeeBuffer<CharType, Traits> m_buffer;
-      
+
     }; // class Tee
-    
+
   } // namespace utilities
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_UTILITIES_TEE_HH */

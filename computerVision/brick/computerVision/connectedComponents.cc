@@ -26,5 +26,5 @@ namespace brick {
     /// @endcond
 
   } // namespace computerVision
-    
+
 } // namespace brick

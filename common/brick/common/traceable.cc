@@ -68,7 +68,7 @@ namespace brick {
       }
       return "";
     }
-  
+
   } // namespace common
 
 } // namespace brick

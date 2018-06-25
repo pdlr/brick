@@ -18,7 +18,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     /**
      ** A simple class template to help you avoid writing "if(myVar >
      ** maxVal) {maxVal = myVar; bestIndex = ii;} all over your code.
@@ -29,7 +29,7 @@ namespace brick {
     class ExtremumRecorder {
     public:
 
-      /** 
+      /**
        * This constructor explicitly initializes the stored extremum.
        * For example, if using operator>() as functor, you would want
        * to pass a very small number as the constructor argument, so
@@ -45,17 +45,17 @@ namespace brick {
         : m_extremeValue(maxValue), m_payload(payload), m_functor(functor) {}
 
 
-      
-      /** 
+
+      /**
        * This member function is an alias for member function test().
-       * 
+       *
        * @param value This argument will be compared to the saved
        * extreme value using the saved functor, and then copied into
        * the saved maximum if the functor returns true.
-       * 
+       *
        * @param payload This argument is copied into the saved payload
        * if and only if the saved extreme value was updated.
-       * 
+       *
        * @return The return value is true if the saved extreme value
        * was updated, false otherwise.
        */
@@ -65,7 +65,7 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This member function compares its first argument with the
        * saved extreme value, and updates the saved extremeValue (and
        * payload) if the specified functor returns true when called
@@ -73,14 +73,14 @@ namespace brick {
        * example, if the functor is simply operator>(), this has the
        * effect of updating the saved value only if the new value is
        * larger.
-       * 
+       *
        * @param value This argument will be compared to the saved
        * extreme value using the saved functor, and then copied into
        * the saved maximum if the functor returns true.
-       * 
+       *
        * @param payload This argument is copied into the saved payload
        * if and only if the saved extreme value was updated.
-       * 
+       *
        * @return The return value is true if the saved extreme value
        * was updated, false otherwise.
        */
@@ -95,9 +95,9 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This member function returns the saved maximum.
-       * 
+       *
        * @return The return value is the largest value passed to
        * member function test() since construction, or since the last
        * call to member function reset().
@@ -106,9 +106,9 @@ namespace brick {
       getExtremeValue() {return m_extremeValue;}
 
 
-      /** 
+      /**
        * This member function returns the saved "payload".
-       * 
+       *
        * @return The return value is the payload associated with the
        * "most extreme" value passed to member function test() since
        * construction, or since the last call to member function
@@ -118,7 +118,7 @@ namespace brick {
       getPayload() {return m_payload;}
 
 
-      /** 
+      /**
        * This member function resets the saved extreme value just as if
        * *this were freshly constructed.
        */
@@ -135,7 +135,7 @@ namespace brick {
       Functor m_functor;
 
     };
-    
+
   } // namespace numeric
 
 } // namespace brick

@@ -15,13 +15,13 @@
 
 // This file is included by circle2D.hh, and should not be directly included
 // by user code, so no need to include circle2D.hh here.
-// 
+//
 // #include <brick/geometry/circle2D.hh>
 
 namespace brick {
 
   namespace geometry {
-    
+
     // The default constructor initializes to the unit circle.
     template <class Type>
     Circle2D<Type>::
@@ -32,7 +32,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // This constructor initializes the circle using explicitly
     // specified values.
     template <class Type>
@@ -47,7 +47,7 @@ namespace brick {
       }
     }
 
-    
+
     // The copy constructor deep copies its argument.
     template <class Type>
     Circle2D<Type>::
@@ -84,9 +84,9 @@ namespace brick {
              << circle.getRadius() << " }";
       return stream;
     }
-    
+
   } // namespace geometry
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_GEOMETRY_CIRCLE2D_IMPL_HH */

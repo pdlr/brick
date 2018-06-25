@@ -19,7 +19,7 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     class ErodeTest
       : public brick::test::TestFixture<ErodeTest> {
 
@@ -126,4 +126,3 @@ namespace {
 }
 
 #endif
-

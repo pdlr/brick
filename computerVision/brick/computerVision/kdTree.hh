@@ -50,7 +50,7 @@ namespace brick {
       : public std::binary_function<Type, Type, bool>
     {
       public:
-      
+
       /**
        * Constructor.  Each KDComparator is associated with a specific
        * level of the KD-Tree, and therefor with a specific axis in
@@ -62,25 +62,25 @@ namespace brick {
        */
       KDComparator(unsigned int axis = 0)
         : m_axis(axis) {};
-      
-      
+
+
       /**
        * Destructor.
        */
       virtual
       ~KDComparator() {}
-      
 
-      /** 
+
+      /**
        * This member function computes the square of the Euclidean
        * distance between two Type instances.
-       * 
+       *
        * @param arg0 This argument is the first of the two Type
        * instances.
-       * 
+       *
        * @param arg1 This argument is the second of the two Type
        * instances.
-       * 
+       *
        * @return The return value is the Euclidean distance between
        * arg0 and arg1.
        */
@@ -95,20 +95,20 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This member function computes a lower bound on the distance
        * between the specified Type instance and Type instances
        * contained in the "far" branch of a KD-Tree.  The dividing
        * hyperplane between the two brances is assumed to run
        * perpendicular to the axis specified by this->m_axis, and
        * intersect the point specified by argument arg1.
-       * 
+       *
        * @param arg0 This argument is the point for which to compute
        * the lower bound distance.
-       * 
+       *
        * @param arg1 This argument is the point through which the
        * separating hyperplane passes.
-       * 
+       *
        * @return The return value is the minimum distance between arg0
        * and the separating hyperplane.
        */
@@ -119,25 +119,25 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This member function returns true if its two arguments
        * represent the same point.
-       * 
+       *
        * @param arg0 This argument is the first Type instance to be
        * compared.
-       * 
+       *
        * @param arg1 This argument is the second Type instance to be
        * compared.
-       * 
+       *
        * @return The return value is true if the two arguments
        * represent the same point, false otherwise.
        */
       bool isEqual(Type const& arg0, Type const& arg1) const {
         return arg0 == arg1;
       }
-      
-        
-      /** 
+
+
+      /**
        * This operator implements "arg0 < arg1" so that sequences of
        * Type instances can be sorted using std::sort().  KDComparator
        * instances will be passed as the final (functor) argument to
@@ -146,7 +146,7 @@ namespace brick {
        * associated with *this.  In the current implementation, Type
        * instances that have identical coordinates on this one axis
        * will be compared along other axes.
-       * 
+       *
        * @return The return value is true if arg0 is "less than" arg1,
        * false otherwise.
        */
@@ -176,16 +176,16 @@ namespace brick {
         }
         return false;
       }
-      
-      
+
+
     private:
 
       unsigned int m_axis;
-      
+
     };
 
 
-    
+
     /**
      ** This class implements a basic KD-Tree data structure.
      ** Template argument Dimension specifies how many dimensions the
@@ -214,7 +214,7 @@ namespace brick {
      **   myPoints.push_back(num::Vector3D(-2.0, 6.3, 5.0));
      **   myPoints.push_back(num::Vector3D(0.0, 0.0, 0.0));
      **   myPoints.push_back(num::Vector3D(3.1, 4.7, 5.4));
-     **   
+     **
      **   cv::KDTree<3, num::Vector3D> kdTree(myPoints.begin(), myPoints.end());
      **
      **   FloatType distance;
@@ -230,22 +230,22 @@ namespace brick {
     class KDTree {
     public:
 
-      /** 
+      /**
        * The default constructor creates an empty tree.
        */
       KDTree();
 
 
-      /** 
+      /**
        * This constructor creates a tree and populates it with the
        * specified sample points.  It has complexity O(N*log(N)),
        * where N is the number of elements to be inserted into the
        * tree.
-       * 
+       *
        * @param beginIter This argument is an iterator pointing to the
        * beginning of a sequence of Type instances that is to be
        * inserted into the tree.
-       * 
+       *
        * @param endIter This argument is an interator pointing one
        * element past the last Type instance in the sequence that is
        * to be inserted into the tree.
@@ -267,7 +267,7 @@ namespace brick {
        * populates it with the specified sample points.  It has
        * complexity O(N*log(N)), where N is the number of elements to
        * be inserted into the tree.
-       * 
+       *
        * Future implementations may add points to the existing tree,
        * without clearing the tree first, so please explicitly
        * call the clear() member function prior to adding samples.
@@ -275,7 +275,7 @@ namespace brick {
        * @param beginIter This argument is an iterator pointing to the
        * beginning of a sequence of Type instances that is to be
        * inserted into the tree.
-       * 
+       *
        * @param endIter This argument is an interator pointing one
        * element past the last Type instance in the sequence that is
        * to be inserted into the tree.
@@ -292,16 +292,16 @@ namespace brick {
       clear();
 
 
-      /** 
+      /**
        * This member function returns true if the specified Type
        * instance has already been inserted into the tree.  It has
        * complexity O(log(N), where N is the number of points
        * contained in the tree.
-       * 
+       *
        * @param point This argument is the Type instance to search
        * for.  It will be compared to elements in the tree using
        * KDComparator<Dimension, Type>::isEqual().
-       * 
+       *
        * @return The return value is true if a matching point is found
        * in the tree, false otherwise.
        */
@@ -309,17 +309,17 @@ namespace brick {
       find(Type const& point) const;
 
 
-      /** 
+      /**
        * This member function returns a const reference to the tree
        * element that is closest (Euclidean distance) to the specified
        * point.  It has complexity O(log(N), where N is the number of
        * points contained in the tree.
-       * 
+       *
        * @param point This argument is the Type instance to search
        * for.  It will be compared to elements in the tree using
        * KDComparator<Dimension, Type>::computeDistance(Type const&,
        * Type const&).
-       * 
+       *
        * @param distance This argument is used to return the distance
        * between the point for which we're searching and the closest
        * point in the tree.  It will be computed using
@@ -335,8 +335,8 @@ namespace brick {
 
       // void
       // rebalance();
-      
-      
+
+
     protected:
 
       template <class Iter>
@@ -352,12 +352,12 @@ namespace brick {
                            Type const*& bestPointPtr,
                            FloatType& bestDistance) const;
 
-      
+
       void
       findNearestRecursive(Type const& point,
                            Type const*& bestPointPtr,
                            FloatType& bestDistance) const;
-      
+
 
       KDComparator<Dimension, Type> m_comparator;
       Type m_point;
@@ -366,7 +366,7 @@ namespace brick {
     };
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

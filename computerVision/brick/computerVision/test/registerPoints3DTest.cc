@@ -21,7 +21,7 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     class RegisterPoints3DTest :
       public brick::test::TestFixture<RegisterPoints3DTest> {
 
@@ -38,14 +38,14 @@ namespace brick {
       void testRegisterPoints3D__In__In__In__In();
       void testRegisterPoints3D__In__In__In__In__bool();
       void testRegisterPoints3D__In__In__In__Out__double__double__size_t();
-    
+
     private:
 
       bool
       isApproximatelySameTransform(const Transform3D<double>& transform0,
                                    const Transform3D<double>& transform1);
 
-    
+
       double m_defaultTolerance;
 
       size_t m_firstOutlier;
@@ -57,9 +57,9 @@ namespace brick {
       std::vector< Vector3D<double> > m_toPointsReference;
       std::vector< Vector3D<double> > m_toPoints2;
       std::vector< Vector3D<double> > m_toPoints2Reference;
-    
+
       Transform3D<double> m_referenceXf;
-    
+
     }; // class RegisterPoints3DTest
 
 
@@ -78,7 +78,7 @@ namespace brick {
         m_toPointsReference(),
         m_toPoints2(),
         m_toPoints2Reference(),
-        m_referenceXf()    
+        m_referenceXf()
     {
       BRICK_TEST_REGISTER_MEMBER(testRegisterPoints3D__In__In__In);
       BRICK_TEST_REGISTER_MEMBER(testRegisterPoints3D__In__In__In__In);
@@ -133,8 +133,8 @@ namespace brick {
       m_toPoints = m_toPointsReference;
       m_toPoints2 = m_toPoints2Reference;
     }
-  
-    
+
+
     void
     RegisterPoints3DTest::
     testRegisterPoints3D__In__In__In()
@@ -192,7 +192,7 @@ namespace brick {
       unweightedFromPoints[6] = unweightedFromPoints[3];
       unweightedToPoints[5] = unweightedToPoints[3];
       unweightedToPoints[6] = unweightedToPoints[3];
-        
+
       // Make sure we get matching results using the weighted and
       // unweighted input sequences.
       Transform3D<double> weightedXf = registerPoints3D<double>(
@@ -204,8 +204,8 @@ namespace brick {
       BRICK_TEST_ASSERT(
         this->isApproximatelySameTransform(weightedXf, unweightedXf));
     }
-    
-  
+
+
     void
     RegisterPoints3DTest::
     testRegisterPoints3D__In__In__In__Out__double__double__size_t()
@@ -242,7 +242,7 @@ namespace brick {
       std::sort(residuals.begin(), residuals.end());
       double threshold =
         (residuals[numberOfInliers] + residuals[numberOfInliers + 1]) / 2.0;
-    
+
       std::fill(flagsVector.begin(), flagsVector.end(), true);
       recoveredXf = registerPoints3D<double>(
         m_fromPoints.begin(), m_fromPoints.end(), m_toPoints2.begin(),
@@ -273,7 +273,7 @@ namespace brick {
     }
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

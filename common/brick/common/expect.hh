@@ -20,7 +20,7 @@
 namespace brick {
 
   namespace common {
-    
+
     /**
      ** This class reads from an inputstream and checks to make sure
      ** the input matches expectations.  Use it like this:
@@ -43,7 +43,7 @@ namespace brick {
      **   // them.
      **   Expect::FormatFlag flags = Expect::SkipWhitespace() | Expect::Sloppy();
      **   myInputStream >> Expect("Number attending:", flags) >> attendeeCount;
-     **   
+     **
      ** @endCode
      **
      ** If the input doesn't match expectation, failbit will be set on
@@ -74,12 +74,12 @@ namespace brick {
       // Ugh.  We go through a contortion below (using static functions
       // instead of static members) to avoid the static initialization
       // order fiasco.
-      
+
       /// Default behavior.  Expect target exactly.
       static FormatFlag NoFlag() {
         static FormatFlag returnValue(0x0);
         return returnValue;
-      }        
+      }
 
       /// Remove any preceding whitespace from the stream input
       /// before comparing against the expectation.
@@ -96,15 +96,15 @@ namespace brick {
         static FormatFlag returnValue(0x2);
         return returnValue;
       }
-      
-      
+
+
       /**
        * Constructor.
        */
       Expect(std::string const& expectation,
              FormatFlag formatFlag = Expect::NoFlag());
 
-      
+
       /**
        * Constructor.
        */
@@ -117,7 +117,7 @@ namespace brick {
        */
       Expect(char const* expectationPtr, size_t length,
              FormatFlag formatFlag = Expect::NoFlag());
-      
+
 
       /**
        * Destructor.
@@ -128,13 +128,13 @@ namespace brick {
 
       std::istream&
       expect(std::istream& stream) const;
-      
+
     private:
 
       // Skips to the next non-whitespace character.
       std::istream&
       skipWhiteSpace(std::istream& stream) const;
-      
+
 
       static const size_t s_chunkSize = 1024;
 
@@ -148,7 +148,7 @@ namespace brick {
     operator>>(std::istream& stream, Expect const& expect);
 
   } // namespace common
-  
+
 } // namespace brick
 
 

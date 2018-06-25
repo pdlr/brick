@@ -16,7 +16,7 @@
 // This file is included by linearAlgebra.hh, and should not be
 // directly included by user code, so no need to include
 // linearAlgebra.hh here.
-// 
+//
 // #include <brick/linearAlgebra/linearAlgebra.hh>
 
 #include <brick/common/exception.hh>
@@ -45,7 +45,7 @@ namespace brick {
       //   [array0[1], 1] * [b]   [array1[1]]
       //   [array0[2], 1]         [array1[2]]
       //   ...                    ...
-      // 
+      //
       // Solving this using the Moore-Penrose pseudoinverse gives
       //
       //                                             -1
@@ -65,7 +65,7 @@ namespace brick {
                 << " and " << array1.size() << " respectively." << std::endl;
         BRICK_THROW(brick::common::ValueException,
                     "linearFit(Array1D const&, Array1D const&)",
-                    message.str().c_str());                 
+                    message.str().c_str());
       }
       if(array0.size() <= 1) {
         BRICK_THROW(brick::common::ValueException,
@@ -101,9 +101,9 @@ namespace brick {
       return std::make_pair((a11 * x0 - a01 * x1) / determinant,
                             (a00 * x1 - a01 * x0) / determinant);
     }
-  
+
   } // namespace linearAlgebra
-  
+
 } // namespace brick
 
 #endif // #ifndef BRICK_LINEARALGEBRA_LINEARALGEBRA_IMPL_HH

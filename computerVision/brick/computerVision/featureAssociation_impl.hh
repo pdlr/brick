@@ -19,7 +19,7 @@
 // This file is included by featureAssociation.hh, and should not be
 // directly included by user code, so no need to include
 // featureAssociation.hh here.
-// 
+//
 // #include <brick/computerVision/featureAssociation.hh>
 
 #include <cmath>
@@ -97,7 +97,7 @@ namespace brick {
     }
 
   } // namespace computerVision
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_FEATUREASSOCIATION_IMPL_HH */

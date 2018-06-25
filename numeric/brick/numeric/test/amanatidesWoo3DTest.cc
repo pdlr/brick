@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/numeric/test/amanatidesWoo3DTest.cc
-* 
+*
 * Source file defining AmanatidesWoo3DTest class.
 *
 * Copyright (C) 2004-2007,2012 David LaRose, dlr@cs.cmu.edu
@@ -52,11 +52,11 @@ namespace brick {
       compareImages(const Array3D<double>& testImage,
                     const Array3D<double>& groundTruthImage);
 
-    
+
       void
       traverseImage(AmanatidesWoo3D< Array3D<double> >& aw3D);
 
-    
+
       Vector3D<double> m_directionXYZ0;
       Vector3D<double> m_directionXYZ1;
       Vector3D<double> m_directionXYZ2;
@@ -68,7 +68,7 @@ namespace brick {
       Vector3D<double> m_startXYZ2;
       double m_testEpsilon;
       Array3D<double> m_zeroImage;
-    
+
     }; // class AmanatidesWoo3DTest
 
 
@@ -153,7 +153,7 @@ namespace brick {
       Vector3D<double> endXYZ2(6.0, 6.0, 5.0);
       m_directionXYZ2 = endXYZ2 - m_startXYZ2;
       m_directionXYZ2 /= magnitude<double>(m_directionXYZ2);
-    
+
       // Coordinate transformation which converts world coordinates to pixel
       // coordinates.
       m_pixelTworld = Transform3D<double>(0.5, 0.0, 0.0, -4.0,
@@ -201,7 +201,7 @@ namespace brick {
       // No independent test for destructor.
     }
 
-  
+
     void
     AmanatidesWoo3DTest::
     testBegin0()
@@ -320,7 +320,7 @@ namespace brick {
       this->compareImages(aw3D.getData(), traceImage);
     }
 
-  
+
     void
     AmanatidesWoo3DTest::
     testValidIntersection0()
@@ -356,7 +356,7 @@ namespace brick {
       BRICK_TEST_ASSERT(!(aw3D.validIntersection()));
     }
 
-  
+
     void
     AmanatidesWoo3DTest::
     testAssignmentOperator()
@@ -374,7 +374,7 @@ namespace brick {
       AmanatidesWoo3D< Array3D<double> >
         aw3DCopy(traceImageCopy, m_pixelTworld, m_startXYZ2, m_directionXYZ2,
                  false);
-    
+
       // Copy using the assignment operator.
       aw3DCopy = aw3D;
 
@@ -384,7 +384,7 @@ namespace brick {
       this->compareImages(traceImage, m_downStreamImage);
     }
 
-  
+
     void
     AmanatidesWoo3DTest::
     compareImages(const Array3D<double>& testImage,

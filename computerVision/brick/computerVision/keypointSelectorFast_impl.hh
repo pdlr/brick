@@ -16,7 +16,7 @@
 
 // This file is included by keypointSelectorFast.hh, and should not be directly included
 // by user code, so no need to include keypointSelectorFast.hh here.
-// 
+//
 // #include <brick/computerVision/keypointSelectorFast.hh>
 
 namespace brick {
@@ -28,7 +28,7 @@ namespace brick {
     // ============== Private member functions below this line ==============
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_KEYPOINTSELECTORFAST_IMPL_HH */

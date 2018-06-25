@@ -20,7 +20,7 @@ namespace num = brick::numeric;
 namespace brick {
 
   namespace computerVision {
-    
+
     class StereoRectifyTest
       : public brick::test::TestFixture<StereoRectifyTest> {
 
@@ -39,7 +39,7 @@ namespace brick {
     private:
 
       const double m_defaultTolerance;
-      
+
     }; // class StereoRectifyTest
 
 
@@ -65,7 +65,7 @@ namespace brick {
       CameraIntrinsicsPinhole<double> intrinsics1(
         640, 480, 300.0, 250.0, 325.0, 220.0);
       double baseline = 0.21;  // meters.
-      
+
       // Compute the Q matrix.
       brick::numeric::Transform3D<double> QQ = getReprojectionMatrix(
         intrinsics0, intrinsics1, baseline);
@@ -114,7 +114,7 @@ namespace brick {
       }
     }
 
-    
+
     void
     StereoRectifyTest::
     testStereoRectify()
@@ -229,7 +229,7 @@ namespace brick {
       double dotProduct = brick::numeric::dot<double>(baseline_world, xAxis);
       BRICK_TEST_ASSERT(approximatelyEqual(crossMag, 0.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(approximatelyEqual(dotProduct, 1.0, m_defaultTolerance));
-      
+
       // Pick some points against which to test.
       std::vector< brick::numeric::Vector3D<double> > testPoints;
       testPoints.push_back(brick::numeric::Vector3D<double>(0.0, 0.0, 0.0));
@@ -300,4 +300,3 @@ namespace {
 }
 
 #endif
-

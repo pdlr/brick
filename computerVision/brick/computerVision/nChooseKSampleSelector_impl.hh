@@ -17,7 +17,7 @@
 // This file is included by nChooseKSampleSelector.hh, and should not
 // be directly included by user code, so no need to include
 // nChooseKSampleSelector.hh here.
-// 
+//
 // #include <brick/computerVision/nChooseKSampleSelector.hh>
 
 #include <limits>
@@ -52,7 +52,7 @@ namespace brick {
       }
     }
 
-    
+
     template <class Sample>
     size_t
     NChooseKSampleSelector<Sample>::
@@ -69,7 +69,7 @@ namespace brick {
       return m_numberOfSamples;
     }
 
-    
+
     template <class Sample>
     typename NChooseKSampleSelector<Sample>::SampleSequenceType
     NChooseKSampleSelector<Sample>::
@@ -146,9 +146,9 @@ namespace brick {
       }
       return std::make_pair(m_sampleVector.begin(), m_sampleVector.end());
     }
-        
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_NCHOOSEKSAMPLESELECTOR_IMPL_HH */

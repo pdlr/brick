@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/numeric/test/sampledFunctionsTest.cpp
-* 
+*
 * Source file defining sampledFunctionsTest class.
 *
 * Copyright (C) 2006-2012 David LaRose, dlr@cs.cmu.edu
@@ -38,7 +38,7 @@ namespace brick {
     private:
 
       double m_defaultTolerance;
-    
+
     }; // class SampledFunctionsTest
 
 
@@ -133,7 +133,7 @@ namespace brick {
     }
 
   } // namespace numeric
-  
+
 } // namespace brick
 
 

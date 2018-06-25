@@ -18,9 +18,9 @@
 namespace brick {
 
   namespace computerVision {
-    
 
-    /** 
+
+    /**
      * This function applies the sobel edge operator in the X
      * direction.  Specifically, convolves the image with the 3x3 kernel
      *
@@ -34,13 +34,13 @@ namespace brick {
      * the image gradient with scale factor 1.0.
      *
      * @param inputImage This argument is the image to be convolved.
-     * 
+     *
      * @param normalizeResult This argument specifies whether or not
      * to divide the resulting pixel values by 8.  Setting this
      * argument to true will result in lost precision on integer
      * types.  This feature is currently not implemented, so please
      * leave normalizeResult at its default value of false.
-     * 
+     *
      * @return The return value is the result of the convolution.
      */
     template <ImageFormat FORMAT>
@@ -48,7 +48,7 @@ namespace brick {
     applySobelX(const Image<FORMAT>& inputImage, bool normalizeResult=false);
 
 
-    /** 
+    /**
      * This function applies the sobel edge operator in the Y
      * direction.  Specifically, convolves the image with the 3x3 kernel
      *
@@ -62,13 +62,13 @@ namespace brick {
      * the image gradient with scale factor 1.0.
      *
      * @param inputImage This argument is the image to be convolved.
-     * 
+     *
      * @param normalizeResult This argument specifies whether or not
      * to divide the resulting pixel values by 8.  Setting this
      * argument to true will result in lost precision on integer
      * types.  This feature is currently not implemented, so please
      * leave normalizeResult at its default value of false.
-     * 
+     *
      * @return The return value is the result of the convolution.
      */
     template <ImageFormat FORMAT>

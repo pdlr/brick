@@ -15,14 +15,14 @@
 
 // This file is included by ray2D.hh, and should not be directly included
 // by user code, so no need to include ray2D.hh here.
-// 
+//
 // #include <brick/geometry/ray2D.hh>
 #include <brick/numeric/utilities.hh>
 
 namespace brick {
 
   namespace geometry {
-    
+
     // The default constructor initializes to the ray that starts
     // at the origin and points along the X axis.
     template <class Type>
@@ -33,7 +33,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // This constructor initializes the ray using a point and a
     // direction vector.
     template <class Type>
@@ -49,7 +49,7 @@ namespace brick {
       }
     }
 
-    
+
     // This constructor initializes the ray according to the
     // equation Ax + By + C = 0.
     template <class Type>
@@ -63,7 +63,7 @@ namespace brick {
       m_direction /= brick::numeric::magnitude<Type>(m_direction);
     }
 
-    
+
     // The copy constructor deep copies its argument.
     template <class Type>
     Ray2D<Type>::
@@ -83,7 +83,7 @@ namespace brick {
       // Empty.
     }
 
-      
+
     // The assignment operator deep copies its argument.
     template <class Type>
     Ray2D<Type>&
@@ -106,7 +106,7 @@ namespace brick {
     {
       return m_direction;
     }
-      
+
 
     // This member function returns the direction of the ray.
     template <class Type>
@@ -116,7 +116,7 @@ namespace brick {
     {
       return this->getDirection();
     }
-      
+
 
     // This member function returns the start point of the ray.
     template <class Type>
@@ -139,9 +139,9 @@ namespace brick {
              << ray.getDirectionVector() << " }";
       return stream;
     }
-    
+
   } // namespace geometry
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_GEOMETRY_RAY2D_IMPL_HH */

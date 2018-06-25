@@ -18,7 +18,7 @@
 namespace brick {
 
   namespace common {
-    
+
     /**
      ** The ReferenceCount class provides a convenient way to track a
      ** shared resource so you know when to delete it.  ReferenceCount
@@ -60,7 +60,7 @@ namespace brick {
      ** resource is allocated.  The only way to move from the
      ** uncounted state to the counted state is to call the reset()
      ** method with no argument, or with a nonzero argument.
-     ** 
+     **
      ** Here is a simple example of how you might use ReferenceCount
      ** to implement an vector class with automatically managed
      ** shallow copy semantics:
@@ -71,7 +71,7 @@ namespace brick {
      **     MyVector()
      **       : m_vectorPtr(new std::vector<ElementType>),
      **         m_referenceCount() {}
-     **  
+     **
      **     ~MyVector() {
      **       if(!m_referenceCount.isShared()) {
      **         delete m_vectorPtr;
@@ -79,7 +79,7 @@ namespace brick {
      **     }
      **
      **   // ** Public interface for element access, etc. goes here. **
-     **  
+     **
      **   private:
      **     std::vector* m_vectorPtr;
      **     ReferenceCount m_referenceCount;
@@ -117,14 +117,14 @@ namespace brick {
     class ReferenceCount
     {
     public:
-      /** 
+      /**
        * The default constructor sets the reference count to 1,
        * indicating a counted and unshared condition.  To indicate
        * that there are existing references, pass a constructor
        * argument greater than 1.  Use an argument of zero to indicate
        * that the shared data has not been initialized, and leave
        * *this in the uncounted state.
-       * 
+       *
        * @param count This argument specifies to what value the count
        * should be initialized.  For most applications, this argument
        * should be set to 1.  Setting this argument to zero indicates
@@ -136,14 +136,14 @@ namespace brick {
         this->reset(count);
       }
 
-    
-      /** 
+
+      /**
        * This is the copy constructor.  If *this is in the counted
        * state, then after copying both ReferenceCount instances share
        * the same count, and the count is incremented by one.  If
        * *this is in the uncounted state, then the copy will also be
        * uncounted.
-       * 
+       *
        * @param other The ReferenceCount instance to be copied.
        */
       ReferenceCount(const ReferenceCount& other)
@@ -151,8 +151,8 @@ namespace brick {
         ++(*this);
       }
 
-    
-      /** 
+
+      /**
        * Decrements the count (if the ReferenceCount instance is in
        * the counted state) and destroys the ReferenceCount instance.
        */
@@ -161,12 +161,12 @@ namespace brick {
         this->deleteIfNecessary();
       }
 
-    
-      /** 
+
+      /**
        * The pre-increment operator increments the count by one, if
        * the ReferenceCount instance is in the counted state, and has
        * no impact in the uncounted state.
-       * 
+       *
        * @return A Reference to the incremented ReferenceCount instance.
        */
       ReferenceCount&
@@ -175,23 +175,23 @@ namespace brick {
         return *this;
       }
 
-    
-      /** 
+
+      /**
        * Due to the semantics of the ReferenceCount class, the
        * post-increment operator is identical to the the pre-increment
        * operator.
-       * 
+       *
        * @return A Reference to the incremented ReferenceCount instance.
        */
       ReferenceCount
       operator++(int) {return ++(*this);}
 
-    
-      /** 
+
+      /**
        * The pre-decrement operator decrements the count by one, if
        * the ReferenceCount instance is in the counted state, and has
        * no impact in the uncounted state.
-       * 
+       *
        * @return A Reference to the decremented ReferenceCount instance.
        */
       ReferenceCount&
@@ -200,22 +200,22 @@ namespace brick {
         return *this;
       }
 
-    
-      /** 
+
+      /**
        * Due to the semantics of the ReferenceCount class, the
        * post-decrement operator is identical to the the pre-decrement
        * operator.
-       * 
+       *
        * @return A Reference to the decremented ReferenceCount instance.
        */
       ReferenceCount
       operator--(int) {return --(*this);}
 
 
-      /** 
+      /**
        * This operator has the same effect as incrementing *this offset
        * times, but runs in O(1) time.
-       * 
+       *
        * @param offset This argument specifies how many times to increment
        * @return A reference to *this.
        */
@@ -225,11 +225,11 @@ namespace brick {
         return *this;
       }
 
-    
-      /** 
+
+      /**
        * This operator has the same effect as decrementing *this offset
        * times, but runs in O(1) time.
-       * 
+       *
        * @param offset This argument specifies how many times to decrement
        * @return A reference to *this.
        */
@@ -239,15 +239,15 @@ namespace brick {
         return *this;
       }
 
-    
-      /** 
+
+      /**
        * The assignment operator copies its argument.  After copying a
        * ReferenceCount instance that is in the counted state, both
        * ReferenceCount instances share the same count, and the count
        * is incremented by one.  After copying a ReferenceCount
        * instance that is in the uncounted state, both ReferenceCount
        * instances are uncounted.
-       * 
+       *
        * @param source The ReferenceCount instance to be copied.
        * @return A reference to *this.
        */
@@ -266,12 +266,12 @@ namespace brick {
         return *this;
       }
 
-    
-      /** 
+
+      /**
        * This member function returns the current count if the
        * ReferenceCount instance is in the counted state, or 0
        * otherwise.
-       * 
+       *
        * @return The internal reference count.
        */
       int
@@ -280,36 +280,36 @@ namespace brick {
         return 0;
       }
 
-    
-      /** 
+
+      /**
        * This member function returns true if the ReferenceCount
        * instance is in the counted state (see class documentation for
        * ReferenceCount).
-       * 
+       *
        * @return true if *this is in the counted state.
        */
       bool
       isCounted() const {return this->m_countPtr != 0;}
 
 
-      /** 
+      /**
        * This member function returns true if more than one
        * ReferenceCount object is sharing the count with *this.  That
        * is, it returns true if *this is in the counted state, and the
        * internal count is greater than 1.
-       * 
+       *
        * @return true if the internal count is greater than 1.
        */
       bool
       isShared() const {return (this->getCount() > 1);}
 
-    
-      /** 
+
+      /**
        * This member function decrements the count and releases the
        * reference, then reinitializes with a fresh count.  Use this
        * if you want to release the shared resource and create a new
        * one.
-       * 
+       *
        * @param count This argument specifies to what value the count
        * should be reinitialized.  For most applications, this argument
        * should be set to 1.
@@ -324,10 +324,10 @@ namespace brick {
         }
       }
 
-      
+
     private:
 
-      /** 
+      /**
        * This member function deletes the internal count pointer
        * pointer if no references remain, and (always) resets the
        * pointer to 0.
@@ -341,12 +341,12 @@ namespace brick {
         }
       }
 
-      
+
       int* m_countPtr;
     };
 
   } // namespace common
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMMON_REFERENCECOUNT_HH */

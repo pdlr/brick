@@ -17,7 +17,7 @@
 // This file is included by stereoRectify.hh, and should not be
 // directly included by user code, so no need to include
 // stereoRectify.hh here.
-// 
+//
 // #include <brick/computerVision/stereoRectify.hh>
 
 #include <brick/linearAlgebra/linearAlgebra.hh>
@@ -40,7 +40,7 @@ namespace brick {
                 <= brick::numeric::NumericTraits<FloatType>::epsilon());
       }
 
-      
+
       template <class FloatType>
       brick::numeric::Array2D<FloatType>
       extractUpperLeftBlock(
@@ -109,7 +109,7 @@ namespace brick {
       // where a is an arbitrary scale factor.
       //
       // Equations for the right camera are very similar.
-      // 
+      //
       // @verbatim
       //       |u - d|   |f_x,   0, c_u', 0|   |x - b|
       //   a * |v    | = |0,   f_y,  c_v, 0| * |y    |
@@ -125,14 +125,14 @@ namespace brick {
       //
       // The right camera projection can be rearranged to move b
       // into the projection matrix.
-      // 
+      //
       // @verbatim
       //       |u - d|   |f_x,   0, c_u', -b*f_x|   |x|
       //   a * |v    | = |0,   f_y,  c_v,      0| * |y|
       //       |1    |   |0,     0,    1,      0|   |z|
       //                                            |1|
       // @endverbatim
-      // 
+      //
       // Only the top row of the right camera equations differs from
       // the left camera equations.  Writing the four unique
       // simultaneous equations together gives:
@@ -145,14 +145,14 @@ namespace brick {
       // @endverbatim
       //
       // which is easily rearranged to:
-      // 
+      //
       // @verbatim
       //       |u|   |f_x,   0,        c_u,     0|   |x|
       //   a * |v| = |0,   f_y,        c_v,     0| * |y|
       //       |d|   |0,     0, c_u - c_u', b*f_x|   |z|
       //       |1|   |0,     0,          1,     0|   |1|
       // @endverbatim
-      // 
+      //
       // If we invert the 4x4 matrix in this last equation using the
       // cofactor method, and discard a scale factor of
       // (-f_x / determinant) because it simply changes the projective
@@ -180,7 +180,7 @@ namespace brick {
         0.0, 0.0, fY, fY * (cUPrime - cU));
     }
 
-    
+
     template <class FloatType>
     void
     stereoRectify(CameraIntrinsicsPinhole<FloatType> const& intrinsics0,
@@ -202,8 +202,8 @@ namespace brick {
                     rcamera0Tworld, rcamera1Tworld,
                     image0Trimage0, image1Trimage1);
     }
-    
-    
+
+
     template <class FloatType>
     void
     stereoRectify(CameraIntrinsicsPinhole<FloatType> const& intrinsics0,
@@ -220,7 +220,7 @@ namespace brick {
     {
       // Hack(xxx): find a principled way to set this threshold.
       FloatType localEpsilon = 1.0E-12;
-      
+
       // Recover optical centers (focal points) of the two cameras in
       // world coords.  These won't change with rectification.
       brick::numeric::Transform3D<FloatType> worldTcamera0 =
@@ -268,7 +268,7 @@ namespace brick {
                     "Error in computation of z axis.");
       }
       zAxis /= zMagnitude;
-      
+
       // The rectified cameras share the same orientation.  The
       // locations of the optical centers (i.e., the translation
       // component of the cameraTworld transforms) remain unchanged.
@@ -285,7 +285,7 @@ namespace brick {
 
       rcamera0Tworld = worldTrcamera0.invert();
       rcamera1Tworld = worldTrcamera1.invert();
-      
+
       // The rectified cameras will share the same intrinsic
       // parameters.  Note that these parameters are not uniquely
       // determined.  Choosing them poorly just means that the input
@@ -298,13 +298,13 @@ namespace brick {
       unsigned int numPixelsX = intrinsics0.getNumPixelsX();
       unsigned int numPixelsY = intrinsics0.getNumPixelsY();
       FloatType focalLength = rectifiedFocalLength;
-      FloatType pixelSizeX = 
+      FloatType pixelSizeX =
         (intrinsics0.getPixelSizeX() + intrinsics1.getPixelSizeX()) / 2.0;
-      FloatType pixelSizeY = 
+      FloatType pixelSizeY =
         (intrinsics0.getPixelSizeY() + intrinsics1.getPixelSizeY()) / 2.0;
-      FloatType centerU = 
+      FloatType centerU =
         (intrinsics0.getCenterU() + intrinsics1.getCenterU()) / 2.0;
-      FloatType centerV = 
+      FloatType centerV =
         (intrinsics0.getCenterV() + intrinsics1.getCenterV()) / 2.0;
       rectifiedIntrinsics0 = CameraIntrinsicsPinhole<FloatType>(
         numPixelsX, numPixelsY, focalLength, pixelSizeX, pixelSizeY,

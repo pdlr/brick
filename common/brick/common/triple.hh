@@ -16,7 +16,7 @@
 namespace brick {
 
   namespace common {
-    
+
     /**
      ** The Triple class provides a convenient way to pass groups of
      ** three things around.  It's intended to be just like std::pair,
@@ -39,17 +39,17 @@ namespace brick {
       /// This describes the type of the Third element of the triple.
       typedef Type2 third_type;
 
-      
+
       /* ============ Public member functions ============ */
-      /** 
+      /**
        * Default constructor initializes all members to default values.
        */
       Triple() : first(Type0()), second(Type1()), third(Type2()) {}
 
-      
-      /** 
+
+      /**
        * This constructor copies each of its arguments into the triple.
-       * 
+       *
        * @param element0 This argument will be copied to the first element
        * of the new Triple.
        * @param element1 This argument will be copied to the first element
@@ -60,13 +60,13 @@ namespace brick {
       Triple(const Type0& element0, const Type1& element1, const Type2& element2)
         : first(element0), second(element1), third(element2) {}
 
-      
-      /** 
+
+      /**
        * This constructor copies each element of another triple.  Note
        * that the types of the elements of the copied triple will be
        * explicitly cast to types of the elements of the the constructed
        * triple.
-       * 
+       *
        * @param source This argument is the triple to be copied.
        */
       template <class OtherType0, class OtherType1, class OtherType2>
@@ -75,13 +75,13 @@ namespace brick {
           second(static_cast<Type1>(other.second)),
           third(static_cast<Type2>(other.third)) {}
 
-      
-      /** 
+
+      /**
        * Empty destructor.
        */
       ~Triple() {}
 
-      
+
       /* ============ Public data members ============ */
 
       /**
@@ -100,11 +100,11 @@ namespace brick {
       Type2 third;
     };
 
-  
-    /** 
+
+    /**
      * makeTriple is a convenience function for creating Triples.  It is
      * intended to be just like std::make_pair().
-     * 
+     *
      * @param element0 This argument specifies the first element of the triple.
      * @param element1 This argument specifies the second element of the triple.
      * @param element2 This argument specifies the third element of the triple.
@@ -118,7 +118,7 @@ namespace brick {
     }
 
   } // namespace common
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMMON_TRIPLE_HH */

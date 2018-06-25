@@ -31,7 +31,7 @@ namespace brick {
 	static std::set<RunnableObject*> globalTestSet;
 	return globalTestSet;
       }
-      
+
     }
     /// @endcond
 

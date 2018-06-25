@@ -47,7 +47,7 @@ namespace brick {
 
 
       std::vector<unsigned int> getKeypointLevels();
-      
+
 
       float getLaplacianMagnitudeThreshold();
 
@@ -87,7 +87,7 @@ namespace brick {
     };
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

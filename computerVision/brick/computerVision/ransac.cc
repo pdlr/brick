@@ -55,8 +55,7 @@ namespace brick {
       return std::max(int(1),
                       static_cast<int>(numberOfRandomSampleSets + 0.5));
     }
-    
-  } // namespace computerVision
-  
-} // namespace brick
 
+  } // namespace computerVision
+
+} // namespace brick

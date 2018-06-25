@@ -24,7 +24,7 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     class ImageIOTest : public brick::test::TestFixture<ImageIOTest> {
 
     public:
@@ -81,7 +81,7 @@ namespace brick {
                     "Unable to open output stream to "
                     "/var/tmp/brickTestImage.pgm");
       }
-      
+
       outputStream << "P5\n"
                    << imageWidth << " " << imageHeight << "\n"
                    << "65535\n";
@@ -118,12 +118,12 @@ namespace brick {
       std::string commentString;
       Image<GRAY8> resultImage = readPNG<GRAY8>(
         outputFileName, commentString);
-      
+
       BRICK_TEST_ASSERT(std::equal(resultImage.begin(), resultImage.end(),
                                    referenceImage.begin()));
     }
-    
- 
+
+
     void
     ImageIOTest::
     testWritePNG_RGB8()
@@ -135,7 +135,7 @@ namespace brick {
       std::string commentString;
       Image<RGB8> resultImage = readPNG<RGB8>(
         outputFileName, commentString);
-      
+
       BRICK_TEST_ASSERT(std::equal(resultImage.begin(), resultImage.end(),
                                    referenceImage.begin()));
     }
@@ -148,19 +148,19 @@ namespace brick {
       Image<GRAY8> referenceImage = readPGM8(getTestImageFileNamePGM0());
       Image<GRAY16> referenceImage16 =
         convertColorspace<GRAY16>(referenceImage);
-      
+
       // TBD(xxx): get a real temp file name.
       std::string outputFileName = "/var/tmp/testImage.png";
       writePNG(outputFileName, referenceImage16);
       std::string commentString;
       Image<GRAY16> resultImage = readPNG<GRAY16>(
         outputFileName, commentString);
-      
+
       BRICK_TEST_ASSERT(std::equal(resultImage.begin(), resultImage.end(),
                                    referenceImage16.begin()));
     }
 
- 
+
     void
     ImageIOTest::
     testWritePNG_RGB16()
@@ -168,14 +168,14 @@ namespace brick {
       Image<RGB8> referenceImage = readPPM8(getTestImageFileNamePPM0());
       Image<RGB16> referenceImage16 =
         convertColorspace<RGB16>(referenceImage);
-      
+
       // TBD(xxx): get a real temp file name.
       std::string outputFileName = "/var/tmp/testImage.png";
       writePNG(outputFileName, referenceImage16);
       std::string commentString;
       Image<RGB16> resultImage = readPNG<RGB16>(
         outputFileName, commentString);
-      
+
       BRICK_TEST_ASSERT(std::equal(resultImage.begin(), resultImage.end(),
                                    referenceImage16.begin()));
     }

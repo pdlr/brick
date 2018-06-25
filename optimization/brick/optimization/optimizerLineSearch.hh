@@ -66,25 +66,25 @@ namespace brick {
       explicit OptimizerLineSearch(const Functor& functor);
 
       /**
-       * Overloading of constructor 
+       * Overloading of constructor
        *
        * @param functor A copy of this argument will be stored
        * internally for use in optimization.
-       * 
+       *
        * @param startPoint The initial search point on the function.
-       * 
+       *
        * @param startGradient The initial gradient at startPoint.
        *
-       * @param startValue The function value at startPoint.     
+       * @param startValue The function value at startPoint.
        */
-      OptimizerLineSearch(const Functor& functor, 
+      OptimizerLineSearch(const Functor& functor,
                           const argument_type& startPoint,
                           const argument_type& startGradient,
                           const result_type& startValue);
 
-      /** 
+      /**
        * Copy constructor.
-       * 
+       *
        * @param source The OptimizerLineSearch instance to be copied.
        */
       OptimizerLineSearch(const OptimizerLineSearch& source);
@@ -95,18 +95,18 @@ namespace brick {
       virtual
       ~OptimizerLineSearch();
 
-      /** 
+      /**
        * If a valid minimization result is available, this method returns
        * the number of function calls required to produce that result.  If
        * no valid minimization result is available, the return value is 0.
-       * 
+       *
        * @return The number of function calls spent in the last
        * minimization, or 0.
        */
       size_t
       getNumberOfFunctionCalls() {return this->m_functionCallCount;}
-    
-      /** 
+
+      /**
        * Sets part of the initial conditions for the minimization.
        * Search will start at this location in parameter space.  The
        * member function setInitialStep() must also be called before
@@ -137,7 +137,7 @@ namespace brick {
                     const result_type& startValue,
                     const argument_type& startGradient);
 
-      /** 
+      /**
        * Sets part of the initial conditions for the minimization.  This
        * specifies both the initial search step and the direction of
        * search in parameter space.  The member function setStartPoint()
@@ -149,7 +149,7 @@ namespace brick {
       virtual void
       setInitialStep(const argument_type& initialStep);
 
-      /** 
+      /**
        * Sets the line search parameters.  Default values are reasonable
        * for functions which take values and arguments in the "normal"
        * range of 0 to 100 or so.
@@ -167,19 +167,19 @@ namespace brick {
       setParameters(FloatType argumentTolerance=1.0e-7,
                     FloatType alpha=1.0e-4,
                     FloatType maximumStepMagnitude=100.0);
-    
+
       /**
        * Assignment operator.
-       * 
+       *
        * @param source The OptimizerLineSearch instance to be copied.
        * @return Reference to *this.
        */
       OptimizerLineSearch&
       operator=(const OptimizerLineSearch& source);
-    
+
     protected:
 
-      /** 
+      /**
        * This protected member function verifies that all necessary
        * values have been set prior to running the optimization.  If
        * anything is missing or inconsistent, it throws an exception.
@@ -188,17 +188,17 @@ namespace brick {
       checkState() {
         // Warning(xxx): currently no state checking is implemented.
       }
-    
-      /** 
+
+      /**
        * Perform the minimization.  This overrides Optimizer<Functor>::run().
-       * 
+       *
        * @return A std::pair of the vector parameter which brings the
        * specified Functor to a point of sufficient decrease, and the
        * corresponding Functor value.
        */
       std::pair<typename Functor::argument_type, typename Functor::result_type>
       run();
-    
+
       // Data members
       FloatType m_alpha;
       FloatType m_argumentTolerance;
@@ -273,7 +273,7 @@ namespace brick {
     {
       this->setParameters();
     }
-  
+
     template<class Functor, class FloatType>
     OptimizerLineSearch<Functor, FloatType>::
     OptimizerLineSearch(const OptimizerLineSearch& source)
@@ -312,12 +312,12 @@ namespace brick {
       // return value from m_functor.gradient().
       this->m_startValue = this->m_functor(startPoint);
       this->m_startGradient = this->m_functor.gradient(startPoint);
-    
-      // Reset the count of function calls.  We ignore the calls used 
+
+      // Reset the count of function calls.  We ignore the calls used
       // to initialize m_startValue, etc. above.
       this->m_functionCallCount = 0;
 
-      // We've changed the starting point, so we'll have to rerun the 
+      // We've changed the starting point, so we'll have to rerun the
       // optimization.  Indicate this by setting the inherited member
       // m_needsOptimization.
       this->m_needsOptimization = true;
@@ -334,11 +334,11 @@ namespace brick {
       copyArgumentType(startPoint, this->m_startPoint);
       this->m_startValue = startValue;
       copyArgumentType(startGradient, this->m_startGradient);
-    
+
       // Reset the count of function calls.
       this->m_functionCallCount = 0;
 
-      // We've changed the starting point, so we'll have to rerun the 
+      // We've changed the starting point, so we'll have to rerun the
       // optimization.  Indicate this by setting the inherited member
       // m_needsOptimization.
       this->m_needsOptimization = true;
@@ -348,11 +348,11 @@ namespace brick {
     void OptimizerLineSearch<Functor, FloatType>::
     setInitialStep(const argument_type& initialStep)
     {
-      // First, make sure this is a valid initialStep.  
+      // First, make sure this is a valid initialStep.
       FloatType initialStepMagnitude =
         brick::common::squareRoot(dotArgumentType<argument_type, FloatType>(initialStep, initialStep));
       if(initialStepMagnitude == static_cast<FloatType>(0.0)) {
-        BRICK_THROW(brick::common::ValueException, 
+        BRICK_THROW(brick::common::ValueException,
 		    "OptimizerLineSearch::setInitialStep()",
 		    "initialStep magnitude is equal to 0.0.");
       }
@@ -361,16 +361,16 @@ namespace brick {
       // be needing the magnitude of initialStep, save it too.
       this->m_initialStepMagnitude = initialStepMagnitude;
       copyArgumentType(initialStep, this->m_initialStep);
-    
+
       // Reset the count of function calls.
       this->m_functionCallCount = 0;
 
-      // We've changed the line direction, so we'll have to rerun the 
+      // We've changed the line direction, so we'll have to rerun the
       // optimization.  Indicate this by setting the inherited member
       // m_needsOptimization.
       this->m_needsOptimization = true;
     }
-  
+
     template<class Functor, class FloatType>
     void OptimizerLineSearch<Functor, FloatType>::
     setParameters(FloatType argumentTolerance,
@@ -384,12 +384,12 @@ namespace brick {
       // Reset the count of function calls.
       this->m_functionCallCount = 0;
 
-      // We've changed the parameters, so we'll have to rerun the 
+      // We've changed the parameters, so we'll have to rerun the
       // optimization.  Indicate this by setting the inherited member
-      // m_needsOptimization.    
+      // m_needsOptimization.
       this->m_needsOptimization = true;
-    }    
-  
+    }
+
     template <class Functor, class FloatType>
     OptimizerLineSearch<Functor, FloatType>& OptimizerLineSearch<Functor, FloatType>::
     operator=(const OptimizerLineSearch& source)
@@ -421,7 +421,7 @@ namespace brick {
 
       // Reset the count of function calls.
       this->m_functionCallCount = 0;
-    
+
       // Initialize a few variables.
       argument_type initialStep;
       copyArgumentType(this->m_initialStep, initialStep);
@@ -444,7 +444,7 @@ namespace brick {
                 << this->m_startGradient << ".";
         BRICK_THROW(brick::common::StateException, "OptimizerLineSearch::run()",
 		    message.str().c_str());
-                   
+
       }
 
       // Compute smallest allowable step, allowing for numerical issues.
@@ -522,7 +522,7 @@ namespace brick {
           // Use result to choose next value of lambda.
           if(ab0 == static_cast<FloatType>(0.0)) {
             if(ab1 == static_cast<FloatType>(0.0)) {
-              BRICK_THROW(brick::common::RunTimeException, 
+              BRICK_THROW(brick::common::RunTimeException,
 			  "OptimizerLineSearch::run()",
 			  "Invalid value for internal variable ab1.");
             }

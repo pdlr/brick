@@ -44,7 +44,7 @@ namespace brick {
                     "choleskyFactorization()",
                     "Argument inputArray must be square.");
       }
-    
+
       // Transpose A to match LAPACK's convention.  Since inputArray
       // is symmetric, we don't really need to transpose!  Also, we
       // only need to copy the upper/lower triangular part, depending
@@ -72,7 +72,7 @@ namespace brick {
             inPtr += (dimension - index0 - 1);
             outPtr += (dimension - index0 - 1);
           }
-        }        
+        }
       }
 
 
@@ -106,7 +106,7 @@ namespace brick {
       kArray = aColumnMajor;
     }
 
-    
+
     Float64
     determinant(Array2D<Float64> const& A)
     {
@@ -120,7 +120,7 @@ namespace brick {
       // In this routine, we take advantage of the fact that the
       // determinant of a matrix is related to the product of the
       // diagonal elements of its LU factorization.
-    
+
       // Start by computing the LU factorization of A.
       Array2D<Float64> AColumnMajor = A.transpose();
       Int32 M = static_cast<Int32>(A.rows());
@@ -161,7 +161,7 @@ namespace brick {
       return determinant;
     }
 
-  
+
     Array1D<Float64>
     eigenvaluesSymmetric(Array2D<Float64> const& inputArray)
     {
@@ -176,7 +176,7 @@ namespace brick {
                     "eigenvaluesSymmetric()",
                     "Argument inputArray must be square.");
       }
-    
+
       // Transpose A to match LAPACK's convention.  Since inputArray is
       // symmetric, we don't really need to transpose!  Also, we only
       // need to copy the upper triangular part.
@@ -219,7 +219,7 @@ namespace brick {
                     "eigenvaluesSymmetric()",
                     message.str().c_str());
       }
-    
+
       // Resize workspace.
       LWORK = static_cast<Int32>(WORK);
       Array1D<Float64> doubleWorkSpace(static_cast<size_t>(LWORK));
@@ -261,7 +261,7 @@ namespace brick {
                     "eigenvectors()",
                     "Argument inputArray must be square.");
       }
-    
+
       // Transpose A to match LAPACK's convention.
       size_t dimension = inputArray.rows();
       Array2D<Float64> aTransposeColumnMajor = inputArray.copy();
@@ -298,7 +298,7 @@ namespace brick {
         BRICK_THROW(brick::common::ValueException, "eigenvectors()",
                     message.str().c_str());
       }
-    
+
       // Resize workspace.
       LWORK = static_cast<Int32>(WORK);
       Array1D<Float64> doubleWorkSpace(static_cast<size_t>(LWORK));
@@ -349,7 +349,7 @@ namespace brick {
             eigenvaluesReal[ii + 1], eigenvaluesImag[ii + 1]);
           for(size_t jj = 0; jj < dimension; ++jj) {
             eigenvectors(jj, ii) = std::complex<Float64>(
-              leftEigenvectorsTranspose(ii, jj), 
+              leftEigenvectorsTranspose(ii, jj),
               leftEigenvectorsTranspose(ii + 1, jj));
             eigenvectors(jj, ii + 1) = std::complex<Float64>(
               leftEigenvectorsTranspose(ii, jj),
@@ -386,7 +386,7 @@ namespace brick {
       }
     }
 
-    
+
     void
     eigenvectorsSymmetric(Array2D<Float64> const& inputArray,
                           Array1D<Float64>& eigenvalues,
@@ -403,7 +403,7 @@ namespace brick {
                     "eigenvectorsSymmetric()",
                     "Argument inputArray must be square.");
       }
-    
+
       // Transpose A to match LAPACK's convention.  Since inputArray is
       // symmetric, we don't really need to transpose!  Also, we only
       // need to copy the upper triangular part.
@@ -446,7 +446,7 @@ namespace brick {
                     "eigenvectorsSymmetric()",
                     message.str().c_str());
       }
-    
+
       // Resize workspace.
       LWORK = static_cast<Int32>(WORK);
       Array1D<Float64> doubleWorkSpace(static_cast<size_t>(LWORK));
@@ -520,7 +520,7 @@ namespace brick {
       return AInverse;
     }
 
-  
+
     // This function solves the system of equations A*x = b, where A and
     // b are known Array2D<double> instances.
     Array1D<Float64>
@@ -559,7 +559,7 @@ namespace brick {
       Array2D<Float64> AColumnMajor = A.transpose();
       Array1D<Float64> bCopy(ldb);
       std::copy(b.begin(), b.end(), bCopy.begin());
-    
+
       // Now invoke the LAPACK routine to find the optimal workspace
       // size.
       dgels_(&trans, &rows, &columns, &nrhs, AColumnMajor.data(), &rows,
@@ -574,7 +574,7 @@ namespace brick {
                     "linearLeastSquares()",
                     message.str().c_str());
       }
-    
+
       // Resize workspace.
       lwork = static_cast<Int32>(temporaryWorkspace);
       Array1D<Float64> doubleWorkspace(static_cast<size_t>(lwork));
@@ -582,7 +582,7 @@ namespace brick {
       // Call again to solve the system of equations.
       dgels_(&trans, &rows, &columns, &nrhs, AColumnMajor.data(), &rows,
              bCopy.data(), &ldb, doubleWorkspace.data(), &lwork, &info);
-    
+
       // Check for errors.
       if(info != 0L) {
         std::ostringstream message;
@@ -604,7 +604,7 @@ namespace brick {
     }
 
 
-    // WARNING:  linearSolveInPlace() destructively modifies 
+    // WARNING:  linearSolveInPlace() destructively modifies
     // both arguments!
     //
     // This function solves the system of equations A*x = b, where A is
@@ -637,7 +637,7 @@ namespace brick {
 
       // Grr.  Have to transpose to match lapack.
       Array2D<Float64> AColumnMajor = A.transpose();
-    
+
       // Now invoke the LAPACK routine.
       Int32 rows = static_cast<Int32>(A.rows());
       Int32 xColumns = static_cast<Int32>(b.columns());
@@ -688,7 +688,7 @@ namespace brick {
                     "than input argument subDiagonal.");
       }
 
-    
+
       // Now invoke the LAPACK routine.
       Int32 N = static_cast<Int32>(centerDiagonal.size());
       Int32 NRHS = 1;
@@ -714,7 +714,7 @@ namespace brick {
 
       return xVector;
     }
-    
+
 
     // This function computes the QR factorization of a general
     // matrix.
@@ -741,7 +741,7 @@ namespace brick {
       // Set up array arguments for the LAPACK routine.
       Array2D<Float64> AColumnMajor = inputArray.transpose();
       Array1D<Float64> tauArray = Array1D<Float64>(std::min(rows, columns));
-    
+
       // Now invoke the LAPACK routine to find the optimal workspace
       // size.
       dgeqrf_(&rows, &columns, AColumnMajor.data(), &lda, tauArray.data(),
@@ -754,7 +754,7 @@ namespace brick {
                 << ".  Something is wrong.";
         BRICK_THROW(brick::common::ValueException, "qrFactorization()", message.str().c_str());
       }
-    
+
       // Resize workspace.
       lwork = static_cast<Int32>(temporaryWorkspace);
       Array1D<Float64> doubleWorkspace(static_cast<size_t>(lwork));
@@ -762,7 +762,7 @@ namespace brick {
       // Call again to solve the system of equations.
       dgeqrf_(&rows, &columns, AColumnMajor.data(), &lda, tauArray.data(),
               doubleWorkspace.data(), &lwork, &info);
-    
+
       // Check for errors.
       if(info != 0L) {
         std::ostringstream message;
@@ -809,7 +809,7 @@ namespace brick {
       for(size_t row = 0; row < qArray.rows(); ++row) {
         qArray(row, row) = static_cast<Float64>(1.0);
       }
-      
+
       // Now subtract out the tau * v * v^T terms.
       Array1D<Float64> vArray(qArray.rows());
       Array2D<Float64> reflector(qArray.rows(), qArray.rows());
@@ -820,12 +820,12 @@ namespace brick {
         for(size_t kk = 0; kk < reflector.rows(); ++kk) {
           reflector(kk, kk) = 1.0;
         }
-        
+
         // Compute tau and v.
         Float64 tau = tauArray[ii];
         // We don't need a loop here because the zeros from last
         // iteration stick around.
-        // 
+        //
         // for(size_t jj = 0; jj < ii; ++jj) {
         //   vArray[jj] = 0.0;
         // }
@@ -864,7 +864,7 @@ namespace brick {
       }
     }
 
-    
+
     // This function accepts an Array2D<Float64> instance having at least
     // as many rows as columns, and returns the Moore-Penrose
     // pseudoinverse.
@@ -896,8 +896,8 @@ namespace brick {
 
       // Note(xxx): Fix things so that isFullRangeRequired is not ignored.
       isFullRangeRequired = isNullSpaceRequired;
-      
-      // 
+
+      //
       // We do not transpose A. Instead, we let LAPACK operate on the
       // untransposed matrix as if it were column major and then swap U
       // and VT at the end.  We make a copy here since the contents of
@@ -938,7 +938,7 @@ namespace brick {
         sigmaArray.reinit(numberOfSingularValues);
       }
       Array1D<Int32> integerWorkSpace(8 * numberOfSingularValues);
-    
+
       // Set up arguments for the LAPACK call.
       char JOBZ;
       if(isNullSpaceRequired) {
@@ -971,7 +971,7 @@ namespace brick {
                     "singularValueDecomposition()",
                     message.str().c_str());
       }
-    
+
       // Resize workspace.
       LWORK = static_cast<Int32>(WORK);
       Array1D<Float64> doubleWorkSpace(static_cast<size_t>(LWORK));
@@ -992,7 +992,7 @@ namespace brick {
                     "singularValueDecomposition()",
                     message.str().c_str());
       }
-    } 
+    }
 
 
 
@@ -1008,7 +1008,7 @@ namespace brick {
                     "singularValueDecomposition()",
                     "Argument inputArray cannot have zero size.");
       }
-    
+
       // We do not transpose A. Instead, we let LAPACK operate on the
       // untransposed matrix as if it were column major and then swap U
       // and VT at the end.  We make a copy here since the contents of
@@ -1033,7 +1033,7 @@ namespace brick {
          || (uArray.columns() != numberOfSingularValues)) {
         uArray.reinit(inputArray.rows(), numberOfSingularValues);
       }
-    
+
       // Shallow copy.
       Array2D<Float64> vTColumnMajor = uArray;
 
@@ -1070,7 +1070,7 @@ namespace brick {
                     "singularValueDecomposition()",
                     message.str().c_str());
       }
-    
+
       // Resize workspace.
       LWORK = static_cast<Int32>(WORK);
       Array1D<Float64> doubleWorkSpace(static_cast<size_t>(LWORK));
@@ -1090,9 +1090,9 @@ namespace brick {
                     "singularValueDecomposition()",
                     message.str().c_str());
       }
-    } 
+    }
 
-  
+
 //   // This function computes the singular value decomposition of a
 //   // matrix, but is less efficient than the routine above: It
 //   // explicitly transposes the matrix before passing it to LAPACK.
@@ -1109,7 +1109,7 @@ namespace brick {
 //                  "singularValueDecomposition()",
 //                  "Argument inputArray cannot have zero size.");
 //     }
-    
+
 //     // Transpose A to match LAPACK's convention.
 //     Array2D<double> aColumnMajor = inputArray.transpose();
 
@@ -1123,7 +1123,7 @@ namespace brick {
 //       sigmaArray.reinit(numberOfSingularValues);
 //     }
 //     Array1D<Int32> integerWorkSpace(8 * numberOfSingularValues);
-    
+
 //     // Set up arguments for the LAPACK call.
 //     char JOBZ = 'S';  // Compute only min(M, N) columns of U and rows of VT.
 //     Int32 M = static_cast<Int32>(inputArray.rows());
@@ -1151,7 +1151,7 @@ namespace brick {
 //                  "singularValueDecomposition()",
 //                  message.str().c_str());
 //     }
-    
+
 //     // Resize workspace.
 //     LWORK = static_cast<Int32>(WORK);
 //     Array1D<double> doubleWorkSpace(static_cast<size_t>(LWORK));
@@ -1176,8 +1176,8 @@ namespace brick {
 //     // Recover the result.
 //     uArray = uColumnMajor.transpose();
 //     vTransposeArray = vTColumnMajor.transpose();
-//   } 
-  
+//   }
+
 
     // This function computes the singular values a matrix without
     // computing the associated U and V matrices.
@@ -1190,12 +1190,12 @@ namespace brick {
                     "singularValues()",
                     "Argument inputArray cannot have zero size.");
       }
-    
+
       // Transpose A to match LAPACK's convention.
       //
       // Actually, it's slightly quicker not to transpose, and singular
       // values remain the same, so we just copy.
-      // 
+      //
       // Array2D<Float64> aColumnMajor = inputArray.transpose();
       Array2D<Float64> aColumnMajor = inputArray.copy();
 
@@ -1204,7 +1204,7 @@ namespace brick {
         std::min(inputArray.rows(), inputArray.columns());
       Array1D<Float64> sigmaArray(numberOfSingularValues);
       Array1D<Int32> integerWorkSpace(8 * numberOfSingularValues);
-    
+
       // Set up arguments for the LAPACK call.
       char JOBZ = 'N';  // Compute no columns of U and no rows of VT.
       // Since we didn't transpose, we have to reverse rows & columns.
@@ -1236,7 +1236,7 @@ namespace brick {
                     "singularValues()",
                     message.str().c_str());
       }
-    
+
       // Resize workspace.
       LWORK = static_cast<Int32>(WORK);
 
@@ -1249,7 +1249,7 @@ namespace brick {
         LWORK = minimumLWORK;
       }
       Array1D<Float64> doubleWorkSpace(static_cast<size_t>(LWORK));
-      
+
       // Call again to do the SVD.
       dgesdd_(&JOBZ, &M, &N, aColumnMajor.data(), &LDA,
               sigmaArray.data(), &U, &LDU, &VT, &LDVT,
@@ -1269,7 +1269,7 @@ namespace brick {
       // Return the result.
       return sigmaArray;
     }
-  
+
   } // namespace linearAlgebra
-  
+
 } // namespace brick

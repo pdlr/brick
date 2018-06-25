@@ -16,7 +16,7 @@
 
 // This file is included by fft.hh, and should not be directly
 // included by user code, so no need to include fft.hh here.
-// 
+//
 // #include <brick/numeric/fft.hh>
 
 #include <brick/common/constants.hh>
@@ -44,7 +44,7 @@ namespace brick {
         return twiddleFactors;
       }
 
-      
+
       bool
       isPowerOfTwo(std::size_t signalLength)
       {
@@ -54,7 +54,7 @@ namespace brick {
         return checkValue == signalLength;
       }
 
-      
+
       template <class ComplexType>
       void
       recursiveRadix2FFT(Array1D<ComplexType>& result,
@@ -91,7 +91,7 @@ namespace brick {
         for(std::size_t ii = 0; ii < countOver2; ++ii) {
           std::size_t evenIndex = outputIndex + ii;
           std::size_t oddIndex = evenIndex + countOver2;
-    
+
           ComplexType& evenPart = result[evenIndex];
           ComplexType& oddPart = result[oddIndex];
 
@@ -104,7 +104,7 @@ namespace brick {
 
     } // namespace privateCode
 
-    
+
     template <class ComplexType>
     Array1D<ComplexType>
     computeFFT(Array1D<ComplexType> const& inputSignal)

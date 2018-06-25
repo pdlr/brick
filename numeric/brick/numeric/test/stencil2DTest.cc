@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/numeric/test/stencil2DTest.cpp
-* 
+*
 * Source file defining Stencil2DTest class.
 *
 * Copyright (C) 2004-2005 David LaRose, dlr@cs.cmu.edu
@@ -22,7 +22,7 @@ using brick::portability::getCurrentTime;
 namespace brick {
 
   namespace numeric {
-    
+
     class Stencil2DTest
       : public brick::test::TestFixture<Stencil2DTest> {
 
@@ -36,7 +36,7 @@ namespace brick {
 
       // Tests of member functions.
       void testSpeed();
-    
+
     private:
 
       void
@@ -44,64 +44,64 @@ namespace brick {
                           const Array2D<int>& kernel,
                           Array2D<int>& resultImage);
 
-    
+
       void
       doArrayDerefConvolution(const Array2D<int>& inputImage,
                               const Array2D<int>& kernel,
                               Array2D<int>& resultImage);
 
-    
+
 
       void
       doConstArrayDerefConvolution(const Array2D<int>& inputImage,
                                    const Array2D<int>& kernel,
                                    Array2D<int>& resultImage);
 
-    
+
       void
       doConstVariableDerefConvolution(const Array2D<int>& inputImage,
                                       const Array2D<int>& kernel,
                                       Array2D<int>& resultImage);
 
-    
+
       void
       doDlrArrayDerefConvolution(const Array2D<int>& inputImage,
                                  const Array2D<int>& kernel,
                                  Array2D<int>& resultImage);
 
-    
+
 
       void
       doHalfIteratorConvolution(const Array2D<int>& inputImage,
                                 const Array2D<int>& kernel,
                                 Array2D<int>& resultImage);
-    
 
-    
+
+
       void
       doHeapArrayDerefConvolution(const Array2D<int>& inputImage,
                                   const Array2D<int>& kernel,
                                   Array2D<int>& resultImage);
 
-    
+
       void
       doIteratorConvolution(const Array2D<int>& inputImage,
                             const Array2D<int>& kernel,
                             Array2D<int>& resultImage);
 
-    
+
       void
       doNaiveConvolution(const Array2D<int>& inputImage,
                          const Array2D<int>& kernel,
                          Array2D<int>& resultImage);
-    
+
 
       void
       doRunTimeStencilConvolution(const Array2D<int>& inputImage,
                                   const Array2D<int>& kernel,
                                   Array2D<int>& resultImage);
 
-    
+
       void
       doSimplifiedStencilConvolution(const Array2D<int>& inputImage,
                                      const Array2D<int>& kernel,
@@ -112,26 +112,26 @@ namespace brick {
       doSingleIndexConvolution(const Array2D<int>& inputImage,
                                const Array2D<int>& kernel,
                                Array2D<int>& resultImage);
-    
+
 
       void
       doStructDerefConvolution(const Array2D<int>& inputImage,
                                const Array2D<int>& kernel,
                                Array2D<int>& resultImage);
-    
-      
+
+
       void
       doStructArrayDerefConvolution(const Array2D<int>& inputImage,
                                     const Array2D<int>& kernel,
                                     Array2D<int>& resultImage);
-    
-      
+
+
       void
       doVariableDerefConvolution(const Array2D<int>& inputImage,
                                  const Array2D<int>& kernel,
                                  Array2D<int>& resultImage);
 
-    
+
     }; // class Stencil2DTest
 
 
@@ -155,7 +155,7 @@ namespace brick {
       const size_t kernelSize = 3;
       const int imageValue = 3;
       const int kernelValue = 4;
-    
+
       Array2D<int> image0(imageSize, imageSize);
       Array2D<int> kernel(kernelSize, kernelSize);
 
@@ -179,7 +179,7 @@ namespace brick {
 
       image0 = imageValue;
       kernel = kernelValue;
-    
+
       resultImage0 = 0;
       double t0 = getCurrentTime();
       this->doNaiveConvolution(image0, kernel, resultImage0);
@@ -365,14 +365,14 @@ namespace brick {
       const size_t imageSize = inputImage.rows();
 
       BRICK_TEST_ASSERT(kernelSize == 3);
-      
+
       const size_t startRow = 0;
       const size_t stopRow = imageSize - kernelSize;
       const size_t startColumn = 0;
       const size_t stopColumn = imageSize - kernelSize;
 
       const int* kernelPtr = kernel.data();
-    
+
       // size_t stencilSize = kernelSize * kernelSize;
       for(size_t row = startRow; row < stopRow; ++row) {
         size_t resultIndex = (row + 1) * imageSize + startColumn + 1;
@@ -406,7 +406,7 @@ namespace brick {
       const size_t imageSize = inputImage.rows();
 
       BRICK_TEST_ASSERT(kernelSize == 3);
-      
+
       const size_t startRow = 0;
       const size_t stopRow = imageSize - kernelSize;
       const size_t startColumn = 0;
@@ -450,7 +450,7 @@ namespace brick {
       const size_t imageSize = inputImage.rows();
 
       BRICK_TEST_ASSERT(kernelSize == 3);
-      
+
       const size_t startRow = 0;
       const size_t stopRow = imageSize - kernelSize;
       const size_t startColumn = 0;
@@ -494,7 +494,7 @@ namespace brick {
       const size_t imageSize = inputImage.rows();
 
       BRICK_TEST_ASSERT(kernelSize == 3);
-      
+
       const size_t startRow = 0;
       const size_t stopRow = imageSize - kernelSize;
       const size_t startColumn = 0;
@@ -555,7 +555,7 @@ namespace brick {
       const size_t imageSize = inputImage.rows();
 
       BRICK_TEST_ASSERT(kernelSize == 3);
-      
+
       const size_t startRow = 0;
       const size_t stopRow = imageSize - kernelSize;
       const size_t startColumn = 0;
@@ -587,7 +587,7 @@ namespace brick {
 
       int* ii = iiii.data();
       int* kk = kkkk.data();
-    
+
       // size_t stencilSize = kernelSize * kernelSize;
       for(size_t row = startRow; row < stopRow; ++row) {
         size_t resultIndex = (row + 1) * imageSize + startColumn + 1;
@@ -621,7 +621,7 @@ namespace brick {
       const size_t imageSize = inputImage.rows();
 
       BRICK_TEST_ASSERT(kernelSize == 3);
-      
+
       const size_t startRow = 0;
       const size_t stopRow = imageSize - kernelSize;
       const size_t startColumn = 0;
@@ -662,7 +662,7 @@ namespace brick {
       const size_t imageSize = inputImage.rows();
 
       BRICK_TEST_ASSERT(kernelSize == 3);
-      
+
       const size_t startRow = 0;
       const size_t stopRow = imageSize - kernelSize;
       const size_t startColumn = 0;
@@ -722,7 +722,7 @@ namespace brick {
       const size_t imageSize = inputImage.rows();
 
       BRICK_TEST_ASSERT(kernelSize == 3);
-      
+
       const size_t startRow = 0;
       const size_t stopRow = imageSize - kernelSize;
       const size_t startColumn = 0;
@@ -770,7 +770,7 @@ namespace brick {
       const size_t stopRow = imageSize - kernelSize;
       const size_t startColumn = 0;
       const size_t stopColumn = imageSize - kernelSize;
-    
+
       for(size_t row = startRow; row < stopRow; ++row) {
         for(size_t column = startColumn; column < stopColumn; ++column) {
           int dotProduct = 0;
@@ -786,7 +786,7 @@ namespace brick {
         }
       }
     }
-  
+
 
     void
     Stencil2DTest::
@@ -798,7 +798,7 @@ namespace brick {
       const size_t imageSize = inputImage.rows();
 
       BRICK_TEST_ASSERT(kernelSize == 3);
-      
+
       const size_t startRow = 0;
       const size_t stopRow = imageSize - kernelSize;
       const size_t startColumn = 0;
@@ -839,7 +839,7 @@ namespace brick {
       const size_t imageSize = inputImage.rows();
 
       BRICK_TEST_ASSERT(kernelSize == 3);
-      
+
       const size_t startRow = 0;
       const size_t stopRow = imageSize - kernelSize;
       const size_t startColumn = 0;
@@ -851,7 +851,7 @@ namespace brick {
       Stencil2D<const int, 9> kk(kernelSize, kernelSize);
       ii.setTarget(inputImage);
       kk.setTarget(kernel);
-    
+
       // size_t stencilSize = kernelSize * kernelSize;
       for(size_t row = startRow; row < stopRow; ++row) {
         size_t resultIndex = (row + 1) * imageSize + startColumn + 1;
@@ -881,12 +881,12 @@ namespace brick {
       const size_t imageSize = inputImage.rows();
 
       BRICK_TEST_ASSERT(kernelSize == 3);
-      
+
       const size_t startRow = 0;
       const size_t stopRow = imageSize - kernelSize;
       const size_t startColumn = 0;
       const size_t stopColumn = imageSize - kernelSize;
-    
+
       for(size_t row = startRow; row < stopRow; ++row) {
         size_t resultIndex = row * imageSize + startColumn;
         for(size_t column = startColumn; column < stopColumn; ++column) {
@@ -923,7 +923,7 @@ namespace brick {
       int cc[9];
     };
 
-  
+
     void
     Stencil2DTest::
     doStructDerefConvolution(const Array2D<int>& inputImage,
@@ -934,7 +934,7 @@ namespace brick {
       const size_t imageSize = inputImage.rows();
 
       BRICK_TEST_ASSERT(kernelSize == 3);
-      
+
       const size_t startRow = 0;
       const size_t stopRow = imageSize - kernelSize;
       const size_t startColumn = 0;
@@ -997,7 +997,7 @@ namespace brick {
       const size_t imageSize = inputImage.rows();
 
       BRICK_TEST_ASSERT(kernelSize == 3);
-      
+
       const size_t startRow = 0;
       const size_t stopRow = imageSize - kernelSize;
       const size_t startColumn = 0;
@@ -1055,7 +1055,7 @@ namespace brick {
       const size_t imageSize = inputImage.rows();
 
       BRICK_TEST_ASSERT(kernelSize == 3);
-      
+
       const size_t startRow = 0;
       const size_t stopRow = imageSize - kernelSize;
       const size_t startColumn = 0;

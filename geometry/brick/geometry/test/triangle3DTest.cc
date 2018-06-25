@@ -19,7 +19,7 @@
 namespace brick {
 
   namespace geometry {
-    
+
     class Triangle3DTest : public brick::test::TestFixture<Triangle3DTest> {
 
     public:
@@ -35,7 +35,7 @@ namespace brick {
     private:
 
       const double m_defaultTolerance;
-      
+
     }; // class Triangle3DTest
 
 

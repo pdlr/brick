@@ -74,7 +74,7 @@ namespace brick {
     }
 
   } // namespace utilities
-  
+
 } // namespace brick
 
 

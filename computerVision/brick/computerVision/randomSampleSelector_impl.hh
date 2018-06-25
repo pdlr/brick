@@ -17,7 +17,7 @@
 // This file is included by randomSampleSelector.hh, and should not be
 // directly included by user code, so no need to include
 // randomSampleSelector.hh here.
-// 
+//
 // #include <brick/numeric/randomSampleSelector.hh>
 
 namespace brick {
@@ -98,9 +98,9 @@ namespace brick {
       }
       return std::make_pair(m_sampleVector.begin(), poolIter);
     }
-        
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_RANDOMSAMPLESELECTOR_IMPL_HH */

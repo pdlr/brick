@@ -36,7 +36,7 @@ namespace brick {
     private:
 
       double m_defaultTolerance;
-      
+
     }; // class Iso12233Test
 
 
@@ -58,7 +58,7 @@ namespace brick {
       constexpr std::size_t patchWidth = 100;
       constexpr std::size_t patchHeight = 100;
       constexpr std::size_t windowWidth = 50;
-      
+
       // Create a test image with a vertically straight up and down
       // edge.  We should have trouble with this image because the
       // vertical edge doesn't let us so super-resolution.
@@ -97,7 +97,7 @@ int main(/* int argc, char** argv */)
   bool result = currentTest.run();
 
   currentTest.exerciseKeypointSelectorFast("testImagePGM0.pgm");
-  
+
   return (result ? 0 : 1);
 }
 
@@ -106,7 +106,7 @@ int main(/* int argc, char** argv */)
 namespace {
 
   brick::iso12233::Iso12233Test currentTest;
-  
+
 }
 
 #endif

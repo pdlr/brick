@@ -16,7 +16,7 @@
 
 // This file is included by imagePyramid.hh, and should not be directly included
 // by user code, so no need to include imagePyramid.hh here.
-// 
+//
 // #include <brick/computerVision/imagePyramid.hh>
 
 #include <brick/computerVision/imageFilter.hh>
@@ -81,7 +81,7 @@ namespace brick {
       Kernel<KernelType> filterKernel = getGaussianKernel<KernelType>(
         sigma, sigma);
 
-      // If levels is set to zero, 
+      // If levels is set to zero,
       if(0 == levels) {
         // Filter kernel may extend up to 6 sigma in any direction.
         double minimumImageSize = std::ceil(12 * sigma);
@@ -108,14 +108,14 @@ namespace brick {
       }
 
       // The next two lines use integer division.
-      m_borderSizeLeftRight = filterKernel.getColumns() / 2; 
+      m_borderSizeLeftRight = filterKernel.getColumns() / 2;
       m_borderSizeTopBottom = filterKernel.getRows() / 2;
-      
+
       // Start off the pyramid.
       Image<Format> currentImage = inputImage.copy();
       m_pyramid.push_back(currentImage);
       --levels;
-      
+
       while(0 != levels) {
         Image<Format> filteredImage = filter2D<Format, InternalFormat>(
           filterKernel, currentImage);
@@ -155,7 +155,7 @@ namespace brick {
                                      static_cast<unsigned int>(column));
     }
 
-      
+
     template <ImageFormat Format, ImageFormat InternalFormat, class KernelType>
     unsigned int
     ImagePyramid<Format, InternalFormat, KernelType>::
@@ -208,7 +208,7 @@ namespace brick {
     {
       return m_pyramid.size();
     }
-    
+
 
     // ============== Private member functions below this line ==============
 
@@ -246,7 +246,7 @@ namespace brick {
 
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_IMAGEPYRAMID_IMPL_HH */

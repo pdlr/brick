@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/numeric/test/IEEEFloat32Test.cc
-* 
+*
 * Source file defining IEEEFloat32Test class.
 *
 * Copyright (C) 2004-2005,2012 David LaRose, dlr@cs.cmu.edu
@@ -43,11 +43,11 @@ namespace brick {
 
     private:
 
-      /** 
+      /**
        * This private function sumply updates the internal state to make
        * sure the specified value is one of the ones explicitly tested.
-       * 
-       * @param value This argument 
+       *
+       * @param value This argument
        */
       void
       addTestFloat(float floatValue,
@@ -56,11 +56,11 @@ namespace brick {
                    unsigned char byte2,
                    unsigned char byte3);
 
-    
+
       // This vector holds an array of floats for which we know the
       // correct IEEE 32 bit representation.
       std::vector<float> m_knownFloatVector;
-    
+
       // These maps are a convenient way of looking up the appropriate
       // binary representation for the floats in m_knownFloatVector,
       // above.
@@ -68,7 +68,7 @@ namespace brick {
       std::map<float, unsigned char> m_byte1Map;
       std::map<float, unsigned char> m_byte2Map;
       std::map<float, unsigned char> m_byte3Map;
-    
+
     }; // class IEEEFloat32Test
 
 
@@ -133,7 +133,7 @@ namespace brick {
         BRICK_TEST_ASSERT(ieeeFloat.getByte(3) == m_byte3Map[floatValue]);
       }
     }
-  
+
     void
     IEEEFloat32Test::
     testConstructor__uchar_uchar_uchar_uchar()
@@ -152,7 +152,7 @@ namespace brick {
         BRICK_TEST_ASSERT(ieeeFloat.getByte(3) == byte3);
       }
     }
-  
+
     void
     IEEEFloat32Test::
     testConstructor__IEEEFloat32()
@@ -168,28 +168,28 @@ namespace brick {
         BRICK_TEST_ASSERT(ieeeFloat1.getByte(3) == m_byte3Map[floatValue]);
       }
     }
-  
+
     void
     IEEEFloat32Test::
     testDestructor()
     {
       // Empty.
     }
-  
+
     void
     IEEEFloat32Test::
     testConversionOperator_NativeFloatType()
     {
       // No explicit test.
     }
-  
+
     void
     IEEEFloat32Test::
     testGetByte__size_t()
     {
       // No explicit test.
     }
-  
+
     void
     IEEEFloat32Test::
     testSetValue__float()
@@ -205,7 +205,7 @@ namespace brick {
         BRICK_TEST_ASSERT(ieeeFloat.getByte(3) == m_byte3Map[floatValue]);
       }
     }
-  
+
     void
     IEEEFloat32Test::
     testSetValue__uchar_uchar_uchar_uchar()
@@ -245,7 +245,7 @@ namespace brick {
       m_byte2Map[floatValue] = byte2;
       m_byte3Map[floatValue] = byte3;
     }
-  
+
   } // namespace numeric
 
 } // namespace brick

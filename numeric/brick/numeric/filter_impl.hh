@@ -15,7 +15,7 @@
 
 // This file is included by filter.hh, and should not be directly included
 // by user code, so no need to include filter.hh here.
-// 
+//
 // #include <brick/numeric/filter.hh>
 
 
@@ -309,7 +309,7 @@ namespace brick {
           }
         }
       }
-      
+
 
       template<class InputType, class OutputType, class KernelType>
       void
@@ -557,9 +557,9 @@ namespace brick {
           }
         }
       }
-      
+
     } // namespace privateCode
-    
+
     template<class InputType, class OutputType, class KernelType>
     void
     filterColumns(
@@ -590,17 +590,17 @@ namespace brick {
         break;
       case 7:
         // Fall through to faster generic routine.
-        // 
+        //
         // privateCode::filterColumns_7(outputArray, inputArray, kernel);
         // break;
       case 9:
         // Fall through to faster generic routine.
-        // 
+        //
         // privateCode::filterColumns_9(outputArray, inputArray, kernel);
         // break;
       case 11:
         // Fall through to faster generic routine.
-        // 
+        //
         // privateCode::filterColumns_11(outputArray, inputArray, kernel);
         // break;
       default:
@@ -609,7 +609,7 @@ namespace brick {
       }
     }
 
-    
+
     template<class InputType, class OutputType, class KernelType>
     void
     filterRows(
@@ -652,9 +652,9 @@ namespace brick {
         break;
       }
     }
-        
+
   } // namespace numeric
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_NUMERIC_FILTER_IMPL_HH */

@@ -15,7 +15,7 @@
 
 // This file is included by bSpline2D.hh, and should not be directly included
 // by user code, so no need to include bSpline2D.hh here.
-// 
+//
 // #include <brick/numeric/bSpline2D.hh>
 
 #include <cmath>
@@ -51,7 +51,7 @@ namespace brick {
       // // you could derive them recursively using a 2D version of
       // // the procedure used in BSpline::computeBasisFunction() from
       // // file bSpline.hh.
-      
+
       // First cubic spline basis component is
       // B(s) = (1 - s)**3 / 6.
       // This expands to
@@ -90,7 +90,7 @@ namespace brick {
       // have some data.
     }
 
-    
+
     // The copy constructor does a deep copy.
     template <class Type, class FloatType>
     BSpline2D<Type, FloatType>::
@@ -109,7 +109,7 @@ namespace brick {
       }
     }
 
-    
+
     // This function allows the spline parameters to be automatically
     // set in order to approximate an irregularly sampled function.
     template <class Type, class FloatType>
@@ -123,7 +123,7 @@ namespace brick {
                              FloatType buffer)
     {
       CoordIter tEnd = tBegin + (sEnd - sBegin);
-    
+
       // Establish bounds for reconstruction
       Vector2D<FloatType> corner0(*std::min_element(sBegin, sEnd) - buffer,
                                   *std::min_element(tBegin, tEnd) - buffer);
@@ -152,12 +152,12 @@ namespace brick {
       // Sanity check input corners (cleanupCorners() is declared in
       // brick/numeric/utilities.hh).
       cleanupCorners(corner0, corner1);
-      
+
       // Remember the specified bounds for reconstruction
       m_minimumXY = corner0;
       m_maximumXY = corner1;
 
-      // Recover control grid size, and sanity check it.      
+      // Recover control grid size, and sanity check it.
       size_t numberOfNodesS = m_controlGrid.columns();
       size_t numberOfNodesT = m_controlGrid.rows();
       if ((numberOfNodesS <= 3) || (numberOfNodesT <= 3)){
@@ -182,7 +182,7 @@ namespace brick {
       }
 
       this->m_xyCellOrigin = this->m_minimumXY - this->m_xyCellSize;
-      
+
       // Allocate some space for intermediate grids, as described in
       // Lee, Wolberg, and Shin.
       Array2D<Type> deltaGrid(this->m_controlGrid.rows(),
@@ -191,7 +191,7 @@ namespace brick {
                                    this->m_controlGrid.columns());
       deltaGrid = static_cast<Type>(0.0);
       omegaGrid = static_cast<FloatType>(0.0);
-    
+
       // This code implements the algorithm on page 231 of the paper.
       size_t iIndex;
       size_t jIndex;
@@ -213,7 +213,7 @@ namespace brick {
                       "BSpline2D::approximateScatteredData()",
                       "Input datum is out of bounds.");
         }
-        
+
         // This call sets the value of powersOfS and powersOfT,
         // and returns by reference the indices of the control grid
         // cell into which (s, t) falls.
@@ -234,7 +234,7 @@ namespace brick {
           FloatType B_k = std::inner_product(
             powersOfS, powersOfS + 4, (this->m_basisArray)[kIndex].data(),
             static_cast<FloatType>(0));
-  
+
           for(size_t lIndex = 0; lIndex < 4; ++lIndex) {
 
             // Compute the second basis function value.
@@ -246,7 +246,7 @@ namespace brick {
             // weightArray is (row, column), not (k, l).
             FloatType weight = B_k * B_l;
             weightArray(lIndex, kIndex) = weight;
-            weightSquaredSum += weight * weight;            
+            weightSquaredSum += weight * weight;
           }
         }
 
@@ -301,7 +301,7 @@ namespace brick {
         }
       }
     }
-    
+
 
     // This member queries the size of the underlying B-Spline
     // control grid.
@@ -314,8 +314,8 @@ namespace brick {
       numberOfNodesS = this->m_controlGrid.columns();
       numberOfNodesT = this->m_controlGrid.rows();
     }
-      
-      
+
+
     // This member function returns the maximum values for the spline
     // parameters S and T.
     template <class Type, class FloatType>
@@ -344,7 +344,7 @@ namespace brick {
     // control grid without changing the shape of the interpolated
     // function or altering its range.
     template <class Type, class FloatType>
-    void 
+    void
     BSpline2D<Type, FloatType>::
     promote()
     {
@@ -360,7 +360,7 @@ namespace brick {
       }
 
       // Member m_basisArray is unchanged.
-      
+
       // Member m_controlGrid nearly doubles in height and width.  To
       // see why it doesn't actually double, consider that the valid
       // interpolation range is interior to the rectangle formed by
@@ -400,7 +400,7 @@ namespace brick {
 
           if(0 != ii && 0 != jj) {
             newControlGrid(twoTimesJj - 1, twoTimesIi - 1) =
-              (this->m_controlGrid(jj - 1, ii - 1) 
+              (this->m_controlGrid(jj - 1, ii - 1)
                + this->m_controlGrid(jj + 1, ii - 1)
                + this->m_controlGrid(jj - 1, ii + 1)
                + this->m_controlGrid(jj + 1, ii + 1)
@@ -412,26 +412,26 @@ namespace brick {
           }
           if(0 != ii) {
             newControlGrid(twoTimesJj, twoTimesIi - 1) =
-              (this->m_controlGrid(jj, ii - 1) 
+              (this->m_controlGrid(jj, ii - 1)
                + this->m_controlGrid(jj + 1, ii - 1)
-               + this->m_controlGrid(jj, ii + 1) 
+               + this->m_controlGrid(jj, ii + 1)
                + this->m_controlGrid(jj + 1, ii + 1)
                + 6.0 * (this->m_controlGrid(jj, ii)
                         + this->m_controlGrid(jj + 1, ii))) / 16.0;
           }
           if(0 != jj) {
             newControlGrid(twoTimesJj - 1, twoTimesIi) =
-              (this->m_controlGrid(jj - 1, ii) 
+              (this->m_controlGrid(jj - 1, ii)
                + this->m_controlGrid(jj + 1, ii)
-               + this->m_controlGrid(jj - 1, ii + 1) 
+               + this->m_controlGrid(jj - 1, ii + 1)
                + this->m_controlGrid(jj + 1, ii + 1)
                + 6.0 * (this->m_controlGrid(jj, ii)
                         + this->m_controlGrid(jj, ii + 1))) / 16.0;
           }
           newControlGrid(twoTimesJj, twoTimesIi) =
-            (this->m_controlGrid(jj, ii) 
+            (this->m_controlGrid(jj, ii)
              + this->m_controlGrid(jj + 1, ii)
-             + this->m_controlGrid(jj, ii + 1) 
+             + this->m_controlGrid(jj, ii + 1)
              + this->m_controlGrid(jj + 1, ii + 1)) / 4.0;
         }
       }
@@ -479,7 +479,7 @@ namespace brick {
       m_xyCellSize.setValue(1.0, 1.0);
     }
 
-    
+
     // This member function both specifies the number of nodes in
     // the spline and sets the node positions so that the spline is
     // "uniform".
@@ -503,7 +503,7 @@ namespace brick {
       m_xyCellSize.setValue(1.0, 1.0);
     }
 
-    
+
     // The assigment operator does a deep copy.
     template <class Type, class FloatType>
     BSpline2D<Type, FloatType>&
@@ -551,8 +551,8 @@ namespace brick {
       }
       return *this;
     }
-    
-    
+
+
     // This operator evaluates the spline at the specified values of
     // spline parameters s and t.
     template <class Type, class FloatType>
@@ -569,14 +569,14 @@ namespace brick {
       FloatType powersOfT[4];
       this->decomposeSamplePoint(sValue, tValue, iIndex, jIndex,
                                  powersOfS, powersOfT);
-      
+
       // Interpolate by adding spline basis functions from the
       // surrounding control points.
       int index0 = iIndex - 1;
       int index1 = jIndex - 1;
       FloatType functionValue = 0.0;
       for(size_t kIndex = 0; kIndex < 4; ++kIndex) {
- 
+
         size_t i0PlusK = index0 + kIndex;
 
         //  FloatType B_k = dot<FloatType>((this->m_basisArray)[kIndex], powersOfS);
@@ -609,7 +609,7 @@ namespace brick {
                          FloatType* powersOfS, FloatType* powersOfT) const
     {
       // Note(xxx): consider using std::modf() here.
-      
+
       // Find the integer coords of the control grid cell in which the
       // input point lies.
       FloatType iTmp = (sValue - m_xyCellOrigin.x()) / m_xyCellSize.x();

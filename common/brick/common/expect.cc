@@ -28,7 +28,7 @@ namespace brick {
       // Empty.
     }
 
-      
+
     // Constructor.
     Expect::
     Expect(char const* expectationPtr, FormatFlag formatFlag)
@@ -39,7 +39,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // Constructor.
     Expect::
     Expect(char const* expectationPtr, size_t length, FormatFlag formatFlag)
@@ -50,14 +50,14 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // Destructor.
     Expect::
     ~Expect()
     {
       // Empty.
     }
-      
+
 
     std::istream&
     Expect::
@@ -70,7 +70,7 @@ namespace brick {
       if((m_formatFlag & SkipWhitespace()) != 0) {
         this->skipWhiteSpace(stream);
       }
-      
+
       // inputString might be very long, so we keep count of how much
       // we've read.
       size_t readCount = 0;
@@ -85,13 +85,13 @@ namespace brick {
 
         // Read the appropriate number of characters.
         stream.read(inputBuffer, static_cast<std::streamsize>(thisChunkCount));
-          
+
         // Quit if we weren't able to read enough bytes.
         if(static_cast<size_t>(stream.gcount()) != thisChunkCount) {
           stream.clear(std::ios_base::failbit);
           break;
         }
-          
+
         // Now evaluate what we've read.
         bool matchFlag = true;
         if((m_formatFlag & Sloppy()) == 0) {
@@ -109,14 +109,14 @@ namespace brick {
           stream.clear(std::ios_base::failbit);
           break;
         }
-        
+
         // Increment our count of how many characters read.
         readCount += thisChunkCount;
       }
       return stream;
     }
 
-    
+
     // Skips to the next non-whitespace character.
     std::istream&
     Expect::
@@ -126,8 +126,8 @@ namespace brick {
       stream.putback(inputChar);
       return stream;
     }
-    
-    
+
+
     std::istream&
     operator>>(std::istream& stream, Expect const& expect)
     {
@@ -135,5 +135,5 @@ namespace brick {
     }
 
   } // namespace common
-  
+
 } // namespace brick

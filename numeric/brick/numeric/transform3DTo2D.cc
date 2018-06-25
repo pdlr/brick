@@ -16,7 +16,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     template <>
     Transform3DTo2D<double>
     operator*(Transform3DTo2D<double> const& transform0,
@@ -133,7 +133,7 @@ namespace brick {
                              a10, a11, a12, a13,
                              a20, a21, a22, a23);
     }
-    
+
   } // namespace numeric
 
 } // namespace brick

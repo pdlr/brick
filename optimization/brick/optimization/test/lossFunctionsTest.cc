@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/optimization/test/lossFunctionsTest.cc
-* 
+*
 * Source file defining a test class for symbols declared in
 * brick/optimization/lossFunctions.hh.
 *
@@ -40,7 +40,7 @@ namespace brick {
 
 
       double m_defaultTolerance;
-      
+
     }; // class LossFunctionsTest
 
 
@@ -70,7 +70,7 @@ namespace brick {
       double constexpr rangeStart = -10.0;
       double constexpr rangeStop = 10.0;
       double constexpr rangeIncrement = 0.01;
-      
+
 
       // Spot check to make sure derivative values are sane.
       {
@@ -86,12 +86,12 @@ namespace brick {
           approximatelyEqual(lossFunction.getWeight(-rootTwo), -rootTwoOverTwo,
                              this->m_defaultTolerance));
       }
-      
+
       // Check that function value and derivative relate correctly.
       {
         LossFunctionCauchy<brick::numeric::DifferentiableScalar<double>>
           lossFunction;
-        
+
         for(double zz = rangeStart; zz < rangeStop; zz += rangeIncrement) {
           brick::numeric::DifferentiableScalar<double> zzDiff(zz);
           zzDiff.setDerivative(1.0);
@@ -110,7 +110,7 @@ namespace brick {
       // Check that function value and square root relate correctly.
       {
         LossFunctionCauchy<double> lossFunction;
-        
+
         for(double zz = rangeStart; zz < rangeStop; zz += rangeIncrement) {
           double loss = lossFunction.getValue(zz);
           double residual = lossFunction.getL2Equivalent(zz);
@@ -131,7 +131,7 @@ namespace brick {
       double constexpr rangeStop = 10.0;
       double constexpr rangeIncrement = 0.01;
       double constexpr delta = 2.0;
-      
+
 
       // Spot check to make sure function values are sane.
       {
@@ -159,12 +159,12 @@ namespace brick {
           approximatelyEqual(lossFunction.getValue(-4.0), 6.0,
                              this->m_defaultTolerance));
       }
-      
+
       // Check that function value and derivative relate correctly.
       {
         LossFunctionHuber<brick::numeric::DifferentiableScalar<double>>
           lossFunction;
-        
+
         for(double zz = rangeStart; zz < rangeStop; zz += rangeIncrement) {
           brick::numeric::DifferentiableScalar<double> zzDiff(zz);
           zzDiff.setDerivative(1.0);
@@ -183,7 +183,7 @@ namespace brick {
       // Check that function value and square root relate correctly.
       {
         LossFunctionHuber<double> lossFunction;
-        
+
         for(double zz = rangeStart; zz < rangeStop; zz += rangeIncrement) {
           double loss = lossFunction.getValue(zz);
           double residual = lossFunction.getL2Equivalent(zz);
@@ -195,7 +195,7 @@ namespace brick {
       }
     }
 
-    
+
     void
     LossFunctionsTest::
     testLossFunctionPseudoHuber()
@@ -231,12 +231,12 @@ namespace brick {
           approximatelyEqual(lossFunction.getValue(-4.0), 4.94427191,
                              this->m_defaultTolerance));
       }
-      
+
       // Check that function value and derivative relate correctly.
       {
         LossFunctionPseudoHuber<brick::numeric::DifferentiableScalar<double>>
           lossFunction;
-        
+
         for(double zz = rangeStart; zz < rangeStop; zz += rangeIncrement) {
           brick::numeric::DifferentiableScalar<double> zzDiff(zz);
           zzDiff.setDerivative(1.0);
@@ -255,7 +255,7 @@ namespace brick {
       // Check that function value and square root relate correctly.
       {
         LossFunctionPseudoHuber<double> lossFunction;
-        
+
         for(double zz = rangeStart; zz < rangeStop; zz += rangeIncrement) {
           double loss = lossFunction.getValue(zz);
           double residual = lossFunction.getL2Equivalent(zz);
@@ -274,7 +274,7 @@ namespace brick {
       double constexpr rangeStart = -10.0;
       double constexpr rangeStop = 10.0;
       double constexpr rangeIncrement = 0.01;
-      
+
 
       // Spot check to make sure derivative values are sane.
       {
@@ -308,12 +308,12 @@ namespace brick {
           approximatelyEqual(lossFunction.getWeight(-8.0), 0.0,
                              this->m_defaultTolerance));
       }
-      
+
       // Check that function value and derivative relate correctly.
       {
         LossFunctionTukeyBiweight<brick::numeric::DifferentiableScalar<double>>
           lossFunction;
-        
+
         for(double zz = rangeStart; zz < rangeStop; zz += rangeIncrement) {
           brick::numeric::DifferentiableScalar<double> zzDiff(zz);
           zzDiff.setDerivative(1.0);
@@ -332,11 +332,11 @@ namespace brick {
       // Check that function value and square root relate correctly.
       {
         LossFunctionTukeyBiweight<double> lossFunction;
-        
+
         for(double zz = rangeStart; zz < rangeStop; zz += rangeIncrement) {
           double loss = lossFunction.getValue(zz);
           double residual = lossFunction.getL2Equivalent(zz);
-          
+
           BRICK_TEST_ASSERT(
             approximatelyEqual(loss, residual * residual,
                                this->m_defaultTolerance));
@@ -345,7 +345,7 @@ namespace brick {
     }
 
   } // namespace optimization
-  
+
 } // namespace brick
 
 

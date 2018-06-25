@@ -25,7 +25,7 @@ namespace brick {
     using brick::portability::pathDelimiter;
     using brick::portability::extensionDelimiter;
 
-  
+
     // This function returns a bool indicating whether or not the
     // specified path is a directory.
     bool
@@ -33,7 +33,7 @@ namespace brick {
     {
       return brick::portability::isDirectory(path);
     }
-  
+
 
     bool
     isExistingPath(std::string const& path)
@@ -46,7 +46,7 @@ namespace brick {
       }
       return false;
     }
-    
+
 
     // This function returns a bool indicating whether or not the
     // specified path is a regular file.
@@ -74,8 +74,8 @@ namespace brick {
     {
       return brick::portability::getAbsolutePath(inputPath);
     }
-    
-    
+
+
     // Joins two path elements with the appropriate delimiter.
     std::string
     joinPath(std::string const& part0, std::string const& part1)
@@ -83,7 +83,7 @@ namespace brick {
       return brick::portability::joinPath(part0, part1);
     }
 
-  
+
     // Returns the names of the entries in the specified directory, in
     // no particular order.
     std::vector<std::string>
@@ -138,7 +138,7 @@ namespace brick {
           fileNameList.push_back(*fileNameIter);
         }
       }
-    
+
       // Now copy the file names into a vector.  Adding the full path,
       // if appriate.
       std::vector<std::string> finalVector(fileNameList.size());
@@ -157,7 +157,7 @@ namespace brick {
       return finalVector;
     }
 
-  
+
     // Returns a std::pair<std::string, std::string> containing the fileName
     // without its extension, and the extension.
     std::pair<std::string, std::string>
@@ -178,7 +178,7 @@ namespace brick {
                             fileName.substr(extensionIndex, std::string::npos));
     }
 
-  
+
     // This function accepts a path returns a pair of strings in which
     // the first element is the directory name and the second is the
     // filename.
@@ -189,5 +189,5 @@ namespace brick {
     }
 
   } // namespace utilities
-  
+
 } // namespace brick

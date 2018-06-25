@@ -17,13 +17,13 @@
 // This file is included by amanatidesWoo2D.hh, and should not be
 // directly included by user code, so no need to include
 // amanatidesWoo2D.hh here.
-// 
+//
 // #include <brick/numeric/amanatidesWoo2D.hh>
 
 namespace brick {
 
   namespace numeric {
-    
+
     template <class ARRAY2D, class FLOAT_TYPE, class INT_TYPE>
     AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE, INT_TYPE>::
     AmanatidesWoo2D(ARRAY2D& data,
@@ -32,7 +32,7 @@ namespace brick {
                     const Vector2D<FLOAT_TYPE>& rayDirection,
                     bool downstreamOnly)
       : m_data(data),
-        m_initialU(-1),  // Initialize to illegal values.  These will be 
+        m_initialU(-1),  // Initialize to illegal values.  These will be
         m_initialV(-1),  // replaced with legal ones if there's a valid
         // intersection between the ray and the pixel
         // array.
@@ -43,7 +43,7 @@ namespace brick {
         m_tMaxU(),
         m_tMaxV(),
         m_tStart(),
-        m_validIntersection(true)    
+        m_validIntersection(true)
     {
       // First convert everything into pixel coordinates.
       Vector2D<FLOAT_TYPE> rayOriginPixel = pixelTworld * rayOrigin;
@@ -86,7 +86,7 @@ namespace brick {
       if(entryPoint.y() < 0.0) {
         entryPoint.setY(0.0);
       }
-    
+
       // Finally, assign the variables described in the Amanatides' and
       // Woo's paper.
 
@@ -115,10 +115,10 @@ namespace brick {
         m_validIntersection = false;
         return;
       }
-    
+
       // m_tStart is just the same as tEntry.
       m_tStart = tEntry_tExit.first;
-    
+
       // The remaining variables depend on whether U & V will be
       // increasing or decreasing as we travel along the ray, so we need
       // if clauses.  Please see the declaration for documentation on
@@ -229,7 +229,7 @@ namespace brick {
       m_validIntersection = source.m_validIntersection;
       return *this;
     }
-    
+
     template <class ARRAY2D, class FLOAT_TYPE, class INT_TYPE>
     std::pair<FLOAT_TYPE, FLOAT_TYPE>
     AmanatidesWoo2D<ARRAY2D, FLOAT_TYPE, INT_TYPE>::
@@ -259,7 +259,7 @@ namespace brick {
       FLOAT_TYPE tIntersectV0 = findIntersection(
         rayOriginPixel, rayDirectionPixel, Vector2D<FLOAT_TYPE>(0.0, 1.0), 0.0,
         -std::numeric_limits<FLOAT_TYPE>::max());
-    
+
       // ... Find the intersection with the line V = data.rows(), or
       // else a really big number if rayDirection is parallel to the
       // columns of the array.
@@ -309,7 +309,7 @@ namespace brick {
       }
       // else
       return (cConstant - dot<FLOAT_TYPE>(rayOrigin, bVector)) / denominator;
-    }      
+    }
 
   } // namespace numeric
 

@@ -16,7 +16,7 @@
 
 // This file is included by keypointSelectorLepetit.hh, and should not be directly included
 // by user code, so no need to include keypointSelectorLepetit.hh here.
-// 
+//
 // #include <brick/computerVision/keypointSelectorLepetit.hh>
 
 #include <algorithm>
@@ -96,7 +96,7 @@ namespace brick {
       const unsigned int expectedKeypointsPerImage = 300;
       const unsigned int sparsity = 10;
       const unsigned int pixelMeasurementRadius = 3;
-      
+
       // Sparsely sample over entire image to accumulate statistics
       // about what the normal pixelSimilarity and laplacianMagnitude
       // are.  Sampling doesn't go all the way to edges because the
@@ -176,8 +176,8 @@ namespace brick {
         laplacianMagnitudeMean + 3.0 * std::sqrt(laplacianMagnitudeVariance);
 #endif
     }
-    
-      
+
+
     void
     KeypointSelectorLepetit::
     measurePixelThresholds(unsigned int row, unsigned int column,
@@ -240,7 +240,7 @@ namespace brick {
         testValue - averageBorderValue);
     }
 
-    
+
     bool
     KeypointSelectorLepetit::
     testPixel(unsigned int row, unsigned int column,
@@ -325,7 +325,7 @@ namespace brick {
     // ============== Private member functions below this line ==============
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_KEYPOINTSELECTORLEPETIT_IMPL_HH */

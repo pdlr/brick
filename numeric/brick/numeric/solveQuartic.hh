@@ -19,26 +19,26 @@
 namespace brick {
 
   namespace numeric {
-  
-    /** 
+
+    /**
      * This function computes the (possibly complex) roots of the
      * quartic polynomial x^4 + c0*x^3 + c1*x^2 + c2*x + c3 = 0.
-     * 
+     *
      * @param c0 This argument is the cubic  coefficient of the
      * polynomial.
-     * 
+     *
      * @param c1 This argument is the quadratic coefficient of the
      * polynomial.
-     * 
+     *
      * @param c2 This argument is the linear coefficient of the
      * polynomial.
-     * 
+     *
      * @param c3 This argument is the constant coefficient of the
      * polynomial.
-     * 
+     *
      * @param root0 This reference argument is used to return the
      * first root of the polynomial.
-     * 
+     *
      * @param root1 This reference argument is used to return the
      * second root of the polynomial.
      *
@@ -56,7 +56,7 @@ namespace brick {
                  brick::common::ComplexNumber<Type>& root2,
                  brick::common::ComplexNumber<Type>& root3);
 
-  
+
   } // namespace numeric
 
 } // namespace brick

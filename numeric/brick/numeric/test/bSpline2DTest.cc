@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/numeric/test/bSpline2DTest.cpp
-* 
+*
 * Source file defining BSpline2DTest class.
 *
 * Copyright (C) 2006-2014 David LaRose, dlr@cs.cmu.edu
@@ -41,7 +41,7 @@ namespace brick {
     private:
 
       double m_defaultTolerance;
-    
+
     }; // class BSpline2DTest
 
 
@@ -99,7 +99,7 @@ namespace brick {
         for(size_t index0 = 0; index0 < testData.rows(); ++index0) {
           double computedResult =
             bSpline(testData(index0, 0), testData(index0, 1));
-          currentResiduals[index0] = 
+          currentResiduals[index0] =
             common::absoluteValue(computedResult - testData(index0, 2));
 
           BRICK_TEST_ASSERT(currentResiduals[index0]
@@ -113,7 +113,7 @@ namespace brick {
       // At the finest control point density, there should be no
       // compromise: all points reconstructed exactly.
       for(size_t index0 = 0; index0 < testData.rows(); ++index0) {
-        BRICK_TEST_ASSERT(approximatelyEqual(currentResiduals[index0], 
+        BRICK_TEST_ASSERT(approximatelyEqual(currentResiduals[index0],
                                              0.0, m_defaultTolerance));
       }
 
@@ -164,7 +164,7 @@ namespace brick {
           double computedResult1 = bSpline1(sCoord, tCoord);
 
           BRICK_TEST_ASSERT(
-            approximatelyEqual(computedResult0, computedResult1, 
+            approximatelyEqual(computedResult0, computedResult1,
                                this->m_defaultTolerance));
 
         }  // for(double tCoord...)
@@ -173,7 +173,7 @@ namespace brick {
 
     } // testPromote.
 
- 
+
     void
     BSpline2DTest::
     testOperatorPlusEquals()
@@ -201,7 +201,7 @@ namespace brick {
         " [4.2, 3.0, 4.4],"
         " [4.4, 1.1, 5.0],"
         " [5.7, 0.1, 2.0]]");
-      
+
       // Approximate the made up data using BSpline2D instances.
       BSpline2D<double> bSpline0;
       bSpline0.setNumberOfNodes(5, 7);
@@ -244,7 +244,7 @@ namespace brick {
       }
 
     }
-    
+
   } // namespace numeric
 
 } // namespace brick
@@ -268,4 +268,3 @@ namespace {
 }
 
 #endif
-

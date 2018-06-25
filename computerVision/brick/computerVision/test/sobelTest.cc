@@ -18,7 +18,7 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     class SobelTest
       : public brick::test::TestFixture<SobelTest> {
 
@@ -67,7 +67,7 @@ namespace brick {
         " [-10,  -9,  -4,   0],"
         " [ -6,   1,   9,  10],"
         " [  0,  12,  28,  32]]");
-    
+
       Image<GRAY_SIGNED32> inputImage = inputArray;
       Image<GRAY_SIGNED32> resultImage = applySobelX(inputImage);
 
@@ -96,7 +96,7 @@ namespace brick {
         " [-16, -9,   0,   4],"
         " [-32,-25, -11,   8],"
         " [ -8,  2,  18,  40]]");
-    
+
       Image<GRAY_SIGNED32> inputImage = inputArray;
       Image<GRAY_SIGNED32> resultImage = applySobelY(inputImage);
 
@@ -108,7 +108,7 @@ namespace brick {
     }
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

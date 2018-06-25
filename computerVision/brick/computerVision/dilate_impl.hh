@@ -15,7 +15,7 @@
 
 // This file is included by dilate.hh, and should not be directly included
 // by user code, so no need to include dilate.hh here.
-// 
+//
 // #include <brick/computerVision/dilate.hh>
 
 #include <cmath>
@@ -24,13 +24,13 @@
 namespace brick {
 
   namespace computerVision {
-  
+
     template<ImageFormat FORMAT>
     Image<FORMAT>
     dilate(const Image<FORMAT>& inputImage)
     {
       typedef typename Image<FORMAT>::value_type ValueType;
-    
+
       Image<FORMAT> outputImage(inputImage.rows(), inputImage.columns());
 
       size_t index0 = 0;
@@ -57,7 +57,7 @@ namespace brick {
         }
         ++index0;
       }
-        
+
       if(inputImage[index0]
          || inputImage[index0 - 1]
          || inputImage[index0 + inputImage.columns() - 1]
@@ -134,7 +134,7 @@ namespace brick {
         }
         ++index0;
       }
-        
+
       if(inputImage[index0]
          || inputImage[index0 - 1]
          || inputImage[index0 - inputImage.columns() - 1]
@@ -169,7 +169,7 @@ namespace brick {
       // Constants to make code below more readable.
       unsigned int const windowRadiusH = windowHeight / 2;
       unsigned int const windowRadiusW = windowWidth / 2;
-      
+
       brick::numeric::BoxIntegrator2D<ValueType, int> integrator(
         inputImage, privateCode::CountingFunctor<ValueType>());
       Image<FORMAT> outputImage(inputImage.rows(), inputImage.columns());
@@ -193,7 +193,7 @@ namespace brick {
             outputImage[index0] = ValueType(0);
           }
           ++index0;
-        }        
+        }
         for(; column < colBoundary1; ++column) {
           if(integrator.getIntegral(
                brick::numeric::Index2D(0, column - windowRadiusW),
@@ -234,7 +234,7 @@ namespace brick {
             outputImage[index0] = ValueType(0);
           }
           ++index0;
-        }        
+        }
         for(; column < colBoundary1; ++column) {
           if(integrator.getIntegral(
                brick::numeric::Index2D(row - windowRadiusH,
@@ -276,7 +276,7 @@ namespace brick {
             outputImage[index0] = ValueType(0);
           }
           ++index0;
-        }        
+        }
         for(; column < colBoundary1; ++column) {
           if(integrator.getIntegral(
                brick::numeric::Index2D(row - windowRadiusH,
@@ -303,14 +303,14 @@ namespace brick {
           }
           ++index0;
         }
-      }      
+      }
 
       return outputImage;
     }
 
-    
+
   } // namespace computerVision
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_DILATE_IMPL_HH */

@@ -17,7 +17,7 @@ namespace brick {
 
   namespace computerVision {
 
-      
+
   } // namespace brick
 
 } // namespace computerVision

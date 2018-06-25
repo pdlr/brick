@@ -56,7 +56,7 @@ namespace brick {
       : public std::unary_function<FloatType, FloatType>
     {
     public:
-      /** 
+      /**
        * Constructs a loss function based on the Cauchy distribution:
        *
        * @code
@@ -82,8 +82,8 @@ namespace brick {
        */
       LossFunctionCauchy();
 
-      
-      /** 
+
+      /**
        * Applies the loss function, the function L(z) described in the
        * constructor comment.  This implements a function that is
        * convex (downward), but with less and less change as you get
@@ -94,24 +94,24 @@ namespace brick {
        *
        * @param argument This is the input value at which to calculate
        * the value of loss function.
-       * 
+       *
        * @return The return value is the resulting value of the loss
        * function.
        */
       FloatType getValue(FloatType const& argument);
 
 
-      /** 
+      /**
        * Returns the first derivative of this->getValue(), the
        * function psi(z) described in the constructor comment.  This
        * is useful in Gauss-Newton iteration when setting the first
        * derivative (with respect to optimization parameters) of the
        * total error to zero.  This is sometimes called the "weight"
        * of the loss function.
-       * 
+       *
        * @param argument This argument is the input value at which to
        * calculate the first derivative of the loss function.
-       * 
+       *
        * @return The return value the first derivative with respect to
        * the input argument.
        */
@@ -126,11 +126,11 @@ namespace brick {
        * M-estimator, invisible to the calling context.
        */
       FloatType getL2Equivalent(FloatType const& argument);
-      
+
     private:
     };
 
-    
+
     /**
      ** Implements the Huber loss function [1], which is quadratic for
      ** arguments with magnitude less than or equal to a user
@@ -152,7 +152,7 @@ namespace brick {
       : public std::unary_function<FloatType, FloatType>
     {
     public:
-      /** 
+      /**
        * Constructs a Huber loss function, specifying the desired
        * transition point between quadratic and linear shape.
        *
@@ -167,8 +167,8 @@ namespace brick {
        */
       LossFunctionHuber(FloatType const& delta = FloatType(1.0));
 
-      
-      /** 
+
+      /**
        * Applies the loss function.  This implements a convex
        * (downward) function that de-weights outliers when compared to
        * L2 loss.  Note that if you're using this in a maximum
@@ -177,23 +177,23 @@ namespace brick {
        *
        * @param argument This is the input value at which to calculate
        * the value of loss function.
-       * 
+       *
        * @return The return value is the resulting value of the loss
        * function.
        */
       FloatType getValue(FloatType const& argument);
 
 
-      /** 
+      /**
        * Returns the first derivative of this->getValue() with
        * respect to its parameter.  This is useful in Gauss-Newton
        * iteration when setting the first derivative (with respect to
        * optimization parameters) of the total error to zero.  This is
        * sometimes called the "weight" of the loss function.
-       * 
+       *
        * @param argument This argument is the input value at which to
        * calculate the first derivative of the loss function.
-       * 
+       *
        * @return The return value the first derivative with respect to
        * the input argument.
        */
@@ -225,12 +225,12 @@ namespace brick {
        * @endcode
        */
       FloatType getL2Equivalent(FloatType const& argument);
-      
+
     private:
       FloatType const m_delta;
       FloatType const m_deltaSquaredOverTwo;
     };
-    
+
 
     /**
      ** Implements the Pseudo-Huber loss function [2], which
@@ -247,7 +247,7 @@ namespace brick {
       : public std::unary_function<FloatType, FloatType>
     {
     public:
-      /** 
+      /**
        * Constructs a pseudo-Huber loss function, specifying the delta
        * parameter that controlls the asymptotic shape of the
        * function.
@@ -255,14 +255,14 @@ namespace brick {
        * @code
        *   L(z) = delta^2 * (sqrt(1 + (z/delta)^2) - 1)
        * @endcode
-       * 
+       *
        * @param delta This argument specifies the value of delta in
        * the equation described above.
        */
       LossFunctionPseudoHuber(FloatType const& delta = FloatType(1.0));
 
-      
-      /** 
+
+      /**
        * Applies the loss function.  This implements a convex
        * (downward) function that de-weights outliers when compared to
        * L2 loss.  Note that you probably want member function
@@ -270,20 +270,20 @@ namespace brick {
        *
        * @param argument This is the input value at which to calculate
        * the value of loss function.
-       * 
+       *
        * @return The return value is the resulting value of the loss
        * function.
        */
       FloatType getValue(FloatType const& argument);
 
 
-      /** 
+      /**
        * Returns the first derivative of this->getValue() with
        * respect to its parameter.  This is useful in Gauss-Newton
        * iteration when setting the first derivative (with respect to
        * optimization parameters) of the total error to zero.  This is
        * sometimes called the "weight" of the loss function.
-       * 
+       *
        * @code
        *   L(z) = delta^2 * (sqrt(1 + (z/delta)^2) - 1)
        *   d/dz(L(z)) = delta^2 * d/dz(sqrt(1 + (z/delta)^2) - 1)
@@ -294,10 +294,10 @@ namespace brick {
        *                * 2/(delta^2) * z
        *   d/dz(L(z)) = (z / sqrt(1 + (z^2 / delta^2)))
        * @endcode
-       * 
+       *
        * @param argument This argument is the input value at which to
        * calculate the first derivative of the loss function.
-       * 
+       *
        * @return The return value the first derivative with respect to
        * the input argument.
        */
@@ -316,7 +316,7 @@ namespace brick {
     private:
       FloatType const m_deltaSquared;
     };
-    
+
 
     /**
      ** Implements the Tukey biweight loss function, which applies
@@ -333,7 +333,7 @@ namespace brick {
       : public std::unary_function<FloatType, FloatType>
     {
     public:
-      /** 
+      /**
        * Constructs a Tukey biweight loss function, which has first
        * derivative as follows:
        *
@@ -343,7 +343,7 @@ namespace brick {
        * @endcode
        *
        * where c is a user supplied constant.
-       * 
+       *
        * @param cc This argument specifies the scale of the loss
        * function.  Note that the optimal value of cc for normally
        * distributed errors is 6.0.
@@ -351,8 +351,8 @@ namespace brick {
        */
       LossFunctionTukeyBiweight(FloatType const& cc = FloatType(6.0));
 
-      
-      /** 
+
+      /**
        * Applies the loss function, This implements a function that is
        * convex (downward) between -cc and cc (remember that cc was
        * the constructor argument), and constant elsewhere.  Note that
@@ -382,23 +382,23 @@ namespace brick {
        *
        * @param argument This is the input value at which to calculate
        * the value of loss function.
-       * 
+       *
        * @return The return value is the resulting value of the loss
        * function.
        */
       FloatType getValue(FloatType const& argument);
 
 
-      /** 
+      /**
        * Returns the first derivative of this->getValue() with
        * respect to its parameter.  This is useful in Gauss-Newton
        * iteration when setting the first derivative (with respect to
        * optimization parameters) of the total error to zero.  This is
        * sometimes called the "weight" of the loss function.
-       * 
+       *
        * @param argument This argument is the input value at which to
        * calculate the first derivative of the loss function.
-       * 
+       *
        * @return The return value the first derivative with respect to
        * the input argument.
        */
@@ -413,13 +413,13 @@ namespace brick {
        * M-estimator, invisible to the calling context.
        */
       FloatType getL2Equivalent(FloatType const& argument);
-      
+
     private:
       FloatType const m_c;
       FloatType const m_cSquared;
     };
 
-    
+
   } // namespace optimization
 
 } // namespace brick
@@ -448,7 +448,7 @@ namespace brick {
       // Empty.
     }
 
-      
+
     // Applies the loss function, the function L(z) described in the
     // constructor comment.
     template <class FloatType>
@@ -469,7 +469,7 @@ namespace brick {
     getWeight(FloatType const& argument)
     {
       return argument / (FloatType(1.0) + argument * argument / FloatType(2.0));
-    }      
+    }
 
 
     // Returns the square root of the loss function value.
@@ -481,7 +481,7 @@ namespace brick {
       return brick::numeric::squareRoot(this->getValue(argument));
     }
 
-    
+
     // Constructs a Huber loss function, specifying the desired
     // transition point between quadratic and linear shape.
     template <class FloatType>
@@ -494,7 +494,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // Applies the loss function.
     template <class FloatType>
     FloatType
@@ -524,7 +524,7 @@ namespace brick {
       }
       return m_delta;
     }
-    
+
 
     // Returns the square root of the loss function value.
     template <class FloatType>
@@ -539,8 +539,8 @@ namespace brick {
       return brick::numeric::squareRoot(
         m_delta * argMagnitude - m_deltaSquaredOverTwo);
     }
-    
-    
+
+
     // Constructs a pseudo-Huber loss function, specifying the internal
     // parameter delta.
     template <class FloatType>
@@ -577,7 +577,7 @@ namespace brick {
         FloatType(1.0) + argument * argument / m_deltaSquared);
     }
 
-    
+
     // Returns the square root of the loss function value.
     template <class FloatType>
     FloatType
@@ -599,7 +599,7 @@ namespace brick {
     {
       // Empty.
     }
-      
+
 
     // Applies the loss function, This implements a function that is
     // convex (downward) between -cc and cc (remember that cc was
@@ -644,7 +644,7 @@ namespace brick {
     {
       return brick::numeric::squareRoot(this->getValue(argument));
     }
-    
+
   } // namespace optimization
 
 } // namespace brick

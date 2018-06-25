@@ -14,7 +14,7 @@
 
 // This file is included by arrayND.hh, and should not be directly included
 // by user code, so no need to include arrayND.hh here.
-// 
+//
 // #include <brick/numeric/arrayND.hh>
 
 #include <algorithm>
@@ -26,7 +26,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     template <size_t Dimension, class Type>
     ArrayND<Dimension, Type>::
     ArrayND()
@@ -61,7 +61,7 @@ namespace brick {
       // Empty.
     }
 
-  
+
     /* When copying from a ArrayND do a shallow copy */
     /* Update reference count if the array we're copying has */
     /* valid data. */
@@ -136,7 +136,7 @@ namespace brick {
       return newArray;
     }
 
-  
+
     template <size_t Dimension, class Type> template <class Type2>
     void ArrayND<Dimension, Type>::
     copy(const ArrayND<Dimension, Type2>& source)
@@ -147,7 +147,7 @@ namespace brick {
       }
     }
 
-  
+
     template <size_t Dimension, class Type> template <class Type2>
     void
     ArrayND<Dimension, Type>::
@@ -178,7 +178,7 @@ namespace brick {
                                 m_strideArray.begin(), *endMinus);
     }
 
-    
+
     template <size_t Dimension, class Type>
     void ArrayND<Dimension, Type>::
     reinit(Array1D<size_t> const& shape)
@@ -187,7 +187,7 @@ namespace brick {
       m_storage.reinit(this->computeSize(m_shape));
       m_strideArray = this->computeStride(m_shape);
     }
-  
+
 
     template <size_t Dimension, class Type>
     ArrayND<Dimension, Type>& ArrayND<Dimension, Type>::
@@ -295,7 +295,7 @@ namespace brick {
       return std::accumulate(shape.begin(), shape.end(), size_t(1),
                              std::multiplies<size_t>());
     }
-    
+
 
     template <size_t Dimension, class Type>
     Array1D<size_t>
@@ -309,10 +309,10 @@ namespace brick {
       }
       return strideArray;
     }
-    
+
 
     /* ========== Non-member functions ========== */
-  
+
     template <size_t Dimension, class Type>
     ArrayND<Dimension, Type> operator+(const ArrayND<Dimension, Type>& array0,
                                        const ArrayND<Dimension, Type>& arrayN)
@@ -445,14 +445,14 @@ namespace brick {
       return result;
     }
 
-  
+
     template <size_t Dimension, class Type>
     inline ArrayND<Dimension, Type> operator*(Type scalar, const ArrayND<Dimension, Type>& array0)
     {
       return array0 * scalar;
     }
 
-  
+
     template <size_t Dimension, class Type>
     ArrayND<Dimension, Type> operator/(Type scalar, const ArrayND<Dimension, Type>& array0)
     {
@@ -461,7 +461,7 @@ namespace brick {
                      std::bind1st(std::divides<Type>(), scalar));
       return result;
     }
-  
+
 
     // Elementwise comparison of an ArrayND with a constant.
     template <size_t Dimension, class Type>
@@ -474,7 +474,7 @@ namespace brick {
       return result;
     }
 
-    
+
     // Elementwise comparison of an ArrayND with another array.
     template <size_t Dimension, class Type>
     ArrayND<Dimension, bool>
@@ -488,7 +488,7 @@ namespace brick {
       return result;
     }
 
-  
+
     template <size_t Dimension, class Type>
     ArrayND<Dimension, bool>
     operator>(const ArrayND<Dimension, Type>& array0, const Type arg)
@@ -499,7 +499,7 @@ namespace brick {
       return result;
     }
 
-  
+
     template <size_t Dimension, class Type>
     ArrayND<Dimension, bool>
     operator>=(const ArrayND<Dimension, Type>& array0, const Type arg)
@@ -547,7 +547,7 @@ namespace brick {
       return stream;
     }
 
-    
+
     // Sets the value of an ArrayND instance from a std::istream.
     template <size_t Dimension, class Type>
     std::istream& operator>>(std::istream& stream,
@@ -568,7 +568,7 @@ namespace brick {
       Array1D<Type> data;
       stream >> common::Expect("data:", flags);
       stream >> data;
-      
+
       if(stream) {
         array0.reinit(shape);
         array0.copy(data.data());

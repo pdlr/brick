@@ -16,13 +16,13 @@
 
 // This file is included by transform3D.hh, and should not be directly
 // included by user code, so no need to include transform3D.hh here.
-// 
+//
 // #include <brick/numeric/transform3D.hh>
 
 namespace brick {
 
   namespace numeric {
-    
+
     // Default constructor.  Initializes to identity.
     template <class Type>
     inline
@@ -165,8 +165,8 @@ namespace brick {
                   message.str().c_str());
       return m_33; // Dummy return to keep the compiler happy.
     }
-    
-  
+
+
     // This member function returns the inverse of *this.
     template <class Type>
     Transform3D<Type>
@@ -176,7 +176,7 @@ namespace brick {
       // We use the cofactor method for now, since it's easier to code
       // than Gauss-Jordan elimination.  We suspect that it's less
       // efficient, however.
-    
+
       // Notation for determinant values is detRRRCCC, where the
       // Rs indicate the involved rows, from top to bottom, and the Cs
       // indicate the involved columns, from left to right.
@@ -201,7 +201,7 @@ namespace brick {
       Type det2312 = m_21 * m_32 - m_22 * m_31;
       Type det2313 = m_21 * m_33 - m_23 * m_31;
       Type det2323 = m_22 * m_33 - m_23 * m_32;
-    
+
       Type det012012 = (m_00 * det1212 - m_01 * det1202 + m_02 * det1201);
       Type det012013 = (m_00 * det1213 - m_01 * det1203 + m_03 * det1201);
       Type det012023 = (m_00 * det1223 - m_02 * det1203 + m_03 * det1202);
@@ -216,7 +216,7 @@ namespace brick {
       Type det023013 = (m_00 * det2313 - m_01 * det2303 + m_03 * det2301);
       Type det023023 = (m_00 * det2323 - m_02 * det2303 + m_03 * det2302);
       Type det023123 = (m_01 * det2323 - m_02 * det2313 + m_03 * det2312);
-    
+
       Type det123012 = (m_10 * det2312 - m_11 * det2302 + m_12 * det2301);
       Type det123013 = (m_10 * det2313 - m_11 * det2303 + m_13 * det2301);
       Type det123023 = (m_10 * det2323 - m_12 * det2303 + m_13 * det2302);
@@ -241,7 +241,7 @@ namespace brick {
         BRICK_THROW(common::ValueException, "Transform3D::invert()",
                   "Transform is not invertible.");
       }
-    
+
       return Transform3D<Type>(
         det123123 / det01230123, -det023123 / det01230123,
         det013123 / det01230123, -det012123 / det01230123,
@@ -266,8 +266,8 @@ namespace brick {
         m_10 * vector0.x() + m_11 * vector0.y() + m_12 * vector0.z(),
         m_20 * vector0.x() + m_21 * vector0.y() + m_22 * vector0.z());
     }
-    
-  
+
+
     // Change the Transform3D value by explicitly setting element values
     // as if setting the elements of a 4x4 transformation matrix:
     //    [[a00, a01, a02, a03],
@@ -422,7 +422,7 @@ namespace brick {
                          a20, a21, a22, a23, a30, a31, a32, a33, doNormalize);
     }
 
-    
+
     // This operator returns one element from the matrix
     // representation of the coordinate transform by value.
     template <class Type>
@@ -479,8 +479,8 @@ namespace brick {
                   message.str().c_str());
       return m_33; // Dummy return to keep the compiler happy.
     }
-  
-  
+
+
     // This operator takes a point and applies the coordinate
     // transform, returning the result.
     template <class Type>
@@ -495,7 +495,7 @@ namespace brick {
         m_30 * vector0.x() + m_31 * vector0.y() + m_32 * vector0.z() + m_33);
     }
 
-  
+
     // The assignment operator simply duplicates its argument.
     template <class Type>
     Transform3D<Type>&
@@ -515,7 +515,7 @@ namespace brick {
       return *this;
     }
 
-  
+
     template <class Type>
     void
     Transform3D<Type>::
@@ -549,14 +549,14 @@ namespace brick {
 
 
     /* ============== Non-member functions ============== */
-  
-  
+
+
     // This operator composes two Transform3D instances.  The resulting
     // transform satisfies the equation:
     //   (transform0 * transform1) * v0 = transform0 * (transform1 * v0),
     // where v0 is a Vector3D instance.
     //
-    // 
+    //
     template <class Type>
     Transform3D<Type>
     operator*(const Transform3D<Type>& transform0, const Transform3D<Type>& transform1)
@@ -760,7 +760,7 @@ namespace brick {
       if (!stream){
         return stream;
       }
-    
+
       // It's a lot easier to use a try block than to be constantly
       // testing whether the IO has succeeded, so we tell stream to
       // complain if anything goes wrong.
@@ -774,7 +774,7 @@ namespace brick {
 
         // Skip any preceding whitespace.
         stream >> common::Expect("", flags);
-      
+
         // Read the "Transform3D(" part.
         stream >> common::Expect("Transform3D(", flags);
 
@@ -796,12 +796,12 @@ namespace brick {
 
         // And update the transform.
         transform0.setTransform(inputValues[0], inputValues[1],
-                                inputValues[2], inputValues[3], 
-                                inputValues[4], inputValues[5], 
-                                inputValues[6], inputValues[7], 
-                                inputValues[8], inputValues[9], 
-                                inputValues[10], inputValues[11], 
-                                inputValues[12], inputValues[13], 
+                                inputValues[2], inputValues[3],
+                                inputValues[4], inputValues[5],
+                                inputValues[6], inputValues[7],
+                                inputValues[8], inputValues[9],
+                                inputValues[10], inputValues[11],
+                                inputValues[12], inputValues[13],
                                 inputValues[14], inputValues[15]);
       } catch(std::ios_base::failure) {
         // Empty

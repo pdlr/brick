@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/test/functors.hh
-* 
+*
 * Header file declaring macros for brick::test library.
 *
 * Copyright (C) 2004-2011 David LaRose, dlr@cs.cmu.edu
@@ -30,7 +30,7 @@ namespace brick {
       : public std::binary_function<Type, Type, bool>
     {
     public:
-      /** 
+      /**
        * The constructor sets the threshold for what is considered
        * approximately equal.  For example, if the constructor argument
        * is 1.0E-6, then two values will be considered equal if the
@@ -43,8 +43,8 @@ namespace brick {
       ApproximatelyEqualFunctor(const Type& epsilon=static_cast<Type>(0))
         : m_epsilon(epsilon) {}
 
-      
-      /** 
+
+      /**
        * The application operator returns true if the difference between
        * its two arguments is less than epsilon and greater than
        * -(epsilon), where epsilon is specified in the constructor.
@@ -66,21 +66,21 @@ namespace brick {
 
     protected:
 
-      /// This protected member function stores the comparison tolerance.   
+      /// This protected member function stores the comparison tolerance.
       Type m_epsilon;
     };
 
 
     // =================== Helper functions =================== //
 
-    /** 
+    /**
      * This convenience function constructs an ApproximatelyEqualFunctor<Type>
      * functor and applies it two the first two arguments.  The third
      * argument sets the threshold for approximate equality.  For
      * example,
      * approximatelyEqual(1.0003, 1.0005, 1.0E-6) will return false, while
      * approximatelyEqual(1.0003, 1.0005, 1.0E-3) will return true.
-     * 
+     *
      * @param argument0 This argument is the first value to be compared.
      *
      * @param argument1 This argument is the second value to be compared.

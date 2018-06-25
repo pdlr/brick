@@ -17,7 +17,7 @@
 namespace brick {
 
   namespace numeric {
-  
+
     template <class Type>
     class Convolve1DTest
       : public brick::test::TestFixture< Convolve1DTest<Type> >
@@ -27,8 +27,8 @@ namespace brick {
 
       // Typedef required why?
       typedef Convolve1DTest<Type> TestFixtureType;
-    
-    
+
+
       Convolve1DTest(const std::string& typeName);
       ~Convolve1DTest() {}
 
@@ -67,7 +67,7 @@ namespace brick {
       Array1D<Type> m_result_zeroPadSignal;
       Array1D<Type> m_result_reflectSignal;
       Array1D<Type> m_result_wrapSignal;
-    
+
     }; // class Convolve1DTest
 
 
@@ -118,7 +118,7 @@ namespace brick {
 	this->equivalent(result, m_result_truncateResult, m_defaultTolerance));
     }
 
-  
+
     template <class Type>
     void
     Convolve1DTest<Type>::
@@ -198,7 +198,7 @@ namespace brick {
 	this->equivalent(result, m_result_truncateResult, m_defaultTolerance));
     }
 
-  
+
     template <class Type>
     void
     Convolve1DTest<Type>::
@@ -282,7 +282,7 @@ namespace brick {
     }
 
   } //  namespace numeric
-  
+
 } // namespace brick
 
 
@@ -310,4 +310,3 @@ namespace {
 }
 
 #endif
-

@@ -19,7 +19,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     /**
      ** This class provides access to the elements of a data array along
      ** a straight path, and does the actual work of Amanatides and
@@ -38,10 +38,10 @@ namespace brick {
                              typename ARRAY3D::value_type>
     {
     public:
-      /** 
+      /**
        * The class constructor is initialized with all of the internal
        * variables of the voxel traversal algorithm.
-       * 
+       *
        * @param data This parameter is a reference to the 3D data over
        * which to iterate.
        * @param startU This parameter specifies the starting U coordinate
@@ -99,110 +99,110 @@ namespace brick {
                               FLOAT_TYPE tDeltaU, FLOAT_TYPE tDeltaV, FLOAT_TYPE tDeltaW,
                               FLOAT_TYPE tStart);
 
-      /** 
+      /**
        * Copy constructor.
-       * 
+       *
        * @param source This argument specifies the AmanatidesWoo3D
        * instance to be copied.
        */
       AmanatidesWoo3DIterator(const AmanatidesWoo3DIterator& source);
 
-      /** 
+      /**
        * Destructor.
        */
       ~AmanatidesWoo3DIterator() {};
 
-      /** 
+      /**
        * This method returns the ray parameter t at which the ray being
        * followed passes into the current voxel.  In other words, the
        * value t such that (rayOrigin + t * rayDirection) is the point
        * of entry into the current voxel.
-       * 
+       *
        * @return The return value is the value of t at which the ray
        * passes into the current voxel.
        */
       FLOAT_TYPE
       tEntry() {return m_tEntry;}
 
-      /** 
+      /**
        * This method returns the ray parameter t at which the ray being
        * followed passes out of the current voxel.  In other words, the
        * value t such that (rayOrigin + t * rayDirection) is the point
        * of exit from the current voxel.  Invoking this method carries a
        * computational cost of 1 FLOAT_TYPE comparison.
-       * 
+       *
        * @return The return value is the value of t at which the ray
        * passes out of the current voxel.
        */
       FLOAT_TYPE
       tExit() {return std::min(m_tMaxU, std::min(m_tMaxV, m_tMaxW));}
 
-      /** 
+      /**
        * This method returns the U coordinate of the current voxel.
-       * 
+       *
        * @return The return value is the U coordinate of the current
        * voxel.
        */
       INT_TYPE
       U() {return m_U;}
 
-      /** 
+      /**
        * This method returns the V coordinate of the current voxel.
-       * 
+       *
        * @return The return value is the V coordinate of the current
        * voxel.
        */
       INT_TYPE
       V() {return m_V;}
 
-      /** 
+      /**
        * This method returns the W coordinate of the current voxel.
-       * 
+       *
        * @return The return value is the W coordinate of the current
        * voxel.
        */
       INT_TYPE
       W() {return m_W;}
 
-      /** 
+      /**
        * This operator returns a reference to the Array3D element at the
        * current voxel.  With each increment of the
        * AmanatidesWoo3DIterator instance, this operator will return a
        * reference to the next voxel along the ray.
-       * 
+       *
        * @return The return value is a reference the the relevant
        * Array3D element.
        */
       inline typename ARRAY3D::value_type& // element_type?
       operator*();
 
-      /** 
+      /**
        * This operator returns a pointer to the Array3D element at the
        * current voxel.  With each increment of the
        * AmanatidesWoo3DIterator instance, this operator will return a
        * pointer to the next voxel along the ray.
-       * 
+       *
        * @return The return value is a pointer the the relevant
        * Array3D element.
        */
       inline typename ARRAY3D::value_type* // element_type?
       operator->();
 
-      /** 
+      /**
        * The pre-increment operator increments the iterator so that it
        * points to the next voxel along the path.
-       * 
+       *
        * @return The return value is a reference to *this.
        */
       inline AmanatidesWoo3DIterator&
       operator++();	             // prefix
 
-      /** 
+      /**
        * The post-increment operator increments the iterator so that it
        * points to the next voxel along the path.  It differs from the
        * pre-increment operator in its return value.  Traditionally,
        * post-increment is a little slower than pre-increment.
-       * 
+       *
        * @param dummy This parameter is a dummy which indicates to the
        * compiler that this operation is post-increment (rather than
        * pre-increment).
@@ -213,10 +213,10 @@ namespace brick {
       inline AmanatidesWoo3DIterator
       operator++(int dummy);                 // postfix
 
-      /** 
+      /**
        * This is the assignment operator.  It copies the value of its
        * argument into *this.
-       * 
+       *
        * @param source This argument specifies the
        * AmanatidesWoo3DIterator instance to be copied.
        * @return The return value is a reference to *this.
@@ -224,7 +224,7 @@ namespace brick {
       AmanatidesWoo3DIterator&
       operator=(const AmanatidesWoo3DIterator& source);
 
-      /** 
+      /**
        * The equality operator returns true if both the argument and
        * *this currently reference a valid voxel, or if both the
        * argument and *this currently reference an invalid voxel.  In all
@@ -232,7 +232,7 @@ namespace brick {
        *
        * NOTE: This behavior is not exactly what you'd expect for an
        * equality operator.  references the same voxel as the argument.
-       * 
+       *
        * @param other This argument is a second AmanatidesWoo3DIterator
        * instance that is to be compared with *this.
        *
@@ -243,7 +243,7 @@ namespace brick {
       inline bool
       operator==(const AmanatidesWoo3DIterator& other);
 
-      /** 
+      /**
        * The equality operator returns false if both the argument and
        * *this currently reference a valid voxel, or if both the
        * argument and *this currently reference an invalid voxel.  In all
@@ -251,7 +251,7 @@ namespace brick {
        *
        * NOTE: This behavior is not exactly what you'd expect for an
        * equality operator.  references the same voxel as the argument.
-       * 
+       *
        * @param other This argument is a second AmanatidesWoo3DIterator
        * instance that is to be compared with *this.
        *

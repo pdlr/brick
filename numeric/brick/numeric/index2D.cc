@@ -15,63 +15,63 @@
 namespace brick {
 
   namespace numeric {
-    
+
     Index2D operator+(const Index2D& index0, const Index2D& index1)
     {
       return Index2D(index0.getRow() + index1.getRow(),
                      index0.getColumn() + index1.getColumn());
     }
 
-  
+
     Index2D operator-(const Index2D& index0, const Index2D& index1)
     {
       return Index2D(index0.getRow() - index1.getRow(),
                      index0.getColumn() - index1.getColumn());
     }
 
-  
+
     Index2D operator*(const Index2D& index0, const Index2D& index1)
     {
       return Index2D(index0.getRow() * index1.getRow(),
                      index0.getColumn() * index1.getColumn());
     }
 
-  
+
     Index2D operator/(const Index2D& index0, const Index2D& index1)
     {
       return Index2D(index0.getRow() / index1.getRow(),
                      index0.getColumn() / index1.getColumn());
     }
 
-  
+
     Index2D operator+(const Index2D& index0, int scalar)
     {
       return Index2D(index0.getRow() + scalar,
                      index0.getColumn() + scalar);
     }
 
-  
+
     Index2D operator-(const Index2D& index0, int scalar)
     {
       return Index2D(index0.getRow() - scalar,
                      index0.getColumn() - scalar);
     }
 
-  
+
     Index2D operator*(const Index2D& index0, int scalar)
     {
       return Index2D(index0.getRow() * scalar,
                      index0.getColumn() * scalar);
     }
 
-  
+
     Index2D operator/(const Index2D& index0, int scalar)
     {
       return Index2D(index0.getRow() / scalar,
                      index0.getColumn() / scalar);
     }
 
-  
+
     bool
     operator==(const Index2D& index0, const Index2D& index1)
     {
@@ -79,14 +79,14 @@ namespace brick {
              (index0.getColumn() == index1.getColumn()));
     }
 
-  
+
     bool
     operator!=(const Index2D& index0, const Index2D& index1)
     {
       return(!operator==(index0, index1));
     }
 
-  
+
     std::ostream&
     operator<<(std::ostream& stream, const Index2D& index0)
     {
@@ -95,7 +95,7 @@ namespace brick {
       return stream;
     }
 
-  
+
     std::istream&
     operator>>(std::istream& stream, Index2D& index0)
     {

@@ -23,8 +23,8 @@
 namespace brick {
 
   namespace utilities {
-    
-    /** 
+
+    /**
      * This function takes an input string and returns a string in which
      * all special shell characters have been escaped.  The list of
      * special characters is specified as a string, and defaults to the
@@ -44,7 +44,7 @@ namespace brick {
      *
      *   cleanString("~foo\;bar\b;az", "\;~", '\', true);
      *   will return the string "\~foo\;bar\b\;az".
-     * 
+     *
      * @param inputString This is the string to be cleaned.
      *
      * @return The return value is a copy of inputString in which
@@ -52,11 +52,11 @@ namespace brick {
      */
     std::string
     cleanString(std::string const& inputString,
-                std::string const& 
+                std::string const&
                 specialCharacters="\"~#$&*()\\|[]{};'`<>/?",
                 char quoteCharacter='\\',
                 bool alreadyQuoted=false);
-  
+
 
     /**
      * This function converts the string inputString to Type.  For
@@ -71,7 +71,7 @@ namespace brick {
      * brick::utilities::ConversionException is thrown.
      *
      * @param inputString This argument is the string to be converted.
-     * 
+     *
      * @return The return value an instance of the target type that has
      * had its value set by stream input from the specified string.
      */
@@ -79,7 +79,7 @@ namespace brick {
     Type
     convertString(std::string const& inputString);
 
-  
+
     /**
      * This function returns a single string comprising copies of all of
      * the strings in inputStringVector, interposed by the copies of
@@ -104,7 +104,7 @@ namespace brick {
     std::string
     joinString(const std::vector<std::string>& inputStringVector,
                std::string const& separator="");
-  
+
 
     /**
      * This function returns a copy of the input argument in which every
@@ -124,9 +124,9 @@ namespace brick {
      */
     std::string
     makeLowerCase(std::string const& inputString);
-  
 
-    /** 
+
+    /**
      * This function returns a copy of the input argument in which every
      * lowercase character has been replaced with its uppercase
      * equivalent.  For example:
@@ -136,10 +136,10 @@ namespace brick {
      * @endcode
      *
      * will return "HI THERE!"
-     * 
+     *
      * @param inputString This argument specifies the string that will
      * be converted to upper case.
-     * 
+     *
      * @return The return value is the converted string.
      */
     std::string
@@ -158,16 +158,16 @@ namespace brick {
      * gives
      *
      *   "hohiihiiohiiiiho"
-     * 
+     *
      * @param inputString This argument species the string that is to
      * be copied.
-     * 
+     *
      * @param target This argument specifies the substring that is to
      * be replaced.
-     * 
+     *
      * @param replacement This argument specifies the string that is to
      * be substituted for each instance of the target.
-     * 
+     *
      * @return The return value is a string in which all non-overlapping
      * instances of target have been replaced with replacement.
      */
@@ -219,13 +219,13 @@ namespace brick {
      * gives
      *
      *   ["", "llo", "hound", ""]
-     * 
+     *
      * @param inputString This argument specifies the string that is to
      * be split.
-     * 
+     *
      * @param delimiter This argument the substring around which
      * inputString should be divided.
-     * 
+     *
      * @param includeNullStrings This argument specifies whether
      * zero-length substrings should be included in the output.
      *
@@ -237,7 +237,7 @@ namespace brick {
      * element being the remainder of the string after the first
      * maxSplit splits are performed.  If this argument is zero, then
      * the number of splits will not be limited.
-     * 
+     *
      * @return The return value is a vector of substrings as described
      * above.
      */
@@ -247,12 +247,12 @@ namespace brick {
                 bool includeNullStrings=false,
                 size_t maxSplit=0);
 
-  
-    /** 
+
+    /**
      * This function removes whitespace from the beginning and end of
      * a string.  If the second argument is specified, it indicates which
      * characters should be considered to be whitespace.
-     * 
+     *
      * @param inputString This is the string to be stripped.
      *
      * @param whiteSpace The characters of this string define what qualifies
@@ -266,7 +266,7 @@ namespace brick {
                 std::string const& whiteSpace=" \t\n");
 
 
-    /** 
+    /**
      * This function returns a copy of the input argument in which
      * end-of-line markers have been inserted to wrap the string at a
      * specified line length.  Wrapping will only occur at places where
@@ -293,12 +293,12 @@ namespace brick {
      * will return
      *
      *   "This is a\n> string\n> to be\n> wrapped.\n> Yesyesyes\n> indeed"
-     * 
+     *
      * @param inputString This argument is the string to be wrapped.
-     * 
+     *
      * @param fillPrefix This prefix will be inserted immediately after
      * each newline in the output string.
-     * 
+     *
      * @param width This argument specifies the target line length for
      * the returned string.  Individual lines will only exceed this
      * length if there are words in the input string that have more
@@ -323,7 +323,7 @@ namespace brick {
                std::string const& eolString="\n");
 
   } // namespace utilities
-  
+
 } // namespace brick
 
 
@@ -334,7 +334,7 @@ namespace brick {
 namespace brick {
 
   namespace utilities {
-    
+
     // Converts the string inputString to Type.
     template <class Type>
     Type
@@ -354,7 +354,7 @@ namespace brick {
     }
 
   } // namespace utilities
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_UTILITIES_STRINGMANIPULATION_HH */

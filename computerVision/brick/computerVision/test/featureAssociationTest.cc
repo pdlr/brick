@@ -20,7 +20,7 @@ namespace {
 
   class SimilarityFunctor {
   public:
-    
+
     SimilarityFunctor(double sigma) : m_sigma(sigma) {}
     ~SimilarityFunctor() {}
 
@@ -29,7 +29,7 @@ namespace {
       double distance = brick::numeric::magnitude<double>(feature1 - feature0);
       return std::exp(-(distance * distance) / (2.0 * m_sigma * m_sigma));
     }
-    
+
   private:
     double m_sigma;
   };
@@ -40,7 +40,7 @@ namespace {
 namespace brick {
 
   namespace computerVision {
-    
+
     class FeatureAssociationTest
       : public brick::test::TestFixture<FeatureAssociationTest> {
 
@@ -54,7 +54,7 @@ namespace brick {
 
       // Tests.
       void testFeatureAssociation();
-      
+
     private:
 
     }; // class FeatureAssociationTest
@@ -138,9 +138,9 @@ namespace brick {
         BRICK_TEST_ASSERT(correspondences[ii].second
                         == features0.size() - ii - 1);
       }
-      
+
     }
-  
+
   } // namespace computerVision
 
 } // namespace brick
@@ -164,4 +164,3 @@ namespace {
 }
 
 #endif
-

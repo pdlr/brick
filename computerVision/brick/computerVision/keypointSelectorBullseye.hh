@@ -26,7 +26,7 @@ namespace brick {
   namespace computerVision {
 
     unsigned int const keypointBullseyeMaxRadius = 64;
-    
+
     template <class CoordinateType, class FloatType = double>
     struct KeypointBullseye {
       CoordinateType row;
@@ -59,7 +59,7 @@ namespace brick {
           seedPoints(),
           bullseye() {}
     };
-    
+
 
     /**
      ** This class template looks for bullseye targets in an input
@@ -80,9 +80,9 @@ namespace brick {
       // ========= Public member functions. =========
 
 
-      /** 
+      /**
        * Default constructor.
-       * 
+       *
        * @param maxNumberOfBullseyes Use this argument to indicate how
        * many bullseye targets you expect to find in the image.
        *
@@ -90,7 +90,7 @@ namespace brick {
        * the biggest bullseye you expect to see.  For example, if the
        * biggest bullseye you expect to see is 20 pixels across, set
        * this to 10 (because radius is half of diameter).
-       * 
+       *
        * @param minRadius Use this argument to indicate the size of
        * the smallest bullseye you expect to see.  For example, if the
        * smallest bullseye you expect to see is 8 pixels across, set
@@ -115,18 +115,18 @@ namespace brick {
                                bool isGeneralPositionRequired = true);
 
 
-      /** 
+      /**
        * Given a keypoint, find its subpixel (general position)
        * location.  This function is exposed publically to give the
        * user flexibility in finding locations in modified version of
        * the original image.
-       * 
+       *
        * @param inputKeypoint This argument is the keypoint to be
        * fine-tuned.
-       * 
+       *
        * @param inImage This argument is the input image against which
        * to compute the refined position.
-       * 
+       *
        * @return The return value is a copy of the input keypoint with
        * its row and column updated to subpixel values.
        */
@@ -135,24 +135,24 @@ namespace brick {
         KeypointBullseye<brick::common::Int32, FloatType> const& inputKeypoint,
         Image<GRAY8> const& inImage);
 
-      
-      /** 
+
+      /**
        * Return the keypoints detected during the most recent call to
        * member function setImage().
-       * 
+       *
        * @return The return value is vector of KeypointBullseye instances.
        */
       std::vector< KeypointBullseye<brick::common::Int32, FloatType> >
       getKeypoints() const;
 
 
-      /** 
+      /**
        * Return the keypoints detected during the most recent call to
        * member function setImage().
-       * 
+       *
        * @param iterator This argument must be a writable iterator
        * pointing to KeypoindBullseye<brick::common::Int32>.
-       * 
+       *
        * @param threshold Increasing this threshold eliminates weaker
        * corners from the output.
        */
@@ -161,58 +161,58 @@ namespace brick {
       getKeypoints(Iter iterator, FloatType threshold = 0.0) const;
 
 
-      /** 
+      /**
        * Return the keypoints detected during the most recent call to
        * member function setImage(), and use subpixel interpolation to
        * refine their positions.
-       * 
+       *
        * @return The return value is vector of KeypointBullseye instances.
        */
       std::vector< KeypointBullseye<FloatType, FloatType> >
       getKeypointsGeneralPosition() const;
 
-      
-      /** 
+
+      /**
        * Return the keypoints detected during the most recent call to
        * member function setImage(), and use subpixel interpolation to
        * refine their positions.
-       * 
+       *
        * @param iterator This argument must be a writable iterator
        * pointing to KeypoindBullseye<FloatType>.
-       * 
+       *
        * @param threshold Increasing this threshold eliminates weaker
        * corners from the output.
        */
       template <class Iter>
       void
       getKeypointsGeneralPosition(Iter iterator) const;
-      
-      
-      /** 
+
+
+      /**
        * Process an image to find keypoints.
-       * 
+       *
        * @param inImage This argument is the image in which to look
        * for keypoints.
        */
       void
       setImage(Image<GRAY8> const& inImage);
-      
 
-      /** 
+
+      /**
        * Process a region of an image to find keypoints.
-       * 
+       *
        * @param inImage This argument is the image in which to look
        * for keypoints.
-       * 
+       *
        * @param startRow This argument helps to specify the upper-left
        * corner of the region to be searched.
-       * 
+       *
        * @param startColumn This argument helps to specify the upper-left
        * corner of the region to be searched.
-       * 
+       *
        * @param stopRow This argument helps to specify the lower-right
        * corner of the region to be searched.
-       * 
+       *
        * @param stopColumn This argument  helps to specify the lower-right
        * corner of the region to be searched.
        */
@@ -248,7 +248,7 @@ namespace brick {
             area(0),
             radius(0) {}
       };
-      
+
 
       // Accumulate statistics related to the difference between two
       // pixel values.
@@ -269,7 +269,7 @@ namespace brick {
                          brick::common::UInt32 numberOfRows,
                          brick::common::UInt32 numberOfColumns) const;
 
-      
+
       bool
       countTransitions(std::vector<brick::common::UInt8> const& spoke,
                        brick::common::UInt32 numberOfTransitions,
@@ -278,8 +278,8 @@ namespace brick {
                        brick::common::UInt8& lightColor,
                        brick::common::UInt32 minRadius,
                        brick::common::UInt32& actualRadius) const;
-      
-      
+
+
       // Make sure bounding box of processing region is sane.
       void
       checkAndRepairRegionOfInterest(brick::common::UInt32& startRow,
@@ -295,7 +295,7 @@ namespace brick {
       std::vector<ComponentDescription>
       describeComponents(Image<GRAY32> const& labelImage,
                          unsigned int const numberOfComponents);
-      
+
       bool
       estimateBullseye(
         brick::geometry::Bullseye2D<FloatType>& bullseye,
@@ -303,7 +303,7 @@ namespace brick {
           edgePositions,
         brick::common::UInt32 numberOfTransitions) const;
 
-      
+
       // Estimate how much the target is squished along each axis.  Is
       // it circular?  Elliptical?
       void
@@ -314,7 +314,7 @@ namespace brick {
         KeypointBullseye<brick::common::Int32, FloatType>& keypoint) const;
 
 
-      
+
       // Figure out what "normal" is for the asymmetry measure, and
       // pick a threshold that's low enough.  Low enough means that
       // only interesting pixels have a lower score from
@@ -349,7 +349,7 @@ namespace brick {
                          brick::common::UInt32 startColumn,
                          brick::common::UInt32 stopRow,
                          brick::common::UInt32 stopColumn);
-      
+
       inline bool
       testAndRecordEdges(
         Image<GRAY1> const& edgeImage,
@@ -367,7 +367,7 @@ namespace brick {
         }
         return false;
       }
-        
+
 
       inline bool
       testAndRecordEdgesDiagonal(
@@ -392,7 +392,7 @@ namespace brick {
         return false;
       }
 
-      
+
       // Compute a measure of bullseye-ness that's more expensive --
       // and more accurate -- than asymmetry, and Fill out a KeyPoint
       // instance with the corresponding information.
@@ -415,7 +415,7 @@ namespace brick {
         FloatType asymmetryThreshold,
         bool forceAsymmetry = false) const;
 
-      
+
       // Insert the new keypoint into a sorted vector, discarding the
       // worst point if the addition would make the vector longer than
       // maxNumberOfBullseyes.
@@ -439,7 +439,7 @@ namespace brick {
                        brick::common::UInt32 minRadius,
                        brick::common::UInt32 maxRadius,
                        FloatType& goodness) const;
-      
+
 
       // Private data members.
 
@@ -450,7 +450,7 @@ namespace brick {
       std::vector< std::vector< brick::numeric::Vector2D<FloatType> > >
         m_edgePositions;
 
-      bool m_isGeneralPositionRequired;      
+      bool m_isGeneralPositionRequired;
       std::vector< KeypointBullseye<brick::common::Int32, FloatType> > m_keypointVector;
       std::vector< KeypointBullseye<FloatType, FloatType> > m_keypointGPVector;
       brick::common::UInt32 m_maxNumberOfBullseyes;
@@ -462,7 +462,7 @@ namespace brick {
     };
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

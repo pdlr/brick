@@ -19,11 +19,11 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     /**
      ** This class does lookup-table-based warping of images.  Image
      ** resampling is done using bilinear interpolation.
-     ** 
+     **
      ** Template argument NumericType specifies the type (usually
      ** float or double) used to do bilinear interpolation.
      **
@@ -41,30 +41,30 @@ namespace brick {
 
       /* ******** Public member functions ******** */
 
-      /** 
+      /**
        * Default constructor makes a non-functioning ImageWarper instance.
        */
       ImageWarper();
 
-    
-      /** 
+
+      /**
        * This constructor fills in the ImageWarper state so that it's
        * ready to transform images.  Because it builds the lookup
        * table during construction, this constructor is likely to be
        * slow.
-       * 
+       *
        * @param inputRows This argument specifies the height, in
        * pixels, of the images that will be warped by the ImageWarper.
-       * 
+       *
        * @param inputColumns This argument specifies the width, in
        * pixels, of the images that will be warped by the ImageWarper.
-       * 
+       *
        * @param outputRows This argument specifies the height, in
        * pixels, of the result images (after warping).
-       * 
+       *
        * @param outputColumns This argument specifies the width, in
        * pixels, of the result images (after warping).
-       * 
+       *
        * @param transformer This argument is a functor that defines
        * the warp.  Please see the documentation for class ImageWarper
        * for more information.
@@ -73,7 +73,7 @@ namespace brick {
                   size_t outputRows, size_t outputColumns,
                   TransformFunctor transformer);
 
-    
+
       /**
        * Destroys the ImageWarper instance and deletes the internal data
        * store.
@@ -82,15 +82,15 @@ namespace brick {
       ~ImageWarper();
 
 
-      /** 
+      /**
        * Warps a single image using the pre-computed lookup table.
-       * 
+       *
        * @param inputImage This argument is the image to be warped.
-       * 
+       *
        * @param defaultValue This argument specifies what pixel value
        * to use for pixels in the output image that map to input-image
        * pixels that lie outside the boundaries of the input image.
-       * 
+       *
        * @return The return value is the warped output image.
        */
       template <ImageFormat InputFormat, ImageFormat OutputFormat>

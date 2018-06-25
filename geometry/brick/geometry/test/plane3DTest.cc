@@ -18,7 +18,7 @@
 namespace brick {
 
   namespace geometry {
-    
+
     class Plane3DTest : public brick::test::TestFixture<Plane3DTest> {
 
     public:
@@ -35,7 +35,7 @@ namespace brick {
     private:
 
       const double m_defaultTolerance;
-      
+
     }; // class Plane3DTest
 
 
@@ -81,7 +81,7 @@ namespace brick {
             plane0.getDirectionVector0(), plane0.getDirectionVector1()),
           0.0, m_defaultTolerance));
     }
-  
+
   } // namespace geometry
 
 } // namespace brick

@@ -15,7 +15,7 @@
 
 // This file is included by circle3D.hh, and should not be directly included
 // by user code, so no need to include circle3D.hh here.
-// 
+//
 // #include <brick/geometry/circle3D.hh>
 
 #include <brick/common/mathFunctions.hh>
@@ -24,7 +24,7 @@
 namespace brick {
 
   namespace geometry {
-    
+
     // The default constructor initializes to the unit circle in the
     // X-Y plane.
     template <class Type>
@@ -38,7 +38,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // This constructor initializes the circle using explicitly
     // specified values.
     template <class Type>
@@ -64,7 +64,7 @@ namespace brick {
       }
     }
 
-    
+
     // The copy constructor deep copies its argument.
     template <class Type>
     Circle3D<Type>::
@@ -106,7 +106,7 @@ namespace brick {
       return this->m_basisVector1;
     }
 
-    
+
     // This member function returns a point on the perimiter of the
     // circle, rotated a user-specified angle around the circle,
     // from an arbitrary-but-unchanging start point.
@@ -119,7 +119,7 @@ namespace brick {
               + brick::common::cosine(angle) * m_basisVector0
               + brick::common::sine(angle) * m_basisVector1);
     }
-    
+
 
     /* ======= Non-member functions. ======= */
 
@@ -135,9 +135,9 @@ namespace brick {
     //          << " }";
     //   return stream;
     // }
-    
+
   } // namespace geometry
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_GEOMETRY_CIRCLE3D_IMPL_HH */

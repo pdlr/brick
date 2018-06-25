@@ -18,7 +18,7 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     // This function computes the histogram of an image.
     numeric::Array1D<brick::common::UInt32>
     getHistogram(const Image<GRAY8>& inputImage)
@@ -38,8 +38,8 @@ namespace brick {
       }
       return histogram;
     }
-  
-  
+
+
     // This function remaps the pixel values of the input image in such
     // a way that output pixel value increases monotonically with input
     // pixel value, and the histogram of the output image is nearly
@@ -63,6 +63,6 @@ namespace brick {
       return outputImage;
     }
 
-  } // namespace computerVision    
+  } // namespace computerVision
 
 } // namespace brick

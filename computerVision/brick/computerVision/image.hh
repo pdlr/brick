@@ -25,7 +25,7 @@ namespace brick {
    ** interface is not stable.
    **/
   namespace computerVision {
-    
+
     /**
      ** This class template represents a 2D image.  The template
      ** parameter indicates the format of the image, such as GRAY8,
@@ -82,16 +82,16 @@ namespace brick {
 
       /* ******** Public member functions ******** */
 
-      /** 
+      /**
        * Default constructor initializes to zero size.
        */
       Image()
         : brick::numeric::Array2D<PixelType>() {}
 
-    
-      /** 
+
+      /**
        * Constructs a "rows x columns" element image.
-       * 
+       *
        * @param numRows Number of rows in the image after successful
        * construction.
        *
@@ -100,36 +100,36 @@ namespace brick {
        */
       Image(size_t numRows, size_t numColumns)
         : brick::numeric::Array2D<PixelType>(numRows, numColumns) {}
-    
 
-      /** 
+
+      /**
        * The copy constructor does a shallow copy.  The newly created
        * image points to the same data as copied image.
-       * 
+       *
        * @param source The Image instance to be copied.
        */
       Image(const Image<FORMAT> &source)
         : brick::numeric::Array2D<PixelType>(source) {}
 
-    
-      /** 
+
+      /**
        * This constructor allows us to implicitly make an Image instance
        * from an Array2D.  As with the copy constructor, the newly
        * created image points to the same data as copied array.
-       * 
+       *
        * @param source The Array2D instance to be copied.
        */
       Image(const brick::numeric::Array2D<PixelType> &source)
         : brick::numeric::Array2D<PixelType>(source) {}
 
-    
+
       /**
        * Construct an image around external data.  Images constructed in
        * this way will not implement reference counting, and will not
        * delete dataPtr when done.  The elements of the Image are
        * generally organized in row-major order, however special case
        * formats such as YUV420 may specify their own ordering.
-       * 
+       *
        * @param numRows Number of rows in the image after successful
        * construction.
        *
@@ -140,7 +140,7 @@ namespace brick {
        * constructed Image should index.
        */
       Image(size_t numRows, size_t numColumns, PixelType* const dataPtr)
-        : brick::numeric::Array2D<PixelType>(numRows, numColumns, dataPtr) {}      
+        : brick::numeric::Array2D<PixelType>(numRows, numColumns, dataPtr) {}
 
 
       /**
@@ -149,7 +149,7 @@ namespace brick {
        * reference counting, and will delete dataPtr when done.  This
        * constructor is provide for ease of interaction with Array2D
        * classes.
-       * 
+       *
        * @param numRows Number of rows in the image after successful
        * construction.
        *
@@ -165,7 +165,7 @@ namespace brick {
       Image(size_t numRows, size_t numColumns, PixelType* const dataPtr,
             size_t* referenceCountPtr)
         : brick::numeric::Array2D<PixelType>(
-          numRows, numColumns, dataPtr, referenceCountPtr) {}      
+          numRows, numColumns, dataPtr, referenceCountPtr) {}
 
 
       /**
@@ -176,7 +176,7 @@ namespace brick {
       ~Image() {}
 
 
-      /** 
+      /**
        * Returns an image that references only a rectangular region of
        * interest drawn from *this.  The returned image will reference
        * the same memory, but may have different start, end, and
@@ -219,7 +219,7 @@ namespace brick {
        *   // along with fullImageP.
        *   subRegion(2, 3) = 90;
        * @endCode
-       *     
+       *
        * @param corner0 This argument and the next define the
        * subregion.  Corner0 is included in the region, but corner1 is
        * not.  It is an error if corner0 is not above and to the left
@@ -227,13 +227,13 @@ namespace brick {
        * zero, corner0.getColumn() is less than zero, corner0.getRow()
        * is greater than this->getRows(), or corner0.getColumn() is
        * greater than this->getColumns().
-       * 
+       *
        * @param corner1 This argument and the previous define the
        * subregion.  It is an error if corner1.getRow() is less than
        * zero, corner1.getColumn() is less than zero, corner1.getRow()
        * is greater than this->getRows(), or corner1.getColumn() is
        * greater than this->getColumns().
-       * 
+       *
        * @return The return value is a shallow copy of the selected
        * region of the original image.
        */
@@ -242,15 +242,15 @@ namespace brick {
              brick::numeric::Index2D const& corner1) {
         return Image<FORMAT>(this->getRegion(corner0, corner1));
       }
-      
 
-      /** 
+
+      /**
        * This assignment operator copies its argument into each pixel of
        * the image.  It is provided avoid an implicit cast when using
        * the corresponding Array2D operator.
-       * 
+       *
        * @param value This argument is the value to be copied.
-       * 
+       *
        * @return The return value is a reference to *this.
        */
       virtual
@@ -259,14 +259,14 @@ namespace brick {
         return brick::numeric::Array2D<PixelType>::operator=(value);
       }
 
-    
+
     private:
 
 
     };
 
   } // namespace computerVision
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_IMAGE_HH */

@@ -21,8 +21,8 @@ namespace brick {
 
   namespace computerVision {
 
-    
-    // This test is copied 
+
+    // This test is copied
     class ImagePyramidTest
       : public brick::test::TestFixture<ImagePyramidTest> {
 
@@ -40,7 +40,7 @@ namespace brick {
     private:
 
       double m_defaultTolerance;
-      
+
     }; // class ImagePyramidTest
 
 
@@ -94,7 +94,7 @@ namespace brick {
                  true);
       }
 #endif
-      
+
       Image<RGB8> inputImageRGB = readPPM8(getTestImageFileNamePPM0());
       // Image<RGB8> inputImageRGB2 = readPPM8(getTestImageFileNamePPM0());
       // PixelRGB8 pixel;
@@ -111,7 +111,7 @@ namespace brick {
       std::cout << "ET: " << time1 - time0 << " to build a pyramid for a "
                 << inputImageGray.rows() << "x" << inputImageGray.columns()
                 << " RGB image." << std::endl;
-      
+
     }
 
   } // namespace computerVision

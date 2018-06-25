@@ -27,11 +27,11 @@ namespace brick {
 
     void
     private_unregisterTestFixture(RunnableObject& testFixture);
-    
-      
+
+
 #ifndef BRICK_TEST_NO_AUTOMATIC_REGISTRATION
 
-    /** 
+    /**
      * This function Registers a test fixture with the pre-written
      * main() function so that it will be run automatically if the
      * user chooses to link with libbrickTestAutoMain.  This function
@@ -46,7 +46,7 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This function unregisters a test fixture with the pre-written
      * main() function so that it will not be be run automatically if
      * the user chooses to link with libbrickTestAutoMain.  It undoes
@@ -68,7 +68,7 @@ namespace brick {
 
     inline void
     unregisterTestFixture(RunnableObject&) {}
-    
+
 #endif /* #ifndef BRICK_TEST_NO_AUTOMATIC_REGISTRATION */
 
   } // namespace test

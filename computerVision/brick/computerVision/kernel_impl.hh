@@ -15,14 +15,14 @@
 
 // This file is included by kernel.hh, and should not be directly included
 // by user code, so no need to include kernel.hh here.
-// 
+//
 // #include <brick/computerVision/kernel.hh>
 
 
 namespace brick {
 
   namespace computerVision {
-    
+
     // Default constructor initializes to zero size.
     template <class ELEMENT_TYPE>
     Kernel<ELEMENT_TYPE>::
@@ -34,8 +34,8 @@ namespace brick {
     {
       // Empty.
     }
-    
-    
+
+
     // The copy constructor does a shallow copy.
     template <class ELEMENT_TYPE>
     Kernel<ELEMENT_TYPE>::
@@ -47,8 +47,8 @@ namespace brick {
     {
       // Empty.
     }
-      
-    
+
+
     // This constructor allows us to implicitly make a Kernel instance
     // from an Array2D.
     template <class ELEMENT_TYPE>
@@ -61,7 +61,7 @@ namespace brick {
     {
       // Empty.
     }
-    
+
 
     // Construct a kernel around external data.
     template <class ELEMENT_TYPE>
@@ -127,7 +127,7 @@ namespace brick {
       // Not separable.
       return m_data.copy();
     }
-    
+
 
     // This method is only valid for separable kernels; it returns
     // the separable kernel component which is parallel to the columns
@@ -142,7 +142,7 @@ namespace brick {
       return columnComponent;
     }
 
-    
+
     // This member function returns the number of columns in the kernel.
     template <class ELEMENT_TYPE>
     size_t
@@ -182,7 +182,7 @@ namespace brick {
       return m_data.rows();
     }
 
-  
+
     // This method allows the user to set the contents of the kernel.
     template <class ELEMENT_TYPE>
     void
@@ -213,7 +213,7 @@ namespace brick {
       m_separableColumns = rowArray.size();
       m_separableRows = columnArray.size();
     }
-    
+
   } // namespace computerVision
 
 } // namespace brick

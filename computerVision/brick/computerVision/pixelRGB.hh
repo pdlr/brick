@@ -19,27 +19,27 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     template<class Type>
     struct PixelRGB
     {
-      /** 
+      /**
        * This constructor makes no guarantees about the color of the
        * pixel.
        */
       PixelRGB()
         : red(), green(), blue() {}
 
-    
-      /** 
+
+      /**
        * This constructor explicitly sets the pixel value.
-       * 
+       *
        * @param redValue This argument specifies the red value for the
        * new pixel.
-       * 
+       *
        * @param greenValue This argument specifies the green value for
        * the new pixel.
-       * 
+       *
        * @param blueValue This argument specifies the blue value for
        * the new pixel.
        */
@@ -54,15 +54,15 @@ namespace brick {
           green(static_cast<Type>(scalar)),
           blue(static_cast<Type>(scalar)) {}
 
-      
+
       template <class OtherType>
       PixelRGB(PixelRGB<OtherType> const& other)
         : red(static_cast<Type>(other.red)),
           green(static_cast<Type>(other.green)),
           blue(static_cast<Type>(other.blue)) {}
 
-      
-      /** 
+
+      /**
        * The destructor deletes cleans up for deletion.
        */
       ~PixelRGB() {}
@@ -77,7 +77,7 @@ namespace brick {
         return *this;
       }
 
-      
+
       template <class OtherType>
       PixelRGB<Type>&
       operator=(PixelRGB<OtherType> const& other) {
@@ -86,16 +86,16 @@ namespace brick {
         blue = static_cast<Type>(other.blue);
         return *this;
       }
-      
 
-      /** 
+
+      /**
        * This member function copies the pixel component values, in
        * order, from consecutive iterator targets, incrementing the
        * iterator after each copy.
-       * 
+       *
        * @param iter This argument is the iterator from which to copy the
        * pixel components.
-       * 
+       *
        * @return The return value is a reference to iter after the
        * copying and incrementing is done.
        */
@@ -104,14 +104,14 @@ namespace brick {
       copyFromIterator(Iter& iter);
 
 
-      /** 
+      /**
        * This member function assigns the pixel component values, in
        * order, to consecutive iterator targets, incrementing the
        * iterator after each assignment.
-       * 
+       *
        * @param iter This argument is the iterator to which to copy the
        * pixel components.
-       * 
+       *
        * @return The return value is a reference to iter after the
        * copying and incrementing is done.
        */
@@ -129,13 +129,13 @@ namespace brick {
 
       /* ====== Public arithmetic operators ====== */
 
-      /** 
-       * This operator adds the color component values of its argument to the 
+      /**
+       * This operator adds the color component values of its argument to the
        * corresponding values of its *this.
-       * 
+       *
        * @param other The color component values of other will be
        * added to *this.
-       * 
+       *
        * @return The return value is a reference to *this.
        */
       template <class OtherType>
@@ -143,13 +143,13 @@ namespace brick {
       operator+=(PixelRGB<OtherType> const& other);
 
 
-      /** 
-       * This operator adds the color component values of its argument to the 
+      /**
+       * This operator adds the color component values of its argument to the
        * corresponding values of its *this.
-       * 
+       *
        * @param other The color component values of other will be
        * added to *this.
-       * 
+       *
        * @return The return value is a reference to *this.
        */
       template <class OtherType>
@@ -157,13 +157,13 @@ namespace brick {
       operator-=(PixelRGB<OtherType> const& other);
 
 
-      /** 
+      /**
        * This operator divides each color component of *this by the
        * the value of its argument.
-       * 
+       *
        * @param scalar This is the value by which to divide each color
        * component of *this.
-       * 
+       *
        * @return The return value is a reference to *this.
        */
       template <class Scalar>
@@ -171,13 +171,13 @@ namespace brick {
       operator*=(Scalar const& scalar);
 
 
-      /** 
+      /**
        * This operator divides each color component of *this by the
        * the value of its argument.
-       * 
+       *
        * @param scalar This is the value by which to divide each color
        * component of *this.
-       * 
+       *
        * @return The return value is a reference to *this.
        */
       template <class Scalar>
@@ -187,11 +187,11 @@ namespace brick {
 
       /* ====== Static member functions ====== */
 
-      /** 
+      /**
        * This static member function indicates whether or not a pixel
        * instance is memory identical to a contiguous array of Component
        * type.
-       * 
+       *
        * @return The return value is true if the pixel structure is not
        * padded by the compiler.
        */
@@ -209,16 +209,16 @@ namespace brick {
     typedef PixelRGB<brick::common::Float64> PixelRGBFloat64;
 
 
-    /** 
+    /**
      * This operator multiplies the color component values of a pixel
      * by a scalar.
-     * 
+     *
      * @param scalar Each color component will be multiplied by this
      * value.
-     * 
+     *
      * @param pixel1 The color component values of this pixel will be
      * multiplied by the scalar.
-     * 
+     *
      * @return The return value is the result of the multiplication.
      */
     template<class Scalar, class Type>
@@ -226,16 +226,16 @@ namespace brick {
     operator*(Scalar scalar, PixelRGB<Type> const& pixel1);
 
 
-    /** 
+    /**
      * This operator multiplies the color component values of a pixel
      * by a scalar.
-     * 
+     *
      * @param pixel1 The color component values of this pixel will be
      * multiplied by the scalar.
-     * 
+     *
      * @param scalar Each color component will be multiplied by this
      * value.
-     * 
+     *
      * @return The return value is the result of the multiplication.
      */
     template<class Scalar, class Type>
@@ -243,16 +243,16 @@ namespace brick {
     operator*(PixelRGB<Type> const& pixel1, Scalar scalar);
 
 
-    /** 
+    /**
      * This operator adds the values of the individual color
      * components of its arguments.
-     * 
+     *
      * @param pixel0 The color component values of pixel1 will be
      * added to the color component values of this pixel.
-     * 
+     *
      * @param pixel1 The color component values of this pixel will be
      * added to the color component values of pixel0.
-     * 
+     *
      * @return The return value is a pixel in which each color
      * component value is the sum of the corresponding values in the
      * two input pixels.
@@ -262,16 +262,16 @@ namespace brick {
     operator+(PixelRGB<Type> const& pixel0, PixelRGB<Type> const& pixel1);
 
 
-    /** 
+    /**
      * This operator subtracts the values of the individual color
      * components of its arguments.
-     * 
+     *
      * @param pixel0 The color component values of pixel1 will be
      * subtracted from the color component values of this pixel.
-     * 
+     *
      * @param pixel1 The color component values of this pixel will be
      * subtracted from the color component values of pixel0.
-     * 
+     *
      * @return The return value is a pixel in which each color component
      * value is the difference of the corresponding values in the two
      * input pixels.
@@ -279,18 +279,18 @@ namespace brick {
     template<class Type>
     inline PixelRGB<Type>
     operator-(PixelRGB<Type> const& pixel0, PixelRGB<Type> const& pixel1);
-    
 
-    /** 
+
+    /**
      * This operator divides the color component values of a pixel
      * by a scalar.
-     * 
+     *
      * @param pixel1 The color component values of this pixel will be
      * divided by the scalar.
-     * 
+     *
      * @param scalar Each color component will be divided by this
      * value.
-     * 
+     *
      * @return The return value is the result of the multiplication.
      */
     template<class Scalar, class Type>
@@ -298,16 +298,16 @@ namespace brick {
     operator/(PixelRGB<Type> const& pixel1, Scalar scalar);
 
 
-    /** 
+    /**
      * This operator multiplies the values of the individual color
      * components of its arguments.
-     * 
+     *
      * @param pixel0 The color component values of this pixel will be
      * multiplied by the color component values of pixel1.
-     * 
+     *
      * @param pixel1 The color component values of pixel0 will be
      * multiplied by the color component values of this pixel.
-     * 
+     *
      * @return The return value is a pixel in which each color
      * component value is the product of the corresponding values in
      * the two input pixels.
@@ -317,16 +317,16 @@ namespace brick {
     operator*(PixelRGB<Type> const& pixel0, PixelRGB<Type> const& pixel1);
 
 
-    /** 
+    /**
      * This operator divides the values of the individual color
      * components of its arguments.
-     * 
+     *
      * @param pixel0 The color component values this pixel will be
      * divided by the color component values of pixel1.
-     * 
+     *
      * @param pixel1 The color component values of pixel0 will be
      * divided by the color component values of this pixel.
-     * 
+     *
      * @return The return value is a pixel in which each color
      * component value is the dividend of the corresponding values in
      * the two input pixels.
@@ -336,14 +336,14 @@ namespace brick {
     operator/(PixelRGB<Type> const& pixel0, PixelRGB<Type> const& pixel1);
 
 
-    /** 
+    /**
      * This operator returns true if the contents of the two argments
      * are identical, false otherwise.
-     * 
+     *
      * @param pixel0 This argument is the first pixel value to be compared.
-     * 
+     *
      * @param pixel1 This argument is the second pixel value to be compared.
-     * 
+     *
      * @return The return value indicates whether the two pixels have
      * identical values.
      */
@@ -351,17 +351,17 @@ namespace brick {
     inline bool
     operator==(PixelRGB<Type> const& pixel0, PixelRGB<Type> const& pixel1);
 
-  } // namespace computerVision    
+  } // namespace computerVision
 
 } // namespace brick
-  
+
 /* ============ Definitions of inline & template functions ============ */
 
 
 namespace brick {
 
   namespace computerVision {
-    
+
     // This member function copies the pixel component values, in
     // order, from consecutive iterator targets, incrementing the
     // iterator after each copy.
@@ -395,7 +395,7 @@ namespace brick {
 
 
 
-    // This operator adds the color component values of its argument to the 
+    // This operator adds the color component values of its argument to the
     // corresponding values of its *this.
     template<class Type>
     template <class OtherType>
@@ -409,8 +409,8 @@ namespace brick {
       return *this;
     }
 
-    
-    // This operator adds the color component values of its argument to the 
+
+    // This operator adds the color component values of its argument to the
     // corresponding values of its *this.
     template<class Type>
     template <class OtherType>
@@ -424,7 +424,7 @@ namespace brick {
       return *this;
     }
 
-    
+
     // This operator divides each color component of *this by the
     // the value of its argument.
     template<class Type>
@@ -439,7 +439,7 @@ namespace brick {
       return *this;
     }
 
-    
+
     // This operator divides each color component of *this by the
     // the value of its argument.
     template<class Type>
@@ -454,7 +454,7 @@ namespace brick {
       return *this;
     }
 
-    
+
     // This static member function indicates whether or not a pixel
     // instance is memory identical to a contiguous array of Component
     // type.
@@ -577,7 +577,7 @@ namespace brick {
     }
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_PIXELRGB_HH */

@@ -20,17 +20,17 @@ namespace brick {
 
   namespace iso12233 {
 
-    /** 
+    /**
      * This function implements the ISO-12233 e-SFR algorithm as
      * closely as possible.
-     * 
+     *
      * @param inputPatch This argument is the image patch to be
      * analyzed.  It must contain a nearly-vertical dark->light edge,
      * with the dark portion on the left side of the patch.  The patch
      * should be significantly wider (2x or so) than argument
      * windowSize.  The patch should have plenty (say, more than 10,
      * fewer than 1000) rows.
-     * 
+     *
      * @param windowSize This argument is the size of the window
      * surrounding the edge that should be evaluated.  Choose a number
      * high enough (greater than 50 or so) to be sure that any
@@ -45,7 +45,7 @@ namespace brick {
      * oecf(inputPatch(rr, cc));" This is also a good way to select
      * specific color channels if you want to measure their MTFs
      * independently.
-     * 
+     *
      * @return The return value is the computed MTF of the imaging
      * system, assuming the physical edge being observed is a perfect
      * instantaneous transition from dark to light.
@@ -58,9 +58,9 @@ namespace brick {
              std::size_t windowSize,
              ConversionFunction const& oecf);
 
-    
+
   } // namespace iso12233
-  
+
 } // namespace brick
 
 

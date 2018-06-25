@@ -30,15 +30,15 @@ namespace brick {
      **/
     class RunnableObject {
     public:
-      /** 
+      /**
        * Constructor registers with the pre-written main() function so
        * that it will be run automatically if the user chooses to link
        * with libbrickTestAutoMain.
        */
       RunnableObject() {registerTestFixture(*this);}
 
-      
-      /** 
+
+      /**
        * Destructor un-registers with the pre-written main() function
        * so that the no-longer-valid RunnableObject instance won't be
        * invoked automatically if the user chooses to link with
@@ -47,17 +47,17 @@ namespace brick {
       virtual
       ~RunnableObject() {unregisterTestFixture(*this);}
 
-      
-      /** 
+
+      /**
        * Pure virtual run() method will dispatch to the run() method
        * of the subclass.
-       * 
+       *
        * @return The return value should indicate success or failure
        * of the test.
        */
       virtual bool
       run() = 0;
-      
+
     };
 
   } // namespace test

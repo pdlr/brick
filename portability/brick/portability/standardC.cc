@@ -19,7 +19,7 @@
 namespace brick {
 
   namespace portability {
-    
+
 #if HAVE_SNPRINTF
 #else
 
@@ -94,7 +94,7 @@ namespace brick {
     }
 
 #endif /* #if HAVE_SNPRINTF */
-  
+
   } // namespace portability
 
 } // namespace brick

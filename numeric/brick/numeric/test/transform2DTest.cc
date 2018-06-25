@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/numeric/test/transform2DTest.cpp
-* 
+*
 * Source file defining Transform2DTest class.
 *
 * Copyright (C) 2004-2011 David LaRose, dlr@cs.cmu.edu
@@ -72,7 +72,7 @@ namespace brick {
     }
 
   } // namespace numeric
- 
+
 } // namespace brick
 
 

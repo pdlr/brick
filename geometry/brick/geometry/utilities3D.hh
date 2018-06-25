@@ -38,20 +38,20 @@ namespace brick {
     bool
     checkIntersect(Ray3D<Type> const& ray, Triangle3D<Type> const& triangle,
                    brick::numeric::Vector3D<Type>& intersect);
-    
+
 
     template <class Type>
     bool
     checkIntersect(Ray3D<Type> const& ray, Triangle3D<Type> const& triangle,
                    Type& lambda);
 
-    
+
     template <class Type>
     bool
     checkIntersect(Ray3D<Type> const& ray, Triangle3D<Type> const& triangle,
                    brick::numeric::Vector3D<Type>& intersect, Type& lambda);
 
-    
+
     template <class Type>
     brick::numeric::Vector3D<Type>
     findIntersect(Ray3D<Type> const& ray, Plane3D<Type> const& plane);
@@ -73,27 +73,27 @@ namespace brick {
     Circle3D<Type>
     operator*(brick::numeric::Transform3D<Type> const& transform,
               Circle3D<Type> const& inputCircle);
-    
+
 
     template <class Type>
     Plane3D<Type>
     operator*(brick::numeric::Transform3D<Type> const& transform,
               Plane3D<Type> const& inputPlane);
-    
+
 
     template <class Type>
     Ray3D<Type>
     operator*(brick::numeric::Transform3D<Type> const& transform,
               Ray3D<Type> const& inputRay);
-    
-    
+
+
     template <class Type>
     Triangle3D<Type>
     operator*(brick::numeric::Transform3D<Type> const& transform,
               Triangle3D<Type> const& inputTriangle);
-    
+
   } // namespace utilities
-    
+
 } // namespace brick
 
 

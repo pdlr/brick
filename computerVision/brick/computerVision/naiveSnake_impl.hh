@@ -16,7 +16,7 @@
 
 // This file is included by naiveSnake.hh, and should not be directly included
 // by user code, so no need to include naiveSnake.hh here.
-// 
+//
 // #include <brick/computerVision/naiveSnake.hh>
 
 #include <brick/computerVision/getEuclideanDistance.hh>
@@ -29,7 +29,7 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     template <class FloatType>
     Snake<FloatType>::
     Snake()
@@ -70,7 +70,7 @@ namespace brick {
       }
     }
 
-    
+
     template <class FloatType>
     std::vector< brick::numeric::Vector2D<FloatType> >
     Snake<FloatType>::
@@ -82,7 +82,7 @@ namespace brick {
                   "Interest image has not been set.  Please call "
                   "setInterestImage() before calling run().");
       }
-      
+
       // If snake has not been seeded, pick a reasonable default.
       if(m_snake.size() == 0) {
         size_t rows = m_externalForceGradientX.rows();
@@ -118,7 +118,7 @@ namespace brick {
       if(m_isConverged) {
         return m_snake;
       }
-      
+
       // Check state.
       if(m_externalForceGradientX.size() == 0) {
         BRICK_THROW(brick::common::StateException, "Snake::runOneIteration()",
@@ -132,7 +132,7 @@ namespace brick {
                   "Snake has not been initialized.  Please call "
                   "setSeedPoints() before calling runOneIteration().");
       }
-    
+
       if(m_snake.size() < 4) {
         BRICK_THROW(brick::common::StateException, "Snake::runOneIteration()",
                   "Snake is too short.");
@@ -202,8 +202,8 @@ namespace brick {
       }
       m_cornerDeletionThreshold = std::cos(theta);
     }
-    
-    
+
+
     template <class FloatType>
     void
     Snake<FloatType>::
@@ -250,7 +250,7 @@ namespace brick {
       m_isConverged = false;
     }
 
-    
+
     template <class FloatType>
     void
     Snake<FloatType>::
@@ -275,14 +275,14 @@ namespace brick {
           betaVector.push_back(newBeta);
           return;
         }
-      
+
         // If the new point is sufficiently far from the previous point,
         // we can continue (leave the while loop).
         spanLength = brick::numeric::magnitude<FloatType>(newPoint - snake[snakeSize - 1]);
         if(spanLength >= m_minSpanLength) {
           break;
         }
-        
+
         // If we get here, then the new point is very close to the
         // previous point.  Delete the previous pont to make the space
         // is bigger.  We assume that smaller beta values are more
@@ -302,7 +302,7 @@ namespace brick {
           return;
         }
       }
-      
+
       // If the new point is very far from the previous point, add
       // some intermediate points to fill up the gap.
       if(spanLength >= m_maxSpanLength) {
@@ -351,13 +351,13 @@ namespace brick {
         // startIndex = 1;
         // stopIndex = snake.size() - 1;
       }
-      
+
       for(size_t snakeIndex = 1; snakeIndex < snake.size() - 1; ++snakeIndex) {
         size_t previousIndex =
           (snakeIndex == 0) ? snake.size() - 1 : snakeIndex - 1;
         size_t nextIndex =
           (snakeIndex == snake.size() - 1) ? 0 : snakeIndex + 1;
-          
+
         const brick::numeric::Vector2D<FloatType>& currentPoint = snake[snakeIndex];
         const brick::numeric::Vector2D<FloatType>& previousPoint = snake[previousIndex];
         const brick::numeric::Vector2D<FloatType>& nextPoint = snake[nextIndex];
@@ -375,7 +375,7 @@ namespace brick {
       }
     }
 
-      
+
     template <class FloatType>
     brick::numeric::Array2D<FloatType>
     Snake<FloatType>::
@@ -383,19 +383,19 @@ namespace brick {
     {
       // For a traditional snake, we want to minimize the total
       // energy:
-      // 
+      //
       //   E_tot = \alpha * E_stretch + \beta * E_bend + \kappa * E_ext
-      // 
+      //
       // Where
-      // 
+      //
       //   E_stretch = \sum_j((x_j - x_j-1)^2 + (y_j - y_j-1)^2)
       //   E_bend = \sum_j(((x_j+1 - x_j) - (x_j - x_j-1))^2
       //                  + ((y_j+1 - y_j) - (y_j - y_j-1))^2)
       //   E_ext = \sum_j(-1 * InterestArray[x_j, y_j])
-      // 
+      //
       // To find the minimum, we do the usual trick of setting the
       // gradient to zero.
-      // 
+      //
       //   For all j,
       //   0 = \alpha * \partial(E_stretch) / \partial(x_j)
       //       + \beta * \partial(E_bend) / \partial(x_j)
@@ -436,16 +436,16 @@ namespace brick {
       // the same value, except at corner points, which have beta set
       // to 0.0.  Redoing the above derivation with unique betas for
       // each value of j, and rearranging, we get:
-      // 
+      //
       //   For all j,
       //   (\kappa * \partial(InterestArray) / \partial(x_j)
       //    + \gamma * previousX_j)
-      //   = (x_j * (4 * \alpha + 8 * \beta_j 
+      //   = (x_j * (4 * \alpha + 8 * \beta_j
       //             + 2 * \beta_j-1 + 2 * \beta_j+1 + \gamma)
       //      - x_j-1 * (2 * \alpha + 4 * \beta_j + 4 * \beta_j-1)
       //      - x_j+1 * (2 * \alpha + 4 * \beta_j + 4 * \beta_j+1)
       //      + x_j-2 * (2 * \beta_j-1) + x_j+2 * (2 * \beta_j+1))
-      //      
+      //
       // We still have a special case to consider: what if we have a
       // non-closed snake with fixed endpoints?  In this case, \beta_0
       // and \beta_N-1 are set to 0.0, and the equations for j == 0
@@ -459,7 +459,7 @@ namespace brick {
       // is connected to the head (j = 0), so that indices j == 0, j
       // == -1, j == -2, etc. are equivalent to j == N, j == N - 1, j
       // = N - 2, etc.
-      // 
+      //
       // These equations, which we'll call the force balance equations,
       // are reflected in AMatrix and the vectors returned by
       // buildForceBalanceRHS().  We invert AMatrix because we want to
@@ -468,12 +468,12 @@ namespace brick {
       // We use the single letter variable N because we'll be indexing
       // with it many times below.
       size_t N = numberOfSnakePoints;
-      
+
       // Argh!  It hurts to make (& invert) such a big matrix, knowing
       // that it'll be mostly zeros.
       brick::numeric::Array2D<FloatType> AMatrix(N, N);
       AMatrix = 0.0;
-    
+
       // Handle the special case of a non-closed, fixed endpoints snake.
       size_t loopStartRow = 0;
       size_t loopStopRow = N;
@@ -538,7 +538,7 @@ namespace brick {
       // We use the single letter variable N because we'll be indexing
       // with it many times below.
       size_t N = snake.size();
-      
+
       brick::numeric::BilinearInterpolator<FloatType> xInterp(m_externalForceGradientX);
       brick::numeric::BilinearInterpolator<FloatType> yInterp(m_externalForceGradientY);
       if((!m_isClosed) && m_isFixed) {
@@ -558,7 +558,7 @@ namespace brick {
           m_gamma * snake[N - 1].y()
           + m_kappa * yInterp(snake[N - 1].y(), snake[N - 1].x()));
       }
-    
+
       for(size_t rowIndex = 1; rowIndex < N - 1; ++rowIndex) {
         const brick::numeric::Vector2D<FloatType>& snakePoint = snake[rowIndex];
         xRHS[rowIndex] = (m_gamma * snakePoint.x()
@@ -567,8 +567,8 @@ namespace brick {
                           + m_kappa * yInterp(snakePoint.y(), snakePoint.x()));
       }
     }
-  
-  
+
+
     template <class FloatType>
     bool
     Snake<FloatType>::
@@ -585,8 +585,8 @@ namespace brick {
       }
       return convergedFlag;
     }
-  
-    
+
+
     template <class FloatType>
     std::pair< std::vector< brick::numeric::Vector2D<FloatType> >, std::vector<FloatType> >
     Snake<FloatType>::
@@ -594,7 +594,7 @@ namespace brick {
     {
       std::vector< brick::numeric::Vector2D<FloatType> > newSnake;
       std::vector<FloatType> newBetaVector;
-      
+
       size_t snakeIndex = 0;
       for(; snakeIndex < m_snake.size() - 1; ++snakeIndex) {
         this->addResampledSpan(newSnake, newBetaVector,
@@ -634,7 +634,7 @@ namespace brick {
     }
 
   } // namespace computerVision
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_NAIVESNAKE_IMPL_HH */

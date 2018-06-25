@@ -19,7 +19,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     // Default constructor initializes to 0.0;
     IEEEFloat32::
     IEEEFloat32()
@@ -143,7 +143,7 @@ namespace brick {
       }
     }
 
-    
+
 
     // This private member function implements the actual conversion
     // from binary representation to float.
@@ -205,8 +205,8 @@ namespace brick {
 
       // Probably need some more checking here.
     }
-  
-  
+
+
     // This private member function implements the actual conversion
     // from float to binary representation.
     void
@@ -238,7 +238,7 @@ namespace brick {
 
       // Remember the offset required by IEEE format.
       exponentAsInt += 127;
-    
+
       // Now we know the mantissa (it's what's left in value).
       int mantissaAsInt = static_cast<int>(value * pow(2.0, 23));
 

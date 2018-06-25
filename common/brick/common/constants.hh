@@ -24,7 +24,7 @@
 namespace brick {
 
   namespace common {
-    
+
     namespace constants {
 
       // Basic physical constants.
@@ -49,7 +49,7 @@ namespace brick {
       BRICK_CONSTEXPR brick::common::Float64 threePiOverFour = piOverTwo + piOverFour;
       BRICK_CONSTEXPR brick::common::Float64 threePiOverTwo = pi + piOverTwo;
       BRICK_CONSTEXPR brick::common::Float64 twoPi = 2.0 * pi;
-      
+
     } // namespace contants
 
   } // namespace common

@@ -65,7 +65,7 @@ namespace brick {
                                    typename Functor::result_type>
     {
     public:
-      /** 
+      /**
        * Constructor.
        *
        * @param functor This argument is the function object to be
@@ -85,13 +85,13 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * Destructor.
        */
       virtual ~GradientFunction() {}
 
-      
-      /** 
+
+      /**
        * This method numerically approximates the gradient of
        * this->operator() by divided differences.  This method should
        * often be overridden by a subclass.
@@ -99,17 +99,17 @@ namespace brick {
        * This function will throw ValueException if you set
        * constructor argument epsilon small enough that, when added to
        * the elements of theta, it gets completely rounded away.
-       * 
+       *
        * @param theta The point around which to compute the gradient.
        * @return The computed gradient.
        */
       typename Functor::argument_type
       gradient(const typename Functor::argument_type& theta);
 
-      
-      /** 
+
+      /**
        * This method evaluates the function value a the specified point.
-       * 
+       *
        * @param theta The point at which to evaluate the function.
        * @return The function value at theta.
        */
@@ -138,7 +138,7 @@ namespace brick {
     {
     public:
 
-      /** 
+      /**
        * Constructor.
        *
        * @param functor This argument is the function object to be
@@ -153,13 +153,13 @@ namespace brick {
                               Scalar errorTolerance = 1.0e-5);
 
 
-      /** 
+      /**
        * Destructor.
        */
       virtual ~GradientFunctionRidders() {}
 
-      
-      /** 
+
+      /**
        * This method numerically approximates the gradient of
        * this->operator().
        *
@@ -184,9 +184,9 @@ namespace brick {
       Scalar m_maxStepBound;
       Scalar m_minStepBound;
       typename Functor::argument_type m_stepBounds;
-      
+
     }; // class GradientFunctionRidders
-    
+
   } // namespace optimization
 
 } // namespace brick
@@ -273,7 +273,7 @@ namespace brick {
     {
       // Empty.
     }
-        
+
 
     template <class Functor, class Scalar>
     typename Functor::argument_type
@@ -286,7 +286,7 @@ namespace brick {
           m_stepBounds[ii] = m_maxStepBound;
         }
       }
-      
+
       // Return value must be a vector, so use argument_type.
       typename Functor::argument_type result(theta.size());
       typename Functor::argument_type errorEstimateVector(theta.size());
@@ -300,7 +300,7 @@ namespace brick {
       for(size_t index = 0; index < theta.size(); ++index) {
         zeroPoint[index] = theta[index];
       }
-      
+
       // Compute each partial derivative.
       for(size_t index = 0; index < theta.size(); ++index) {
 
@@ -323,7 +323,7 @@ namespace brick {
           // index'th element of zeroPoint, and then tell m_ridders to
           // evaluate around theta[index].
           zeroPoint[index] = 0.0;
-          
+
           Scalar errorValue;
           m_ridders.getFunctor().setTargetDimension(index);
           m_ridders.getFunctor().setZeroPoint(zeroPoint);
@@ -356,7 +356,7 @@ namespace brick {
       }
       return result;
     }
-    
+
   } // namespace optimization
 
 } // namespace brick

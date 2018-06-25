@@ -20,7 +20,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     /**
      ** A simple class template to help you avoid writing "if(myVar >
      ** maxVal) {maxVal = myVar; bestIndex = ii;} all over your code.
@@ -31,7 +31,7 @@ namespace brick {
     {
     public:
 
-      /** 
+      /**
        * Default constructor initializes max to a very small number
        * (either std::numeric_limits<Type>::min(),
        * -std::numeric_limits<Type>::max(), depending on the
@@ -45,7 +45,7 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This constructor allows the user to explicitly set the starting
        * maxValue, and the default payload.
        */
@@ -53,17 +53,17 @@ namespace brick {
         : ExtremumRecorder< Type, Payload, std::greater<Type> >(
             maxValue, payload, std::greater<Type>()) {}
 
-      
+
       // Member function test(), and its alias evaluate(), are
       // inherited from ExtremumRecorder.
       //
       // bool evaluate(const Type& value, const Payload& payload);
       // bool test(const Type& value, const Payload& payload);
 
-      
-      /** 
+
+      /**
        * This member function returns the saved maximum.
-       * 
+       *
        * @return The return value is the largest value passed to
        * member function test() since construction, or since the last
        * call to member function reset().
@@ -72,9 +72,9 @@ namespace brick {
       getMax() {return this->getMaximum();}
 
 
-      /** 
+      /**
        * This member function returns the saved maximum.
-       * 
+       *
        * @return The return value is the largest value passed to
        * member function test() since construction, or since the last
        * call to member function reset().
@@ -89,7 +89,7 @@ namespace brick {
       // const Payload& getPayload();
 
 
-      /** 
+      /**
        * This member function resets the saved maximum just as if
        * *this were freshly constructed with the default constructor.
        */
@@ -104,7 +104,7 @@ namespace brick {
         }
       }
     };
-    
+
   } // namespace numeric
 
 } // namespace brick

@@ -20,32 +20,32 @@
 namespace brick {
 
   namespace geometry {
-    
+
     /**
      ** The Ellipse2D class represents an ellipse in 2D space.
      **/
     template <class Type>
     class Ellipse2D {
     public:
-      
-      /** 
+
+      /**
        * The default constructor initializes to the unit circle.
        */
       inline
       Ellipse2D();
 
-      
-      /** 
+
+      /**
        * This constructor initializes the ellipse using explicitly
        * specified values.
-       * 
+       *
        * @param origin This argument specifies the position of the
        * geometric center of the ellipse.
-       * 
+       *
        * @param semimajorAxis This argument represents a vector pointing
        * from the center of the ellipse to one of the two points on
        * the boundary of the ellipse that are farthest from the center.
-       * 
+       *
        * @param ratio This argument specifies the length of the minor
        * axis as a proportion of the length of the major axis.  It must
        * be less than or equal to 1.0.
@@ -55,18 +55,18 @@ namespace brick {
                 brick::numeric::Vector2D<Type> const& semimajorAxis,
                 Type ratio);
 
-    
-      /** 
+
+      /**
        * This constructor initializes the ellipse using explicitly
        * specified values.
-       * 
+       *
        * @param origin This argument specifies the position of the
        * geometric center of the ellipse.
-       * 
+       *
        * @param semimajorAxis This argument represents a vector pointing
        * from the center of the ellipse to one of the two points on
        * the boundary of the ellipse that are farthest from the center.
-       * 
+       *
        * @param semiminorAxis This argument represents a vector
        * pointing from the center of the ellipse to one of the two
        * points on the boundary of the ellipse that are closest to the
@@ -80,34 +80,34 @@ namespace brick {
                 brick::numeric::Vector2D<Type> const& semimajorAxis,
                 brick::numeric::Vector2D<Type> const& semiminorAxis);
 
-    
-      /** 
+
+      /**
        * The copy constructor deep copies its argument.
-       * 
+       *
        * @param source This argument is the class instance to be copied.
        */
       inline
       Ellipse2D(Ellipse2D<Type> const& source);
 
 
-      /** 
+      /**
        * Destructor.
        */
       ~Ellipse2D() {}
 
 
-      /** 
+      /**
        * The assignment operator deep copies its argument.
-       * 
+       *
        * @param source This argument is the class instance to be copied.
-       * 
+       *
        * @return The return value is a reference to *this.
        */
       inline Ellipse2D<Type>&
       operator=(Ellipse2D<Type> const& source);
 
 
-      /** 
+      /**
        * Estimate ellipse parameters from a series of points on the
        * ellipse.  After calling this member function, *this will
        * match the input points as closely as possible.  This member
@@ -129,7 +129,7 @@ namespace brick {
        *
        * @param beginIter This argument is an iterator pointing to the
        * beginning of a sequence of Vector2D<Type> instances.
-       * 
+       *
        * @param endIter This argument is an iterator pointing to the
        * end of the sequence of Vector2D<Type> instances.
        */
@@ -137,18 +137,18 @@ namespace brick {
       void
       estimate(IterType beginIter, IterType endIter);
 
-      
-      /** 
+
+      /**
        * This member function returns the geometric center of the ellipse.
-       * 
+       *
        * @return The return value is the point at the centroid of the
        * ellipse.
        */
       brick::numeric::Vector2D<Type> const&
       getOrigin() const {return m_origin;}
-      
 
-      /** 
+
+      /**
        * This member function returns a vector pointing from the
        * center of the ellipse to the point on the edge of the ellipse
        * that is farthest from the center.  Note that there are two
@@ -157,15 +157,15 @@ namespace brick {
        * consistent for the life of the ellipse, and will reflect the
        * semimajor axis specified as a constructor argument (if the
        * three-argument constructor was used).
-       * 
+       *
        * @return The return value is a vector pointing along the
        * semimajor axis of the ellipse.
        */
       brick::numeric::Vector2D<Type> const&
       getSemimajorAxis() const {return m_semimajorAxis;}
-      
 
-      /** 
+
+      /**
        * This member function returns a vector pointing from the
        * center of the ellipse to the point on the edge of the ellipse
        * that is closest to the center.  Note that there are two such
@@ -174,13 +174,13 @@ namespace brick {
        * the life of the ellipse, and will be normally be rotated 90
        * degrees counterclockwise from the vector returned by
        * getSemiMajorAxis().
-       * 
+       *
        * @return The return value is a vector pointing along the
        * semiminor axis of the ellipse.
        */
       brick::numeric::Vector2D<Type> const&
       getSemiminorAxis() const {return m_semiminorAxis;}
-      
+
 
     private:
       // Private member functions.
@@ -192,8 +192,8 @@ namespace brick {
         brick::numeric::Vector2D<Type>& origin,
         brick::numeric::Vector2D<Type>& semimajorAxis,
         brick::numeric::Vector2D<Type>& semiminorAxis);
-      
-      
+
+
       // Private data members.
       brick::numeric::Vector2D<Type> m_origin;
       brick::numeric::Vector2D<Type> m_semimajorAxis;
@@ -208,9 +208,9 @@ namespace brick {
     template <class Type>
     std::ostream&
     operator<<(std::ostream& stream, Ellipse2D<Type> const& ellipse);
-    
+
   } // namespace geometry
-    
+
 } // namespace brick
 
 

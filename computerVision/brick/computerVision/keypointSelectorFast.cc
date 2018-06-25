@@ -42,7 +42,7 @@ namespace brick {
       this->checkAndRepairRegionOfInterest(
         inImage, pixelMeasurementRadius, startRow, startColumn,
         stopRow, stopColumn);
-      
+
       // Sparsely sample over entire image to accumulate statistics
       // about what the normal pixel intensity difference is.
       std::vector<common::Int16> intensityDifferenceVector;
@@ -55,7 +55,7 @@ namespace brick {
       }
 
       // Figure out how many keypoints we can reasonably expect to see
-      // in our sparse vector of samples.  
+      // in our sparse vector of samples.
       unsigned int numPixels =
         (stopRow - startRow) * (stopColumn - startColumn);
       unsigned int numSamples = intensityDifferenceVector.size();
@@ -80,7 +80,7 @@ namespace brick {
       }
     }
 
-    
+
     std::vector<KeypointFast>
     KeypointSelectorFast::
     getKeypoints() const
@@ -109,12 +109,12 @@ namespace brick {
 
       // Discard last image's keypoints.
       m_keypointVector.clear();
-      
+
       // Make sure the passed-in image bounds are legal.
       this->checkAndRepairRegionOfInterest(
         inImage, pixelMeasurementRadius, startRow, startColumn,
         stopRow, stopColumn);
-      
+
       if(m_threshold == 0) {
         // Rosten's paper suggests that they've simply hard-coded a
         // constant threshold in their keypoint selection algorithm.
@@ -143,8 +143,8 @@ namespace brick {
     {
       m_threshold = threshold;
     }
-    
-    
+
+
     void
     KeypointSelectorFast::
     checkAndRepairRegionOfInterest(Image<GRAY8> const& inImage,
@@ -248,7 +248,7 @@ namespace brick {
         maxAccumulator[0][ii] = std::max(maxAccumulator[0][ii],
                                          common::Int16(0));
       }
-      
+
       // Second, third, and fourth rows get minimum and maximum values
       // among neighborhoods of size two, four, and eight,
       // respectively.  Note that the use of std::min() instead of
@@ -306,7 +306,7 @@ namespace brick {
       common::Int16 difference1 = testValue - image(row, column + 3);
       common::Int16 difference3 = testValue - image(row, column - 3);
       common::Int16 difference2 = testValue - image(row + 3, column);
-      
+
       // Much more optimizing to do here.  For now, we'll go ahead with a
       // boneheaded approach to get things running.
       int positiveCount = (int(difference0 > threshold)
@@ -384,7 +384,7 @@ namespace brick {
       }
       return false;
     }
-    
+
   } // namespace brick
 
 } // namespace computerVision

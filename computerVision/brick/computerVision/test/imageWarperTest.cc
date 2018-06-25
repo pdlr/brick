@@ -18,7 +18,7 @@ namespace num = brick::numeric;
 namespace brick {
 
   namespace computerVision {
-    
+
     class ImageWarperTest
       : public brick::test::TestFixture<ImageWarperTest> {
 
@@ -40,7 +40,7 @@ namespace brick {
       struct ShiftWarpFunctor {
         ShiftWarpFunctor(FloatType xShift, FloatType yShift)
           : m_shift(xShift, yShift) {}
-        
+
         num::Vector2D<FloatType>
         operator()(num::Vector2D<FloatType> const& arg) const {return arg + m_shift;}
 
@@ -51,7 +51,7 @@ namespace brick {
       struct StretchXWarpFunctor {
         StretchXWarpFunctor(FloatType stretchFactor)
           : m_factor(stretchFactor) {}
-        
+
         num::Vector2D<FloatType>
         operator()(num::Vector2D<FloatType> const& arg) const {
           return num::Vector2D<FloatType>(arg.x() / m_factor, arg.y());
@@ -78,11 +78,11 @@ namespace brick {
       bool
       isInBounds(num::Vector2D<FloatType> const& coordinate,
                  Image<Format> const& image);
-      
-        
+
+
       double m_defaultTolerance;
       float m_defaultFloatTolerance;
-      
+
     }; // class ImageWarperTest
 
 
@@ -115,7 +115,7 @@ namespace brick {
 
       size_t outputRows = 5 * xImage.rows();
       size_t outputColumns = 6 * xImage.rows();
-      
+
       common::Float64 defaultValue = -1.0;
       common::Float64 xShift = -1.2;
       common::Float64 yShift = -2.5;
@@ -123,7 +123,7 @@ namespace brick {
       ShiftWarpFunctor<common::Float64> shiftWarpFunctor(xShift, yShift);
       StretchXWarpFunctor<common::Float64> stretchXWarpFunctor(scaleFactor);
       StretchYWarpFunctor<common::Float64> stretchYWarpFunctor(scaleFactor);
-      
+
       ImageWarper< common::Float64, ShiftWarpFunctor<common::Float64> > shiftWarper(
         xImage.rows(), xImage.columns(), outputRows, outputColumns,
         shiftWarpFunctor);
@@ -220,7 +220,7 @@ namespace brick {
 
       size_t outputRows = 5 * xImage.rows();
       size_t outputColumns = 6 * xImage.rows();
-      
+
       PixelRGBFloat32 defaultValue(-1.0, -1.0, -1.0);
       common::Float32 xShift = -1.2;
       common::Float32 yShift = -2.5;
@@ -228,7 +228,7 @@ namespace brick {
       ShiftWarpFunctor<common::Float32> shiftWarpFunctor(xShift, yShift);
       StretchXWarpFunctor<common::Float32> stretchXWarpFunctor(scaleFactor);
       StretchYWarpFunctor<common::Float32> stretchYWarpFunctor(scaleFactor);
-      
+
       ImageWarper< common::Float32, ShiftWarpFunctor<common::Float32> > shiftWarper(
         xImage.rows(), xImage.columns(), outputRows, outputColumns,
         shiftWarpFunctor);
@@ -324,8 +324,8 @@ namespace brick {
               && (coordinate.x() < FloatType((image.columns() - 1)))
               && (coordinate.y() < FloatType((image.rows() - 1))));
     }
-    
-    
+
+
   } // namespace computerVision
 
 } // namespace brick
@@ -349,4 +349,3 @@ namespace {
 }
 
 #endif
-

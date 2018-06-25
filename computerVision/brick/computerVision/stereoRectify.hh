@@ -24,34 +24,34 @@ namespace brick {
 
 #if 0  /* Still in progress. */
 
-    /** 
+    /**
      * Given rectified intrinsics and extrinsics for a stereo camera,
      * calculate the reprojection matrix Q that transforms image
-     * coordinates and disparities into 3D coordinates. 
+     * coordinates and disparities into 3D coordinates.
      *
      * @param intrinsics0 This argument specifies the camera
      * intrinsics corresponding to rectified images from the first
      * (usually left) camera.
-     * 
+     *
      * @param intrinsics1 This argument specifies the camera
      * intrinsics corresponding to rectified images from the second
      * (usually right) camera.  The value of this argument is normally
      * identical to intrinsics0, and is permitted to differ from
      * intrinsics0 only in the value of the U coordinate projection
      * center.
-     * 
+     *
      * @param camera0Tworld This argument specifies the coordinate
      * transformation taking world coordinates and returning the
      * corresponding coordinates in the camera coordinate system
      * corresponding to intrinsics0.
-     * 
+     *
      * @param camera1Tworld This argument specifies the coordinate
      * transformation taking world coordinates and returning the
      * corresponding coordinates in the camera coordinate system
      * corresponding to intrinsics1.  The rotation component of this
      * transform must be identical to the rotation component of
      * camera0Tworld, although the translation components may differ.
-     * 
+     *
      * @return The return value is the calculated reprojection matrix.
      */
     template <class FloatType>
@@ -65,7 +65,7 @@ namespace brick {
 
 #endif /* #if 0 */
 
-    /** 
+    /**
      * Given rectified intrinsics and a stereo baseline for a camera pair,
      * calculate the reprojection matrix Q that transforms image
      * coordinates and disparities into 3D coordinates.  That is,
@@ -91,24 +91,24 @@ namespace brick {
      * normally the case for conventional rectified stereo pairs.
      *
      * Note that it is permissible to have non-square image pixels.
-     * 
+     *
      * @param intrinsics0 This argument specifies the camera
      * intrinsics corresponding to rectified images from the first
      * (usually left) camera.
-     * 
+     *
      * @param intrinsics1 This argument specifies the camera
      * intrinsics corresponding to rectified images from the second
      * (usually right) camera.  The value of this argument is normally
      * identical to intrinsics0, and is permitted to differ from
      * intrinsics0 only in the value of the U coordinate projection
      * center.
-     * 
+     *
      * @param This argument specifies the offset between left and
      * right cameras, which is assumed to be exactly in the direction
      * of the camera X axis.  Positive numbers mean that the right
      * camera is displaced from the left camera in the positive X
      * direction.
-     * 
+     *
      * @return The return value is the calculated reprojection matrix.
      */
     template <class FloatType>
@@ -117,8 +117,8 @@ namespace brick {
       CameraIntrinsicsPinhole<FloatType> const& intrinsics0,
       CameraIntrinsicsPinhole<FloatType> const& intrinsics1,
       FloatType baseline);
-    
-    
+
+
     /**
      * This function implements the stereo rectification algorithm of
      * Fusello, Trucco, and Verri [1].  Our convention is that, from
@@ -134,50 +134,50 @@ namespace brick {
      * [1] A. Fusiello, E. Trucco, and A. Verri. A compact algorithm for
      * rectification of stereo pairs. Machine Vision and Applications,
      * 2000.
-     * 
+     *
      * @param intrinsics0 This argument represents the intrinsic
      * calibration parameters of the left camera of the stereo pair.
-     * 
+     *
      * @param intrinsics1 This argument represents the intrinsic
      * calibration parameters of the right camera of the stereo pair.
-     * 
+     *
      * @param camera0Tworld This argument represents the extrinsic
      * parameters of the left camera of the stereo pair.  It specifies
      * a coordinate transform that takes coordinates in the world
      * coordinate system and returns camera0 coordinates representing
      * the same point.
-     * 
+     *
      * @param camera1Tworld This argument represents the extrinsic
      * parameters of the right camera of the stereo pair.  It specifies
      * a coordinate transform that takes coordinates in the world
      * coordinate system and returns camera1 coordinates representing
      * the same point.
-     * 
+     *
      * @param rectifiedIntrinsics0 This argument returns the updated
      * (rectified) intrinsics of the left camera.
-     * 
+     *
      * @param rectifiedIntrinsics1 This argument returns the updated
      * (rectified) intrinsics of the right camera.
-     * 
+     *
      * @param rcamera0Tworld This argument returns the rectified
      * extrinsic parameters of the left camera.  That is, it specifies
      * a coordinate transform that takes coordinates in the world
      * coordinate system and returns coordinates in the coordinate
      * system of the rectified left camera that represent the same
      * point.
-     * 
+     *
      * @param rcamera1Tworld This argument returns the rectified
      * extrinsic parameters of the right camera.  That is, it
      * specifies a coordinate transform that takes coordinates in the
      * world coordinate system and returns coordinates in the
      * coordinate system of the rectified right camera that represent
      * the same point.
-     * 
+     *
      * @param image0Trimage0 This argument returns a homography that
      * takes pixel coordinates in the unrectified left image, and
      * returns pixel coordinates in rectified left image that refer to
      * the same point in the image.
-     * 
+     *
      * @param image1Trimage1 This argument returns a homography that
      * takes pixel coordinates in the unrectified right image, and
      * returns pixel coordinates in rectified right image that refer to
@@ -214,16 +214,16 @@ namespace brick {
      *
      * @param intrinsics0 This argument represents the intrinsic
      * calibration parameters of the left camera of the stereo pair.
-     * 
+     *
      * @param intrinsics1 This argument represents the intrinsic
      * calibration parameters of the right camera of the stereo pair.
-     * 
+     *
      * @param camera0Tworld This argument represents the extrinsic
      * parameters of the left camera of the stereo pair.  It specifies
      * a coordinate transform that takes coordinates in the world
      * coordinate system and returns camera0 coordinates representing
      * the same point.
-     * 
+     *
      * @param camera1Tworld This argument represents the extrinsic
      * parameters of the right camera of the stereo pair.  It specifies
      * a coordinate transform that takes coordinates in the world
@@ -236,32 +236,32 @@ namespace brick {
      * the 10-argument version of stereoRectify(), which sets the
      * returned focal length to the average of the focal lengths of
      * intrinsics0 and intrinsics1.
-     * 
+     *
      * @param rectifiedIntrinsics0 This argument returns the updated
      * (rectified) intrinsics of the left camera.
-     * 
+     *
      * @param rectifiedIntrinsics1 This argument returns the updated
      * (rectified) intrinsics of the right camera.
-     * 
+     *
      * @param rcamera0Tworld This argument returns the rectified
      * extrinsic parameters of the left camera.  That is, it specifies
      * a coordinate transform that takes coordinates in the world
      * coordinate system and returns coordinates in the coordinate
      * system of the rectified left camera that represent the same
      * point.
-     * 
+     *
      * @param rcamera1Tworld This argument returns the rectified
      * extrinsic parameters of the right camera.  That is, it
      * specifies a coordinate transform that takes coordinates in the
      * world coordinate system and returns coordinates in the
      * coordinate system of the rectified right camera that represent
      * the same point.
-     * 
+     *
      * @param image0Trimage0 This argument returns a homography that
      * takes pixel coordinates in the unrectified left image, and
      * returns pixel coordinates in rectified left image that refer to
      * the same point in the image.
-     * 
+     *
      * @param image1Trimage1 This argument returns a homography that
      * takes pixel coordinates in the unrectified right image, and
      * returns pixel coordinates in rectified right image that refer to
@@ -280,7 +280,7 @@ namespace brick {
                   numeric::Transform3D<FloatType>& rcamera1Tworld,
                   numeric::Transform2D<FloatType>& image0Trimage0,
                   numeric::Transform2D<FloatType>& image1Trimage1);
-    
+
 
   } // namespace computerVision
 

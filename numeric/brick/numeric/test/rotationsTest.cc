@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/numeric/test/rotationsTest.cpp
-* 
+*
 * Source file defining rotationsTest class.
 *
 * Copyright (C) 2005, 2011 David LaRose, dlr@cs.cmu.edu
@@ -34,7 +34,7 @@ namespace brick {
       void testAxisAngleToTransform3D();
 
       void testEulerToTransform3D();
-    
+
       void testQuaternionToAxisAngle();
       void testQuaternionToRollPitchYaw();
       void testQuaternionToTransform3D();
@@ -59,9 +59,9 @@ namespace brick {
       void assertSimilar(Vector3D<double> const& v0,
                          Vector3D<double> const& v1) const;
 
-      
+
       double m_defaultTolerance;
-    
+
     }; // class RotationsTest
 
 
@@ -84,7 +84,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testQuaternionToTransform3D);
 
       BRICK_TEST_REGISTER_MEMBER(testRodriguesToTransform3D);
-      
+
       BRICK_TEST_REGISTER_MEMBER(testRollPitchYawToAxisAngle);
       BRICK_TEST_REGISTER_MEMBER(testRollPitchYawToQuaternion);
       BRICK_TEST_REGISTER_MEMBER(testRollPitchYawToTransform3D);
@@ -100,10 +100,10 @@ namespace brick {
     RotationsTest::
     testAxisAngleToQuaternion()
     {
-    
+
     }
 
-  
+
     void
     RotationsTest::
     testAxisAngleToRollPitchYaw()
@@ -111,7 +111,7 @@ namespace brick {
 
     }
 
-  
+
     void
     RotationsTest::
     testAxisAngleToTransform3D()
@@ -119,7 +119,7 @@ namespace brick {
 
     }
 
-  
+
     void
     RotationsTest::
     testEulerToTransform3D()
@@ -158,7 +158,7 @@ namespace brick {
       this->assertSimilar(xf0, xf3);
     }
 
-  
+
     void
     RotationsTest::
     testQuaternionToAxisAngle()
@@ -166,7 +166,7 @@ namespace brick {
 
     }
 
-  
+
     void
     RotationsTest::
     testQuaternionToRollPitchYaw()
@@ -174,7 +174,7 @@ namespace brick {
 
     }
 
-  
+
     void
     RotationsTest::
     testQuaternionToTransform3D()
@@ -182,7 +182,7 @@ namespace brick {
 
     }
 
-  
+
     void
     RotationsTest::
     testRodriguesToTransform3D()
@@ -230,10 +230,10 @@ namespace brick {
                          0.0, 0.0, 0.0, 1.0);
         this->assertSimilar(xf0, xf1, 1.0E-15);
       }
-      
+
     }
 
-    
+
     void
     RotationsTest::
     testRollPitchYawToAxisAngle()
@@ -241,7 +241,7 @@ namespace brick {
 
     }
 
-  
+
     void
     RotationsTest::
     testRollPitchYawToQuaternion()
@@ -249,7 +249,7 @@ namespace brick {
 
     }
 
-  
+
     void
     RotationsTest::
     testRollPitchYawToTransform3D()
@@ -257,7 +257,7 @@ namespace brick {
 
     }
 
-  
+
     void
     RotationsTest::
     testTransform3DToAxisAngle()
@@ -265,7 +265,7 @@ namespace brick {
 
     }
 
-  
+
     void
     RotationsTest::
     testTransform3DToQuaternion()
@@ -273,7 +273,7 @@ namespace brick {
 
     }
 
-  
+
     void
     RotationsTest::
     testTransform3DToRodrigues()
@@ -292,7 +292,7 @@ namespace brick {
 
     }
 
-  
+
     void
     RotationsTest::
     testTransform3DToRollPitchYaw()
@@ -317,7 +317,7 @@ namespace brick {
         }
       }
     }
-  
+
 
     void
     RotationsTest::
@@ -357,9 +357,9 @@ namespace brick {
       BRICK_TEST_ASSERT(approximatelyEqual(v0.y(), v1.y(), m_defaultTolerance));
       BRICK_TEST_ASSERT(approximatelyEqual(v0.z(), v1.z(), m_defaultTolerance));
     }
-    
+
   } // namespace numeric
-  
+
 } // namespace brick
 
 

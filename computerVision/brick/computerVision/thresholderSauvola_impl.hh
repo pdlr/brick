@@ -17,7 +17,7 @@
 // This file is included by thresholderSauvola.hh, and should not be
 // directly included by user code, so no need to include
 // thresholderSauvola.hh here.
-// 
+//
 // #include <brick/computerVision/thresholderSauvola.hh>
 
 namespace brick {
@@ -25,7 +25,7 @@ namespace brick {
   namespace computerVision {
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 
@@ -56,7 +56,7 @@ namespace brick {
     }
 
 
-    
+
     // Computes a thresholded image based on the input image
     // previously set by member function setImage().
     template <ImageFormat Format, class Config>
@@ -72,7 +72,7 @@ namespace brick {
       // This is the largest possible value for standard deviation of
       // pixel intensity.  Generally 1/2 of the maximum pixel value.
       FloatType const maxStdDev = Config::getMaxStdDev();
-      
+
       // We already know (because of checks in setImage() and
       // setWindowRadius()) that the image size is larger than
       // windowSize x windowSize.  This saves us from some error
@@ -110,7 +110,7 @@ namespace brick {
             roiBeginColumn, roiEndColumn, 0,
             static_cast<int32_t>(totalColumns),
             static_cast<int32_t>(windowSize));
- 
+
           // The algorithm needs the mean pixel value in the window.
           SumType pixelSum = this->m_sumIntegrator.getIntegral(
             brick::numeric::Index2D(roiBeginRow, roiBeginColumn),
@@ -118,11 +118,11 @@ namespace brick {
           FloatType localMean = static_cast<FloatType>(pixelSum) / windowArea;
 
           // We'll use the unbiased estimator for variance,
-          // 
+          //
           // @code
           //    var = (sum_i(x_i * x_i) - N * mu * mu) / (N - 1)
           // @endcode
-          // 
+          //
           // where mu is the sample mean, x_i are individual samples,
           // N is the nmber of samples, and sum_i denotes summation
           // over all of the samples.  Please see
@@ -144,7 +144,7 @@ namespace brick {
           FloatType multiplier = normalizedStdDev - FloatType(1);
           FloatType scaleFactor = FloatType(1) + this->m_kappa * multiplier;
           FloatType threshold = localMean * scaleFactor;
-          
+
           if(static_cast<FloatType>(this->m_inputImage(rr, cc)) > threshold) {
             outputImage(rr, cc) = Config::getWhiteValue();
           } else {
@@ -182,7 +182,7 @@ namespace brick {
       m_squaredSumIntegrator.setArray(
         inputImage, [](PixelType const& xx) {return xx * xx;});
     }
-    
+
   } // namespace computerVision
 
 } // namespace brick

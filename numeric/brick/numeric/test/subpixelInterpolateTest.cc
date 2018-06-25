@@ -30,7 +30,7 @@ namespace brick {
 
       SubpixelInterpolateTest();
       ~SubpixelInterpolateTest() {}
-    
+
       void setUp(const std::string&) {}
       void tearDown(const std::string&) {}
 
@@ -53,9 +53,9 @@ namespace brick {
         double value20, double value21, double value22,
         double& k0, double& k1, double& k2, double& k3, double& k4, double& k5);
 #endif /* if 0 */
-      
+
       double m_defaultTolerance;
-      
+
     }; // class SubpixelInterpolateTest
 
 
@@ -88,7 +88,7 @@ namespace brick {
           Array1D<double> xyVec(2);
           xyVec[0] = static_cast<double>(xx - 1);
           xyVec[1] = static_cast<double>(yy - 1);
-          
+
           myImage(yy, xx) =
             (dot<double>(xyVec, matrixMultiply<double>(AA, xyVec))
              + dot<double>(xyVec, bb) + cc);
@@ -119,7 +119,7 @@ namespace brick {
     testSubpixelInterpolate__TypeX3_etc()
     {
       // Set up a quadratic.
-      // 
+      //
       //   f(p) = 2*p^2 - p - 2
       //
       // Solving manually gives extremum at 0.25.
@@ -132,7 +132,7 @@ namespace brick {
           ++position) {
         myImage(position) = 2.0 * position * position - position - 2.0;
       }
-      
+
       // Try to recover the min value and location in several places.
       for(int p0 = 1; p0 < static_cast<int>(myImage.size()) - 1; ++p0) {
         double extremumPosition;
@@ -148,7 +148,7 @@ namespace brick {
         BRICK_TEST_ASSERT(
           approximatelyEqual(extremeValue, minValue, m_defaultTolerance));
       }
-    } 
+    }
 
 
     void
@@ -161,7 +161,7 @@ namespace brick {
       const double minValue = -5.0;
       const double targetRow = 3.4;
       const double targetColumn = 7.2;
-      
+
       Array2D<double> myImage(10, 10);
       for(int row = 0; row < static_cast<int>(myImage.rows()); ++row) {
         for(int column = 0; column < static_cast<int>(myImage.columns());
@@ -173,7 +173,7 @@ namespace brick {
                                + 2.0 * columnOffset * columnOffset
                                + 1.4 * columnOffset * rowOffset);
           myImage(row, column) = pixelValue;
-        }   
+        }
       }
 #else
       // Now a harder example:
@@ -206,9 +206,9 @@ namespace brick {
             (dot<double>(rcVec, matrixMultiply<double>(AA, rcVec))
              + dot<double>(rcVec, bb) + cc);
           myImage(row, column) = pixelValue;
-        }   
+        }
       }
-      
+
       // Try to recover the min value and location in several places.
       for(int r0 = 1; r0 < static_cast<int>(myImage.rows()) - 1; ++r0) {
         for(int c0 = 1; c0 < static_cast<int>(myImage.columns()) - 1; ++c0) {
@@ -233,7 +233,7 @@ namespace brick {
             approximatelyEqual(extremeValue, minValue, m_defaultTolerance));
         }
       }
-    } 
+    }
 
 
 #if 0
@@ -284,9 +284,9 @@ namespace brick {
       k5 = xVector(5);
     }
 #endif /* if 0 */
-    
+
   } // namespace numeric
-  
+
 } // namespace brick
 
 

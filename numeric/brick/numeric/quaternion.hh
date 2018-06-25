@@ -15,7 +15,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     /**
      ** This class implements a quaternion.  Among other things,
      ** quaternions are useful for expressing rigid rotations in 3D
@@ -32,16 +32,16 @@ namespace brick {
     class Quaternion {
     public:
 
-      /** 
+      /**
        * The default constructor initializes a quaternion with values
        * [1.0, 0.0, 0.0, 0.0].
        */
-      Quaternion() 
+      Quaternion()
         : m_s(1.0), m_i(0.0), m_j(0.0), m_k(0.0), m_isNormalized(true) {}
 
-      /** 
+      /**
        * This constructor explicitly sets the values of the quaternion.
-       * 
+       *
        * @param ss This parameter specifies the value of s, the real
        * component of the quaternion.
        *
@@ -60,13 +60,13 @@ namespace brick {
        * set this argument to true.
        */
       Quaternion(Type ss, Type ii, Type jj, Type kk,
-                 bool isAlreadyNormalized=false) 
+                 bool isAlreadyNormalized=false)
         : m_s(ss), m_i(ii), m_j(jj), m_k(kk),
           m_isNormalized(isAlreadyNormalized) {}
 
-      /** 
+      /**
        * The copy constructor deep copies its argument.
-       * 
+       *
        * @param source This parameter specifies the Quaternion instance
        * to be copied.
        */
@@ -74,17 +74,17 @@ namespace brick {
         m_s(source.m_s), m_i(source.m_i), m_j(source.m_j), m_k(source.m_k),
         m_isNormalized(source.m_isNormalized) {}
 
-      /** 
+      /**
        * The destructor destroys the Quaternion instance.
        */
       virtual
       inline
       ~Quaternion() {}
 
-      /** 
+      /**
        * This member function returns the real component of the
        * Quaternion.
-       * 
+       *
        * @return The return value is the real component of the
        * Quaternion.
        */
@@ -92,10 +92,10 @@ namespace brick {
       Type
       s() const { return m_s; };
 
-      /** 
+      /**
        * This member function returns the first imaginary component of
        * the Quaternion.
-       * 
+       *
        * @return The return value is the first imaginary component of
        * the Quaternion.
        */
@@ -103,10 +103,10 @@ namespace brick {
       Type
       i() const { return m_i; };
 
-      /** 
+      /**
        * This member function returns the second imaginary component of
        * the Quaternion.
-       * 
+       *
        * @return The return value is the second imaginary component of
        * the Quaternion.
        */
@@ -114,10 +114,10 @@ namespace brick {
       Type
       j() const { return m_j; };
 
-      /** 
+      /**
        * This member function returns the third imaginary component of
        * the Quaternion.
-       * 
+       *
        * @return The return value is the third imaginary component of
        * the Quaternion.
        */
@@ -125,7 +125,7 @@ namespace brick {
       Type
       k() const { return m_k; };
 
-      /** 
+      /**
        * This member function normalizes the Quaternion, first computing
        * the magnitude of the Quaternion, and then dividing each element
        * by that value.  Strictly speaking, the magnitude of a
@@ -136,17 +136,17 @@ namespace brick {
       isNormalized() {return m_isNormalized;}
 
 
-      /** 
+      /**
        * This member function computes and returns the magnitude of
        * the quaternion.
-       * 
+       *
        * @return The return value is the computed magnitude.
        */
       Type
       getMagnitude();
 
-      
-      /** 
+
+      /**
        * This member function normalizes the Quaternion, first computing
        * the magnitude of the Quaternion, and then dividing each element
        * by that value.  Strictly speaking, the magnitude of a
@@ -156,10 +156,10 @@ namespace brick {
       void
       normalize();
 
-      /** 
+      /**
        * This member function sets the values of the Quaternion
        * components explicitly.
-       * 
+       *
        * @param ss This parameter specifies the real component of the
        * Quaternion.
        *
@@ -185,9 +185,9 @@ namespace brick {
         m_isNormalized = isAlreadyNormalized;
       }
 
-      /** 
+      /**
        * The assignment operator simply deep copies its argument.
-       * 
+       *
        * @param source This argument is the Quaternion instance to be copied.
        *
        * @return The return value is a reference to *this.
@@ -199,7 +199,7 @@ namespace brick {
         m_isNormalized = source.m_isNormalized;
         return *this;
       }
-    
+
     private:
       // Components of the quaternion are listed in order.
       Type m_s;
@@ -213,14 +213,14 @@ namespace brick {
 
     /* ======================= Non-member functions ===================== */
 
-    /** 
+    /**
      * This function returns the conjugate of a Quaternion, in which the
      * sign of each imaginary component has been reversed.  Note that
      * for quaternions which represent rotation, the rotation
      * represented by the conjugate is also the inverse rotation.  That
      * is, if you rotate by a quaternion, q, and then rotate by
      * conjugate(q), you wind up exactly where you started.
-     * 
+     *
      * @param source This argument specifies the Quaternion whose
      * conjugate is to be computed.
      *
@@ -234,7 +234,7 @@ namespace brick {
       return Quaternion<Type>(source.s(), -(source.i()), -(source.j()),
                               -(source.k()));
     }
-  
+
   } // namespace numeric
 
 } // namespace brick

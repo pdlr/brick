@@ -44,6 +44,7 @@ namespace brick {
       /**
        * Build a Transform2D instance by explicitly setting element values
        * as if setting the elements of a 3x3 transformation matrix:
+       *
        *    [[a00, a01, a02],
        *     [a10, a11, a12],
        *     [a20, a21, a22]]
@@ -64,6 +65,26 @@ namespace brick {
       Transform2D(Type const& a00, Type const& a01, Type const& a02,
                   Type const& a10, Type const& a11, Type const& a12,
                   Type const& a20, Type const& a21, Type const& a22,
+                  bool doNormalize = false);
+
+
+      /**
+       * Build a Transform2D instance from a sequence that specifies
+       * element values in row major order.
+       *
+       *   [a0, a1, a2,
+       *    a3, a4, a5,
+       *    a6, a7, a8]]
+       *
+       * @param sequence A sequence of 8 or more elements that
+       * specifies the elements of the transform.  If the sequence has
+       * only 8 elements, then a value of Type(1.0) is used for the
+       * 9th element.
+       *
+       * @param doNormalize If true, the matrix will be rescaled so that its
+       * lower right element is 1.0.
+       */
+      Transform2D(std::initializer_list<Type> sequence,
                   bool doNormalize = false);
 
 

@@ -55,6 +55,39 @@ namespace brick {
     }
 
 
+    // Build a Transform2D instance from a sequence that specifies
+    // element values in row major order.
+    template <class Type>
+    Transform2D<Type>::
+    Transform2D(std::initializer_list<Type> sequence,
+                bool doNormalize)
+      : m_00(Type(1)), m_01(Type(0)), m_02(Type(0)),
+        m_10(Type(0)), m_11(Type(1)), m_12(Type(0)),
+        m_20(Type(0)), m_21(Type(0)), m_22(Type(1))
+    {
+      if(sequence.size() < 8) {
+        BRICK_THROW(common::ValueException, "Transform2D::Transform2D()",
+                    "Initialization list is not long enough.  Expected at "
+                    "least 8 elements.");
+      }
+      auto iter = sequence.begin();
+      m_00 = *iter; ++iter;
+      m_01 = *iter; ++iter;
+      m_02 = *iter; ++iter;
+      m_10 = *iter; ++iter;
+      m_11 = *iter; ++iter;
+      m_12 = *iter; ++iter;
+      m_20 = *iter; ++iter;
+      m_21 = *iter; ++iter;
+      if(iter != sequence.end()) {
+        m_22 = *iter;
+      }
+      if(doNormalize) {
+        this->normalize();
+      }
+    }
+
+
     // Build a Transform2D from a homogeneous 3x3 matrix.
     template <class Type>
     Transform2D<Type>::

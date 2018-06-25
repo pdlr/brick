@@ -70,6 +70,20 @@ namespace brick {
 
 
       /**
+       * Build a Transform3DTo2D instance from a sequence that specifies
+       * element values in row major order.
+       *
+       *   [a0, a1, a2, a3,
+       *    a4, a5, a6, a7
+       *    a8, a9, a10, a11]
+       *
+       * @param sequence A sequence of 12 or more elements that
+       * specifies the elements of the transform.
+       */
+      Transform3DTo2D(std::initializer_list<Type> sequence);
+
+
+      /**
        * Build a Transform3DTo2D from a homogeneous 3x4 matrix.
        *
        * @param source A 2D array containing the elements of the desired

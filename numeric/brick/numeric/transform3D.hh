@@ -78,6 +78,27 @@ namespace brick {
 
 
       /**
+       * Build a Transform3D instance from a sequence that specifies
+       * element values in row major order.
+       *
+       *   [a0, a1, a2, a3,
+       *    a4, a5, a6, a7
+       *    a8, a9, a10, a11,
+       *    a12, a13, a14, a15]
+       *
+       * @param sequence A sequence of 15 or more elements that
+       * specifies the elements of the transform.  If the sequence has
+       * only 15 elements, then a value of Type(1.0) is used for the
+       * 16th element.
+       *
+       * @param doNormalize If true, the matrix will be rescaled so that its
+       * lower right element is 1.0.
+       */
+      Transform3D(std::initializer_list<Type> sequence,
+                  bool doNormalize = false);
+
+
+      /**
        * Build a Transform3D from a homogeneous 4x4 matrix.
        *
        * @param source A 2D array containing the elements of the desired

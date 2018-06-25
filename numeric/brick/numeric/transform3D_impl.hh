@@ -59,6 +59,47 @@ namespace brick {
     }
 
 
+    // Build a Transform3D instance from a sequence that specifies
+    // element values in row major order.
+    template <class Type>
+    Transform3D<Type>::
+    Transform3D(std::initializer_list<Type> sequence,
+                bool doNormalize)
+      : m_00(Type(1)), m_01(Type(0)), m_02(Type(0)), m_03(Type(0)),
+        m_10(Type(0)), m_11(Type(1)), m_12(Type(0)), m_13(Type(0)),
+        m_20(Type(0)), m_21(Type(0)), m_22(Type(1)), m_23(Type(0)),
+        m_30(Type(0)), m_31(Type(0)), m_32(Type(0)), m_33(Type(1))
+    {
+      if(sequence.size() < 15) {
+        BRICK_THROW(common::ValueException, "Transform3D::Transform3D()",
+                    "Initialization list is not long enough.  Expected at "
+                    "least 15 elements.");
+      }
+      auto iter = sequence.begin();
+      m_00 = *iter; ++iter;
+      m_01 = *iter; ++iter;
+      m_02 = *iter; ++iter;
+      m_03 = *iter; ++iter;
+      m_10 = *iter; ++iter;
+      m_11 = *iter; ++iter;
+      m_12 = *iter; ++iter;
+      m_13 = *iter; ++iter;
+      m_20 = *iter; ++iter;
+      m_21 = *iter; ++iter;
+      m_22 = *iter; ++iter;
+      m_23 = *iter; ++iter;
+      m_30 = *iter; ++iter;
+      m_31 = *iter; ++iter;
+      m_32 = *iter; ++iter;
+      if(iter != sequence.end()) {
+        m_33 = *iter;
+      }
+      if(doNormalize) {
+        this->normalize();
+      }
+    }
+
+
     // Build a Transform3D from a homogeneous 4x4 matrix.
     template <class Type>
     Transform3D<Type>::

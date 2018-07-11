@@ -21,21 +21,44 @@ namespace brick {
   namespace iso12233 {
 
     /**
+     ** This struct controls the operation of the e-SFR algorithm.
+     ** The default settings give what the author considers to be good
+     ** performance.  If you want things to run strictly to the
+     ** standard, use Iso12233Config::getStandardCompliant() to set up
+     ** an Iso12233Config instance for you.
+     **/
+    struct Iso12233Config {
+      bool useInitialHammingWindow = false;
+      bool useSecondHammingWindow = false;
+
+      static Iso12233Config
+      getStandardCompliant() {
+        Iso12233Config result;
+        result.useInitialHammingWindow = true;
+        result.useSecondHammingWindow = true;
+        return result;
+      }
+    };
+    
+
+    /** 
      * This function implements the ISO-12233 e-SFR algorithm as
      * closely as possible.
      *
      * @param inputPatch This argument is the image patch to be
      * analyzed.  It must contain a nearly-vertical dark->light edge,
      * with the dark portion on the left side of the patch.  The patch
-     * should be significantly wider (2x or so) than argument
-     * windowSize.  The patch should have plenty (say, more than 10,
-     * fewer than 1000) rows.
+     * should be significantly wider (slightly more than 2x) than
+     * argument windowSize.  The patch should have plenty (say, more
+     * than 10, fewer than 1000) rows.
      *
      * @param windowSize This argument is the size of the window
      * surrounding the edge that should be evaluated.  Choose a number
-     * high enough (greater than 50 or so) to be sure that any
-     * lingering effects of being near an edge have died out by the
-     * time you are windowSize / 2 from the edge itself.
+     * high enough to be sure that any lingering effects of being near
+     * an edge have died out by the time you are windowSize / 2 from
+     * the edge itself.  The larger this number, the less your result
+     * will be affected by FFT artifacts, so choose this to be at
+     * least 10 times the width of your blurred edge.
      *
      * @param conversionFunction This function should implement the
      * Opto-Electronic Conversion Function (OECF) of the camera.  When
@@ -56,8 +79,8 @@ namespace brick {
     Array1D<FloatType>
     iso12233(Image<InputFormat> const& inputPatch,
              std::size_t windowSize,
-             ConversionFunction const& oecf);
-
+             ConversionFunction const& oecf,
+             Iso12233Config const& config = Iso12233Config());
 
   } // namespace iso12233
 

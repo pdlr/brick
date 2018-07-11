@@ -288,7 +288,7 @@ namespace brick {
 
 #if 0
 
-int main(int argc, char** argv)
+int main(int /* argc */, char** /* argv */)
 {
   brick::numeric::Convolve1DTest<double> currentTest0("double");
   brick::numeric::Convolve1DTest<float> currentTest1("float");

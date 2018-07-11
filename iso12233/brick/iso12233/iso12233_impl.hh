@@ -62,7 +62,8 @@ namespace brick {
       void
       estimateEdgeSlopeAndOffset(FloatType& slope, FloatType& offset,
                                  Array2D<FloatType> const& reflectanceImage,
-                                 std::size_t windowSize);
+                                 std::size_t windowSize,
+                                 Iso12233Config const& config);
 
       // Select windowSize pixels from each row of reflectanceImage,
       // with the windows centered at column coordinates given by
@@ -70,7 +71,8 @@ namespace brick {
       // rectangular array.
       template <class FloatType>
       Array2D<FloatType>
-      selectEdgeWindows(Array2D<FloatType> const& reflectanceImage,
+      selectEdgeWindows(Array1D<std::size_t>& pixelShiftArray,
+                        Array2D<FloatType> const& reflectanceImage,
                         Array1D<FloatType> const& centroidArray,
                         std::size_t windowSize);
 
@@ -101,7 +103,8 @@ namespace brick {
     Array1D<FloatType>
     iso12233(Image<InputFormat> const& inputPatch,
              std::size_t windowSize,
-             ConversionFunction const& oecf)
+             ConversionFunction const& oecf,
+             Iso12233Config const& config)
     {
       // Argument checking.
       // TBD(xxx): initial check on windowSize.
@@ -123,7 +126,7 @@ namespace brick {
       FloatType slope = 0.0;
       FloatType offset = 0.0;
       privateCode::estimateEdgeSlopeAndOffset(
-        slope, offset, reflectanceImage, windowSize);
+        slope, offset, reflectanceImage, windowSize, config);
 
       // Paragraph 6.2.4 of the standard: align the edges in all of (or a
       // plurality of) the rows.  Because the line crosses each row at a
@@ -177,6 +180,21 @@ namespace brick {
         Array1D<FloatType> outputRow(inputRow.size());
         if(newFromOld > 0) {
           // Maximum is on the "left" half of inputRow.
+          std::size_t newColumn = newFromOld;
+          std::size_t oldColumn = 0;
+          while(newColumn < outputRow.size()) {
+            outputRow[newColumn] = inputRow[oldColumn];
+            ++newColumn;
+            ++oldColumn;
+          }
+          newColumn = 0;
+          while(oldColumn < inputRow.size()) {
+            outputRow[newColumn] = inputRow[oldColumn];
+            ++newColumn;
+            ++oldColumn;
+          }
+        } else {
+          // Maximum is on the "right" half of inputRow.
           std::size_t newColumn = 0;
           std::size_t oldColumn = inputRow.size() - newFromOld;
           while(oldColumn < inputRow.size()) {
@@ -293,38 +311,44 @@ namespace brick {
       void
       estimateEdgeSlopeAndOffset(FloatType& slope, FloatType& offset,
                                  Array2D<FloatType> const& reflectanceImage,
-                                 std::size_t windowSize)
+                                 std::size_t windowSize,
+                                 Iso12233Config const& config)
       {
         // To make things easier later in the function, we require that
         // reflectanceImage be wider than windowSize, and process only a
         // subset of the image data.
-        std::size_t windowStartColumn =
-          (reflectanceImage.columns() - windowSize) / 2;
-        std::size_t windowStopColumn = windowStartColumn + windowSize;
-
-        // Paragraph 6.2.3.2 of the standard.
-
-        // Each line is multiplied by a Hamming window.  Note that we
-        // make this bigger than windowSize because we are going to
-        // convolve with an FIR derivative filter, and we want to ignore
-        // the edges, where the filter extends outside windowedImage.
         if(windowSize >= (reflectanceImage.columns() - 2)) {
           BRICK_THROW(brick::common::ValueException,
                       "estimateEdgeSlopeAndOffset()",
                       "Argument reflectanceImage must have at least "
                       "(windowSize + 2) columns.");
         }
-        std::size_t roiStartColumn = windowStartColumn - 1;
-        std::size_t roiStopColumn = windowStopColumn + 1;
-        // SubArrays do deep copies.
-        Array2D<FloatType> windowedImage = brick::numeric::subArray(
-          reflectanceImage, brick::numeric::Slice(),
-          brick::numeric::Slice(roiStartColumn, roiStopColumn));
-        Array1D<FloatType> windowFunction =
-          brick::numeric::getHammingWindow1D<FloatType>(
-            roiStopColumn - roiStartColumn);
-        for(std::size_t rr = 0; rr < reflectanceImage.rows(); ++rr) {
-          windowedImage.getRow(rr) *= windowFunction;
+        // std::size_t windowStartColumn =
+        //   (reflectanceImage.columns() - windowSize) / 2;
+        // std::size_t windowStopColumn = windowStartColumn + windowSize;
+
+        // // xxx
+        // // Note that we
+        // // make this bigger than windowSize because we are going to
+        // // convolve with an FIR derivative filter, and we want to ignore
+        // // the edges, where the filter extends outside windowedImage.
+        // // SubArrays do deep copies.
+        // std::size_t roiStartColumn = windowStartColumn - 1;
+        // std::size_t roiStopColumn = windowStopColumn + 1;
+        // Array2D<FloatType> windowedImage = brick::numeric::subArray(
+        //   reflectanceImage, brick::numeric::Slice(),
+        //   brick::numeric::Slice(roiStartColumn, roiStopColumn));
+        
+        // Paragraph 6.2.3.2 of the standard.
+        // Each line is multiplied by a Hamming window.
+        Array2D<FloatType> windowedImage = reflectanceImage.copy();
+        if(config.useInitialHammingWindow) {
+          Array1D<FloatType> windowFunction =
+            brick::numeric::getHammingWindow1D<FloatType>(
+              windowedImage.columns());
+          for(std::size_t rr = 0; rr < reflectanceImage.rows(); ++rr) {
+            windowedImage.getRow(rr) *= windowFunction;
+          }
         }
 
         // Approximate the derivative along each row using [-1/2, 1/2]
@@ -357,6 +381,15 @@ namespace brick {
         std::pair<FloatType, FloatType> slope_offset =
           brick::linearAlgebra::linearFit(rowIndices, centroidArray);
 
+        // If we're not using window functions, there's no point in
+        // processing further... we have the best estimate of edge
+        // location that we're going to get.
+        // xxx if(!config.useInitialHammingWindow
+        //    && !config.useSecondHammingWindow) {
+        //   slope = slope_offset.first;
+        //   offset = slope_offset.second;
+        //   return;
+        // }
 
         // Paragraph 6.2.3.3 of the standard.
 
@@ -365,11 +398,25 @@ namespace brick {
         centroidArray = slope_offset.first * rowIndices + slope_offset.second;
 
         // Repeat the Hamming window multiplication, but this time
-        // center each window at the estimated line position.
+        // center each window at the estimated line position, and
+        // restrict attention to the user specified window size.  Note
+        // that we grab a little more image data than just windowSize
+        // because we are going to convolve with an FIR derivative
+        // filter, and we want to ignore the edges, where the filter
+        // extends outside windowSize.  Argument pixelShiftArray tells
+        // us which pixels got selected for each row of windowedImage,
+        // so we can correctly calculate the line slope and offset
+        // later.
+        Array1D<std::size_t> pixelShiftArray;
         windowedImage = privateCode::selectEdgeWindows(
-          reflectanceImage, centroidArray, roiStopColumn - roiStartColumn);
-        for(std::size_t rr = 0; rr < reflectanceImage.rows(); ++rr) {
-          windowedImage.getRow(rr) *= windowFunction;
+          pixelShiftArray, reflectanceImage, centroidArray, windowSize + 2);
+        if(config.useSecondHammingWindow) {
+          Array1D<FloatType> windowFunction =
+            brick::numeric::getHammingWindow1D<FloatType>(
+              windowedImage.columns());
+          for(std::size_t rr = 0; rr < reflectanceImage.rows(); ++rr) {
+            windowedImage.getRow(rr) *= windowFunction;
+          }
         }
 
         // Approximate the derivative along each row again using
@@ -387,6 +434,10 @@ namespace brick {
           // body of the standard, but ought to be. It _is_ reflected in
           // appendix D of the standard, though.
           centroidArray[rr] -= FloatType(0.5);
+
+          // Compensate for the fact that each row of this image was
+          // shifted to center the Hamming window.
+          centroidArray[rr] += static_cast<FloatType>(pixelShiftArray[rr]);
         }
 
         // Paragraph 6.2.3.5 of the standard.
@@ -406,7 +457,8 @@ namespace brick {
       // rectangular array.
       template <class FloatType>
       Array2D<FloatType>
-      selectEdgeWindows(Array2D<FloatType> const& reflectanceImage,
+      selectEdgeWindows(Array1D<std::size_t>& pixelShiftArray,
+                        Array2D<FloatType> const& reflectanceImage,
                         Array1D<FloatType> const& centroidArray,
                         std::size_t windowSize)
       {
@@ -422,6 +474,7 @@ namespace brick {
 
         // Alocate space for function output.
         Array2D<FloatType> outputImage(centroidArray.size(), windowSize);
+        pixelShiftArray.reinit(centroidArray.size());
 
         // Iterate over each row of reflectanceImage.
         for(std::size_t rr = 0; rr < centroidArray.size(); ++rr) {
@@ -446,6 +499,7 @@ namespace brick {
           std::copy(reflectanceImage.data(rr, startColumn),
                     reflectanceImage.data(rr, stopColumn),
                     outputImage.data(rr, 0));
+          pixelShiftArray[rr] = startColumn;
         }
 
         return outputImage;
@@ -464,7 +518,7 @@ namespace brick {
         // The standard requires us to supersample by a factor of four.
         // We choose to put the edge in the middle of the output row.
         std::size_t outputWindowSize = windowSize << 2;
-        FloatType outputEdgeLocation = (static_cast<FloatType>(outputWindowSize)
+        FloatType outputEdgeLocation = (static_cast<FloatType>(outputWindowSize - 1)
                                         / FloatType(2.0));
 
         // We'll accumulate pixel values in these arrays, which we
@@ -478,11 +532,12 @@ namespace brick {
         // into the accumulater arrays we just created.
         for(std::size_t rr = 0; rr < reflectanceImage.rows(); ++rr) {
 
-          // Variable edgeLocation will be a number like "55.21"
+          // Variable edgeLocation will be a number in input pixel column
+          // coordinates.  Something like "55.21"
           FloatType edgeLocation = offset + slope * rr;
 
-          // There's a linear mapping between output row position and
-          // input row position.  It has the form:
+          // There's a linear mapping between output column coordinate and
+          // input column coordinate.  It has the form:
           //
           // @code
           //   outputPosition = 4 * inputPosition + delta.
@@ -490,18 +545,16 @@ namespace brick {
           //
           // The factor of 4 is required by the standard.  Now that we
           // have edge location in this row, we can solve for delta.
-          FloatType delta = outputEdgeLocation - (FloatType(4.0) * edgeLocation);
+          FloatType delta = (outputEdgeLocation
+                             - (FloatType(4.0) * edgeLocation));
 
           // Invert the linear equation to find out where the first and
-          // last pixels of outputRow project to in inputRow.  The extra
-          // 0.5 added in each row is to make the static cast round to
-          // the nearest integer, rather than truncating.
+          // last pixels of outputRow project to in inputRow.
           std::size_t inputStartColumn = static_cast<size_t>(
-            ((FloatType(0.0) - delta) / FloatType(4.0))
-            + FloatType(0.5));
+            std::round((FloatType(0.0) - delta) / FloatType(4.0)));
           std::size_t inputStopColumn = static_cast<size_t>(
-            ((FloatType(outputWindowSize - 1) - delta) / FloatType(4.0))
-            + FloatType(0.5));
+            std::round((FloatType(outputWindowSize - 1) - delta)
+                       / FloatType(4.0)));
 
           // Make sure no indexing issues in the input patch.  Remember
           // that size_t is unsigned, so negative numbers roll over to
@@ -516,35 +569,32 @@ namespace brick {
                         "input image patch.");
           }
 
-          // Adjust start and stop columns to avoid indexing issues in
-          // the output row.  Remember that size_t is unsigned, so
+          // We've found the input pixel to which the first output
+          // pixel most nearly maps, but remember that there are 4x as
+          // many output pixels as input pixels.  The center of this
+          // input pixel does not necessarily map to the first output
+          // pixel.  We project in the other direction now to find out
+          // which output pixel gets the contents of this first pixel.
+          // If the result is out of bounds, we increment the input
+          // pixel index.  Remember that size_t is unsigned, so
           // negative numbers roll over to large positive numbers.
           std::size_t outputStartColumn = 0;
           while(1) {
             outputStartColumn = static_cast<std::size_t>(
-              inputStartColumn * 4 + delta + 0.5);
+              std::round(inputStartColumn * 4 + delta));
             if(outputStartColumn < outputWindowSize) {break;}
             ++inputStartColumn;
-          }
-          std::size_t outputStopColumn = 0;
-          while(1) {
-            outputStopColumn = static_cast<std::size_t>(
-              inputStopColumn * 4 + delta + 0.5);
-            if(outputStopColumn < outputWindowSize) {break;}
-            --inputStopColumn;
-          }
-          if(inputStartColumn >= inputStopColumn) {
-            BRICK_THROW(brick::common::LogicException,
-                        "shiftAndCombineRows()",
-                        "Start and stop columns are not strictly ordered.");
           }
 
           // Now copy and accumulate this row's data.
           std::size_t occ = outputStartColumn;
-          for(std::size_t cc = inputStartColumn; cc < inputStopColumn; ++cc) {
+          std::size_t cc = inputStartColumn;
+          while(cc < reflectanceImage.columns()
+                && occ < outputRow.size()) {
             outputRow[occ] += reflectanceImage(rr, cc);
             counts[occ] += 1;
             occ += 4;
+            ++cc;
           }
         }
 

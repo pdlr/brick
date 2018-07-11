@@ -38,10 +38,17 @@ namespace brick {
      * quick and easy FFT for use when other libraries aren't handy.
      *
      * @param inputSignal This argument is the complex-valued signal
-     * from which to compute the Fourier transform.
+     * from which to compute the Fourier transform.  For now, the
+     * number of elements in this sequence must be a power of two.
      *
-     * @return The return value is the Fourier transform of argument
-     * inputSignal.
+     * @return The return value is the Discrete Fourier transform of
+     * argument inputSignal.  Assuming there are N elements in
+     * inputSignal, the return value will also have N elements.  The
+     * nth element of the return value is the Fourier coefficient for
+     * frequency 2*pi*n/N radians per sample, where n starts at zero
+     * and goes to (N - 1).  Note that elements with n > (N/2) are
+     * above Nyquist, and in real signals will alias back to
+     * frequencies symmetrically distributed around n = N/2.
      */
     template <class ComplexType>
     Array1D<ComplexType>

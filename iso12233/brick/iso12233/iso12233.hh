@@ -29,37 +29,45 @@ namespace brick {
      ** an Iso12233Config instance for you.
      **/
     struct Iso12233Config {
+
+      // Local types.
+      enum class PostWeightStrategy : std::int8_t {SINC, DERIVED};
+
+      // Configuration variables.
       bool useInitialHammingWindow = false;
       bool useSecondHammingWindow = false;
+      PostWeightStrategy postWeightStrategy = PostWeightStrategy::DERIVED;
 
       static Iso12233Config
       getStandardCompliant() {
         Iso12233Config result;
         result.useInitialHammingWindow = true;
         result.useSecondHammingWindow = true;
+        result.postWeightStrategy = PostWeightStrategy::SINC;
         return result;
       }
     };
-    
 
-    /** 
+
+    /**
      * This function implements the ISO-12233 e-SFR algorithm as
      * closely as possible.
-     * 
+     *
      * @param inputPatch This argument is the image patch to be
      * analyzed.  It must contain a nearly-vertical dark->light edge,
      * with the dark portion on the left side of the patch.  The patch
-     * should be significantly wider (slightly more than 2x) than
-     * argument windowSize.  The patch should have plenty (say, more
-     * than 10, fewer than 1000) rows.
-     * 
-     * @param windowSize This argument is the size of the window
-     * surrounding the edge that should be evaluated.  Choose a number
-     * high enough to be sure that any lingering effects of being near
-     * an edge have died out by the time you are windowSize / 2 from
-     * the edge itself.  The larger this number, the less your result
-     * will be affected by FFT artifacts, so choose this to be at
-     * least 10 times the width of your blurred edge.
+     * should be significantly wider (more than 2x) than argument
+     * windowSize.  The patch should have plenty (say, more than 10,
+     * fewer than 1000) rows.
+     *
+     * @param windowSize This argument must (for now) be a power of
+     * two, and is the size of the window surrounding the edge that
+     * should be evaluated.  Choose a number high enough to be sure
+     * that any lingering effects of being near an edge have died out
+     * by the time you are windowSize / 2 from the edge itself.  The
+     * larger this number, the less your result will be affected by
+     * FFT artifacts, so choose this to be at least 10 times the width
+     * of your blurred edge.
      *
      * @param conversionFunction This function should implement the
      * Opto-Electronic Conversion Function (OECF) of the camera.  When
@@ -69,7 +77,7 @@ namespace brick {
      * oecf(inputPatch(rr, cc));" This is also a good way to select
      * specific color channels if you want to measure their MTFs
      * independently.
-     * 
+     *
      * @return The return value is the computed MTF of the imaging
      * system, assuming the physical edge being observed is a perfect
      * instantaneous transition from dark to light.
@@ -83,9 +91,9 @@ namespace brick {
              ConversionFunction const& oecf,
              Iso12233Config const& config = Iso12233Config());
 
-    
+
   } // namespace iso12233
-  
+
 } // namespace brick
 
 

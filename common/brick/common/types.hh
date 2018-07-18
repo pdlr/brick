@@ -33,7 +33,7 @@ namespace brick {
                int TMPL_SIZEOF_DOUBLE>
       struct GlobalTypeStruct {};
 
-      
+
       // This template specialization defines type names for 32 bit
       // i386 machines.
       template<>
@@ -79,7 +79,7 @@ namespace brick {
                        sizeof(float),
                        sizeof(double)>
       LocalTypeStruct;
-      
+
     } // namespace privateCode
     /// @endcond
 
@@ -104,7 +104,7 @@ namespace brick {
     typedef privateCode::LocalTypeStruct::UnsignedInt64 UInt64;
 
   } // namespace common
-    
+
 }  // namespace brick
 
 #endif /* #ifndef BRICK_COMMON_TYPES_HH */

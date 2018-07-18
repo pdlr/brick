@@ -16,7 +16,7 @@
 
 // This file is included by utilities.hh, and should not be directly included
 // by user code, so no need to include utilities.hh here.
-// 
+//
 // #include <brick/computerVision/utilities.hh>
 
 #include <brick/linearAlgebra/linearAlgebra.hh>
@@ -42,7 +42,7 @@ namespace brick {
 	typedef typename Image<Format>::iterator ImageIterator;
 	typedef typename brick::numeric::Array2D<ComponentType>::iterator
           ArrayIterator;
-      
+
 	// Argument checking.
 	if(inputArray.columns()
 	   % ImageFormatTraits<Format>::getNumberOfComponents()
@@ -81,7 +81,7 @@ namespace brick {
 	return returnValue;
       }
 
-  
+
       // Explicit specializations of
       // privateCode::associateColorComponents() are needed for those
       // image formats which use builtin types as pixels.
@@ -106,7 +106,7 @@ namespace brick {
 	return true;
       }
 
-    
+
       template<>
       inline bool
       associateColorComponents(
@@ -117,7 +117,7 @@ namespace brick {
 	return true;
       }
 
-    
+
       template<>
       inline bool
       associateColorComponents(
@@ -128,7 +128,7 @@ namespace brick {
 	return true;
       }
 
-    
+
       template<>
       inline bool
       associateColorComponents(
@@ -139,7 +139,7 @@ namespace brick {
 	return true;
       }
 
-    
+
       template<>
       inline bool
       associateColorComponents(
@@ -150,7 +150,7 @@ namespace brick {
 	return true;
       }
 
-    
+
       template<>
       inline bool
       associateColorComponents(
@@ -161,7 +161,7 @@ namespace brick {
 	return true;
       }
 
-    
+
       template<>
       inline bool
       associateColorComponents(
@@ -188,7 +188,7 @@ namespace brick {
 	// Calculate output array width.
 	size_t numberOfOutputColumns = inputImage.columns()
 	  * ImageFormatTraits<Format>::getNumberOfComponents();
-    
+
 	// Now build the output array.
 	bool returnValue;
 	if(PixelType::isContiguous()) {
@@ -212,8 +212,8 @@ namespace brick {
 	}
 	return returnValue;
       }
-  
-  
+
+
       // Explicit specializations of dissociateColorComponents() are needed
       // for those image formats which use builtin types as pixels.
       template<>
@@ -226,7 +226,7 @@ namespace brick {
 	return true;
       }
 
-    
+
       template<>
       inline bool
       dissociateColorComponents(
@@ -237,7 +237,7 @@ namespace brick {
 	return true;
       }
 
-    
+
       template<>
       inline bool
       dissociateColorComponents(
@@ -248,7 +248,7 @@ namespace brick {
 	return true;
       }
 
-    
+
       template<>
       inline bool
       dissociateColorComponents(
@@ -259,7 +259,7 @@ namespace brick {
 	return true;
       }
 
-    
+
       template<>
       inline bool
       dissociateColorComponents(
@@ -270,7 +270,7 @@ namespace brick {
 	return true;
       }
 
-    
+
       template<>
       inline bool
       dissociateColorComponents(
@@ -281,7 +281,7 @@ namespace brick {
 	return true;
       }
 
-    
+
       template<>
       inline bool
       dissociateColorComponents(
@@ -292,7 +292,7 @@ namespace brick {
 	return true;
       }
 
-    
+
       template<>
       inline bool
       dissociateColorComponents(
@@ -319,7 +319,7 @@ namespace brick {
       return privateCode::associateColorComponents(inputArray, outputImage);
     }
 
-    
+
     // This deprecated function tries to return an Image which
     // references the same memory as the input array, but in which each
     // pixel is the aggregate of the appropriate number of elements from
@@ -370,7 +370,7 @@ namespace brick {
     {
       return privateCode::dissociateColorComponents(inputImage, outputArray);
     }
-  
+
 
     // This deprecated function tries to return an Array2D which
     // references the same memory as the input image, but in which each
@@ -392,7 +392,7 @@ namespace brick {
       return outputArray;
     }
 
-  
+
     // Return the transform that, in the least-squares sense, most
     // nearly transforms each point in fromPoints to the corresponding
     // point in toPoints.
@@ -420,8 +420,8 @@ namespace brick {
       //   | 0, 0, 0, x, y, 1 | * | b | = | v |
       //                          | c |
       //                          | d |
-      //                          | e | 
-      //                          | f | 
+      //                          | e |
+      //                          | f |
       //
       // Given more than one (x, y) to (u, v) correspondence, we
       // combine all of the simultaneous equations into one big linear
@@ -431,15 +431,15 @@ namespace brick {
       //   A * | b | = B
       //       | c |
       //       | d |
-      //       | e | 
+      //       | e |
       //       | f |
-      // 
+      //
       unsigned int numberOfPoints = toPointsEnd - toPointsBegin;
       if(numberOfPoints < 3) {
         BRICK_THROW(brick::common::ValueException, "estimateAffineTransform()",
                     "Input sequences must have at least three elements.");
       }
-        
+
       numeric::Array2D<brick::common::Float64> AMatrix(numberOfPoints * 2, 6);
       numeric::Array1D<brick::common::Float64> BVector(numberOfPoints * 2);
 
@@ -465,13 +465,13 @@ namespace brick {
       brick::numeric::Array1D<brick::common::Float64> result =
         brick::linearAlgebra::linearLeastSquares(AMatrix, BVector);
       return brick::numeric::Transform2D<brick::common::Float64>(
-        result[0], result[1], result[2], 
+        result[0], result[1], result[2],
         result[3], result[4], result[5],
         brick::common::Float64(0), brick::common::Float64(0),
         brick::common::Float64(1));
     }
 
-    
+
     // This function subsamples its input to create a new, smaller
     // image.
     template<ImageFormat Format>
@@ -524,7 +524,7 @@ namespace brick {
       typedef typename Image<InputFormat>::PixelType InputType;
       typedef typename Image<OutputFormat>::PixelType OutputType;
       typedef typename Image<IntermediateFormat>::PixelType IntermediateType;
-      
+
       Image<OutputFormat> outputImage(inputImage.rows() * 2 - 1,
                                       inputImage.columns() * 2 - 1);
       ColorspaceConverter<InputFormat, OutputFormat> converter;
@@ -602,7 +602,7 @@ namespace brick {
 
       return outputImage;
     }
-  
+
 
     // This function creates a new array and copies into it the pixel
     // data from the input image.
@@ -625,9 +625,9 @@ namespace brick {
       returnValue.copy(tempArray);
       return returnValue;
     }
-  
-  } // namespace computerVision    
-  
+
+  } // namespace computerVision
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_UTILITIES_IMPL_HH */

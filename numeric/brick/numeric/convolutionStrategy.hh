@@ -17,7 +17,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     enum ConvolutionStrategy {
       BRICK_CONVOLVE_TRUNCATE_RESULT,
       BRICK_CONVOLVE_PAD_RESULT,
@@ -26,14 +26,14 @@ namespace brick {
       BRICK_CONVOLVE_REFLECT_SIGNAL,
       BRICK_CONVOLVE_WRAP_SIGNAL
     };
-  
+
 
     enum ConvolutionROI {
       BRICK_CONVOLVE_ROI_SAME,
       BRICK_CONVOLVE_ROI_VALID,
       BRICK_CONVOLVE_ROI_FULL
     };
-  
+
   } // namespace numeric
 
 } // namespace brick

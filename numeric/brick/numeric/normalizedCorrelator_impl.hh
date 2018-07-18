@@ -17,13 +17,13 @@
 // This file is included by normalizedCorrelator.hh, and should not be
 // directly included by user code, so no need to include
 // normalizedCorrelator.hh here.
-// 
+//
 // #include <brick/numeric/normalizedCorrelator.hh>
 
 namespace brick {
 
   namespace numeric {
-    
+
     // This constructor initializes the NormalizedCorrelator
     // instance, but doesn't add any samples.
     template <class Type>
@@ -42,7 +42,7 @@ namespace brick {
         this->enableInputTracking();
       }
     }
-    
+
 
     // This constructor initializes the NormalizedCorrelator
     // instance using sequences of samples from the two signals to
@@ -66,7 +66,7 @@ namespace brick {
       }
       this->addSamples(begin0, end0, begin1);
     }
-    
+
 
     // The destructor destroys the NormalizedCorrelator instance and
     // cleans up any associated resources.
@@ -77,7 +77,7 @@ namespace brick {
       this->enableInputTracking(false);
     }
 
-    
+
     // This member function adds a single pair of samples (one from
     // each of the two signals to be correlated) to the normalized
     // correlation calculation.
@@ -94,7 +94,7 @@ namespace brick {
       this->addSampleWithoutTracking(sample0, sample1);
     }
 
-    
+
     // This member function works identically to addSample(), with
     // the exception that input tracking is never updated.
     template <class Type>
@@ -139,7 +139,7 @@ namespace brick {
         ++begin1;
       }
     }
-      
+
 
     // This member function removes all samples from the
     // NormalizedCorrelator instance.
@@ -195,7 +195,7 @@ namespace brick {
         }
       }
     }
-      
+
 
     // This member function returns the number of sample pairs
     // contributing to the normalized correlation.
@@ -207,7 +207,7 @@ namespace brick {
       return m_count;
     }
 
-      
+
     // This member function returns the normalized correlation of
     // all the currently added sample pairs.
     template <class Type>
@@ -225,7 +225,7 @@ namespace brick {
       return numerator / denominator;
     }
 
-    
+
     // If input tracking is enabled, this member function removes
     // pairs of samples from the normalized correlation calculation,
     // following the order in which they were added.
@@ -258,7 +258,7 @@ namespace brick {
       }
     }
 
-      
+
     // This member function removes a pair of sample values from the
     // normalized correlation calculation.
     template <class Type>
@@ -275,7 +275,7 @@ namespace brick {
       this->removeSampleWithoutTracking(sample0, sample1);
     }
 
-    
+
     // This member function works identically to removeSample(),
     // with the exception that input tracking is never updated.
     template <class Type>
@@ -289,7 +289,7 @@ namespace brick {
       m_sum01 -= sample0 * sample1;
       m_sum11 -= sample1 * sample1;
       --m_count;
-    }        
+    }
 
 
     // This member function removes a sequence of pairs of samples

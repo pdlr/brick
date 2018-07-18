@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file index3D.cpp
+* @file brick/numeric/index3D.cpp
 *
 * Source file defining Index3D class.
 *
@@ -15,7 +15,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     Index3D operator+(const Index3D& index0, const Index3D& index1)
     {
       return Index3D(index0.getRow() + index1.getRow(),
@@ -23,7 +23,7 @@ namespace brick {
                      index0.getSlice() + index1.getSlice());
     }
 
-  
+
     Index3D operator-(const Index3D& index0, const Index3D& index1)
     {
       return Index3D(index0.getRow() - index1.getRow(),
@@ -31,7 +31,7 @@ namespace brick {
                      index0.getSlice() - index1.getSlice());
     }
 
-  
+
     Index3D operator*(const Index3D& index0, const Index3D& index1)
     {
       return Index3D(index0.getRow() * index1.getRow(),
@@ -39,7 +39,7 @@ namespace brick {
                      index0.getSlice() * index1.getSlice());
     }
 
-  
+
     Index3D operator/(const Index3D& index0, const Index3D& index1)
     {
       return Index3D(index0.getRow() / index1.getRow(),
@@ -47,7 +47,7 @@ namespace brick {
                      index0.getSlice() / index1.getSlice());
     }
 
-  
+
     Index3D operator+(const Index3D& index0, int scalar)
     {
       return Index3D(index0.getRow() + scalar,
@@ -55,7 +55,7 @@ namespace brick {
                      index0.getSlice() + scalar);
     }
 
-  
+
     Index3D operator-(const Index3D& index0, int scalar)
     {
       return Index3D(index0.getRow() - scalar,
@@ -63,7 +63,7 @@ namespace brick {
                      index0.getSlice() - scalar);
     }
 
-  
+
     Index3D operator*(const Index3D& index0, int scalar)
     {
       return Index3D(index0.getRow() * scalar,
@@ -71,7 +71,7 @@ namespace brick {
                      index0.getSlice() * scalar);
     }
 
-  
+
     Index3D operator/(const Index3D& index0, int scalar)
     {
       return Index3D(index0.getRow() / scalar,
@@ -79,7 +79,7 @@ namespace brick {
                      index0.getSlice() / scalar);
     }
 
-  
+
     bool
     operator==(const Index3D& index0, const Index3D& index1)
     {
@@ -88,14 +88,14 @@ namespace brick {
              (index0.getSlice() == index1.getSlice()));
     }
 
-  
+
     bool
     operator!=(const Index3D& index0, const Index3D& index1)
     {
       return(!operator==(index0, index1));
     }
 
-  
+
     std::ostream&
     operator<<(std::ostream& stream, const Index3D& index0)
     {
@@ -105,7 +105,7 @@ namespace brick {
       return stream;
     }
 
-  
+
     std::istream&
     operator>>(std::istream& stream, Index3D& index0)
     {

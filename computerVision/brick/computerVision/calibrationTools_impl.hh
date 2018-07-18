@@ -16,7 +16,7 @@
 // This file is included by calibrationTools.hh, and should not be
 // directly included by user code, so no need to include
 // calibrationTools.hh here.
-// 
+//
 // #include <brick/computerVision/calibrationTools.hh>
 
 #include <limits>
@@ -53,23 +53,23 @@ namespace brick {
         /// Convenient typedef for keeping track of how we represent
         /// real numbers.
         typedef typename Intrinsics::FloatType FloatType;
-        
+
         /**
          * Constructor.
-         * 
+         *
          * @param intrinsics This argument gives initial values for
          * the state of *this.  It does not have to have all if its
          * intrinsic parameters set correctly, but it should
          * accurately reflect the image size (numPixelsX, numPixelsY).
-         * 
+         *
          * @param points3DBegin This argument is the beginning of a
          * sequence of Vector3D instances expressed in camera
          * coordinates.
-         * 
+         *
          * @param points3DEnd This argument This argument marks the
          * end of the sequence of Vector3D instances expressed in
          * camera coordinates.
-         * 
+         *
          * @param points2DBegin This argument is the beginning of a
          * sequence of Vector2D instances in image coordinates,
          * corresponding to the 3D sequence in earlier constructor
@@ -90,7 +90,7 @@ namespace brick {
 
         /**
          * Constructor for use by subclasses.
-         * 
+         *
          * @param intrinsics This argument gives initial values for
          * the state of *this.  It does not have to have all if its
          * intrinsic parameters set correctly, but it should
@@ -103,8 +103,8 @@ namespace brick {
             m_numPixelsX(intrinsics.getNumPixelsX()),
             m_numPixelsY(intrinsics.getNumPixelsY())
           {}
-        
-        
+
+
         /**
          * Destructor.
          */
@@ -145,22 +145,22 @@ namespace brick {
         getIntrinsics() {return m_intrinsics;}
 
 
-        /** 
+        /**
          * Returns the number of 3D points in the sequence provided to
          * the constructor..
-         * 
+         *
          * @return The return value the number of points.
          */
         virtual unsigned int
         getNumberOfPoints() {return m_cameraCoords.size();}
-        
 
-        /** 
+
+        /**
          * Updates the internal state to reflect the specified
          * parameter vector.  This function differs from
          * this->operator()() in that it stops before computing any
          * image-space residuals.
-         * 
+         *
          * @param parameters This argument exactly corresponds to the
          * "freeParameters" argument of this->operator()().
          */
@@ -232,20 +232,20 @@ namespace brick {
 
         /**
          * Constructor.
-         * 
+         *
          * @param intrinsics This argument gives initial values for
          * the state of *this.  It does not have to have all if its
          * intrinsic parameters set correctly, but it should
          * accurately reflect the image size (numPixelsX, numPixelsY).
-         * 
+         *
          * @param points3DBegin This argument is the beginning of a
          * sequence of Vector3D instances expressed in world
          * coordinates (not camera coordinates).
-         * 
+         *
          * @param points3DEnd This argument This argument marks the
          * end of the sequence of Vector3D instances expressed in
          * world coordinates.
-         * 
+         *
          * @param points2DBegin This argument is the beginning of a
          * sequence of Vector2D instances in image coordinates,
          * corresponding to the 3D sequence in earlier constructor
@@ -266,8 +266,8 @@ namespace brick {
             std::copy(points2DBegin, points2DBegin + m_worldCoords.size(),
                       this->m_imageCoords.begin());
           }
-        
-        
+
+
         /**
          * Destructor.
          */
@@ -278,7 +278,7 @@ namespace brick {
         virtual numeric::Transform3D<FloatType>
         getPoseCameraTworld() {return m_cameraTworld;}
 
-        
+
         virtual void
         setParameters(typename Intrinsics::ParameterVectorType const&
                       parameters) {
@@ -337,7 +337,7 @@ namespace brick {
         }
         return zValue;
       }
-      
+
 
 #if 0
       // xxx save this because it'll be useful for adapting to
@@ -350,19 +350,19 @@ namespace brick {
         // If points3D are (x_i, y_i, z_i) and points2D are (u_i,
         // v_i), this routine returns a Transform3DTo2D H so that for
         // each point in points3D and corresponding point in points2D:
-        // 
+        //
         //   u_i ~= ((h0*x_i + h1*y_i + h2*z_i + h3)
         //           / (h8*x_i + h9*y_i + h10*z_i + 1.0))
-        // 
+        //
         //   v_i ~= ((h4*x_i + h5*y_i + h6*z_i + h7)
         //           / (h8*x_i + h9*y_i + h10*z_i + 1.0))
-        // 
+        //
         // where
-        // 
+        //
         //        [[h0, h1, h2,   h3],
         //   H ==  [h4, h5, h6,   h7],
         //         [h8, h9, h10, 1.0]]
-        // 
+        //
         // A linear solution is used, however the equations are scaled by
         // the denominators of the above equations, so the solution is _not_
         // optimal in the least squares sense.  If iter == 0, the solution is
@@ -428,7 +428,7 @@ namespace brick {
 
 #endif /* #if 0 */
 
-      
+
       template <class FloatType, class Iter3D, class Iter2D>
       numeric::Transform3DTo2D<FloatType>
       estimateTransform3DTo2D(Iter3D points3DBegin, Iter3D points3DEnd,
@@ -437,19 +437,19 @@ namespace brick {
         // If points3D are (x_i, y_i, z_i) and points2D are (u_i,
         // v_i), this routine returns a Transform3DTo2D H so that for
         // each point in points3D and corresponding point in points2D:
-        // 
+        //
         //   u_i ~= ((h0*x_i + h1*y_i + h2*z_i + h3)
         //           / (h8*x_i + h9*y_i + h10*z_i + h11))
-        // 
+        //
         //   v_i ~= ((h4*x_i + h5*y_i + h6*z_i + h7)
         //           / (h8*x_i + h9*y_i + h10*z_i + h11))
-        // 
+        //
         // where
-        // 
+        //
         //        [[h0, h1,  h2,  h3],
         //   H ==  [h4, h5,  h6,  h7],
         //         [h8, h9, h10, h11]]
-        // 
+        //
         // A linear solution is used, however the equations are scaled by
         // the denominators of the above equations, so the solution is _not_
         // optimal in the least squares sense.  If iter == 0, the solution is
@@ -515,7 +515,7 @@ namespace brick {
           eigenvectors(10, lastColumn), eigenvectors(11, lastColumn));
         return result;
       }
-      
+
     } // namespace privateCode
 
 
@@ -584,7 +584,7 @@ namespace brick {
       // Because the Hessian matrix is real and symmetric (and
       // therefore normal), condition number can be computed as a
       // ratio of eigenvalues.
-      brick::numeric::Array1D<FloatType> eigenvalues = 
+      brick::numeric::Array1D<FloatType> eigenvalues =
         brick::linearAlgebra::eigenvaluesSymmetric(m_hessianMatrix);
 
       // Pick the right eigenvalue to compare.
@@ -628,8 +628,8 @@ namespace brick {
     {
       return this->m_parameterVector;
     }
-    
-    
+
+
     // This member function is called by estimateCameraParameters to
     // record calibration statistics that will later be available to
     // the user.
@@ -645,7 +645,7 @@ namespace brick {
         m_hessianMatrix = hessianMatrix.copy();
     }
 
-    
+
     // This function estimates camera intrinsic parameters for
     // "complicated" types of camera intrinsics that require nonlinear
     // optimization.
@@ -662,7 +662,7 @@ namespace brick {
         ObjectiveFunction;
       typedef brick::optimization::GradientFunctionLM<
         ObjectiveFunction, FloatType> GradientFunctionLM;
-      
+
       Intrinsics intrinsics;
       intrinsics.setNumPixelsX(numPixelsX);
       intrinsics.setNumPixelsY(numPixelsY);
@@ -706,10 +706,10 @@ namespace brick {
       // the projection equation is
       //
       //   alpha * w_i = P * d_i
-      // 
+      //
       // where alpha is an arbitrary scale factor, and P is the pinhole
       // projection matrix.
-      // 
+      //
       //       | k_x, 0.0, u_0, 0.0 |
       //   P = | 0.0, k_y, v_0, 0.0 |
       //       | 0.0, 0.0, 1.0, 0.0 |
@@ -731,11 +731,11 @@ namespace brick {
       //   cross(w_i, P * d_i)
       //     = skewSymmetric(w_i) * equivalentMatrix(d_i) * vec(P)
       //     = [0.0, 0.0, 0.0]^T
-      //    
+      //
       // We get one of these sets of linear equations in the elements of
       // P for each pair of input points.  We can assemble the equations
       // into a linear system and solve for vec(P).
-      // 
+      //
       //   A * vec(P) = [0.0, 0.0, ..., 0.0]
       //
       // In practice, though, we see that P is very sparse, and has one
@@ -752,13 +752,13 @@ namespace brick {
       // the nonzero elements of vec(P):
       //
       //   | x_i, 0.0, z_i, 0.0 |   | k_x |   | 0.0 |
-      //   | 0.0, y_i, 0.0, z_i | * | k_y | + | 0.0 | 
+      //   | 0.0, y_i, 0.0, z_i | * | k_y | + | 0.0 |
       //   | 0.0, 0.0, 0.0, 0.0 |   | u_0 |   | z_i |
       //                            | v_0 |
       //
       // The added term, [0.0, 0.0, z_i]^T, corresponds to the [2, 3]
       // element of P.
-      // 
+      //
       // Here is skewSymmetric(w_i) written out:
       //
       //                        |  0.0, -1.0,  v_i |
@@ -851,10 +851,10 @@ namespace brick {
       // the projection equation is
       //
       //   alpha * w_i = P * d_i
-      // 
+      //
       // where alpha is an arbitrary scale factor, and P is the pinhole
       // projection matrix.
-      // 
+      //
       //       | k_x, 0.0, u_0, 0.0 |
       //   P = | 0.0, k_y, v_0, 0.0 |
       //       | 0.0, 0.0, 1.0, 0.0 |
@@ -862,7 +862,7 @@ namespace brick {
       // Note that, by this definition, alpha is always equal to z_i:
       // points that lie on the same ray in camera coordinates project
       // to the same image point.  Dividing out the alpha, we have
-      // 
+      //
       //   w_i = P * [x_i / z_i, y_i / z_i, 1, 1]^T
       //
       // We're going to pick elements of P to minimize (in the least
@@ -875,12 +875,12 @@ namespace brick {
       // Expanding the above equation, we have
       //
       //   |u_i|   | k_x, 0.0, u_0, 0.0 |   |x_i / z_i|
-      //   |v_i| = | 0.0, k_y, v_0, 0.0 | * |y_i / z_i| 
+      //   |v_i| = | 0.0, k_y, v_0, 0.0 | * |y_i / z_i|
       //   | 1 |   | 0.0, 0.0, 1.0, 0.0 |   |    1    |
       //                                    |    1    |
       // The bottom row of this equation is an identity (1 = 1), so we
       // discard it and rearrange the top two rows to isolate the unknowns.
-      // 
+      //
       //   |u_i| = | k_x * x_i / z_i| + |u_0|
       //   |v_i|   | k_y * y_i / z_i|   |v_0|
       //
@@ -888,7 +888,7 @@ namespace brick {
       //   |    0    , y_i / z_i, 0, 1| * |k_y| = |v_0|
       //                                  |u_0|
       //                                  |v_0|
-      // 
+      //
       // Combining these equations for all of the input points, we
       // solve for k_x, k_y, u_0, and v_0 below.
       numeric::Array2D<FloatType> AMatrix(2 * numberOfInputPoints, 4);
@@ -928,7 +928,7 @@ namespace brick {
       return CameraIntrinsicsPinhole<FloatType>(
         numPixelsX, numPixelsY, 1, 1.0 / k_x, 1.0 / k_y, u_0, v_0);
     }
-    
+
 
     template <class Intrinsics, class Iter3D, class Iter2D>
     void
@@ -1006,10 +1006,10 @@ namespace brick {
         allFreeParameters, gradient, hessian);
       statistics.setStatistics(
         objectiveFunction(allFreeParameters), allFreeParameters, hessian);
-                               
+
     }
 
-    
+
     template <class FloatType, class Iter3D, class Iter2D>
     void
     estimateCameraParametersPinhole(
@@ -1044,7 +1044,7 @@ namespace brick {
       FloatType h9 = imagePworld(2, 1);
       FloatType h10 = imagePworld(2, 2);
       FloatType h11 = imagePworld(2, 3);
-      
+
       // Assume H factors into:
       //
       //        [[f_u,   0, u_0, 0],   [[           ],
@@ -1071,7 +1071,7 @@ namespace brick {
       //          [b1, b3, b4]]
       //
       // where J is the first 3 columns of H, and b0...b4 are as follows:
-      // 
+      //
       //   b0 = (a/f_u)^2
       //   b1 = -(a/f_u)^2 * u_0
       //   b2 = (a/f_v)^2
@@ -1083,7 +1083,7 @@ namespace brick {
       //   [[b0,  0, b1],
       //    [ 0, b2, b3]  = J^(-T) *  J^(-1)
       //    [b1, b3, b4]]
-      // 
+      //
       // We rearrange and solve linearly for b0 - b4 here.
       numeric::Array1D<FloatType> eyeVector(9);
       eyeVector = 0.0;
@@ -1119,7 +1119,7 @@ namespace brick {
       coefficients(8, 4) = h10 * h10;
 
       // Solve for b0 - b4.
-      numeric::Array1D<FloatType> bVector = 
+      numeric::Array1D<FloatType> bVector =
         linearAlgebra::linearLeastSquares(coefficients, eyeVector);
 
       // Remembering the definitions of the elements of bVector, we
@@ -1132,7 +1132,7 @@ namespace brick {
       // assume two things: the focal length is positive; and the 3D
       // positions of the projected points are generally in front of
       // the camera.
-      // 
+      //
       //   b0 = (a/f_u)^2
       //   b1 = -(a/f_u)^2 * u_0
       //   b2 = (a/f_v)^2
@@ -1146,7 +1146,7 @@ namespace brick {
                     "preEstimateCameraParameters()",
                     "Untenable initial estimate for intrinsics.");
       }
-      FloatType u_0 = -bVector[1] / bVector[0];        
+      FloatType u_0 = -bVector[1] / bVector[0];
       FloatType v_0 = -bVector[3] / bVector[2];
       FloatType aSquared = bVector[4] + u_0 * bVector[1] + v_0 * bVector[3];
       if(aSquared < 1.0e-10) {
@@ -1156,12 +1156,12 @@ namespace brick {
       }
       FloatType oneOverF_u = brick::common::squareRoot(bVector[0] / aSquared);
       // Note: assuming positive focal length.
-      FloatType f_u = 1.0 / oneOverF_u;  
+      FloatType f_u = 1.0 / oneOverF_u;
       FloatType oneOverF_v = brick::common::squareRoot(bVector[2] / aSquared);
       // Note: assuming positive focal length.
-      FloatType f_v = 1.0 / oneOverF_v;  
+      FloatType f_v = 1.0 / oneOverF_v;
       FloatType aa = brick::common::squareRoot(aSquared);
-           
+
       // OK, I've copied one of the above equations here for easy
       // reference.  We just solved for the first matrix on the right
       // side of the equation, and we have H since the very beginning
@@ -1229,7 +1229,7 @@ namespace brick {
       FloatType averageZValue =
         privateCode::computeAverageTransformedZValue(
           cameraTworld, points3DBegin, points3DEnd);
-      
+
       if(averageZValue < 0.0) {
         // Based on our assumption of projecting from positive Z,
         // looks like we need to flip the sign of alpha.  We observed
@@ -1263,7 +1263,7 @@ namespace brick {
       // vertex.  The base of the triangle is a chord of the circle,
       // with length 2 * r * sin(pi / N), where N is the number of
       // triangles.
-      // 
+      //
       // As an aside, we idly wonder what the differe difference
       // between the area of the triangular approximation and the area
       // of the circle will be.  The area of the circle is
@@ -1271,7 +1271,7 @@ namespace brick {
       // @code
       //   A_c = pi * r^2.
       // @endcode
-      // 
+      //
       // The "height" of each triangle is just r * cos(pi / N).  This
       // makes the area of each triangle be A_t = r^2 * sin(pi / N) *
       // cos(pi / N).  So the area of the approximation is
@@ -1279,7 +1279,7 @@ namespace brick {
       // @code
       //   A_a = N * A_t = N * r^2 * sin(pi/N) * cos(pi/N).
       // @endcode
-      // 
+      //
       // So we have (assuming we shoot for "equal to", not "less than"):
       //
       // @code
@@ -1307,7 +1307,7 @@ namespace brick {
       typedef typename Intrinsics::FloatType MyFloat;
 
       // Sort out how we'll pie-slice the circle.
-      MyFloat const angleIncrement = 
+      MyFloat const angleIncrement =
         common::constants::twoPi / numberOfTriangles;
       MyFloat const stopAngle =
         common::constants::twoPi - angleIncrement / 2.0;
@@ -1339,7 +1339,7 @@ namespace brick {
         previousCorner = nextCorner;
         currentAngle += angleIncrement;
       }
-      
+
       // Add in the final triangle.
       geometry::Triangle2D<MyFloat> finalTriangle(
         firstCorner, previousCorner, centerPoint);
@@ -1353,7 +1353,7 @@ namespace brick {
     }
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_CALIBRATIONTOOLS_IMPL_HH */

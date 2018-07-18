@@ -19,9 +19,9 @@
 namespace brick {
 
   namespace computerVision {
-  
+
     /**
-     * Using Horn's method [1], find the Rigid body tranform which
+     * Using Horn's method [1], find the Rigid body transform that
      * takes one set of points (represented as
      * brick::numeric::Vector3D<FloatType>) and most nearly registers
      * them with a second set.
@@ -29,7 +29,7 @@ namespace brick {
      * [1] Horn, B, "Closed-form solution of absolute orientation
      * using unit quaternions", J. Opt. Soc. Am., Vol.  4(4), April,
      * 1987.
-     * 
+     *
      * @param fromPointsBegin This iterator, along with fromPointsEnd,
      * defines one of the two sets of points to be registered.  The
      * type of (*fromPointsBegin) must be Vector3D<FloatType>.  The
@@ -37,10 +37,10 @@ namespace brick {
      * the range specified by this iterator pair and transform them so
      * that they match the corresponding elements of the "to" range as
      * closely as possible in the least-squares sense.
-     * 
+     *
      * @param fromPointsEnd See the documentation for argument
      * fromPointsBegin.
-     * 
+     *
      * @param toPointsBegin This argument defines the beginning of one
      * of the two sets of points to be registered.  The returned
      * Transform3D<FloatType> instance will take points in the range
@@ -50,7 +50,7 @@ namespace brick {
      * range starting from toPointsBegin and extending (fromPointsEnd
      * - fromPointsBegin) elements.  possible in the least-squares
      * sense.
-     * 
+     *
      * @return The return value is a Transform3D<FloatType> instance
      * which takes the points in the "from" range and matches them to
      * the points in the "to" range.
@@ -73,10 +73,10 @@ namespace brick {
      * the range specified by this iterator pair and transform them so
      * that they match the corresponding elements of the "to" range as
      * closely as possible in the least-squares sense.
-     * 
+     *
      * @param fromPointsEnd See the documentation for argument
      * fromPointsBegin.
-     * 
+     *
      * @param toPointsBegin This argument defines the beginning of one
      * of the two sets of points to be registered.  The returned
      * Transform3D<FloatType> instance will take points in the range
@@ -118,10 +118,10 @@ namespace brick {
      * the range specified by this iterator pair and transform them so
      * that they match the corresponding elements of the "to" range as
      * closely as possible in the least-squares sense.
-     * 
+     *
      * @param fromPointsEnd See the documentation for argument
      * fromPointsBegin.
-     * 
+     *
      * @param toPointsBegin This argument defines the beginning of one
      * of the two sets of points to be registered.  The returned
      * Transform3D<FloatType> instance will take points in the range
@@ -142,7 +142,7 @@ namespace brick {
      * @param dummy This argument distambiguates the weighted version
      * of registerPoints3D from the version that accepts boolean
      * flags.
-     * 
+     *
      * @return The return value is a Transform3D<FloatType> instance
      * that takes into account the input points and their weights.
      */
@@ -171,10 +171,10 @@ namespace brick {
      * the range specified by this iterator pair and transform them so
      * that they match the corresponding elements of the "to" range as
      * closely as possible in the least-squares sense.
-     * 
+     *
      * @param fromPointsEnd See the documentation for argument
      * fromPointsBegin.
-     * 
+     *
      * @param toPointsBegin This argument defines the beginning of one
      * of the two sets of points to be registered.  The returned
      * Transform3D<FloatType> instance will take points in the range
@@ -227,9 +227,9 @@ namespace brick {
                      InIter1 toPointsBegin, OutIter0 selectedFlagsBegin,
                      FloatType inclusion, FloatType maximumResidual = -1.0,
                      size_t maximumIterations = 5);
-  
-  
-  } // namespace computerVision    
+
+
+  } // namespace computerVision
 
 } // namespace brick
 

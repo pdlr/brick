@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file brick/numeric/subArray2D.hh 
+* @file brick/numeric/subArray2D.hh
 * Header file declaring SubArray2D class template.
 *
 * Copyright (C) 2001-2011 David LaRose, dlr@cs.cmu.edu
@@ -15,7 +15,7 @@
 
 // This file is included by subArray2D.hh, and should not be directly included
 // by user code, so no need to include subArray2D.hh here.
-// 
+//
 // #include <brick/numeric/subArray2D.hh>
 
 #include <cmath>
@@ -26,7 +26,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     template <class Type>
     SubArray2D<Type>::
     SubArray2D(const Array2D<Type>& source)
@@ -67,7 +67,7 @@ namespace brick {
       if((this->m_stopColumn == 0) && (this->m_columnStride > 0)) {
         this->m_stopColumn = static_cast<int>(source.columns());
       }
-    
+
       // Negative indexing is also super-convenient
       while(this->m_startRow < 0) {
         this->m_startRow += static_cast<int>(source.rows());
@@ -86,7 +86,7 @@ namespace brick {
       int intRows = ((this->m_stopRow - this->m_startRow)
                       / this->m_rowStride); // integer division
       if(intRows < 0) {
-        this->m_rows = 0; 
+        this->m_rows = 0;
       } else {
         this->m_rows = intRows;
         // Can't think of a better way to do this.
@@ -100,7 +100,7 @@ namespace brick {
       int intColumns = ((this->m_stopColumn - this->m_startColumn)
                         / this->m_columnStride); // integer division
       if(intColumns < 0) {
-        this->m_columns = 0; 
+        this->m_columns = 0;
       } else {
         this->m_columns = intColumns;
         // Can't think of a better way to do this.
@@ -115,7 +115,7 @@ namespace brick {
       this->checkArray2DSize(source);
     }
 
-    
+
     template <class Type>
     SubArray2D<Type>::
     SubArray2D(const SubArray2D<Type> &other)
@@ -173,7 +173,7 @@ namespace brick {
       return *this;
     }
 
-    
+
     template <class Type>
     SubArray2D<Type>& SubArray2D<Type>::
     operator+=(const SubArray2D<Type>& other)
@@ -198,7 +198,7 @@ namespace brick {
       return *this;
     }
 
-    
+
     template <class Type>
     SubArray2D<Type>& SubArray2D<Type>::
     operator-=(const SubArray2D<Type>& other)
@@ -223,7 +223,7 @@ namespace brick {
       return *this;
     }
 
-    
+
     template <class Type>
     inline void SubArray2D<Type>::
     checkArray2DSize(const Array2D<Type>&
@@ -295,7 +295,7 @@ namespace brick {
 #endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
     }
 
-    
+
     template <class Type>
     inline void SubArray2D<Type>::
     checkSubArray2DSize(const SubArray2D<Type>&
@@ -324,7 +324,7 @@ namespace brick {
 #endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
     }
 
-    
+
     template <class Type>
     SubArray2D<Type>& SubArray2D<Type>::
     copyColumnMajor(const SubArray2D<Type>& other)
@@ -346,7 +346,7 @@ namespace brick {
       }
       return *this;
     }
-  
+
     template <class Type>
     SubArray2D<Type>& SubArray2D<Type>::
     copyRowMajor(const SubArray2D<Type>& other)

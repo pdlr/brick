@@ -74,13 +74,13 @@ namespace brick {
       gaussian(brick::common::Float64 mu, brick::common::Float64 sigma);
 
 
-      /** 
+      /**
        * This member function returns the current state of the random
        * number generator.  Note that the result of this call will
        * change each time a random number is generated.  You can pick up
        * at any given place in the sequence of random numbers by
        * recording the seed at that point and setting it later.
-       * 
+       *
        * @return The return value is a long long int.  Currently only
        * the low-order 47 bits are meaningful.  The remaining bits will
        * be set to zero.
@@ -88,7 +88,7 @@ namespace brick {
       brick::common::Int64
       getCurrentSeed();
 
-    
+
       /**
        * This member function returns a Float64 drawn from a Gaussian
        * distribution with mean equal to 0.0 and and standard deviation
@@ -112,7 +112,7 @@ namespace brick {
        */
       void
       setCurrentSeed(brick::common::Int64 seed);
-    
+
 
       /**
        * This member function returns a Float64, x, drawn from a uniform
@@ -154,10 +154,10 @@ namespace brick {
 
     private:
 
-      /** 
+      /**
        * This private member function sets the the internal state which
        * will be used to seed the LAPACK function call
-       * 
+       *
        * @param seed0 This argument is a seed integer, and must be in
        * the range [0,4096).
        *
@@ -174,7 +174,7 @@ namespace brick {
       setLapackSeed(brick::common::Int32 seed0, brick::common::Int32 seed1,
                     brick::common::Int32 seed2, brick::common::Int32 seed3);
 
-    
+
       /**
        * The four seed values used by the pseudo-random number generator.
        */

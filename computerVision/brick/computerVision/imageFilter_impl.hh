@@ -15,7 +15,7 @@
 
 // This file is included by imageFilter.hh, and should not be directly included
 // by user code, so no need to include imageFilter.hh here.
-// 
+//
 // #include <brick/computerVision/imageFilter.hh>
 
 // #include <cmath>
@@ -64,7 +64,7 @@ namespace brick {
           outputImage = static_cast<OUTPUT_TYPE>(0);
           return;
         }
-        
+
         size_t halfKernelColumns = kernel.columns() / 2;
         size_t halfKernelRows = kernel.rows() / 2;
         size_t imageColumns = image.columns();
@@ -85,7 +85,7 @@ namespace brick {
               ++columnIndex) {
             *(resultIterator++) = static_cast<OUTPUT_TYPE>(0);
           }
-          ++rowIndex;          
+          ++rowIndex;
         }
 
         // Now process all of the rows which are affected by the
@@ -108,7 +108,7 @@ namespace brick {
 
           // Process most of the pixels in the current row.
           while(columnIndex < lastAffectedColumn) {
-              
+
             // Calculate one dot-product between the kernel and the
             // current bit of image.
             KernelType dotProduct = static_cast<KernelType>(0);
@@ -147,12 +147,12 @@ namespace brick {
               ++columnIndex) {
             *(resultIterator++) = static_cast<OUTPUT_TYPE>(0);
           }
-          ++rowIndex;          
+          ++rowIndex;
         }
       }
 
 
-      
+
       template<class OUTPUT_TYPE, class INPUT_TYPE, class KernelType>
       void
       filterColumnsZeroPad(brick::numeric::Array2D<OUTPUT_TYPE>& outputImage,
@@ -184,7 +184,7 @@ namespace brick {
           outputImage = static_cast<OUTPUT_TYPE>(0);
           return;
         }
-        
+
         size_t halfKernelSize = kernel.size() / 2;
         size_t imageColumns = image.columns();
         size_t imageRows = image.rows();
@@ -202,7 +202,7 @@ namespace brick {
               ++columnIndex) {
             outputRow[columnIndex] = static_cast<OUTPUT_TYPE>(0);
           }
-          ++rowIndex;          
+          ++rowIndex;
         }
 
         // Now process all of the rows which are affected by the
@@ -223,7 +223,7 @@ namespace brick {
 	    outputRow(columnIndex0) = static_cast<OUTPUT_TYPE>(0);
 	    ++columnIndex0;
 	  }
-	    
+
           for(size_t columnIndex1 = skipColumns;
               columnIndex1 < lastAffectedColumn;
               ++columnIndex1) {
@@ -257,7 +257,7 @@ namespace brick {
               ++columnIndex) {
             outputRow[columnIndex] = static_cast<OUTPUT_TYPE>(0);
           }
-          ++rowIndex;          
+          ++rowIndex;
         }
       }
 
@@ -293,7 +293,7 @@ namespace brick {
           outputImage = static_cast<OUTPUT_TYPE>(0);
           return;
         }
-        
+
         size_t halfKernelSize = kernel.size() / 2;
         size_t imageColumns = image.columns();
         size_t imageRows = image.rows();
@@ -307,7 +307,7 @@ namespace brick {
 		    outputImage.rowBegin(index0),
 		    static_cast<OUTPUT_TYPE>(0));
 	}
-	
+
         // Get a pointer to the output image data.
         typename brick::numeric::Array2D<OUTPUT_TYPE>::iterator
           resultIterator = outputImage.begin() + skipRows * imageColumns;
@@ -374,7 +374,7 @@ namespace brick {
     } // namespace privateCode
     /// @endcond
 
-#endif    
+#endif
 
     namespace privateCode {
 
@@ -395,7 +395,7 @@ namespace brick {
         Image<InputFormat> const& inImage,
         typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
         int const finalShift = -2);
-      
+
       template <class IntermediateType, ImageFormat OutputFormat,
                 ImageFormat InputFormat>
       void
@@ -413,7 +413,7 @@ namespace brick {
         Image<InputFormat> const& inImage,
         typename ImageFormatTraits<OutputFormat>::PixelType const fillValue,
         int const finalShift = -4);
-      
+
       template <class IntermediateType, ImageFormat OutputFormat,
                 ImageFormat InputFormat>
       void
@@ -476,7 +476,7 @@ namespace brick {
 
     } // namespace privateCode
 
-    
+
     // This function filters an image with the given kernel.
     template<ImageFormat OutputFormat,
              ImageFormat ImageFormat,
@@ -493,7 +493,7 @@ namespace brick {
 	returnImage, kernel, image, fillValue, convolutionStrategy);
       return returnImage;
     }
-    
+
 
     // This function filters an image with the given kernel, placing
     // the result into a pre-constructed Image instance.
@@ -515,7 +515,7 @@ namespace brick {
       }
       typedef typename ImageFormatTraits<OutputFormat>::PixelType
 	OutputPixelType;
-      
+
       if(kernel.isSeparable()) {
 	brick::numeric::Array1D<KernelType> kernelRowComponent =
 	  kernel.getRowComponent();
@@ -525,7 +525,7 @@ namespace brick {
 	  1, kernelRowComponent.size(), kernelRowComponent.data());
 	brick::numeric::Array2D<KernelType> columnKernel(
 	  kernelColumnComponent.size(), 1, kernelColumnComponent.data());
-	
+
 	Image<OutputFormat> intermediateImage =
 	  numeric::correlate2D<OutputPixelType, OutputPixelType>(
 	    rowKernel, image,
@@ -709,7 +709,7 @@ namespace brick {
   } // namespace computerVision
 
 } // namespace brick
-    
+
 
 // Definitions of local symbols below.
 
@@ -752,7 +752,7 @@ namespace brick {
         for(unsigned int index = 0; index < numColumns; ++index) {
           outPtr0[index] = fillValue;
         }
-        
+
         // Now convolve, but do it row-wise to minimize cache misses.
         for(unsigned int row = 1; row < stopRow; ++row) {
           InElementType* inPtr = const_cast<InElementType*>(
@@ -811,7 +811,7 @@ namespace brick {
           outPtr0[index] = fillValue;
           outPtr0[index + outRowStep] = fillValue;
         }
-        
+
         // Now convolve, but do it row-wise to minimize cache misses.
         for(unsigned int row = 2; row < stopRow; ++row) {
           InElementType* inPtr = const_cast<InElementType*>(
@@ -836,7 +836,7 @@ namespace brick {
         }
       }
 
-      
+
       template <class IntermediateType, ImageFormat OutputFormat,
                 ImageFormat InputFormat>
       void
@@ -867,7 +867,7 @@ namespace brick {
         int const threeInRowStep = inRowStep * 3;
         int const outRowStep = outImage.getRowStep();
         int const twoOutRowStep = outRowStep * 2;
-        
+
         // Fill pixels for which we won't have valid results.
         OutElementType* outPtr0 = const_cast<OutElementType*>(
           outImage.data(0, 0));
@@ -876,7 +876,7 @@ namespace brick {
           outPtr0[index + outRowStep] = fillValue;
           outPtr0[index + twoOutRowStep] = fillValue;
         }
-        
+
         // Now convolve, but do it row-wise to minimize cache misses.
         for(unsigned int row = 3; row < stopRow; ++row) {
           InElementType* inPtr = const_cast<InElementType*>(
@@ -939,7 +939,7 @@ namespace brick {
         int const outRowStep = outImage.getRowStep();
         int const twoOutRowStep = outRowStep * 2;
         int const threeOutRowStep = outRowStep * 3;
-        
+
         // Fill pixels for which we won't have valid results.
         OutElementType* outPtr0 = const_cast<OutElementType*>(
           outImage.data(0, 0));
@@ -949,7 +949,7 @@ namespace brick {
           outPtr0[index + twoOutRowStep] = fillValue;
           outPtr0[index + threeOutRowStep] = fillValue;
         }
-        
+
         // Now convolve, but do it row-wise to minimize cache misses.
         for(unsigned int row = 4; row < stopRow; ++row) {
           InElementType* inPtr = const_cast<InElementType*>(
@@ -1018,7 +1018,7 @@ namespace brick {
         int const twoOutRowStep = outRowStep * 2;
         int const threeOutRowStep = outRowStep * 3;
         int const fourOutRowStep = outRowStep * 4;
-        
+
         // Fill pixels for which we won't have valid results.
         OutElementType* outPtr0 = const_cast<OutElementType*>(
           outImage.data(0, 0));
@@ -1029,7 +1029,7 @@ namespace brick {
           outPtr0[index + threeOutRowStep] = fillValue;
           outPtr0[index + fourOutRowStep] = fillValue;
         }
-        
+
         // Now convolve, but do it row-wise to minimize cache misses.
         for(unsigned int row = 5; row < stopRow; ++row) {
           InElementType* inPtr = const_cast<InElementType*>(
@@ -1066,7 +1066,7 @@ namespace brick {
           outPtr0[index + fourOutRowStep] = fillValue;
         }
       }
-      
+
 
       template <class IntermediateType, ImageFormat OutputFormat,
                 ImageFormat InputFormat>
@@ -1089,7 +1089,7 @@ namespace brick {
                       "Arguments outImage and inImage must have "
                       "the same shape.");
         }
-        
+
         // Now convolve each row in turn.
         unsigned int stopColumn = inImage.columns() - 1;
         for(unsigned int row = 0; row < inImage.rows(); ++row) {
@@ -1108,7 +1108,7 @@ namespace brick {
         }
       }
 
-      
+
       template <class IntermediateType, ImageFormat OutputFormat,
                 ImageFormat InputFormat>
       void
@@ -1264,7 +1264,7 @@ namespace brick {
         }
 
       }
-      
+
 
       template <class IntermediateType, ImageFormat OutputFormat,
                 ImageFormat InputFormat>
@@ -1326,11 +1326,11 @@ namespace brick {
           outPtr[stopColumn + 4] = fillValue;
         }
       }
-      
+
     } // namespace privateCode
-    
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 
@@ -1339,7 +1339,7 @@ namespace brick {
 namespace {
 
   template <brick::computerVision::ImageFormat Format>
-  brick::computerVision::Image<Format> 
+  brick::computerVision::Image<Format>
   filterColumns121_simple(
     brick::computerVision::Image<Format> const& inImage,
     typename brick::computerVision::ImageFormatTraits<Format>::PixelType const /* fillValue */,
@@ -1372,7 +1372,7 @@ namespace {
 
 
   template <brick::computerVision::ImageFormat Format>
-  brick::computerVision::Image<Format> 
+  brick::computerVision::Image<Format>
   filterRows121_multipass(
     brick::computerVision::Image<Format> const& inImage,
     unsigned int numberOfPasses,
@@ -1440,7 +1440,7 @@ namespace {
 
 
   template <brick::computerVision::ImageFormat Format>
-  brick::computerVision::Image<Format> 
+  brick::computerVision::Image<Format>
   filter_1_6_15_20_15_6_1(brick::computerVision::Image<Format> const& inImage,
                           const unsigned int stepSize,
                           const unsigned int startRow,
@@ -1470,7 +1470,7 @@ namespace {
     }
     return resultImage;
   }
-  
+
 } // namespace
 
 #endif /* #ifndef BRICK_COMPUTERVISION_IMAGEFILTER_IMPL_HH */

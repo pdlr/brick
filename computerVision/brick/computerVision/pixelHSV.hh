@@ -18,28 +18,28 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     template<class TYPE>
     struct PixelHSV
     {
     public:
 
-      /** 
+      /**
        * This constructor makes no guarantees about the color of the
        * pixel.
        */
       PixelHSV()
         : hue(), saturation(), value() {}
 
-    
-      /** 
+
+      /**
        * This constructor explicitly sets the pixel value.
-       * 
+       *
        * @param hue This argument specifies the hue value for the new pixel.
-       * 
+       *
        * @param saturation This argument specifies the saturation
        * value for the new pixel.
-       * 
+       *
        * @param value This argument specifies the value value for the new pixel.
        */
       PixelHSV(const TYPE& hueValue, const TYPE& saturationValue,
@@ -47,20 +47,20 @@ namespace brick {
         : hue(hueValue), saturation(saturationValue), value(valueValue) {}
 
 
-      /** 
+      /**
        * The destructor deletes cleans up for deletion.
        */
       ~PixelHSV() {}
 
-    
-      /** 
+
+      /**
        * This member function copies the pixel component values, in
        * order, from consecutive iterator targets, incrementing the
        * iterator after each copy.
-       * 
+       *
        * @param iter This argument is the iterator from which to copy the
        * pixel components.
-       * 
+       *
        * @return The return value is a reference to iter after the
        * copying and incrementing is done.
        */
@@ -69,14 +69,14 @@ namespace brick {
       copyFromIterator(Iter& iter);
 
 
-      /** 
+      /**
        * This member function assigns the pixel component values, in
        * order, to consecutive iterator targets, incrementing the
        * iterator after each assignment.
-       * 
+       *
        * @param iter This argument is the iterator to which to copy the
        * pixel components.
-       * 
+       *
        * @return The return value is a reference to iter after the
        * copying and incrementing is done.
        */
@@ -94,11 +94,11 @@ namespace brick {
 
       /* ====== Static member functions ====== */
 
-      /** 
+      /**
        * This static member function indicates whether or not a pixel
        * instance is memory identical to a contiguous array of Component
        * type.
-       * 
+       *
        * @return The return value is true if the pixel structure is not
        * padded by the compiler.
        */
@@ -116,16 +116,16 @@ namespace brick {
     typedef PixelHSV<brick::common::Float64> PixelHSVFloat64;
 
 
-    /** 
+    /**
      * This operator subtracts the values of the individual color
      * components of its arguments.
-     * 
+     *
      * @param pixel0 The color component values of pixel1 will be
      * subtracted from the color component values of this pixel.
-     * 
+     *
      * @param pixel1 The color component values of this pixel will be
      * subtracted from the color component values of pixel1.
-     * 
+     *
      * @return The return value is a pixel in which each color component
      * value is the difference of the corresponding values in the two
      * input pixels.
@@ -134,15 +134,15 @@ namespace brick {
     inline PixelHSV<TYPE>
     operator-(const PixelHSV<TYPE>& pixel0, const PixelHSV<TYPE>& pixel1);
 
-  
-    /** 
+
+    /**
      * This operator returns true if the contents of the two argments
      * are identical, false otherwise.
-     * 
+     *
      * @param pixel0 This argument is the first pixel value to be compared.
-     * 
+     *
      * @param pixel1 This argument is the second pixel value to be compared.
-     * 
+     *
      * @return The return value indicates whether the two pixels have
      * identical values.
      */
@@ -153,14 +153,14 @@ namespace brick {
   } // namespace computerVision
 
 } // namespace brick
-  
+
 /* ============ Definitions of inline & template functions ============ */
 
 
 namespace brick {
 
   namespace computerVision {
-    
+
     // This member function copies the pixel component values, in
     // order, from consecutive iterator targets, incrementing the
     // iterator after each copy.
@@ -237,7 +237,7 @@ namespace brick {
     }
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_PIXELHSV_HH */

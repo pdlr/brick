@@ -17,7 +17,7 @@
 // This file is included by getEuclideanDistance.hh, and should not be
 // directly included by user code, so no need to include
 // getEuclideanDistance.hh here.
-// 
+//
 // #include <brick/computerVision/getEuclideanDistance.hh>
 
 #include <cmath>
@@ -26,7 +26,7 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     /// @cond privateCode
     namespace privateCode {
 
@@ -57,7 +57,7 @@ namespace brick {
     } // namespace privateCode
     /// @endcond
 
-  
+
     template<class FloatType, ImageFormat FORMAT>
     brick::numeric::Array2D<FloatType>
     getEuclideanDistance(const Image<FORMAT>& inputImage,
@@ -104,8 +104,8 @@ namespace brick {
         // This variable will tell us if we can quit early because the
         // distances are all correct.
         bool isChanged = false;
-      
-        // === Propagate distances East. === 
+
+        // === Propagate distances East. ===
 
         // Propagate distances East along top row.
         index0 = 1;
@@ -203,7 +203,7 @@ namespace brick {
             0, static_cast<int>(column));
           --index0;
         }
-      
+
         // Propagate distances West through the bulk of the image.
         for(size_t row = 1; row < inputImage.rows() - 1; ++row) {
           index0 = (row + 1) * inputImage.columns() - 2;
@@ -221,7 +221,7 @@ namespace brick {
             --index0;
           }
         }
-      
+
         // Propagate distances West along bottom row.
         index0 = rows * columns - 2;
         for(size_t column = inputImage.columns() - 2; column < columns; --column) {
@@ -289,15 +289,9 @@ namespace brick {
       numberOfPassesUsed = passNumber;
       return distanceMap;
     }
-  
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_EUCLIDEANDISTANCE_IMPL_HH */
-
-
-
-
-
-

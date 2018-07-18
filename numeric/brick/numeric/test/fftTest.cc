@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
-* @file fftTest.cc
-* 
+* @file brick/numeric/test/fftTest.cc
+*
 * Source file defining FFTTest class.
 *
 * Copyright (C) 2017 David LaRose, dlr@cs.cmu.edu
@@ -20,7 +20,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     class FFTTest
       : public brick::test::TestFixture<FFTTest> {
 
@@ -36,10 +36,10 @@ namespace brick {
       void testComputeFFT_radix2();
       void testComputeFFT_result();
       void testComputeFFT_singleFrequency();
-    
+
     private:
 
-      
+
 
       double m_defaultTolerance;
       double m_relaxedTolerance;
@@ -71,8 +71,8 @@ namespace brick {
       BRICK_TEST_ASSERT_EXCEPTION(common::NotImplementedException,
                                   computeFFT(inputSignal));
     }
-    
-      
+
+
     void
     FFTTest::
     testComputeFFT_result()
@@ -107,7 +107,7 @@ namespace brick {
                              brick::common::cosine(theta));
           double imaginaryPart = (referenceAmplitudes[jj] *
                                   brick::common::sine(theta));
-          
+
           // Notice that we're just Naively (O(N^2)) doing an inverse
           // DFT here, so we need a factor of 1/N to make the
           // amplitudes work out.
@@ -120,12 +120,12 @@ namespace brick {
       }
 
       // std::cout << "\nSignal: " << inputSignal << std::endl;
-      
+
       // Now do the FFT.
       Array1D< std::complex<double> > fft = computeFFT(inputSignal);
 
       // std::cout << "\nFFT: " << fft << std::endl;
-      
+
       // Check that the result is correct.
       for(std::size_t ii = 0; ii < signalLength; ++ii) {
         double amplitude = std::abs(fft[ii]);
@@ -140,7 +140,7 @@ namespace brick {
                                this->m_defaultTolerance));
           if(amplitude > brick::numeric::NumericTraits<double>::epsilon()) {
             BRICK_TEST_ASSERT(
-              approximatelyEqual(phase, referencePhases[ii], 
+              approximatelyEqual(phase, referencePhases[ii],
                                  this->m_defaultTolerance));
           }
         } catch(...) {

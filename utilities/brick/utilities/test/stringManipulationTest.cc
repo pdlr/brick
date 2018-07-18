@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/utilities/test/stringManipulationTest.cc
-* 
+*
 * Source file defining tests for string manipulation routines.
 *
 * Copyright (C) 2004-2011 David LaRose, dlr@cs.cmu.edu
@@ -99,7 +99,7 @@ namespace brick {
       BRICK_TEST_ASSERT(convertString<double>("11.5") == 11.5);
     }
 
-  
+
     void
     StringManipulationTest::
     testJoinString()
@@ -111,7 +111,7 @@ namespace brick {
       std::string string1("String1");
       std::string string2("String2");
       std::string string3("String3");
-    
+
       std::string outputString;
       outputString = joinString(inputStringVector);
       BRICK_TEST_ASSERT(outputString == "");
@@ -138,7 +138,7 @@ namespace brick {
       BRICK_TEST_ASSERT(outputString == referenceString);
       outputString = joinString(inputStringVector, blankSeparator);
       BRICK_TEST_ASSERT(outputString == referenceString);
-    
+
       referenceString = (string0 + unblankSeparator
                          + string1 + unblankSeparator
                          + string2 + unblankSeparator
@@ -147,7 +147,7 @@ namespace brick {
       BRICK_TEST_ASSERT(outputString == referenceString);
     }
 
-  
+
     void
     StringManipulationTest::
     testReplaceString()
@@ -243,7 +243,7 @@ namespace brick {
       BRICK_TEST_ASSERT(stringParts[2] == "is");
       BRICK_TEST_ASSERT(stringParts[3] == "");
       BRICK_TEST_ASSERT(stringParts[4] == "atestaastringaa");
-    
+
       stringParts = splitString(testString, "a", true, 9);
       BRICK_TEST_ASSERT(stringParts.size() == 10);
       BRICK_TEST_ASSERT(stringParts[0] == "");
@@ -301,11 +301,11 @@ namespace brick {
       // Sencond test shouldn't change the string.
       std::string resultString2 = wrapString(testString2);
       BRICK_TEST_ASSERT(resultString2 == testString2);
-    
+
     }
-  
+
   } // namespace utilities
-  
+
 } // namespace brick
 
 

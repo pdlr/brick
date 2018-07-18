@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file utilitiesTest.cpp
+* @file brick/numeric/test/utilitiesTest.cpp
 *
 * Source file defining UtilitiesTest class.
 *
@@ -25,7 +25,7 @@ namespace brick {
     public:
 
       typedef UtilitiesTest<Type> TestFixtureType;
-    
+
 
       UtilitiesTest(const std::string& typeName);
       ~UtilitiesTest() {}
@@ -80,9 +80,9 @@ namespace brick {
 
       Array1D<double>
       getRandomSample(size_t dimensionality);
-      
+
       double m_defaultTolerance;
-    
+
     }; // class UtilitiesTest
 
 
@@ -180,7 +180,7 @@ namespace brick {
       BRICK_TEST_ASSERT(!allFalse(testArray1));
       BRICK_TEST_ASSERT(anyTrue(testArray1));
       BRICK_TEST_ASSERT(!anyFalse(testArray1));
-    
+
       BRICK_TEST_ASSERT(!allTrue(testArray2));
       BRICK_TEST_ASSERT(!allFalse(testArray2));
       BRICK_TEST_ASSERT(anyTrue(testArray2));
@@ -426,7 +426,7 @@ namespace brick {
     testAxisSum0()
     {
       typedef typename ArithmeticTraits<Type, Type>::SumType SumType;
-      
+
       Array2D<Type> testArray0("[[-2, -1, -10],"
                                " [5, 2, 3],"
                                " [10, 0, -2],"
@@ -435,7 +435,7 @@ namespace brick {
       Array1D<SumType> sumOverColumns("[-13, 10, 8, 5]");
       Array1D<SumType> computedSum0 = axisSum<SumType>(testArray0, 0);
       Array1D<SumType> computedSum1 = axisSum<SumType>(testArray0, 1);
-    
+
       BRICK_TEST_ASSERT(
         this->equivalent(computedSum0, sumOverRows,
                          static_cast<SumType>(m_defaultTolerance)));
@@ -443,7 +443,7 @@ namespace brick {
         this->equivalent(computedSum1, sumOverColumns,
                          static_cast<SumType>(m_defaultTolerance)));
     }
-    
+
 
     template <class Type>
     void
@@ -458,7 +458,7 @@ namespace brick {
       Array1D<double> sumOverColumns("[-13, 10, 8, 5]");
       Array1D<double> computedSum0 = axisSum<double>(testArray0, 0);
       Array1D<double> computedSum1 = axisSum<double>(testArray0, 1);
-    
+
       BRICK_TEST_ASSERT(
         this->equivalent(computedSum0, sumOverRows,
                          static_cast<double>(m_defaultTolerance)));
@@ -466,7 +466,7 @@ namespace brick {
         this->equivalent(computedSum1, sumOverColumns,
                          static_cast<double>(m_defaultTolerance)));
     }
-    
+
 
     template <class Type>
     void
@@ -480,12 +480,12 @@ namespace brick {
 //                              " [1, 2, 2]]");
 //     Array1D<double> sumOverRows("[14, 3, -7]");
 //     Array1D<double> sumOverColumns("[-13, 10, 8, 5]");
-    
+
 //     Array1D<double> computedSum0 =
 //       axisSum(testArray0, 0, Double, std::plus<double>());
 //     Array1D<double> computedSum1 =
 //       axisSum(testArray0, 1, Double, std::plus<double>());
-    
+
 //     BRICK_TEST_ASSERT(
 //       this->equivalent(computedSum0, sumOverRows,
 //                        static_cast<double>(m_defaultTolerance)));
@@ -493,7 +493,7 @@ namespace brick {
 //       this->equivalent(computedSum1, sumOverColumns,
 //                        static_cast<double>(m_defaultTolerance)));
     }
-    
+
 
     template <class Type>
     void
@@ -505,13 +505,13 @@ namespace brick {
                             " [0, 1, 2, 3]]");
       Array2D<Type> computedIndices =
         columnIndices<Type>(indices.rows(), indices.columns());
-    
+
       BRICK_TEST_ASSERT(
         this->equivalent(computedIndices, indices,
                          static_cast<Type>(m_defaultTolerance)));
     }
 
-  
+
     template <class Type>
     void
     UtilitiesTest<Type>::
@@ -521,13 +521,13 @@ namespace brick {
       Array1D<bool> mask("[1, 1, 0, 1, 0]");
       Array1D<Type> target("[1, 2, 4]");
       Array1D<Type> computedArray = compress(mask, inputArray);
-    
+
       BRICK_TEST_ASSERT(
         this->equivalent(computedArray, target,
                          static_cast<Type>(m_defaultTolerance)));
     }
 
-  
+
     template <class Type>
     void
     UtilitiesTest<Type>::
@@ -538,13 +538,13 @@ namespace brick {
       Array1D<Type> target("[1, 2, 4]");
       size_t numTrue = 3;
       Array1D<Type> computedArray = compress(mask, inputArray, numTrue);
-    
+
       BRICK_TEST_ASSERT(
         this->equivalent(computedArray, target,
                          static_cast<Type>(m_defaultTolerance)));
     }
 
-  
+
     template <class Type>
     void
     UtilitiesTest<Type>::
@@ -564,7 +564,7 @@ namespace brick {
       Array1D<Type> inputArray0("[0, 2, 0, 2, 0, 0, 0, 0]");
       double centroid = getCentroid<double>(inputArray0);
       BRICK_TEST_ASSERT(approximatelyEqual(centroid, 2.0, m_defaultTolerance));
-      
+
       Array1D<Type> inputArray1("[-5, -1, 2, 6, 6, 2, -1, -5]");
       centroid = getCentroid<double>(inputArray1);
       BRICK_TEST_ASSERT(approximatelyEqual(centroid, 3.5, m_defaultTolerance));
@@ -601,7 +601,7 @@ namespace brick {
         Array1D<double> sampleOffset =
           sampleArray.row(sampleIndex) - referenceMean;
         referenceCovariance += outerProduct<double>(
-          sampleOffset, sampleOffset);      
+          sampleOffset, sampleOffset);
       }
       referenceCovariance /= static_cast<double>(numberOfSamples - 1);
 
@@ -668,7 +668,7 @@ namespace brick {
           maximum(inputArray.getRegion(Index2D(1, 1), Index2D(4, 5))),
           10.0, m_defaultTolerance));
     }
-    
+
 
     template <class Type>
     void
@@ -715,8 +715,8 @@ namespace brick {
                                " [1, 2, 2]]");
       SumType sum0_2_0_3 = -3;
       SumType sum0_3_0_2 = 14;
-      SumType sum2_4_1_3 = 2;    
-    
+      SumType sum2_4_1_3 = 2;
+
       SumType computedSum0_2_0_3 =
         sum<SumType>(testArray0, Index2D(0, 0), Index2D(2, 3));
       SumType computedSum0_3_0_2 =
@@ -734,7 +734,7 @@ namespace brick {
         approximatelyEqual(computedSum2_4_1_3, sum2_4_1_3,
                            static_cast<SumType>(m_defaultTolerance)));
     }
-    
+
 
     template <class Type>
     void
@@ -839,9 +839,9 @@ namespace brick {
       }
       return returnValue;
     }
-    
+
   } // namespace numeric
-  
+
 } // namespace brick
 
 

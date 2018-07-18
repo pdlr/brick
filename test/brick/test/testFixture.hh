@@ -33,7 +33,7 @@ namespace brick {
      ** inheritance:
      **
      **   class MyTestClass : public brick::TestFixture<MyTestClass>;
-     ** 
+     **
      ** The derived class should define individual tests as member
      ** functions:
      **
@@ -72,23 +72,23 @@ namespace brick {
 
       /* ============== Public Typedefs ============== */
 
-      /** 
+      /**
        * The TestFixtureType typedef is used by helper macros, and may
        * eventually be useful for other things, too.
        */
       typedef FixtureType TestFixtureType;
-    
-      /** 
+
+      /**
        * The TestFunctionPtr typedef is used to conveniently work with
        * member functions of the derived class, which will be run as
        * individual tests.
        */
       typedef void (FixtureType::* TestFunctionPtr)();
 
-    
+
       /* ============== Public Member Functions ============== */
 
-      /** 
+      /**
        * This constructor sets the name of the group of tests run by
        * this test fixture.
        *
@@ -99,7 +99,7 @@ namespace brick {
       TestFixture(const std::string& testFixtureName);
 
 
-      /** 
+      /**
        * The destructor cleans up any resources and destroys the class
        * instance.
        */
@@ -107,7 +107,7 @@ namespace brick {
       ~TestFixture();
 
 
-      /** 
+      /**
        * This member function is used to indicate which member functions
        * of the subclass should be run as tests.  Call it once for each
        * test.
@@ -124,12 +124,12 @@ namespace brick {
       virtual void
       registerTest(const std::string& testName,
                    TestFunctionPtr testFunctionPtr);
-      
-      /** 
+
+      /**
        * This member function runs all of the registered tests, keeps
        * track of the results, and prints any diagnostic output, finally
        * returning a bool indicating success (true) or failure (false).
-       * 
+       *
        * @return The return value will be true if all of the registered
        * tests pass, false otherwise.
        */
@@ -140,7 +140,7 @@ namespace brick {
 
       /* ============== Protected Member Functions ============== */
 
-      /** 
+      /**
        * This protected member function prints a message indicating that
        * the test fixture has run all of its tests.  If a subclass
        * overrides TestFixture::run(), then this method should generally
@@ -148,8 +148,8 @@ namespace brick {
        */
       virtual void
       announceTestFinish();
-    
-      /** 
+
+      /**
        * This protected member function prints a message indicating that
        * the test fixture is about to run its tests.  If a subclass
        * overrides TestFixture::run(), then this method should generally
@@ -159,7 +159,7 @@ namespace brick {
       announceTestStart();
 
 
-      /** 
+      /**
        * This protected member function builds a diagnostic string
        * describing a test failure.  Derived classes can override this
        * to customize test failure output.
@@ -180,7 +180,7 @@ namespace brick {
        * information about the nature of the failure.
        *
        * @return The return value is a formatted string describing the
-       * error.  The default format looks something like this: 
+       * error.  The default format looks something like this:
        * "1) Failed test foo::bar ..."
        */
       virtual std::string
@@ -188,12 +188,12 @@ namespace brick {
                           const std::string& testName,
                           const std::string& failureType,
                           const std::string& whatMessage);
-                        
 
-      /** 
+
+      /**
        * This protected member function prints the final output
        * indicating how many tests passed/failed, etc.
-       * 
+       *
        * @param errorCount This argument specifies how many tests
        * aborted by throwing exceptions.
        *
@@ -204,7 +204,7 @@ namespace brick {
       printTestStatistics(int errorCount,
                           const std::vector<std::string>& testMessages);
 
-      /** 
+      /**
        * This protected member function is called immediately before
        * each test is run.  The argument will be set to the name of the
        * test which is about to be run.
@@ -215,8 +215,8 @@ namespace brick {
        */
       virtual void
       setUp(const std::string&) {}
-    
-      /** 
+
+      /**
        * This protected member function is called immediately after
        * each test is run.  The argument will be set to the name of the
        * test which was just run.
@@ -228,7 +228,7 @@ namespace brick {
       virtual void
       tearDown(const std::string&) {}
 
-    
+
       /* ============== Protected Member Variables ============== */
 
       /**
@@ -242,7 +242,7 @@ namespace brick {
        * running tests.  Lower numbers mean less output.
        */
       int m_verbosity;
-    
+
     private:
 
       /* ============== Private Member Variables ============== */
@@ -256,7 +256,7 @@ namespace brick {
     };
 
   } // namespace test
-  
+
 } // namespace brick
 
 
@@ -284,7 +284,7 @@ namespace brick {
       // Empty
     }
 
-  
+
     // The destructor cleans up any resources and destroys the class
     // instance.
     template <class FixtureType>
@@ -319,7 +319,7 @@ namespace brick {
     {
       // Print the starting banner.
       this->announceTestStart();
-    
+
       // This vector will hold the a message for each failed test.
       std::vector<std::string> testMessages;
 
@@ -337,7 +337,7 @@ namespace brick {
           // the exception?
           throw;
         }
-      
+
         // Extract the function pointer.
         TestFunctionPtr testFunctionPtr = m_testFunctionPtrVector[index];
         try {
@@ -366,7 +366,7 @@ namespace brick {
 
           // Increment the count of errors.
           ++errorCount;
-        
+
           // And save information about the error.
           std::string message = this->buildFailureMessage(
             testMessages.size() + 1, m_testNameVector[index], "Error in test",
@@ -413,7 +413,7 @@ namespace brick {
       return (testMessages.size() == 0);
     }
 
-  
+
     // This protected member function prints a message indicating that
     // the test fixture has run all of its tests.
     template <class FixtureType>
@@ -429,7 +429,7 @@ namespace brick {
       }
     }
 
-  
+
     // This protected member function prints a message indicating that
     // the test fixture is about to run its tests.
     template <class FixtureType>
@@ -458,14 +458,14 @@ namespace brick {
     {
       // We'll build the message using stream IO.
       std::ostringstream messageBuffer;
-    
+
       // First format up the "1) " part.
       messageBuffer << failureIndex << ") ";
 
       // We'll want to know how many spaces the string takes up so far
       // so we can format better later.
       size_t indentSize = messageBuffer.str().size();
-    
+
       // Add the failure description and test name.
       messageBuffer << failureType << " " << m_testFixtureName << "::"
                     << testName;

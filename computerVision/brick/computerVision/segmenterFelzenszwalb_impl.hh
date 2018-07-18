@@ -17,7 +17,7 @@
 // This file is included by segmenterFelzenszwalb.hh, and should not be
 // directly included by user code, so no need to include
 // segmenterFelzenszwalb.hh here.
-// 
+//
 // #include <brick/computerVision/segmenterFelzenszwalb.hh>
 
 namespace brick {
@@ -25,7 +25,7 @@ namespace brick {
   namespace computerVision {
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 
@@ -58,7 +58,7 @@ namespace brick {
       }
     }
 
-    
+
     template <class EdgeFunctor, class FloatType>
     template <ImageFormat FORMAT>
     std::vector< Edge<FloatType> >
@@ -68,7 +68,7 @@ namespace brick {
       return this->getEdges8Connected(inImage);
     }
 
-    
+
     template <class EdgeFunctor, class FloatType>
     template <ImageFormat FORMAT>
     std::vector< Edge<FloatType> >
@@ -113,7 +113,7 @@ namespace brick {
                     "SegmenterFelzenszwalb::getEdges4Connected()",
                     "Indexing error.");
       }
-    
+
       // Get the last row of pixels;
       for(size_t column = 0; column < interiorColumns; ++column) {
         pixelIndex1 = pixelIndex0 + 1;
@@ -159,14 +159,14 @@ namespace brick {
         // Get the first pixel of the row;
         pixelIndex1 = pixelIndex0 + 1;
         this->setEdge(edges[edgeNumber++], pixelIndex0, pixelIndex1, inImage);
-      
+
         pixelIndex1 += inImage.columns();
         this->setEdge(edges[edgeNumber++], pixelIndex0, pixelIndex1, inImage);
 
         pixelIndex1 -= 1;
         this->setEdge(edges[edgeNumber++], pixelIndex0, pixelIndex1, inImage);
         ++pixelIndex0;
-      
+
         // Get the interior pixels of the row.
         for(size_t column = 1; column < interiorColumns; ++column) {
           pixelIndex1 = pixelIndex0 + 1;
@@ -198,7 +198,7 @@ namespace brick {
                     "SegmenterFelzenszwalb::getEdges8Connected()",
                     "Indexing error.");
       }
-    
+
       // Get the last row of pixels;
       for(size_t column = 0; column < interiorColumns; ++column) {
         pixelIndex1 = pixelIndex0 + 1;
@@ -244,7 +244,7 @@ namespace brick {
       return labelArray;
     }
 
-      
+
     template <class EdgeFunctor, class FloatType>
     brick::numeric::Array2D<brick::common::UnsignedInt32>
     SegmenterFelzenszwalb<EdgeFunctor, FloatType>::
@@ -258,7 +258,7 @@ namespace brick {
         std::numeric_limits<brick::common::UnsignedInt32>::max());
       brick::common::UnsignedInt32 currentLabel = 0;
       segmentSizes.clear();
-      
+
       // Iterate over each pixel.
       brick::numeric::Array1D<Segment>::iterator setIter =
         m_segmentation.begin();
@@ -267,7 +267,7 @@ namespace brick {
       while(setIter != m_segmentation.end()) {
 
         // Figure out to which segment the current pixel belongs.
-        // 
+        //
         // Warning(xxx): Assuming we know something about how both
         // vectors and DisjointSets are implemented.
         Segment& head = setIter->find();
@@ -302,7 +302,7 @@ namespace brick {
     segment(const Image<FORMAT>& inputImage)
     {
       m_imageSize.setValue(inputImage.rows(), inputImage.columns());
-      
+
       // Smooth the image slightly to reduce artifacts.
       Image<GRAY_FLOAT32> smoothedImage;
       if(m_sigma == 0.0) {
@@ -312,7 +312,7 @@ namespace brick {
           getGaussianKernelBySize<brick::common::Float32>(
             m_smoothSize, m_smoothSize,
             m_sigma, m_sigma);
-        smoothedImage = 
+        smoothedImage =
           filter2D<GRAY_FLOAT32, FORMAT>(
             gaussian, inputImage, brick::common::Float32(0));
       }
@@ -342,9 +342,9 @@ namespace brick {
       m_segmentation.reinit(numPixels);
       for(SegmentIter segmentIter = m_segmentation.begin();
           segmentIter != m_segmentation.end(); ++segmentIter) {
-        segmentIter->setPayload(m_k);        
+        segmentIter->setPayload(m_k);
       }
-      
+
       // Iteratively merge segments, as described in the paper.
       ITER edgeIter = edgeBegin;
       while(edgeIter != edgeEnd) {
@@ -372,8 +372,8 @@ namespace brick {
         ++edgeIter;
       }
     }
-        
-    
+
+
     template <class EdgeFunctor, class FloatType>
     inline float
     SegmenterFelzenszwalb<EdgeFunctor, FloatType>::
@@ -395,7 +395,7 @@ namespace brick {
       edge.weight = m_edgeFunctor(inImage, index0, index1);
     }
 
-  
+
     template <class EdgeFunctor, class FloatType>
     inline void
     SegmenterFelzenszwalb<EdgeFunctor, FloatType>::
@@ -411,8 +411,8 @@ namespace brick {
     operator<(Edge<FloatType> const& arg0, Edge<FloatType> const& arg1) {
       return arg0.weight < arg1.weight;
     }
-    
-    
+
+
   } // namespace computerVision
 
 } // namespace brick

@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file derivativeRiddersTest.cpp
+* @file brick/numeric/test/derivativeRiddersTest.cpp
 *
 * Source file defining tests for numerical differentiation.
 *
@@ -32,11 +32,11 @@ namespace brick {
 
       // Tests.
       void testDerivativeRidders();
-    
+
     private:
 
       double m_defaultTolerance;
-    
+
     }; // class DerivativeRiddersTest
 
 
@@ -62,7 +62,7 @@ namespace brick {
       }
     };
 
-    
+
     /* ============== Member Function Definititions ============== */
 
     DerivativeRiddersTest::
@@ -95,14 +95,14 @@ namespace brick {
       // std::cout << "Error is "
       //           << common::absoluteValue(derivative - derivativeEst)
       //           << " (+/- " << errorValue << ")" << std::endl;
-      
+
       BRICK_TEST_ASSERT(approximatelyEqual(derivative, derivativeEst, 1.0e-9));
       BRICK_TEST_ASSERT(errorValue > 1.0E-14);
       BRICK_TEST_ASSERT(errorValue < 1.0E-7);
     }
 
   } // namespace numeric
-  
+
 } // namespace brick
 
 #if 0
@@ -119,7 +119,7 @@ int main(int argc, char** argv)
 namespace {
 
   brick::numeric::DerivativeRiddersTest currentTest;
-  
+
 }
 
 #endif

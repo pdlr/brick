@@ -15,7 +15,7 @@
 
 // This file is included by utilites.hh, and should not be directly
 // included by user code, so no need to include utilities.hh here.
-// 
+//
 // #include <brick/numeric/utilites.hh>
 
 
@@ -24,11 +24,12 @@
 #include <numeric>
 
 #include <brick/numeric/mathFunctions.hh>
+#include <brick/numeric/differentiableScalar.hh>
 
 namespace brick {
 
   namespace numeric {
-    
+
     /**
      ** @cond privateCode
      **
@@ -49,11 +50,11 @@ namespace brick {
        **/
       template <class Type>
       struct absFunctor : public std::unary_function<Type, Type> {
-        /** 
+        /**
          * This is the operator which does all the work.  Since there's
          * no generic way to compute the absolute value of a type, the
          * generic implementation simply throws an exception.
-         * 
+         *
          * @return This function throws an exception, and so does not return.
          */
         inline Type operator()(Type const& input) {
@@ -70,10 +71,10 @@ namespace brick {
       template <>
       struct absFunctor<long double>
         : public std::unary_function<long double, long double> {
-        /** 
+        /**
          * This is the operator which does all the work.  It returns the
          * absolute value of its input argument.
-         * 
+         *
          * @return This function throws an exception, and so does not return.
          */
         inline double operator()(long double const& input) {
@@ -89,10 +90,10 @@ namespace brick {
        **/
       template <>
       struct absFunctor<double> : public std::unary_function<double, double> {
-        /** 
+        /**
          * This is the operator which does all the work.  It returns the
          * absolute value of its input argument.
-         * 
+         *
          * @return This function throws an exception, and so does not return.
          */
         inline double operator()(double const& input) {
@@ -106,10 +107,10 @@ namespace brick {
        **/
       template <>
       struct absFunctor<float> : public std::unary_function<float, float> {
-        /** 
+        /**
          * This is the operator which does all the work.  It returns the
          * absolute value of its input argument.
-         * 
+         *
          * @return This function throws an exception, and so does not return.
          */
         inline float operator()(float const& input) {
@@ -126,10 +127,10 @@ namespace brick {
       template <>
       struct absFunctor<long int>
         : public std::unary_function<long int, long int> {
-        /** 
+        /**
          * This is the operator which does all the work.  It returns the
          * absolute value of its input argument.
-         * 
+         *
          * @return This function throws an exception, and so does not return.
          */
         inline long int operator()(long int const& input) {
@@ -144,10 +145,10 @@ namespace brick {
       template <>
       struct absFunctor<long long int>
         : public std::unary_function<long long int, long long int> {
-        /** 
+        /**
          * This is the operator which does all the work.  It returns the
          * absolute value of its input argument.
-         * 
+         *
          * @return This function throws an exception, and so does not return.
          */
         inline long long int operator()(long long int const& input) {
@@ -163,10 +164,10 @@ namespace brick {
        **/
       template <>
       struct absFunctor<int> : public std::unary_function<int, int> {
-        /** 
+        /**
          * This is the operator which does all the work.  It returns the
          * absolute value of its input argument.
-         * 
+         *
          * @return This function throws an exception, and so does not return.
          */
         inline int operator()(int const& input) {
@@ -223,7 +224,7 @@ namespace brick {
       return true;
     }
 
-  
+
     // This function returns true if each element of its argument is
     // true, and returns false otherwise.
     template <class Type>
@@ -240,7 +241,7 @@ namespace brick {
       return true;
     }
 
-  
+
     // This function returns true if any element of its argument is
     // false, and returns false otherwise.
     template <class Type>
@@ -250,7 +251,7 @@ namespace brick {
       return !allTrue(array0);
     }
 
-  
+
     // This function returns true if any element of its argument is
     // true, and returns false otherwise.
     template <class Type>
@@ -260,7 +261,7 @@ namespace brick {
       return !allFalse(array0);
     }
 
-  
+
     // This function returns the index of the largest element of its input
     // array.
     template <class Type>
@@ -290,7 +291,7 @@ namespace brick {
     {
       return argmax(array0.begin(), array0.end(), comparator);
     }
-  
+
 
     // This function returns the index of the largest element of its
     // input sequence, where largeness is defined by the second argument.
@@ -325,7 +326,7 @@ namespace brick {
       size_t column = ravelIndex - row * array0.columns();
       return Index2D(row, column);
     }
-  
+
 
     // This function returns the index of the smallest element of its input
     // array.
@@ -390,10 +391,10 @@ namespace brick {
       std::sort(sortVector.begin(), sortVector.end());
       std::transform(sortVector.begin(), sortVector.end(), resultVector.begin(),
                      ExtractSecondFunctor<Type, size_t>());
-      return resultVector;    
+      return resultVector;
     }
 
-  
+
 //   // This function returns an array of indices, result, so that the
 //   // sequence (array0[result[0]], array0[result[1]],
 //   // array0[result[2]], ...) is sorted from smallest to largest using
@@ -411,10 +412,10 @@ namespace brick {
 //     std::sort(sortVector.begin(), sortVector.end(), comparator);
 //     std::transform(sortVector.begin(), sortVector.end(), resultVector.begin(),
 //                    ExtractSecondFunctor<Type, size_t>());
-//     return resultVector;    
+//     return resultVector;
 //   }
 
-  
+
     // This function returns an Array1D in which each element has the
     // value of the largest element in one row or column of the input
     // Array2D.
@@ -471,7 +472,7 @@ namespace brick {
                    message.str().c_str());
         break;
       }
-      return result;  
+      return result;
     }
 
 
@@ -532,7 +533,7 @@ namespace brick {
                    message.str().c_str());
         break;
       }
-      return result;  
+      return result;
     }
 
 
@@ -546,7 +547,7 @@ namespace brick {
         array0, axis, static_cast<ResultType>(0), std::plus<ResultType>());
     }
 
-    
+
     // This function returns an Array1D in which each element has the
     // sum of one row or column of the input Array2D.
     template <class ResultType, class Type, class Functor>
@@ -588,10 +589,10 @@ namespace brick {
                    message.str().c_str());
         break;
       }
-      return result;  
+      return result;
     }
 
-    
+
     // This function swaps values between its two arguments so that
     // the value of each element of corner0 is less than or equal to
     // the corresponding value of corner1.
@@ -600,7 +601,7 @@ namespace brick {
     cleanupCorners(Vector2D<Type>& corner0, Vector2D<Type>& corner1)
     {
       bool returnValue = true;
-      
+
       if(corner0.getX() > corner1.getX()) {
         Type maxX = corner0.getX();
         corner0.setValue(corner1.getX(), corner0.getY());
@@ -620,7 +621,7 @@ namespace brick {
       return returnValue;
     }
 
-    
+
     // columnIndices(rows, columns): Returns an Array2D in which each
     // element contains the index of its column.
     template <class Type>
@@ -637,7 +638,7 @@ namespace brick {
       return returnValue;
     }
 
-    
+
     // This function selects those elements of an input Array1D which
     // correspond to "true" values of a mask Array1D, and returns an
     // Array1D containing only those elements.
@@ -650,7 +651,7 @@ namespace brick {
       return compress(condition, input, numTrue);
     }
 
-    
+
     // This function behaves in exactly the same way as compress(const
     // Array1D&, Array1D const&), above, but it permits the user to
     // specify the number of true elements in the condition array.
@@ -755,7 +756,7 @@ namespace brick {
                  * static_cast<Type1>(vector1.y())));
     }
 
-    
+
     // This function computes the inner product of two Vector3D instances.
     template <class Type1, class Type0>
     inline Type1
@@ -769,7 +770,7 @@ namespace brick {
                  * static_cast<Type1>(vector1.z())));
     }
 
-    
+
     // This function computes the matrix X such that A * x = X * vec(A).
     template <class Type>
     Array2D<Type>
@@ -784,7 +785,7 @@ namespace brick {
       }
       return XMatrix;
     }
-  
+
     // This function returns a 2D matrix with the specified shape in
     // which the elements on the diagonal are set to 1, and all other
     // elements are set to 0.
@@ -796,7 +797,7 @@ namespace brick {
       size_t rank = std::min(rows, columns);
       for(size_t index = 0; index < rank; ++index) {
         returnArray(index, index) = static_cast<Type>(1);
-      } 
+      }
       return returnArray;
     }
 
@@ -810,7 +811,7 @@ namespace brick {
       Array1D<Type> result(array0.size());
       // std::transform(array0.begin(), array0.end(), std::log);
       for(size_t index0 = 0; index0 < array0.size(); ++index0) {
-        result[index0] = std::log(array0[index0]);      
+        result[index0] = std::log(array0[index0]);
       }
       return result;
     }
@@ -851,7 +852,7 @@ namespace brick {
       Array2D<Type> result(array0.size());
       // std::transform(array0.begin(), array0.end(), std::log);
       for(size_t index0 = 0; index0 < array0.size(); ++index0) {
-        result[index0] = std::log(array0[index0]);      
+        result[index0] = std::log(array0[index0]);
       }
       return result;
     }
@@ -871,7 +872,7 @@ namespace brick {
       return result;
     }
 
-  
+
     // This function computes the magnitude of its input argument.
     template <class Type1, class Type0>
     inline Type1
@@ -881,7 +882,7 @@ namespace brick {
       return brick::numeric::squareRoot(magnitudeSquared<Type1>(array0));
     }
 
-  
+
     // This function computes the magnitude of its input argument.
     template <class Type1, class Type0>
     inline Type1
@@ -890,7 +891,7 @@ namespace brick {
       return brick::numeric::squareRoot(magnitudeSquared<Type1>(vector0));
     }
 
-  
+
     // This function computes the magnitude of its input argument.
     template <class Type1, class Type0>
     inline Type1
@@ -921,7 +922,7 @@ namespace brick {
                  * static_cast<Type1>(vector0.y())));
     }
 
-  
+
     // This function computes the square of the magnitude of its input
     // argument.
     template <class Type1, class Type0>
@@ -935,7 +936,7 @@ namespace brick {
                  * static_cast<Type1>(vector0.z())));
     }
 
-  
+
     // This function computes a vector * matrix product just like
     // matrixMultiply(Array1D<Type> const&, Array2D<Type> const&), above.
     // This function differs in that the element type of the return
@@ -1063,7 +1064,7 @@ namespace brick {
     maximum(Array2D<Type> const& array0, Functor comparator)
     {
       Type maxElement = 0;
-      
+
       if(array0.size() == 0) {
         BRICK_THROW(brick::common::ValueException, "maximum()",
                    "Can't find the maximum element of an empty array.");
@@ -1103,7 +1104,7 @@ namespace brick {
       return meanValue / count;
     }
 
-    
+
     // This function computes the average value, or geometric mean, of
     // the elements of its argument, and allows the user to specify the
     // precision with which the computation is carried out.
@@ -1113,7 +1114,7 @@ namespace brick {
     {
       return sum<Type1>(array0) / static_cast<Type1>(array0.size());
     }
-  
+
 
     // This function returns the centroid of a 1D array.
     template <class FloatType, class Type>
@@ -1122,7 +1123,7 @@ namespace brick {
       return getCentroid<FloatType>(signal.begin(), signal.end());
     }
 
-    
+
     // This function returns the centroid of a 1D array.
     template <class FloatType, class IterType>
     FloatType
@@ -1148,8 +1149,8 @@ namespace brick {
       // Remember that indices here are zero-based.
       return (weightedAccumulator / accumulator) - 1;
     }
-    
-    
+
+
     // This function estimates the mean and covariance of a set of
     // vectors, which are represented by the rows (or columns) of the
     // input 2D array.
@@ -1177,13 +1178,13 @@ namespace brick {
         dimensionality = sampleArray.rows();
         numberOfSamples = sampleArray.columns();
       }
-      
+
       // Now compute the mean value of the sample points.
       // For efficiency, we simultaneously compute covariance.
       // We make use of the identity:
-      // 
+      //
       //   covariance = E[(x - u)*(x - u)^T] = E[x * x^T] - u * u^T
-      // 
+      //
       // where E[.] denotes expected value and u is the mean.
       //
       // Note that the sample mean is an unbiased estimator for u, but
@@ -1247,7 +1248,7 @@ namespace brick {
           }
         }
       }
-    
+
       // Finish up the computation of the mean.
       meanArray /= static_cast<double>(numberOfSamples);
 
@@ -1266,8 +1267,8 @@ namespace brick {
         }
       }
     }
-  
-                    
+
+
     // This function estimates the mean and variance of a sequence of
     // scalar values.
     template <class Iter, class Type>
@@ -1302,12 +1303,12 @@ namespace brick {
       //
       // Recognizing that sum_i(x_i) is N * mu, and combining terms,
       // we get
-      // 
+      //
       //   var = (1 / (N - 1)) * sum_i(x_i * x_i)
       //         - (N / (N - 1)) * mu * mu,
       //
       //   var = (sum_i(x_i * x_i) - N * mu * mu) / (N - 1)
-      // 
+      //
       // which is implemented below, except that we replace N * mu
       // with sum_i(x_i), because we've already computed that.
       if(numberOfElements >= 2) {
@@ -1322,7 +1323,7 @@ namespace brick {
         variance = Type(0.0);
       }
     }
-    
+
     // This function estimates the mean and variance of a sequence of
     // scalar values, discarding values that appear to be outliers.
     template <class Iter, class Type>
@@ -1349,7 +1350,7 @@ namespace brick {
                   "This function still needs to be written!");
     }
 
-    
+
     // This function returns a copy of the smallest element in the input
     // Array1D instance.
     template <class Type>
@@ -1461,7 +1462,7 @@ namespace brick {
       return result;
     }
 
-    
+
     // This function computes the outer product of two input Array1D
     // instances and allows the user to control which type is used to do the
     // computation.
@@ -1495,12 +1496,12 @@ namespace brick {
       }
       int length = static_cast<int>((stop - start) / stride);
       if(stride > 0) {
-        if((length * stride) < (stop - start)) {      
-          ++length;      
+        if((length * stride) < (stop - start)) {
+          ++length;
         }
       } else {
         if((length * stride) > (stop - start)) {
-          ++length;      
+          ++length;
         }
       }
       Array1D<Type> result(length);
@@ -1510,7 +1511,7 @@ namespace brick {
       }
       return result;
     }
-  
+
 
     // This function computes the RMS (Root Mean Square) value of the
     // elements of its argument.
@@ -1572,7 +1573,7 @@ namespace brick {
     {
       return ((array0.shape0() == array1.shape0())
               && (array0.shape1() == array1.shape1())
-              && (array0.shape2() == array1.shape2()));            
+              && (array0.shape2() == array1.shape2()));
     }
 
 
@@ -1593,7 +1594,7 @@ namespace brick {
       returnVal(0, 0) = 0;
       returnVal(0, 1) = -vector0(2);
       returnVal(0, 2) = vector0(1);
-  
+
       returnVal(1, 0) = vector0(2);
       returnVal(1, 1) = 0;
       returnVal(1, 2) = -vector0(0);
@@ -1616,7 +1617,7 @@ namespace brick {
       valid = solveQuadratic(c0, c1, c2, root0, root1);
     }
 #endif
-    
+
     // This function computes the standard deviation of a group of
     // scalar samples.
     template <class Type0, class Type1>
@@ -1659,7 +1660,7 @@ namespace brick {
       return result;
     }
 
-    
+
     // This function returns an array made up of only those elements
     // of dataArray that correspond to indices in indexArray.
     template <class Type, class IntegralType>
@@ -1673,8 +1674,8 @@ namespace brick {
       }
       return resultArray;
     }
-    
-    
+
+
     // This function returns an array made up of only those elements
     // of dataArray that correspond to indices in indexArray.
     template <class Type, class IntegralType>
@@ -1684,8 +1685,8 @@ namespace brick {
     {
       return take(dataArray.ravel(), indexArray);
     }
-    
-         
+
+
     // This function works just like take(Array2D const&, Array1D
     // const&), with the exception that the input array is not
     // flattened, and entire rows (or columns) are selected.
@@ -1721,8 +1722,8 @@ namespace brick {
       }
       return resultArray;
     }
-    
-         
+
+
     // This function computes the standard deviation of a group of
     // scalar samples.
     template <class Type0, class Type1>
@@ -1773,7 +1774,7 @@ namespace brick {
       result = 0;
       return result;
     }
-  
+
   } // namespace numeric
 
 } // namespace brick

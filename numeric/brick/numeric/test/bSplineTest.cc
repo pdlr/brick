@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
-* @file bSplineTest.cpp
-* 
+* @file brick/numeric/test/bSplineTest.cpp
+*
 * Source file defining BSplineTest class.
 *
 * Copyright (C) 2006,2012 David LaRose, dlr@cs.cmu.edu
@@ -35,7 +35,7 @@ namespace brick {
 
       // Regression tests.
       void testNonperiodicSpline();
-      
+
     private:
 
       double
@@ -46,15 +46,15 @@ namespace brick {
       double
       computePeriodicQuadraticSpline(double sValue,
                                      std::vector<double>& controlPoints);
-    
-    
+
+
       double
       cubicBasisFunction(double x);
-    
-    
+
+
       double
       quadraticBasisFunction(double x);
-    
+
     }; // class BSplineTest
 
 
@@ -171,7 +171,7 @@ namespace brick {
           } else {
             knotMultiplicities[ii] = 1;
           }
-        }              
+        }
 
         // spline.setKnotMultiplicities(knotMultiplicities);
 
@@ -224,7 +224,7 @@ namespace brick {
         std::cout << "Zoom 16.5: " << spline(16.5) << std::endl;
       }
     }
-  
+
 
     double
     BSplineTest::
@@ -254,7 +254,7 @@ namespace brick {
       return result;
     }
 
-  
+
     double
     BSplineTest::
     computePeriodicCubicSpline(double sValue,
@@ -286,7 +286,7 @@ namespace brick {
       return result;
     }
 
-  
+
     double
     BSplineTest::
     cubicBasisFunction(double x)
@@ -316,7 +316,7 @@ namespace brick {
       return returnValue;
     }
 
-  
+
     double
     BSplineTest::
     quadraticBasisFunction(double x)
@@ -359,4 +359,3 @@ namespace {
 }
 
 #endif
-

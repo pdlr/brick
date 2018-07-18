@@ -21,7 +21,7 @@
 namespace brick {
 
   namespace geometry {
-    
+
     class Circle3DTest : public brick::test::TestFixture<Circle3DTest> {
 
     public:
@@ -39,7 +39,7 @@ namespace brick {
     private:
 
       const double m_defaultTolerance;
-      
+
     }; // class Circle3DTest
 
 
@@ -156,12 +156,12 @@ namespace brick {
 
             BRICK_TEST_ASSERT(
               approximatelyEqual(radius, magnitude0, m_defaultTolerance));
-            
+
           }
         }
       }
     }
-    
+
   } // namespace geometry
 
 } // namespace brick

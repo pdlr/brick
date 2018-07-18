@@ -16,7 +16,7 @@
 
 // This file is included by subArray1D.hh, and should not be directly included
 // by user code, so no need to include subArray1D.hh here.
-// 
+//
 // #include <brick/numeric/subArray1D.hh>
 
 #include <cmath>
@@ -27,7 +27,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     template <class Type>
     SubArray1D<Type>::
     SubArray1D(const Array1D<Type>& source)
@@ -40,7 +40,7 @@ namespace brick {
       // Empty
     }
 
-    
+
     template <class Type>
     SubArray1D<Type>::
     SubArray1D(const Array1D<Type>& source, const Slice& slice0)
@@ -56,7 +56,7 @@ namespace brick {
       if((this->m_stop == 0) && (this->m_stride > 0)) {
         this->m_stop = source.size();
       }
-    
+
       // Negative indexing is also super-convenient
       while(this->m_start < 0) {
         this->m_start += source.size();
@@ -69,7 +69,7 @@ namespace brick {
       int intSize = ((this->m_stop - this->m_start)
                      / this->m_stride); // integer division
       if(intSize < 0) {
-        this->m_size = 0; 
+        this->m_size = 0;
       } else {
         this->m_size = intSize;
         // Can't think of a better way to do this.
@@ -84,7 +84,7 @@ namespace brick {
       this->checkArray1DSize(source);
     }
 
-  
+
     template <class Type>
     SubArray1D<Type>::
     SubArray1D(const SubArray1D<Type> &other)
@@ -97,7 +97,7 @@ namespace brick {
       // Empty
     }
 
-  
+
     template <class Type>
     SubArray1D<Type>::operator Array1D<Type>() const
     {
@@ -106,7 +106,7 @@ namespace brick {
       return returnVal;
     }
 
-  
+
     template <class Type>
     SubArray1D<Type>& SubArray1D<Type>::
     operator=(const SubArray1D<Type>& other)
@@ -115,7 +115,7 @@ namespace brick {
       return this->copy(other);
     }
 
-  
+
     template <class Type>
     SubArray1D<Type>& SubArray1D<Type>::
     operator=(Type value)
@@ -127,7 +127,7 @@ namespace brick {
       return *this;
     }
 
-  
+
     template <class Type>
     SubArray1D<Type>& SubArray1D<Type>::
     operator+=(const SubArray1D<Type>& other)
@@ -144,7 +144,7 @@ namespace brick {
       return *this;
     }
 
-  
+
     template <class Type>
     SubArray1D<Type>& SubArray1D<Type>::
     operator-=(const SubArray1D<Type>& other)
@@ -161,7 +161,7 @@ namespace brick {
       return *this;
     }
 
-    
+
     template <class Type>
     inline void SubArray1D<Type>::
     checkArray1DSize(const Array1D<Type>&
@@ -203,7 +203,7 @@ namespace brick {
 #endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
     }
 
-  
+
     template <class Type>
     inline void SubArray1D<Type>::
     checkSubArray1DSize(const SubArray1D<Type>&
@@ -224,7 +224,7 @@ namespace brick {
 #endif /* #ifdef BRICK_NUMERIC_CHECKBOUNDS */
     }
 
-  
+
     template <class Type>
     SubArray1D<Type>& SubArray1D<Type>::
     copy(const SubArray1D<Type>& other)

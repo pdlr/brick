@@ -28,7 +28,7 @@ namespace brick {
 
   namespace computerVision {
 
-    
+
     class ThresholderSauvolaTest
       : public brick::test::TestFixture<ThresholderSauvolaTest> {
 
@@ -43,12 +43,12 @@ namespace brick {
       // Tests.
       void testThresholderSauvola();
       void testExecutionTime();
-      
+
     private:
 
       double m_defaultTolerance;
       uint32_t m_kernelSize;
-      
+
     }; // class ThresholderSauvolaTest
 
 
@@ -108,7 +108,7 @@ namespace brick {
       }
 
       writePGM8("big.pgm", bigImage);
-      
+
       // Run the thresholder.
       ThresholderSauvola<GRAY8> thresholder(m_kernelSize, 0.5);
 
@@ -118,14 +118,14 @@ namespace brick {
       thresholder.setImage(bigImage);
       Image<GRAY8> outputImage = thresholder.computeBinaryImage();
       double t1 = brick::utilities::getCurrentTime();
-      
+
       std::cout << "Stop!" << std::endl;
       std::cout << "Processed an image of size (" << bigImage.columns()
                 << ", " << bigImage.rows() << ") in "
                 << std::fixed << std::setprecision(5)
                 << t1 - t0 << " seconds" << std::endl;
     }
-    
+
   } // namespace computerVision
 
 } // namespace brick

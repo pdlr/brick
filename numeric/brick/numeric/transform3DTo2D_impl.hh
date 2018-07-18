@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file transform3DTo2D_impl.hh
+* @file brick/numeric/transform3DTo2D_impl.hh
 *
 * Header file providing implementations for inline and template
 * functions declared in transform3DTo2D.hh.
@@ -16,7 +16,7 @@
 
 // This file is included by transform3DTo2D.hh, and should not be directly
 // included by user code, so no need to include transform3DTo2D.hh here.
-// 
+//
 // #include <brick/numeric/transform3DTo2D.hh>
 
 #include <brick/common/expect.hh>
@@ -24,7 +24,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     // Default constructor
     template <class Type>
     Transform3DTo2D<Type>::
@@ -37,7 +37,7 @@ namespace brick {
     }
 
 
-    // Build a Transform3DTo2D instance by explicitly setting element 
+    // Build a Transform3DTo2D instance by explicitly setting element
     // values as if setting the elements of a 3x4 transformation matrix.
     template <class Type>
     inline
@@ -53,7 +53,38 @@ namespace brick {
       // Empty.
     }
 
-    
+
+    // Build a Transform3DTo2D instance from a sequence that specifies
+    // element values in row major order.
+    template <class Type>
+    Transform3DTo2D<Type>::
+    Transform3DTo2D(std::initializer_list<Type> sequence)
+      : m_00(Type(1)), m_01(Type(0)), m_02(Type(0)), m_03(Type(0)),
+        m_10(Type(0)), m_11(Type(1)), m_12(Type(0)), m_13(Type(0)),
+        m_20(Type(0)), m_21(Type(0)), m_22(Type(1)), m_23(Type(0))
+    {
+      if(sequence.size() < 12) {
+        BRICK_THROW(common::ValueException,
+                    "Transform3DTo2D::Transform3DTo2D()",
+                    "Initialization list is not long enough.  Expected at "
+                    "least 12 elements.");
+      }
+      auto iter = sequence.begin();
+      m_00 = *iter; ++iter;
+      m_01 = *iter; ++iter;
+      m_02 = *iter; ++iter;
+      m_03 = *iter; ++iter;
+      m_10 = *iter; ++iter;
+      m_11 = *iter; ++iter;
+      m_12 = *iter; ++iter;
+      m_13 = *iter; ++iter;
+      m_20 = *iter; ++iter;
+      m_21 = *iter; ++iter;
+      m_22 = *iter; ++iter;
+      m_23 = *iter;
+    }
+
+
     // Build a Transform3DTo2D from a homogeneous 3x4 matrix.
     template <class Type>
     Transform3DTo2D<Type>::
@@ -95,9 +126,9 @@ namespace brick {
     getFunctor() const
     {
       return Transform3DTo2DFunctor<Type>(*this);
-    }    
-  
-  
+    }
+
+
     // Change the Transform3DTo2D value by explicitly setting element values
     // as if setting the elements of a 4x4 transformation matrix:
     //    [[a00, a01, a02, a03],
@@ -169,7 +200,7 @@ namespace brick {
       return m_23; // Dummy return to keep the compiler happy.
     }
 
-    
+
     // This operator returns one element from the matrix
     // representation of the coordinate transform by value.
     template <class Type>
@@ -218,7 +249,7 @@ namespace brick {
       return m_23; // Dummy return to keep the compiler happy.
     }
 
-    
+
     // This operator takes a point and applies the coordinate
     // transform, returning the result.
     template <class Type>
@@ -232,7 +263,7 @@ namespace brick {
         m_20 * vector0.x() + m_21 * vector0.y() + m_22 * vector0.z() + m_23);
     }
 
-    
+
     // The assignment operator simply duplicates its argument.
     template <class Type>
     Transform3DTo2D<Type>&
@@ -250,7 +281,7 @@ namespace brick {
       return *this;
     }
 
-    
+
     /* ================ Non member functions below ================ */
 
 
@@ -407,7 +438,7 @@ namespace brick {
       return stream;
     }
 
-    
+
     template <class Type>
     std::istream&
     operator>>(std::istream& stream, Transform3DTo2D<Type>& transform0)
@@ -416,7 +447,7 @@ namespace brick {
       if (!stream){
         return stream;
       }
-    
+
       // It's a lot easier to use a try block than to be constantly
       // testing whether the IO has succeeded, so we tell stream to
       // complain if anything goes wrong.
@@ -430,7 +461,7 @@ namespace brick {
 
         // Skip any preceding whitespace.
         stream >> common::Expect("", flags);
-      
+
         // Read the "Transform3DTo2D(" part.
         stream >> common::Expect("Transform3D(", flags);
 
@@ -452,10 +483,10 @@ namespace brick {
 
         // And update the transform.
         transform0.setTransform(inputValues[0], inputValues[1],
-                                inputValues[2], inputValues[3], 
-                                inputValues[4], inputValues[5], 
-                                inputValues[6], inputValues[7], 
-                                inputValues[8], inputValues[9], 
+                                inputValues[2], inputValues[3],
+                                inputValues[4], inputValues[5],
+                                inputValues[6], inputValues[7],
+                                inputValues[8], inputValues[9],
                                 inputValues[10], inputValues[11]);
       } catch(std::ios_base::failure) {
         // Empty

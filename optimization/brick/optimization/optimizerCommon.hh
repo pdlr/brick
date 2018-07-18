@@ -21,17 +21,17 @@ namespace brick {
 
   namespace optimization {
 
-    /** 
+    /**
      * This function computes a scale factor for convergence tests.
      * Roughly, the bigger the elements of argument vector, relative to
      * the elements of argument point, the bigger the returned value.
-     * 
+     *
      * @param vector A direction vector for use in the scaling calculation.
      * @param point A starting point for use in the scaling calculation.
      * @return A scale factor, always greater than zero.
      */
     // Default function template parameters require C++11.
-#if __cplusplus <= 199711L 
+#if __cplusplus <= 199711L
     template <class ArgumentType, class FloatType>
 #else
     template <class ArgumentType, class FloatType = double>
@@ -40,8 +40,8 @@ namespace brick {
     contextSensitiveScale(const ArgumentType& vector,
                           const ArgumentType& point);
 
-  
-    /** 
+
+    /**
      * This function copies an argument_type array in such a way that
      * the result is a deep copy of the original, even if argument_type
      * has shallow copy semantics.
@@ -53,20 +53,20 @@ namespace brick {
     inline void
     copyArgumentType(const ArgumentType& source, ArgumentType& target);
 
-    
-    /** 
+
+    /**
      * This function computes the dot product of two ArgumentType instances.
      * Note that ArgumentType is assumed to be a vector class supporting
      * operator[](size_t) for const access to its elements, and providing
      * a size() member function.  The dot product is returned as a FloatType.
-     * 
+     *
      * @param argument0 This argument is the first term in the dot product.
      * @param argument1 This argument is the second term in the dot product.
      * @return The sum of the products of corresponding elements of
      * the two arguments.
      */
     // Default function template parameters require C++11.
-#if __cplusplus <= 199711L 
+#if __cplusplus <= 199711L
     template <class ArgumentType, class FloatType>
 #else
     template <class ArgumentType, class FloatType = double>
@@ -76,21 +76,21 @@ namespace brick {
                     const ArgumentType& argument1);
 
 
-    /** 
+    /**
      * This function computes matrix product of an Array2D<FloatType> instance
      * and an ArgumentType instance.  Note that ArgumentType is assumed to
      * be a vector class supporting operator[](size_t) for const access to
      * its elements, and providing a size() member function.  The
      * matrix*vector product is returned through the final reference
      * argument.
-     * 
+     *
      * @param matrix0 This argument is the first term in the product.
      * @param vector0 This argument is the second term in the product.
      * @param result The elements of this argument will be  set to the
      * result of the matrix * vector product.
      */
     // Default function template parameters require C++11.
-#if __cplusplus <= 199711L 
+#if __cplusplus <= 199711L
     template <class ArgumentType, class FloatType>
 #else
     template <class ArgumentType, class FloatType = double>
@@ -168,7 +168,7 @@ namespace brick {
       }
     }
 
-    
+
 // This function computes the dot product of two ArgumentType instances.
     template <class ArgumentType, class FloatType>
     FloatType
@@ -209,14 +209,14 @@ namespace brick {
         std::ostringstream message;
         message << "Matrix argument has " << matrix0.rows()
                 << " but result has " << result.size() << " elements.";
-        BRICK_THROW(brick::common::ValueException, 
+        BRICK_THROW(brick::common::ValueException,
 		    "matrixMultiplyArgumentType(...)",
 		    message.str().c_str());
       }
       for(size_t row = 0; row < matrix0.rows(); ++row) {
         result[row] = 0.0;
         for(size_t column = 0; column < matrix0.columns(); ++column) {
-          result[row] += matrix0(row, column) * vector0[column];        
+          result[row] += matrix0(row, column) * vector0[column];
         }
       }
     }

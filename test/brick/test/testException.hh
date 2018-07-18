@@ -33,7 +33,7 @@ namespace brick {
     BRICK_DECLARE_EXCEPTION_TYPE(TestException, brick::common::Exception);
 
   } // namespace test
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_TEST_TESTEXCEPTION_HH */

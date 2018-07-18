@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/utilities/optionParser.cc
-* 
+*
 * Source file defining the OptionParser class.
 *
 * Copyright (C) 2006-2011 David LaRose, dlr@cs.cmu.edu
@@ -19,7 +19,7 @@
 namespace brick {
 
   namespace utilities {
-  
+
     // Default constructor.
     OptionParser::
     OptionParser(bool allowExtraArguments,
@@ -80,7 +80,7 @@ namespace brick {
       this->addSection("", "Options:");
     }
 
-    
+
     // Destructor.
     OptionParser::
     ~OptionParser()
@@ -179,7 +179,7 @@ namespace brick {
                     "OptionParser::addOptionWithValue()",
                     message.str().c_str());
       }
-      
+
       // Figure out to which section this option belongs.
       auto optionMapIter = m_optionDescriptionsBySection.find(sectionName);
       if(optionMapIter == m_optionDescriptionsBySection.end()) {
@@ -202,7 +202,7 @@ namespace brick {
       m_optionCounts.insert(std::make_pair(name, 0));
     }
 
-    
+
     void
     OptionParser::
     addPositionalArgument(std::string const& name,
@@ -218,7 +218,7 @@ namespace brick {
       }
     }
 
-    
+
     // Use this function to group options into sections.
     void
     OptionParser::
@@ -234,7 +234,7 @@ namespace brick {
                     "OptionParser::addSection()",
                     message.str().c_str());
       }
-      
+
       if(sectionDescription == "") {
         // If no sectionDescription is available, substitute the
         // section name.
@@ -244,12 +244,12 @@ namespace brick {
         m_sectionDescriptions.insert(
           std::make_pair(sectionName, sectionDescription));
       }
-      
+
       m_optionDescriptionsBySection.insert(
         std::make_pair(sectionName, OptionMap()));
     }
 
-    
+
     size_t
     OptionParser::
     getCount(std::string const& name) const
@@ -265,7 +265,7 @@ namespace brick {
       return iter->second;
     }
 
-    
+
     std::vector<std::string>
     OptionParser::
     getExtraPositionalArguments()
@@ -273,7 +273,7 @@ namespace brick {
       return m_extraArgumentValues;
     }
 
-    
+
     std::string
     OptionParser::
     getOptionsDescription(std::string const& sectionName)
@@ -287,7 +287,7 @@ namespace brick {
                     "OptionParser::getOptionsDescription()",
                     message.str().c_str());
       }
-      
+
       if(!optionMapIter->second.empty()) {
         auto optionIter = optionMapIter->second.begin();
         while(optionIter != optionMapIter->second.end()) {
@@ -298,7 +298,7 @@ namespace brick {
       return optionsStream.str();
     }
 
-    
+
     std::string
     OptionParser::
     getUsage()
@@ -323,7 +323,7 @@ namespace brick {
       if(m_description != "") {
         usageStream << "\n\n" << m_description << "\n";
       }
-      
+
       if(!m_positionalArgumentNames.empty()) {
         usageStream << "\n\nPositional arguments:\n";
         for(argIndex = 0; argIndex < m_numberOfPosArgRequired; ++argIndex) {
@@ -342,7 +342,7 @@ namespace brick {
                            + m_positionalArgumentDefaultValues[argIndex]),
                           indentString) << "\""
             << "\n";
-          ++argIndex;          
+          ++argIndex;
         }
       }
 
@@ -353,11 +353,11 @@ namespace brick {
           usageStream << this->getOptionsDescription(sectionIter->first);
         }
       }
-      
+
       return usageStream.str();
     }
-    
-    
+
+
     std::string
     OptionParser::
     getValue(std::string const& name)
@@ -365,7 +365,7 @@ namespace brick {
       return this->getValue(name, -1);
     }
 
-    
+
     std::string
     OptionParser::
     getValue(std::string const& name, int valueIndex)
@@ -411,7 +411,7 @@ namespace brick {
         size_t argIndex = panIter - m_positionalArgumentNames.begin();
         return m_positionalArgumentDefaultValues[argIndex];
       }
-      
+
       // // No appropriate positional argument found.  Return the empty
       // // string.
       // return "";
@@ -424,7 +424,7 @@ namespace brick {
                   message.str().c_str());
     }
 
-    
+
     void
     OptionParser::
     parseCommandLine(int argc, const char* argv[])
@@ -450,7 +450,7 @@ namespace brick {
 
       // Reset state for new parse.
       m_optionValues.clear();
-      std::map<std::string, size_t>::iterator iter = m_optionCounts.begin(); 
+      std::map<std::string, size_t>::iterator iter = m_optionCounts.begin();
       while(iter != m_optionCounts.end()) {
         iter->second = 0;
         ++iter;
@@ -550,7 +550,7 @@ namespace brick {
                       && currentArgument[0] == '-') {
               currentArgument =
                 "-" + currentArgument.substr(typedLength, std::string::npos);
-              currentState = BRICK_OP_IDENTIFYING_ARG;                
+              currentState = BRICK_OP_IDENTIFYING_ARG;
             } else {
               errorMessage
                 << "Option \""
@@ -591,7 +591,7 @@ namespace brick {
                   << m_numberOfPosArgParsed << ".";
           BRICK_THROW(brick::common::IOException,
                       "OptionParser::parseCommandLine()",
-                      message.str().c_str());                      
+                      message.str().c_str());
         }
         if(!m_allowExtraArguments && (m_extraArgumentValues.size() != 0)) {
           std::ostringstream message;
@@ -601,7 +601,7 @@ namespace brick {
                   << m_numberOfPosArgParsed << ".";
           BRICK_THROW(brick::common::IOException,
                       "OptionParser::parseCommandLine()",
-                      message.str().c_str());                      
+                      message.str().c_str());
         }
 
       } catch(const brick::common::IOException& caughtException) {
@@ -631,7 +631,7 @@ namespace brick {
       }
       delete[] newArgv;
     }
-    
+
 
     bool
     OptionParser::
@@ -657,7 +657,7 @@ namespace brick {
             message << "Argument \"" << argument << "\" is ambiguous.";
             BRICK_THROW(brick::common::IOException,
                         "OptionParser::findOptionDescription()",
-                        message.str().c_str());                      
+                        message.str().c_str());
           } else {
             typedLength = localTypedLength;
             foundOption = true;
@@ -700,7 +700,7 @@ namespace brick {
         exit(m_exitCode);
       }
     }
-    
+
   } // namespace utilities
 
 } // namespace brick

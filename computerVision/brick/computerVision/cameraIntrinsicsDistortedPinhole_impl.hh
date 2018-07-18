@@ -17,7 +17,7 @@
 // This file is included by cameraIntrinsicsDistortedPinhole.hh, and should
 // not be directly included by user code, so no need to include
 // cameraIntrinsicsDistortedPinhole.hh here.
-// 
+//
 // #include <brick/numeric/cameraIntrinsicsDistortedPinhole.hh>
 
 #include <iomanip>
@@ -43,19 +43,19 @@ namespace brick {
       {
       public:
         ReverseProjectionObjective();
-        
+
         ReverseProjectionObjective(
           CameraIntrinsicsDistortedPinhole<FloatType> const& intrinsics,
           const brick::numeric::Vector2D<FloatType>& uvTarget,
           FloatType const& maxAzimuthTangent,
           FloatType const& maxElevationTangent);
-        
+
         FloatType
         operator()(const brick::numeric::Array1D<FloatType>& theta);
 
         FloatType
         getOffset();
-        
+
         brick::numeric::Array1D<FloatType>
         gradient(const brick::numeric::Array1D<FloatType>& theta);
 
@@ -79,7 +79,7 @@ namespace brick {
         computeFieldOfViewPenaltyGradient(
           const FloatType& xValue, const FloatType& yValue,
           FloatType& dPdX, FloatType& dPdY);
-        
+
         CameraIntrinsicsDistortedPinhole<FloatType> const* m_intrinsicsPtr;
         FloatType m_offset;
         brick::numeric::Vector2D<FloatType> m_uvTarget;
@@ -91,7 +91,7 @@ namespace brick {
 
       // Implementation of ReverseProjectionObjective is at the bottom of this
       // file.
-      
+
     } // namespace privateCode;
 
 
@@ -106,7 +106,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // This constructor allows the caller to explicitly set the
     // camera pinhole intrinsic parameters.
     template <class FloatType>
@@ -125,7 +125,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // This member function takes a point in 2D pixel coordinates
     // and returns a ray in 3D camera coordinates passing through
     // all of the 3D points that project to the specified 2D
@@ -149,7 +149,7 @@ namespace brick {
       // think of... the center of projection.
       brick::numeric::Array1D<FloatType> startPoint(2);
       startPoint = FloatType(0.0);
-      
+
       // Now optimize to find a better answer.
       typedef privateCode::ReverseProjectionObjective<FloatType> LocalObjective;
       LocalObjective objective(*this, pixelPosition,
@@ -161,7 +161,7 @@ namespace brick {
 
       // This would be the place to check convergence and try a
       // different start point, if we were so inclined.
-      
+
       if(residual > (this->getMaximumReverseProjectionResidual()
                      + objective.getOffset())) {
         BRICK_THROW(
@@ -169,7 +169,7 @@ namespace brick {
           "CameraIntrinsicsDistortedPinhole<FloatType>::reverseProject()",
           "Reverse projection failed to converge.");
       }
-      
+
       return brick::geometry::Ray3D<FloatType>(
         brick::numeric::Vector3D<FloatType>(0.0, 0.0, 0.0),
         brick::numeric::Vector3D<FloatType>(endPoint[0], endPoint[1], 1.0),
@@ -194,7 +194,7 @@ namespace brick {
         // Empty.
       }
 
-      
+
       template <class FloatType>
       ReverseProjectionObjective<FloatType>::
       ReverseProjectionObjective(
@@ -220,7 +220,7 @@ namespace brick {
            / maxElevationTangent);
       }
 
-        
+
       template <class FloatType>
       FloatType
       ReverseProjectionObjective<FloatType>::
@@ -258,7 +258,7 @@ namespace brick {
         return m_offset;
       }
 
-      
+
       template <class FloatType>
       brick::numeric::Array1D<FloatType>
       ReverseProjectionObjective<FloatType>::
@@ -269,7 +269,7 @@ namespace brick {
           gradientArray = FloatType(0.0);
           return gradientArray;
         }
-        
+
         FloatType uValue;
         FloatType vValue;
         FloatType dUdX;
@@ -288,7 +288,7 @@ namespace brick {
         //    2*deltaU*(d/dx)deltaU + 2*deltaV*(d/dx)deltaV
         //
         // (d/dy)(deltaU^2 + deltaV^2) =
-        //    2*deltaU*(d/dy)deltaU + 2*deltaV*(d/dy)deltaV 
+        //    2*deltaU*(d/dy)deltaU + 2*deltaV*(d/dy)deltaV
         gradientArray[0] = twoTimesDeltaU * dUdX + twoTimesDeltaV * dVdX;
         gradientArray[1] = twoTimesDeltaU * dUdY + twoTimesDeltaV * dVdY;
 
@@ -306,7 +306,7 @@ namespace brick {
 
         gradientArray[0] += dPdX;
         gradientArray[1] += dPdY;
-        
+
         return gradientArray;
       }
 
@@ -319,7 +319,7 @@ namespace brick {
         if(m_intrinsicsPtr == 0) {
           return 0.0;
         }
-        
+
         // Start by computing a vaguely normalized measure of how far
         // out-of-bounds uvPosition is.  We'll call this "violation."
         FloatType uViolation = 0.0;
@@ -355,7 +355,7 @@ namespace brick {
         vViolation *= vViolation;
         return uViolation + vViolation;
       }
-        
+
 
       template <class FloatType>
       void
@@ -370,7 +370,7 @@ namespace brick {
           dPdY = 0.0;
           return;
         }
-        
+
         // Start by computing a vaguely normalized measure of how far
         // out-of-bounds uvPosition is.  We'll call this "violation."
         // Simultaneously compute the first derivative of violation
@@ -429,7 +429,7 @@ namespace brick {
         const brick::numeric::Vector3D<FloatType>& candidate)
       {
         FloatType penalty(0.0);
-        
+
         // Penalize unrectified points that should project outside the
         // image.  We make this term be zero at the edge of the field
         // of view, ramping quadratically to the cost equivalent of
@@ -440,7 +440,7 @@ namespace brick {
           candidate.x() / candidate.z());
         FloatType elevationTangent = brick::numeric::absoluteValue(
           candidate.y() / candidate.z());
-        
+
         // Are we in violation horizontally?
         if(azimuthTangent > this->m_maxAzimuthTangent) {
 
@@ -460,7 +460,7 @@ namespace brick {
           //   k * 0.1 * t_max = w
           //   k = 10 * w / t_max
           // @endverbatim
-          // 
+          //
           // We precomputed k in the constructor.  We called it
           // m_azimuthViolationScale.
           azimuthViolation *= this->m_azimuthViolationScale;
@@ -477,7 +477,7 @@ namespace brick {
           elevationViolation *= elevationViolation;
           penalty += elevationViolation;
         }
-          
+
         return penalty;
       }
 
@@ -492,7 +492,7 @@ namespace brick {
         // Initialize penalty gradients to zero.
         dPdX = FloatType(0.0);
         dPdY = FloatType(0.0);
-        
+
         // Penalize unrectified points that should project outside the
         // image.
         FloatType azimuthTangent = xValue;
@@ -509,7 +509,7 @@ namespace brick {
           elevationTangent = -elevationTangent;
           dEldY = -dEldY;
         }
-        
+
         // Are we in violation horizontally?
         if(azimuthTangent > this->m_maxAzimuthTangent) {
           FloatType azimuthViolation =
@@ -527,12 +527,12 @@ namespace brick {
           dPdY = (FloatType(2) * elevationViolation
                   * this->m_elevationViolationScale * dEldY);
         }
-      }          
-      
+      }
+
     } // namespace privateCode;
-    
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_CAMERAINTRINSICSDISTORTEDPINHOLE_IMPL_HH */

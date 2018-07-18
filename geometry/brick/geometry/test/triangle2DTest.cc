@@ -20,7 +20,7 @@
 namespace brick {
 
   namespace geometry {
-    
+
     class Triangle2DTest : public brick::test::TestFixture<Triangle2DTest> {
 
     public:
@@ -39,7 +39,7 @@ namespace brick {
     private:
 
       const double m_defaultTolerance;
-      
+
     }; // class Triangle2DTest
 
 
@@ -77,7 +77,7 @@ namespace brick {
         approximatelyEqual(vertex2.getX(), 0.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(
         approximatelyEqual(vertex2.getY(), 1.0, m_defaultTolerance));
-      
+
     }
 
     void
@@ -86,7 +86,7 @@ namespace brick {
     {
       // Indirectly tested by testGetArea().
     }
-    
+
 
     void
     Triangle2DTest::
@@ -132,7 +132,7 @@ namespace brick {
         }
       }
     }
-    
+
   } // namespace geometry
 
 } // namespace brick

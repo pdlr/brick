@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/utilities/test/pathTest.cc
-* 
+*
 * Source file defining tests for file handling.
 *
 * Copyright (C) 2004-2011 David LaRose, dlr@cs.cmu.edu
@@ -77,7 +77,7 @@ namespace brick {
       system("touch _disposable_test_directory_/baz.sxw");
 
       // Verify results.
-      try{ 
+      try{
         BRICK_TEST_ASSERT(isDirectory("_disposable_test_directory_"));
         BRICK_TEST_ASSERT(!isDirectory("_disposable_test_directory_/foo.txt"));
         BRICK_TEST_ASSERT(!isDirectory("_disposable_test_directory_/bar.png"));
@@ -87,12 +87,12 @@ namespace brick {
         system("rm -rf _disposable_test_directory_");
         throw;
       }
-    
+
       // Clean up.
       system("rm -rf _disposable_test_directory_");
 
 #endif /* #if BRICK_UNITTEST_USE_UNSAFE_FILEIO */
-    
+
     }
 
 
@@ -125,7 +125,7 @@ namespace brick {
       BRICK_TEST_ASSERT(joinPath("foo\\bar\\", "\\baz.hum")
                         == "foo\\bar\\\\baz.hum");
 
-#if 0 
+#if 0
       // Hmm.  Not sure what the right behavior is here.
       // Should joinPath("foo", "/bar") give "foo//bar", "foo/bar", or "/bar"?
 
@@ -139,7 +139,7 @@ namespace brick {
       BRICK_TEST_ASSERT(joinPath("\\testVariety\\", "\\training\\phase1model\\")
                         == "\\testVariety\\training\\phase1model\\");
 #endif /* #if 0 */
-    
+
 #else
       BRICK_TEST_ASSERT(joinPath("foo", "bar.baz") == "foo/bar.baz");
       BRICK_TEST_ASSERT(joinPath("foo/bar", "baz.hum") == "foo/bar/baz.hum");
@@ -179,11 +179,11 @@ namespace brick {
       // email of 10/1/09.  Remove this line
       // once the bug is fixed.
 #endif /* #if 0 */
-    
+
 #endif /* #ifdef _WIN32 */
     }
 
-  
+
     void
     PathTest::
     testListDirectory()
@@ -204,7 +204,7 @@ namespace brick {
       std::sort(listing.begin(), listing.end());
 
       // Verify results.
-      try{ 
+      try{
         BRICK_TEST_ASSERT(listing.size() == 5);
         BRICK_TEST_ASSERT(listing[0] == ".");
         BRICK_TEST_ASSERT(listing[1] == "..");
@@ -216,7 +216,7 @@ namespace brick {
         system("rm -rf _disposable_test_directory_");
         throw;
       }
-    
+
       // List the contents again and sort them into a predictable order.
       // This time ask for full path.
       listing =
@@ -224,7 +224,7 @@ namespace brick {
       std::sort(listing.begin(), listing.end());
 
       // Verify results.
-      try{ 
+      try{
         BRICK_TEST_ASSERT(listing.size() == 5);
         BRICK_TEST_ASSERT(listing[0] == "_disposable_test_directory_/.");
         BRICK_TEST_ASSERT(listing[1] == "_disposable_test_directory_/..");
@@ -236,7 +236,7 @@ namespace brick {
         system("rm -rf _disposable_test_directory_");
         throw;
       }
-    
+
       // Clean up.
       system("rm -rf _disposable_test_directory_");
 
@@ -244,7 +244,7 @@ namespace brick {
 
     }
 
-  
+
     void
     PathTest::
     testRecursiveListDirectory()
@@ -280,7 +280,7 @@ namespace brick {
         // system("rm -rf _disposable_test_directory_");
         throw;
       }
-    
+
       // List the contents and sort them into a predictable order.  This
       // time ask for directory names to be included.
       listing =
@@ -288,7 +288,7 @@ namespace brick {
       std::sort(listing.begin(), listing.end());
 
       // Verify results.
-      try{ 
+      try{
         size_t index0 = 0;
         BRICK_TEST_ASSERT(listing.size() == 12);
         BRICK_TEST_ASSERT(listing[index0++] == ".");
@@ -308,7 +308,7 @@ namespace brick {
         system("rm -rf _disposable_test_directory_");
         throw;
       }
-    
+
       // List the contents and sort them into a predictable order.  This
       // time ask for directory names to be included and request full
       // path name.
@@ -317,7 +317,7 @@ namespace brick {
       std::sort(listing.begin(), listing.end());
 
       // Verify results.
-      try{ 
+      try{
         size_t index0 = 0;
         BRICK_TEST_ASSERT(listing.size() == 12);
         BRICK_TEST_ASSERT(listing[index0++]
@@ -352,7 +352,7 @@ namespace brick {
         system("rm -rf _disposable_test_directory_");
         throw;
       }
-    
+
       // Clean up.
       system("rm -rf _disposable_test_directory_");
 
@@ -442,9 +442,9 @@ namespace brick {
       BRICK_TEST_ASSERT(directoryName_fileName.second == "");
 #endif
     }
-  
+
   } // namespace utilities
-  
+
 } // namespace brick
 
 

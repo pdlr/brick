@@ -16,7 +16,7 @@
 
 // This file is included by imageWarper.hh, and should not be directly included
 // by user code, so no need to include imageWarper.hh here.
-// 
+//
 // #include <brick/computerVision/imageWarper.hh>
 
 #include <brick/numeric/vector2D.hh>
@@ -37,7 +37,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     template<class NumericType, class TransformFunctor>
     ImageWarper<NumericType, TransformFunctor>::
     ImageWarper(size_t inputRows, size_t inputColumns,
@@ -61,13 +61,13 @@ namespace brick {
             NumericType intPart;
             NumericType xFrac;
             NumericType yFrac;
-            
+
             brick::common::splitFraction(inputCoord.x(), intPart, xFrac);
             size_t i0 = static_cast<size_t>(intPart);
 
             brick::common::splitFraction(inputCoord.y(), intPart, yFrac);
             size_t j0 = static_cast<size_t>(intPart);
-            
+
             NumericType oneMinusXFrac = 1.0 - xFrac;
             NumericType oneMinusYFrac = 1.0 - yFrac;
             sampleInfo.c00 = oneMinusXFrac * oneMinusYFrac;
@@ -82,7 +82,7 @@ namespace brick {
         }
       }
     }
-    
+
 
     // Destroys the ImageWarper instance and deletes the internal data
     // store.
@@ -120,7 +120,7 @@ namespace brick {
           typename Image<OutputFormat>::PixelType& outputPixel =
             outputImage[ii];
           size_t inputIndex = sampleInfo.index00;
-          
+
           outputPixel = sampleInfo.c00 * inputImage[inputIndex];
           ++inputIndex;
           outputPixel += sampleInfo.c01 * inputImage[inputIndex];

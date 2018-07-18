@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file transform2D.cc
+* @file brick/numeric/transform2D.cc
 *
 * Source file defining symbols declared in transform2D.hh.
 *
@@ -15,7 +15,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     template <>
     inline Transform2D<double>
     operator*(Transform2D<double> const& transform0,
@@ -90,7 +90,7 @@ namespace brick {
                                 a10, a11, a12,
                                 a20, a21, a22);
     }
-    
+
   } // namespace numeric
 
 } // namespace brick

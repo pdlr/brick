@@ -37,15 +37,15 @@ namespace brick {
 
       // Tests.
       void testGetTransform();
-    
+
     private:
 
       double m_defaultTolerance;
-    
+
     }; // class IterativeClosestPointTest
 
 
-    
+
     /* ====== IterativeClosestPointTest Member Function Definititions ====== */
 
     IterativeClosestPointTest::
@@ -74,7 +74,7 @@ namespace brick {
         2.0 * maxTranslation / (numTranslations - 1);
       double const rotationIncrement =
         2.0 * maxRotation / (numRotations - 1);
-      
+
       std::vector< num::Vector3D<double> > modelPoints;
 
       // Set up a well behaved shape to register.  Note that this
@@ -119,7 +119,7 @@ namespace brick {
                   observedFromModel.setValue(0, 3, tx);
                   observedFromModel.setValue(1, 3, ty);
                   observedFromModel.setValue(2, 3, tz);
-                  num::Transform3D<double> modelFromObserved = 
+                  num::Transform3D<double> modelFromObserved =
                     observedFromModel.invert();
 
                   // Use the ground truth transform to compute some
@@ -127,7 +127,7 @@ namespace brick {
                   std::vector< num::Vector3D<double> > observedPoints(
                     modelPoints.size());
                   std::transform(modelPoints.begin(), modelPoints.end(),
-                                 observedPoints.begin(), 
+                                 observedPoints.begin(),
                                  observedFromModel.getFunctor());
 
                   // Recover the coordinate transformation by ICP.
@@ -138,9 +138,9 @@ namespace brick {
                   modelFromObservedEstimate = icp.registerPoints(
                     observedPoints.begin(), observedPoints.end(),
                     modelFromObservedEstimate);
-                  observedFromModelEstimate = 
+                  observedFromModelEstimate =
                     modelFromObservedEstimate.invert();
-                  
+
                   // Verify that we've recovered the correct transform.
                   double txEstimate = observedFromModelEstimate(0, 3);
                   double tyEstimate = observedFromModelEstimate(1, 3);
@@ -159,10 +159,10 @@ namespace brick {
                     com::approximatelyEqual(
                       tzEstimate, tz, this->m_defaultTolerance));
                   BRICK_TEST_ASSERT(
-                    com::approximatelyEqual(rollPitchYawEstimate.x(), roll, 
+                    com::approximatelyEqual(rollPitchYawEstimate.x(), roll,
                                             this->m_defaultTolerance));
                   BRICK_TEST_ASSERT(
-                    com::approximatelyEqual(rollPitchYawEstimate.y(), pitch, 
+                    com::approximatelyEqual(rollPitchYawEstimate.y(), pitch,
                                             this->m_defaultTolerance));
                   BRICK_TEST_ASSERT(
                     com::approximatelyEqual(rollPitchYawEstimate.z(), yaw,
@@ -174,9 +174,9 @@ namespace brick {
         }
       }
     }
-  
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 
@@ -194,7 +194,7 @@ int main(int argc, char** argv)
 namespace {
 
   brick::computerVision::IterativeClosestPointTest currentTest;
-  
+
 }
 
 #endif

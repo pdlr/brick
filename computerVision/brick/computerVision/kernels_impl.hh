@@ -15,7 +15,7 @@
 
 // This file is included by kernels.hh, and should not be directly included
 // by user code, so no need to include kernel.hh here.
-// 
+//
 // #include <brick/computerVision/kernels.hh>
 
 #include <cmath>
@@ -28,7 +28,7 @@ namespace brick {
 
     /// @cond privateCode
     namespace privateCode {
-      
+
       template <class TYPE>
       brick::numeric::Array1D<TYPE>
       getGaussian1D(size_t size, double sigma, bool normalize=false,
@@ -44,7 +44,7 @@ namespace brick {
           buffer[index0] = k * exp(-x * x / twoSigmaSq);
           x += 1.0;
         }
-        
+
         double scaleFactor = 1.0;
         if(normalize) {
           double integral = brick::numeric::sum<double>(buffer);
@@ -56,7 +56,7 @@ namespace brick {
         }
         return result;
       }
-      
+
     } // namespace privateCode
     /// @endcond
 
@@ -82,7 +82,7 @@ namespace brick {
         rowNormalizationTarget, columnNormalizationTarget);
     }
 
-    
+
     // This function generates and returns a separable Gaussian kernel.
     template<class KERNEL_TYPE>
     Kernel<KERNEL_TYPE>
@@ -115,7 +115,7 @@ namespace brick {
 
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_KERNELS_IMPL_HH */

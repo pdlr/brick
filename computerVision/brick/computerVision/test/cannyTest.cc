@@ -21,7 +21,7 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     class CannyTest
       : public brick::test::TestFixture<CannyTest> {
 
@@ -85,7 +85,7 @@ int main(int argc, char** argv)
 namespace {
 
   brick::computerVision::CannyTest currentTest;
-  
+
 }
 
 #endif

@@ -91,7 +91,6 @@ namespace brick {
              ConversionFunction const& oecf,
              Iso12233Config const& config = Iso12233Config());
 
-
   } // namespace iso12233
 
 } // namespace brick

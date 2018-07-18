@@ -44,7 +44,7 @@ namespace brick {
     inline Type FunctionName(Type arg0, Type arg1) {                           \
       return brick::common::FunctionName<Type>(arg0, arg1);                    \
     }
-    
+
 #define BRICK_NUMERIC_DECLARE_MATHFUNCTION_FAMILY_1(FunctionName)              \
     BRICK_NUMERIC_DECLARE_MATHFUNCTION_1(FunctionName, brick::common::Int8)    \
     BRICK_NUMERIC_DECLARE_MATHFUNCTION_1(FunctionName, brick::common::Int16)   \
@@ -68,7 +68,7 @@ namespace brick {
     BRICK_NUMERIC_DECLARE_MATHFUNCTION_2(FunctionName, brick::common::UInt64)  \
     BRICK_NUMERIC_DECLARE_MATHFUNCTION_2(FunctionName, brick::common::Float32) \
     BRICK_NUMERIC_DECLARE_MATHFUNCTION_2(FunctionName, brick::common::Float64)
-    
+
     // Please see brick/common/mathFunctions.hh for documentation of
     // math functions.
 
@@ -77,6 +77,9 @@ namespace brick {
     BRICK_NUMERIC_DECLARE_MATHFUNCTION_FAMILY_1(arccosine)
     BRICK_NUMERIC_DECLARE_MATHFUNCTION_FAMILY_1(arcsine)
     BRICK_NUMERIC_DECLARE_MATHFUNCTION_FAMILY_1(cosine)
+    BRICK_NUMERIC_DECLARE_MATHFUNCTION_FAMILY_1(logarithm)
+    BRICK_NUMERIC_DECLARE_MATHFUNCTION_FAMILY_1(roundToCeiling)
+    BRICK_NUMERIC_DECLARE_MATHFUNCTION_FAMILY_1(roundToFloor)
     BRICK_NUMERIC_DECLARE_MATHFUNCTION_FAMILY_1(sine)
     BRICK_NUMERIC_DECLARE_MATHFUNCTION_FAMILY_1(squareRoot)
     BRICK_NUMERIC_DECLARE_MATHFUNCTION_FAMILY_1(tangent)
@@ -96,7 +99,7 @@ namespace brick {
                               brick::common::Float64& fractionalPart) {
       brick::common::splitFraction(arg, integerPart, fractionalPart);
     }
-    
+
   } // namespace numeric
 
 } // namespace brick

@@ -54,5 +54,3 @@ namespace brick {
   } // namespace brick
 
 } // namespace computerVision
-
-    

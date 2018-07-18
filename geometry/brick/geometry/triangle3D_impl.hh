@@ -15,7 +15,7 @@
 
 // This file is included by triangle3D.hh, and should not be directly included
 // by user code, so no need to include triangle3D.hh here.
-// 
+//
 // #include <brick/geometry/triangle3D.hh>
 
 #include <brick/common/expect.hh>
@@ -24,7 +24,7 @@
 namespace brick {
 
   namespace geometry {
-    
+
     // The default constructor initializes to a triangle in the X-Y
     // plane.
     template <class Type>
@@ -37,7 +37,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // This constructor initializes the triangle using three points.
     template <class Type>
     Triangle3D<Type>::
@@ -51,7 +51,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // The copy constructor deep copies its argument.
     template <class Type>
     Triangle3D<Type>::
@@ -97,7 +97,7 @@ namespace brick {
     {
       return m_vertex0;
     }
-      
+
 
     // This member function returns the one of the three vertices
     // that define the triangle.
@@ -108,7 +108,7 @@ namespace brick {
     {
       return m_vertex1;
     }
-      
+
 
     // This member function returns the one of the three vertices
     // that define the triangle.
@@ -119,7 +119,7 @@ namespace brick {
     {
       return m_vertex2;
     }
-      
+
 
     /* ======= Non-member functions. ======= */
 
@@ -143,7 +143,7 @@ namespace brick {
       if (!stream){
         return stream;
       }
-    
+
       // It's a lot easier to use a try block than to be constantly
       // testing whether the IO has succeeded, so we tell inputStream to
       // complain if anything goes wrong.
@@ -156,7 +156,7 @@ namespace brick {
         brick::numeric::Vector3D<Type> vertex0;
         brick::numeric::Vector3D<Type> vertex1;
         brick::numeric::Vector3D<Type> vertex2;
-        
+
         brick::common::Expect::FormatFlag flags =
           brick::common::Expect::SkipWhitespace;
         stream >> brick::common::Expect("Triangle3D", flags)
@@ -169,7 +169,7 @@ namespace brick {
                >> brick::common::Expect("}");
 
         triangle.setValue(vertex0, vertex1, vertex2);
-        
+
       } catch(std::ios_base::failure) {
         // Empty
       }
@@ -177,9 +177,9 @@ namespace brick {
       return stream;
     }
 
-    
+
   } // namespace utilities
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_GEOMETRY_TRIANGLE3D_IMPL_HH */

@@ -15,7 +15,7 @@
 
 // This file is included by convolve1D.hh, and should not be directly included
 // by user code, so no need to include convolve1D.hh here.
-// 
+//
 // #include <brick/numeric/convolve1D.hh>
 
 #include <algorithm> // For std::reverse_copy()
@@ -29,7 +29,7 @@ namespace brick {
 
   namespace numeric {
 
-    /// @cond privateCode    
+    /// @cond privateCode
     namespace privateCode {
 
       template <class OutputType, class KernelType, class SignalType>
@@ -117,7 +117,7 @@ namespace brick {
 
 	// Constants specified without reference to signal or result.
 	const int kSizeOverTwo = static_cast<int>(kernel.size()) / 2;
-	
+
 	// Constants specified with respect to argument signal.
 	const int transitionIndex0 = kSizeOverTwo;
 	const int transitionIndex1 = static_cast<int>(signal.size()) - kSizeOverTwo;
@@ -152,8 +152,8 @@ namespace brick {
 	  result.begin() + resultTransitionIndex0);
         return result;
       }
-    
-                   
+
+
       template <class OutputType, class KernelType, class SignalType>
       Array1D<OutputType>
       correlate1DZeroPadSignal(const Array1D<KernelType>& kernel,
@@ -165,7 +165,7 @@ namespace brick {
 
 	// Constants specified without reference to signal or result.
 	const int kSizeOverTwo = static_cast<int>(kernel.size()) / 2;
-	
+
 	// Constants specified with respect to argument signal.
 	const int transitionIndex0 = kSizeOverTwo;
 	const int transitionIndex1 = static_cast<int>(signal.size()) - kSizeOverTwo;
@@ -214,7 +214,7 @@ namespace brick {
 	  ++inputIndex;
 	  ++outputIndex;
         }
-	
+
         correlate1DCommon<OutputType, KernelType, SignalType>(
 	  kernel,
 	  signal.begin() + clippedTransitionIndex0 - kSizeOverTwo,
@@ -239,10 +239,10 @@ namespace brick {
 	// signal.
 	Array1D<OutputType> accumulatedKernel = accumulateKernel<
 	  OutputType, KernelType, SignalType>(kernel, fillValue);
-	
+
 	// Constants specified without reference to signal or result.
 	const int kSizeOverTwo = static_cast<int>(kernel.size()) / 2;
-	
+
 	// Constants specified with respect to argument signal.
 	const int transitionIndex0 = kSizeOverTwo;
 	const int transitionIndex1 = static_cast<int>(signal.size()) - kSizeOverTwo;
@@ -292,7 +292,7 @@ namespace brick {
 	  ++inputIndex;
 	  ++outputIndex;
         }
-	
+
         correlate1DCommon<OutputType, KernelType, SignalType>(
 	  kernel,
 	  signal.begin() + clippedTransitionIndex0 - kSizeOverTwo,
@@ -436,7 +436,7 @@ namespace brick {
 
 	// Constants specified without reference to signal or result.
 	const int kSizeOverTwo = static_cast<int>(kernel.size()) / 2;
-	
+
 	// Constants specified with respect to argument signal.
 	const int transitionIndex0 = kSizeOverTwo;
 	const int transitionIndex1 = static_cast<int>(signal.size()) - kSizeOverTwo;
@@ -530,7 +530,7 @@ namespace brick {
       return correlate1D<OutputType, KernelType, SignalType>(
 	reversedKernel, signal, strategy, roi);
     }
-    
+
 
     template <class OutputType, class KernelType, class SignalType,
 	      class FillType>
@@ -546,7 +546,7 @@ namespace brick {
       return correlate1D<OutputType, KernelType, SignalType>(
 	reversedKernel, signal, strategy, roi, fillValue);
     }
-    
+
 
     template <class OutputType, class KernelType, class SignalType>
     inline Array1D<OutputType>
@@ -561,7 +561,7 @@ namespace brick {
       return correlate1D<OutputType, KernelType, SignalType>(
 	reversedKernel, signal, strategy, boundary0, boundary1);
     }
-    
+
 
     template <class OutputType, class KernelType, class SignalType,
 	      class FillType>
@@ -578,7 +578,7 @@ namespace brick {
       return correlate1D<OutputType, KernelType, SignalType>(
 	reversedKernel, signal, strategy, boundary0, boundary1, fillValue);
     }
-    
+
 
     template <class OutputType, class KernelType, class SignalType>
     Array1D<OutputType>
@@ -619,7 +619,7 @@ namespace brick {
       }
       return Array1D<OutputType>();
     }
-    
+
 
     template <class OutputType, class KernelType, class SignalType,
 	      class FillType>
@@ -663,7 +663,7 @@ namespace brick {
       return Array1D<OutputType>();
     }
 
-    
+
     template <class OutputType, class KernelType, class SignalType>
     Array1D<OutputType>
     correlate1D(const Array1D<KernelType>& kernel,
@@ -715,7 +715,7 @@ namespace brick {
       }
       return Array1D<OutputType>();
     }
-    
+
 
     template <class OutputType, class KernelType, class SignalType,
 	      class FillType>

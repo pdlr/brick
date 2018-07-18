@@ -23,7 +23,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
 
     /** Unstable: interface subject to change. **/
     template <class OutputType, class AccumulatorType,
@@ -35,7 +35,7 @@ namespace brick {
              ConvolutionStrategy strategy = BRICK_CONVOLVE_PAD_RESULT,
              ConvolutionROI roi = BRICK_CONVOLVE_ROI_SAME);
 
-    
+
   } // namespace numeric
 
 } // namespace brick

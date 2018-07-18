@@ -17,7 +17,7 @@
 // This file is included by boxIntegrator2D.hh, and should not be
 // directly included by user code, so no need to include
 // boxIntegrator2D.hh here.
-// 
+//
 // #include <brick/numeric/boxIntegrator2D.hh>
 
 #include <brick/common/functional.hh>
@@ -26,7 +26,7 @@ namespace brick {
 
   namespace numeric {
 
-  
+
     // This constructor performs almost no work, and simply
     // initializes the class instance to a "zero" state.
     template <class Type0, class Type1>
@@ -165,7 +165,7 @@ namespace brick {
       this->setArray(inputArray, common::StaticCastFunctor<Type0, Type1>());
     }
 
-      
+
     // This member function discards and previously cached integral
     // information, applies the specified functor to each element of
     // the input array, performs a double integral over the input
@@ -183,7 +183,7 @@ namespace brick {
         inputArray.columns(), functor);
     }
 
-      
+
     // This constructor works just like the single argument version
     // of setArray, with the exception that the pre-integration is
     // performed over only a rectangular sub-array.
@@ -198,7 +198,7 @@ namespace brick {
                      common::StaticCastFunctor<Type0, Type1>());
     }
 
-    
+
     // This member function works just like the three-argument
     // version of setArray, with the exception that the the
     // specified functor is applied to each element of the array
@@ -225,7 +225,7 @@ namespace brick {
 
       int roiRows = row1 - row0;
       int roiColumns = column1 - column0;
-      
+
       m_corner0.setValue(row0, column0);
       this->fillCache(
         inputArray.begin() + (row0 * inputArray.columns() + column0),
@@ -253,7 +253,7 @@ namespace brick {
       // values are identically zero.
       std::fill(m_cache.rowBegin(0), m_cache.rowEnd(0),
                 static_cast<Type1>(functor(0)));
-      
+
       // Pre-integrate first row.
       typename Array2D<Type0>::const_iterator endIter = inIter + roiColumns;
       typename Array2D<Type1>::iterator outIter =
@@ -282,9 +282,9 @@ namespace brick {
         }
       }
     }
-    
+
   } // namespace numeric
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_NUMERIC_BOXINTEGRATOR2D_IMPL_HH */

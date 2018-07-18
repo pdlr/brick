@@ -17,7 +17,7 @@
 // This file is included by imagePyramidBinomial.hh, and should not be
 // directly included by user code, so no need to include
 // imagePyramidBinomial.hh here.
-// 
+//
 // #include <brick/computerVision/imagePyramidBinomial.hh>
 
 #include <brick/computerVision/pixelOperations.hh>
@@ -77,7 +77,7 @@ namespace brick {
       // is 3x3.
       m_borderSizeLeftRight = 1;
       m_borderSizeTopBottom = 1;
-      
+
       // Start off the pyramid.
       Image<Format> currentImage;
       if(isDeepCopyImage) {
@@ -150,8 +150,8 @@ namespace brick {
       }
       return brick::numeric::Vector2D<Type>(row, column);
     }
-    
-      
+
+
     template <ImageFormat Format, ImageFormat InternalFormat>
     unsigned int
     ImagePyramidBinomial<Format, InternalFormat>::
@@ -204,7 +204,7 @@ namespace brick {
     {
       return m_pyramid.size();
     }
-    
+
 
     // ============== Private member functions below this line ==============
 
@@ -238,7 +238,7 @@ namespace brick {
       }
     }
 
-    
+
     template <ImageFormat Format, ImageFormat InternalFormat>
     Image<Format>
     ImagePyramidBinomial<Format, InternalFormat>::
@@ -251,10 +251,10 @@ namespace brick {
                     "Input image size is smaller than 3x3.  There must be "
                     "some unchecked arguments upstream.");
       }
-      
+
       // Create an output image of the appropriate size.
       Image<Format> outputImage(inputImage.rows(), inputImage.columns());
-      
+
       // Zero the first output row (where there will be no filtered data).
       std::fill(outputImage.getRow(0).begin(), outputImage.getRow(0).end(),
                 PixelType(0));
@@ -300,7 +300,7 @@ namespace brick {
     {
       brick::numeric::Array1D<InternalPixelType> outputRow(inputRow.size());
       uint32_t sizeMinusOne = outputRow.size() - 1;
-      
+
       outputRow[0] =
         ImageFormatTraits<InternalFormat>().getZeroPixel();
 
@@ -316,13 +316,13 @@ namespace brick {
 
       }
 
-      outputRow[sizeMinusOne] = 
+      outputRow[sizeMinusOne] =
         ImageFormatTraits<InternalFormat>().getZeroPixel();
 
       return outputRow;
     }
 
-    
+
     template <ImageFormat Format, ImageFormat InternalFormat>
     Image<Format>
     ImagePyramidBinomial<Format, InternalFormat>::
@@ -335,11 +335,11 @@ namespace brick {
                     "Input image size is smaller than 3x3.  There must be "
                     "some unchecked arguments upstream.");
       }
-      
+
       // Create an output image of the appropriate size.
       Image<Format> outputImage(inputImage.rows() / 2,
                                 inputImage.columns() / 2);
-      
+
       // Zero the first output row (where there will be no filtered data).
       std::fill(outputImage.getRow(0).begin(), outputImage.getRow(0).end(),
                 PixelType(0));
@@ -397,7 +397,7 @@ namespace brick {
     {
       brick::numeric::Array1D<InternalPixelType> outputRow(inputRow.size() / 2);
       uint32_t sizeMinusOne = inputRow.size() - 1;
-      
+
       outputRow[0] =
         ImageFormatTraits<InternalFormat>().getZeroPixel();
 
@@ -415,7 +415,7 @@ namespace brick {
       }
 
       while(outputRowIndex < outputRow.size()) {
-        outputRow[outputRowIndex] = 
+        outputRow[outputRowIndex] =
           ImageFormatTraits<InternalFormat>().getZeroPixel();
         ++outputRowIndex;
       }
@@ -423,7 +423,7 @@ namespace brick {
       return outputRow;
     }
 
-    
+
     template <ImageFormat Format, ImageFormat InternalFormat>
     Image<Format>
     ImagePyramidBinomial<Format, InternalFormat>::
@@ -449,7 +449,7 @@ namespace brick {
     }
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_IMAGEPYRAMIDBINOMIAL_IMPL_HH */

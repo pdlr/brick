@@ -98,7 +98,7 @@ namespace brick {
       BRICK_TEST_ASSERT(date0.getYear() == 0);
     }
 
-  
+
     void
     DateTest::
     testConstructor__string()
@@ -117,7 +117,7 @@ namespace brick {
       BRICK_TEST_ASSERT(date1.getYear() == date0.getYear());
     }
 
-  
+
     void
     DateTest::
     testConstructor__size_t__size_t__size_t()
@@ -142,7 +142,7 @@ namespace brick {
       BRICK_TEST_ASSERT(date2.getYear() == 2000);
     }
 
-  
+
     void
     DateTest::
     testConstructor__Date()
@@ -154,7 +154,7 @@ namespace brick {
       BRICK_TEST_ASSERT(date1.getYear() == date0.getYear());
     }
 
-  
+
     void
     DateTest::
     testDestructor()
@@ -162,7 +162,7 @@ namespace brick {
       // No explicit test.
     }
 
-  
+
     void
     DateTest::
     testGetDay()
@@ -170,7 +170,7 @@ namespace brick {
       // No explicit test.
     }
 
-  
+
     void
     DateTest::
     testGetMonth()
@@ -178,7 +178,7 @@ namespace brick {
       // No explicit test.
     }
 
-  
+
     void
     DateTest::
     testGetYear()
@@ -186,7 +186,7 @@ namespace brick {
       // No explicit test.
     }
 
-  
+
     void
     DateTest::
     testSetDay()
@@ -200,7 +200,7 @@ namespace brick {
       BRICK_TEST_ASSERT(date0.getYear() == 2001);
     }
 
-  
+
     void
     DateTest::
     testSetMonth()
@@ -214,7 +214,7 @@ namespace brick {
       BRICK_TEST_ASSERT(date0.getYear() == 2001);
     }
 
-  
+
     void
     DateTest::
     testSetYear()
@@ -227,7 +227,7 @@ namespace brick {
       BRICK_TEST_ASSERT(date0.getYear() == 2002);
     }
 
-  
+
     // Tests of non-member functions.
     void
     DateTest::
@@ -249,7 +249,7 @@ namespace brick {
       BRICK_TEST_ASSERT(!(date4 == date0));
     }
 
-  
+
     void
     DateTest::
     testOperatorGreaterThan()
@@ -270,7 +270,7 @@ namespace brick {
       BRICK_TEST_ASSERT(date4 > date0);
     }
 
-  
+
     void
     DateTest::
     testOperatorGreaterOrEqualTo()
@@ -291,7 +291,7 @@ namespace brick {
       BRICK_TEST_ASSERT(date4 >= date0);
     }
 
-  
+
     void
     DateTest::
     testOperatorLessThan()
@@ -312,7 +312,7 @@ namespace brick {
       BRICK_TEST_ASSERT(!(date4 < date0));
     }
 
-  
+
     void
     DateTest::
     testOperatorLessOrEqualTo()
@@ -333,7 +333,7 @@ namespace brick {
       BRICK_TEST_ASSERT(!(date4 <= date0));
     }
 
-  
+
     void
     DateTest::
     testOperatorNotEqualTo()
@@ -354,7 +354,7 @@ namespace brick {
       BRICK_TEST_ASSERT(date4 != date0);
     }
 
-  
+
     void
     DateTest::
     testOutputOperator()
@@ -370,7 +370,7 @@ namespace brick {
       BRICK_TEST_ASSERT(date0 == date1);
     }
 
-  
+
     void
     DateTest::
     testInputOperator()
@@ -379,7 +379,7 @@ namespace brick {
     }
 
   } // namespace utilities
-  
+
 } // namespace brick
 
 

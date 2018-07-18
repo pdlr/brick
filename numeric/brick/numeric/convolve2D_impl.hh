@@ -15,7 +15,7 @@
 
 // This file is included by convolve2D.hh, and should not be directly included
 // by user code, so no need to include convolve2D.hh here.
-// 
+//
 // #include <brick/numeric/convolve2D.hh>
 
 #include <algorithm> // For std::reverse_copy()
@@ -28,7 +28,7 @@ namespace brick {
 
   namespace numeric {
 
-    /// @cond privateCode    
+    /// @cond privateCode
     namespace privateCode {
 
       template <class AccumulatorType, class KernelType, class SignalType>
@@ -45,7 +45,7 @@ namespace brick {
 	for(size_t row = 0; row < kernel.rows(); ++row) {
 	  tempKernel(row + 1, 0) = static_cast<KernelSumType>(0);
 	  std::copy(kernel.rowBegin(row), kernel.rowEnd(row),
-		    tempKernel.rowBegin(row + 1) + 1);		    
+		    tempKernel.rowBegin(row + 1) + 1);
 	}
 
 	// Accumulate horizontally.
@@ -88,8 +88,8 @@ namespace brick {
 	  - accumulatedKernel(row1, column0)
 	  + accumulatedKernel(row0, column0));
       }
-      
-      
+
+
       template <class OutputType, class AccumulatorType,
 		class KernelType, class SignalType,
 		size_t StencilSize>
@@ -210,7 +210,7 @@ namespace brick {
 	}
       }
 
-      
+
       template <class OutputType, class AccumulatorType,
 		class KernelType, class SignalType>
       inline OutputType
@@ -243,7 +243,7 @@ namespace brick {
 	}
 	return static_cast<OutputType>(dotProduct);
       }
-      
+
 
       template <class OutputType, class AccumulatorType,
 		class KernelType, class SignalType>
@@ -267,7 +267,7 @@ namespace brick {
 	    0, kernelStartColumn, signalRow0, signalRightStartColumn);
 	return static_cast<OutputType>(result);
       }
-      
+
 
       template <class OutputType, class AccumulatorType,
 		class KernelType, class SignalType>
@@ -312,7 +312,7 @@ namespace brick {
 	}
 	return static_cast<OutputType>(dotProduct);
       }
-      
+
 
       template <class OutputType, class AccumulatorType,
 		class KernelType, class SignalType>
@@ -334,7 +334,7 @@ namespace brick {
 	  KernelIterator kernelMiddle = kernelIter + rightOverlap;
 	  KernelIterator kernelEnd = kernel.rowEnd(kernelRow);
 	  SignalIterator signalIter = signal.rowEnd(signalRow) - rightOverlap;
-	  
+
 	  // Compute in-bounds component.
 	  while(kernelIter != kernelMiddle) {
 	    dotProduct += static_cast<AccumulatorType>(
@@ -355,7 +355,7 @@ namespace brick {
 	}
 	return static_cast<OutputType>(dotProduct);
       }
-      
+
 
       template <class OutputType, class AccumulatorType,
 		class KernelType, class SignalType>
@@ -409,7 +409,7 @@ namespace brick {
 	// Constants specified without reference to signal or result.
 	const int kRowOverTwo = static_cast<int>(kernel.rows()) / 2;
 	const int kColOverTwo = static_cast<int>(kernel.columns()) / 2;
-	
+
 	// Constants specified with respect to rows & columns in
 	// argument signal.
 	const int startRow = corner0.getRow();
@@ -469,7 +469,7 @@ namespace brick {
 	  ++row;
 	  ++outputRow;
 	}
-	
+
 	Index2D signalCorner0(clippedTransitionRow0, clippedTransitionColumn0);
 	Index2D signalCorner1(clippedTransitionRow1, clippedTransitionColumn1);
 	Index2D resultCorner0(resultTransitionRow0, resultTransitionColumn0);
@@ -477,8 +477,8 @@ namespace brick {
 	  kernel, signal, result, signalCorner0, signalCorner1, resultCorner0);
         return result;
       }
-    
-                   
+
+
       template <class OutputType, class AccumulatorType,
 		class KernelType, class SignalType>
       Array2D<OutputType>
@@ -573,7 +573,7 @@ namespace brick {
 	    ++column;
 	    ++outputColumn;
 	  }
-	    
+
 	  // Fill in right edge.
 	  column = clippedTransitionColumn1;
 	  outputColumn +=
@@ -590,7 +590,7 @@ namespace brick {
 	  ++row;
 	  ++outputRow;
 	}
-	
+
 	// Fill in areas along bottom of image.
         while(row < stopRow) {
 	  // Fill in bottom left corner.
@@ -664,11 +664,11 @@ namespace brick {
 	Array2D<AccumulatorType> accumulatedKernel =
 	  doubleAccumulateKernel<AccumulatorType, KernelType, SignalType>(
 	    kernel, fillValue);
-	
+
 	// Constants specified without reference to signal or result.
 	const int kRowOverTwo = static_cast<int>(kernel.rows()) / 2;
 	const int kColOverTwo = static_cast<int>(kernel.columns()) / 2;
-	
+
 	// Constants specified with respect to rows & columns in
 	// argument signal.
 	const int startRow = corner0.getRow();
@@ -767,7 +767,7 @@ namespace brick {
 	    ++column;
 	    ++outputColumn;
 	  }
-	    
+
 	  // Fill in right edge.
 	  column = clippedTransitionColumn1;
 	  outputColumn +=
@@ -788,7 +788,7 @@ namespace brick {
 	  ++row;
 	  ++outputRow;
 	}
-	
+
 	// Fill in areas along bottom of image.
         while(row < stopRow) {
 	  // Fill in bottom left corner.
@@ -889,7 +889,7 @@ namespace brick {
 	// Constants specified without reference to signal or result.
 	const int kRowOverTwo = static_cast<int>(kernel.rows()) / 2;
 	const int kColOverTwo = static_cast<int>(kernel.columns()) / 2;
-	
+
 	// Constants specified with respect to rows & columns in
 	// argument signal.
 	const int startRow = corner0.getRow();
@@ -1093,7 +1093,7 @@ namespace brick {
 			    const Index2D& corner1)
       {
 	// Brace yourself...
-	
+
 	size_t outputRows =
 	  corner1.getRow() - corner0.getRow();
 	size_t outputColumns =
@@ -1103,7 +1103,7 @@ namespace brick {
 	// Constants specified without reference to signal or result.
 	const int kRowOverTwo = static_cast<int>(kernel.rows()) / 2;
 	const int kColOverTwo = static_cast<int>(kernel.columns()) / 2;
-	
+
 	// Constants specified with respect to rows & columns in
 	// argument signal.
 	const int startRow = corner0.getRow();
@@ -1378,7 +1378,7 @@ namespace brick {
         return result;
       }
 
-      
+
       template <class KernelType>
       Array2D<KernelType>
       reverseKernel(const Array2D<KernelType>& kernel) {
@@ -1390,8 +1390,8 @@ namespace brick {
 	}
 	return reversedKernel;
       }
-      
-                   
+
+
     } // namespace privateCode
     /// @endcond
 
@@ -1408,7 +1408,7 @@ namespace brick {
       return correlate2D<OutputType, AccumulatorType, KernelType, SignalType>(
 	reversedKernel, signal, strategy, roi);
     }
-    
+
 
     template <class OutputType, class AccumulatorType,
 	      class KernelType, class SignalType, class FillType>
@@ -1423,7 +1423,7 @@ namespace brick {
       return correlate2D<OutputType, AccumulatorType, KernelType, SignalType>(
 	reversedKernel, signal, strategy, roi, fillValue);
     }
-    
+
 
     template <class OutputType, class AccumulatorType,
 	      class KernelType, class SignalType>
@@ -1438,7 +1438,7 @@ namespace brick {
       return correlate2D<OutputType, AccumulatorType, KernelType, SignalType>(
 	reversedKernel, signal, strategy, corner0, corner1);
     }
-    
+
 
     template <class OutputType, class AccumulatorType,
 	      class KernelType, class SignalType, class FillType>
@@ -1454,7 +1454,7 @@ namespace brick {
       return correlate2D<OutputType, AccumulatorType, KernelType, SignalType>(
 	reversedKernel, signal, strategy, corner0, corner1, fillValue);
     }
-    
+
 
     template <class OutputType, class AccumulatorType,
 	      class KernelType, class SignalType>
@@ -1499,7 +1499,7 @@ namespace brick {
       }
       return Array2D<OutputType>();
     }
-    
+
 
     template <class OutputType, class AccumulatorType,
 	      class KernelType, class SignalType, class FillType>
@@ -1546,7 +1546,7 @@ namespace brick {
       return Array2D<OutputType>();
     }
 
-    
+
     template <class OutputType, class AccumulatorType,
 	      class KernelType, class SignalType>
     Array2D<OutputType>
@@ -1608,7 +1608,7 @@ namespace brick {
       }
       return Array2D<OutputType>();
     }
-    
+
 
     template <class OutputType, class AccumulatorType,
 	      class KernelType, class SignalType, class FillType>
@@ -1639,7 +1639,7 @@ namespace brick {
                   "Argument kernel must not have more columns than "
                   "argument signal.");
       }
-    
+
       switch(strategy) {
       case BRICK_CONVOLVE_TRUNCATE_RESULT:
         return privateCode::correlate2DTruncateResult<
@@ -1679,7 +1679,7 @@ namespace brick {
       }
       return Array2D<OutputType>();
     }
-    
+
   } // namespace numeric
 
 } // namespace brick

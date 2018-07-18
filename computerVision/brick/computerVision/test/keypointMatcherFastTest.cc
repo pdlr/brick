@@ -33,16 +33,16 @@ namespace brick {
       void testKeypointMatcherFast();
       void testKeypointMatcherFastRotationInvariant();
       void testKeypointMatcherFastRotationInvariant2();
-        
+
     private:
 
       // Generate test input.
       void
       generateKeypointVectors(std::vector<KeypointFast>& keypoints,
                               std::vector<KeypointFast>& queryPoints);
-      
+
       double m_defaultTolerance;
-      
+
     }; // class KeypointMatcherFastTest
 
 
@@ -68,7 +68,7 @@ namespace brick {
       std::vector<KeypointFast> queryPoints;
       this->generateKeypointVectors(keypoints, queryPoints);
       unsigned int numberOfKeypoints = keypoints.size();
-      
+
       // Create and sanity-check a matcher to be tested.
       KeypointMatcherFast matcher;
       KeypointFast matchingPoint;
@@ -91,7 +91,7 @@ namespace brick {
         BRICK_TEST_ASSERT(matchingPoint.isPositive
                           == queryPoints[ii].isPositive);
       }
-      
+
     }
 
 
@@ -115,7 +115,7 @@ namespace brick {
       // of pixels, so if we set this to 0.79, rotation up to 3 pixels
       // will be accepted.
       KeypointMatcherFast matcher(0.78);
-      
+
       KeypointFast matchingPoint;
       BRICK_TEST_ASSERT(matcher.matchKeypoint(queryPoints[0], matchingPoint)
                         == false);
@@ -141,7 +141,7 @@ namespace brick {
           BRICK_TEST_ASSERT(matchingPoint.column == queryPoints[ii].column);
         }
       }
-      
+
     }
 
 
@@ -155,7 +155,7 @@ namespace brick {
       this->generateKeypointVectors(keypoints, queryPoints);
       unsigned int numberOfKeypoints = keypoints.size();
 
-      
+
       // Tweak queryPoinr 2 so that it matches keypoint 1 better, but only
       // if rotation invariance is up to 3 elements.
       queryPoints[2].featureVector[8] = 20;
@@ -164,7 +164,7 @@ namespace brick {
       // rotation up to 3 elements.  3/16. = 0.185 rotations ~= 1.15
       // radians.
       KeypointMatcherFast matcher(1.15);
-      
+
       KeypointFast matchingPoint;
       BRICK_TEST_ASSERT(matcher.matchKeypoint(queryPoints[0], matchingPoint)
                         == false);
@@ -191,7 +191,7 @@ namespace brick {
         }
       }
     }
-    
+
 
     // Generate test input.
     void
@@ -216,7 +216,7 @@ namespace brick {
         }
         keypoints[ii].isPositive = true;
       }
-      
+
       // Tweak a couple of feature points so their means are not a
       // good indicator of how well they match.
       keypoints[1].featureVector[5] = 20;
@@ -230,7 +230,7 @@ namespace brick {
           ++ii) {
         keypoints[ii].isPositive = false;
       }
-      
+
       // Make a set of keypoints for which we'll find matches among
       // the original set.  We'll start by simply copying the points
       // we just made, and then perturb the feature vectors so that
@@ -246,15 +246,15 @@ namespace brick {
         queryPoints[16].featureVector[jj] -= 2;
       }
       for(unsigned int jj = 3; jj < 16; jj += 4) {
-        queryPoints[0].featureVector[jj] += 1; 
+        queryPoints[0].featureVector[jj] += 1;
         queryPoints[1].featureVector[jj] -= 1;
-        queryPoints[10].featureVector[jj] += 2; 
+        queryPoints[10].featureVector[jj] += 2;
         queryPoints[11].featureVector[jj] -= 1;
       }
 
     }
-    
-    
+
+
   } // namespace computerVision
 
 } // namespace brick

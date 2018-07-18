@@ -20,111 +20,111 @@ namespace brick {
 
   namespace utilities {
 
-    /** 
+    /**
      * This function returns a bool indicating whether or not the
      * specified path is a directory.  If the path is a symbolic link,
      * the return value is currently unspecified, but will eventually be
      * true iff the link points to a directory.
-     * 
+     *
      * @param path This argument is the filename to evaluate.
-     * 
+     *
      * @return The return value is true if path refers to a directory,
      * false otherwise.
      */
     bool
     isDirectory(std::string const& path);
-  
-  
-    /** 
+
+
+    /**
      * This function returns a bool indicating whether or not the
      * specified file or directory exists.  If the path is a symbolic link,
      * the return value is currently unspecified, but will eventually be
      * true.
-     * 
+     *
      * @param path This argument is the filename to evaluate.
-     * 
+     *
      * @return The return value is true if path exists, false
      * otherwise.
      */
     bool
     isExistingPath(std::string const& path);
-  
 
-    /** 
+
+    /**
      * This function reolves references to ".", "..", symbolic links,
      * etc., and returns the canonicalized absolute pathname
      * corresponding to its input.
-     * 
+     *
      * @param inputPath The path to be canonicalized.
-     * 
+     *
      * @return The return value is the resolved path, or an empty
      * string if path resolution fails.
      */
     std::string
     getAbsolutePath(std::string const& inputPath);
-    
 
-    /** 
+
+    /**
      * This function returns a bool indicating whether or not the
      * specified file exists and is not a directory or other special
      * file.  If the path is a symbolic link, the return value is
      * currently unspecified, but will eventually be true iff the link
      * points to a file.
-     * 
+     *
      * @param path This argument is the filename to evaluate.
-     * 
+     *
      * @return The return value is true if path refers to a regular
      * file, false otherwise.
      */
     bool
     isRegularFile(std::string const& path);
-    
-    
+
+
     /**
      * Joins two path elements with the appropriate path delimiter.
      * For example:
      *
      *   joinPath("foo", "bar");
-     * 
+     *
      * might give
      *
      *   "foo/bar"
-     * 
+     *
      * while
-     * 
+     *
      *   joinPath("foo/baz/", "bar");
-     * 
+     *
      * might give
-     * 
+     *
      *   "/foo/baz/bar"
      **/
     std::string
     joinPath(std::string const& part0, std::string const& part1);
 
-  
+
     /**
      * Returns the names of the entries in the specified directory, in
      * no particular order.  For example,
-     * 
+     *
      *   listDirectory("/etc");
-     * 
+     *
      * might give
-     * 
+     *
      *   ["fstab", "init.d", "modules.conf", ...]
      *
      * while
      *
      *   listDirectory("/etc", true);
-     * 
+     *
      * might give
-     * 
+     *
      *   ["/etc/fstab", "/etc/init.d", "/etc/modules.conf", ...]
      **/
     std::vector<std::string>
     listDirectory(std::string const& directoryName, bool fullPath=false);
 
 
-    /** 
+    /**
      * Returns the names of files in the directory tree below the
      * specified directory.  For example,
      *
@@ -167,7 +167,7 @@ namespace brick {
                            bool includeDirectoryNames=false);
 
 
-    /** 
+    /**
      * This function searches a sequence of directories looking for
      * the specified file.  If the file is found, the complete path to
      * the found file is returned through reference argument fullPath.
@@ -213,7 +213,7 @@ namespace brick {
      * "/home/rick/dir0/subdir0/foo.txt".
      *
      * The call:
-     * 
+     *
      * @code
      *   std::string result;
      *   searchForFile("subdir0/foo.txt", searchPath.begin(), searchPath.end(),
@@ -232,16 +232,16 @@ namespace brick {
      * @endcode
      *
      * would return false and not touch result.
-     *   
+     *
      * @param fileName This argument is the file to be found.
-     * 
+     *
      * @param pathBegin This argument is an interator pointing to the
      * beginning of a sequence of directories in which to search.
-     * 
+     *
      * @param pathEnd This argument is an interator pointing to the
      * end (in the STL sense) of a sequence of directories in which to
      * search.
-     * 
+     *
      * @param fullPath This argument is used to return the full path
      * to the located file.  If the file is not found, this argument
      * will not be accessed.
@@ -250,7 +250,7 @@ namespace brick {
      * any preceding directory information will be removed from
      * argument fileName before the search is conducted.  See the
      * examples above for more information.
-     * 
+     *
      * @return The return value is true if the file is found, false otherwise.
      */
     template <class IterType>
@@ -259,14 +259,14 @@ namespace brick {
                   IterType pathBegin, IterType pathEnd,
                   std::string& fullPath,
                   bool discardInputDir = false);
-    
-  
+
+
     /**
      * Returns a std::pair<std::string, std::string> containing the fileName
      * without its extension, and the extension.  For example:
      *
      *   splitExt("/foo/bar.baz")
-     * 
+     *
      * returns
      *
      *   {"/foo/bar", ".baz"}
@@ -277,7 +277,7 @@ namespace brick {
     splitExtension(std::string const& fileName);
 
 
-    /** 
+    /**
      * This function accepts a path returns a pair of strings in which
      * the first element is the directory name and the second is the
      * filename.  For example:
@@ -303,7 +303,7 @@ namespace brick {
      *   {"/foo/", ""}
      *
      * @param path This is the pathname to be split.
-     * 
+     *
      * @return The return value is a pair containing first the directory
      * name, and second the file name.
      */
@@ -311,7 +311,7 @@ namespace brick {
     splitPath(std::string const& path);
 
   } // namespace utilities
-    
+
 } // namespace brick
 
 
@@ -320,7 +320,7 @@ namespace brick {
 namespace brick {
 
   namespace utilities {
-    
+
     // This function searches a sequence of directories looking for
     // the specified file.
     template <class IterType>
@@ -348,7 +348,7 @@ namespace brick {
     }
 
   } // namespace utilities
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_UTILITIES_PATH_HH */

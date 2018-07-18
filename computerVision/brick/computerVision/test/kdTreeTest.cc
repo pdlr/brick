@@ -40,7 +40,7 @@ namespace brick {
       void testConstructor();
       void testFind();
       void testFindNearest();
-    
+
     private:
 
       num::Vector3D<double> const&
@@ -50,7 +50,7 @@ namespace brick {
 
 
       double m_defaultTolerance;
-    
+
     }; // class KDTreeTest
 
 
@@ -74,7 +74,7 @@ namespace brick {
       return true;
     }
 
-    
+
     /* ============ KDTreeTest Member Function Definititions ============ */
 
     KDTreeTest::
@@ -187,7 +187,7 @@ namespace brick {
       KDTree< 3, num::Vector3D<double> > kdTree(inPoints.begin(), inPoints.end());
 
       for(size_t ii = 0; ii < outPoints.size(); ++ii) {
-        double distance;      
+        double distance;
         num::Vector3D<double> nearest = this->findNearest(
           outPoints[ii], inPoints, distance);
         double maybeDistance;
@@ -217,9 +217,9 @@ namespace brick {
       }
       return *nearestPointPtr;
     }
-  
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 
@@ -237,7 +237,7 @@ int main(int argc, char** argv)
 namespace {
 
   brick::computerVision::KDTreeTest currentTest;
-  
+
 }
 
 #endif

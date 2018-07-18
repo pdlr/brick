@@ -19,20 +19,20 @@
 namespace brick {
 
   namespace utilities {
-    
+
     /**
      ** The OptionDescription class
      **/
     class OptionDescription {
     public:
 
-      /** 
+      /**
        * Default constructor.
        */
       OptionDescription();
 
-      
-      /** 
+
+      /**
        * Constructor.
        */
       OptionDescription(std::string const& name,
@@ -42,7 +42,7 @@ namespace brick {
                         bool allowPartialMatch,
                         std::string const& docString,
                         std::string const& defaultValue = "");
-      
+
       /**
        * Destructor.
        */
@@ -50,12 +50,12 @@ namespace brick {
 
       std::string const&
       getAlphabetizationKey() const {return m_key;}
-      
+
 
       std::string const&
       getDefaultValue() const {return m_defaultValue;}
 
-      
+
       std::string const&
       getName() const {return m_name;}
 
@@ -64,15 +64,15 @@ namespace brick {
       getMatchLength(std::string const& argument,
                      bool& isShortMatch) const;
 
-      
+
       std::string
       getOptionDoc() const;
-      
+
 
       bool
       isMatch(std::string const& argument) const;
-      
-      
+
+
       bool
       requiresValue() const {return m_requiresValue;}
 

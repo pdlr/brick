@@ -15,7 +15,7 @@
 
 // This file is included by erode.hh, and should not be directly included
 // by user code, so no need to include erode.hh here.
-// 
+//
 // #include <brick/computerVision/erode.hh>
 
 #include <cmath>
@@ -34,16 +34,16 @@ namespace brick {
           return arg0 ? 1 : 0;
         }
       };
-      
+
     } // namespace privateCode
 
-    
+
     template<ImageFormat FORMAT>
     Image<FORMAT>
     erode(const Image<FORMAT>& inputImage)
     {
       typedef typename Image<FORMAT>::value_type ValueType;
-    
+
       Image<FORMAT> outputImage(inputImage.rows(), inputImage.columns());
 
       size_t index0 = 0;
@@ -65,7 +65,7 @@ namespace brick {
         for(; column < colBoundary0; ++column) {
           outputImage[index0] = ValueType(0);
           ++index0;
-        }        
+        }
         for(; column < colBoundary1; ++column) {
           if(inputImage[index0 - 1]
              && inputImage[index0 + 1]
@@ -92,7 +92,7 @@ namespace brick {
           outputImage[index0] = ValueType(0);
           ++index0;
         }
-      }      
+      }
 
       return outputImage;
     }
@@ -122,7 +122,7 @@ namespace brick {
       unsigned int const windowRadiusH = windowHeight / 2;
       unsigned int const windowRadiusW = windowWidth / 2;
       int const regionSize = windowHeight * windowWidth;
-      
+
       brick::numeric::BoxIntegrator2D<ValueType, int> integrator(
         inputImage, privateCode::CountingFunctor<ValueType>());
       Image<FORMAT> outputImage(inputImage.rows(), inputImage.columns());
@@ -146,7 +146,7 @@ namespace brick {
         for(; column < colBoundary0; ++column) {
           outputImage[index0] = ValueType(0);
           ++index0;
-        }        
+        }
         for(; column < colBoundary1; ++column) {
           if(integrator.getIntegral(
                brick::numeric::Index2D(row - windowRadiusH,
@@ -171,13 +171,13 @@ namespace brick {
           outputImage[index0] = ValueType(0);
           ++index0;
         }
-      }      
+      }
 
       return outputImage;
     }
-    
+
   } // namespace computerVision
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_ERODE_IMPL_HH */

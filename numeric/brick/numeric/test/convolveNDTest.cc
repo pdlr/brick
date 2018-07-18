@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file convolveNDTest.cpp
+* @file brick/numeric/test/convolveNDTest.cpp
 *
 * Source file defining ConvolveNDTest class.
 *
@@ -19,7 +19,7 @@
 namespace brick {
 
   namespace numeric {
-  
+
     template <class Type>
     class ConvolveNDTest
       : public brick::test::TestFixture< ConvolveNDTest<Type> >
@@ -29,8 +29,8 @@ namespace brick {
 
       // Typedef required why?
       typedef ConvolveNDTest<Type> TestFixtureType;
-    
-    
+
+
       ConvolveNDTest(const std::string& typeName);
       ~ConvolveNDTest() {}
 
@@ -52,7 +52,7 @@ namespace brick {
       Type m_fillValue;
       ArrayND<2, Type> m_signal;
       Array2D<Type> m_signal2D;
-    
+
     }; // class ConvolveNDTest
 
 
@@ -104,7 +104,7 @@ namespace brick {
         BRICK_CONVOLVE_ROI_SAME, static_cast<Type>(0));
       ArrayND<2, Type> reference(reference2D.shape());
       reference.copy(reference2D.data());
-      
+
       BRICK_TEST_ASSERT(
 	this->equivalent(result0, reference, m_defaultTolerance));
 
@@ -120,7 +120,7 @@ namespace brick {
         BRICK_CONVOLVE_ROI_SAME, static_cast<Type>(0));
       reference.reinit(reference2D.shape());
       reference.copy(reference2D.data());
-      
+
       BRICK_TEST_ASSERT(
 	this->equivalent(result1, reference, m_defaultTolerance));
     }
@@ -147,7 +147,7 @@ namespace brick {
     }
 
   } //  namespace numeric
-  
+
 } // namespace brick
 
 

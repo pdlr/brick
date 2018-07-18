@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/portability/filesystem.cpp
-* 
+*
 * Source file defining portability routines for dealing with filesystems.
 *
 * Copyright (C) 2003-2011, David LaRose, dlr@cs.cmu.edu
@@ -67,7 +67,7 @@ namespace brick {
       }
       return false;
     }
-    
+
 
     // Joins two path elements with the appropriate delimiter.
     std::string
@@ -105,7 +105,7 @@ namespace brick {
     splitPath(const std::string& path)
     {
       typedef std::vector<std::string>::const_iterator DelimIter;
-      
+
       const std::vector<std::string>& delimiterVector = pathDelimiters();
       std::string::size_type delimiterIndex = std::string::npos;
 
@@ -124,7 +124,7 @@ namespace brick {
         path.substr(0, delimiterIndex + 1),
         path.substr(delimiterIndex + 1, std::string::npos));
     }
-    
+
   } // namespace portability
 
 } // namespace brick
@@ -160,14 +160,14 @@ namespace brick {
       return delimiterVector;
     }
 
-    
+
     // Initialize on first use to avoid static initialization order fiasco.
     const std::string& extensionDelimiter() {
       static std::string delimiter = ".";
       return delimiter;
     }
 
-    
+
     // This function reolves references to ".", "..", symbolic links,
     // etc., and returns the canonicalized absolute pathname
     // corresponding to its input.
@@ -179,7 +179,7 @@ namespace brick {
       return "";
     }
 
-    
+
     // Returns the names of the entries in the specified directory, in
     // no particular order.
     std::vector<std::string>
@@ -188,10 +188,10 @@ namespace brick {
       std::vector<std::string> listing;
       std::string fileNameGlob = joinPath(directoryName, "*");
       WIN32_FIND_DATA findData;
-      HANDLE handle = FindFirstFile(fileNameGlob.c_str(), &findData); 
-      if (handle == INVALID_HHANDLE_VALUE) { 
+      HANDLE handle = FindFirstFile(fileNameGlob.c_str(), &findData);
+      if (handle == INVALID_HHANDLE_VALUE) {
         return listing;
-      } 
+      }
       while(1) {
         listing.push_back(std::string(findData.cFileName));
         if (!FindNextFile(handle, &findData)) {
@@ -204,13 +204,13 @@ namespace brick {
                       message.str().c_str());
         }
       }
-      if (!FindClose(handle)) { 
+      if (!FindClose(handle)) {
         std::ostringstream message;
         message << "Problem closing search handle for " << directoryName;
         BRICK_THROW(brick::common::IOException, "listDirectory()",
                     message.str().c_str());
       }
-    
+
       if(fullPath) {
         // std::transform(listing.begin(), listing.end(), listing.begin(),
         //                std::bind1st(std::ptr_fun(joinPath), directoryName));
@@ -221,9 +221,9 @@ namespace brick {
       }
       return listing;
     }
-  
+
   } // namespace portability
-  
+
 } // namespace brick
 
 /* ===================== End Windows code ===================== */
@@ -242,7 +242,7 @@ namespace brick {
       return delimiter;
     }
 
-  
+
     // Initialize on first use to avoid static initialization order fiasco.
     const std::vector<std::string>& pathDelimiters() {
       bool needsInit = true;
@@ -254,7 +254,7 @@ namespace brick {
       return delimiterVector;
     }
 
-    
+
     // Initialize on first use to avoid static initialization order fiasco.
     const std::string& extensionDelimiter() {
       static std::string delimiter = ".";
@@ -285,7 +285,7 @@ namespace brick {
       return result;
     }
 
-    
+
     // Returns the names of the entries in the specified directory, in
     // no particular order.
     std::vector<std::string>
@@ -323,7 +323,7 @@ namespace brick {
         throw;
       }
       closedir(directoryPtr);
-      
+
       if(fullPath) {
         // std::transform(listing.begin(), listing.end(), listing.begin(),
         //                std::bind1st(std::ptr_fun(joinPath), directoryName));
@@ -342,4 +342,3 @@ namespace brick {
 /* ===================== End Linux code ===================== */
 
 #endif /* #ifdef _WIN32 */
-

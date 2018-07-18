@@ -17,7 +17,7 @@
 // This file is included by differentiableScalar.hh, and should not be
 // directly included by user code, so no need to include
 // differentiableScalar.hh here.
-// 
+//
 // #include <brick/numeric/differentiableScalar.hh>
 
 #include <algorithm>
@@ -67,7 +67,7 @@ namespace brick {
                 &(this->m_partials[0]));
     }
 
-      
+
     // The copy constructor does a deep copy.
     template <class Type, uint32_t Dimension>
     DifferentiableScalar<Type, Dimension>::
@@ -78,7 +78,7 @@ namespace brick {
       std::copy(&(other.m_partials[0]), &(other.m_partials[0]) + Dimension,
                 &(this->m_partials[0]));
     }
-      
+
 
     // The assigment operator does a deep copy.
     template <class Type, uint32_t Dimension>
@@ -110,7 +110,7 @@ namespace brick {
       this->m_value *= other.m_value;
       return *this;
     }
-    
+
 
     // This operator divides the differentiableScalar by another
     // differentiableScalar.
@@ -134,7 +134,7 @@ namespace brick {
       this->m_value /= other.m_value;
       return *this;
     }
-    
+
 
     // This operator adds another differentiableScalar to *this.
     template <class Type, uint32_t Dimension>
@@ -149,7 +149,7 @@ namespace brick {
       return *this;
     }
 
-    
+
     // This operator subtracts another differentiableScalar from *this.
     template <class Type, uint32_t Dimension>
     DifferentiableScalar<Type, Dimension>&
@@ -174,7 +174,7 @@ namespace brick {
       return m_partials[0] = derivative;
     }
 
-      
+
     // This member function sets the first derivative of *this
     // with respect to the "ii"-th parameter.
     template <class Type, uint32_t Dimension>
@@ -185,10 +185,10 @@ namespace brick {
       return m_partials[ii] = derivative;
     }
 
-    
+
     /* ============ Non-member function definitions ============ */
 
-  
+
     // This operator multiplies two DifferentiableScalar instances,
     // applying the chain rule to compute the derivatives of the
     // result.
@@ -214,7 +214,7 @@ namespace brick {
       result *=  arg1;
       return result;
     }
-    
+
 
     // This operator multiplies a scalar by a DifferentiableScalar
     // instance.
@@ -228,7 +228,7 @@ namespace brick {
       return result;
     }
 
-    
+
     // This operator divides two DifferentiableScalar instances,
     // applying the chain rule to compute the derivatives of the
     // result.
@@ -240,7 +240,7 @@ namespace brick {
       DifferentiableScalar<Type, Dimension> result(arg0);
       result /= arg1;
       return result;
-    }      
+    }
 
 
     // This operator divides a DifferentiableScalar instance by a
@@ -254,7 +254,7 @@ namespace brick {
       result /=  arg1;
       return result;
     }
-    
+
 
     // This operator divides a scalar by a DifferentiableScalar
     // instance.
@@ -268,7 +268,7 @@ namespace brick {
       return result;
     }
 
-    
+
     // This operator adds two DifferentiableScalar instances.
     template<class Type, uint32_t Dimension>
     DifferentiableScalar<Type, Dimension>
@@ -279,7 +279,7 @@ namespace brick {
       result += arg1;
       return result;
     }
-  
+
 
     // This operator adds a DifferentiableScalar instance to a
     // scalar.
@@ -292,7 +292,7 @@ namespace brick {
       result +=  arg1;
       return result;
     }
-    
+
 
     // This operator adds a scalar to a DifferentiableScalar
     // instance.
@@ -306,7 +306,7 @@ namespace brick {
       return result;
     }
 
-    
+
     // This operator subtracts two DifferentiableScalar instances.
     template<class Type, uint32_t Dimension>
     DifferentiableScalar<Type, Dimension>
@@ -330,7 +330,7 @@ namespace brick {
       result.setValue(result.getValue - arg1);
       return result;
     }
-    
+
 
     // This operator subtracts a DifferentiableScalar instance from a
     // scalar.
@@ -342,7 +342,7 @@ namespace brick {
       DifferentiableScalar<Type, Dimension> result(arg0);
       return result - arg1;
     }
-    
+
 
     // The additive inverse operator.
     template<class Type, uint32_t Dimension>
@@ -353,8 +353,8 @@ namespace brick {
       result *= Type(-1);
       return result;
     }
-      
-    
+
+
     // This function computes the absoluteValue of a DifferentiableScalar
     // instance, with partial derivatives.
     template<class Type, uint32_t Dimension>
@@ -368,7 +368,7 @@ namespace brick {
       return result;
     }
 
-    
+
     // This function computes the cosine of a DifferentiableScalar
     // instance, with partial derivatives.
     template<class Type, uint32_t Dimension>
@@ -388,7 +388,48 @@ namespace brick {
       return result;
     }
 
-    
+
+    // This function computes the natural log of a
+    // DifferentiableScalar instance, with partial derivatives.
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    logarithm(DifferentiableScalar<Type, Dimension> const& arg0)
+    {
+      DifferentiableScalar<Type, Dimension> result(
+        brick::numeric::logarithm(arg0.getValue()));
+
+      // Derivative of log(f(x)) is (1/f(x)) * f'(x).
+      for(uint32_t ii = 0; ii < Dimension; ++ii) {
+        result.setPartialDerivative(
+          ii, arg0.getPartialDerivative(ii) / arg0.getValue());
+      }
+
+      return result;
+    }
+
+
+    // This function returns the largest integral value not less than
+    // than its argument, zeroing all partial derivatives.
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    roundToCeiling(DifferentiableScalar<Type, Dimension> const& arg0)
+    {
+      return DifferentiableScalar<Type, Dimension>(
+        roundToCeiling(static_cast<Type>(arg0)));
+    }
+
+
+    // This function returns the largest integral value not greater
+    // than than its argument, zeroing all partial derivatives.
+    template<class Type, uint32_t Dimension>
+    DifferentiableScalar<Type, Dimension>
+    roundToFloor(DifferentiableScalar<Type, Dimension> const& arg0)
+    {
+      return DifferentiableScalar<Type, Dimension>(
+        roundToFloor(static_cast<Type>(arg0)));
+    }
+
+
     // This function computes the sine of a DifferentiableScalar
     // instance, with partial derivatives.
     template<class Type, uint32_t Dimension>
@@ -447,7 +488,7 @@ namespace brick {
       stream << "]}";
       return stream;
     }
-    
+
   } // namespace numeric
 
 } // namespace brick

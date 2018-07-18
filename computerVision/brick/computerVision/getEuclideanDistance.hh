@@ -21,7 +21,7 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     template<class FloatType, ImageFormat FORMAT>
     brick::numeric::Array2D<FloatType>
     getEuclideanDistance(const Image<FORMAT>& inputImage,
@@ -33,7 +33,7 @@ namespace brick {
     getEuclideanDistance(const Image<FORMAT>& inputImage,
                          size_t maxNumberOfPasses,
                          size_t& numberOfPassesUsed);
-  
+
   } // namespace computerVision
 
 } // namespace brick

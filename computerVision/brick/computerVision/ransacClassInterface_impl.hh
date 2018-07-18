@@ -16,7 +16,7 @@
 // This file is included by ransacClassInterface.hh, and should not be
 // directly included by user code, so no need to include
 // ransacClassInterface.hh here.
-// 
+//
 // #include <brick/computerVision/ransacClassInterface.hh>
 
 #include <algorithm>
@@ -70,7 +70,7 @@ namespace brick {
       m_numberOfRandomSampleSets =
         std::ceil(std::log(1.0 - requiredConfidence)
                   / std::log(singlePickDisconfidence)) + 0.5;
-      
+
       if(m_minimumConsensusSize == 0) {
         // User didn't specify a minimum consensus size.  Compute one
         // assuming that the probability of a sample matching an
@@ -85,7 +85,7 @@ namespace brick {
         }
         m_minimumConsensusSize = sampleSize + extraSamples;
       }
-      
+
     }
 
 
@@ -122,7 +122,7 @@ namespace brick {
       return result;
     }
 
-    
+
     template <class Problem>
     void
     Ransac<Problem>::
@@ -137,7 +137,7 @@ namespace brick {
       if(consensusFlags.size() != m_problem.getPoolSize()) {
         consensusFlags.resize(m_problem.getPoolSize());
       }
-      
+
       // Apply error function to entire set.
       typename Problem::SampleSequenceType testSet = m_problem.getPool();
       std::vector<double> errorMetrics(m_problem.getPoolSize());
@@ -149,8 +149,8 @@ namespace brick {
         errorMetrics.begin(), errorMetrics.end(), consensusFlags.begin(),
         std::bind2nd(std::less<double>(), threshold));
     }
-    
-    
+
+
     template <class Problem>
     bool
     Ransac<Problem>::
@@ -163,7 +163,7 @@ namespace brick {
           std::cout << "Ransac: running sample #" << iteration
                     << " of " << m_numberOfRandomSampleSets << std::endl;
         }
-        
+
         // Select samples
         typename ProblemType::SampleSequenceType trialSet =
           m_problem.getRandomSample(m_problem.getSampleSize());
@@ -177,7 +177,7 @@ namespace brick {
         // call allows those problems to reset that state prior to
         // starting over with a new random sample.
         m_problem.beginIteration(iteration);
-        
+
         size_t consensusSetSize = 0;
         size_t previousConsensusSetSize = 0;
         size_t strikes = 0;
@@ -196,7 +196,7 @@ namespace brick {
               << std::count(consensusFlags.begin(), consensusFlags.end(), true)
               << " (vs. " << m_minimumConsensusSize << ")" << std::endl;
           }
-          
+
           // See if this iteration has converged yet.
           if(this->isConverged(consensusFlags, previousConsensusFlags,
                                consensusSetSize, previousConsensusSetSize,
@@ -264,7 +264,7 @@ namespace brick {
         // No.  We're converged, after a fashion.
         return true;
       }
-      
+
       // If previousConsensusFlags isn't initialized yet, then we're
       // clearly not converged, and can skip the remaining tests.
       if(consensusFlags.size() == previousConsensusFlags.size()) {
@@ -285,7 +285,7 @@ namespace brick {
           return true;
         }
       }
-      
+
       // Finally, do the bookkeeping so that previousConsensusFlags
       // gets updated.
       previousConsensusFlags = consensusFlags;
@@ -293,9 +293,9 @@ namespace brick {
 
       return false;
     }
-    
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_RANSACCLASSINTERFACE_IMPL_HH */

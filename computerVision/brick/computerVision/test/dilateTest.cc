@@ -21,7 +21,7 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     class DilateTest
       : public brick::test::TestFixture<DilateTest> {
 
@@ -91,8 +91,8 @@ namespace brick {
       for(size_t index0 = 0; index0 < dilatedImage2.size(); ++index0) {
         BRICK_TEST_ASSERT(dilatedImage2[index0] == referenceImage2[index0]);
       }
-      
-      
+
+
       // Actually, the 5x5 dilation is mostly white.  Test again using a
       // sparser image.
       Image<GRAY8> inputImage3 = erode<GRAY8>(inputImage);
@@ -126,7 +126,7 @@ namespace brick {
         throw;
       }
 #endif
-      
+
     }
 
   } // namespace computerVision

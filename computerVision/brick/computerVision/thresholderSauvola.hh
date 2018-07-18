@@ -41,7 +41,7 @@ namespace brick {
       static FloatType getMaxStdDev() {return 128.0;}
       static uint8_t getWhiteValue() {return 255;}
     };
-    
+
 
     /**
      ** This class implements the adaptive text thresholding algorithm
@@ -65,7 +65,7 @@ namespace brick {
      **   Image<GRAY8> binaryImage = thresholder(inputImage0);
      ** @endcode
      **
-     ** J.  Sauvola and M. Pietikainen, “Adaptive document image
+     ** [1] J. Sauvola and M. Pietikainen, “Adaptive document image
      ** binarization,” Pattern Recognition 33(2), pp. 225–236, 2000.
      **/
     template < ImageFormat Format,
@@ -77,23 +77,23 @@ namespace brick {
 
       typedef typename Config::FloatType FloatType;
       typedef typename Config::SumType SumType;
-      
-      /** 
+
+      /**
        * Constructor.
-       * 
+       *
        * @param windowRadius This argument specifies the size of the
        * image adaptation region.  Thresholds will be computed based
        * on a region of support that is 2*windowRadius + 1 pixels
        * square.  Larger values make the threshold adapt more slowly
        * over the image.
-       * 
+       *
        * @param kappa This argument specifies the threshold
        * sensitivity.  Larger values of kappa make there be less text
        * (black) in the output image.
        */
       ThresholderSauvola(uint32_t windowRadius, FloatType kappa = 0.5);
-      
-      
+
+
       /**
        * Destructor.
        */
@@ -101,21 +101,21 @@ namespace brick {
       ~ThresholderSauvola() {}
 
 
-      /** 
+      /**
        * Computes a thresholded image based on the input image
        * previously set by member function setImage().  Calling this
        * member function without have previously called setImage() is
        * an error.
-       * 
+       *
        * @return The return value is an Image<GRAY8> in which
        * forground (text) pixels are black (i.e., have pixel value 0)
        * and background pixels are white (i.e., have pixel value 255).
        */
       Image<GRAY8>
       computeBinaryImage();
-      
-      
-      /** 
+
+
+      /**
        * Sets the image to be thresholded, and does preprocessing so
        * that subsequent calls to member function computeBinaryImage()
        * can execute quickly.  Note that inputImage is only shallow
@@ -129,12 +129,12 @@ namespace brick {
       void
       setImage(Image<Format> const& inputImage);
 
-      
-      /** 
+
+      /**
        * Set the sensitivity of the thresholding algorithm, overriding
        * constructor argument and any previous calls and
        * setSensitivity().
-       * 
+       *
        * @param kappa This argument specifies the threshold
        * sensitivity.  Larger values of kappa make there be more text
        * (black) in the output image.
@@ -144,11 +144,11 @@ namespace brick {
         this->m_kappa = kappa;
       }
 
-      
-      /** 
+
+      /**
        * Set the size of the adaptation region, overriding constructor
        * argument and any previous calls and setWindowRadius().
-       * 
+       *
        * @param windowRadius This argument specifies the size of the
        * image adaptation region.  Thresholds will be computed based
        * on a region of support that is 2*windowRadius + 1 pixels
@@ -160,8 +160,8 @@ namespace brick {
         this->m_windowRadius = windowRadius;
       }
 
-      
-      /** 
+
+      /**
        * This operator thresholds an input image.  It is equivalent to
        * calling member function setImage(), followed by member
        * function computeBinaryImage().
@@ -177,7 +177,7 @@ namespace brick {
         this->setImage(inputImage);
         return this->computeBinaryImage();
       }
-      
+
     private:
 
       // Quick and dirty routine to make sure an image ROI is
@@ -210,7 +210,7 @@ namespace brick {
 
       // This member variables holds a shallow copy of the input image.
       Image<Format> m_inputImage;
-      
+
       brick::numeric::BoxIntegrator2D<PixelType, SumType>
         m_sumIntegrator;
       brick::numeric::BoxIntegrator2D<PixelType, SumType>
@@ -218,7 +218,7 @@ namespace brick {
     };
 
   } // namespace computerVision
-    
+
 } // namespace brick
 
 

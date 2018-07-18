@@ -37,7 +37,7 @@ namespace brick {
     class BoxIntegrator2D {
     public:
 
-      /** 
+      /**
        * This constructor performs almost no work, and simply
        * initializes the class instance to a "zero" state.
        */
@@ -45,11 +45,11 @@ namespace brick {
       BoxIntegrator2D();
 
 
-      /** 
+      /**
        * This constructor initializes the class instance, and then
        * passes its arguments to member function setArray() in order
        * to precompute integral information.
-       * 
+       *
        * @param inputArray This argument specifies the array over
        * which to integrate.  The data in the array is not retained,
        * so it is safe to de-allocate the array after the constructor
@@ -59,11 +59,11 @@ namespace brick {
       BoxIntegrator2D(const Array2D<Type0>& inputArray);
 
 
-      /** 
+      /**
        * This constructor initializes the class instance, and then
        * passes its arguments to member function setArray() in order
        * to precompute integral information.
-       * 
+       *
        * @param inputArray This argument specifies the array over
        * which to integrate.  The data in the array is not retained,
        * so it is safe to de-allocate the array after the constructor
@@ -77,21 +77,21 @@ namespace brick {
       BoxIntegrator2D(const Array2D<Type0>& inputArray, Functor functor);
 
 
-      /** 
+      /**
        * This constructor works just like the single argument version
        * of setArray, with the exception that the pre-integration is
        * performed over only a rectangular sub-array.  This is useful
        * if you know you will only need to compute integrals over a
        * portion of the input array.
-       * 
+       *
        * @param inputArray This argument specifies the array over
        * which to integrate.  The data in the array is not retained,
        * so it is safe to de-allocate the array after the constructor
        * call has completed.
-       * 
+       *
        * @param corner0 This argument, along with corner1, defines the
        * sub-region over which to integrate.
-       * 
+       *
        * @param corner1 This argument, along with corner0, defines the
        * sub-region over which to integrate.
        */
@@ -100,19 +100,19 @@ namespace brick {
                       const Index2D& corner1);
 
 
-      /** 
+      /**
        * The copy constructor does a shallow copy of its argument,
        * however behavior of the class should be indistinguishable
        * from a deep copy (operations on each of the original and copy
        * will not affect the other).
-       * 
+       *
        * @param other This argument is the BoxIntegrator2D instance to
        * be copied.
        */
       BoxIntegrator2D(const BoxIntegrator2D& other);
 
 
-      /** 
+      /**
        * This member function returns the integral over the
        * rectangular region with corner0 and corner1 at its diagonally
        * opposite corners.  It is very efficient, requiring only 4 2D
@@ -148,7 +148,7 @@ namespace brick {
        * constructor or three-argument version of setArray, then
        * corner0 specifies the corner relative to region over which
        * pre-integration was performed.
-       * 
+       *
        * @param corner1 This argument specifies the region corner
        * diagonally opposite to corner0.  If the array was set using
        * the single-argument constructor or single-argument version of
@@ -157,7 +157,7 @@ namespace brick {
        * three-argument constructor or three-argument version of
        * setArray, then corner1 specifies the corner relative to
        * region over which pre-integration was performed.
-       * 
+       *
        * @return The return value is the integral over the specified
        * region.
        */
@@ -165,7 +165,7 @@ namespace brick {
       getIntegral(const Index2D& corner0, const Index2D& corner1);
 
 
-      /** 
+      /**
        * This member function works just like member function
        * getIntegral(const Index2D&, const Index2D&), with two
        * exceptions: it is very slightly slower; and corner indexing
@@ -180,7 +180,7 @@ namespace brick {
        * array, regardless of whether the single-argument or
        * three-argument version of the constructor (or setArray()
        * method) was used.
-       * 
+       *
        * @param corner1 This argument specifies the region corner
        * diagonally opposit to corner0.  The corner is specified as an
        * index into the entire array, regardless of whether the
@@ -190,7 +190,7 @@ namespace brick {
        * @param dummy This argument is not used.  Its only role is to
        * differentiate this member function from the two argument
        * version of getIntegral().
-       * 
+       *
        * @return The return value is the integral over the specified
        * region.
        */
@@ -198,7 +198,7 @@ namespace brick {
       getIntegral(const Index2D& corner0, const Index2D& corner1, bool dummy);
 
 
-      /** 
+      /**
        * This member function returns the raw 2D integral from which
        * box integration is performed.  It is normally used only by
        * other functions in the dlr_libs suite of libraries, but is a
@@ -207,11 +207,11 @@ namespace brick {
        * @param row This argument specifies the row (relative to the
        * region over which pre-integration was performed) at which to
        * sample the raw integral.
-       * 
+       *
        * @param column This argument specifies the column (relative to
        * the region over which pre-integration was performed) at which
        * to sample the raw integral.
-       * 
+       *
        * @return The return value is the value of the raw pre-integral
        * at the specified location.
        */
@@ -219,13 +219,13 @@ namespace brick {
       getRawIntegral(size_t row, size_t column);
 
 
-      /** 
+      /**
        * This member function is just like getRawIntegral(size_t,
        * size_t), but uses raster-order single indexing.
        *
        * @param index0 This argument specifies the location at which
        * to sample the raw integral.
-       * 
+       *
        * @return The return value is the value of the raw pre-integral
        * at the specified location.
        */
@@ -233,12 +233,12 @@ namespace brick {
       getRawIntegral(size_t index0);
 
 
-      /** 
+      /**
        * This member function discards and previously cached integral
        * information, performs a double integral over the input array,
        * and caches the result for future use in computing
        * sub-integrals.
-       * 
+       *
        * @param inputArray This argument specifies the array over
        * which to integrate.  The data in the array is not retained,
        * so it is safe to de-allocate the array after the constructor
@@ -247,14 +247,14 @@ namespace brick {
       void
       setArray(const Array2D<Type0>& inputArray);
 
-      
-      /** 
+
+      /**
        * This member function discards and previously cached integral
        * information, applies the specified functor to each element of
        * the input array, performs a double integral over the input
        * array, and caches the result for future use in computing
        * sub-integrals.
-       * 
+       *
        * @param inputArray This argument specifies the array over
        * which to integrate.  The data in the array is not retained,
        * so it is safe to de-allocate the array after the constructor
@@ -267,22 +267,22 @@ namespace brick {
       void
       setArray(const Array2D<Type0>& inputArray, Functor functor);
 
-      
-      /** 
+
+      /**
        * This member functionworks just like the single argument
        * version of setArray, with the exception that the
        * pre-integration is performed over only a rectangular
        * sub-array.  This is useful if you know you will only need to
        * compute integrals over a portion of the input array.
-       * 
+       *
        * @param inputArray This argument specifies the array over
        * which to integrate.  The data in the array is not retained,
        * so it is safe to de-allocate the array after the constructor
        * call has completed.
-       * 
+       *
        * @param corner0 This argument, along with corner1, defines the
        * sub-region over which to integrate.
-       * 
+       *
        * @param corner1 This argument, along with corner0, defines the
        * sub-region over which to integrate.
        */
@@ -292,20 +292,20 @@ namespace brick {
                const Index2D& corner1);
 
 
-      /** 
+      /**
        * This member function works just like the three-argument
        * version of setArray, with the exception that the the
        * specified functor is applied to each element of the array
        * before integration.
-       * 
+       *
        * @param inputArray This argument specifies the array over
        * which to integrate.  The data in the array is not retained,
        * so it is safe to de-allocate the array after the constructor
        * call has completed.
-       * 
+       *
        * @param corner0 This argument, along with corner1, defines the
        * sub-region over which to integrate.
-       * 
+       *
        * @param corner1 This argument, along with corner0, defines the
        * sub-region over which to integrate.
        *
@@ -323,19 +323,19 @@ namespace brick {
     protected:
 
 
-      /** 
+      /**
        * This protected member function does the actual work of
        * pre-integrating the input array.
-       * 
+       *
        * @param inIter This argument is an iterator pointing to the
        * upper-left corner of the region to be integrated.
-       * 
+       *
        * @param roiRows This argument specifies how many rows there
        * are in the region to be integrated.
-       * 
+       *
        * @param roiColumns This argument specifies how many columns
        * there are in the region to be integrated.
-       * 
+       *
        * @param inputArrayColumns This argument how many columns there
        * are in the input array.
        */
@@ -354,7 +354,7 @@ namespace brick {
 
 
   } // namespace numeric
-  
+
 } // namespace brick
 
 // Include file containing definitions of inline and template

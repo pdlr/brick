@@ -17,7 +17,7 @@
 // This file is included by fivePointAlgorithm.hh, and should not be
 // directly included by user code, so no need to include
 // fivePointAlgorithm.hh here.
-// 
+//
 // #include <brick/computerVision/fivePointAlgorithm.hh>
 
 #include <cmath>
@@ -55,7 +55,7 @@ namespace brick {
       //
       // where the points q are drawn from sequence0, and the points
       // q' are drawn from sequence1.
-      // 
+      //
       // We rearrange this equation to get
       //
       //   ||e_00*q_x*q'_x + e_01*q_y*q'_x + e_02*q'_x
@@ -68,7 +68,7 @@ namespace brick {
       // respectively.
       //
       // or,
-      // 
+      //
       //   ||A * vec(E)|| = 0
       //
       // With the matrix A as specified in the code below.
@@ -121,7 +121,7 @@ namespace brick {
       //   det(E) = 0
       //
       // and
-      // 
+      //
       //   2 * E * transpose(E) * E - trace(E * transpose(E)) * E = 0
       //
       // These two equations give us ten cubic constraints on x, y,
@@ -161,7 +161,7 @@ namespace brick {
       }
       std::cout << "===================" << std::endl;
 #endif
-      
+
       // The paper calls for Gauss-Jordan elimination to reduce the
       // first 10 columns of M to the identity matrix, so that the
       // rows of the eliminated matrix form a Groebner basis of the
@@ -197,12 +197,12 @@ namespace brick {
       // do not include the monomials x, y, or z.  This means that x,
       // y, and z will be in the quotient ring of complex third-order
       // polynomials over the ideal of the polynomials expressed in M.
-      // 
+      //
       // Theorem xxx in [3] gives us that, at the solutions, x, of the
       // polynomials in M,
       //
       //   f(x) * transpose(u(x)) = transpose(u(x)) * A_f
-      // 
+      //
       // Where f(x) is an arbitrary polynomial in the quotient ring,
       // u(x) is the vector of basis monomials of the quotient ring,
       // and A_f is the action matrix associated with f(x).
@@ -249,7 +249,7 @@ namespace brick {
       brick::numeric::Array1D< std::complex<FloatType> > eigenvalues;
       brick::numeric::Array2D< std::complex<FloatType> > eigenvectors;
       brick::linearAlgebra::eigenvectors(At, eigenvalues, eigenvectors);
-      
+
       // Now that we have solutions for x, y, and z, we can go back
       // and use them to reconstruct potential solutions for the
       // essential matrix.
@@ -283,7 +283,7 @@ namespace brick {
       FloatType bestErrorSoFar = std::numeric_limits<FloatType>::max();
       brick::numeric::Array2D<FloatType> selectedCandidate(3, 3);
       selectedCandidate = 0.0;
-      
+
       // Copy input points into local buffers.
       size_t numberOfPoints = sequence0End - sequence0Begin;
       std::vector< brick::numeric::Vector2D<FloatType> >
@@ -339,7 +339,7 @@ namespace brick {
       return selectedCandidate;
     }
 
-    
+
     template<class FloatType, class Iterator>
     void
     fivePointAlgorithmRobust(Iterator sequence0Begin, Iterator sequence0End,
@@ -357,7 +357,7 @@ namespace brick {
       // the same intrinsics.
       CameraIntrinsicsPinhole<FloatType> intrinsics(
         1, 1, 1.0, 1.0, 1.0, 0.0, 0.0);
-      
+
       // State variables so we'll remember the correct essential
       // matrices once we find them.
       FloatType bestErrorSoFar = std::numeric_limits<FloatType>::max();
@@ -365,7 +365,7 @@ namespace brick {
       brick::numeric::Transform3D<FloatType> selectedCam0Tcam2;
       brick::numeric::Transform3D<FloatType> selectedCam1Tcam2;
       selectedCam2Ecam0 = 0.0;
-      
+
       // Copy input points into local buffers.
       size_t numberOfPoints = sequence0End - sequence0Begin;
       std::vector< brick::numeric::Vector2D<FloatType> > points2D_cam0(numberOfPoints);
@@ -439,20 +439,20 @@ namespace brick {
           if(internalScore >= bestErrorSoFar) {
             continue;
           }
-          
+
           // Compute the 3D position of each input point in camera 1
           // coordinates.
           for(size_t kk = 0; kk < numberOfPoints; ++kk) {
             points3D_cam1[kk] = c1Tc2 * points3D_cam2[kk];
           }
-          
+
           // Recover 3D position of each of the input points in camera
           // 0 coordinates.
           brick::numeric::Transform3D<FloatType> c0Tc2 = c2Tc0.invert();
           for(size_t kk = 0; kk < numberOfPoints; ++kk) {
             points3D_cam0[kk] = c0Tc2 * points3D_cam2[kk];
           }
-          
+
           // Project 3D points into each image, and compute residual.
           for(size_t kk = 0; kk < numberOfPoints; ++kk) {
             brick::numeric::Vector2D<FloatType> residualVec0(
@@ -498,7 +498,7 @@ namespace brick {
       cam1Tcam2 = selectedCam1Tcam2;
     }
 
-    
+
     template <class FloatType>
     FloatType
     checkEpipolarConstraint(
@@ -507,13 +507,13 @@ namespace brick {
       brick::numeric::Vector2D<FloatType>& point1)
     {
       // Compute matrix-vector product F * q.
-      FloatType lineCoefficient0 = 
+      FloatType lineCoefficient0 =
         fundamentalMx[0] * point0.x() + fundamentalMx[1] * point0.y()
         + fundamentalMx[2];
-      FloatType lineCoefficient1 = 
+      FloatType lineCoefficient1 =
         fundamentalMx[3] * point0.x() + fundamentalMx[4] * point0.y()
         + fundamentalMx[5];
-      FloatType lineCoefficient2 = 
+      FloatType lineCoefficient2 =
         fundamentalMx[6] * point0.x() + fundamentalMx[7] * point0.y()
         + fundamentalMx[8];
 
@@ -525,7 +525,7 @@ namespace brick {
         brick::geometry::findClosestPoint(point1, ray);
       return brick::numeric::magnitudeSquared<FloatType>(closestPoint - point1);
     }
-    
+
 
     template <class FloatType>
     brick::numeric::Transform3D<FloatType>
@@ -553,7 +553,7 @@ namespace brick {
       // but I haven't had time to test and make sure I've implemented
       // them correctly.  Note that the right-handedness check is
       // missing from this code.
-      
+
       // Multiply by D == [[0, 1, 0], [-1, 0, 0], [0, 0, 1]].
       vTransposeArray.getRow(0) *= -1.0;
       std::swap(vTransposeArray[0], vTransposeArray[3]);
@@ -591,18 +591,18 @@ namespace brick {
         if((testPoint3D0.z() < 0.0) || (testPoint3D1.z() < 0.0)) {
           c1Tc0.setTransform(
             -c1Tc0.value<0, 0>(), -c1Tc0.value<0, 1>(),
-            -c1Tc0.value<0, 2>(), -c1Tc0.value<0, 3>(), 
+            -c1Tc0.value<0, 2>(), -c1Tc0.value<0, 3>(),
             -c1Tc0.value<1, 0>(), -c1Tc0.value<1, 1>(),
-            -c1Tc0.value<1, 2>(), -c1Tc0.value<1, 3>(), 
+            -c1Tc0.value<1, 2>(), -c1Tc0.value<1, 3>(),
             -c1Tc0.value<2, 0>(), -c1Tc0.value<2, 1>(),
             -c1Tc0.value<2, 2>(), -c1Tc0.value<2, 3>(),
-            0.0, 0.0, 0.0, 1.0);            
+            0.0, 0.0, 0.0, 1.0);
         }
       }
       return c1Tc0;
 #else
       // Here's a bonehead version of the above.
-      
+
       // Multiply by D == [[0, 1, 0], [-1, 0, 0], [0, 0, 1]].
       vTransposeArray.getRow(0) *= -1.0;
       std::swap(vTransposeArray[0], vTransposeArray[3]);
@@ -673,7 +673,7 @@ namespace brick {
       return c1Tc0_3;
 #endif
     }
-    
+
 
     template <class FloatType>
     brick::numeric::Vector3D<FloatType>
@@ -706,8 +706,8 @@ namespace brick {
       return brick::geometry::findIntersect(
         ray0_0, ray1_0, distance0, distance1, residual);
     }
-    
-    
+
+
     // This function is used internally by fivePointAlgorithm() to
     // generate a 10x20 matrix of coefficients of polynomial
     // constraints.
@@ -736,7 +736,7 @@ namespace brick {
         # below.
 
         # ---------------- Start of Maxima code ------------------
-        
+
         E0:matrix([e0rc00, e0rc01, e0rc02],
                   [e0rc10, e0rc11, e0rc12],
                   [e0rc20, e0rc21, e0rc22]);
@@ -753,7 +753,7 @@ namespace brick {
 
         C0:determinant(EE);
         C0E:expand(C0);
-        
+
         EExEET:EE . transpose(EE);
         ETrace:EExEET[1][1] + EExEET[2][2] + EExEET[3][3];
         CC:2 * (EExEET . EE) - (ETrace * EE);
@@ -766,7 +766,7 @@ namespace brick {
 
         appendfile("maximaConstraints.txt");
         grind(Constraints);
-        
+
         # ----------------- End of Maxima code -------------------
 
         # Here's python code that parses maximaConstraints.txt
@@ -775,14 +775,14 @@ namespace brick {
         # execute the command
         #
         #   python pythonCode.py > cppSnippet.cpp
-        # 
+        #
         # Then copy the contents of cppSnippet.cpp into the cut &
         # paste section below.
 
         # ---------------- Start of Python code ------------------
         import re
         constraintsRe = re.compile("\[.*\]", re.DOTALL)
-        
+
         # This regex works as follows:
         #   (                  - Starts a group representing the coefficient.
         #     [+-]?              - Optional prefix of '+' or '-', as in
@@ -808,29 +808,29 @@ namespace brick {
                              'x1^2', 'x1*x2', 'x2^2',
                              'x0', 'x1', 'x2',
                              None]
-        
+
         inputFile = open('maximaConstraints.txt')
         inputText = inputFile.read()
-        
+
         # This array represents the 10x20 constraint matrix.
         coefficientArray = map(lambda x: [''] * 20, range(10))
-        
+
         # We're expecting to find 10 equations: 9 polynomials for the nine
         # terms in the "2 * E * transpose(E) * E ..." constraint, and one
         # polynomial for the determinant constraint.
         constraintsText = constraintsRe.search(inputText).group(0)[1:-1]
         constraintsList = constraintsText.split(',')
-        
+
         # Iterate over all constraints.
         constraintNumber = 0
         for constraint in constraintsList:
           coefficientMap = {}
-          
+
           # Reset this row of the constraint matrix.
           for monomial in expectedMonomials:
             coefficientMap[monomial] = ''
           # end for
-          
+
           # Examine all terms of this polynomial, split each term into
           # coefficient and monomial parts (where coefficient might be
           # something like "e0rc12^2*e2rc21", and monomial might be
@@ -852,7 +852,7 @@ namespace brick {
               coefficientMap[monomial] + coefficient.replace('^', '_'))
             startPos = termMatch.end()
           # end while
-          
+
           # Now put the accumulated coefficients into the constraint matrix.
           for ii in range(len(expectedMonomials)):
             coefficient = coefficientMap[expectedMonomials[ii]]
@@ -864,7 +864,7 @@ namespace brick {
           # end for
           constraintNumber = constraintNumber + 1
         # end for
-        
+
         # Send C++ code to standard out.
         for ii in range(len(coefficientArray)):
           for jj in range(len(expectedMonomials)):
@@ -872,9 +872,9 @@ namespace brick {
                    % (ii, jj, coefficientArray[ii][jj]))
           # end for
         # end for
-                
+
         # ----------------- End of Python code -------------------
-        
+
         =====================================================
         ==============  End of long comment  ================
         =====================================================
@@ -958,7 +958,7 @@ namespace brick {
       FloatType e3rc20_2 = e3rc20 * e3rc20;
       FloatType e3rc21_2 = e3rc21 * e3rc21;
       FloatType e3rc22_2 = e3rc22 * e3rc22;
-      
+
       // Cubes of individual matrix elements.
       FloatType e0rc00_3 = e0rc00_2 * e0rc00;
       FloatType e0rc01_3 = e0rc01_2 * e0rc01;
@@ -1000,8 +1000,8 @@ namespace brick {
       // Big matrix to accept all of the constraint coefficients.
       brick::numeric::Array2D<FloatType> AMatrix(10, 20);
 
-      
-      // ============= Begin cut & paste section ============= 
+
+      // ============= Begin cut & paste section =============
 
     AMatrix(0, 0) = -e0rc00*e0rc22_2+2*e0rc02*e0rc20*e0rc22-e0rc00*e0rc21_2+2*e0rc01*e0rc20*e0rc21+e0rc00*e0rc20_2-e0rc00*e0rc12_2+2*e0rc02*e0rc10*e0rc12-e0rc00*e0rc11_2+2*e0rc01*e0rc10*e0rc11+e0rc00*e0rc10_2+e0rc00*e0rc02_2+e0rc00*e0rc01_2+e0rc00_3;
     AMatrix(0, 1) = -2*e0rc00*e0rc22*e1rc22+2*e0rc02*e0rc20*e1rc22-2*e0rc00*e0rc21*e1rc21+2*e0rc01*e0rc20*e1rc21+2*e0rc02*e0rc22*e1rc20+2*e0rc01*e0rc21*e1rc20+2*e0rc00*e0rc20*e1rc20-2*e0rc00*e0rc12*e1rc12+2*e0rc02*e0rc10*e1rc12-2*e0rc00*e0rc11*e1rc11+2*e0rc01*e0rc10*e1rc11+2*e0rc02*e0rc12*e1rc10+2*e0rc01*e0rc11*e1rc10+2*e0rc00*e0rc10*e1rc10+2*e0rc20*e0rc22*e1rc02+2*e0rc10*e0rc12*e1rc02+2*e0rc00*e0rc02*e1rc02+2*e0rc20*e0rc21*e1rc01+2*e0rc10*e0rc11*e1rc01+2*e0rc00*e0rc01*e1rc01-e0rc22_2*e1rc00-e0rc21_2*e1rc00+e0rc20_2*e1rc00-e0rc12_2*e1rc00-e0rc11_2*e1rc00+e0rc10_2*e1rc00+e0rc02_2*e1rc00+e0rc01_2*e1rc00+3*e0rc00_2*e1rc00;
@@ -1204,7 +1204,7 @@ namespace brick {
     AMatrix(9, 18) = +e2rc00*e3rc11*e3rc22-e2rc01*e3rc10*e3rc22-e2rc10*e3rc01*e3rc22+e2rc11*e3rc00*e3rc22-e2rc00*e3rc12*e3rc21+e2rc02*e3rc10*e3rc21+e2rc10*e3rc02*e3rc21-e2rc12*e3rc00*e3rc21+e2rc01*e3rc12*e3rc20-e2rc02*e3rc11*e3rc20-e2rc11*e3rc02*e3rc20+e2rc12*e3rc01*e3rc20+e2rc20*e3rc01*e3rc12-e2rc21*e3rc00*e3rc12-e2rc20*e3rc02*e3rc11+e2rc22*e3rc00*e3rc11+e2rc21*e3rc02*e3rc10-e2rc22*e3rc01*e3rc10;
     AMatrix(9, 19) = +e3rc00*e3rc11*e3rc22-e3rc01*e3rc10*e3rc22-e3rc00*e3rc12*e3rc21+e3rc02*e3rc10*e3rc21+e3rc01*e3rc12*e3rc20-e3rc02*e3rc11*e3rc20;
 
-      
+
       // ============= End cut & paste section =============
 
       // Warning(xxx): The action matrix in Stewenius & Nister's paper
@@ -1228,7 +1228,7 @@ namespace brick {
     }
 
   } // namespace computerVision
-    
+
 } // namespace brick
 
 

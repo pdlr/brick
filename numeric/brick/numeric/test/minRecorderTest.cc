@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
-* @file minRecorderTest.cpp
-* 
+* @file brick/numeric/test/minRecorderTest.cpp
+*
 * Source file defining minRecorderTest class.
 *
 * Copyright (C) 2005, 2011 David LaRose, dlr@cs.cmu.edu
@@ -38,7 +38,7 @@ namespace brick {
       void testReset();
 
     private:
-    
+
     }; // class MinRecorderTest
 
 
@@ -66,16 +66,16 @@ namespace brick {
       MinRecorder<int, unsigned char> minRecorder0;
       BRICK_TEST_ASSERT(minRecorder0.getMinimum() ==
                         std::numeric_limits<int>::max());
-      BRICK_TEST_ASSERT(minRecorder0.getPayload() == 
+      BRICK_TEST_ASSERT(minRecorder0.getPayload() ==
                         static_cast<unsigned char>(0));
 
       MinRecorder<unsigned int, int> minRecorder1;
-      BRICK_TEST_ASSERT(minRecorder1.getMinimum() == 
+      BRICK_TEST_ASSERT(minRecorder1.getMinimum() ==
                         std::numeric_limits<unsigned int>::max());
-      BRICK_TEST_ASSERT(minRecorder1.getPayload() == 0);      
+      BRICK_TEST_ASSERT(minRecorder1.getPayload() == 0);
     }
 
-  
+
     void
     MinRecorderTest::
     testConstructor__Type__Payload()
@@ -110,7 +110,7 @@ namespace brick {
               BRICK_TEST_ASSERT(minRecorder0.getMin() == ii);
               BRICK_TEST_ASSERT(minRecorder0.getMinimum() == ii);
               BRICK_TEST_ASSERT(minRecorder0.getPayload() == jj);
-            }            
+            }
           }
           for(kk = -kBound; kk <= kBound; ++kk) {
             unsigned int payload = static_cast<unsigned int>(kk + 2 * kBound);
@@ -123,13 +123,13 @@ namespace brick {
               BRICK_TEST_ASSERT(minRecorder0.getMin() == ii);
               BRICK_TEST_ASSERT(minRecorder0.getMinimum() == ii);
               BRICK_TEST_ASSERT(minRecorder0.getPayload() == jj);
-            }            
+            }
           }
         }
       }
     }
 
-  
+
     void
     MinRecorderTest::
     testGetMin()
@@ -137,7 +137,7 @@ namespace brick {
       // Already tested in testTest().
     }
 
-  
+
     void
     MinRecorderTest::
     testGetMinimum()
@@ -145,7 +145,7 @@ namespace brick {
       // Already tested in testTest().
     }
 
-  
+
     void
     MinRecorderTest::
     testGetPayload()
@@ -153,7 +153,7 @@ namespace brick {
       // Already tested in testTest().
     }
 
-  
+
     void
     MinRecorderTest::
     testReset()
@@ -171,13 +171,13 @@ namespace brick {
           minRecorder1.reset();
           BRICK_TEST_ASSERT(minRecorder1.getMinimum() ==
                             std::numeric_limits<unsigned int>::max());
-          BRICK_TEST_ASSERT(minRecorder1.getPayload() == 0);      
+          BRICK_TEST_ASSERT(minRecorder1.getPayload() == 0);
         }
       }
     }
 
   } // namespace numeric
-  
+
 } // namespace brick
 
 

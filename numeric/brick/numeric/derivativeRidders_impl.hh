@@ -17,7 +17,7 @@
 // This file is included by derivativeRidders.hh, and should not be
 // directly included by user code, so no need to include
 // derivativeRidders.hh here.
-// 
+//
 // #include <brick/numeric/derivativeRidders.hh>
 
 #include <limits>
@@ -26,7 +26,7 @@
 namespace brick {
 
   namespace numeric {
-  
+
     template <class Functor, class Scalar>
     DerivativeRidders<Functor, Scalar>::
     DerivativeRidders(Functor const& functor,
@@ -79,7 +79,7 @@ namespace brick {
       return *this;
     }
 
-    
+
     template <class Functor, class Scalar>
     Scalar
     DerivativeRidders<Functor, Scalar>::
@@ -91,7 +91,7 @@ namespace brick {
 
       // xxx
       m_tableau = Scalar(0);
-      
+
       // Start with the largest step.
       Scalar currentStep = m_stepBound;
       for(unsigned int ii = 0; ii < m_tableau.columns(); ++ii) {
@@ -105,7 +105,7 @@ namespace brick {
         //                     / (2 * currentStep));
         m_tableau(0, ii) = ((m_functor(x1) - m_functor(x0))
                             / (x1 - x0));
-        
+
         // Now fill in table of extrapolated estimates.
         Scalar weight = m_rombergFactor;
         for(unsigned int jj = 1; jj <= ii; ++jj) {
@@ -164,7 +164,7 @@ namespace brick {
       this->setZeroPoint(zeroPoint);
     }
 
-      
+
     template <class Functor, class Scalar>
     NDimensionalFunctorAdapter<Functor, Scalar>::
     NDimensionalFunctorAdapter(Functor const& functor)
@@ -176,7 +176,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // Copy constructor does a deep copy.
     template <class Functor, class Scalar>
     NDimensionalFunctorAdapter<Functor, Scalar>::
@@ -191,7 +191,7 @@ namespace brick {
       this->setZeroPoint(other.m_zeroPoint);
     }
 
-    
+
     // Assignment operator does a deep copy.
     template <class Functor, class Scalar>
     NDimensionalFunctorAdapter<Functor, Scalar>&
@@ -206,7 +206,7 @@ namespace brick {
       return *this;
     }
 
-    
+
     template <class Functor, class Scalar>
     typename Functor::result_type
     NDimensionalFunctorAdapter<Functor, Scalar>::
@@ -233,7 +233,7 @@ namespace brick {
         m_zeroPoint[ii] = zeroPoint[ii];
       }
     }
-    
+
   } // namespace numeric
 
 } // namespace brick

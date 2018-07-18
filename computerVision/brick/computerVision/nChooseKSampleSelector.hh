@@ -35,7 +35,7 @@ namespace brick {
       // ========= Public typedefs. =========
 
       /**
-       ** This typedef simply mirrors template argument Sample. 
+       ** This typedef simply mirrors template argument Sample.
        **/
       typedef Sample SampleType;
 
@@ -51,7 +51,7 @@ namespace brick {
 
       // ========= Public member functions. =========
 
-      /** 
+      /**
        * The constructor specifies the full population of samples from
        * which to exhaustively select.
        *
@@ -62,7 +62,7 @@ namespace brick {
        *
        * @param beginIter This argument and the next specify a
        * sequence from which to copy the sample population.
-       * 
+       *
        * @param endIter This argument and the previous specify a
        * sequence from which to copy the sample population.
        */
@@ -72,23 +72,23 @@ namespace brick {
                              IterType endIter);
 
 
-      /** 
+      /**
        * This member function returns the number of distinct
        * combinations of sampleSize elements that can be drawn from
        * the sequence passed to the constructor.
-       * 
+       *
        * @return The return value is "N choose M," where N is the size
        * of the sequence passed to the constructor, and M is the value
        * of constructor argument sampleSize.
        */
       size_t
       getNumberOfSamples();
-      
 
-      /** 
+
+      /**
        * This member function returns a SampleSequenceType instance
        * containing the entire population passed to the constructor.
-       * 
+       *
        * @return The return value is a sequence containing the entire
        * population.
        */
@@ -98,10 +98,10 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This member function returns a the number of samples in the
        * entire population passed to the constructor.
-       * 
+       *
        * @return The return value is the size of the entire
        * population.
        */
@@ -109,17 +109,17 @@ namespace brick {
       getPoolSize() {return m_poolVector.size();}
 
 
-      /** 
+      /**
        * This member function returns a SampleSequenceType instance
        * drawn from the sample population.  This sequence will remain
        * valid at least until the next call to getSample().
-       * 
+       *
        * @param sampleNumber This argument specifies which of the
        * available samples should be returned.  Its value should be in
        * the range 0 <= sampleNumber < this->getNumberOfSamples().
        * This function is more efficient if the value of sampleNumber
        * starts at 0 and is incremented with each cal to getSample().
-       * 
+       *
        * @return The return value is a sequence containing the
        * requested sample.
        */
@@ -133,7 +133,7 @@ namespace brick {
 
       void
       incrementSampleIndices();
-      
+
       SampleSequenceType
       statelessGetSample(size_t sampleNumber);
 
@@ -146,7 +146,7 @@ namespace brick {
     };
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

@@ -30,7 +30,7 @@ namespace brick {
       // Empty.
     }
 
-      
+
     // Destructor.
     KeypointMatcherFast::
     ~KeypointMatcherFast()
@@ -62,7 +62,7 @@ namespace brick {
         double(0.0)) / KeypointFast::numberOfFeatures;
     }
 
-    
+
     double
     KeypointMatcherFast::
     computeSSD(KeypointFast const& keypoint0, KeypointFast const& keypoint1)
@@ -92,7 +92,7 @@ namespace brick {
           std::fabs(expectedRotation) / common::constants::twoPi
           * KeypointFast::numberOfFeatures) + 1.0,
         KeypointFast::numberOfFeatures / 2.0);
-      
+
       // Inefficient for now...  Compute SSD at each rotation.
       double minimumSsd = std::numeric_limits<double>::max();
 
@@ -175,14 +175,14 @@ namespace brick {
       if(keypointMap.empty()) {
         return false;
       }
-      
+
       // Start by finding the keypoint whose feature vector mean is
       // closest to that of the query point.  This is a good starting
       // point for a linear search.
       typedef std::map<double, KeypointFast>::const_iterator MapIterator;
       double featureVectorMean = this->computeFeatureVectorMean(query);
       MapIterator startIter = keypointMap.lower_bound(featureVectorMean);
-      
+
       // Now search forward until we know for sure we're not going to
       // find a better match.  We'll know we've gone far enough when
       // the difference in feature vector means is big enough to
@@ -225,10 +225,10 @@ namespace brick {
           bestSSDSoFar = newSSD;
           bestMatch = currentIter->second;
         }
-      } 
+      }
       return true;
     }
 
   } // namespace computerVision
-  
+
 } // namespace brick

@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file rotations_impl.cc
+* @file brick/numeric/rotations_impl.cc
 *
 * Source file declaring functions which convert between different
 * representations of 3D rotation.
@@ -26,7 +26,7 @@ namespace {
   // whether things are approximately equal without digging too deeply
   // into numerical issues.  Ultimately, these functions should be
   // removed, and brick::numeric::NumericTraits<> should be extended
-  // to provide a better version of this functionality.  
+  // to provide a better version of this functionality.
   // The default case is undefined so we'll get a compile error if we
   // try to use l_getRotationsEpsilon() with any type for which we haven't
   // picked an epsilon.
@@ -38,13 +38,13 @@ namespace {
   l_getRotationsEpsilon<brick::common::Float64>() {
     return 1.0E-10;
   }
-  
+
   template <>
   inline brick::common::Float32
   l_getRotationsEpsilon<brick::common::Float32>() {
     return 1.0E-5;
   }
-  
+
 
   template <class Type>
   Transform3D<Type>
@@ -69,7 +69,7 @@ namespace {
     case BRICK_AXIS_Z:
       return Transform3D<Type>(cosineAngle, -sineAngle, Type(0.0), Type(0.0),
                                sineAngle, cosineAngle, Type(0.0), Type(0.0),
-                               Type(0.0), Type(0.0), Type(1.0), Type(0.0), 
+                               Type(0.0), Type(0.0), Type(1.0), Type(0.0),
                                Type(0.0), Type(0.0), Type(0.0), Type(1.0));
       break;
     default:
@@ -81,14 +81,14 @@ namespace {
     // Should never get here either.
     return Transform3D<Type>();
   }
-                    
+
 }
 
 
 namespace brick {
 
   namespace numeric {
-    
+
     template <class Type>
     Quaternion<Type>
     angleAxisToQuaternion(const Type& angle, const Vector3D<Type>& axis, bool isNormalized)
@@ -117,7 +117,7 @@ namespace brick {
                         sineValue * axisCopy.y(), sineValue * axisCopy.z());
     }
 
-  
+
     template <class Type>
     Vector3D<Type>
     angleAxisToRollPitchYaw(const Type& angle, const Vector3D<Type>& axis,
@@ -125,9 +125,9 @@ namespace brick {
     {
       Quaternion<Type> quaternion = angleAxisToQuaternion(angle, axis, isNormalized);
       return quaternionToRollPitchYaw(quaternion);
-    }    
+    }
 
-  
+
     template <class Type>
     Transform3D<Type>
     angleAxisToTransform3D(const Type& angle, const Vector3D<Type>& axis, bool isNormalized)
@@ -136,7 +136,7 @@ namespace brick {
       return quaternionToTransform3D(quaternion);
     }
 
-  
+
     // This function converts a rotation from general euler angle
     // representation to Transform3D representation.
     template <class Type>
@@ -150,7 +150,7 @@ namespace brick {
               * l_getEulerComponent(angle0, axis0));
     }
 
-    
+
     template <class Type>
     std::pair< Type, Vector3D<Type> >
     quaternionToAngleAxis(const Quaternion<Type>& quaternion)
@@ -174,7 +174,7 @@ namespace brick {
       return std::make_pair(angle, sineTimesAxis / sineHalfTheta);
     }
 
-  
+
     template <class Type>
     Vector3D<Type>
     quaternionToRollPitchYaw(const Quaternion<Type>& quaternion)
@@ -211,7 +211,7 @@ namespace brick {
         Type(0.0), Type(0.0), Type(0.0), Type(1.0));
     }
 
-  
+
     // This function converts a rotation from Rodrigues representation
     // to Transform3D representation.
     template <class Type>
@@ -220,15 +220,15 @@ namespace brick {
                            Type const& epsilon)
     {
       Transform3D<Type> result;
-      
+
       // The length of the input vector encodes the size of the
       // rotation.
       Type thetaSquared = magnitudeSquared<Type>(rodrigues);
-      
+
       if(thetaSquared > epsilon) {
 
         Type theta = brick::numeric::squareRoot(thetaSquared);
-        
+
         // The input vector points along the axis of rotation.
         // Normalize it to unit length.  Note that there's not error
         // checking here.  It's the responsibility of the calling
@@ -247,14 +247,14 @@ namespace brick {
         Type omcyy = oneMinusCT * direction.y() * direction.y();
         Type omcyz = oneMinusCT * direction.y() * direction.z();
         Type omczz = oneMinusCT * direction.z() * direction.z();
-        
+
         result.setValue(
           omcxx + cosTheta, omcxy - sinTheta * direction.z(),
           omcxz + sinTheta * direction.y(), Type(0.0),
 
           omcxy + sinTheta * direction.z(), omcyy + cosTheta,
           omcyz - sinTheta * direction.x(), Type(0.0),
-        
+
           omcxz - sinTheta * direction.y(), omcyz + sinTheta * direction.x(),
           omczz + cosTheta, Type(0.0),
 
@@ -272,7 +272,7 @@ namespace brick {
       return result;
     }
 
-    
+
     template <class Type>
     std::pair< Type, Vector3D<Type> >
     rollPitchYawToAngleAxis(const Vector3D<Type>& rollPitchYaw)
@@ -281,7 +281,7 @@ namespace brick {
       return quaternionToAngleAxis(quaternion);
     }
 
-  
+
     template <class Type>
     Quaternion<Type>
     rollPitchYawToQuaternion(const Vector3D<Type>& rollPitchYaw)
@@ -289,7 +289,7 @@ namespace brick {
       Transform3D<Type> transform3D = rollPitchYawToTransform3D(rollPitchYaw);
       return transform3DToQuaternion(transform3D);
     }
-  
+
 
     template <class Type>
     Transform3D<Type>
@@ -316,14 +316,14 @@ namespace brick {
                                  Type(0.0), Type(0.0), Type(0.0), Type(1.0));
       Transform3D<Type> yawTransform(cosineYaw, -sineYaw, Type(0.0), Type(0.0),
                                sineYaw, cosineYaw, Type(0.0), Type(0.0),
-                               Type(0.0), Type(0.0), Type(1.0), Type(0.0), 
+                               Type(0.0), Type(0.0), Type(1.0), Type(0.0),
                                Type(0.0), Type(0.0), Type(0.0), Type(1.0));
 
       // Compose the three rotations to get the result.
       return rollTransform * (pitchTransform * yawTransform);
     }
 
-  
+
     template <class Type>
     std::pair< Type, Vector3D<Type> >
     transform3DToAngleAxis(const Transform3D<Type>& transform3D)
@@ -332,7 +332,7 @@ namespace brick {
       return quaternionToAngleAxis(quaternion);
     }
 
-  
+
     // This routine draws from _On Homogeneous Transforms, Quaternions,
     // and Computation Efficiency_, by Funda, Taylor, and Paul, IEEE R&A,
     // June 1990.
@@ -342,7 +342,7 @@ namespace brick {
     {
       // For convenience, we make temporary variables representing the
       // elements of transform3D.
-      // 
+      //
       // Type t00 = transform3D.value<0, 0>();
       // Type t01 = transform3D.value<0, 1>();
       // Type t02 = transform3D.value<0, 2>();
@@ -361,7 +361,7 @@ namespace brick {
       Type t20 = transform3D(2, 0);
       Type t21 = transform3D(2, 1);
       Type t22 = transform3D(2, 2);
-    
+
       // First compute s.
       Type sSquaredTimesFour = (Type(1.0) + t00 + t11 + t22);
       // Allow for numerical errors.
@@ -378,7 +378,7 @@ namespace brick {
       // unfortunately goes to zero for theta approaching 0 degrees and
       // 180 degrees.
       Vector3D<Type> axis0(t21 - t12, t02 - t20, t10 - t01);
-    
+
       // We need to find another parallel vector using the elements of
       // transform3D. Start by noting which axis dominates.
       int axisOfLargestRotation = 0;
@@ -458,8 +458,8 @@ namespace brick {
       Type theta = common::arctangent2(sinTheta, cosTheta);
       return direction * (theta / dirMagnitude);
     }
-    
-  
+
+
     template <class Type>
     Vector3D<Type>
     transform3DToRollPitchYaw(const Transform3D<Type>& transform3D)
@@ -508,7 +508,7 @@ namespace brick {
       return Vector3D<Type>(roll, pitch, yaw);
     }
 
-  
+
   } // namespace numeric
 
 } // namespace brick

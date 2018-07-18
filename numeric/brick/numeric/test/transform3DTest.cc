@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
-* @file transform3DTest.cpp
-* 
+* @file brick/numeric/test/transform3DTest.cpp
+*
 * Source file defining Transform3DTest class.
 *
 * Copyright (C) 2004-2011 David LaRose, dlr@cs.cmu.edu
@@ -16,7 +16,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     class Transform3DTest : public test::TestFixture<Transform3DTest> {
 
     public:
@@ -73,7 +73,7 @@ namespace brick {
     }
 
   } // namespace numeric
-  
+
 } // namespace brick
 
 

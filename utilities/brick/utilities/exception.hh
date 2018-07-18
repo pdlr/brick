@@ -24,12 +24,12 @@ namespace brick {
    ** time and filenames, and a few other odds and ends.
    **/
   namespace utilities {
-  
+
     /**
      ** This is an Exception class for errors involving failed
      ** conversions from one type to another.
      **/
-    class ConversionException;    
+    class ConversionException;
     BRICK_DECLARE_EXCEPTION_TYPE(
       ConversionException, brick::common::ValueException);
 

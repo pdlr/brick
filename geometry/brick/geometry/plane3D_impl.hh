@@ -15,7 +15,7 @@
 
 // This file is included by plane3D.hh, and should not be directly included
 // by user code, so no need to include plane3D.hh here.
-// 
+//
 // #include <brick/geometry/plane3D.hh>
 
 #include <brick/linearAlgebra/linearAlgebra.hh>
@@ -25,7 +25,7 @@
 namespace brick {
 
   namespace geometry {
-    
+
     // The default constructor initializes to the X-Y plane.
     template <class Type>
     Plane3D<Type>::
@@ -36,7 +36,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // This constructor initializes the plane using three points.
     template <class Type>
     Plane3D<Type>::
@@ -59,7 +59,7 @@ namespace brick {
       }
     }
 
-    
+
     // This constructor initializes the plane using a collection of
     // points.
     template <class Type>
@@ -140,7 +140,7 @@ namespace brick {
       // Empty.
     }
 
-  
+
     // Destructor.
     template <class Type>
     Plane3D<Type>::
@@ -174,7 +174,7 @@ namespace brick {
     {
       return m_directionVector0;
     }
-      
+
 
     // This member function returns one of a pair of orthonormal
     // direction vectors that span the plane.
@@ -195,7 +195,7 @@ namespace brick {
     {
       return brick::numeric::cross(m_directionVector0, m_directionVector1);
     }
-      
+
 
     // This member function returns one of the infinitely many
     // points on the plane that could serve as the origin of a 2D
@@ -221,12 +221,12 @@ namespace brick {
                  * m_directionVector1);
       return brick::numeric::magnitude<Type>(offset);
     }
-        
-      
+
+
     /* ======= Private member functions. ======= */
 
     template <class Type>
-    template <class Iterator> 
+    template <class Iterator>
     void
     Plane3D<Type>::
     estimateFromSequence(Iterator beginIterator,
@@ -263,7 +263,7 @@ namespace brick {
       covarianceMatrix(2, 0) = covarianceMatrix(0, 2);
       covarianceMatrix(2, 1) = covarianceMatrix(1, 2);
       covarianceMatrix /= static_cast<double>(count);
-      
+
       // Solve for best fit plane.
       brick::numeric::Array1D<double> eigenvalues;
       brick::numeric::Array2D<double> eigenvectors;
@@ -297,7 +297,7 @@ namespace brick {
 
 
   } // namespace utilities
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_GEOMETRY_PLANE3D_IMPL_HH */

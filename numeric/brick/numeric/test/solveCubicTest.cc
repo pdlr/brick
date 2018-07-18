@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file solveCubicTest.cpp
+* @file brick/numeric/test/solveCubicTest.cpp
 *
 * Source file tests for solveCubic functions.
 *
@@ -37,7 +37,7 @@ namespace brick {
     private:
 
       double m_defaultTolerance;
-    
+
     }; // class SolveCubicTest
 
 
@@ -89,7 +89,7 @@ namespace brick {
       BRICK_TEST_ASSERT(approximatelyEqual(root1, 5.0 / 3.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(approximatelyEqual(root2, 7.0, m_defaultTolerance));
 
-      
+
       // Test for (2x + 4i)(4x - 8i)(3x + 9) = 0
       //   : (8x^2 + 32)(3x + 9) = 0
       //   : 24x^3 + 72x^2 + 96x + 288 = 0
@@ -150,7 +150,7 @@ namespace brick {
       BRICK_TEST_ASSERT(
         approximatelyEqual(root2.getImaginaryPart(), 0.0, m_defaultTolerance));
 
-      
+
       // Test for (2x + 4i)(4x - 8i)(3x + 9) = 0
       //   : (8x^2 + 32)(3x + 9) = 0
       //   : 24x^3 + 72x^2 + 96x + 288 = 0
@@ -213,7 +213,7 @@ namespace brick {
     }
 
   } // namespace numeric
-  
+
 } // namespace brick
 
 

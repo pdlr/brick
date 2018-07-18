@@ -23,7 +23,7 @@ namespace num = brick::numeric;
 namespace brick {
 
   namespace computerVision {
-    
+
     class ThreePointAlgorithmTest
       : public brick::test::TestFixture<ThreePointAlgorithmTest> {
 
@@ -38,26 +38,26 @@ namespace brick {
       // Tests.
       void testThreePointAlgorithm();
       void testThreePointAlgorithmRobust();
-      
+
     private:
 
       void
       getCameraIntrinsics(
         std::vector< CameraIntrinsicsPinhole<double> >& intrinsicsVector);
-      
+
       void
       getCameraPoses(std::vector< num::Transform3D<double> >& worldTcamVector);
 
       void
       getTestPoints3D(std::vector< num::Vector3D<double> >& pVector);
-      
+
       bool
       isApproximatelyEqual(const Vector3D<double>& vector0,
                            const Vector3D<double>& vector1);
-      
-      
+
+
       double m_defaultTolerance;
-      
+
     }; // class ThreePointAlgorithmTest
 
 
@@ -85,7 +85,7 @@ namespace brick {
 
       std::vector< num::Vector3D<double> > worldPoints;
       this->getTestPoints3D(worldPoints);
-      
+
       for(unsigned int poseNumber = 0;
           poseNumber < worldTcamVector.size();
           ++poseNumber) {
@@ -120,7 +120,7 @@ namespace brick {
               testPoints_camera[0] - testPoints_camera[2]);
             double d2 = num::magnitude<double>(
               testPoints_camera[0] - testPoints_camera[1]);
-            
+
             std::vector< num::Vector3D<double> > camPoints0;
             std::vector< num::Vector3D<double> > camPoints1;
             std::vector< num::Vector3D<double> > camPoints2;
@@ -150,7 +150,7 @@ namespace brick {
               double dHat0 = num::magnitude<double>(pHat1 - pHat2);
               double dHat1 = num::magnitude<double>(pHat0 - pHat2);
               double dHat2 = num::magnitude<double>(pHat0 - pHat1);
-              
+
               BRICK_TEST_ASSERT(
                 num::magnitude<double>(
                   uHat0 - testPoints_image[0]) < m_defaultTolerance);
@@ -180,7 +180,7 @@ namespace brick {
     {
       const unsigned int sampleSize = 7;
       const double residualTolerance = 1.0E-5;
-      
+
       std::vector< num::Transform3D<double> > worldTcamVector;
       this->getCameraPoses(worldTcamVector);
 
@@ -264,13 +264,13 @@ namespace brick {
         CameraIntrinsicsPinhole<double>(320, 240, 0.006, 0.0001, 0.00012, 180, 100));
     }
 
-    
+
     void
     ThreePointAlgorithmTest::
     getCameraPoses(std::vector< num::Transform3D<double> >& worldTcamVector)
     {
       worldTcamVector.clear();
-      
+
       std::vector< num::Vector3D<double> > centerVector;
       std::vector<double> angleVector;
 
@@ -300,7 +300,7 @@ namespace brick {
                            0.0, 0.0,   0.0, 1.0));
       }
     }
-    
+
 
     void
     ThreePointAlgorithmTest::
@@ -345,7 +345,7 @@ namespace brick {
       pVector.push_back(num::Vector3D<double>(6, 2, 25));
       pVector.push_back(num::Vector3D<double>(5, 1, 18));
     }
-    
+
 
     bool
     ThreePointAlgorithmTest::
@@ -357,7 +357,7 @@ namespace brick {
          && approximatelyEqual(vector0.y(), vector1.y(), m_defaultTolerance)
          && approximatelyEqual(vector0.z(), vector1.z(), m_defaultTolerance));
     }
-    
+
   } // namespace computerVision
 
 } // namespace brick

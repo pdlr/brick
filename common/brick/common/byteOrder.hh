@@ -21,7 +21,7 @@
 namespace brick {
 
   namespace common {
-    
+
     /**
      ** This enum provides a convenient way to represent the various
      ** machine-dependent byte orderings.
@@ -32,11 +32,11 @@ namespace brick {
     };
 
 
-    /** 
+    /**
      * This function returns the appropriate byte order for the platform
      * on which it is run.  For example, this function will return
      * BRICK_LITTLE_ENDIAN when run on a 386 machine.
-     * 
+     *
      * @return The return value is the byte ordering used by the current
      * platform.
      */
@@ -44,14 +44,14 @@ namespace brick {
     getByteOrder();
 
 
-    /** 
+    /**
      * This function swaps the byte order of a single value.
-     * 
+     *
      * @param inputValue This argument is the value to be byte-swapped.
-     * 
+     *
      * @param fromByteOrder This argument indicates the current byte
      * order of the values in the array.
-     * 
+     *
      * @param toByteOrder This argument specifies the desired final byte
      * order for the data in the array.
      *
@@ -63,21 +63,21 @@ namespace brick {
                     ByteOrder fromByteOrder,
                     ByteOrder toByteOrder);
 
-    
-    /** 
+
+    /**
      * This function takes a pointer to a C-style array of values and
      * modifies the array in place so that it has a particular byte
      * order.
-     * 
+     *
      * @param dataPtr This argument is a pointer to the C-style array of
      * values.
-     * 
+     *
      * @param numberOfElements This argument indicates how many values
      * are in the array.
-     * 
+     *
      * @param fromByteOrder This argument indicates the current byte
      * order of the values in the array.
-     * 
+     *
      * @param toByteOrder This argument specifies the desired final byte
      * order for the data in the array.
      */
@@ -88,24 +88,24 @@ namespace brick {
                     ByteOrder fromByteOrder,
                     ByteOrder toByteOrder);
 
-    
-    /** 
+
+    /**
      * This function takes a pointer to a C-style array of values and
      * copies it into another C-style array, swapping bytes if necessary
      * so that the output array has the specified byte order.
-     * 
+     *
      * @param fromDataPtr This argument is a pointer to the C-style
      * array of input values.
-     * 
+     *
      * @param numberOfElements This argument indicates how many values
      * are in both the input array and the output array.
-     * 
+     *
      * @param toDataPtr This argument is a pointer to the C-style array
      * of output values.
-     * 
+     *
      * @param fromByteOrder This argument indicates the current byte
      * order of the values in the array.
-     * 
+     *
      * @param toByteOrder This argument specifies the desired final byte
      * order for the data in the array.
      */
@@ -119,7 +119,7 @@ namespace brick {
 
 
   } // namespace common
-  
+
 } // namespace brick
 
 
@@ -133,7 +133,7 @@ namespace brick {
 
     /// @cond privateCode
     namespace privateCode {
-    
+
       /**
        * This is an "under-the-hood" implementation function for the
        * switchByteOrder() function template.  It is not part of the
@@ -158,7 +158,7 @@ namespace brick {
         BRICK_THROW(NotImplementedException, "genericSwitchByteOrder()",
                     message.str().c_str());
       }
-  
+
 
       template <>
       inline void
@@ -332,7 +332,7 @@ namespace brick {
     } // namespace privateCode
     /// @endcond
 
-  
+
     // This function returns the appropriate byte order for the platform
     // on which it is run.
     inline ByteOrder
@@ -358,7 +358,7 @@ namespace brick {
       return returnValue;
     }
 
-    
+
     // This function takes a pointer to a C-style array of values and
     // modifies the array in place so that it has a particular byte
     // order.
@@ -374,7 +374,7 @@ namespace brick {
         fromByteOrder, toByteOrder);
     }
 
-    
+
     // This function takes a pointer to a C-style array of values and
     // copies it into another C-style array, swapping bytes if necessary
     // so that the output array has the specified byte order.
@@ -391,9 +391,9 @@ namespace brick {
         reinterpret_cast<UnsignedInt8*>(toDataPtr), fromByteOrder, toByteOrder);
     }
 
-    
+
   } // namespace common
-  
+
 } // namespace brick
-    
+
 #endif /* #ifndef BRICK_COMMON_BYTEORDER_HH */

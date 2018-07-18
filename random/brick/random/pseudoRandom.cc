@@ -35,7 +35,7 @@ namespace brick {
         static_cast<brick::common::Int32>(currentTime);
       brick::common::Int32 uSeconds =
         static_cast<brick::common::Int32>(1000000.0 * (currentTime - seconds));
-    
+
       // All seeds must be in the range [0, 4096).
       brick::common::Int32 seed0 =
         static_cast<brick::common::Int32>(seconds & 0x00000fff);
@@ -71,7 +71,7 @@ namespace brick {
       this->setCurrentSeed(seed);
     }
 
-  
+
     // This member function returns a Float64 drawn from a Gaussian
     // distribution with the specified mean and standard deviation.
     brick::common::Float64
@@ -96,7 +96,7 @@ namespace brick {
       seed += static_cast<brick::common::Int64>((m_seed[3] & 0x0ffe) >> 1);
       return seed;
     }
-  
+
 
     // This member function returns a Float64 drawn from a Gaussian
     // distribution with equal to 0.0 and and standard deviation equal to
@@ -132,8 +132,8 @@ namespace brick {
         static_cast<brick::common::Int32>((seed & 0x00000007ff800000LL) >> 23);
       brick::common::Int32 seed2 =
         static_cast<brick::common::Int32>((seed & 0x00000000007ff800LL) >> 11);
-    
-      // Seed3 must be odd, 
+
+      // Seed3 must be odd,
       brick::common::Int32 seed3 =
         static_cast<brick::common::Int32>(((seed & 0x00000000000007ffLL) << 1)
                                           + 1);
@@ -145,7 +145,7 @@ namespace brick {
       // }
     }
 
-  
+
     // This member function returns a Float64, x, drawn from a uniform
     // distribution.
     brick::common::Float64
@@ -199,7 +199,7 @@ namespace brick {
       m_seed[3] = seed3;
     }
 
-    
+
   } // namespace random
-    
+
 } // namespace brick

@@ -37,7 +37,7 @@ namespace brick {
       // ========= Public typedefs. =========
 
       /**
-       ** This typedef simply mirrors template argument Sample. 
+       ** This typedef simply mirrors template argument Sample.
        **/
       typedef Sample SampleType;
 
@@ -53,14 +53,14 @@ namespace brick {
 
       // ========= Public member functions. =========
 
-      /** 
+      /**
        * The constructor specifies the full population of samples from
        * which to randomly select.  The input sequence will be copied
        * to internal storage.
-       * 
+       *
        * @param beginIter This argument and the next specify a
        * sequence from which to copy the sample population.
-       * 
+       *
        * @param endIter This argument and the previous specify a
        * sequence from which to copy the sample population.
        */
@@ -68,12 +68,12 @@ namespace brick {
       RandomSampleSelector(IterType beginIter, IterType endIter);
 
 
-      /** 
+      /**
        * This member function returns a SampleSequenceType instance
        * containing the entire population passed to the constructor.
        * This sequence will remain valid at least until the next call
        * to getRandomSample() or getSubset().
-       * 
+       *
        * @return The return value is a sequence containing the entire
        * population.
        */
@@ -81,10 +81,10 @@ namespace brick {
       getPool();
 
 
-      /** 
+      /**
        * This member function returns a the number of samples in the
        * entire population passed to the constructor.
-       * 
+       *
        * @return The return value is the size of the entire
        * population.
        */
@@ -92,15 +92,15 @@ namespace brick {
       getPoolSize();
 
 
-      /** 
+      /**
        * This member function returns a SampleSequenceType instance
        * drawn randomly (without replacement) from the sample
        * population.  This sequence will remain valid at least until
        * the next call to getRandomSample() or getSubset().
-       * 
+       *
        * @param sampleSize This argument specifies how many elements
        * should be in the returned sequence.
-       * 
+       *
        * @return The return value is a sequence containing the the
        * requested number of randomly selected samples.
        */
@@ -108,7 +108,7 @@ namespace brick {
       getRandomSample(size_t sampleSize);
 
 
-      /** 
+      /**
        * This member function has very limited usefulness.  Following
        * a call to getPool(), you can compute a sequence of bools (or
        * values that will implicitly cast to bools) indicating which
@@ -120,33 +120,33 @@ namespace brick {
        * been a call to either getRandomSample() or getSubset() more
        * recently than your last call to getPool(), then this function
        * will return unexpected results.
-       * 
+       *
        * @param beginIter This argument and the next are the
        * pair of indicators specifying which elements should be in
        * the output sequence.  Elements for which the indicator is
        * true will be included in the sequence, while elements for
        * which the indicator is false will not.
-       * 
+       *
        * @param endIter This argument and the previous are the
        * pair of indicators specifying which elements should be in
        * the output sequence.
-       * 
+       *
        * @return The return value is a sequence containing the
        * requested samples.
        */
       template<class IterType>
       SampleSequenceType
       getSubset(IterType beginIter, IterType endIter);
-      
+
     private:
-      
+
       brick::random::PseudoRandom m_pseudoRandom;
       std::vector<SampleType> m_sampleVector;
 
     };
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

@@ -21,7 +21,7 @@ namespace num = brick::numeric;
 namespace brick {
 
   namespace computerVision {
-    
+
     class EightPointAlgorithmTest
       : public brick::test::TestFixture<EightPointAlgorithmTest> {
 
@@ -36,14 +36,14 @@ namespace brick {
       // Tests.
       void testEightPointAlgorithm();
       void testNormalizePointSequence();
-      
+
     private:
 
       void
       getTestPoints(std::vector< num::Vector2D<cmn::Float64> >& uVector,
                     std::vector< num::Vector2D<cmn::Float64> >& uPrimeVector,
                     num::Array2D<cmn::Float64>& FOrig);
-      
+
       bool
       isApproximatelyEqual(const num::Array1D<cmn::Float64>& array0,
                            const num::Array1D<cmn::Float64>& array1);
@@ -52,9 +52,9 @@ namespace brick {
       isApproximatelyEqual(const num::Array2D<cmn::Float64>& array0,
                            const num::Array2D<cmn::Float64>& array1);
 
-      
+
       cmn::Float64 m_defaultTolerance;
-      
+
     }; // class EightPointAlgorithmTest
 
 
@@ -78,7 +78,7 @@ namespace brick {
       std::vector< num::Vector2D<cmn::Float64> > uVector;
       std::vector< num::Vector2D<cmn::Float64> > uPrimeVector;
       this->getTestPoints(uVector, uPrimeVector, FOrig);
-      
+
       // Try to recover FOrig.
       num::Array2D<cmn::Float64> FEstimate = eightPointAlgorithm<cmn::Float64>(
         uVector.begin(), uVector.end(), uPrimeVector.begin());
@@ -93,7 +93,7 @@ namespace brick {
         uPrime[0] = uPrimeVector[ii].x();
         uPrime[1] = uPrimeVector[ii].y();
         uPrime[2] = 1.0;
-        
+
         num::Array1D<cmn::Float64> lineCoeffs =
           num::matrixMultiply<cmn::Float64>(FEstimate, uu);
         cmn::Float64 residual = num::dot<cmn::Float64>(uPrime, lineCoeffs);
@@ -133,7 +133,7 @@ namespace brick {
                                        " [ -1.0, -2.0, 1.0],"
                                        " [ -2.0, -22.0, 1.0]]");
 
-      
+
       // Normalize these points.
       num::Array2D<cmn::Float64> outputPoints;
       num::Array2D<cmn::Float64> transform;
@@ -219,7 +219,7 @@ namespace brick {
       for(size_t ii = 0; ii < uVector.size(); ++ii) {
         uVector[ii] += num::Vector2D<cmn::Float64>(10.0, 20.0);
       }
-      
+
       // Create a series of matching "u'" points, ostensibly coming
       // from the other image.
       uPrimeVector.resize(uVector.size());
@@ -239,15 +239,15 @@ namespace brick {
         // if
         //
         //   lineCoords == [c_0, c_1, c_2],
-        // 
+        //
         // and
-        // 
+        //
         //   uPrime == [alpha * k_0, (1.0 - alpha) * k_0, 1]
-        // 
+        //
         // then
         //
         //   c_0 * alpha * k_0 + c_1 * (1.0 - alpha) * k_0 + c_2 = 0
-        // 
+        //
         //   k_0 * ((c_0 - c_1) * alpha + c_1) + c_2 = 0
         //
         //   k_0 = -c_2 / ((c_0 - c_1) * alpha + c_1)
@@ -278,7 +278,7 @@ namespace brick {
         }
       }
     }
-    
+
 
     bool
     EightPointAlgorithmTest::
@@ -292,7 +292,7 @@ namespace brick {
                         ApproximatelyEqualFunctor<cmn::Float64>(1.0E-10));
     }
 
-  
+
     bool
     EightPointAlgorithmTest::
     isApproximatelyEqual(const num::Array2D<cmn::Float64>& array0,
@@ -307,7 +307,7 @@ namespace brick {
       return std::equal(array0.begin(), array0.end(), array1.begin(),
                         ApproximatelyEqualFunctor<cmn::Float64>(1.0E-10));
     }
-  
+
   } // namespace computerVision
 
 } // namespace brick
@@ -331,4 +331,3 @@ namespace {
 }
 
 #endif
-

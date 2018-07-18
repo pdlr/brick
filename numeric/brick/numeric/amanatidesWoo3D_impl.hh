@@ -17,13 +17,13 @@
 // This file is included by amanatidesWoo3D.hh, and should not be
 // directly included by user code, so no need to include
 // amanatidesWoo3D.hh here.
-// 
+//
 // #include <brick/numeric/amanatidesWoo3D.hh>
 
 namespace brick {
 
   namespace numeric {
-    
+
     template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
     AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     AmanatidesWoo3D(ARRAY3D& data,
@@ -32,7 +32,7 @@ namespace brick {
                     const Vector3D<FLOAT_TYPE>& rayDirection,
                     bool downstreamOnly)
       : m_data(data),
-        m_initialU(-1),  // Initialize to illegal values.  These will be 
+        m_initialU(-1),  // Initialize to illegal values.  These will be
         m_initialV(-1),  // replaced with legal ones if there's a valid
         m_initialW(-1),  // intersection between the ray and the voxel
         // array.
@@ -46,7 +46,7 @@ namespace brick {
         m_tMaxV(),
         m_tMaxW(),
         m_tStart(),
-        m_validIntersection(true)    
+        m_validIntersection(true)
     {
       // First convert everything into voxel coordinates.
       Vector3D<FLOAT_TYPE> rayOriginVoxel = voxelTworld * rayOrigin;
@@ -92,7 +92,7 @@ namespace brick {
       if(entryPoint.z() < 0.0) {
         entryPoint.setZ(0.0);
       }
-    
+
       // Finally, assign the variables described in the Amanatides' and
       // Woo's paper.
 
@@ -126,10 +126,10 @@ namespace brick {
         m_validIntersection = false;
         return;
       }
-    
+
       // m_tStart is just the same as tEntry.
       m_tStart = tEntry_tExit.first;
-    
+
       // The remaining variables depend on whether U & V will be
       // increasing or decreasing as we travel along the ray, so we need
       // if clauses.  Please see the declaration for documentation on
@@ -180,7 +180,7 @@ namespace brick {
         m_tMaxW = std::numeric_limits<FLOAT_TYPE>::max();
       }
     }
-    
+
     template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
     AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
     AmanatidesWoo3D(const AmanatidesWoo3D& source)
@@ -261,7 +261,7 @@ namespace brick {
       m_validIntersection = source.m_validIntersection;
       return *this;
     }
-    
+
     template <class ARRAY3D, class FLOAT_TYPE, class INT_TYPE>
     std::pair<FLOAT_TYPE, FLOAT_TYPE>
     AmanatidesWoo3D<ARRAY3D, FLOAT_TYPE, INT_TYPE>::
@@ -276,33 +276,33 @@ namespace brick {
       FLOAT_TYPE tIntersectU0 = findIntersection(
         rayOriginVoxel, rayDirectionVoxel, Vector3D<FLOAT_TYPE>(1.0, 0.0, 0.0),
         0.0, -std::numeric_limits<FLOAT_TYPE>::max());
-    
+
       // ... Find the intersection with the plane U = data.shape()[2],
       // or else a really big number if rayDirection is parallel to the
       // U axis.
       FLOAT_TYPE tIntersectU1 = findIntersection(
         rayOriginVoxel, rayDirectionVoxel, Vector3D<FLOAT_TYPE>(1.0, 0.0, 0.0),
         data.shape()[2], std::numeric_limits<FLOAT_TYPE>::max());
-    
+
       // ... Find the intersection with the plane V = 0, or else a
       // really small number if rayDirection is parallel to the V axis.
       FLOAT_TYPE tIntersectV0 = findIntersection(
         rayOriginVoxel, rayDirectionVoxel, Vector3D<FLOAT_TYPE>(0.0, 1.0, 0.0),
         0.0, -std::numeric_limits<FLOAT_TYPE>::max());
-    
+
       // ... Find the intersection with the plane V = data.shape()[1],
       // or else a really big number if rayDirection is parallel to the
       // V axis.
       FLOAT_TYPE tIntersectV1 = findIntersection(
         rayOriginVoxel, rayDirectionVoxel, Vector3D<FLOAT_TYPE>(0.0, 1.0, 0.0),
         data.shape()[1], std::numeric_limits<FLOAT_TYPE>::max());
-    
+
       // ... Find the intersection with the plane W = 0, or else a
       // really small number if rayDirection is parallel to the W axis.
       FLOAT_TYPE tIntersectW0 = findIntersection(
         rayOriginVoxel, rayDirectionVoxel, Vector3D<FLOAT_TYPE>(0.0, 0.0, 1.0),
         0.0, -std::numeric_limits<FLOAT_TYPE>::max());
-    
+
       // ... Find the intersection with the plane W = data.shape()[0],
       // or else a really big number if rayDirection is parallel to the
       // W axis.
@@ -354,7 +354,7 @@ namespace brick {
       }
       // else
       return (cConstant - dot<FLOAT_TYPE>(rayOrigin, bVector)) / denominator;
-    }      
+    }
 
   } // namespace numeric
 

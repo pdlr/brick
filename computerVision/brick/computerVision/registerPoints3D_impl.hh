@@ -17,7 +17,7 @@
 // This file is included by registerPoints3D.hh, and should not be
 // directly included by user code, so no need to include
 // registerPoints3D.hh here.
-// 
+//
 // #include <brick/computerVision/registerPoints3D.hh>
 
 #include <limits>
@@ -34,7 +34,7 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     /// @cond privateCode
     namespace privateCode {
 
@@ -95,7 +95,7 @@ namespace brick {
 
         // // Note(xxx): Need to implement more versions of
         // // eigenvectorsSymmetric()!
-        // 
+        //
         // Array2D<Float64> tempArray(matrixN.rows(), matrixN.columns());
         // tempArray.copy(matrixN);
         // eigenvectorsSymmetric(matrixN, eValues, eVectors);
@@ -118,11 +118,11 @@ namespace brick {
         xf.setValue(1, 3, bestFitTranslation.y());
         xf.setValue(2, 3, bestFitTranslation.z());
         return xf;
-      }        
-      
+      }
+
     } // namespace privateCode
     /// @endcond
-  
+
 
     template <class FloatType, class InIter0, class InIter1>
     brick::numeric::Transform3D<FloatType>
@@ -134,7 +134,7 @@ namespace brick {
         fromPointsBegin, fromPointsEnd, toPointsBegin, flags.begin());
     }
 
-  
+
     template <class FloatType, class InIter0, class InIter1, class InIter2>
     brick::numeric::Transform3D<FloatType>
     registerPoints3D(InIter0 fromPointsBegin, InIter0 fromPointsEnd,
@@ -180,21 +180,21 @@ namespace brick {
         if(*flagsIter) {
           Vector3D<FloatType>& fromPoint = *fromIter;
           Vector3D<FloatType>& toPoint = *toIter;
-        
+
           // Copy the first element in the current row.
           translatedFromPoints[arrayIndex] = fromPoint.x() - fromMean.x();
           translatedToPoints[arrayIndex] = toPoint.x() - toMean.x();
-        
+
           // Advance to next element in the current row.
           ++arrayIndex;
           translatedFromPoints[arrayIndex] = fromPoint.y() - fromMean.y();
           translatedToPoints[arrayIndex] = toPoint.y() - toMean.y();
-        
+
           // Advance to next element in the current row.
           ++arrayIndex;
           translatedFromPoints[arrayIndex] = fromPoint.z() - fromMean.z();
           translatedToPoints[arrayIndex] = toPoint.z() - toMean.z();
-        
+
           // Wrap around to next row.
           ++arrayIndex;
         }
@@ -209,7 +209,7 @@ namespace brick {
       return privateCode::estimateTransformFromZeroMeanPointArrays(
         translatedFromPoints, translatedToPoints, fromMean, toMean);
     }
-  
+
 
     template <class FloatType, class InIter0, class InIter1, class InIter2>
     brick::numeric::Transform3D<FloatType>
@@ -258,7 +258,7 @@ namespace brick {
         FloatType weight = *weightsIter;
         Vector3D<FloatType> const& fromPoint = *fromIter;
         Vector3D<FloatType> const& toPoint = *toIter;
-        
+
         // Copy the first element in the current row.  We know that,
         // later on, the thing we care about is the matrix product of
         // translatedFromPoints.transpose() and translatedToPoints.
@@ -270,19 +270,19 @@ namespace brick {
         translatedFromPoints[arrayIndex] =
           weight * (fromPoint.x() - fromMean.x());
         translatedToPoints[arrayIndex] = toPoint.x() - toMean.x();
-        
+
         // Advance to next element in the current row.
         ++arrayIndex;
-        translatedFromPoints[arrayIndex] = 
+        translatedFromPoints[arrayIndex] =
           weight * (fromPoint.y() - fromMean.y());
         translatedToPoints[arrayIndex] = toPoint.y() - toMean.y();
-        
+
         // Advance to next element in the current row.
         ++arrayIndex;
         translatedFromPoints[arrayIndex] =
           weight * (fromPoint.z() - fromMean.z());
         translatedToPoints[arrayIndex] = toPoint.z() - toMean.z();
-        
+
         // Wrap around to next row.
         ++arrayIndex;
 
@@ -297,7 +297,7 @@ namespace brick {
       return privateCode::estimateTransformFromZeroMeanPointArrays(
         translatedFromPoints, translatedToPoints, fromMean, toMean);
     }
-  
+
 
     template <class FloatType, class InIter0, class InIter1, class OutIter0>
     brick::numeric::Transform3D<FloatType>
@@ -373,7 +373,7 @@ namespace brick {
           // No change.  We're done.
           break;
         }
-      
+
         // Reset flags so the next iteration will exclude points which
         // exceed the threshold.
         std::copy(newFlags.begin(), newFlags.end(), flags.begin());
@@ -382,8 +382,8 @@ namespace brick {
       std::copy(flags.begin(), flags.end(), selectedFlagsBegin);
       return resultTransform;
     }
-  
-  } // namespace computerVision    
+
+  } // namespace computerVision
 
 } // namespace brick
 

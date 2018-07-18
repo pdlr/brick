@@ -20,8 +20,8 @@
 namespace brick {
 
   namespace utilities {
-    
-    /** 
+
+    /**
      * This function formats a 1D array in a way that python can parse
      * into a built-in list.  The output will look something like this:
      *
@@ -31,7 +31,7 @@ namespace brick {
      * member functions, and an ArrayType::const_iter typedef.
      *
      * @param array0 This argument is the array to be formatted.
-     * 
+     *
      * @return The return value is a string containing the
      * python-friendly text.
      */
@@ -39,8 +39,8 @@ namespace brick {
     std::string
     toPythonList(const ArrayType& array0);
 
-  
-    /** 
+
+    /**
      * This function formats a 1D Array object in a way that python can
      * parse into a Numpy array.  The output will look something like
      * this:
@@ -49,9 +49,9 @@ namespace brick {
      *
      * The array object must provide stl-style begin() and end()
      * member functions.
-     * 
+     *
      * @param array0 This argument is the array to be formatted.
-     * 
+     *
      * @return The return value is a string containing the
      * python-friendly text.
      */
@@ -59,8 +59,8 @@ namespace brick {
     std::string
     toPythonNumeric1DArray(const ArrayType& array0);
 
-  
-    /** 
+
+    /**
      * This function formats an 2D Array object in a way that python can
      * parse into a Numeric array.  The output will look something like
      * this:
@@ -77,9 +77,9 @@ namespace brick {
      *   array-like object that addresses a specific row of the array.
      *   This object must be compatible with the function toPythonList(),
      *   which is declared above.
-     * 
+     *
      * @param array0 This argument is the array to be formatted.
-     * 
+     *
      * @return The return value is a string containing the
      * python-friendly text.
      */
@@ -88,7 +88,7 @@ namespace brick {
     toPythonNumeric2DArray(const ArrayType& array0);
 
   } // namespace utilities
-  
+
 } // namespace brick
 
 
@@ -97,7 +97,7 @@ namespace brick {
 namespace brick {
 
   namespace utilities {
-    
+
     template<class ArrayType>
     std::string
     toPythonList(const ArrayType& array0)
@@ -117,7 +117,7 @@ namespace brick {
         // written to each line, so that we can politely insert carriage
         // returns.
         size_t lineCount = 0;
-        
+
         // Loop just enough to complete one line.
         while((iter != array0.end()) && (lineCount < 20)) {
 
@@ -195,7 +195,7 @@ namespace brick {
 
       // And return the formatted string.
       return outputStream.str();
-    }  
+    }
 
   } // namespace utilities
 

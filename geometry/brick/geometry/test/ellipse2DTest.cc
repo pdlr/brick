@@ -21,7 +21,7 @@
 namespace brick {
 
   namespace geometry {
-    
+
     class Ellipse2DTest : public brick::test::TestFixture<Ellipse2DTest> {
 
     public:
@@ -40,12 +40,12 @@ namespace brick {
 
       // Given a set of 2D points on an ellipse, estimate the
       // algebraic parameters a, b, c, d, e, and f, such that
-      // 
+      //
       //   a*x*x + b*x*y + c*y*y + d*x + e*y + f = 0.
       brick::numeric::Array1D<double>
       estimateAlgebraicParameters(
         std::vector< brick::numeric::Vector2D<double> > const& samplePoints);
-      
+
       // Given an algebraic parameterization of an ellipse and an X
       // coordinate, find the corresponding Y coordinates (if the X
       // coordinate is within the range of the ellipse, else return
@@ -56,10 +56,10 @@ namespace brick {
         brick::numeric::Array1D<double> const& algebraicParameters,
         double& yy0,
         double& yy1);
-      
+
       const double m_defaultTolerance;
       const double m_relaxedTolerance;
-      
+
     }; // class Ellipse2DTest
 
 
@@ -163,7 +163,7 @@ namespace brick {
       // recovered correctly.  This is important because there is some
       // trigonometry in the estimation that might fail in specific
       // quadrants only.
-      
+
       double semimajorAxisMagnitude = 45.0;
       double semiminorAxisMagnitude = 30.0;
       brick::numeric::Vector2D<double> origin(100.0, 200.0);
@@ -223,7 +223,7 @@ namespace brick {
       }
     }
 
-    
+
     bool
     Ellipse2DTest::
     solveAlgebraicEllipse(
@@ -239,7 +239,7 @@ namespace brick {
                    + algebraicParameters[5]);
       return brick::numeric::solveQuadratic(c0, c1, c2, yy0, yy1);
     }
-    
+
   } // namespace geometry
 
 } // namespace brick

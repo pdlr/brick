@@ -4,7 +4,7 @@
 *
 * Header file declaring OptimizerLM class.
 *
-* (C) Copyright 2003-2011 David LaRose, dlr@cs.cmu.edu
+* (C) Copyright 2003-2018 David LaRose, dlr@cs.cmu.edu
 * See accompanying LICENSE file for details.
 *
 ***************************************************************************
@@ -30,7 +30,58 @@ namespace brick {
      ** algorithm seeks the parameter value which minimizes the
      ** objective function.  The template parameter (Functor) defines
      ** the type to use as the objective function of the minimization,
-     ** and must support the GradientFunction interface.
+     ** and must support the following interface:
+     **
+     ** @code
+     **   struct MyFunctor
+     **     : public std::unary_function<ArrayType, ScalarType>
+     **   {
+     **     // This operator evaluates and returns the sum-of-squares
+     **     // error at the specified value of parameter vector theta.
+     **     ScalarType operator()(ArrayType const& theta);
+     **
+     **     // This method computes the gradient and Hessian matrix of
+     **     // this->operator(), where dEdX is the gradient, and
+     **     // d2EdX2 is the Hessian (second derivative) matrix.
+     **     void
+     **     computeGradientAndHessian(
+     **       ArrayType const& theta,
+     **       brick::numeric::Array1D<ScalarType>& dEdX,
+     **       brick::numeric::Array2D<ScalarType>& d2EdX2);
+     **   };
+     ** @endcode
+     **
+     ** In the example above, ArrayType is a vector or 1D array type that
+     ** supports the following interface:
+     **
+     **   ArrayType(std::size_t N): construct an N-element vector.
+     **   std::size_t size(): return the number of elements in the vector.
+     **   ArrayType::element_type& operator[](size_t ii): return a
+     **                        reference to the (ii)th element of the array.
+     **   const ArrayType::element_type& operator[](size_t ii) const:
+     **                        return a const reference to the (ii)th element
+     **                        of the array.
+     **
+     ** In the example above, ScalarType and the element_type of ArrayType
+     ** must both continuous scalar types, such as double or float, and
+     ** it must be possible to implicitly cast between them.
+     **
+     ** Here's an example of how you might use this OptimizerLM:
+     **
+     ** @code
+     **   MyFunctor ssdFunction;
+     **   OptimizerLM<MyFunctor> optimizer(ssdFunction);
+     **   optimizer.setStartPoint(myStartPoint);
+     **   myResult = optimizer.optimum();
+     ** @endcode
+     **
+     ** For code that implements automatic differentiation, and
+     ** removes the burden of computing gradient and Hessian, see the
+     ** AutoGradientFunctionLM class template.
+     **
+     ** For some old (and numerically poor) code that implements divided-
+     ** differences differentiation, see the GradientFunctionLM class
+     ** template.
      **
      ** [1] W. H. Press et al., Numerical Recipes in C The Art of
      ** Scientific Computing, Cambridge University Press, 1988.
@@ -66,9 +117,9 @@ namespace brick {
       explicit OptimizerLM(const Functor& functor);
 
 
-      /** 
+      /**
        * Copy constructor.  This constructor deep copies its argument.
-       * 
+       *
        * @param source The OptimizerLM instance to be copied.
        */
       OptimizerLM(const OptimizerLM& source);
@@ -81,8 +132,8 @@ namespace brick {
       virtual
       ~OptimizerLM();
 
-    
-//     /** 
+
+//     /**
 //      * This method returns the number of function calls required to
 //      * complete the previous minimization.  If the minimization
 //      * parameter "restarts" is 0, there will be only one element in
@@ -99,8 +150,8 @@ namespace brick {
 //     virtual std::vector<size_t>
 //     getNumberOfFunctionCalls() {return this->m_functionCallCount;}
 
-    
-//     /** 
+
+//     /**
 //      * This method returns the number of gradient calls required to
 //      * complete the previous minimization.  If the minimization
 //      * parameter "restarts" is 0, there will be only one element in
@@ -116,8 +167,8 @@ namespace brick {
 //      */
 //     virtual std::vector<size_t>
 //     getNumberOfGradientCalls() {return this->m_gradientCallCount;}
-    
-//     /** 
+
+//     /**
 //      * This method returns the number of iterations required to
 //      * complete the previous minimization.  If the minimization
 //      * parameter "restarts" is 0, there will be only one element in
@@ -137,30 +188,30 @@ namespace brick {
 
       /**
        * This method sets one of the termination criteria of the
-       * optimization.  
-       * 
+       * optimization.
+       *
        * @param maxIterations Each minimization will terminate after
        * this many iterations.
        */
       virtual void
       setMaxIterations(size_t maxIterations) {this->m_maxIterations = maxIterations;}
 
-      
+
       /**
        * This method sets one of the termination criteria of the
-       * optimization.  
-       * 
+       * optimization.
+       *
        * @param maxLambda Iteration will terminate if LM parameter
        * "lambda" increases beyound this amount.
        */
       virtual void
       setMaxLambda(FloatType maxLambda) {this->m_maxLambda = maxLambda;}
 
-      
+
       /**
        * This method sets one of the termination criteria of the
-       * optimization.  
-       * 
+       * optimization.
+       *
        * @param minDrop Iteration will terminate if error fails to
        * decrease by at least this proportion for "strikes"
        * consecutive iterations.
@@ -168,7 +219,7 @@ namespace brick {
       virtual void
       setMinDrop(FloatType minDrop) {this->m_minDrop = minDrop;}
 
-    
+
       /**
        * This method sets one of the termination criteria of the
        * optimization.  Iteration will stop if the magnitude of the
@@ -182,42 +233,42 @@ namespace brick {
       virtual void
       setMinimumGradientMagnitude(FloatType minimumGradientMagnitude);
 
-    
-      /** 
+
+      /**
        * This method sets minimization parameters.  Default values are
        * reasonable for functions which take values and arguments in the
        * "normal" range of 0 to 100 or so.
-       * 
-       * @param initialLambda This argument 
-       * 
+       *
+       * @param initialLambda This argument
+       *
        * @param maxIterations Each minimization will terminate after
        * this many iterations.
-       * 
+       *
        * @param maxLambda Iteration will terminate if LM parameter
        * "lambda" increases beyound this amount.
-       * 
+       *
        * @param minLambda This argument sets a limit on how small LM
        * parameter "lambda" is allowed to get.
-       * 
+       *
        * @param minError Iteration will terminate if the objective
        * function value goes below this level.
-       * 
+       *
        * @param minimumGradientMagnitude The value at which the
        * magnitude of the objective function gradient will be
        * considered small enough to terminate iteration.
-       * 
+       *
        * @param minDrop Iteration will terminate if error fails to
        * decrease by at least this proportion for "strikes"
        * consecutive iterations.
-       * 
+       *
        * @param strikes Iteration will terminate if error fails to
        * decrease by at least the proportion specified by "minDrip"
        * for this many consecutive iterations.
-       * 
+       *
        * @param maxBackSteps Iteration will terminate if the value of
        * LM parameter "lambda" must be increased this many times in a
        * row.
-       * 
+       *
        * @param verbosity This argument indicates the desired output
        * level.  Setting verbosity to zero mean that no standard output
        * should be generated.  Higher numbers indicate increasingly more
@@ -234,9 +285,9 @@ namespace brick {
                     size_t strikes = 3,
                     int maxBackSteps = -1,
                     int verbosity = 0);
-    
-    
-      /** 
+
+
+      /**
        * This method sets the initial conditions for the minimization.
        * Gradient based search will start at this location in parameter
        * space.
@@ -247,7 +298,7 @@ namespace brick {
       virtual void
       setStartPoint(const typename Functor::argument_type& startPoint);
 
-    
+
       /**
        * This method sets the amount of text printed to the standard
        * output during the optimization.  Currently this method does
@@ -262,32 +313,32 @@ namespace brick {
       virtual void
       setVerbosity(int verbosity) {this->m_verbosity = verbosity;}
 
-    
+
       /**
        * The assignment operator deep copies its argument.
-       * 
+       *
        * @param source The OptimizerLM instance to be copied.
-       * 
+       *
        * @return Reference to *this.
        */
       virtual OptimizerLM&
       operator=(const OptimizerLM& source);
-    
+
     protected:
 
-      /** 
+      /**
        * This protected member function is used to asses whether the
        * algorithm has reached convergence.
-       * 
+       *
        * @param theta This argument specifies the parameter values
        * (arguments to the objective function) being assessed.
-       * 
+       *
        * @param value This argument specifies the function value at the
        * point described by theta.
-       * 
+       *
        * @param gradient This argument specifies the function gradient
        * at the point described by theta.
-       * 
+       *
        * @return The return value gets progressively smaller as we
        * approach a local minimum.
        */
@@ -296,11 +347,11 @@ namespace brick {
                                 const result_type& value,
                                 const argument_type& gradient);
 
-    
-      /** 
-       * Perform the optimization.  This virtual function overrides the 
+
+      /**
+       * Perform the optimization.  This virtual function overrides the
        * definition in Optimizer.
-       * 
+       *
        * @return A std::pair of the vector parameter which brings the
        * specified Functor to an optimum, and the corresponding optimal
        * Functor value.
@@ -317,7 +368,7 @@ namespace brick {
       template <class Type>
       inline void
       verboseWrite(const char* intro, const Type& subject, int verbosity);
-    
+
       // Data members.
       FloatType m_initialLambda;
       int m_maxBackSteps;
@@ -361,7 +412,7 @@ namespace brick {
 namespace brick {
 
   namespace optimization {
-  
+
     template <class Functor, class FloatType>
     OptimizerLM<Functor, FloatType>::
     OptimizerLM()
@@ -400,7 +451,7 @@ namespace brick {
     {
       this->setParameters();
     }
-  
+
 
     template <class Functor, class FloatType>
     OptimizerLM<Functor, FloatType>::
@@ -421,7 +472,7 @@ namespace brick {
       copyArgumentType(source.m_startPoint, this->m_startPoint);
     }
 
-  
+
     template <class Functor, class FloatType>
     OptimizerLM<Functor, FloatType>::
     ~OptimizerLM()
@@ -440,7 +491,7 @@ namespace brick {
       this->m_minGrad = minimumGradientMagnitude * minimumGradientMagnitude;
     }
 
-  
+
     template <class Functor, class FloatType>
     void
     OptimizerLM<Functor, FloatType>::
@@ -471,12 +522,12 @@ namespace brick {
 //     this->m_functionCallCount.clear();
 //     this->m_gradientCallCount.clear();
 //     this->m_iterationCount.clear();
-    
-      // We've changed the parameters, so we'll have to rerun the 
+
+      // We've changed the parameters, so we'll have to rerun the
       // optimization.  Indicate this by setting the inherited member
-      // m_needsOptimization.    
+      // m_needsOptimization.
       Optimizer<Functor>::m_needsOptimization = true;
-    }    
+    }
 
 
     template <class Functor, class FloatType>
@@ -491,9 +542,9 @@ namespace brick {
 //     this->m_gradientCallCount.clear();
 //     this->m_iterationCount.clear();
 
-      // We've changed the parameters, so we'll have to rerun the 
+      // We've changed the parameters, so we'll have to rerun the
       // optimization.  Indicate this by setting the inherited member
-      // m_needsOptimization.    
+      // m_needsOptimization.
       Optimizer<Functor>::m_needsOptimization = true;
     }
 
@@ -530,11 +581,11 @@ namespace brick {
     {
       // Check that we have a valid startPoint.
       if(this->m_startPoint.size() == 0) {
-        BRICK_THROW(brick::common::StateException, 
+        BRICK_THROW(brick::common::StateException,
 		    "OptimizerLM<Functor, FloatType>::run()",
 		    "startPoint has not been initialized.");
       }
-    
+
       // Initialize working location so that we start at the right place.
       argument_type theta(this->m_startPoint.size());
       copyArgumentType(this->m_startPoint, theta);
@@ -588,7 +639,7 @@ namespace brick {
           // Solve B * deltaX = dEdX'
           copyArgumentType(dEdX, deltaX);
 	  brick::linearAlgebra::linearSolveInPlace(BMatrix, deltaX);
-        
+
           // We have a new candidate location in the error space.
           for(size_t elementIndex = 0; elementIndex < theta.size();
               ++elementIndex) {
@@ -636,7 +687,7 @@ namespace brick {
 //       if(m_iterationFunctorPtr != 0) {
 //         m_iterationFunctorPtr(theta);
 //       }
-    
+
         // Test termination conditions.
         FloatType drop =
           (errorHistory[iterationIndex] - errorValue)
@@ -650,9 +701,9 @@ namespace brick {
           strikes = 0;
         }
 
-        if(lambda >= this->m_maxLambda 
-           || strikes == this->m_strikes 
-           || errorHistory[iterationIndex] <= this->m_minError 
+        if(lambda >= this->m_maxLambda
+           || strikes == this->m_strikes
+           || errorHistory[iterationIndex] <= this->m_minError
            || (this->m_maxBackSteps >= 0 && backtrackCount >= this->m_maxBackSteps)) {
           if(this->m_verbosity >= 1) {
             std::cout << "Stopping with lambda = " << lambda

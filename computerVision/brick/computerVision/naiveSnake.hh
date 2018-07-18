@@ -42,20 +42,20 @@ namespace brick {
 
       std::vector<FloatType>
       getBetaVector() {return m_betaVector;}
-      
-      
+
+
       bool
       isConverged() {return m_isConverged;}
 
-        
+
       std::vector< brick::numeric::Vector2D<FloatType> >
       run();
 
-      
+
       std::vector< brick::numeric::Vector2D<FloatType> >
       runOneIteration();
-      
-      
+
+
       void
       setBendingConstant(FloatType beta);
 
@@ -77,7 +77,7 @@ namespace brick {
       setExternalForceConstant(FloatType kappa)
         {m_kappa = kappa; m_isConverged = false;}
 
-    
+
       // void
       // setFixedEndpoints(bool isFixed=true)
       //   {m_isFixed = isFixed; m_isConverged = false;}
@@ -103,7 +103,7 @@ namespace brick {
       void
       setMinimumSpanLength(size_t spanLength)
         {m_minSpanLength = spanLength; m_isConverged = false;}
-      
+
 
       void
       setSeedPoints(const std::vector< brick::numeric::Vector2D<FloatType> >& seedPoints);
@@ -112,11 +112,11 @@ namespace brick {
       void
       setSeedPoints(const std::vector< brick::numeric::Vector2D<FloatType> >& seedPoints,
                     const std::vector<bool> cornerFlags);
-      
+
 
       void
       setStepsPerIteration(size_t numSteps) {m_contourIterations = numSteps;}
-    
+
 
       void
       setStretchingConstant(FloatType alpha)
@@ -142,29 +142,29 @@ namespace brick {
       adjustBetas(const std::vector< brick::numeric::Vector2D<FloatType> >& snake,
                   std::vector<FloatType>& betaVector);
 
-      
+
       brick::numeric::Array2D<FloatType>
       buildForceBalanceMatrix(size_t numberOfSnakePoints);
 
-      
+
       void
       buildForceBalanceRHS(const std::vector< brick::numeric::Vector2D<FloatType> >& snake,
                            brick::numeric::Array1D<FloatType>& xRHS,
                            brick::numeric::Array1D<FloatType>& yRHS);
 
-      
+
       bool
       isConverged(const std::vector< brick::numeric::Vector2D<FloatType> >& snake,
                   const std::vector< brick::numeric::Vector2D<FloatType> >& oldSnake);
-    
+
 
       std::pair< std::vector< brick::numeric::Vector2D<FloatType> >, std::vector<FloatType> >
       resampleSnake();
 
       void
       updateSnakePosition(std::vector< brick::numeric::Vector2D<FloatType> >& snake);
-    
-      
+
+
       FloatType m_alpha;
       FloatType m_beta;
       std::vector<FloatType> m_betaVector;
@@ -187,7 +187,7 @@ namespace brick {
     };
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

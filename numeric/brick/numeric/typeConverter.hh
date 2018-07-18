@@ -30,12 +30,12 @@ namespace brick {
     };
 
 
-    /** 
+    /**
      * Convenience function to allow syntactically pleasant use of the
      * TypeConverter class template.
-     * 
+     *
      * @param arg This argument is the value to be converted.
-     * 
+     *
      * @return The return value is the result of the conversion.
      */
     template <class Type0, class Type1>
@@ -44,8 +44,8 @@ namespace brick {
       return (TypeConverter<Type0, Type1>()).operator()(arg);
     }
 
-    
-    // == Specializations of TypeConverter == 
+
+    // == Specializations of TypeConverter ==
 
     template <>
     struct TypeConverter<common::Int8, common::Float32> {
@@ -60,7 +60,7 @@ namespace brick {
         return static_cast<common::Int8>(arg + 0.5);
       }
     };
-    
+
     template <>
     struct TypeConverter<common::Int16, common::Float32> {
       common::Int8 operator()(common::Float32 const& arg) {
@@ -116,7 +116,7 @@ namespace brick {
         return static_cast<common::UInt8>(arg + 0.5);
       }
     };
-    
+
     template <>
     struct TypeConverter<common::UInt16, common::Float32> {
       common::UInt8 operator()(common::Float32 const& arg) {

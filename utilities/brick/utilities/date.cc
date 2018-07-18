@@ -193,7 +193,7 @@ namespace brick {
       return stream;
     }
 
-    
+
   } // namespace utilities
-    
+
 } // namespace brick

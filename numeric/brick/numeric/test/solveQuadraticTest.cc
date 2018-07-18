@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file solveQuadraticTest.cpp
+* @file brick/numeric/test/solveQuadraticTest.cpp
 *
 * Source file tests for solveQuadratic function templates.
 *
@@ -38,7 +38,7 @@ namespace brick {
     private:
 
       double m_defaultTolerance;
-    
+
     }; // class SolveQuadraticTest
 
 
@@ -94,7 +94,7 @@ namespace brick {
       BRICK_TEST_ASSERT(approximatelyEqual(root0, -7.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(approximatelyEqual(root1, -2.0, m_defaultTolerance));
 
-      
+
       // Test for (2x + 4i)(4x - 8i) = 0;
       c0 = 8.0;
       c1 = 0.0;
@@ -238,9 +238,9 @@ namespace brick {
       BRICK_TEST_ASSERT(
         approximatelyEqual(root1.getImaginaryPart(), 2.0, m_defaultTolerance));
     }
-    
+
   } // namespace numeric
-  
+
 } // namespace brick
 
 

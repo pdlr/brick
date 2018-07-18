@@ -30,54 +30,54 @@ namespace brick {
     class ComplexNumber
     {
     public:
-      /** 
+      /**
        * The default constructor sets value to 0 + 0i.
        */
       ComplexNumber()
         : m_realPart(0), m_imaginaryPart(0) {}
 
-      
-      /** 
+
+      /**
        * This constructor allows real and imaginary parts to be
        * explicitly set.
-       * 
+       *
        * @param rr This specifies what the real part of the complex number
        * will be set to.
-       * 
+       *
        * @param ii This specifies what the imaginary part of the complex number
        * will be set to.
        */
       ComplexNumber(Type const& rr, Type const& ii)
         : m_realPart(rr), m_imaginaryPart(ii) {}
-      
-     
-      /** 
+
+
+      /**
        * Destroys the ComplexNumber instance.
        */
       ~ComplexNumber() {}
 
 
-      /** 
+      /**
        * Returns the real part of the complex number by value.
-       * 
+       *
        * @return The return value is the real component of the complex
        * number.
        */
       Type const&
       getRealPart() const {return this->m_realPart;}
-    
 
-      /** 
+
+      /**
        * Returns the imaginary part of the complex number by value.
-       * 
+       *
        * @return The return value is the imaginary component of the
        * complex number.
        */
       Type const&
       getImaginaryPart() const {return this->m_imaginaryPart;}
-    
 
-      /** 
+
+      /**
        * Sets the real part of the complex number.
        *
        * @param rr This specifies what the real part of the complex
@@ -93,7 +93,7 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * Sets the imaginary part of the complex number.
        *
        * @param ii This specifies what the imaginary part of the
@@ -107,9 +107,9 @@ namespace brick {
         this->m_imaginaryPart = ii;
         return this->m_imaginaryPart;
       }
-      
 
-      /** 
+
+      /**
        * Sets the real and imaginary parts of the complex number.
        *
        * @param rr This specifies what the real part of the complex
@@ -126,12 +126,12 @@ namespace brick {
         this->m_imaginaryPart = ii;
         return *this;
       }
-      
+
     private:
 
       Type m_realPart;
       Type m_imaginaryPart;
-      
+
     };
 
 
@@ -166,10 +166,10 @@ namespace brick {
       Type rootR = squareRoot(rr);
       Type xOverTwo = xx / Type(2);
       return ComplexNumber<Type>(rootR * cosine(xOverTwo),
-                                 rootR * sine(xOverTwo)); 
+                                 rootR * sine(xOverTwo));
     }
-    
-    
+
+
     template <class Type>
     ComplexNumber<Type>
     operator-(ComplexNumber<Type> const& arg0) {
@@ -177,7 +177,7 @@ namespace brick {
         -arg0.getRealPart(), -arg0.getImaginaryPart());
     }
 
-    
+
     template <class Type>
     ComplexNumber<Type>
     operator+(ComplexNumber<Type> const& arg0,
@@ -187,7 +187,7 @@ namespace brick {
         arg0.getImaginaryPart() + arg1.getImaginaryPart());
     }
 
-    
+
     template <class Type>
     ComplexNumber<Type>
     operator-(ComplexNumber<Type> const& arg0,
@@ -197,7 +197,7 @@ namespace brick {
         arg0.getImaginaryPart() - arg1.getImaginaryPart());
     }
 
-    
+
     template <class Type>
     ComplexNumber<Type>
     operator*(ComplexNumber<Type> const& arg0,
@@ -209,7 +209,7 @@ namespace brick {
         + arg0.getImaginaryPart() * arg1.getRealPart());
     }
 
-    
+
     template <class Type>
     ComplexNumber<Type>
     operator/(ComplexNumber<Type> const& arg0,
@@ -225,7 +225,7 @@ namespace brick {
       return ComplexNumber<Type>(realPart, imaginaryPart);
     }
 
-    
+
     template <class Type>
     ComplexNumber<Type>
     operator+(Type const& arg0, ComplexNumber<Type> const& arg1) {
@@ -233,7 +233,7 @@ namespace brick {
         arg0 + arg1.getRealPart(), arg1.getImaginaryPart());
     }
 
-    
+
     template <class Type>
     ComplexNumber<Type>
     operator-(Type const& arg0, ComplexNumber<Type> const& arg1) {
@@ -241,7 +241,7 @@ namespace brick {
         arg0 - arg1.getRealPart(), -(arg1.getImaginaryPart()));
     }
 
-    
+
     template <class Type>
     ComplexNumber<Type>
     operator*(Type const& arg0, ComplexNumber<Type> const& arg1) {
@@ -249,7 +249,7 @@ namespace brick {
         arg0 * arg1.getRealPart(), arg0 * arg1.getImaginaryPart());
     }
 
-    
+
     template <class Type>
     ComplexNumber<Type>
     operator/(Type const& arg0, ComplexNumber<Type> const& arg1) {
@@ -260,7 +260,7 @@ namespace brick {
       return ComplexNumber<Type>(realPart, imaginaryPart);
     }
 
-    
+
     template <class Type>
     ComplexNumber<Type>
     operator+(ComplexNumber<Type> const& arg0, Type const& arg1) {
@@ -268,7 +268,7 @@ namespace brick {
         arg0.getRealPart() + arg1, arg0.getImaginaryPart());
     }
 
-    
+
     template <class Type>
     ComplexNumber<Type>
     operator-(ComplexNumber<Type> const& arg0, Type const& arg1) {
@@ -276,7 +276,7 @@ namespace brick {
         arg0.getRealPart() - arg1, arg0.getImaginaryPart());
     }
 
-    
+
     template <class Type>
     ComplexNumber<Type>
     operator*(ComplexNumber<Type> const& arg0, Type const& arg1) {
@@ -284,7 +284,7 @@ namespace brick {
         arg0.getRealPart() * arg1, arg0.getImaginaryPart() * arg1);
     }
 
-    
+
     template <class Type>
     ComplexNumber<Type>
     operator/(ComplexNumber<Type> const& arg0, Type const& arg1) {
@@ -293,7 +293,7 @@ namespace brick {
     }
 
   } // namespace common
-    
+
 } // namespace brick
 
 

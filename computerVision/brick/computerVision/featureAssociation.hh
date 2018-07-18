@@ -20,7 +20,7 @@ namespace brick {
 
   namespace computerVision {
 
-    /** 
+    /**
      * This function template implements the feature association
      * algorithm of Guy Scott and H. Christopher Longuet-Higgins, as
      * described in [1].
@@ -49,30 +49,30 @@ namespace brick {
      * requires decomposing (via SVD) an N by M matrix, where N and M
      * are the lengths of the two input sequenceds.  This limits its
      * usefulness for large feature sets.
-     * 
+     *
      * [1] G. L. Scott and H. C. Longuet Higgins, "An Algorithm for
      * Associating the Features of Two Images," Proceedings of
      * Biological Sciences, Vol. 244, No. 1309, pp. 21-26, April,
      * 1991.
      *
-     * 
+     *
      * @param sequence0Begin This argument is an STL style iterator
      * pointing to the first element of the first feature sequence.
-     * 
+     *
      * @param sequence0End This argument is an STL style iterator
      * pointing one-past-the-last element of the first feature
      * sequence.
-     * 
+     *
      * @param sequence1Begin This argument is an STL style iterator
      * pointing to the first element of the second feature sequence.
-     * 
+     *
      * @param sequence1End This argument is an STL style iterator
      * pointing one-past-the-last element of the second feature
      * sequence.
-     * 
+     *
      * @param similarityFunctor This argument specifies a functor that
      * takes two features and computes their similarity.
-     * 
+     *
      * @return The return value is a vector of pairs of indices in
      * which each pair of indices indicates a pair of corresponding
      * features.  The first element of the pair is an index into
@@ -87,9 +87,9 @@ namespace brick {
     associateFeaturesScott91(Iterator0 sequence0Begin, Iterator0 sequence0End,
                              Iterator1 sequence1Begin, Iterator1 sequence1End,
                              Functor similarityFunctor);
-    
+
   } // namespace computerVision
-    
+
 } // namespace brick
 
 

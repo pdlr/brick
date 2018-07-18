@@ -17,7 +17,7 @@
 // This file is included by staticArray1D.hh, and should not be
 // directly included by user code, so no need to include
 // staticArray1D.hh here.
-// 
+//
 // #include <brick/numeric/staticArray1D.hh>
 
 #include <algorithm>
@@ -29,7 +29,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     // Static constant describing how the string representation of an
     // StaticArray1D should start.
     template <class Type>
@@ -41,7 +41,7 @@ namespace brick {
       return intro;
     }
 
-  
+
     // Static constant describing how the string representation of an
     // StaticArray1D should end.
     template <class Type>
@@ -53,7 +53,7 @@ namespace brick {
       return outro;
     }
 
-  
+
     // Non-static member functions below.
 
     template <class Type>
@@ -64,7 +64,7 @@ namespace brick {
       // Empty.
     }
 
-  
+
     // Construct from an initialization string.
     template <class Type>
     StaticArray1D<Type, Size>::
@@ -82,14 +82,14 @@ namespace brick {
         message << "Couldn't parse input string: \"" << inputString << "\".";
         BRICK_THROW3(ValueException,
                    "StaticArray1D::StaticArray1D(const std::string&)",
-                   message.str().c_str());                 
+                   message.str().c_str());
       }
 
       // If all went well, copy into *this.
       *this = inputStaticArray;
     }
 
-  
+
     // When copying from a StaticArray1D do a deep copy.
     template <class Type>
     StaticArray1D<Type, Size>::
@@ -99,7 +99,7 @@ namespace brick {
       std::copy(source.begin(), source.end(), m_dataArray);
     }
 
-  
+
     template <class Type>
     StaticArray1D<Type, Size>::
     ~StaticArray1D()
@@ -107,7 +107,7 @@ namespace brick {
       // Empty.
     }
 
-  
+
     template <class Type>
     StaticArray1D<Type, Size>& StaticArray1D<Type, Size>::
     operator=(Type val)
@@ -125,7 +125,7 @@ namespace brick {
       return *this;
     }
 
-  
+
     template <class Type> template <class Type2>
     StaticArray1D<Type, Size>&
     StaticArray1D<Type, Size>::
@@ -136,7 +136,7 @@ namespace brick {
       return *this;
     }
 
-  
+
     template <class Type>
     StaticArray1D<Type, Size>&
     StaticArray1D<Type, Size>::
@@ -147,7 +147,7 @@ namespace brick {
       return *this;
     }
 
-  
+
     template <class Type> template <class Type2>
     StaticArray1D<Type, Size>&
     StaticArray1D<Type, Size>::
@@ -158,7 +158,7 @@ namespace brick {
       return *this;
     }
 
-  
+
     template <class Type>
     StaticArray1D<Type, Size>&
     StaticArray1D<Type, Size>::
@@ -169,7 +169,7 @@ namespace brick {
       return *this;
     }
 
-  
+
     template <class Type> template <class Type2>
     StaticArray1D<Type, Size>&
     StaticArray1D<Type, Size>::
@@ -180,7 +180,7 @@ namespace brick {
       return *this;
     }
 
-  
+
     template <class Type>
     StaticArray1D<Type, Size>&
     StaticArray1D<Type, Size>::
@@ -191,7 +191,7 @@ namespace brick {
       return *this;
     }
 
-  
+
     template <class Type> template <class Type2>
     StaticArray1D<Type, Size>&
     StaticArray1D<Type, Size>::
@@ -202,7 +202,7 @@ namespace brick {
       return *this;
     }
 
-  
+
     template <class Type>
     StaticArray1D<Type, Size>&
     StaticArray1D<Type, Size>::
@@ -213,7 +213,7 @@ namespace brick {
       return *this;
     }
 
-  
+
     template <class Type>
     StaticArray1D<bool, Size> StaticArray1D<Type, Size>::
     operator>(const Type arg)
@@ -225,7 +225,7 @@ namespace brick {
       return result;
     }
 
-  
+
     template <class Type>
     StaticArray1D<bool, Size> StaticArray1D<Type, Size>::
     operator>=(const Type arg)
@@ -237,7 +237,7 @@ namespace brick {
       return result;
     }
 
-  
+
     template <class Type>
     StaticArray1D<bool, Size> StaticArray1D<Type, Size>::
     operator<(const Type arg)
@@ -249,7 +249,7 @@ namespace brick {
       return result;
     }
 
-  
+
     template <class Type>
     StaticArray1D<bool, Size> StaticArray1D<Type, Size>::
     operator<=(const Type arg)
@@ -261,7 +261,7 @@ namespace brick {
       return result;
     }
 
-  
+
     template <class Type>
     inline void StaticArray1D<Type, Size>::
     checkBounds(size_t index) const
@@ -279,7 +279,7 @@ namespace brick {
 
 
     /* ========== Non-member functions =========== */
-  
+
     template <class Type>
     StaticArray1D<Type, Size>
     operator+(const StaticArray1D<Type, Size>& staticArray0,
@@ -292,7 +292,7 @@ namespace brick {
       return result;
     }
 
-  
+
     template <class Type>
     StaticArray1D<Type, Size>
     operator-(const StaticArray1D<Type, Size>& staticArray0,
@@ -305,7 +305,7 @@ namespace brick {
       return result;
     }
 
-  
+
     template <class Type>
     StaticArray1D<Type, Size>
     operator*(const StaticArray1D<Type, Size>& staticArray0,
@@ -318,7 +318,7 @@ namespace brick {
       return result;
     }
 
-  
+
     template <class Type>
     StaticArray1D<Type, Size>
     operator/(const StaticArray1D<Type, Size>& staticArray0,
@@ -331,7 +331,7 @@ namespace brick {
       return result;
     }
 
-  
+
     template <class Type>
     StaticArray1D<Type, Size>
     operator+(const StaticArray1D<Type, Size>& staticArray0, Type scalar)
@@ -342,7 +342,7 @@ namespace brick {
       return result;
     }
 
-  
+
     template <class Type>
     StaticArray1D<Type, Size>
     operator-(const StaticArray1D<Type, Size>& staticArray0, Type scalar)
@@ -412,7 +412,7 @@ namespace brick {
                      std::bind1st(std::divides<Type>(), scalar));
       return result;
     }
-  
+
 
     template <class Type>
     std::ostream&
@@ -421,7 +421,7 @@ namespace brick {
     {
       // Most of the time, OutputType will be the same as Type.
       typedef typename NumericTraits<Type>::TextOutputType OutputType;
-    
+
       if (!stream){
         BRICK_THROW(IOException, "operator<<(std::ostream&, const StaticArray1D&)",
                   "Invalid stream\n");
@@ -456,7 +456,7 @@ namespace brick {
       if (!inputStream){
         return inputStream;
       }
-    
+
       // It's a lot easier to use a try block than to be constantly
       // testing whether the IO has succeeded, so we tell inputStream to
       // complain if anything goes wrong.
@@ -470,7 +470,7 @@ namespace brick {
 
         // Skip any preceding whitespace.
         inputStream >> common::Expect("", flags);
-      
+
         // We won't require the input format to start with
         // "StaticArray1D(", but if it does we read it here.
         bool foundIntro = false;
@@ -533,4 +533,3 @@ namespace brick {
 } // namespace brick
 
 #endif /* #ifdef BRICK_NUMERIC_STATICARRAY1D_IMPL_HH */
-

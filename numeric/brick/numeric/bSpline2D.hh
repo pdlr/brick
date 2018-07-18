@@ -60,12 +60,12 @@ namespace brick {
     class BSpline2D {
     public:
 
-      /** 
+      /**
        * This constructor builds a BSpline2D instance of unspecified
        * length and width.  Currently only bicubic splines are
        * supported; we do not provide any way to construct splines of
        * order different that 3.
-       * 
+       *
        * @param isIsotropic If this argument is true, the spatial
        * resolution of the spline control grid will be the same in
        * each of the two interpolated axes.  If this argument is set
@@ -78,15 +78,15 @@ namespace brick {
       explicit BSpline2D(bool isIsotropic = false);
 
 
-      /** 
+      /**
        * The copy constructor does a deep copy.
-       * 
+       *
        * @param other This argument is the BSpline2D instance to be copied.
        */
       BSpline2D(BSpline2D<Type, FloatType> const& other);
 
 
-      /** 
+      /**
        * This function allows the spline parameters to be
        * automatically set in order to approximate an irregularly
        * sampled function.  If you have some randomly distributed
@@ -96,7 +96,7 @@ namespace brick {
        * points it should have along each axis (set this using member
        * function setNumberOfNodes()), and then call
        * approximateScatteredData().
-       * 
+       *
        * @param sBegin This iterator specifies the beginning of a
        * sequence of (possibly non-uniformly distributed) S
        * coordinates of points at which observations of the
@@ -135,8 +135,8 @@ namespace brick {
                                ObsIter observationsBegin,
                                FloatType buffer = 1.0E-5);
 
-      
-      /** 
+
+      /**
        * This function allows the spline parameters to be
        * automatically set in order to approximate an irregularly
        * sampled function.  If you have some randomly distributed
@@ -146,7 +146,7 @@ namespace brick {
        * points it should have along each axis (set this using member
        * function setNumberOfNodes()), and then call
        * approximateScatteredData().
-       * 
+       *
        * @param sBegin This iterator specifies the beginning of a
        * sequence of (possibly non-uniformly distributed) S
        * coordinates of points at which observations of the
@@ -202,31 +202,31 @@ namespace brick {
        */
       bool getIsIsotropic() {return this->m_isIsotropic;}
 
-      
-      /** 
+
+      /**
        * This member queries the size of the underlying B-Spline
        * control grid.
-       * 
+       *
        * @param numberOfNodesS This argument returns how many nodes
        * the spline has along the S axis.
-       * 
+       *
        * @param numberOfNodesT This argument returns how many nodes
        * the spline has along the T axis.
        */
       void
       getNumberOfNodes(size_t& numberOfNodesS,
                        size_t& numberOfNodesT) const;
-      
-      
-      /** 
+
+
+      /**
        * This member function returns the maximum value for the spline
        * parameters S and T.  Calling operator()(FloatType, FloatType) with
        * arguments greater than or equal to those reported by
        * getMaximumSAndTValues() is an error.
-       * 
+       *
        * @param maximumS This argument is used to return the maximum
        * value of spline parameter S by reference.
-       * 
+       *
        * @param maximumT This argument is used to return the maximum
        * value of spline parameter T by reference.
        */
@@ -234,15 +234,15 @@ namespace brick {
       getMaximumSAndTValues(FloatType& maximumS, FloatType& maximumT) const;
 
 
-      /** 
+      /**
        * This member function returns the minimum value for the spline
        * parameters S and T.  Calling operator()(FloatType, FloatType) with
        * arguments less than those reported by getMinimumSAndTValues()
        * is an error.
-       * 
+       *
        * @param minimumS This argument is used to return the minimum
        * value of spline parameter S by reference.
-       * 
+       *
        * @param minimumT This argument is used to return the minimum
        * value of spline parameter T by reference.
        */
@@ -258,14 +258,14 @@ namespace brick {
        * to the function represented by a B-spline with twice the
        * resolution.
        */
-      void 
+      void
       promote();
 
 
-      /** 
+      /**
        * This member function sets the values of the control points of
        * the spline.
-       * 
+       *
        * @param controlPoints This argument specifies the control
        * point values for the spline.  It must have shape
        * (numberOfNodesS, numberOfNodesT), where numberOfNodesS and
@@ -276,7 +276,7 @@ namespace brick {
       setControlPoints(Array2D<Type> const& controlPoints);
 
 
-      /** 
+      /**
        * This member function both specifies the number of nodes in
        * the spline and sets the node positions so that the spline is
        * "uniform".  The node positions will be set so that the first
@@ -288,54 +288,54 @@ namespace brick {
        * interpolated s and t values starts at 0.0, and goes to
        * (numberOfNodesS - 3.0) and (numberOfNodesT - 3.0),
        * respectively.
-       * 
+       *
        * @param numberOfNodesS This argument specifies how many nodes
        * the spline should have along the S axis.
-       * 
+       *
        * @param numberOfNodesT This argument specifies how many nodes
        * the spline should have along the T axis.
        */
       void
       setNumberOfNodes(size_t numberOfNodesS,
                        size_t numberOfNodesT);
-      
 
-      /** 
+
+      /**
        * The assigment operator does a deep copy.
-       * 
+       *
        * @param other This argument is the BSpline2D instance to be copied.
        */
       BSpline2D<Type, FloatType>&
       operator=(BSpline2D<Type, FloatType> const& other);
 
-      
-      /** 
+
+      /**
        * This operator updates a spline so that its output is exactly
        * the sum of its original output and the output of another
        * spline.  The argument of this function must have the same
        * minimumXY, maximumXY, xyCellSize, and controlGrid size as
        * *this.
-       * 
+       *
        * @param other This argument is the BSpline2D instance to be
        * added to *this.
        */
       BSpline2D<Type, FloatType>&
       operator+=(BSpline2D<Type, FloatType> const& other);
 
-      
-      /** 
+
+      /**
        * This operator evaluates the spline at the specified values of
        * spline parameters S and T.
-       * 
+       *
        * @return The return value is the calculated spline value.
        */
       Type
       operator()(FloatType sValue, FloatType tValue) const;
-      
+
 
     protected:
 
-      /** 
+      /**
        * This protected member function returns the integer part of
        * sValue and tValue, while -- as a side effect -- setting
        * member variables m_powersOfS and m_powersOfT so that the i^th
@@ -343,23 +343,23 @@ namespace brick {
        * i^th power of the fractional part of sValue, and the i^th
        * element of m_powersOfT is equal to the i^th power of the
        * fractional part of tValue.
-       * 
+       *
        * @param sValue This argument is the value of spline parameter
        * S to be decomposed.
-       * 
+       *
        * @param tValue This argument  is the value of spline parameter
        * T to be decomposed.
-       * 
+       *
        * @param iIndex This argument is used to return the integer
        * part of sValue.  For uniform spline (which *this always is),
        * this is equivalent to the index of the span into which sValue
        * falls.
-       * 
+       *
        * @param jIndex This argument is used to return the integer
        * part of tValue.  For uniform spline (which *this always is),
        * this is equivalent to the index of the span into which tValue
        * falls.
-       * 
+       *
        * @param powersOfS This argument must point to a four-element
        * array, into which the first four powers of the scalar offset,
        * s, will be written.
@@ -382,9 +382,9 @@ namespace brick {
       Vector2D<FloatType> m_xyCellOrigin;
       Vector2D<FloatType> m_xyCellSize;
     };
-    
+
   } // namespace numeric
-  
+
 } // namespace brick
 
 // Include file containing definitions of inline and template

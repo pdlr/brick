@@ -16,7 +16,7 @@
 
 // This file is included by keypointMatcherFast.hh, and should not be directly included
 // by user code, so no need to include keypointMatcherFast.hh here.
-// 
+//
 // #include <brick/computerVision/keypointMatcherFast.hh>
 
 namespace brick {
@@ -35,7 +35,7 @@ namespace brick {
           *sequenceBegin);
         if(sequenceBegin->isPositive) {
           m_keypointMapPositive.insert(
-            std::make_pair(featureVectorMean, *sequenceBegin));          
+            std::make_pair(featureVectorMean, *sequenceBegin));
         } else {
           m_keypointMapNegative.insert(
             std::make_pair(featureVectorMean, *sequenceBegin));
@@ -47,7 +47,7 @@ namespace brick {
     // ============== Private member functions below this line ==============
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_KEYPOINTMATCHERFAST_IMPL_HH */

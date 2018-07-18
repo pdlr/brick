@@ -17,7 +17,7 @@
 // This file is included by extendedKalmanFilter.hh, and should not be
 // directly included by user code, so no need to include
 // extendedKalmanFilter.hh here.
-// 
+//
 // #include <brick/computerVision/extendedKalmanFilter.hh>
 
 #include <brick/computerVision/extendedKalmanFilter.hh>
@@ -40,7 +40,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // Use this member function tell the filter about a new
     // measurement, and to request that the state estimate be
     // updated to reflect this new measurement.
@@ -70,7 +70,7 @@ namespace brick {
                   "ExtendedKalmanFilter::checkProcessJacobians()",
                   "Argument epsilon has incorrect size.");
       }
-      
+
       // Get the symbolically computed Jacobians and check their sizes.
       brick::numeric::Array2D<FloatType> measurementJacobian0;
       brick::numeric::Array2D<FloatType> measurementJacobian1;
@@ -82,7 +82,7 @@ namespace brick {
       brick::numeric::Array1D<FloatType> measurement =
         this->applyMeasurementModel(
           measurementID, m_timestamp, m_previousTimestamp, m_state);
-      brick::numeric::Array2D<FloatType> measurementNoiseCovariance = 
+      brick::numeric::Array2D<FloatType> measurementNoiseCovariance =
         this->getMeasurementNoiseCovariance(
           measurementID, m_timestamp, m_previousTimestamp);
       if(measurementJacobian0.rows() != measurement.size()
@@ -95,7 +95,7 @@ namespace brick {
                   "At least one of the returned Jacobians has incorrect size.");
       }
 
-      // Generate finite-difference approximation to measurementJacobian0, the 
+      // Generate finite-difference approximation to measurementJacobian0, the
       // Jacobian wrt state.
       brick::numeric::Array2D<FloatType> approximateJacobian0(
         measurementJacobian0.rows(), measurementJacobian0.columns());
@@ -109,7 +109,7 @@ namespace brick {
             measurementID, m_timestamp, m_previousTimestamp, state);
 
         state[columnIndex] += 2.0 * epsilonArray[columnIndex];
-        brick::numeric::Array1D<FloatType> resultMeasurement1 = 
+        brick::numeric::Array1D<FloatType> resultMeasurement1 =
           this->applyMeasurementModel(
             measurementID, m_timestamp, m_previousTimestamp, state);
 
@@ -128,11 +128,11 @@ namespace brick {
       // identity matrix, which is hard to get wrong.  In cases where
       // it's not the identity matrix, we'll trust the user to write
       // her own test.
-      
+
       residualArray0 = approximateJacobian0 - measurementJacobian0;
     }
-      
-      
+
+
     template <class FloatType>
     void
     ExtendedKalmanFilter<FloatType>::
@@ -154,7 +154,7 @@ namespace brick {
         m_timestamp, m_previousTimestamp, m_state,
         processJacobian0, processJacobian1);
 
-      brick::numeric::Array2D<FloatType> processNoiseCovariance = 
+      brick::numeric::Array2D<FloatType> processNoiseCovariance =
         this->getProcessNoiseCovariance(m_timestamp, m_previousTimestamp);
       if(processJacobian0.rows() != m_state.size()
          || processJacobian0.columns() != m_state.size()
@@ -165,7 +165,7 @@ namespace brick {
                   "At least one of the returned Jacobians has incorrect size.");
       }
 
-      // Generate finite-difference approximation to processJacobian0, the 
+      // Generate finite-difference approximation to processJacobian0, the
       // Jacobian wrt state.
       brick::numeric::Array2D<FloatType> approximateJacobian0(
         processJacobian0.rows(), processJacobian0.columns());
@@ -174,12 +174,12 @@ namespace brick {
         brick::numeric::Array1D<FloatType> state = m_state.copy();
 
         state[columnIndex] -= epsilonArray[columnIndex];
-        brick::numeric::Array1D<FloatType> resultState0 = 
+        brick::numeric::Array1D<FloatType> resultState0 =
           this->applyProcessModel(m_timestamp, m_previousTimestamp, state,
                                   controlInput);
 
         state[columnIndex] += 2.0 * epsilonArray[columnIndex];
-        brick::numeric::Array1D<FloatType> resultState1 = 
+        brick::numeric::Array1D<FloatType> resultState1 =
           this->applyProcessModel(m_timestamp, m_previousTimestamp, state,
                                   controlInput);
 
@@ -196,11 +196,11 @@ namespace brick {
       // identity matrix, which is hard to get wrong.  In cases where
       // it's not the identity matrix, we'll trust the user to write
       // her own test.
-      
+
       residualArray0 = approximateJacobian0 - processJacobian0;
     }
 
-    
+
     // This member function may optionally be called to disable
     // updates of Kalman gain and estimation error covariance.
     template <class FloatType>
@@ -213,7 +213,7 @@ namespace brick {
                 "Sorry. Should be easy to implement, though.");
     }
 
-    
+
     // This member function returns the current state estimate for
     // the filter, as well as the estimated covariance of the state
     // estimate.
@@ -229,7 +229,7 @@ namespace brick {
       covariance = m_covariance.copy();
     }
 
-      
+
     // This member function sets the initial state estimate for the
     // filter, as well as the covariance of any Gaussian noise
     // reflected in the initial state estimate.
@@ -245,7 +245,7 @@ namespace brick {
       m_covariance = covariance.copy();
     }
 
-      
+
     // This member function may optionally be called to reverse the
     // effect of freezeKalmanGain().
     template <class FloatType>
@@ -257,7 +257,7 @@ namespace brick {
                 "ExtendedKalmanFilter::unfreezeKalmanGain()",
                 "Sorry. Should be easy to implement, though.");
     }
-      
+
 
     template <class FloatType>
     void
@@ -293,19 +293,19 @@ namespace brick {
       m_timestamp = currentTime;
       m_state = this->applyProcessModel(
         m_timestamp, m_previousTimestamp, m_state, controlInput);
-      
+
       // Note(xxx): Inefficient to transpose every time.
       brick::numeric::Array2D<FloatType> processJacobian0;
       brick::numeric::Array2D<FloatType> processJacobian1;
       this->getProcessJacobians(
         m_timestamp, m_previousTimestamp, m_state,
         processJacobian0, processJacobian1);
-      m_covariance = 
+      m_covariance =
         brick::numeric::matrixMultiply<FloatType>(
           brick::numeric::matrixMultiply<FloatType>(
             processJacobian0, m_covariance),
           processJacobian0.transpose());
-      m_covariance += 
+      m_covariance +=
         brick::numeric::matrixMultiply<FloatType>(
           brick::numeric::matrixMultiply<FloatType>(
             processJacobian1,
@@ -353,7 +353,7 @@ namespace brick {
       brick::numeric::Array2D<FloatType> VTranspose = VMatrix.transpose();
 
       // "Denominator" should be (H_k * Ppr_k * (H_k)^T) + (V_k * R_k * (V_k)^T)
-      brick::numeric::Array2D<FloatType> denominator = 
+      brick::numeric::Array2D<FloatType> denominator =
         brick::numeric::matrixMultiply<FloatType>(
           brick::numeric::matrixMultiply<FloatType>(HMatrix, m_covariance), HTranspose);
       denominator +=
@@ -367,8 +367,8 @@ namespace brick {
       brick::numeric::Array1D<FloatType> innovation =
         measurement - this->applyMeasurementModel(
           measurementID, m_timestamp, m_previousTimestamp, m_state);
-      
-      brick::numeric::Array2D<FloatType> kalmanGain = 
+
+      brick::numeric::Array2D<FloatType> kalmanGain =
         brick::numeric::matrixMultiply<FloatType>(
           brick::numeric::matrixMultiply<FloatType>(m_covariance, HTranspose),
                        linearAlgebra::inverse(denominator));
@@ -389,10 +389,9 @@ namespace brick {
       m_covariance = brick::numeric::matrixMultiply<FloatType>(kTimesHMinusI, m_covariance);
       m_covariance *= -1.0;
     }
-    
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_EXTENDEDKALMANFILTER_IMPL_HH */
-

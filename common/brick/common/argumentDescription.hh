@@ -19,19 +19,19 @@
 namespace brick {
 
   namespace common {
-  
-    /** 
+
+    /**
      * This function template is responsible deciding how to print
      * argument values during a stack trace.  The default is to use the
      * stream output operator, but you'll want to specialize it for
      * classes that don't implement a stream output operator, and for
      * classes whose stream output operators print inappropriate stuff.
-     * 
+     *
      * @param outputStream This argument is the stream to which the
      * argument description will be sent.
-     * 
+     *
      * @param argument This argument is the actual argument to be described.
-     * 
+     *
      * @return The return value is a reference to parameter outputStream.
      */
     template <class Type>
@@ -43,7 +43,7 @@ namespace brick {
     }
 
   } // namespace common
-  
+
 } // namespace brick
 
 
@@ -55,7 +55,7 @@ namespace brick {
 namespace brick {
 
   namespace common {
-  
+
     template <class TYPE>
     std::ostream&
     addArgumentDescription(std::ostream& outputStream,
@@ -84,7 +84,7 @@ namespace brick {
     }
 
   } // namespace common
-  
+
 } // namespace brick
 
 #endif /* #ifdef BRICK_COMMON_USE_TRACEABLE */
@@ -95,7 +95,7 @@ namespace brick {
 namespace brick {
 
   using common::addArgumentDescription;
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMMON_ARGUMENTDESCRIPTION_HH */

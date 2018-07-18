@@ -67,10 +67,10 @@ namespace brick {
        */
       explicit OptimizerBFGS(const Functor& functor);
 
-      /** 
+      /**
        * Copy constructor.  This constructor simply copies the source
        * argument.
-       * 
+       *
        * @param source The OptimizerBFGS instance to be copied.
        */
       OptimizerBFGS(const OptimizerBFGS& source);
@@ -82,7 +82,7 @@ namespace brick {
       virtual
       ~OptimizerBFGS();
 
-      /** 
+      /**
        * This method returns the number of function calls required to
        * complete the previous minimization.  If the minimization
        * parameter "restarts" is 0, there will be only one element in
@@ -99,7 +99,7 @@ namespace brick {
       virtual std::vector<size_t>
       getNumberOfFunctionCalls() {return this->m_functionCallCount;}
 
-      /** 
+      /**
        * This method returns the number of gradient calls required to
        * complete the previous minimization.  If the minimization
        * parameter "restarts" is 0, there will be only one element in
@@ -115,8 +115,8 @@ namespace brick {
        */
       virtual std::vector<size_t>
       getNumberOfGradientCalls() {return this->m_gradientCallCount;}
-    
-      /** 
+
+      /**
        * This method returns the number of iterations required to
        * complete the previous minimization.  If the minimization
        * parameter "restarts" is 0, there will be only one element in
@@ -132,8 +132,8 @@ namespace brick {
        */
       virtual std::vector<size_t>
       getNumberOfIterations() {return this->m_iterationCount;}
-                  
-      /** 
+
+      /**
        * This method sets minimization parameters.  Default values are
        * reasonable for functions which take values and arguments in the
        * "normal" range of 0 to 100 or so.
@@ -175,13 +175,13 @@ namespace brick {
                     FloatType maximumStepMagnitudeFactor = 100.0,
                     FloatType minimumFunctionValue =
                       -std::numeric_limits<FloatType>::max());
-    
-    
-      /** 
+
+
+      /**
        * This method sets the optimization parameter controlling the
        * maximum number of iterations, without affecting any other
        * optimization parameters.
-       * 
+       *
        * @param iterationLimit Each minimization will terminate after
        * this many iterations.
        */
@@ -190,12 +190,12 @@ namespace brick {
         this->m_iterationLimit = iterationLimit;
       }
 
-    
-      /** 
+
+      /**
        * This method sets the optimization parameter controlling the
        * number of restarts, without affecting any other optimization
        * parameters.
-       * 
+       *
        * @param numberOfRestarts Following successful termination, the
        * minimization will be re-run this many times to refine the
        * result accuracy.
@@ -205,12 +205,12 @@ namespace brick {
         this->m_numberOfRestarts = numberOfRestarts;
       }
 
-      
-      /** 
+
+      /**
        * This method sets the optimization parameter controlling the
        * function value at which the optimization will be considered
-       * "close enough." 
-       * 
+       * "close enough."
+       *
        * @param minimumFunctionValue Iteration will terminate if the
        * objective function value falls to or below this value.
        */
@@ -219,8 +219,8 @@ namespace brick {
         this->m_minimumFunctionValue = minimumFunctionValue;
       }
 
-      
-      /** 
+
+      /**
        * This method sets the initial conditions for the minimization.
        * Gradient based search will start at this location in parameter
        * space.
@@ -246,32 +246,32 @@ namespace brick {
       virtual void
       setVerbosity(int verbosity) {this->m_verbosity = verbosity;}
 
-    
+
       /**
        * Assignment operator.
-       * 
+       *
        * @param source The OptimizerBFGS instance to be copied.
-       * 
+       *
        * @return Reference to *this.
        */
       virtual OptimizerBFGS&
       operator=(const OptimizerBFGS& source);
-    
+
     protected:
 
-      /** 
+      /**
        * This protected member function is used to asses whether the
        * algorithm has reached convergence.
-       * 
+       *
        * @param theta This argument specifies the parameter values
        * (arguments to the objective function) being assessed.
-       * 
+       *
        * @param value This argument specifies the function value at the
        * point described by theta.
-       * 
+       *
        * @param gradient This argument specifies the function gradient
        * at the point described by theta.
-       * 
+       *
        * @return The return value gets progressively smaller as we
        * approach a local minimum.
        */
@@ -280,10 +280,10 @@ namespace brick {
                                 const result_type& value,
                                 const argument_type& gradient);
 
-      /** 
-       * Perform the optimization.  This virtual function overrides the 
+      /**
+       * Perform the optimization.  This virtual function overrides the
        * definition in Optimizer.
-       * 
+       *
        * @return A std::pair of the vector parameter which brings the
        * specified Functor to an optimum, and the corresponding optimal
        * Functor value.
@@ -292,30 +292,30 @@ namespace brick {
       std::pair<typename Functor::argument_type, typename Functor::result_type>
       run();
 
-      /** 
+      /**
        * Perform one complete BFGS minimization, starting from the
        * specified position.
-       * 
+       *
        * @param theta This argument specifies the point at which to
        * start the minimization.
-       * 
+       *
        * @param startValue This argument should be set to the value of
        * the objective function evaluated at theta.
-       * 
+       *
        * @param startGradient This argument should be set to the objective
        * function gradient evaluated at theta.
-       * 
+       *
        * @param numberOfFunctionCalls This parameter is used to return
        * the number of function calls required to perform the
        * minimization.
-       * 
+       *
        * @param numberOfGradientCalls This parameter is used to return
        * the number of gradient calls required to perform the
        * minimization.
-       * 
+       *
        * @param numberOfIterations This parameter is used to return the
        * number of BFGS iterations required to perform the minimization.
-       * 
+       *
        * @return A brick::triple of the vector parameter which brings the
        * specified Functor to an optimum, and the corresponding optimal
        * Functor value, and the corresponding gradient.
@@ -343,12 +343,12 @@ namespace brick {
       OptimizerLineSearch<Functor, FloatType> m_optimizerLineSearch;
       argument_type m_startPoint;
       int m_verbosity;
-      
+
       // Data members used for bookkeeping.
       std::vector<size_t> m_functionCallCount;
       std::vector<size_t> m_gradientCallCount;
       std::vector<size_t> m_iterationCount;
-    
+
     }; // class OptimizerBFGS
 
   } // namespace optimization
@@ -381,7 +381,7 @@ namespace brick {
 namespace brick {
 
   namespace optimization {
-  
+
     template <class Functor, class FloatType>
     OptimizerBFGS<Functor, FloatType>::
     OptimizerBFGS()
@@ -424,11 +424,11 @@ namespace brick {
         m_verbosity(0),
         m_functionCallCount(),
         m_gradientCallCount(),
-        m_iterationCount()    
+        m_iterationCount()
     {
       this->setParameters();
     }
-  
+
 
     template<class Functor, class FloatType>
     OptimizerBFGS<Functor, FloatType>::
@@ -488,14 +488,14 @@ namespace brick {
       this->m_functionCallCount.clear();
       this->m_gradientCallCount.clear();
       this->m_iterationCount.clear();
-    
-      // We've changed the parameters, so we'll have to rerun the 
-      // optimization.  Indicate this by setting the inherited member
-      // m_needsOptimization.    
-      Optimizer<Functor>::m_needsOptimization = true;
-    }    
 
-    
+      // We've changed the parameters, so we'll have to rerun the
+      // optimization.  Indicate this by setting the inherited member
+      // m_needsOptimization.
+      Optimizer<Functor>::m_needsOptimization = true;
+    }
+
+
     template<class Functor, class FloatType>
     void
     OptimizerBFGS<Functor, FloatType>::
@@ -508,9 +508,9 @@ namespace brick {
       this->m_gradientCallCount.clear();
       this->m_iterationCount.clear();
 
-      // We've changed the parameters, so we'll have to rerun the 
+      // We've changed the parameters, so we'll have to rerun the
       // optimization.  Indicate this by setting the inherited member
-      // m_needsOptimization.    
+      // m_needsOptimization.
       Optimizer<Functor>::m_needsOptimization = true;
     }
 
@@ -536,7 +536,7 @@ namespace brick {
       this->m_functionCallCount = source.m_functionCallCount;
       this->m_gradientCallCount = source.m_gradientCallCount;
       this->m_iterationCount = source.m_iterationCount;
-    
+
       return *this;
     }
 
@@ -560,7 +560,7 @@ namespace brick {
           gradientAbsValue
           * std::max(thetaAbsValue, static_cast<FloatType>(1.0))
           / denominator;
-        
+
         if(candidate > returnValue) {
           returnValue = candidate;
         }
@@ -579,7 +579,7 @@ namespace brick {
 		    "OptimizerBFGS<Functor, FloatType>::run()",
 		    "startPoint has not been initialized.");
       }
-    
+
       // Initialize working location so that we start at the right place.
       argument_type theta(this->m_startPoint.size());
       copyArgumentType(this->m_startPoint, theta);
@@ -622,7 +622,7 @@ namespace brick {
       return std::make_pair(optimum_optimalValue_gradient.first,
                             optimum_optimalValue_gradient.second);
     }
-    
+
     template <class Functor, class FloatType>
     brick::common::Triple<typename Functor::argument_type,
                           typename Functor::result_type,
@@ -651,7 +651,7 @@ namespace brick {
         return brick::common::makeTriple(
           thetaLocal, currentValue, mutableGradient);
       }
-      
+
       // Of course, we should only copy startGradient if it's actually
       // been initialized.
       argument_type currentGradient;
@@ -673,7 +673,7 @@ namespace brick {
         return brick::common::makeTriple(
           thetaLocal, currentValue, currentGradient);
       }
-    
+
       // Check that gradient dimension is correct.
       if(currentGradient.size() != dimensionality) {
         std::ostringstream message;
@@ -684,7 +684,7 @@ namespace brick {
 		    "OptimizerBFGS<Functor, FloatType>::doBfgs()",
 		    message.str().c_str());
       }
-    
+
       // Set up inverse hessian estimate.
       brick::numeric::Array2D<FloatType> inverseHessian(dimensionality, dimensionality);
       inverseHessian = 0.0;
@@ -718,7 +718,7 @@ namespace brick {
       this->m_optimizerLineSearch.setParameters(
         this->m_lineSearchArgumentTolerance, this->m_lineSearchAlpha,
         maximumStepMagnitude);
-    
+
       // Perform the bfgs iteration.
       while(1) {
         // Perform line search.
@@ -736,7 +736,7 @@ namespace brick {
                     << "     Current value: "
                     << std::setw(15) << currentValue << std::flush;
         }
-        
+
         // Revise our initial step to match the data, and update current
         // position in parameter space.
         for(size_t index = 0; index < dimensionality; ++index) {
@@ -748,7 +748,7 @@ namespace brick {
         if(currentValue <= this->m_minimumFunctionValue) {
           if(this->m_verbosity > 0) {
             std::cout << "\nTerminating OptimizerBFGS::doBfgs() with "
-                      << "objective value (" << currentValue 
+                      << "objective value (" << currentValue
                       << ") less than or equal to threshold ("
                       << this->m_minimumFunctionValue
                       << ")." << std::endl;
@@ -847,7 +847,7 @@ namespace brick {
           for(size_t row = 0; row < inverseHessian.rows(); ++row) {
             for(size_t column = 0; column < inverseHessian.columns(); ++column) {
               // First DFP term.
-              // 
+              //
               // Note(xxx): redundant calculation?  this multiplication
               // is done immediately above.
               FloatType increment0 = (oneOverFac * searchStep[row]
@@ -901,7 +901,7 @@ namespace brick {
           std::ostringstream message;
           message << "Iteration limit of " << this->m_iterationLimit
                   << " exceeded.";
-          BRICK_THROW(brick::common::RunTimeException, 
+          BRICK_THROW(brick::common::RunTimeException,
 		      "OptimizerBFGS<Functor, FloatType>::doBfgs()",
 		      message.str().c_str());
         }

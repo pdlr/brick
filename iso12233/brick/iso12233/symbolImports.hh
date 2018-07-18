@@ -30,9 +30,9 @@ namespace brick {
 
     using brick::numeric::Array1D;
     using brick::numeric::Array2D;
-    
+
   } // namespace iso12233
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_ISO12233_SYMBOLIMPORTS_HH */

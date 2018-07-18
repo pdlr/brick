@@ -21,7 +21,7 @@ namespace brick {
 
 
   namespace numeric {
-    
+
     /**
      ** @warning WARNING: this class is very immature, is not well
      ** tested, and has an interface that is subject to change.
@@ -83,7 +83,7 @@ namespace brick {
        ** Typedef for iterator type helps with standard library interface.
        **/
       typedef Type* iterator;
-    
+
       /**
        ** Typedef for const_iterator type helps with standard library
        ** interface.
@@ -93,13 +93,13 @@ namespace brick {
 
       /* ======== Public member functions ======== */
 
-      /** 
+      /**
        * Default constructor initializes to zero size.
        */
       ArrayND();
 
-      
-      /** 
+
+      /**
        * Constructs an array with a user-specified shape.  For
        * example, the following code constructs a 2-dimensional
        * ArrayND instance with 5 rows and 6 columns:
@@ -129,7 +129,7 @@ namespace brick {
       ArrayND(size_t dimension, size_t const shape[]);
 
 
-      /** 
+      /**
        * Constructs an array with a user-specified shape.  For
        * example, the following code constructs a 2-dimensional
        * ArrayND instance with 5 rows and 6 columns:
@@ -151,29 +151,29 @@ namespace brick {
       explicit
       ArrayND(const Array1D<size_t>& shape);
 
-    
-      /** 
+
+      /**
        * The copy constructor does a shallow copy.  The newly created
        * array points to the same data as copied array.
-       * 
+       *
        * @param source The ArrayND<> instance to be copied.
        */
       ArrayND(const ArrayND<Dimension, Type> &source);
-    
+
 
       /**
        * Construct from an initialization string.  Ultimately, this
        * constructor will be very flexible about interpreting string
        * syntax, but right now it only accepts a secret format known
        * only to the developers of this library.
-       * 
+       *
        * @param inputString The argument specifies the string from which
        * the array will be constructed.
        */
       explicit
       ArrayND(const std::string& inputString);
 
-      
+
       /**
        * Destroys the ArrayND instance and deletes the internal data
        * store if no remaining arrays point to it.
@@ -181,18 +181,18 @@ namespace brick {
       ~ArrayND();
 
 
-      /** 
+      /**
        * Return begin() iterator for Standard Library algorithms.
-       * 
+       *
        * @return Iterator pointing to the first element of the array.
        */
       iterator
       begin() {return m_storage.begin();}
 
-      
-      /** 
+
+      /**
        * Return begin() const_iterator for Standard Library algorithms.
-       * 
+       *
        * @return Const iterator pointing to the first element of the
        * array.
        */
@@ -200,7 +200,7 @@ namespace brick {
       begin() const {return m_storage.begin();}
 
 
-      /** 
+      /**
        * Optionally throw an exception if the shape of *this is
        * different than specified.
        *
@@ -209,25 +209,25 @@ namespace brick {
       inline void
       checkDimension(Array1D<size_t> const& shape) const;
 
-    
-      /** 
+
+      /**
        * Reset the array to zero size, abandoning all contents.  This is
        * equivalent to this->reinit(0);
        */
       void
       clear() {m_shape.reinit(0); m_storage.reinit(0);}
 
-      
-      /** 
+
+      /**
        * Allocate a new array and deep copy the contents of *this.
-       * 
+       *
        * @return A new array which is a (deep) copy of *this.
        */
       ArrayND<Dimension, Type>
       copy() const;
 
-      
-      /** 
+
+      /**
        * Deep copies the contents of source.  It is an error if source
        * does not have the same shape as *this.
        *
@@ -240,17 +240,17 @@ namespace brick {
       template <class Type2> void
       copy(const ArrayND<Dimension, Type2>& source);
 
-      
+
       /**
        * Copies elements from dataPtr.  There must be valid data at all
        * addresses from dataPtr to (dataPtr + this->size());
-       * 
+       *
        * @param dataPtr Pointer to the data to be copied.
        */
       template <class Type2> void
       copy(const Type2* dataPtr);
 
-      
+
       /**
        * Returns a pointer to the internal data store.  This is ugly
        * but often necessary for interfacing with external libraries.
@@ -259,17 +259,17 @@ namespace brick {
        * subsequent rows.  In this event, any ArrayND instance for
        * which the returned data is not contiguous will also return
        * false from member function isContiguous().
-       * 
+       *
        * @return Pointer to the internal data store.
        */
       Type*
       data() {return m_storage.data();}
 
-      
+
       /**
        * This version of data(void) is appropriate for const ArrayND,
        * and returns a pointer-to-const.
-       * 
+       *
        * @return Const pointer to the internal data store.
        *
        * @see Type* ArrayND<size_t, Type>::data()
@@ -277,31 +277,31 @@ namespace brick {
       const Type*
       data() const {return m_storage.data();}
 
-      
-      /** 
+
+      /**
        * This member function returns true if the array instance
        * contains no elements.  It has complexity O(1).
-       * 
+       *
        * @return The return value indicates whether or not the array is
        * empty.
        */
       bool
       empty() const {return m_storage.empty();}
 
-    
-      /** 
+
+      /**
        * Return end() iterator for Standard Library algorithms.
-       * 
+       *
        * @return Iterator pointing just past the last element of
        * the array.
        */
       iterator
       end() {return m_storage.end();}
 
-      
-      /** 
+
+      /**
        * Return end() const_iterator for Standard Library algorithms.
-       * 
+       *
        * @return Const iterator pointing just past the last element of
        * the array.
        */
@@ -309,40 +309,40 @@ namespace brick {
       end() const {return m_storage.end();}
 
 
-      /** 
+      /**
        * This member function converts a multi-dimensional index (such
        * as would be passed to getElement(Array1D<size_t> const&))
        * into a scalar index (such as would be passed to
        * getElement(size_t).
-       * 
+       *
        * @param indexArray This argument is the array to be converted.
-       * 
+       *
        * @return The return value is the equivalent 1D index.
        */
       size_t
       flattenIndex(const Array1D<size_t>& indexArray) const;
 
-      
-      /** 
+
+      /**
        * This member function returns a specific element of the array
        * by value.
-       * 
+       *
        * @param index0 This argument specifies which element value
        * should be returned.
-       * 
+       *
        * @return The return value is a copy of the requested element.
        */
       inline Type
       getElement(size_t index0) const {return this->operator()(index0);}
 
 
-      /** 
+      /**
        * This member function returns a specific element of the array
        * by value.
-       * 
+       *
        * @param index0 This argument specifies which element value
        * should be returned.
-       * 
+       *
        * @return The return value is a copy of the requested element.
        */
       inline Type
@@ -351,14 +351,14 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This member function returns a (reference to an) array
        * describing the shape of *this.  Note that Array1D copy
        * semantics are _shallow_, so you'll actually get an array that
        * references memory inside *this.  If you copy (shallow copy)
        * this array, and then modify its contents, you will break the
        * internal state of *this.
-       * 
+       *
        * @return The return value is an array describing the number of
        * elements along each axis of *this.
        */
@@ -366,16 +366,16 @@ namespace brick {
       getShape() const {return m_shape;}
 
 
-      /** 
+      /**
        * This member function establishes the relationship between
        * single-indexing (for example using getElement(size_t)) and
        * array indexing (for example using getElement(Array1D<size_t>
        * const&)) by returning the single-index offset between
        * adjacent elements along the specified axis.
-       * 
+       *
        * @param axis This argument specifies the axis along which we
        * wish to move.
-       * 
+       *
        * @return The return value is the number by which the argument
        * to getElement(size_t) must be incremented in order to move
        * one element along the specified axis.
@@ -383,8 +383,8 @@ namespace brick {
       size_t
       getStride(size_t axis) const {return m_strideArray[axis];}
 
-      
-      /** 
+
+      /**
        * This member function returns an array in which each element
        * contains the distance between adjacent elements along the
        * corresponding axis.  See member function getStride() for more
@@ -393,19 +393,19 @@ namespace brick {
        * *this.  If you copy (shallow copy) this array, and then
        * modify its contents, you will break the internal state of
        * *this.
-       * 
+       *
        * @return The return value is an array in which the ii-th
        * element is equal to the result of this->getStride(ii).
        */
       Array1D<size_t> const&
       getStrideArray() const {return m_strideArray;}
 
-      
-      /** 
+
+      /**
        * Indicates whether the internal data array is being managed (and
        * reference counted) by *this.  This member function is only
        * needed in very unusual circumstances.
-       * 
+       *
        * @return The return value is a bool indicating whether the internal
        * data is being managed by *this.
        */
@@ -417,44 +417,44 @@ namespace brick {
        * Returns an Array1D, with size equal to this->size(), which
        * references the same data as *this.  In other words, ravel()
        * returns a flattened version of *this.
-       * 
+       *
        * @return Array1D referencing the same data as *this.
        */
       Array1D<Type>
       ravel() {return m_storage;}
 
-      
+
       /**
        * Returns an Array1D, with size equal to this->size(), which
        * references the same data as *this.  In other words, ravel()
        * returns a flattened version of *this.
-       * 
+       *
        * @return Array1D referencing the same data as *this.
        */
       Array1D<Type> const
       ravel() const {return m_storage;}
 
-      
-      /** 
+
+      /**
        * Changes the shape of the array and reallocates storage.
        * The current array contents are lost.
-       * 
+       *
        * @param size Number of elements in the array after reallocation.
        */
       void
       reinit(Array1D<size_t> const& shape);
-    
 
-      /** 
+
+      /**
        * This member function sets the value of a specific element of
        * the array.
-       * 
+       *
        * @param index0 This argument specifies which element value
        * should be set.
-       * 
+       *
        * @param value This argument will be copied into the selected
        * array element.
-       * 
+       *
        * @return The return value is a reference to the newly set
        * array element.
        */
@@ -464,16 +464,16 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * This member function sets the value of a specific element of
        * the array.
-       * 
+       *
        * @param index0 This argument specifies which element value
        * should be set.
-       * 
+       *
        * @param value This argument will be copied into the selected
        * array element.
-       * 
+       *
        * @return The return value is a reference to the newly set
        * array element.
        */
@@ -483,77 +483,77 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * Returns the number of elements in the array.
-       * 
+       *
        * @return The number of elements in the array.
        */
       size_t
       size() const {return m_storage.size();}
 
-      
-      /** 
+
+      /**
        * Assignment operator shallow copies the contents of source.
        * After the copy, both arrays reference the same data.
-       * 
+       *
        * @param source The ArrayND instance to be copied.
-       * 
+       *
        * @return Reference to *this.
        */
       ArrayND<Dimension, Type>&
       operator=(const ArrayND<Dimension, Type>& source);
 
-      
-      /** 
+
+      /**
        * Assign value to every element in the array.
-       * 
+       *
        * @param value The value to be copied.
-       * 
+       *
        * @return Reference to *this.
        */
       inline ArrayND<Dimension, Type>&
       operator=(Type value);
 
 
-      /** 
+      /**
        * Returns the (index)th element of the array by reference.
-       * 
+       *
        * @param index Indicates the selected element.
-       * 
+       *
        * @return Reference to the (index)th element of the array.
        */
       Type&
       operator()(size_t index0) {return m_storage(index0);}
-  
 
-      /** 
+
+      /**
        * Returns the (index)th element of the array by value.
-       * 
+       *
        * @param index Indicates the selected element.
-       * 
+       *
        * @return Value of the (index)th element of the array.
        */
       Type const& operator()(size_t index0) const {return m_storage(index0);}
 
-      
-      /** 
+
+      /**
        * Returns the (index)th element of the array by reference.
-       * 
+       *
        * @param index Indicates the selected element.
-       * 
+       *
        * @return Reference to the (index)th element of the array.
        */
       Type&
       operator()(Array1D<size_t> const& index0) {
         return m_storage[this->flattenIndex(index0)];
       }
-  
 
-      /** 
+
+      /**
        * Returns the (index)th element of the array by value.
-       * 
+       *
        * @param index Indicates the selected element.
-       * 
+       *
        * @return Value of the (index)th element of the array.
        */
       Type const& operator()(Array1D<size_t> const& index0) const {
@@ -561,131 +561,131 @@ namespace brick {
       }
 
 
-      /** 
+      /**
        * Returns the (index)th element of the array by reference.
        * Synonymous with operator()().
-       * 
+       *
        * @param index Indicates the selected element.
-       * 
+       *
        * @return Reference to the (index)th element of the array.
        */
       Type& operator[](size_t index) {return this->operator()(index);}
 
-      
-      /** 
+
+      /**
        * Returns the (index)th element of the array by value.
        * Synonymous with operator()() const.
-       * 
+       *
        * @param index Indicates the selected element.
-       * 
+       *
        * @return Value of the (index)th element of the array.
        */
       Type const&
       operator[](size_t index) const {return this->operator()(index);}
 
 
-      /** 
+      /**
        * Increments each element of *this by the value of the
        * corresponding element of arg.
-       * 
+       *
        * @param arg ArrayND of values to be added to the elements of
-       * *this.     
+       * *this.
        *
        * @exception ValueException on incompatible array sizes
-       * 
+       *
        * @return Reference to *this.
        */
       template <class Type2>
       ArrayND<Dimension, Type>&
       operator+=(const ArrayND<Dimension, Type2>& arg);
 
-      
-      /** 
+
+      /**
        * Increments each element of *this by a constant.
-       * 
+       *
        * @param arg Value by which array elements will be incremented.
-       * 
+       *
        * @return Reference to *this.
        */
       ArrayND<Dimension, Type>&
       operator+=(const Type arg);
 
 
-      /** 
+      /**
        * Decrements each element of *this by the value of the
        * corresponding element of arg.
-       * 
+       *
        * @param arg ArrayND of values to be subtracted from the elements
        * of *this.
        *
        * @exception ValueException on incompatible array sizes
-       * 
+       *
        * @return Reference to *this.
        */
       template <class Type2>
       ArrayND<Dimension, Type>&
       operator-=(const ArrayND<Dimension, Type2>& arg);
 
-      
-      /** 
+
+      /**
        * Decrements each element of *this by a constant.
-       * 
+       *
        * @param arg Value by which array elements will be decremented.
-       * 
+       *
        * @return Reference to *this.
        */
       ArrayND<Dimension, Type>&
       operator-=(const Type arg);
 
-      
-      /** 
+
+      /**
        * Multiplies each element of *this by the value of the
        * corresponding element of arg.
-       * 
+       *
        * @param arg ArrayND of values by which the elements of *this
        * should be multiplied.
        *
        * @exception ValueException on incompatible array sizes
-       * 
+       *
        * @return Reference to *this.
        */
       template <class Type2>
       ArrayND<Dimension, Type>&
       operator*=(const ArrayND<Dimension, Type2>& arg);
 
-      
-      /** 
+
+      /**
        * Multiplies each element of *this by a constant.
-       * 
+       *
        * @param arg Value by which array elements will be multiplied.
-       * 
+       *
        * @return Reference to *this.
        */
       ArrayND<Dimension, Type>&
       operator*=(const Type arg);
 
 
-      /** 
+      /**
        * Divides each element of *this by the value of the corresponding
        * element of arg.
-       * 
+       *
        * @param arg ArrayND of values by which the elements of *this
        * should be divided.
        *
        * @exception ValueException on incompatible array sizes
-       * 
+       *
        * @return Reference to *this.
        */
       template <class Type2>
       ArrayND<Dimension, Type>&
       operator/=(const ArrayND<Dimension, Type2>& arg);
 
-      
-      /** 
+
+      /**
        * Divides each element of *this by a constant.
-       * 
+       *
        * @param arg Value by which array elements will be divided.
-       * 
+       *
        * @return Reference to *this.
        */
       ArrayND<Dimension, Type>&
@@ -697,7 +697,7 @@ namespace brick {
       size_t computeSize(Array1D<size_t> const& shape) const;
       Array1D<size_t> computeStride(Array1D<size_t> const& shape) const;
 
-      
+
       /* ======== Private data members ======== */
       Array1D<size_t> m_shape;
       Array1D<Type> m_storage;
@@ -707,9 +707,9 @@ namespace brick {
 
     /* Non-member functions which should maybe wind up in a different file */
 
-    /** 
+    /**
      * Elementwise addition of ArrayND instances.
-     * 
+     *
      * @param array0 First argument for addition.
      *
      * @param arrayN Second argument for addition.
@@ -724,11 +724,11 @@ namespace brick {
     ArrayND<Dimension, Type>
     operator+(const ArrayND<Dimension, Type>& array0,
               const ArrayND<Dimension, Type>& arrayN);
-  
 
-    /** 
+
+    /**
      * Elementwise subtraction of ArrayND instances.
-     * 
+     *
      * @param array0 First argument for subtraction.
      *
      * @param arrayN Second argument for subtraction.
@@ -745,9 +745,9 @@ namespace brick {
               const ArrayND<Dimension, Type>& arrayN);
 
 
-    /** 
+    /**
      * Elementwise multiplication of ArrayND instances.
-     * 
+     *
      * @param array0 First argument for multiplication.
      *
      * @param arrayN Second argument for multiplication.
@@ -762,11 +762,11 @@ namespace brick {
     ArrayND<Dimension, Type>
     operator*(const ArrayND<Dimension, Type>& array0,
               const ArrayND<Dimension, Type>& arrayN);
-  
 
-    /** 
+
+    /**
      * Elementwise division of ArrayND instances.
-     * 
+     *
      * @param array0 First argument for division.
      *
      * @param arrayN Second argument for division.
@@ -783,9 +783,9 @@ namespace brick {
               const ArrayND<Dimension, Type>& arrayN);
 
 
-    /** 
+    /**
      * Addition of ArrayND and scalar.
-     * 
+     *
      * @param array ArrayND argument of the addition.
      *
      * @param scalar Scalar argument of the addition.
@@ -799,9 +799,9 @@ namespace brick {
     operator+(const ArrayND<Dimension, Type>& array, Type scalar);
 
 
-    /** 
+    /**
      * Subtraction of ArrayND and scalar.
-     * 
+     *
      * @param array0 ArrayND argument of the subtraction.
      *
      * @param scalar Scalar argument of the subtraction.
@@ -815,9 +815,9 @@ namespace brick {
     operator-(const ArrayND<Dimension, Type>& array0, Type scalar);
 
 
-    /** 
+    /**
      * Multiplication of ArrayND and scalar.
-     * 
+     *
      * @param array0 ArrayND argument of the multiplication.
      *
      * @param scalar Scalar argument of the multiplication.
@@ -831,9 +831,9 @@ namespace brick {
     operator*(const ArrayND<Dimension, Type>& array0, Type scalar);
 
 
-    /** 
+    /**
      * Division of ArrayND and scalar.
-     * 
+     *
      * @param array0 ArrayND argument of the division.
      *
      * @param scalar Scalar argument of the division.
@@ -847,9 +847,9 @@ namespace brick {
     operator/(const ArrayND<Dimension, Type>& array0, Type scalar);
 
 
-    /** 
+    /**
      * Addition of scalar and ArrayND.
-     * 
+     *
      * @param scalar Scalar argument of the addition.
      *
      * @param array0 ArrayND argument of the addition.
@@ -863,9 +863,9 @@ namespace brick {
     operator+(Type scalar, const ArrayND<Dimension, Type>& array0);
 
 
-    /** 
+    /**
      * Subtraction of scalar and ArrayND.
-     * 
+     *
      * @param scalar Scalar argument of the subtraction.
      *
      * @param array0 ArrayND argument of the subtraction.
@@ -879,9 +879,9 @@ namespace brick {
     operator-(Type scalar, const ArrayND<Dimension, Type>& array0);
 
 
-    /** 
+    /**
      * Multiplication of scalar and ArrayND.
-     * 
+     *
      * @param scalar Scalar argument of the multiplication.
      *
      * @param array0 ArrayND argument of the multiplication.
@@ -895,9 +895,9 @@ namespace brick {
     operator*(Type scalar, const ArrayND<Dimension, Type>& array0);
 
 
-    /** 
+    /**
      * Division of scalar and ArrayND.
-     * 
+     *
      * @param scalar Scalar argument of the division.
      *
      * @param array0 ArrayND argument of the division.
@@ -911,14 +911,14 @@ namespace brick {
     operator/(Type scalar, const ArrayND<Dimension, Type>& array0);
 
 
-    /** 
+    /**
      * Elementwise comparison of an ArrayND with a constant.
      *
      * @param array0 An ArrayND instance.
-     * 
+     *
      * @param arg Value to which the elements of array0 should be
      * compared.
-     * 
+     *
      * @return An ArrayND<bool> in which each element has value "true"
      * if the corresponding element of array0 is equal to arg.
      */
@@ -926,15 +926,15 @@ namespace brick {
     ArrayND<Dimension, bool>
     operator==(const ArrayND<Dimension, Type>& array0, const Type arg);
 
-    
-    /** 
+
+    /**
      * Elementwise comparison of an ArrayND with another array.
-     * 
+     *
      * @param array0 An ArrayND instance.
      *
      * @param arrayN A second ArrayND instance with the same size as
      * array0.
-     * 
+     *
      * @return An ArrayND<bool> in which each element has value "true"
      * if the corresponding element of array0 is equal to the
      * corresponding element of arrayN.
@@ -943,15 +943,15 @@ namespace brick {
     ArrayND<Dimension, bool>
     operator==(const ArrayND<Dimension, Type>& array0,
                const ArrayND<Dimension, Type>& arrayN);
-    
 
-    /** 
+
+    /**
      * Elementwise comparison of an ArrayND with a constant.
-     * 
+     *
      * @param array0 An ArrayND instance.
      *
      * @param arg Value to which array elements should be compared.
-     * 
+     *
      * @return An ArrayND<bool> in which each element has value "true"
      * if the corresponding element of array0 is greater than arg.
      */
@@ -959,14 +959,14 @@ namespace brick {
     ArrayND<Dimension, bool>
     operator>(const ArrayND<Dimension, Type>& array0, const Type arg);
 
-  
-    /** 
+
+    /**
      * Elementwise comparison of an ArrayND with a constant.
-     * 
+     *
      * @param array0 An ArrayND instance.
-     * 
+     *
      * @param arg Value to which array elements should be compared.
-     * 
+     *
      * @return An ArrayND<bool> in which each element has value "true"
      * if the corresponding element of array0 is greater than or equal
      * to arg.
@@ -976,13 +976,13 @@ namespace brick {
     operator>=(const ArrayND<Dimension, Type>& array0, const Type arg);
 
 
-    /** 
+    /**
      * Elementwise comparison of an ArrayND with a constant.
-     * 
+     *
      * @param array0 An ArrayND instance.
-     * 
+     *
      * @param arg Value to which array elements should be compared.
-     * 
+     *
      * @return An ArrayND<bool> in which each element has value "true"
      * if the corresponding element of array0 is less than arg.
      */
@@ -991,13 +991,13 @@ namespace brick {
     operator<(const ArrayND<Dimension, Type>& array0, const Type arg);
 
 
-    /** 
+    /**
      * Elementwise comparison of an ArrayND with a constant.
-     * 
+     *
      * @param array0 An ArrayND instance.
-     * 
+     *
      * @param arg Value to which array elements should be compared.
-     * 
+     *
      * @return An ArrayND<bool> in which each element has value "true"
      * if the corresponding element of array0 is less than or equal to
      * arg.
@@ -1011,11 +1011,11 @@ namespace brick {
     std::ostream& operator<<(std::ostream& stream,
                              const ArrayND<Dimension, Type>& array0);
 
-    
+
     template <size_t Dimension, class Type>
     std::istream& operator>>(std::istream& stream,
                              ArrayND<Dimension, Type> & array0);
-    
+
   } // namespace numeric
 
 } // namespace brick

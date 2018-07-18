@@ -32,17 +32,17 @@ namespace brick {
       const Type1*
       copyPNMData(const Type0* sourcePtr, size_t numberOfElements);
 
-  
+
       template<class Type0, class Type1>
       void
       deletePNMData(const Type0* outputBuffer, const Type1* sourcePtr);
 
-  
+
       template<class Type0, class Type1>
       const Type1*
       normalizePNMData(const Type0* sourcePtr, size_t numberOfElements);
 
-  
+
       template<class Type>
       void
       writeRawPGM(const std::string& fileName,
@@ -50,7 +50,7 @@ namespace brick {
                   const size_t rows,
                   const size_t columns);
 
-  
+
       template<class Type>
       void
       writeRawPPM(const std::string& fileName,
@@ -58,7 +58,7 @@ namespace brick {
                   const size_t rows,
                   const size_t columns);
 
-  
+
       template<class Type>
       void
       writePlainPGM(const std::string& fileName,
@@ -66,7 +66,7 @@ namespace brick {
                     const size_t rows,
                     const size_t columns);
 
-      
+
       template<class Type>
       void
       writePlainPPM(const std::string& fileName,
@@ -76,7 +76,7 @@ namespace brick {
 
     } // namespace privateCode
     /// @endcond
-    
+
 
     template<class Type>
     void
@@ -107,7 +107,7 @@ namespace brick {
           charBuffer = privateCode::copyPNMData<Type, brick::common::UnsignedInt8>(
             imageData, numberOfElements);
         }
-      
+
         // Dispatch to the appropriate IO routine.
         if(rawFormat) {
           privateCode::writeRawPGM(fileName, charBuffer, rows, columns);
@@ -128,7 +128,7 @@ namespace brick {
           shortBuffer = privateCode::copyPNMData<Type, brick::common::UnsignedInt16>(
             imageData, numberOfElements);
         }
-      
+
         // Dispatch to the appropriate IO routine.
         if(rawFormat) {
           privateCode::writeRawPGM(fileName, shortBuffer, rows, columns);
@@ -170,7 +170,7 @@ namespace brick {
           charBuffer = privateCode::copyPNMData<Type, brick::common::UnsignedInt8>(
             imageData, numberOfElements);
         }
-      
+
         // Dispatch to the appropriate IO routine.
         if(rawFormat) {
           privateCode::writeRawPPM(fileName, charBuffer, rows, columns);
@@ -191,7 +191,7 @@ namespace brick {
           shortBuffer = privateCode::copyPNMData<Type, brick::common::UnsignedInt16>(
             imageData, numberOfElements);
         }
-      
+
         // Dispatch to the appropriate IO routine.
         if(rawFormat) {
           privateCode::writeRawPPM(fileName, shortBuffer, rows, columns);
@@ -222,8 +222,8 @@ namespace brick {
 
 
     } // namespace privateCode
-      
-    
+
+
     template <ImageFormat Format>
     Image<Format>
     readPNG(const std::string& fileName,
@@ -251,13 +251,13 @@ namespace brick {
     writePNG<GRAY8>(const std::string& fileName,
                     const Image<GRAY8>& outputImage,
                     const std::string& /* comment */);
-    
+
     template<>
     void
     writePNG<GRAY16>(const std::string& fileName,
                      const Image<GRAY16>& outputImage,
                      const std::string& /* comment */);
-    
+
     template<>
     void
     writePNG<RGB8>(const std::string& fileName,
@@ -269,7 +269,7 @@ namespace brick {
     writePNG<RGB16>(const std::string& fileName,
                     const Image<RGB16>& outputImage,
                     const std::string& /* comment */);
-    
+
   } // namespace computerVision
 
 } // namespace brick
@@ -300,7 +300,7 @@ namespace brick {
         // All done.
         return outputBuffer;
       }
-  
+
 
       template<class Type0, class Type1>
       void
@@ -317,7 +317,7 @@ namespace brick {
         delete[] outputBuffer;
       }
 
-  
+
       template<class Type0, class Type1>
       const Type1*
       normalizePNMData(const Type0* sourcePtr, size_t numberOfElements)
@@ -338,7 +338,7 @@ namespace brick {
         // Try to avoid dividing by zero.
         double scaleFactor = 0.0;
         if(maxValue != minValue) {
-          scaleFactor = imageMax / (maxValue - minValue);      
+          scaleFactor = imageMax / (maxValue - minValue);
         }
 
         // Do the actual normalization.
@@ -351,7 +351,7 @@ namespace brick {
         return outputBuffer;
       }
 
-  
+
       template<class Type>
       void
       writeRawPGM(const std::string& fileName,
@@ -362,7 +362,7 @@ namespace brick {
         // Compute the largest acceptable value for the target type.
         const int imageMax =
           static_cast<int>(std::pow(2.0, 8.0 * sizeof(Type)) - 0.5);
-    
+
         // Open the file.
         std::ofstream outputStream(fileName.c_str(), std::ios::binary);
         if(!outputStream) {
@@ -402,8 +402,8 @@ namespace brick {
           message << "Can't write a pgm with " << sizeof(Type)
                   << "-byte values.";
           BRICK_THROW(brick::common::ValueException, "writeRawPGM()", message.str().c_str());
-        }      
-        
+        }
+
         // Check for errors.
         if(!outputStream) {
           outputStream.close();
@@ -411,12 +411,12 @@ namespace brick {
           message << "Error writing to open output file: " << fileName;
           BRICK_THROW(brick::common::IOException, "writeRawPGM()", message.str().c_str());
         }
-    
+
         // All done!
         outputStream.close();
       }
 
-  
+
       template<class Type>
       void
       writeRawPPM(const std::string& fileName,
@@ -427,7 +427,7 @@ namespace brick {
         // Compute the largest acceptable value for the target type.
         const int imageMax =
           static_cast<int>(std::pow(2.0, 8.0 * sizeof(Type)) - 0.5);
-    
+
         // Open the file.
         std::ofstream outputStream(fileName.c_str(), std::ios::binary);
         if(!outputStream) {
@@ -467,20 +467,20 @@ namespace brick {
           message << "Can't write a ppm with " << sizeof(Type)
                   << "-byte values.";
           BRICK_THROW(brick::common::ValueException, "writeRawPPM()", message.str().c_str());
-        }      
-        
+        }
+
         // Check for errors.
         if(!outputStream) {
           std::ostringstream message;
           message << "Error writing to open output file: " << fileName;
           BRICK_THROW(brick::common::IOException, "writeRawPPM()", message.str().c_str());
         }
-    
+
         // All done!
         outputStream.close();
       }
 
-  
+
       template<class Type>
       void
       writePlainPGM(const std::string& fileName,
@@ -491,7 +491,7 @@ namespace brick {
         // Compute the largest acceptable value for the target type.
         const int imageMax =
           static_cast<int>(std::pow(2.0, 8.0 * sizeof(Type)) - 0.5);
-    
+
         // Open the file.
         std::ofstream outputStream(fileName.c_str());
         if(!outputStream) {
@@ -524,7 +524,7 @@ namespace brick {
         // All done!
         outputStream.close();
       }
-    
+
 
       template<class Type>
       void
@@ -536,7 +536,7 @@ namespace brick {
         // Compute the largest acceptable value for the target type.
         const int imageMax =
           static_cast<int>(std::pow(2.0, 8.0 * sizeof(Type)) - 0.5);
-    
+
         // Open the file.
         std::ofstream outputStream(fileName.c_str());
         if(!outputStream) {
@@ -574,7 +574,7 @@ namespace brick {
 
     } // namespace privateCode
     /// @endcond
-      
+
   } // namespace computerVision
 
 } // namespace brick

@@ -23,7 +23,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     /**
      ** This class implements the Fast Voxel Traversal Algorithm of
      ** Amanatides and Woo [1] for 3D arrays.  The algorithm is for
@@ -67,13 +67,13 @@ namespace brick {
      **   Transform3D<double> voxelFromWorld;
      **   AmanatidesWoo3D< Array3D<int> > rayTracer(
      **     myArray3D, voxelFromWorld, rayOrigin, rayDirection, false);
-     **   awIterator iterator0 = rayTracer.begin(); 
+     **   awIterator iterator0 = rayTracer.begin();
      **   awIterator iterator1 = rayTracer.end();
      **   for(; iterator0 != iterator1; ++iterator0) {
      **     *iterator0 = 0;
      **   }
      ** @endcode
-     ** 
+     **
      ** [1] John Amanatides and Andrew Woo, "A Fast Voxel Traversal
      ** Algorithm for Ray Tracing", Eurographics ’87, 1987, pp 3-10.
      **/
@@ -94,28 +94,28 @@ namespace brick {
       // Iteration over const arrays will be done using a different
       // class.
       // typedef AmanatidesWoo3DConstIterator<ARRAY3D> const_iterator;
-    
+
       /* ================== Public methods ================== */
 
-      /** 
+      /**
        * This constructor specifies all of the internal state of the
        * AmanatidesWoo3D class.  After construction, the AmanatidesWoo3D
        * instance is ready to be used.
-       * 
+       *
        * @param data This argument specifies the 3D array over which to
        * iterate.
        *
        * @param voxelTworld This parameter specifies a coordinate
        * transformation which takes world coordinates and converts them
        * into voxel coordinates.
-       *     
+       *
        * @param rayOrigin This parameter specifies the starting point
        * of the ray to be traced, expressed in world coordinates.  If
        * you'd rather express rayOrigin and rayDirection in voxel
        * coordinates, simply set argument voxelTworld to the identity
        * transform.  Note that rayOrigin does not have to lie inside the
        * voxel array.
-       *     
+       *
        * @param rayDirection This parameter specifies the direction of
        * the ray to be traced, expressed in world coordinates.  In other
        * words, any point on the line of interest can be written as
@@ -123,7 +123,7 @@ namespace brick {
        * you'd rather express rayOrigin and rayDirection in voxel
        * coordinates, simply set argument voxelTworld to the identity
        * transform.
-       *     
+       *
        * @param downstreamOnly This boolean argument specifies whether
        * voxels "upstream" of rayOrigin are to be included in the voxel
        * traversal.  If downstreamOnly is set to false, voxels which
@@ -137,23 +137,23 @@ namespace brick {
                       const Vector3D<FLOAT_TYPE>& rayDirection,
                       bool downstreamOnly=true);
 
-    
-      /** 
+
+      /**
        * This is the copy constructor.  After copying, the new
        * AmanatidesWoo3D instance and the copied instance both reference
        * the same voxel array.
-       * 
+       *
        * @param source The AmanatidesWoo3D instance to be copied.
        */
       AmanatidesWoo3D(const AmanatidesWoo3D& source);
 
-      /** 
+      /**
        * This is the destructor.  It destroys the AmanatidesWoo3D
        * instance and cleans up any allocated memory.
        */
       ~AmanatidesWoo3D();
 
-      /** 
+      /**
        * This member function returns an iterator which references the
        * first voxel along the traced ray.  If constructor argument
        * downstreamOnly was set to false, this iterator will either
@@ -166,7 +166,7 @@ namespace brick {
        * (in the case that the ray does not intersect the voxel array,
        * and in the case that rayOrigin lies outside the voxel array and
        * rayDirection points away from the voxel array).
-       * 
+       *
        * @return The return value is an iterator pointing to the first
        * voxel in the array, or else an iterator for which (iter ==
        * this->end()) is true.
@@ -174,12 +174,12 @@ namespace brick {
       iterator
       begin();
 
-      /** 
+      /**
        * This member function returns an iterator which references an
        * invalid voxel, and which will be equal (==) to the iterator
        * returned by member function begin() when that iterator has
        * fully traversed the line of voxels.
-       * 
+       *
        * @return The return value is an iterator pointing to an invalid
        * voxel, for use as the end iterator in the comparison clause of
        * a loop: "while(rayIterator != endIterator) {++rayIterator; ...;}".
@@ -187,16 +187,16 @@ namespace brick {
       iterator
       end();
 
-      /** 
+      /**
        * This member function returns a reference to the array object
        * over which iteration is performed.
-       * 
+       *
        * @return The return value is a reference to the data array.
        */
       ARRAY3D&
       getData() {return m_data;}
 
-      /** 
+      /**
        * This member function returns true if the iterator returned by
        * member function begin() will point to a valid voxel.  In other
        * words, if constructor argument downstreamOnly was set to
@@ -206,33 +206,33 @@ namespace brick {
        * downstreamOnly was set to true, the return value of
        * validIntersection whether the "downstream" half of the ray
        * actually intersects the voxel array.
-       * 
+       *
        * @return A boolean indicating whether or not (this->begin() ==
        * this->end()) will be true.
        */
       inline bool
       validIntersection();
-    
-      /** 
+
+      /**
        * The assignment operator copies its argument.  After copying,
        * *this and the copied instance both reference the same voxel
        * array.
-       * 
+       *
        * @param source The AmanatidesWoo3D instance to be copied.
        * @return The return value is a reference to *this.
        */
       AmanatidesWoo3D&
       operator=(const AmanatidesWoo3D& source);
-  
+
     private:
 
-      /** 
+      /**
        * This private member function computes the parameters tEntry and
        * tExit such that (rayOrigin + tEntry * rayDirection) is very
        * first point of intersection between the ray and the voxel
        * array, and (rayOrigin + tExit * rayDirection) is very last of
        * intersection between the ray and the voxel array.
-       * 
+       *
        * @param rayOriginVoxel This parameter specifies the starting
        * point of the ray to be traced, expressed in voxel coordinates.
        * @param rayDirectionVoxel This parameters specifies the
@@ -247,16 +247,16 @@ namespace brick {
                              const Vector3D<FLOAT_TYPE>& rayDirectionVoxel,
                              const ARRAY3D& data);
 
-      /** 
+      /**
        * This function is not documented because it will change very
        * soon.
-       * 
-       * @param rayOrigin 
-       * @param rayDirection 
-       * @param bVector 
-       * @param cConstant 
-       * @param defaultValue 
-       * @return 
+       *
+       * @param rayOrigin
+       * @param rayDirection
+       * @param bVector
+       * @param cConstant
+       * @param defaultValue
+       * @return
        */
       FLOAT_TYPE
       findIntersection(const Vector3D<FLOAT_TYPE>& rayOrigin,
@@ -280,7 +280,7 @@ namespace brick {
       /// This data member indicates the W coordinate of the first voxel
       /// along the path.
       INT_TYPE m_initialW;
-    
+
       /// This data member indicates whether the U coordinate will be
       /// increasing (m_stepU == 1) or decreasing (m_stepU == -1) as we
       /// travel along the ray path.
@@ -290,12 +290,12 @@ namespace brick {
       /// increasing (m_stepV == 1) or decreasing (m_stepV == -1) as we
       /// travel along the ray path.
       INT_TYPE m_stepV;
-    
+
       /// This data member indicates whether the W coordinate will be
       /// increasing (m_stepW == 1) or decreasing (m_stepW == -1) as we
       /// travel along the ray path.
       INT_TYPE m_stepW;
-    
+
       /// This data member indicates what increment of ray parameter t
       /// moves us exactly 1 voxel in the U direction.
       FLOAT_TYPE m_tDeltaU;
@@ -303,11 +303,11 @@ namespace brick {
       /// This data member indicates what increment of ray parameter t
       /// moves us exactly 1 voxel in the V direction.
       FLOAT_TYPE m_tDeltaV;
-    
+
       /// This data member indicates what increment of ray parameter t
       /// moves us exactly 1 voxel in the W direction.
       FLOAT_TYPE m_tDeltaW;
-    
+
       /// This data member indicates the value of ray parameter t at
       /// which the ray first enters a voxel with U coordinate not equal
       /// to m_initialU.

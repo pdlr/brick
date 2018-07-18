@@ -25,7 +25,7 @@
 namespace brick {
 
   namespace computerVision {
-  
+
     /**
      ** The ImageFormatTraits class template specifies the
      ** characteristics of the available image formats.
@@ -58,7 +58,7 @@ namespace brick {
       // imageFormatTraits_impl.hh.
       static ImageFormat const Format = NO_FORMAT;
     };
-    
+
   } // namespace computerVision
 
 } // namespace brick

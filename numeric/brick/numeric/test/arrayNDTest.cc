@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
 * @file brick/numeric/test/arrayNDTest.cpp
-* 
+*
 * Source file defining ArrayNDTest class.
 *
 * Copyright (C) 2004-2008, 2011 David LaRose, dlr@cs.cmu.edu
@@ -31,7 +31,7 @@ namespace brick {
 
       typedef ArrayNDTest<Type> TestFixtureType;
 
-    
+
       ArrayNDTest(const std::string& typeName);
       ~ArrayNDTest();
 
@@ -44,42 +44,42 @@ namespace brick {
       checkShapeEquality(const ArrayND<3, Type>& array0,
                          const ArrayND<3, Type>& array1);
 
-    
+
       virtual void
       checkShapeEquality(const ArrayND<3, Type>& array0,
                          const ArrayND<3, bool>& array1);
 
-    
+
       virtual void
       checkValueEquality(const ArrayND<3, Type>& array0,
                          const ArrayND<3, Type>& array1,
                          typename ArrayND<3, Type>::value_type tolerance);
 
-    
+
       virtual typename ArrayND<3, Type>::value_type
       getComparisonOperatorThreshold() {
         return m_fibonacciCArray[m_defaultArraySize / 2];
       }
 
-    
+
       virtual typename ArrayND<3, Type>::value_type
       getEqualityOperatorTarget() {
         return m_squaresCArray[m_defaultArraySize / 2];
       }
 
-    
+
       virtual ArrayND<3, Type>
       getFibonacciArray() {return ArrayND<3, Type>(m_fibonacciString);}
 
-    
+
       virtual typename ArrayND<3, Type>::value_type
       getIncrementOperatorArgument() {return static_cast<Type>(4);}
 
-    
+
       virtual typename ArrayND<3, Type>::value_type
       getMultiplicationOperatorArgument() {return static_cast<Type>(2);}
 
-    
+
       virtual ArrayND<3, Type>
       getSquaresArray() {return ArrayND<3, Type>(m_squaresString);}
 
@@ -116,8 +116,8 @@ namespace brick {
 
       bool
       isShapeMatch(Array1D<size_t> const& shape0, Array1D<size_t> const& shape1);
-    
-    
+
+
       Array1D<size_t> m_defaultArrayShape;
       size_t m_defaultArraySize;
       size_t m_defaultArrayValue;
@@ -129,7 +129,7 @@ namespace brick {
       Type* m_squaresCArray;
       std::string m_squaresString;
       double m_testEpsilon;
-    
+
     }; // class ArrayNDTest
 
 
@@ -146,7 +146,7 @@ namespace brick {
         m_defaultMultiplier(2),
         m_fibonacciCArray(0),
         m_fibonacciString(""),
-        m_illegalString(),      
+        m_illegalString(),
         m_squaresCArray(0),
         m_squaresString(""),
         m_testEpsilon(1.0e-8)
@@ -182,7 +182,7 @@ namespace brick {
       m_defaultArrayShape[0] = 2;
       m_defaultArrayShape[1] = 3;
       m_defaultArrayShape[2] = 5;
-    
+
       // Figure out how many elements there are in array of this
       // shape.
       size_t dataSize = std::accumulate(m_defaultArrayShape.begin(),
@@ -275,8 +275,8 @@ namespace brick {
       BRICK_TEST_ASSERT(std::equal(array0.begin(), array0.end(), array1.begin(),
                                  ApproximatelyEqualFunctor<Type>(tolerance)));
     }
-  
-  
+
+
     template <class Type>
     void
     ArrayNDTest<Type>::
@@ -286,7 +286,7 @@ namespace brick {
       ArrayND<3, Type> array0;
       BRICK_TEST_ASSERT(array0.size() == 0);
     }
-  
+
 
     template <class Type>
     void
@@ -297,7 +297,7 @@ namespace brick {
       ArrayND<3, Type> array0(m_defaultArrayShape);
       BRICK_TEST_ASSERT(this->isShapeMatch(array0.getShape(), m_defaultArrayShape));
     }
-  
+
 
     template <class Type>
     void
@@ -322,7 +322,7 @@ namespace brick {
       }
     }
 
-    
+
     template <class Type>
     void
     ArrayNDTest<Type>::
@@ -345,7 +345,7 @@ namespace brick {
       BRICK_TEST_ASSERT(std::equal(array1.begin(), array1.end(),
                                  m_fibonacciCArray));
     }
-  
+
 
     template <class Type>
     void
@@ -450,7 +450,7 @@ namespace brick {
       BRICK_TEST_ASSERT(array0.data() != m_fibonacciCArray);
     }
 
-  
+
     template <class Type>
     void
     ArrayNDTest<Type>::
@@ -492,7 +492,7 @@ namespace brick {
       Type* finalElementPtr = &(array0[total - 1]) + 1;
       BRICK_TEST_ASSERT(&(*(array0.end())) == finalElementPtr);
     }
-    
+
 
     template <class Type>
     void
@@ -530,7 +530,7 @@ namespace brick {
       BRICK_TEST_ASSERT(array0.data() != dataPtr0);
     }
 
-  
+
     template <class Type>
     void
     ArrayNDTest<Type>::
@@ -546,7 +546,7 @@ namespace brick {
       BRICK_TEST_ASSERT(array1.size() == total);
     }
 
-  
+
     template <class Type>
     void
     ArrayNDTest<Type>::
@@ -565,7 +565,7 @@ namespace brick {
                                  m_fibonacciCArray));
     }
 
-  
+
     template <class Type>
     void
     ArrayNDTest<Type>::
@@ -584,13 +584,13 @@ namespace brick {
       // Check that all values were set by getting a pointer to the
       //
       // Strangely, std::find_if segfaults for me under g++-4.1.
-      // 
+      //
       // first one that's not equal to m_defaultArrayValue
       //   typename ArrayND<3, Type>::iterator firstRenegade =
       //     std::find_if(array0.begin(), array0.end(),
       //                  std::bind2nd(std::not_equal_to<Type>(),
       //                               m_defaultArrayValue));
-    
+
       typename ArrayND<3, Type>::iterator firstRenegade = array0.begin();
       while(firstRenegade != array0.end()) {
         if(*firstRenegade != static_cast<Type>(m_defaultArrayValue)) {
@@ -602,7 +602,7 @@ namespace brick {
       BRICK_TEST_ASSERT(firstRenegade == array0.end());
     }
 
-  
+
     template <class Type>
     void
     ArrayNDTest<Type>::
@@ -669,7 +669,7 @@ namespace brick {
       }
       return std::equal(shape0.begin(), shape0.end(), shape1.begin());
     }
-  
+
   } // namespace numeric
 
 } // namespace brick

@@ -20,7 +20,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     /**
      ** Functor template which computes the value of a Gaussian
      ** evaluated at its argument.
@@ -29,10 +29,10 @@ namespace brick {
     struct Gaussian1DFunctor
       : public std::unary_function<Type, Type>
     {
-      /** 
+      /**
        * The constructor initializes the Gaussian to zero mean and the
        * specified standard deviation.
-       * 
+       *
        * @param sigma This argument specifies the standard deviation of
        * the Gaussian.
        */
@@ -40,11 +40,11 @@ namespace brick {
         : m_k0(1.0 / (std::sqrt(2.0 * M_PI) * sigma)),
           m_k1(-1.0 / (2.0 * sigma * sigma)) {}
 
-    
-      /** 
+
+      /**
        * Compute the value of the Gaussian at the specified input value,
        * and return the result.
-       * 
+       *
        * @param input The point at which to evaluate the Guassian.
        */
       inline Type
@@ -57,7 +57,7 @@ namespace brick {
       Type m_k1;
     };
 
-  
+
     /**
      ** Functor template which computes the natural logarithm of its
      ** argument (using std::log(), if appropriate).
@@ -66,9 +66,9 @@ namespace brick {
     struct LogFunctor
       : public std::unary_function<Type, Type>
     {
-      /** 
+      /**
        * Compute the log of the input argument, and return the result.
-       * 
+       *
        * @param input The natural log of this argument will be computed.
        * @return The natural log of the argument.
        */
@@ -78,7 +78,7 @@ namespace brick {
       }
     };
 
-  
+
     /**
      ** Functor template which uses static_cast to convert instances of
      ** one type into instances of another, but does the right thing
@@ -89,11 +89,11 @@ namespace brick {
     struct NumericTypeConversionFunctor
       : public std::unary_function<TypeIn, TypeOut>
     {
-      /** 
+      /**
        * This operator returns the output value which minimizes the
        * difference between input and output.  In general, this takes
        * some smarts, so this may need specializing later.
-       * 
+       *
        * @param input Will be converted to type TypeOut.
        * @return The result of the conversion.
        */
@@ -109,7 +109,7 @@ namespace brick {
       }
     };
 
-  
+
     /**
      ** Functor template which computes the square root of its argument
      ** (using std::sqrt(), if appropriate).
@@ -118,9 +118,9 @@ namespace brick {
     struct SquareRootFunctor
       : public std::unary_function<Type, Type>
     {
-      /** 
+      /**
        * Take the square root of the input argument, and return the result.
-       * 
+       *
        * @param input This argument will be passed to a square root function.
        * @return The result of the square root call.
        */
@@ -140,11 +140,11 @@ namespace brick {
 namespace brick {
 
   namespace numeric {
-    
+
   // None
 
   } // namespace numeric
-  
+
 }  // namespace brick
 
 #endif // #ifndef BRICK_NUMERIC_FUNCTIONAL_HH

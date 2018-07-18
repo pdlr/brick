@@ -15,7 +15,7 @@
 
 // This file is included by kdTree.hh, and should not be directly included
 // by user code, so no need to include kdTree.hh here.
-// 
+//
 // #include <brick/computerVision/kdTree.hh>
 
 #include <algorithm>
@@ -49,12 +49,12 @@ namespace brick {
     {
       this->addSamples(beginIter, endIter);
     }
-      
-    
+
+
     // The destructor cleans up any system resources during destruction.
     template <unsigned int Dimension, class Type, class FloatType>
     KDTree<Dimension, Type, FloatType>::
-    ~KDTree() 
+    ~KDTree()
     {
       this->clear();
     }
@@ -120,7 +120,7 @@ namespace brick {
         return m_rightChild->find(point);
       }
     }
-    
+
 
     template <unsigned int Dimension, class Type, class FloatType>
     Type const&
@@ -200,7 +200,7 @@ namespace brick {
         if(bestDistance < bound) {
           continue;
         }
-        
+
         FloatType myDistance = currentTree->m_comparator.computeDistance(
           point, currentTree->m_point);
         if(myDistance < bestDistance) {
@@ -211,7 +211,7 @@ namespace brick {
         if(currentTree->m_leftChild == 0 && currentTree->m_rightChild == 0) {
           continue;
         }
-      
+
         KDTree* nearChildPtr;
         KDTree* farChildPtr;
         bool isLeft = currentTree->m_comparator(point, currentTree->m_point);
@@ -248,7 +248,7 @@ namespace brick {
       }
     }
 
-      
+
     template <unsigned int Dimension, class Type, class FloatType>
     void
     KDTree<Dimension, Type, FloatType>::
@@ -265,7 +265,7 @@ namespace brick {
       if(m_leftChild == 0 && m_rightChild == 0) {
         return;
       }
-      
+
       bool isLeft = m_comparator(point, m_point);
       FloatType remoteDistanceLowerBound = m_comparator.getPrimarySeparation(
         point, m_point);
@@ -278,7 +278,7 @@ namespace brick {
       } else {
         nearChildPtr = m_rightChild;
         farChildPtr = m_leftChild;
-      }        
+      }
 
       if(nearChildPtr) {
         nearChildPtr->findNearestRecursive(point, bestPointPtr, bestDistance);
@@ -288,9 +288,9 @@ namespace brick {
         farChildPtr->findNearestRecursive(point, bestPointPtr, bestDistance);
       }
     }
-    
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_KDTREE_IMPL_HH */

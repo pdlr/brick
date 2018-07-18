@@ -24,7 +24,7 @@ namespace brick {
       // defined in autoregister.cpp
       std::set<RunnableObject*>&
       getGlobalTestSet();
-      
+
     }
     /// @endcond
 

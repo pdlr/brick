@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
-* @file geometry2DTest.cc
-* 
+* @file brick/numeric/test/geometry2DTest.cc
+*
 * Source file defining tests for the geometry2DTest class.
 *
 * Copyright (C) 2007,2012 David LaRose, dlr@cs.cmu.edu
@@ -33,7 +33,7 @@ namespace brick {
     private:
 
       const double m_defaultTolerance;
-    
+
     }; // class Geometry2DTest
 
 
@@ -66,7 +66,7 @@ namespace brick {
                   double r1 = magnitude<double>(target - center1);
                   Vector2D<double> recoveredPoint0;
                   Vector2D<double> recoveredPoint1;
-                
+
                   bool result = bilaterate<double>(
                     center0, center1, r0, r1, recoveredPoint0, recoveredPoint1);
                   if(!result) {

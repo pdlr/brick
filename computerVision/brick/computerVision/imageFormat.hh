@@ -16,7 +16,7 @@
 namespace brick {
 
   namespace computerVision {
-  
+
     /**
      ** This enum indicates the acceptable image format values.  Please
      ** see the ImageFormatTraits class template for the characteristics
@@ -47,7 +47,7 @@ namespace brick {
     };
 
   } // namespace computerVision
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_IMAGEFORMAT_HH */

@@ -20,7 +20,7 @@ namespace brick {
 
   namespace numeric {
 
-    /** 
+    /**
      * This function solves for the coefficients of a 2D quadratic,
      * given the function values on a 3x3 grid around the origin.  It
      * is used internally by subpixelInterpolate(), but is exposed
@@ -48,40 +48,40 @@ namespace brick {
      * 0, 1}, y = {-1, 0, 1}, this function returns the values of k0
      * ... k5 that most nearly satisfy the equation (in the least
      * squares sense).
-     * 
+     *
      * @param value00 This argument is the value of f(-1, -1).
-     * 
+     *
      * @param value01 This argument is the value of f(0, -1).
-     * 
+     *
      * @param value02 This argument is the value of f(1, -1).
-     * 
+     *
      * @param value10 This argument is the value of f(-1, 0).
-     * 
+     *
      * @param value11 This argument is the value of f(0, 0).
-     * 
+     *
      * @param value12 This argument is the value of f(1, 0).
-     * 
+     *
      * @param value20 This argument is the value of f(-1, 1).
-     * 
+     *
      * @param value21 This argument is the value of f(0, 1).
-     * 
+     *
      * @param value22 This argument is the value of f(1, 1).
-     * 
+     *
      * @param k0 This argument returns a recovered parameter of the
      * quadratic function.
-     * 
+     *
      * @param k1 This argument returns a recovered parameter of the
      * quadratic function.
-     * 
+     *
      * @param k2 This argument returns a recovered parameter of the
      * quadratic function.
-     * 
+     *
      * @param k3 This argument returns a recovered parameter of the
      * quadratic function.
-     * 
+     *
      * @param k4 This argument returns a recovered parameter of the
      * quadratic function.
-     * 
+     *
      * @param k5 This argument returns a recovered parameter of the
      * quadratic function.
      */
@@ -94,7 +94,7 @@ namespace brick {
       Type1& k0, Type1& k1, Type1& k2, Type1& k3, Type1& k4, Type1& k5);
 
 
-    /** 
+    /**
      * Given pixel values in a 3x3 array around (centerRow,
      * centerColumn), this function fits a quadratic to the array
      * values and returns the location and interpolated value of the
@@ -108,46 +108,46 @@ namespace brick {
      * corners at (i, j), (i, j+1), (i+1, j), and (i+1, j+1).  Under
      * this convention, the center of pixel [i, j] is at row
      * coordinate (i + 0.5), column coordinate (j + 0.5).
-     * 
+     *
      * @param centerRowCoord This argument is the row coordinate of the
-     * center of the center pixel of the 3x3 neighborhood.  
-     * 
+     * center of the center pixel of the 3x3 neighborhood.
+     *
      * @param centerColumnCoord This argument is the column coordinate of the
      * center of the center pixels of the 3x3 neighborhood.
-     * 
+     *
      * @param value00 This argument is the pixel value at (centerRowCoord -
      * 1, centerColumnCoord - 1).
-     * 
+     *
      * @param value01 This argument is the pixel value at (centerRowCoord -
      * 1, centerColumnCoord).
-     * 
+     *
      * @param value02 This argument is the pixel value at (centerRowCoord -
      * 1, centerColumnCoord + 1).
-     * 
+     *
      * @param value10 This argument is the pixel value at (centerRowCoord,
      * centerColumnCoord - 1).
-     * 
+     *
      * @param value11 This argument is the pixel value at (centerRowCoord,
      * centerColumnCoord).
-     * 
+     *
      * @param value12 This argument is the pixel value at (centerRowCoord,
      * centerColumnCoord + 1).
-     * 
+     *
      * @param value20 This argument is the pixel value at (centerRowCoord +
      * 1, centerColumnCoord - 1).
-     * 
+     *
      * @param value21 This argument is the pixel value at (centerRowCoord +
      * 1, centerColumnCoord).
-     * 
+     *
      * @param value22 This argument is the pixel value at (centerRowCoord +
      * 1, centerColumnCoord + 1).
-     * 
+     *
      * @param extremumRowCoord This argument returns the (subpixel) row
      * coordinate of the recovered extremum.
-     * 
+     *
      * @param extremumColumnCoord This argument returns the (subpixel)
      * column coordinate of the recovered extremum.
-     * 
+     *
      * @param extremeValue This argument returns the interpolated
      * pixel value at the recovered extremum.
      *
@@ -169,7 +169,7 @@ namespace brick {
                         Type1& extremeValue);
 
 
-    /** 
+    /**
      * Given pixel values in a 3x1 arrangement around centerPosition,
      * this function fits a quadratic to the values and returns the
      * location and interpolated value of the extremum (max or min
@@ -181,22 +181,22 @@ namespace brick {
      * We encourage the convention that the pixel at integer
      * coordinate i has boundaries at i and (i+1).  Under this
      * convention, the center of pixel i is at coordinate (i + 0.5).
-     * 
+     *
      * @param centerPosition This argument is the coordinate of the
      * center of the center pixel of the 3x1 neighborhood.
-     * 
+     *
      * @param value0 This argument is the pixel value at
      * (centerPosition - 1).
-     * 
+     *
      * @param value1 This argument is the pixel value at
      * centerPosition.
-     * 
+     *
      * @param value2 This argument is the pixel value at
      * (centerPosition + 1).
-     * 
+     *
      * @param extremumPosition This argument returns the (subpixel)
      * position of the recovered extremum.
-     * 
+     *
      * @param extremeValue This argument returns the interpolated
      * pixel value at the recovered extremum.
      *
@@ -212,9 +212,9 @@ namespace brick {
                         Type0 value0, Type0 value1, Type0 value2,
                         Type1& extremumPosition,
                         Type1& extremeValue);
-    
+
   } // namespace numeric
-  
+
 } // namespace brick
 
 

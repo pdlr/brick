@@ -31,7 +31,7 @@ namespace brick {
 
       static const unsigned int numberOfFeatures = 16;
     };
-    
+
 
     /**
      ** This class template selects keypoints from an input image
@@ -53,46 +53,46 @@ namespace brick {
       // ========= Public member functions. =========
 
 
-      /** 
+      /**
        * Default constructor.
        */
       KeypointSelectorFast();
 
 
-      /** 
+      /**
        * This function tries to automatically set the internal
        * threshold of the algorithm based on an input image.  Lower
        * thresholds lead to more keypoints being detected.  If you
        * like, you can also set the threshold explicitly using member
        * function setThreshold().  Note that you may need to adjust
        * the threshold over time as lighting in the image changes.
-       * 
+       *
        * @param inImage This argument is the image from which to
        * estimate the threshold.
-       * 
+       *
        * @param startRow This argument specifies the bounding box of
        * the image region to use during estimation.  Omit it to
        * process the whole image.
-       * 
+       *
        * @param startColumn This argument specifies the bounding box of
        * the image region to use during estimation.  Omit it to
        * process the whole image.
-       * 
+       *
        * @param stopRow This argument specifies the bounding box of
        * the image region to use during estimation.  Omit it to
        * process the whole image.
-       * 
+       *
        * @param stopColumn This argument specifies the bounding box of
        * the image region to use during estimation.  Omit it to
        * process the whole image.
-       * 
+       *
        * @param expectedKeypointsPerImage This argument specifies
        * (roughly) how many keypoints you'd like to the automatically
        * tuned threshold to detect.
        */
       void
       estimateThreshold(
-        Image<GRAY8> const& inImage, 
+        Image<GRAY8> const& inImage,
         unsigned int startRow = 0,
         unsigned int startColumn = 0,
         unsigned int stopRow = std::numeric_limits<unsigned int>::max(),
@@ -100,44 +100,44 @@ namespace brick {
         unsigned int expectedKeypointsPerImage = 500);
 
 
-      /** 
+      /**
        * Return the keypoints detected during the most recent call to
        * member function setImage().
-       * 
+       *
        * @return The return value is vector of KeypointFast instances.
        */
       std::vector<KeypointFast>
       getKeypoints() const;
 
 
-      /** 
+      /**
        * Return the value of the threshold used in keypoint detection.
        * See member function estimateThreshold().
-       * 
+       *
        * @return The threshold value.
        */
       brick::common::Int16
       getThreshold() const;
 
 
-      /** 
+      /**
        * Process an image to find keypoints.
-       * 
+       *
        * @param inImage This argument is the image in which to look
        * for keypoints.
-       * 
+       *
        * @param startRow This argument specifies the bounding box of
        * the image region to use during estimation.  Omit it to
        * process the whole image.
-       * 
+       *
        * @param startColumn This argument specifies the bounding box of
        * the image region to use during estimation.  Omit it to
        * process the whole image.
-       * 
+       *
        * @param startRow This argument specifies the bounding box of
        * the image region to use during estimation.  Omit it to
        * process the whole image.
-       * 
+       *
        * @param startColumn This argument specifies the bounding box of
        * the image region to use during estimation.  Omit it to
        * process the whole image.
@@ -151,16 +151,16 @@ namespace brick {
         unsigned int stopColumn = std::numeric_limits<unsigned int>::max());
 
 
-      /** 
+      /**
        * Manually set the internal threshold of the algorithm.  See
        * also member function estimateThreshold().
-       * 
+       *
        * @param threshold This argument specifies the desired threshold.
        */
       void
       setThreshold(brick::common::Int16 threshold);
 
-      
+
     private:
 
       // Make sure bounding box of processing region is sane.
@@ -177,7 +177,7 @@ namespace brick {
       brick::common::Int16
       measurePixelThreshold(Image<GRAY8> const& image,
                             unsigned int row, unsigned int column) const;
-      
+
 
       // Check to see if a specific pixel should be selected as a keypoint.
       bool
@@ -202,7 +202,7 @@ namespace brick {
     };
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

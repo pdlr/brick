@@ -30,7 +30,7 @@ namespace brick {
      ** @endcode
      **
      ** Template argument TypeIn describes the contents of the input array.
-     ** 
+     **
      ** Template argument TypeOut describes the type of the
      ** interpolation result.
      **
@@ -45,9 +45,9 @@ namespace brick {
     {
     public:
 
-      /** 
+      /**
        * Constructor sets the array to be interpolated.
-       * 
+       *
        * @param image0 This argument can be an Array2D instance of any
        * type that supports basic math functions.
        */
@@ -55,16 +55,16 @@ namespace brick {
         : m_array(image0) {}
 
 
-      /** 
+      /**
        * Destructor.
        */
       ~BilinearInterpolator() {}
 
 
-      /** 
+      /**
        * The application operator performs a bilinear interpolation
        * among the elements of the array specified at construction,
-       * 
+       *
        * @return The interpolated value.
        */
       inline TypeOut
@@ -74,7 +74,7 @@ namespace brick {
 
       inline void
       checkBounds(FloatType row, FloatType column) const;
-    
+
       Array2D<TypeIn> m_array;
     };
 

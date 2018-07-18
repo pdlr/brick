@@ -16,7 +16,7 @@
 // This file is included by cameraIntrinsicsRational.hh, and should
 // not be directly included by user code, so no need to include
 // cameraIntrinsicsRational.hh here.
-// 
+//
 // #include <brick/numeric/cameraIntrinsicsRational.hh>
 
 #include <iomanip>
@@ -46,7 +46,7 @@ namespace brick {
     {
       // Empty.
     }
-      
+
 
     // This constructor allows the caller to explicitly set the
     // camera intrinsic parameters.
@@ -80,7 +80,7 @@ namespace brick {
     {
       // Empty.
     }
-    
+
 
     // This function exposes the distortion parameters of the camera
     // model.
@@ -106,10 +106,10 @@ namespace brick {
                     "CameraIntrinsicsRational::getDistortionCoefficients()",
                     "Wrong number of parameters.");
       }
-      return result;        
+      return result;
     }
-      
-      
+
+
     // This function provides a reasonable starting point for
     // intrinsic parameters that are generally estimated by
     // nonlinear optimization.
@@ -124,7 +124,7 @@ namespace brick {
       result = 0.0;
       return result;
     }
-      
+
 
     // Returns a vector of all parameters of the class.
     template <class FloatType>
@@ -153,9 +153,9 @@ namespace brick {
                     "CameraIntrinsicsRational::getFreeParameters()",
                     "Wrong number of parameters.");
       }
-      return result;        
+      return result;
     }
-    
+
 
     // This member function takes a point in 3D camera coordinates
     // and projects it into pixel coordinates.
@@ -170,7 +170,7 @@ namespace brick {
         this->getFocalLengthX() * distortedPoint.x() + this->getCenterU(),
         this->getFocalLengthY() * distortedPoint.y() + this->getCenterV());
     }
-    
+
 
     // This member function sets the calibration from an input
     // stream.
@@ -183,7 +183,7 @@ namespace brick {
       if (!stream){
         return stream;
       }
-    
+
       // We'll silently skip whitespace.
       common::Expect::FormatFlag flags = common::Expect::SkipWhitespace();
 
@@ -202,7 +202,7 @@ namespace brick {
       FloatType radialCoefficient5;
       FloatType tangentialCoefficient0;
       FloatType tangentialCoefficient1;
-      
+
       stream >> common::Expect("CameraIntrinsicsRational", flags);
       stream >> common::Expect("{", flags);
       stream >> numpixelsX;
@@ -266,7 +266,7 @@ namespace brick {
       // We'll want this later to avoid computing a bunch of square roots.
       FloatType requiredPrecisionSquared =
         requiredPrecision * requiredPrecision;
-      
+
       // First project back through pinhole parameters to get a point
       // we can reverse project through the distortion model.  See
       // CameraIntrinsicsPinhole::reverseProject() for an explanation
@@ -281,25 +281,25 @@ namespace brick {
       while(1) {
         // We have x0 = a(x) * x + b(x),
         // where a(x) is radial distortion, and b(x) is tangential distortion.
-        // 
+        //
         // Approximate that as x0 ~= a(xHat) * x + b(xHat)
         // Gives us x ~= (x0 - b(xHat)) / a(xHat)
-        // 
+        //
         // Iterate on this.  This converges as long as the gradient of
         // the distortion field has magnitude less than 1.0.
-    
+
         FloatType xSquared = xHat.x() * xHat.x();
         FloatType ySquared = xHat.y() * xHat.y();
         FloatType rSquared = xSquared + ySquared;
         FloatType rFourth = rSquared * rSquared;
         FloatType rSixth = rSquared * rFourth;
-    
+
         // Compute radial distortion terms.
         FloatType radialDistortionNumerator =
           (1.0 + m_radialCoefficient0 * rSquared
            + m_radialCoefficient1 * rFourth
            + m_radialCoefficient2 * rSixth);
-        FloatType radialDistortionDenominator = 
+        FloatType radialDistortionDenominator =
           (1.0 + m_radialCoefficient3 * rSquared
            + m_radialCoefficient4 * rFourth
            + m_radialCoefficient5 * rSixth);
@@ -313,7 +313,7 @@ namespace brick {
            + m_tangentialCoefficient1 * (rSquared + 2.0 * xSquared)),
           (m_tangentialCoefficient0 * (rSquared + 2.0 * ySquared)
            + 2.0 * m_tangentialCoefficient1 * crossTerm));
-    
+
         // Apply distortion.
         brick::numeric::Vector2D<FloatType> xNext =
           (x0 - tangentialDistortion) * oneOverRadialDistortion;
@@ -396,8 +396,8 @@ namespace brick {
                     "Wrong number of parameters.");
       }
     }
-    
-    
+
+
     // This member function writes the calibration to an
     // outputstream in a format that is compatible with member
     // function readFromStream().
@@ -463,8 +463,8 @@ namespace brick {
       dVdX = kY * dYDdX;
       dVdY = kY * dYDdY;
     }
-    
-    
+
+
     // This member function takes a 2D point in the Z==1 plane of
     // camera coordinates, and returns an "distorted" version of
     // that 2D point.
@@ -479,13 +479,13 @@ namespace brick {
       FloatType rSquared = xSquared + ySquared;
       FloatType rFourth = rSquared * rSquared;
       FloatType rSixth = rSquared * rFourth;
-    
+
       // Compute radial distortion terms.
       FloatType radialDistortionNumerator =
         (1.0 + m_radialCoefficient0 * rSquared
          + m_radialCoefficient1 * rFourth
          + m_radialCoefficient2 * rSixth);
-      FloatType radialDistortionDenominator = 
+      FloatType radialDistortionDenominator =
         (1.0 + m_radialCoefficient3 * rSquared
          + m_radialCoefficient4 * rFourth
          + m_radialCoefficient5 * rSixth);
@@ -499,13 +499,13 @@ namespace brick {
          + m_tangentialCoefficient1 * (rSquared + 2.0 * xSquared)),
         (m_tangentialCoefficient0 * (rSquared + 2.0 * ySquared)
          + 2.0 * m_tangentialCoefficient1 * crossTerm));
-    
+
       // Apply distortion and return.
       return brick::numeric::Vector2D<FloatType> (
         radialDistortion * point + tangentialDistortion);
     }
 
-    
+
     template <class FloatType>
     inline brick::numeric::Vector3D<FloatType>
     CameraIntrinsicsRational<FloatType>::
@@ -601,7 +601,7 @@ namespace brick {
       FloatType crossTerm = xNorm * yNorm;
       FloatType dCrossTermDX = yNorm;
       FloatType dCrossTermDY = xNorm;
-      
+
       brick::numeric::Vector2D<FloatType> tangentialDistortion(
         (2.0 * m_tangentialCoefficient0 * crossTerm
          + m_tangentialCoefficient1 * (rSquared + 2.0 * xSquared)),
@@ -693,7 +693,7 @@ namespace brick {
       imageY.setPartialDerivative(5, 1.0);
       DiffScalar0 distortedX = (imageX - cU) / fX;
       DiffScalar0 distortedY = (imageY - cV) / fY;
-      
+
       // Reverse projection is done iteratively, in a way that doesn't
       // lend itself to automatic differentiation.  Here we do the
       // reverse projection _without_ derivatives.
@@ -716,7 +716,7 @@ namespace brick {
         rectifiedX, rectifiedY);
       brick::numeric::Vector2D<DiffScalar1> distortedPoint =
         diffIntrinsics.projectThroughDistortion(rectifiedVector2D);
-        
+
       // Now that we know the partial derivatives of the forward
       // projection, Use the inverse function theorem to recover
       // partials of the rectified point (the point we just found) wrt
@@ -743,7 +743,7 @@ namespace brick {
       FloatType b01 = -a01 / determinant;
       FloatType b10 = -a10 / determinant;
       FloatType b11 = a00 / determinant;
-      
+
       // Now we use this jacobian to propagate all our other partial
       // derivatives (including those we got from the forward
       // projection) through the reverse projection.
@@ -756,7 +756,7 @@ namespace brick {
       // We also need the jacobian of the distorted point wrt all of
       // our parameters.  We allocate space for this here.
       brick::numeric::Array2D<FloatType> dDistdParams(2, numParameters);
-      
+
       // The first four columns describe derivatives with respect to
       // pinhole parameters.  For these parameters, the jacobian we're
       // after is a straightforward composition of [the partial
@@ -806,9 +806,9 @@ namespace brick {
 
       return true;
     }
-    
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_CAMERAINTRINSICSRATIONAL_IMPL_HH */

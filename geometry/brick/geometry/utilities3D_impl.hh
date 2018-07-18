@@ -16,7 +16,7 @@
 
 // This file is included by utilities3D.hh, and should not be directly
 // included by user code, so no need to include utilities3D.hh here.
-// 
+//
 // #include <brick/geometry/utilities3D.hh>
 
 #include <sstream>
@@ -52,12 +52,12 @@ namespace brick {
         FloatType determinant = ATA(0, 0) * ATA(1, 1) - ATA(0, 1) * ATA(1, 0);
         if(brick::numeric::absoluteValue(determinant)
            < brick::numeric::NumericTraits<FloatType>::epsilon()) {
-          
+
           BRICK_THROW(brick::common::ValueException,
                       "geometry::privateCode::psuedoInverse()",
                       "Matrix is not full rank");
         }
-        
+
         brick::numeric::Array2D<FloatType> ATAInv(2, 2);
         ATAInv(0, 0) = ATA(1, 1) / determinant;
         ATAInv(0, 1) = -(ATA(0, 1) / determinant);
@@ -65,7 +65,7 @@ namespace brick {
         ATAInv(1, 1) = ATA(0, 0) / determinant;
         return brick::numeric::matrixMultiply<FloatType>(ATAInv, ATranspose);
       }
-      
+
     } // namespace privateCode
 
 
@@ -87,7 +87,7 @@ namespace brick {
       Type dummy;
       return checkIntersect(ray, triangle, intersect, dummy);
     }
-    
+
 
     template <class Type>
     bool
@@ -124,7 +124,7 @@ namespace brick {
       // We rearrange this equation and solve for alpha_0, alpha_1, and beta.
       brick::common::Float64 bufferA[9];
       brick::common::Float64 bufferB[3];
-      
+
       brick::numeric::Array2D<brick::common::Float64> AMatrix(3, 3, bufferA);
       brick::numeric::Array1D<brick::common::Float64> bVector(3, bufferB);
 
@@ -132,7 +132,7 @@ namespace brick {
         triangle.getVertex1() - triangle.getVertex0();
       brick::numeric::Vector3D<Type> e_1 =
         triangle.getVertex2() - triangle.getVertex0();
-      
+
       AMatrix[0] = e_0.x();
       AMatrix[3] = e_0.y();
       AMatrix[6] = e_0.z();
@@ -179,7 +179,7 @@ namespace brick {
         brick::numeric::cross(offsetFromVertex1, e_2);
       Type dotProduct =
         brick::numeric::dot<Type>(crossProduct0, crossProduct1);
-      
+
       if(dotProduct >= 0.0) {
         return false;
       }
@@ -189,7 +189,7 @@ namespace brick {
       return true;
     }
 
-    
+
     template <class Type>
     brick::numeric::Vector3D<Type>
     findIntersect(Ray3D<Type> const& ray, Plane3D<Type> const& plane)
@@ -198,14 +198,14 @@ namespace brick {
       return findIntersect(ray, plane, dummy);
     }
 
-    
+
     template <class Type>
     brick::numeric::Vector3D<Type>
     findIntersect(Ray3D<Type> const& ray, Plane3D<Type> const& plane, Type& distance)
     {
       brick::common::Float64 bufferA[9];
       brick::common::Float64 bufferB[3];
-      
+
       brick::numeric::Array2D<Type> AMatrix(3, 3, bufferA);
       brick::numeric::Array1D<Type> bVector(3, bufferB);
 
@@ -231,11 +231,11 @@ namespace brick {
                 << plane << ".  Perhaps the ray is parallel to the plane.";
         BRICK_THROW(brick::common::ValueException, "findIntersect()", message.str().c_str());
       }
-      
+
       distance = bVector[0];
       return ray.getOrigin() + distance * ray.getDirectionVector();
     }
-     
+
 
     template <class Type>
     brick::numeric::Vector3D<Type>
@@ -265,7 +265,7 @@ namespace brick {
       // @verbatim
       //   [v_0; -v_1] * [a_0; a_1]^T = [z_1 - z_0]
       // @endverbatim
-      
+
       brick::numeric::Array2D<Type> AMatrix(3, 2);
       AMatrix(0, 0) = ray0.getDirectionVector().x();
       AMatrix(1, 0) = ray0.getDirectionVector().y();
@@ -299,7 +299,7 @@ namespace brick {
       residual = brick::numeric::magnitude<Type>(point1 - point0) / 2.0;
       return Type(0.5) * (point0 + point1);
     }
-    
+
 
     template <class Type>
     Circle3D<Type>
@@ -313,7 +313,7 @@ namespace brick {
         true);
     }
 
-    
+
     template <class Type>
     Plane3D<Type>
     operator*(brick::numeric::Transform3D<Type> const& transform,
@@ -340,8 +340,8 @@ namespace brick {
         transform * (inputRay.getOrigin() + inputRay.getDirectionVector());
       return Ray3D<Type>(newOrigin, newEndpoint - newOrigin, false);
     }
-    
-    
+
+
     template <class Type>
     Triangle3D<Type>
     operator*(brick::numeric::Transform3D<Type> const& transform,
@@ -358,7 +358,7 @@ namespace brick {
 
 
   } // namespace utilities
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_GEOMETRY_UTILITIES3D_IMPL_HH */

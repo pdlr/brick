@@ -44,19 +44,19 @@ namespace brick {
 
       Mode mode = FOREGROUND_BACKGROUND;
     };
-    
-    
+
+
     /**
      * This function does connected components analysis on a previously
      * segmented image.
-     * 
+     *
      * @param inputImage This argument is the segmented image.  Pixels
      * which are not part of a blob must have value of 0.  All other
      * values are considered to be blob pixels.  All non-zero pixels are
      * considered to be part of the same class.  That is, adjacent
      * pixels with different non-zero values will be considered to be
      * part of the same blob.
-     * 
+     *
      * @return The return value is an image of labels in which each
      * pixel describes the the corresponding pixel of the input image.
      * Blobs in the input image will be labeled 0, 1, 2, etc. in the
@@ -69,13 +69,13 @@ namespace brick {
     connectedComponents(const Image<FORMAT_IN>& inputImage,
                         ConnectedComponentsConfig const& config
                         = ConnectedComponentsConfig());
-  
+
 
     /**
      * This function is just like connectedComponents(const Image&),
      * except that it also returns (by reference) the number of
      * components in the image.
-     * 
+     *
      * @param inputImage This argument is the segmented image.  Pixels
      * which are not part of a blob must have value of 0.  All other
      * values are considered to be blob pixels.  All non-zero pixels are
@@ -86,7 +86,7 @@ namespace brick {
      * @param numberOfComponents This argument returns by reference
      * how many distinct components were identified in the image, not
      * counting the background.
-     * 
+     *
      * @return The return value is an image of labels in which each
      * pixel describes the the corresponding pixel of the input image.
      * Blobs in the input image will be labeled 0, 1, 2, etc. in the
@@ -102,7 +102,7 @@ namespace brick {
                         = ConnectedComponentsConfig());
 
   } // namespace computerVision
-    
+
 } // namespace brick
 
 // Include file containing definitions of inline and template

@@ -81,7 +81,7 @@ namespace brick {
       : public std::unary_function<typename SSDFunctor::argument_type, Scalar>
     {
     public:
-      /** 
+      /**
        * Constructor.
        *
        * @param functor This argument is the function object to be
@@ -93,26 +93,26 @@ namespace brick {
        * of 2 * epsilon.
        */
       GradientFunctionLM(const SSDFunctor& functor, Scalar epsilon=1.0e-6);
-      
 
-      /** 
+
+      /**
        * Destructor.
        */
       virtual ~GradientFunctionLM() {}
 
-      
-      /** 
+
+      /**
        * This operator evaluates the sum-of-squares error at the
        * specified point.
-       * 
+       *
        * @param theta The point at which to evaluate the function.
        * @return The function value at theta.
        */
       Scalar
       operator()(const typename SSDFunctor::argument_type& theta);
 
-      
-      /** 
+
+      /**
        * This method approximates the gradient and Hessian matrix of
        * this->operator().  The Jacobian of SSDFunctor::operator()()
        * is computed by divided differences, the gradient is computed
@@ -124,7 +124,7 @@ namespace brick {
        * This function will throw ValueException if you set
        * constructor argument epsilon small enough that, when added to
        * the elements of theta, it gets completely rounded away.
-       * 
+       *
        * @param theta The point around which to compute the gradient
        * and hessian.
        *
@@ -133,7 +133,7 @@ namespace brick {
        * argument should be controlled by a template parameter.  This
        * will be fixed when we finally get around to overhauling the
        * Optimizer* template parameters.
-       * 
+       *
        * @param d2EdX2 This argument is used to return the computed
        * Hessian matrix to the calling context.  Note that the type if
        * this argument should be controlled by a template parameter.
@@ -145,7 +145,7 @@ namespace brick {
         typename SSDFunctor::argument_type const& theta,
         brick::numeric::Array1D<brick::common::Float64>& dEdX,
         brick::numeric::Array2D<brick::common::Float64>& d2EdX2);
-      
+
     private:
       SSDFunctor m_functor;
       Scalar m_epsilon;
@@ -176,13 +176,13 @@ namespace brick {
         m_epsilon(epsilon)
     {
       if(epsilon == 0.0) {
-        BRICK_THROW(brick::common::ValueException, 
+        BRICK_THROW(brick::common::ValueException,
 		    "GradientFunctionLM::GradientFunctionLM()",
 		    "Invalid value (0.0) for argument epsilon.");
       }
     }
 
-    
+
     // This operator evaluates the sum-of-squares error at the
     // specified point.
     template <class SSDFunctor, class Scalar>
@@ -212,7 +212,7 @@ namespace brick {
     {
       // Note(xxx): Move all of these Array?D constructors out of this
       // function so as to not do gobs of extra new/delete cycles.
-      
+
       // Get oriented.
       typename SSDFunctor::result_type errorTerms = this->m_functor(theta);
 
@@ -257,13 +257,13 @@ namespace brick {
       }
       dEdX = brick::numeric::matrixMultiply<Scalar>(jacobian, errorTerms);
       dEdX *= 2.0;
-      
+
       // Compute Hession estimate.
       d2EdX2 = brick::numeric::matrixMultiply<Scalar>(
         jacobian, jacobian.transpose());
       d2EdX2 *= 2.0;
     }
-    
+
   } // namespace optimization
 
 } // namespace brick

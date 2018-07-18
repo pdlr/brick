@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
-* @file array2DTest.cpp
-* 
+* @file brick/numeric/test/array2DTest.cpp
+*
 * Source file defining Array2DTest class.
 *
 * Copyright (C) 2004-2011 David LaRose, dlr@cs.cmu.edu
@@ -45,46 +45,46 @@ namespace brick {
       checkShapeEquality(const Array2D<Type>& array0,
                          const Array2D<Type>& array1);
 
-    
+
       virtual void
       checkShapeEquality(const Array2D<Type>& array0,
                          const Array2D<bool>& array1);
 
-    
+
       virtual void
       checkValueEquality(const Array2D<Type>& array0,
                          const Array2D<Type>& array1,
                          typename Array2D<Type>::value_type tolerance);
 
-    
+
       virtual typename Array2D<Type>::value_type
       getComparisonOperatorThreshold() {
         return m_fibonacciCArray[m_defaultArraySize / 2];
       }
 
-    
+
       virtual typename Array2D<Type>::value_type
       getEqualityOperatorTarget() {
         return m_squaresCArray[m_defaultArraySize / 2];
       }
 
-    
+
       virtual Array2D<Type>
       getFibonacciArray() {return Array2D<Type>(m_fibonacciString);}
 
-    
+
       virtual typename Array2D<Type>::value_type
       getIncrementOperatorArgument() {return static_cast<Type>(4);}
 
-    
+
       virtual typename Array2D<Type>::value_type
       getMultiplicationOperatorArgument() {return static_cast<Type>(2);}
 
-    
+
       virtual Array2D<Type>
       getSquaresArray() {return Array2D<Type>(m_squaresString);}
 
-    
+
       // Tests of member functions.
       void testConstructor__void();
       void testConstructor__size_t__size_t();
@@ -139,7 +139,7 @@ namespace brick {
 
 
     private:
-    
+
       size_t m_defaultArrayColumns;
       size_t m_defaultArrayRows;
       size_t m_defaultArraySize;
@@ -152,7 +152,7 @@ namespace brick {
       Type* m_squaresCArray;
       std::string m_squaresString;
       double m_testEpsilon;
-    
+
     }; // class Array2DTest
 
 
@@ -171,7 +171,7 @@ namespace brick {
         m_defaultMultiplier(2),
         m_fibonacciCArray(0),
         m_fibonacciString(""),
-        m_illegalString(),      
+        m_illegalString(),
         m_squaresCArray(0),
         m_squaresString(""),
         m_testEpsilon(1.0e-8)
@@ -227,7 +227,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testSquareRoot__Array2D);
       BRICK_TEST_REGISTER_MEMBER(testSqrt__Array2D);
 
-    
+
       // Set up fibonacci data for tests.
       m_fibonacciCArray = new Type[m_defaultArraySize];
       m_fibonacciCArray[0] = static_cast<Type>(1);
@@ -324,7 +324,7 @@ namespace brick {
                                    ApproximatelyEqualFunctor<Type>(tolerance)));
     }
 
-  
+
     template <class Type>
     void
     Array2DTest<Type>::
@@ -336,7 +336,7 @@ namespace brick {
       BRICK_TEST_ASSERT(array0.columns() == 0);
       BRICK_TEST_ASSERT(array0.size() == 0);
     }
-  
+
 
     template <class Type>
     void
@@ -349,7 +349,7 @@ namespace brick {
       BRICK_TEST_ASSERT(array0.columns() == m_defaultArrayColumns);
       BRICK_TEST_ASSERT(array0.size() == m_defaultArraySize);
     }
-  
+
 
     template <class Type>
     void
@@ -381,7 +381,7 @@ namespace brick {
         }
       }
     }
-  
+
 
     template <class Type>
     void
@@ -403,7 +403,7 @@ namespace brick {
                                   Array2D<Type> array1(m_illegalString));
 
     }
-  
+
 
     template <class Type>
     void
@@ -426,7 +426,7 @@ namespace brick {
       BRICK_TEST_ASSERT(std::equal(array1.begin(), array1.end(),
                                    m_fibonacciCArray));
     }
-  
+
 
     template <class Type>
     void
@@ -439,7 +439,7 @@ namespace brick {
       Type* cArray = new Type[m_defaultArraySize];
       std::copy(m_fibonacciCArray, m_fibonacciCArray + m_defaultArraySize,
                 cArray);
-    
+
       // Create an array using the constructor under test.
       Array2D<Type>* array0Ptr = new Array2D<Type>(
         m_defaultArrayRows, m_defaultArrayColumns, cArray);
@@ -457,7 +457,7 @@ namespace brick {
       // Clean up.
       delete[] cArray;
     }
-  
+
 
 //   testConstructor__size_t__TypePtr__size_tPtr()
 //   {
@@ -487,7 +487,7 @@ namespace brick {
 //   }
 
 
-  
+
     template <class Type>
     void
     Array2DTest<Type>::
@@ -580,7 +580,7 @@ namespace brick {
       BRICK_TEST_ASSERT(array1.rows() == array0.rows());
       BRICK_TEST_ASSERT(array1.columns() == array0.columns());
       BRICK_TEST_ASSERT(std::equal(array1.begin(), array1.end(), array0.begin()));
-      BRICK_TEST_ASSERT(array1.data() != array0.data());    
+      BRICK_TEST_ASSERT(array1.data() != array0.data());
     }
 
 
@@ -693,7 +693,7 @@ namespace brick {
         m_defaultArrayRows, m_defaultArrayColumns, m_fibonacciCArray);
       BRICK_TEST_ASSERT(array0.data(0, 0) == m_fibonacciCArray);
       BRICK_TEST_ASSERT(array0.data(0, 1) == (m_fibonacciCArray + 1));
-      BRICK_TEST_ASSERT(array0.data(1, 0) 
+      BRICK_TEST_ASSERT(array0.data(1, 0)
                         == (m_fibonacciCArray + m_defaultArrayColumns));
       BRICK_TEST_ASSERT(array0.data(m_defaultArrayRows - 1,
                                     m_defaultArrayColumns - 1)
@@ -712,7 +712,7 @@ namespace brick {
         m_defaultArrayRows, m_defaultArrayColumns, m_fibonacciCArray);
       BRICK_TEST_ASSERT(array0.data(0, 0) == m_fibonacciCArray);
       BRICK_TEST_ASSERT(array0.data(0, 1) == (m_fibonacciCArray + 1));
-      BRICK_TEST_ASSERT(array0.data(1, 0) 
+      BRICK_TEST_ASSERT(array0.data(1, 0)
                         == (m_fibonacciCArray + m_defaultArrayColumns));
       BRICK_TEST_ASSERT(array0.data(m_defaultArrayRows - 1,
                                     m_defaultArrayColumns - 1)
@@ -732,7 +732,7 @@ namespace brick {
       Type* finalElementPtr = m_fibonacciCArray + m_defaultArraySize;
       BRICK_TEST_ASSERT(&(*(array0.end())) == finalElementPtr);
     }
-    
+
 
     template <class Type>
     void
@@ -756,12 +756,12 @@ namespace brick {
       // Create an array in which every element is set to 1.
       Array2D<Type> fullArray(10, 20);
       fullArray = Type(1);
-      
+
       // Get an array that refers to a 4x4 subset of fullArray.
       Index2D corner0(5, 10);
       Index2D corner1(9, 14);
       Array2D<Type> subRegion = fullArray.getRegion(corner0, corner1);
-      
+
       // Set just the elements within that subset to 100.
       subRegion = Type(100);
 
@@ -774,9 +774,9 @@ namespace brick {
 
           if((static_cast<int>(rr) == corner0.getRow()    + 1) &&
              (static_cast<int>(cc) == corner0.getColumn() + 2)) {
-            
+
             BRICK_TEST_ASSERT(Type(50) == fullArray(rr, cc));
-            
+
           } else if((static_cast<int>(rr) >= corner0.getRow()) &&
                     (static_cast<int>(rr) <  corner1.getRow()) &&
                     (static_cast<int>(cc) >= corner0.getColumn()) &&
@@ -816,7 +816,7 @@ namespace brick {
       BRICK_TEST_ASSERT(std::equal(array1.begin(), array1.end(),
                                    m_fibonacciCArray));
     }
-  
+
 
     template <class Type>
     void
@@ -828,7 +828,7 @@ namespace brick {
       const Array2D<Type>* array0Ptr = new Array2D<Type>(
         m_defaultArrayRows, m_defaultArrayColumns, m_fibonacciCArray);
       const Array1D<Type> array1 = array0Ptr->ravel();
-    
+
       // Check for correct value.
       BRICK_TEST_ASSERT(array1.size() == array0Ptr->size());
       BRICK_TEST_ASSERT(array1.data() == array0Ptr->data());
@@ -840,7 +840,7 @@ namespace brick {
       BRICK_TEST_ASSERT(std::equal(array1.begin(), array1.end(),
                                    m_fibonacciCArray));
     }
-  
+
 
     template <class Type>
     void
@@ -892,7 +892,7 @@ namespace brick {
       BRICK_TEST_ASSERT(array0.data() != m_fibonacciCArray);
     }
 
-  
+
     template <class Type>
     void
     Array2DTest<Type>::
@@ -905,8 +905,8 @@ namespace brick {
 
       // Test that size is checked.
       BRICK_TEST_ASSERT_EXCEPTION(
-        common::ValueException, 
-        array0.reshape(static_cast<int>(m_defaultArrayRows) + 1, 
+        common::ValueException,
+        array0.reshape(static_cast<int>(m_defaultArrayRows) + 1,
                        static_cast<int>(m_defaultArrayColumns) + 2));
 
       // Check that correctly sized reshapes work.
@@ -936,7 +936,7 @@ namespace brick {
       }
     }
 
-  
+
     template <class Type>
     void
     Array2DTest<Type>::
@@ -955,7 +955,7 @@ namespace brick {
       }
     }
 
-  
+
     template <class Type>
     void
     Array2DTest<Type>::
@@ -1010,10 +1010,10 @@ namespace brick {
 
       BRICK_TEST_ASSERT(array0.rows() == m_defaultArrayRows);
       BRICK_TEST_ASSERT(array0.columns() == m_defaultArrayColumns);
-      BRICK_TEST_ASSERT(array0.size() == m_defaultArraySize);    
+      BRICK_TEST_ASSERT(array0.size() == m_defaultArraySize);
       BRICK_TEST_ASSERT(array1.rows() == m_defaultArrayColumns);
       BRICK_TEST_ASSERT(array1.columns() == m_defaultArrayRows);
-      BRICK_TEST_ASSERT(array1.size() == m_defaultArraySize);    
+      BRICK_TEST_ASSERT(array1.size() == m_defaultArraySize);
       size_t index0 = 0;
       for(size_t row = 0; row < m_defaultArrayRows;
           ++row) {
@@ -1024,7 +1024,7 @@ namespace brick {
         }
       }
     }
-  
+
 
     template <class Type>
     void
@@ -1048,7 +1048,7 @@ namespace brick {
                                    m_fibonacciCArray));
     }
 
-  
+
     template <class Type>
     void
     Array2DTest<Type>::
@@ -1075,7 +1075,7 @@ namespace brick {
       BRICK_TEST_ASSERT(firstRenegade == array0.end());
     }
 
-  
+
     template <class Type>
     void
     Array2DTest<Type>::
@@ -1188,7 +1188,7 @@ namespace brick {
       }
     }
 
-    
+
     // General test of square root is not performed, since square root
     // only makes sense for certain types.
     template <class Type>
@@ -1224,7 +1224,7 @@ namespace brick {
           approximatelyEqual(array1(index0), targetValue, 1.0E-14));
       }
     }
-  
+
 
 
     // General test of square root is not performed, since square root
@@ -1264,7 +1264,7 @@ namespace brick {
     }
 
   } // namespace numeric
- 
+
 } // namespace brick
 
 
@@ -1295,4 +1295,3 @@ namespace {
 }
 
 #endif
-

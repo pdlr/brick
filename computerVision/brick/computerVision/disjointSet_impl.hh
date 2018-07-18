@@ -16,7 +16,7 @@
 
 // This file is included by disjointSet.hh, and should not be directly included
 // by user code, so no need to include disjointSet.hh here.
-// 
+//
 // #include <brick/computerVision/disjointSet.hh>
 
 
@@ -53,8 +53,8 @@ namespace brick {
     {
       // Empty.
     }
-        
-        
+
+
     // This member function returns a reference to the head of the
     // set to which *this belongs.
     template <class Type>
@@ -67,7 +67,7 @@ namespace brick {
       while(headPtr->m_parentPtr != headPtr) {
         headPtr = headPtr->m_parentPtr;
       }
-        
+
       // Now do the same thing again, but this time update all of
       // the parent pointers to point directly at the head.
       DisjointSet<Type>* updatePtr = this;
@@ -134,7 +134,7 @@ namespace brick {
         ++(myParent.m_rank);
       }
     }
-      
+
 
     // This member function returns the payload associated with
     // *this.
@@ -145,7 +145,7 @@ namespace brick {
     {
       return m_payload;
     }
-        
+
 
     // This member function returns the number of members in the set
     // of which *this is a member.
@@ -166,9 +166,9 @@ namespace brick {
     {
       m_payload = payload;
     }
-      
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

@@ -15,7 +15,7 @@
 
 // This file is included by ellipse2D.hh, and should not be directly included
 // by user code, so no need to include ellipse2D.hh here.
-// 
+//
 // #include <brick/geometry/ellipse2D.hh>
 
 #include <brick/linearAlgebra/linearAlgebra.hh>
@@ -29,7 +29,7 @@
 namespace brick {
 
   namespace geometry {
-    
+
     // The default constructor initializes to the unit circle.
     template <class Type>
     Ellipse2D<Type>::
@@ -41,7 +41,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // This constructor initializes the ellipse using explicitly
     // specified values.
     template <class Type>
@@ -58,7 +58,7 @@ namespace brick {
       }
     }
 
-    
+
     // This constructor initializes the ellipse using explicitly
     // specified values.
     template <class Type>
@@ -73,7 +73,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // The copy constructor deep copies its argument.
     template <class Type>
     Ellipse2D<Type>::
@@ -110,7 +110,7 @@ namespace brick {
     estimate(IterType beginIter, IterType endIter)
     {
       // This algorithm is based on the ellipse parameterization
-      // 
+      //
       //   F(x, y) = a * x^2 + b * x * y + c * y^2 + d * x + e * y + f = 0,
       //
       // with the ellipse-specific constraint
@@ -133,7 +133,7 @@ namespace brick {
       // constraint matrix, identically zero except for a -1 in the
       // second element of the second row, and 2s in the third element
       // of the first row and the first element of the third row.
-      // 
+      //
       // Minimizing F(x, y) in the least squares sense, we have
       //
       //   aHat = min_over_a(a^T * S * a)
@@ -199,7 +199,7 @@ namespace brick {
                     "Ellipse2D::estimate()",
                     "Input points are not sufficient to estimate ellipse.");
       }
-      
+
       // After some algebra, Halir & Flasser reduce this the solution
       // for the first three elements to an eigenproblem with 3x3
       // matrix M.
@@ -349,12 +349,12 @@ namespace brick {
          || ((aa > cc) && (bb < 0.0))){
         SS = -SS;
       }
-      
+
       // Finally, solve for the scale of the ellipse and recover the
       // scaled major and minor axes.
       Type PP = aa * CC * CC + cc * SS * SS + bb * CC * SS;
       Type QQ = aa * SS * SS + cc * CC * CC - bb * CC * SS;
-      
+
 #if 0
       brick::numeric::Array2D<Type> AA(3, 3);
       AA(0,0) = 2 * aa;
@@ -377,7 +377,7 @@ namespace brick {
       Type rho = gamma / (2 * phi);
       Type alpha = brick::common::squareRoot(rho / PP);
       Type beta = brick::common::squareRoot(rho / QQ);
-      
+
       if(alpha >= beta) {
         semimajorAxis.setValue(alpha * CC, alpha * SS);
         semiminorAxis.setValue(-beta * SS, beta * CC);
@@ -400,9 +400,9 @@ namespace brick {
              << ellipse.getSemiminorAxis() << " }";
       return stream;
     }
-    
+
   } // namespace geometry
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_GEOMETRY_ELLIPSE2D_IMPL_HH */

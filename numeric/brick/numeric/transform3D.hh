@@ -19,12 +19,12 @@
 namespace brick {
 
   namespace numeric {
-    
+
     // Forward declaration.
     template <class Type>
     class Transform3DFunctor;
 
-  
+
     /**
      ** The Transform3D class represents a homogeneous coordinate
      ** transform from one 3D coordinate system to another 3D
@@ -34,21 +34,21 @@ namespace brick {
     class Transform3D {
     public:
 
-      /** 
+      /**
        * Default constructor.  Initializes to identity.
        */
       inline
       Transform3D();
 
-      
-      /** 
+
+      /**
        * Build a Transform3D instance by explicitly setting element values
        * as if setting the elements of a 4x4 transformation matrix:
        *    [[a00, a01, a02, a03],
        *     [a10, a11, a12, a13],
        *     [a20, a21, a22, a23],
        *     [a30, a31, a32, a33]]
-       * 
+       *
        * @param a00 The value of one element of the transformation matrix.
        * @param a01 The value of one element of the transformation matrix.
        * @param a02 The value of one element of the transformation matrix.
@@ -77,7 +77,28 @@ namespace brick {
         bool doNormalize = false);
 
 
-      /** 
+      /**
+       * Build a Transform3D instance from a sequence that specifies
+       * element values in row major order.
+       *
+       *   [a0, a1, a2, a3,
+       *    a4, a5, a6, a7
+       *    a8, a9, a10, a11,
+       *    a12, a13, a14, a15]
+       *
+       * @param sequence A sequence of 15 or more elements that
+       * specifies the elements of the transform.  If the sequence has
+       * only 15 elements, then a value of Type(1.0) is used for the
+       * 16th element.
+       *
+       * @param doNormalize If true, the matrix will be rescaled so that its
+       * lower right element is 1.0.
+       */
+      Transform3D(std::initializer_list<Type> sequence,
+                  bool doNormalize = false);
+
+
+      /**
        * Build a Transform3D from a homogeneous 4x4 matrix.
        *
        * @param source A 2D array containing the elements of the desired
@@ -86,22 +107,22 @@ namespace brick {
       Transform3D(const Array2D<Type>& source);
 
 
-      /** 
+      /**
        * The copy constructor simply duplicates its argument.
-       * 
+       *
        * @param src This is the Transform3D instance to be copied.
        */
       inline
       Transform3D(Transform3D<Type> const& src);
 
 
-      /** 
+      /**
        * Destructor.
        */
       ~Transform3D() {}
 
 
-      /** 
+      /**
        * This member function returns a functor which makes it easier to
        * transform arrays of points using algorithms such as
        * std::transform().  For example:
@@ -110,7 +131,7 @@ namespace brick {
        * std::transform(myPoints.begin(), myPoints.end(), myNewPoints.begin(),
        *                myTransform.getFunctor());
        * @endcode
-       * 
+       *
        * @return The return value is a functor instance which will
        * transform points according to the current value of *this.  The
        * functor will contain a copy of *this, so that subsequent
@@ -118,9 +139,9 @@ namespace brick {
        */
       Transform3DFunctor<Type>
       getFunctor() const;
-    
 
-      /** 
+
+      /**
        * This member function returns one element from the matrix
        * representation of the coordinate transform by value.  Note
        * that indexing is zero-based.  For example, calling
@@ -130,7 +151,7 @@ namespace brick {
        * faster than operator()(), but the indices must be known at
        * compile time.  This is an alias for member function template
        * value<row, column>().
-       * 
+       *
        * @return The value of the requested element.
        */
       template <size_t row, size_t column>
@@ -139,17 +160,17 @@ namespace brick {
       getValue() const;
 
 
-      /** 
+      /**
        * This member function returns the inverse of *this.  It is an
        * error if *this is not invertible.
-       * 
+       *
        * @return The return value is the inverse of *this.
        */
       Transform3D
       invert() const;
 
-    
-      /** 
+
+      /**
        * Assuming the *this represents a rigid body transformation,
        * this member function takes a point and applies only the
        * rotational part of the coordinate transform, returning the
@@ -161,22 +182,22 @@ namespace brick {
        * transform (i.e., the upper-left 3x3 submatrix is orthogonal,
        * and the bottom row is [0, 0, 0, 1]), but does not check that
        * this is true.
-       * 
+       *
        * @param vector0 The point to be transformed.
        * @return The result of the transformation.
        */
       Vector3D<Type>
       rotate(const Vector3D<Type>& vector0) const;
 
-      
-      /** 
+
+      /**
        * Change the Transform3D value by explicitly setting element values
        * as if setting the elements of a 4x4 transformation matrix:
        *    [[a00, a01, a02, a03],
        *     [a10, a11, a12, a13],
        *     [a20, a21, a22, a23],
        *     [a30, a31, a32, a33]]
-       * 
+       *
        * @param a00 The value of one element of the transformation matrix.
        * @param a01 The value of one element of the transformation matrix.
        * @param a02 The value of one element of the transformation matrix.
@@ -206,7 +227,7 @@ namespace brick {
 
 
 
-      /** 
+      /**
        * This member function sets one element of the matrix
        * representation of the coordinate transform.  Note that indexing
        * is zero-based.  For example, calling myTransform3D.setValue(1,
@@ -218,13 +239,13 @@ namespace brick {
        * It is not permitted to set the value of the lower-right element
        * of the matrix: setValue(3, 3, ...) will throw an
        * IndexException.
-       * 
+       *
        * @param row This argument specifies the row of the matrix
        * element to be modified.
-       * 
+       *
        * @param column This argument specifies the row of the matrix
        * element to be modified.
-       * 
+       *
        * @param value This argument specifies the value to be copied
        * into the matrix element at the specified row & column.
        */
@@ -232,7 +253,7 @@ namespace brick {
       setValue(size_t row, size_t column, Type const& value);
 
 
-      /** 
+      /**
        * This member function sets one element from the matrix
        * representation of the coordinate transform.  Note that indexing
        * is zero-based.  For example, calling myTransform3D.setValue<1,
@@ -243,7 +264,7 @@ namespace brick {
        * It is not permitted to set the value of the lower-right element
        * of the matrix: setValue<3, 3>(Type) will throw an
        * IndexException.
-       * 
+       *
        * @param value This argument specifies the value to be copied
        * into the matrix element at the specified row & column.
        */
@@ -252,7 +273,7 @@ namespace brick {
       setValue(Type const& value);
 
 
-      /** 
+      /**
        * This member function is an alias for member function setTransform().
        */
       void
@@ -263,15 +284,15 @@ namespace brick {
         Type const& a30, Type const& a31, Type const& a32, Type const& a33,
         bool doNormalize = false);
 
-      
-      /** 
+
+      /**
        * This member function returns one element from the matrix
        * representation of the coordinate transform by value.  Note that
        * indexing is zero-based.  For example, calling
        * myTransform3D.value<1, 2>() will return the element from the
        * 2nd row, 3rd column of the matrix representation of the
        * coordinate transformation.
-       * 
+       *
        * @return The value of the requested element.
        */
       template <size_t row, size_t column>
@@ -279,7 +300,7 @@ namespace brick {
       value() const {return this->getValue<row, column>();}
 
 
-      /** 
+      /**
        * This operator returns one element from the matrix
        * representation of the coordinate transform by value.
        * If blindingly fast execution is important, consider using
@@ -292,31 +313,31 @@ namespace brick {
       Type const&
       operator()(size_t row, size_t column) const;
 
-    
-      /** 
+
+      /**
        * This operator takes a point and applies the coordinate
        * transform, returning the result.
-       * 
+       *
        * @param vector0 The point to be transformed.
        * @return The result of the transformation.
        */
       Vector3D<Type>
       operator*(const Vector3D<Type>& vector0) const;
 
-    
-      /** 
+
+      /**
        * The assignment operator simply duplicates its argument.
-       * 
+       *
        * @param source This is the Transform3D instance to be copied.
        * @return A reference to *this.
        */
       Transform3D<Type>&
       operator=(const Transform3D& source);
 
-    
+
     private:
       void normalize();
-      
+
       Type m_00, m_01, m_02, m_03;
       Type m_10, m_11, m_12, m_13;
       Type m_20, m_21, m_22, m_23;
@@ -337,40 +358,40 @@ namespace brick {
 
     public:
 
-      /** 
+      /**
        * The constructor deep-copies its argument.
-       * 
+       *
        *  @param transform This is the transform instance to be copied.
        */
       Transform3DFunctor(Transform3D<Type> const& transform)
         : m_transform(transform) {}
 
-    
-      /** 
+
+      /**
        * The application operator transforms its argument.
-       * 
+       *
        *  @param vec This is the vector to be transformed.
-       * 
+       *
        *  @return The transformed vector.
        */
       inline Vector3D<Type>
       operator()(Vector3D<Type> const& vec) const {return m_transform * vec;}
-    
+
     private:
       Transform3D<Type> m_transform;
     };
-  
-  
+
+
     /* ============== Non-member functions ============== */
-  
-    /** 
+
+    /**
      * This operator composes two Transform3D instances.  The resulting
      * transform satisfies the equation:
      *
      *  (transform0 * transform1) * v0 = transform0 * (transform1 * v0),
      *
      * where v0 is a Vector3D instance.
-     * 
+     *
      * @param transform0 This is the first of the two Transform3D instances to
      * be composed.
      * @param transform1 This is the second of the two Transform3D instances to
@@ -382,8 +403,8 @@ namespace brick {
     Transform3D<Type>
     operator*(const Transform3D<Type>& transform0, const Transform3D<Type>& transform1);
 
-  
-    /** 
+
+    /**
      * Outputs a text representation of a Transform3D instance to a
      * std::ostream.  The output format looks like this:
      *
@@ -403,12 +424,12 @@ namespace brick {
     std::ostream&
     operator<<(std::ostream& stream, const Transform3D<Type>& transform0);
 
-  
-    /** 
+
+    /**
      * Sets the value of a Transform3D instance from a std::istream.
      * The input format is as described for
      * operator<<(std::ostream&, const Transform3D&), above.
-     * 
+     *
      * @param stream Reference to the the input stream.
      *
      * @param transform0 Reference to the Transform3D that will take
@@ -419,7 +440,7 @@ namespace brick {
     template <class Type>
     std::istream&
     operator>>(std::istream& stream, Transform3D<Type>& transform0);
-  
+
   } // namespace numeric
 
 } // namespace brick

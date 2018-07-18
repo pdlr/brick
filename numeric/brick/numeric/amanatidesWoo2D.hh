@@ -24,7 +24,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     /**
      ** This class implements the Fast Voxel Traversal Algorithm of
      ** Amanatides and Woo [1] for 2D arrays.  The algorithm is for
@@ -63,7 +63,7 @@ namespace brick {
      **   Transform2D<double> pixelFromWorld;
      **   AmanatidesWoo2D< Array2D<int> > rayTracer(
      **     myArray2D, pixelFromWorld, rayOrigin, rayDirection, false);
-     **   awIterator iterator0 = rayTracer.begin(); 
+     **   awIterator iterator0 = rayTracer.begin();
      **   awIterator iterator1 = rayTracer.end();
      **   for(; iterator0 != iterator1; ++iterator0) {
      **     *iterator0 = 0;
@@ -90,28 +90,28 @@ namespace brick {
       // Iteration over const arrays will be done using a different
       // class.
       // typedef AmanatidesWoo2DConstIterator<ARRAY2D> const_iterator;
-    
+
       /* ================== Public methods ================== */
 
-      /** 
+      /**
        * This constructor specifies all of the internal state of the
        * AmanatidesWoo2D class.  After construction, the AmanatidesWoo2D
        * instance is ready to be used.
-       * 
+       *
        * @param data This argument specifies the 2D array over which to
        * iterate.
        *
        * @param pixelTworld This parameter specifies a coordinate
        * transformation which takes world coordinates and converts them
        * into pixel coordinates.
-       *     
+       *
        * @param rayOrigin This parameter specifies the starting point
        * of the ray to be traced, expressed in world coordinates.  If
        * you'd rather express rayOrigin and rayDirection in pixel
        * coordinates, simply set argument pixelTworld to the identity
        * transform.  Note that rayOrigin does not have to lie inside the
        * pixel array.
-       *     
+       *
        * @param rayDirection This parameter specifies the direction of
        * the ray to be traced, expressed in world coordinates.  In other
        * words, any point on the line of interest can be written as
@@ -119,7 +119,7 @@ namespace brick {
        * you'd rather express rayOrigin and rayDirection in pixel
        * coordinates, simply set argument pixelTworld to the identity
        * transform.
-       *     
+       *
        * @param downstreamOnly This boolean argument specifies whether
        * pixels "upstream" of rayOrigin are to be included in the pixel
        * traversal.  If downstreamOnly is set to false, pixels which
@@ -133,23 +133,23 @@ namespace brick {
                       const Vector2D<FLOAT_TYPE>& rayDirection,
                       bool downstreamOnly=true);
 
-    
-      /** 
+
+      /**
        * This is the copy constructor.  After copying, the new
        * AmanatidesWoo2D instance and the copied instance both reference
        * the same pixel array.
-       * 
+       *
        * @param source The AmanatidesWoo2D instance to be copied.
        */
       AmanatidesWoo2D(const AmanatidesWoo2D& source);
 
-      /** 
+      /**
        * This is the destructor.  It destroys the AmanatidesWoo2D
        * instance and cleans up any allocated memory.
        */
       ~AmanatidesWoo2D();
 
-      /** 
+      /**
        * This member function returns an iterator which references the
        * first pixel along the traced ray.  If constructor argument
        * downstreamOnly was set to false, this iterator will either
@@ -162,7 +162,7 @@ namespace brick {
        * (in the case that the ray does not intersect the pixel array,
        * and in the case that rayOrigin lies outside the pixel array and
        * rayDirection points away from the pixel array).
-       * 
+       *
        * @return The return value is an iterator pointing to the first
        * pixel in the array, or else an iterator for which (iter ==
        * this->end()) is true.
@@ -170,12 +170,12 @@ namespace brick {
       iterator
       begin();
 
-      /** 
+      /**
        * This member function returns an iterator which references an
        * invalid pixel, and which will be equal (==) to the iterator
        * returned by member function begin() when that iterator has
        * fully traversed the line of pixels.
-       * 
+       *
        * @return The return value is an iterator pointing to an invalid
        * pixel, for use as the end iterator in the comparison clause of
        * a loop: "while(rayIterator != endIterator) {++rayIterator; ...;}".
@@ -183,16 +183,16 @@ namespace brick {
       iterator
       end();
 
-      /** 
+      /**
        * This member function returns a reference to the array object
        * over which iteration is performed.
-       * 
+       *
        * @return The return value is a reference to the data array.
        */
       ARRAY2D&
       getData() {return m_data;}
-    
-      /** 
+
+      /**
        * This member function returns true if the iterator returned by
        * member function begin() will point to a valid pixel.  In other
        * words, if constructor argument downstreamOnly was set to
@@ -202,33 +202,33 @@ namespace brick {
        * downstreamOnly was set to true, the return value of
        * validIntersection whether the "downstream" half of the ray
        * actually intersects the pixel array.
-       * 
+       *
        * @return A boolean indicating whether or not (this->begin() ==
        * this->end()) will be true.
        */
       inline bool
       validIntersection();
 
-      /** 
+      /**
        * The assignment operator copies its argument.  After copying,
        * *this and the copied instance both reference the same pixel
        * array.
-       * 
+       *
        * @param source The AmanatidesWoo2D instance to be copied.
        * @return The return value is a reference to *this.
        */
       AmanatidesWoo2D&
       operator=(const AmanatidesWoo2D& source);
-  
+
     private:
 
-      /** 
+      /**
        * This private member function computes the parameters tEntry and
        * tExit such that (rayOrigin + tEntry * rayDirection) is very
        * first point of intersection between the ray and the pixel
        * array, and (rayOrigin + tExit * rayDirection) is very last of
        * intersection between the ray and the pixel array.
-       * 
+       *
        * @param rayOriginPixel This parameter specifies the starting
        * point of the ray to be traced, expressed in pixel coordinates.
        * @param rayDirectionPixel This parameters specifies the
@@ -243,16 +243,16 @@ namespace brick {
                              const Vector2D<FLOAT_TYPE>& rayDirectionPixel,
                              const ARRAY2D& data);
 
-      /** 
+      /**
        * This function is not documented because it will change very
        * soon.
-       * 
-       * @param rayOrigin 
-       * @param rayDirection 
-       * @param bVector 
-       * @param cConstant 
-       * @param defaultValue 
-       * @return 
+       *
+       * @param rayOrigin
+       * @param rayDirection
+       * @param bVector
+       * @param cConstant
+       * @param defaultValue
+       * @return
        */
       FLOAT_TYPE
       findIntersection(const Vector2D<FLOAT_TYPE>& rayOrigin,
@@ -282,7 +282,7 @@ namespace brick {
       /// increasing (m_stepV == 1) or decreasing (m_stepV == -1) as we
       /// travel along the ray path.
       INT_TYPE m_stepV;
-    
+
       /// This data member indicates what increment of ray parameter t
       /// moves us exactly 1 pixel in the U direction.
       FLOAT_TYPE m_tDeltaU;
@@ -290,7 +290,7 @@ namespace brick {
       /// This data member indicates what increment of ray parameter t
       /// moves us exactly 1 pixel in the V direction.
       FLOAT_TYPE m_tDeltaV;
-    
+
       /// This data member indicates the value of ray parameter t at
       /// which the ray first enters a pixel with U coordinate not equal
       /// to m_initialU.

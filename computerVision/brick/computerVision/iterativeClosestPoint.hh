@@ -48,7 +48,7 @@ namespace brick {
     class IterativeClosestPoint {
     public:
 
-      /** 
+      /**
        * The default constructor.
        */
       IterativeClosestPoint();
@@ -63,7 +63,7 @@ namespace brick {
 
       unsigned int
       getIterationCount() {return m_iterationCount;}
-      
+
 
       brick::numeric::Transform3D<FloatType>
       getTransform();
@@ -73,10 +73,10 @@ namespace brick {
       brick::numeric::Transform3D<FloatType>
       registerPoints(
         Iter beginIter, Iter endIter,
-        brick::numeric::Transform3D<FloatType> const& modelFromQueryEstimate 
+        brick::numeric::Transform3D<FloatType> const& modelFromQueryEstimate
         = brick::numeric::Transform3D<FloatType>());
-      
-      
+
+
       template <class Iter>
       void
       setModelPoints(Iter beginIter, Iter endIter);
@@ -118,7 +118,7 @@ namespace brick {
     };
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

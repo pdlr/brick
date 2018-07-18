@@ -40,11 +40,11 @@ namespace brick {
       /// This is the Type of the objective function argument.
       typedef typename Functor::argument_type argument_type;
 
-    
+
       /// This is the Type of the objective function return value.
       typedef typename Functor::result_type result_type;
 
-    
+
       /**
        * This is the default constructor.  Note that the default
        * constructor in any derived classes must initialize
@@ -52,7 +52,7 @@ namespace brick {
        */
       Optimizer();
 
-    
+
       /**
        * This constructor specifies the specific Functor instance to
        * use.  Using this constructor exclusively avoids the danger of
@@ -64,23 +64,23 @@ namespace brick {
        */
       explicit Optimizer(const Functor& functor);
 
-    
-      /** 
+
+      /**
        * Copy constructor. This constructor simply copies the source
        * argument.
-       * 
+       *
        * @param source The Optimizer instance to be copied.
        */
       Optimizer(const Optimizer& source);
 
-    
+
       /**
        * Destructor.
        */
       virtual ~Optimizer();
 
-    
-      /** 
+
+      /**
        * This method finds the optimum of the current Functor, if
        * necessary, and returns the Functor value at that point.  Note
        * that you must have specified an objective function (Functor)
@@ -91,8 +91,8 @@ namespace brick {
       result_type
       getOptimalValue();
 
-    
-      /** 
+
+      /**
        * This method finds the optimum of the current Functor, if
        * necessary, and returns the Functor argument which produces that
        * optimum.  Note that you must have specified an objective
@@ -103,28 +103,28 @@ namespace brick {
       argument_type
       getOptimum();
 
-    
-      /** 
+
+      /**
        * This method returns a copy of the Functor instance used for
        * optimization.
-       * 
+       *
        * @return A Functor instance.
        */
       Functor objectiveFunction() {return this->m_functor;}
 
-    
+
       /**
        * This is the assignment operator. It simply copies its input
        * argument.
-       * 
+       *
        * @param source The Optimizer instance to be copied.
        * @return Reference to *this.
        */
       Optimizer&
       operator=(const Optimizer& source);
 
-    
-      /** 
+
+      /**
        * This member function is an alias for member function
        * getOptimalValue().
        *
@@ -133,8 +133,8 @@ namespace brick {
       result_type
       optimalValue() {return this->getOptimalValue();}
 
-    
-      /** 
+
+      /**
        * This member function is an alias for member function
        * getOptimum().
        *
@@ -143,8 +143,8 @@ namespace brick {
       argument_type
       optimum() {return this->getOptimum();}
 
-    
-      /** 
+
+      /**
        * This method specifies the Functor instance to use for the
        * optimization.  If this function is overridden by the base
        * class, it should normally either call
@@ -156,13 +156,13 @@ namespace brick {
        */
       void
       setObjectiveFunction(const Functor& functor);
-    
+
     protected:
 
-      /** 
+      /**
        * Perform the optimization.  This pure virtual function must be
        * overridden by the base class.
-       * 
+       *
        * @return A std::pair of the vector parameter which brings the
        * specified Functor to an optimum, and the corresponding optimal
        * Functor value.
@@ -172,16 +172,16 @@ namespace brick {
       run() = 0;
 
 
-      /** 
+      /**
        * This protected member function provides a way for subclasses to
        * communicate intermediate optimization results outside of the
        * normal "return value of this->run()" method.
-       * 
+       *
        * @param optimum This argument will be saved as the current optimum.
-       * 
+       *
        * @param optimalValue This argument will be saved as the function
        * value a the current optimum.
-       * 
+       *
        * @param needsFurtherOptimization This argument indicates whether
        * or not further refinement is necessary.
        */
@@ -194,8 +194,8 @@ namespace brick {
         this->m_optimalValue = optimalValueArg;
         this->m_needsOptimization = needsFurtherOptimization;
       }
-    
-    
+
+
       /// m_functor->operator()() should compute the objective function.
       Functor m_functor;
 
@@ -246,7 +246,7 @@ namespace brick {
     {
       // Empty
     }
-    
+
     // Constructor which specifies the specific Functor instance to use.
     template <class Functor>
     Optimizer<Functor>::

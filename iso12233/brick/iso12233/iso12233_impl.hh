@@ -618,7 +618,7 @@ namespace brick {
         return outputImage;
       }
 
-      
+
       // Align the rows of reflectanceImage and combine them into a
       // single supersampled version of the (nearly vertical) edge.
       template <class FloatType>
@@ -644,7 +644,7 @@ namespace brick {
         // Now iterate over each input row, copying the pixel values
         // into the accumulater arrays we just created.
         for(std::size_t rr = 0; rr < reflectanceImage.rows(); ++rr) {
-        
+
           // Variable edgeLocation will be a number in input pixel column
           // coordinates.  Something like "55.21"
           FloatType edgeLocation = offset + slope * rr;

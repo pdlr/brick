@@ -48,12 +48,12 @@ namespace brick {
           m_xy(xyArg),
           m_yy(yyArg) {}
 
-      
+
       template <class FloatType>
       void
       getCovariance(FloatType& c00, FloatType& c01, FloatType& c11);
     };
-    
+
 
     /**
      ** This class template selects keypoints from an input image
@@ -72,35 +72,35 @@ namespace brick {
       // ========= Public member functions. =========
 
 
-      /** 
+      /**
        * Default constructor.
-       * 
+       *
        * @param kappa This argument is the free parameter in the
        * Harris corner metric computation.
-       * 
+       *
        * @param sigma This argument is currently ignored.
        */
       KeypointSelectorHarris(FloatType kappa = 0.1,
                              FloatType sigma = 1.6);
 
 
-      /** 
+      /**
        * Return the keypoints detected during the most recent call to
        * member function setImage().
-       * 
+       *
        * @return The return value is vector of KeypointHarris instances.
        */
       std::vector< KeypointHarris<brick::common::Int32> >
       getKeypoints() const;
 
 
-      /** 
+      /**
        * Return the keypoints detected during the most recent call to
        * member function setImage().
-       * 
+       *
        * @param iterator This argument must be a writable iterator
        * pointing to KeypoindHarris<brick::common::Int32>.
-       * 
+       *
        * @param threshold Increasing this threshold eliminates weaker
        * corners from the output.
        */
@@ -109,36 +109,36 @@ namespace brick {
       getKeypoints(Iter iterator, FloatType threshold = 0.0) const;
 
 
-      /** 
+      /**
        * Return the keypoints detected during the most recent call to
        * member function setImage(), and use subpixel interpolation to
        * refine their positions.
-       * 
+       *
        * @return The return value is vector of KeypointHarris instances.
        */
       std::vector< KeypointHarris<FloatType> >
       getKeypointsGeneralPosition() const;
 
-      
-      /** 
+
+      /**
        * Return the keypoints detected during the most recent call to
        * member function setImage(), and use subpixel interpolation to
        * refine their positions.
-       * 
+       *
        * @param iterator This argument must be a writable iterator
        * pointing to KeypoindHarris<FloatType>.
-       * 
+       *
        * @param threshold Increasing this threshold eliminates weaker
        * corners from the output.
        */
       template <class Iter>
       void
       getKeypointsGeneralPosition(Iter iterator) const;
-      
-      
-      /** 
+
+
+      /**
        * Process an image to find keypoints.
-       * 
+       *
        * @param inImage This argument is the image in which to look
        * for keypoints.
        */
@@ -163,7 +163,7 @@ namespace brick {
         brick::numeric::Array2D<AccumulatedType>& gradientYY,
         brick::numeric::Index2D& corner0,
         brick::numeric::Index2D& corner1);
-        
+
 
       // Give products of gradients, compute the Harris corner
       // indicator at each pixel within the region defined by corner0
@@ -177,7 +177,7 @@ namespace brick {
         brick::numeric::Index2D const& corner0,
         brick::numeric::Index2D const& corner1);
 
-      
+
       /* ======== Data members ========= */
       brick::numeric::Array2D<FloatType>       m_harrisIndicators;
       brick::numeric::Array2D<AccumulatedType> m_gradientXX;
@@ -198,7 +198,7 @@ namespace brick {
     };
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 

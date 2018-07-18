@@ -18,16 +18,16 @@
 namespace brick {
 
   namespace utilities {
-    
-    /** 
+
+    /**
      * This function returns the current time as a double, the number of
      * seconds since some significant (and OS dependent) event in the
      * distant past.
      */
     using portability::getCurrentTime;
 
-    
-    /** 
+
+    /**
      * This function causes the program to suspend execution for at
      * least as many seconds as specified by its argument.  The
      * resolution of the timer is implementation dependent, but will
@@ -43,35 +43,35 @@ namespace brick {
     class Timer {
     public:
 
-      /** 
+      /**
        * This constructor initializes the timer and starts timing.
-       * 
-       * @param timeUnit This argument 
+       *
+       * @param timeUnit This argument
        */
       Timer()
 	: m_startTime(0.0) {this->reset();}
 
-    
-      /** 
+
+      /**
        * Destructor.
        */
       ~Timer() {}
 
 
-      /** 
+      /**
        * The function calculates and returns the time since the last
        * reset (or since the timer was created).
-       * 
+       *
        * @return The return value is the elapsed time in seconds.
        */
       double
       getElapsedTime() {return getCurrentTime() - m_startTime;}
 
 
-      /** 
+      /**
        * This function behaves just like getElapsedTime(), but also
        * resets the timer to zero.
-       * 
+       *
        * @return The return value is the elapsed time in seconds.
        */
       double
@@ -82,13 +82,13 @@ namespace brick {
       }
 
     private:
-      
+
       double m_startTime;
-      
+
     }; // class Timer
-    
+
   } // namespace utilities
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_UTILITIES_TIMEUTILITIES_HH */

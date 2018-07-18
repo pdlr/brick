@@ -16,7 +16,7 @@
 
 // This file is included by circle2D.hh, and should not be directly included
 // by user code, so no need to include circle2D.hh here.
-// 
+//
 // #include <brick/geometry/utilities2D.hh>
 #include <brick/numeric/utilities.hh>
 
@@ -84,7 +84,7 @@ namespace brick {
       //
       // where A is the 2x2 matrix [(v_0 - v_1), (w_1 - w_0)], and b is the 2
       // element vector [v_0 - w_0].
-      
+
       // First find matrix A.
       brick::numeric::Vector2D<Type> lineDirection0 =
         lineSegment0.getVertex0() - lineSegment0.getVertex1();
@@ -106,7 +106,7 @@ namespace brick {
                                 alpha, beta)) {
         return false;
       }
-      
+
       // The line segment runs from alpha = 0 to alpha = 1 and from
       // beta = 0 to beta = 1.  Check this here.
       if((alpha < 0.0) || (alpha >= 1.0) || (beta < 0.0) || (beta >= 1.0)) {
@@ -118,7 +118,7 @@ namespace brick {
       return true;
     }
 
-    
+
     template <class Type>
     bool
     checkIntersect(Ray2D<Type> const& ray,
@@ -139,7 +139,7 @@ namespace brick {
       double dummy;
       return checkIntersect(ray, lineSegment, intersect, dummy);
     }
-    
+
 
     template <class Type>
     bool
@@ -178,7 +178,7 @@ namespace brick {
       //
       // where A is the 2x2 matrix [(v_0 - v_1), d], and b is the 2
       // element vector [v_0 - o].
-      
+
       // First find matrix A.
       brick::numeric::Vector2D<Type> lineDirection =
         lineSegment.getVertex0() - lineSegment.getVertex1();
@@ -213,14 +213,14 @@ namespace brick {
       if(beta < 0.0) {
         return false;
       }
-      
+
       // All done.  Now fill in the return parameters.
       lambda = beta;
       intersect = ray.getOrigin() + beta * ray.getDirectionVector();
       return true;
     }
 
-    
+
     // Return the centroid of triangle, which is coincident with the
     // intersection of its three medians.
     template <class Type>
@@ -250,7 +250,7 @@ namespace brick {
       return (intersect0 + intersect1 + intersect2) / Type(3.0);
     }
 
-    
+
     template <class Type>
     brick::numeric::Vector2D<Type>
     findClosestPoint(brick::numeric::Vector2D<Type> const& point,
@@ -273,8 +273,8 @@ namespace brick {
         transform * inputSegment.getVertex1();
       return LineSegment2D<Type>(newVertex0, newVertex1);
     }
-    
-    
+
+
     template <class Type>
     Ray2D<Type>
     operator*(brick::numeric::Transform2D<Type> const& transform,
@@ -286,10 +286,10 @@ namespace brick {
         transform * (inputRay.getOrigin() + inputRay.getDirectionVector());
       return Ray2D<Type>(newOrigin, newEndpoint - newOrigin, false);
     }
-    
-    
+
+
   } // namespace utilities
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_GEOMETRY_UTILITIES2D_IMPL_HH */

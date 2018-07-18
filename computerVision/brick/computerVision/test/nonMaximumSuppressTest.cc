@@ -88,7 +88,7 @@ namespace brick {
         " [  0,   2,  0,  9,  0],"
         " [  0,   4,  0,  6,  0],"
         " [  0,   0,  0,  0,  0]]");
-    
+
       Image<GRAY_SIGNED32> inputImage = inputArray;
       Image<GRAY_FLOAT64> gradX = gradXArray;
       Image<GRAY_FLOAT64> gradY = gradYArray;

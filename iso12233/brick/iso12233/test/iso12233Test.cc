@@ -254,7 +254,7 @@ namespace brick {
 } // namespace brick
 
 
-#if 1
+#if 0
 
 int main(/* int argc, char** argv */)
 {
@@ -262,7 +262,7 @@ int main(/* int argc, char** argv */)
   bool result = currentTest.run();
 
   currentTest.testLowPassEdge();
-  
+
   return (result ? 0 : 1);
 }
 
@@ -271,7 +271,7 @@ int main(/* int argc, char** argv */)
 namespace {
 
   brick::iso12233::Iso12233Test currentTest;
-  
+
 }
 
 #endif

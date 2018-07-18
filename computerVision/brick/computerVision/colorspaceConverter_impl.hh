@@ -16,7 +16,7 @@
 // This file is included by colorspaceConverter.hh, and should not be
 // directly included by user code, so no need to include
 // colorspaceConverter.hh here.
-// 
+//
 // #include <brick/computerVision/colorspaceConverter.hh>
 
 #include <cmath>
@@ -35,7 +35,7 @@ namespace brick {
       // for the compiler.  Instead, we dispatch to this function,
       // which is not templated.  Life gets much easiser.
 
-        
+
       // This conversion follows the wikipedia article "HSL color
       // space" as of 2009-02-19, with the exceptions that all
       // resulting components are scaled [0.0, 1.0], and that the
@@ -50,7 +50,7 @@ namespace brick {
           std::max(inputPixel.red,
                    std::max(inputPixel.green, inputPixel.blue)));
         outputPixel.value = maxVal;
-    
+
         // Handle first special case up-front.
         if(maxVal == 0.0) {
           outputPixel.hue = brick::common::Float64(0.0);
@@ -64,7 +64,7 @@ namespace brick {
                    std::min(inputPixel.green, inputPixel.blue)));
         brick::common::Float64 delta = maxVal - minVal;
         outputPixel.saturation = delta / maxVal;
-    
+
         // Handle second special case up-front.
         if(delta == 0.0) {
           outputPixel.hue = brick::common::Float64(0.0);
@@ -88,7 +88,7 @@ namespace brick {
             brick::common::Float64(5.0 / 6.0)
             + (static_cast<brick::common::Float64>(inputPixel.red)
                - static_cast<brick::common::Float64>(inputPixel.green)) / (6.0 * delta);
-        }      
+        }
 
 #if 1
         // Previous code doesn't correspond to wikipedia anymore.
@@ -97,7 +97,7 @@ namespace brick {
         outputPixel.hue -= 1.0 / 6.0;
         outputPixel.hue = ((outputPixel.hue < 0.0)
                            ? (outputPixel.hue + 1.0) : outputPixel.hue);
-#endif    
+#endif
       }
 
 
@@ -121,7 +121,7 @@ namespace brick {
         while(remainder >= 2.0) {
           remainder -= 2.0;
         }
-        
+
         brick::common::Float64 xValue =
           chroma * (1.0 - brick::common::absoluteValue(remainder - 1));
 
@@ -152,7 +152,7 @@ namespace brick {
           red = chroma;
           green = 0.0;
           blue = xValue;
-        } 
+        }
 
         // Now update to reflect pixel brightness.
         double increment = inputPixel.value - chroma;
@@ -163,7 +163,7 @@ namespace brick {
 
     } // namespace privateCode
 
-    
+
     template<>
     inline
     void
@@ -497,7 +497,7 @@ namespace brick {
                                 + 0.311135 * inputPixel.blue);
     }
 
-    
+
     template<>
     inline
     void
@@ -509,7 +509,7 @@ namespace brick {
       outputPixel.green = inputPixel.green;
       outputPixel.blue = inputPixel.blue;
     }
-  
+
 
     template<>
     inline
@@ -554,9 +554,9 @@ namespace brick {
     }
 
 
-    
+
   } // namespace computerVision
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_COLORSPACECONVERTER_IMPL_HH */

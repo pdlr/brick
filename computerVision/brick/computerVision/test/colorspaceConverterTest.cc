@@ -81,7 +81,7 @@ namespace brick {
             brick::common::UnsignedInt8 grayValue = static_cast<brick::common::UnsignedInt8>(grayDbl + 0.5);
 
             PixelRGB8 inputPixel(static_cast<brick::common::UnsignedInt8>(redValue),
-								 static_cast<brick::common::UnsignedInt8>(greenValue), 
+								 static_cast<brick::common::UnsignedInt8>(greenValue),
 								 static_cast<brick::common::UnsignedInt8>(blueValue));
             BRICK_TEST_ASSERT(converter(inputPixel) == grayValue);
           }
@@ -116,7 +116,7 @@ namespace brick {
       }
     }
 
- 
+
     void
     ColorspaceConverterTest::
     testRGB8ToRGBA8()
@@ -140,7 +140,7 @@ namespace brick {
       }
     }
 
- 
+
     void
     ColorspaceConverterTest::
     testRGB8ToHSV_FLOAT64()
@@ -156,7 +156,7 @@ namespace brick {
       inputPixels.push_back(PixelRGB8(192, 108, 169));
 
       // HSV values computed manually using:
-      // 
+      //
       //   v = max(r,g,b) / 255.0.
       //   s = (0, if v == 0
       //        (max(r, g, b) - min(r, g, b)) / max, otherwise.
@@ -184,7 +184,7 @@ namespace brick {
       }
     }
 
- 
+
     void
     ColorspaceConverterTest::
     testRGB8ToYIQ_FLOAT64()
@@ -210,7 +210,7 @@ namespace brick {
         targetPixels[ii].quadrature =
           red * 0.211456 + green * -0.522591 + blue * 0.311135;
       }
-            
+
       ColorspaceConverter<RGB8, YIQ_FLOAT64> converter;
 
       const double tolerance = 1.0E-9;
@@ -225,7 +225,7 @@ namespace brick {
       }
     }
 
- 
+
     void
     ColorspaceConverterTest::
     testRGB_FLOAT64ToHSV_FLOAT64()
@@ -247,11 +247,11 @@ namespace brick {
 
       ColorspaceConverter<RGB_FLOAT64, HSV_FLOAT64> converter0;
       ColorspaceConverter<HSV_FLOAT64, RGB_FLOAT64> converter1;
-      
+
       for(unsigned int ii = 0; ii < inputPixels.size(); ++ii) {
         PixelHSV<brick::common::Float64> hsvPixel = converter0(inputPixels[ii]);
         PixelRGBFloat64 rgbPixel = converter1(hsvPixel);
-        
+
         const double tolerance = 1.0E-9;
 	BRICK_TEST_ASSERT(
           approximatelyEqual(rgbPixel.red, inputPixels[ii].red,
@@ -297,7 +297,7 @@ namespace brick {
         targetPixels[ii].quadrature =
           red * 0.211456 + green * -0.522591 + blue * 0.311135;
       }
-            
+
       ColorspaceConverter<RGB_FLOAT64, YIQ_FLOAT64> converter;
 
       const double tolerance = 1.0E-9;
@@ -312,7 +312,7 @@ namespace brick {
       }
     }
 
- 
+
     void
     ColorspaceConverterTest::
     testBGRA8ToRGB8()
@@ -338,7 +338,7 @@ namespace brick {
         }
       }
     }
-  
+
     void
     ColorspaceConverterTest::
     testRGBA8ToRGB8()
@@ -381,17 +381,17 @@ namespace brick {
 
       ColorspaceConverter<RGB8, HSV_FLOAT64> converter0;
       ColorspaceConverter<HSV_FLOAT64, RGB8> converter1;
-      
+
       for(unsigned int ii = 0; ii < inputPixels.size(); ++ii) {
         PixelHSV<brick::common::Float64> hsvPixel = converter0(inputPixels[ii]);
         PixelRGB8 rgbPixel = converter1(hsvPixel);
-        
+
 	BRICK_TEST_ASSERT(rgbPixel.red == inputPixels[ii].red);
 	BRICK_TEST_ASSERT(rgbPixel.green == inputPixels[ii].green);
 	BRICK_TEST_ASSERT(rgbPixel.blue == inputPixels[ii].blue);
       }
     }
-    
+
   } // namespace computerVision
 
 } // namespace brick

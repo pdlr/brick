@@ -15,7 +15,7 @@
 
 // This file is included by convolveND.hh, and should not be directly included
 // by user code, so no need to include convolveND.hh here.
-// 
+//
 // #include <brick/numeric/convolveND.hh>
 
 #include <iostream>
@@ -28,10 +28,10 @@
 namespace brick {
 
   namespace numeric {
-    
+
     namespace privateCode {
 
-      /// @cond privateCode    
+      /// @cond privateCode
       inline bool
       convolveNDUpdatePosition(Array1D<size_t>& position,
                                Array1D<size_t> const& lowerBound,
@@ -48,8 +48,8 @@ namespace brick {
 
     } // namespace privateCode
     /// @endcond
-    
-    
+
+
     // Unstable: interface subject to change.
     template <class OutputType, class AccumulatorType,
 	      class KernelType, class SignalType, size_t Dimension>
@@ -65,10 +65,10 @@ namespace brick {
         reversedKernel[kernel.size() - ii - 1] =
           static_cast<AccumulatorType>(kernel[ii]);
       }
-      
+
       ArrayND<Dimension, OutputType> result(signal.getShape());
       result = OutputType(0);
-      
+
       if(strategy != BRICK_CONVOLVE_PAD_RESULT) {
         BRICK_THROW(brick::common::NotImplementedException, "convolve()",
                   "Only ConvolutionStrategy BRICK_CONVOLVE_PAD_RESULT is "
@@ -104,7 +104,7 @@ namespace brick {
       do {
         size_t signalIndex = signal.flattenIndex(elementPosition);
         size_t resultIndex = signalIndex + resultOffset;
-        
+
         AccumulatorType accumulator = AccumulatorType(0);
         for(size_t ii = 0; ii < reversedKernel.size(); ++ii) {
           accumulator += (reversedKernel[ii]
@@ -116,7 +116,7 @@ namespace brick {
                 elementPosition, positionLowerBound, positionUpperBound));
       return result;
     }
-    
+
 
   } // namespace numeric
 

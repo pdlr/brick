@@ -17,7 +17,7 @@
 // This file is included by eightPointAlgorithm.hh, and should not be
 // directly included by user code, so no need to include
 // eightPointAlgorithm.hh here.
-// 
+//
 // #include <brick/computerVision/eightPointAlgorithm.hh>
 
 #include <cmath>
@@ -37,8 +37,8 @@ namespace brick {
       return eightPointAlgorithm(
         sequence0Begin, sequence0End, sequence1Begin, eigenvalues);
     }
-    
-    
+
+
     template<class FloatType, class Iterator>
     brick::numeric::Array2D<FloatType>
     eightPointAlgorithm(Iterator sequence0Begin, Iterator sequence0End,
@@ -50,7 +50,7 @@ namespace brick {
       // below.
       size_t numberOfCorrespondences = sequence0End - sequence0Begin;
 
-      
+
       // Following Hartley, precondition the data by translating and
       // scaling (independently for each image) so that the points
       // roughly form a unit circle.  This greatly improves the
@@ -91,7 +91,7 @@ namespace brick {
       //
       // where the points u are drawn from sequence0, and the points
       // u' are drawn from sequence1.
-      // 
+      //
       // We rearrange this equation to get
       //
       //   ||f_00*u_x*u'_x + f_01*u_y*u'_x + f_02*u'_x
@@ -104,11 +104,11 @@ namespace brick {
       // respectively.
       //
       // or,
-      // 
+      //
       //   ||A * vec(F)|| = 0
       //
       // With the matrix A as specified in the code below.
-        
+
       brick::numeric::Array2D<FloatType> AMatrix(numberOfCorrespondences, 9);
       for(size_t rowIndex = 0; rowIndex < numberOfCorrespondences; ++rowIndex) {
         brick::numeric::Array1D<FloatType> currentRow =
@@ -166,7 +166,7 @@ namespace brick {
         brick::numeric::matrixMultiply<FloatType>(
           brick::numeric::matrixMultiply<FloatType>(
             KPrimeInv.transpose(), FMatrix), KKInv);
-      
+
       return FMatrix;
     }
 
@@ -191,7 +191,7 @@ namespace brick {
       // take its Choleski factorization
       //
       //   E = K * K^T
-      // 
+      //
       // where K is upper triangular. It follows that
       //
       //   sum(inv(K / sqrt(N)) * u_i * u_i^T * inv(K / sqrt(N))^T) = NI,
@@ -222,7 +222,7 @@ namespace brick {
     }
 
   } // namespace computerVision
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_EIGHTPOINTALGORITHM_IMPL_HH */

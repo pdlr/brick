@@ -21,7 +21,7 @@
 // This file is included by iterativeClosestPoint.hh, and should not
 // be directly included by user code, so no need to include
 // iterativeClosestPoint.hh here.
-// 
+//
 // #include <brick/computerVision/iterativeClosestPoint.hh>
 
 namespace brick {
@@ -40,7 +40,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // The destructor cleans up any system resources.
     template <unsigned int Dimension, class Type, class FloatType>
     IterativeClosestPoint<Dimension, Type, FloatType>::
@@ -48,7 +48,7 @@ namespace brick {
     {
       // Empty.
     }
-    
+
 
     template <unsigned int Dimension, class Type, class FloatType>
     brick::numeric::Transform3D<FloatType>
@@ -108,15 +108,15 @@ namespace brick {
         // Re-estimate coordinate transformation.
         modelFromQuery = this->estimateTransformModelFromQuery(
           selectedQueryPoints, matchingModelPointAddresses, weights);
-        
+
         ++m_iterationCount;
       }
 
       return modelFromQuery;
     }
-      
-    
-      
+
+
+
     template <unsigned int Dimension, class Type, class FloatType>
       template <class Iter>
       void
@@ -143,7 +143,7 @@ namespace brick {
       for(unsigned int ii = 0; ii < matchingModelPointAddresses.size(); ++ii) {
         matchingModelPoints[ii] = *(matchingModelPointAddresses[ii]);
       }
-      
+
       return registerPoints3D<FloatType>(selectedQueryPoints.begin(),
                                          selectedQueryPoints.end(),
                                          matchingModelPoints.begin(),
@@ -195,7 +195,7 @@ namespace brick {
         isMatchingSetChanged |= (matchingPointPtr
                                  != matchingModelPointAddresses[ii]);
         matchingModelPointAddresses[ii] = matchingPointPtr;
-                                 
+
         // Checks of normals, etc., go here.
         if(distance < this->m_distanceThreshold) {
           weights[ii] = 1.0;
@@ -215,7 +215,7 @@ namespace brick {
       // new point-to-point correspondences.
       return isMatchingSetChanged;
     }
-    
+
 
     template <unsigned int Dimension, class Type, class FloatType>
     bool
@@ -228,7 +228,7 @@ namespace brick {
     }
 
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_ITERATIVECLOSESTPOINT_IMPL_HH */

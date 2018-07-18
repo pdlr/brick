@@ -18,7 +18,7 @@
 // This file is included by subPixelInterpolate.hh, and should not be
 // directly included by user code, so no need to include
 // subPixelInterpolate.hh here.
-// 
+//
 // #include <brick/numeric/subPixelInterpolate.hh>
 
 #include <cmath>
@@ -43,7 +43,7 @@ namespace brick {
       // @code
       //   [x0*x0, 2*x0*y0, y0*y0, x0, y0, 1] [k0, k1, k2, k3, k5, k5]^T = value00
       // @endcode
-      // 
+      //
       // We're always going to look at a 3x3 neighborhood around (0,
       // 0), so this gives us 9 simultaneous equations that are
       // quadratic in x, y, but linear in the parameters for which
@@ -60,7 +60,7 @@ namespace brick {
       //                 [value21]
       //                 [value22]
       // @endcode
-      // 
+      //
       // Where A is a 9x6 matrix:
       //
       // @code
@@ -121,7 +121,7 @@ namespace brick {
             + -0.11111111111111116 * value22);
     }
 
-    
+
     template <class Type0, class Type1>
     bool
     subpixelInterpolate(Type1 centerRowCoord, Type1 centerColumnCoord,
@@ -216,7 +216,7 @@ namespace brick {
     }
 
 
-    
+
     // Given pixel values in a 3x1 arrangement centerPosition, this
     // function fits a quadratic to the values and returns the
     // location and interpolated value of the extremum (max or min
@@ -243,7 +243,7 @@ namespace brick {
       // we can write the above equation three times, one for each of
       // the input values, assuming coodinates of -1, 0, 1.  Writing
       // this in matrix form gives:
-      // 
+      //
       // @code
       //   [1, -1, 1][k0]   [value0]
       //   [0,  0, 1][k1] = [value1]
@@ -285,7 +285,7 @@ namespace brick {
 
       return true;
     }
-    
+
   } // namespace numeric
 
 } // namespace brick

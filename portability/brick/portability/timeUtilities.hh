@@ -23,37 +23,37 @@ namespace brick {
       BRICK_TZ_GMT,
       BRICK_TZ_LOCAL
     };
-    
-    
-    /** 
+
+
+    /**
      * This function returns the current time as a double, the number of
      * seconds since some significant (and OS dependent) event in the
      * distant past.
-     * 
+     *
      * @return The return value is a double indicating the current time.
      */
     double
     getCurrentTime();
 
 
-    /** 
+    /**
      * This function returns the current time as a string in the
      * format "YYYY-MM-DD HH:MM:SS.ss".
      *
-     * @param tz This argument 
-     * 
-     * @return The return value 
+     * @param tz This argument
+     *
+     * @return The return value
      */
     std::string
     getISOTimeString(TimeZone tz = BRICK_TZ_LOCAL);
 
-    
-    /** 
+
+    /**
      * This function causes the program to suspend execution for at
      * least as many seconds as specified by its argument.  The
      * resolution of the timer is implementation dependent, but will
      * always be some small fraction of a second.
-     * 
+     *
      * @param seconds This argument indicates how many seconds to
      * sleep.
      */

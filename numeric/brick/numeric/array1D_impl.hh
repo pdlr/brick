@@ -15,7 +15,7 @@
 
 // This file is included by array1D.hh, and should not be directly included
 // by user code, so no need to include array1D.hh here.
-// 
+//
 // #include <brick/numeric/array1D.hh>
 
 #include <algorithm>
@@ -27,7 +27,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     // Static constant describing how the string representation of an
     // Array1D should start.
     template <class Type>
@@ -87,7 +87,7 @@ namespace brick {
       return separator;
     }
 
-    
+
     // Non-static member functions below.
 
     template <class Type>
@@ -100,7 +100,7 @@ namespace brick {
       // Empty.
     }
 
-  
+
     template <class Type>
     Array1D<Type>::
     Array1D(size_t arraySize)
@@ -131,14 +131,14 @@ namespace brick {
         message << "Couldn't parse input string: \"" << inputString << "\".";
         BRICK_THROW(common::ValueException,
                     "Array1D::Array1D(const std::string&)",
-                    message.str().c_str());                 
+                    message.str().c_str());
       }
 
       // If all went well, copy into *this.
       *this = inputArray;
     }
 
-  
+
     /* When copying from an Array1D do a shallow copy */
     /* Update reference count if the array we're copying has */
     /* valid data. */
@@ -187,7 +187,7 @@ namespace brick {
       std::copy(initializer.begin(), initializer.end(), this->begin());
     }
 
-    
+
     template <class Type>
     Array1D<Type>::~Array1D()
     {
@@ -224,7 +224,7 @@ namespace brick {
       return newArray;
     }
 
-  
+
     template <class Type> template <class Type2>
     void Array1D<Type>::
     copy(const Array1D<Type2>& source)
@@ -242,7 +242,7 @@ namespace brick {
       }
     }
 
-  
+
     template <class Type> template <class Type2>
     void
     Array1D<Type>::
@@ -282,7 +282,7 @@ namespace brick {
       if (!inputStream){
         return inputStream;
       }
-    
+
       // It's a lot easier to use a try block than to be constantly
       // testing whether the IO has succeeded, so we tell inputStream to
       // complain if anything goes wrong.
@@ -293,7 +293,7 @@ namespace brick {
       // Now on with the show.
       try{
         common::Expect::FormatFlag flags = common::Expect::SkipWhitespace();
-      
+
         // Skip any preceding whitespace.
         inputStream >> common::Expect("", flags);
 
@@ -346,7 +346,7 @@ namespace brick {
       inputStream.exceptions(oldExceptionState);
       return inputStream;
     }
-  
+
 
     template <class Type>
     void Array1D<Type>::
@@ -354,7 +354,7 @@ namespace brick {
     {
       this->allocate(arraySize);
     }
-  
+
 
     template <class Type>
     void Array1D<Type>::
@@ -364,7 +364,7 @@ namespace brick {
         this->reinit(arraySize);
       }
     }
-  
+
 
     template <class Type>
     Array1D<Type>& Array1D<Type>::
@@ -509,11 +509,11 @@ namespace brick {
     {
       for(int ii = this->size() - 1; ii >= 0; --ii) {
         this->m_dataPtr[ii] <<= numberOfBits;
-      }      
+      }
       return *this;
     }
 
-    
+
     template <class Type>
     Array1D<Type>&
     Array1D<Type>::
@@ -521,18 +521,18 @@ namespace brick {
     {
       for(int ii = this->size() - 1; ii >= 0; --ii) {
         this->m_dataPtr[ii] >>= numberOfBits;
-      }      
+      }
       return *this;
     }
 
-    
+
     template <class Type>
     void Array1D<Type>::
     allocate(size_t arraySize)
     {
       // Make sure to release any shared resources.
       this->deAllocate();
-      
+
       // Check array size.  It doesn't make sense to allocate memory
       // for a zero size array.
       m_size = arraySize;
@@ -540,7 +540,7 @@ namespace brick {
         // Allocate data storage.  new() should throw an exception if
         // we run out of memory.
         m_dataPtr = new Type[m_size];
- 
+
         // Set reference count to show that exactly one Array is pointing
         // to this data.
         m_referenceCount.reset(1);
@@ -591,7 +591,7 @@ namespace brick {
     }
 
     /* Non-member functions which should maybe wind up in a different file. */
-  
+
     template <class Type>
     Array1D<Type> operator+(const Array1D<Type>& array0,
                             const Array1D<Type>& array1)
@@ -720,14 +720,14 @@ namespace brick {
       return result;
     }
 
-  
+
     template <class Type>
     inline Array1D<Type> operator*(Type scalar, const Array1D<Type>& array0)
     {
       return array0 * scalar;
     }
 
-  
+
     template <class Type>
     Array1D<Type> operator/(Type scalar, const Array1D<Type>& array0)
     {
@@ -736,7 +736,7 @@ namespace brick {
                      std::bind1st(std::divides<Type>(), scalar));
       return result;
     }
-  
+
 
     // Elementwise comparison of an Array1D with a constant.
     template <class Type>
@@ -749,7 +749,7 @@ namespace brick {
       return result;
     }
 
-    
+
     // Elementwise comparison of an Array1D with another array.
     template <class Type>
     Array1D<bool>
@@ -762,7 +762,7 @@ namespace brick {
       return result;
     }
 
-  
+
     template <class Type>
     Array1D<bool>
     operator>(const Array1D<Type>& array0, const Type arg)
@@ -773,7 +773,7 @@ namespace brick {
       return result;
     }
 
-  
+
     template <class Type>
     Array1D<bool>
     operator>=(const Array1D<Type>& array0, const Type arg)
@@ -812,7 +812,7 @@ namespace brick {
     {
       // Most of the time, OutputType will be the same as Type.
       typedef typename NumericTraits<Type>::TextOutputType OutputType;
-    
+
       if (!stream){
         BRICK_THROW(common::IOException,
                     "operator<<(std::ostream&, const Array1D&)",

@@ -15,7 +15,7 @@
 
 // This file is included by bSpline.hh, and should not be directly included
 // by user code, so no need to include bSpline.hh here.
-// 
+//
 // #include <brick/numeric/bSpline.hh>
 
 #include <cmath>
@@ -48,7 +48,7 @@ namespace brick {
       // Empty
     }
 
-    
+
     // The copy constructor does a deep copy.
     template <class Type>
     BSpline<Type>::
@@ -68,10 +68,10 @@ namespace brick {
     {
       // Empty
     }
-      
 
 
-    
+
+
     // This member function returns the maximum value for the spline
     // parameter S.
     template <class Type>
@@ -149,7 +149,7 @@ namespace brick {
         m_order, m_numberOfNodes, m_cumulativeKnotCounts, controlPoints);
     }
 
-    
+
     // This member function sets the knot multiplicity at each node
     // of the spline.
     template <class Type>
@@ -214,7 +214,7 @@ namespace brick {
     }
 
 
-    
+
     // This member function both specifies the number of nodes in
     // the spline and sets the node positions so that the spline is
     // "uniform".
@@ -278,7 +278,7 @@ namespace brick {
       }
     }
 
-    
+
     // This operator evaluates the spline at the specified value of
     // spline parameter s.
     template <class Type>
@@ -314,7 +314,7 @@ namespace brick {
       return result;
     }
 
-    
+
     // This protected member function computes one spline basis
     // function for use in calculating spline values.
     template <class Type>
@@ -336,7 +336,7 @@ namespace brick {
       // the spline, k_(n+1) is the position of the (n+1)^st knot in
       // the spline, and s is the parametric distance along the
       // spline.
-      // 
+      //
       // Note that only one of the 0 order components is non-zero at
       // any given point along the spline.  The next three lines
       // create an array of order + 1 polynomials, initialize all of
@@ -435,7 +435,7 @@ namespace brick {
       }
       return coefficientMatrixArray;
     }
-    
+
 
     // This protected member function returns an array in which each
     // element corresponds to one span of the spline, and contains
@@ -460,7 +460,7 @@ namespace brick {
       for(size_t spanNumber = 0; spanNumber < numberOfSpans; ++spanNumber) {
         Array1D<Type> newVector(numberOfBasisFunctions);
         int knotIndex =
-          static_cast<int>(cumulativeKnotCounts[spanNumber]) 
+          static_cast<int>(cumulativeKnotCounts[spanNumber])
 		  - static_cast<int>(numberOfBasisFunctions);
         for(size_t controlPointIndex = 0;
             controlPointIndex < newVector.size();
@@ -503,11 +503,11 @@ namespace brick {
         double offsetDistance = (knotPositions[wrappedIndex]
                                  - knotPositions[0]);
         return knotPositions[knotPositions.size() - 1] + offsetDistance;
-      } 
+      }
       return knotPositions[knotNumber];
     }
 
-    
+
     // This protected member function returns the number of the span
     // in which the specified spline parameter value lies.
     template <class Type>
@@ -558,7 +558,7 @@ namespace brick {
       }
       return returnValue;
     }
-      
+
 
     // This protected member function sets the positions of the
     // nodes in the spline.

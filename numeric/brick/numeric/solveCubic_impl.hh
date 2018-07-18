@@ -17,7 +17,7 @@
 // This file is included by solveCubic.hh, and should not be
 // directly included by user code, so no need to include
 // solveCubic.hh here.
-// 
+//
 // #include <brick/numeric/solveCubic.hh>
 
 #include <cmath>
@@ -40,7 +40,7 @@ namespace brick {
       // University Press, 2007.
 
       bool returnValue = true;
-      
+
       Type c0Squared = c0 * c0;
       Type qq = ((c0Squared - (Type(3.0) * c1)) / Type(9.0));
       Type rr = ((Type(2.0) * c0Squared * c0
@@ -114,7 +114,7 @@ namespace brick {
                         - c0OverThree),
                        0.0);
         root1.setValue((minusTwoRootQq * std::cos((theta + twoPi) / Type(3.0))
-                        - c0OverThree), 
+                        - c0OverThree),
                        0.0);
         root2.setValue((minusTwoRootQq * std::cos((theta - twoPi) / Type(3.0))
                         - c0OverThree),
@@ -131,7 +131,7 @@ namespace brick {
         Type bb = (aa == Type(0.0)) ? Type(0.0) : (qq / aa);
 
         root0.setValue(((aa + bb) - c0OverThree), 0.0);
-        root1.setValue((Type(-0.5) * (aa + bb) - c0OverThree), 
+        root1.setValue((Type(-0.5) * (aa + bb) - c0OverThree),
                        (Type(squareRoot(3.0)) / Type(2.0)) * (aa - bb));
         root2.setValue(root1.getRealPart(), -(root1.getImaginaryPart()));
       }

@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
-* @file differentiableScalarTest.cc
-* 
+* @file brick/numeric/test/differentiableScalarTest.cc
+*
 * Source file defining DifferentiableScalarTest class.
 *
 * Copyright (C) 2014 David LaRose, dlr@cs.cmu.edu
@@ -21,7 +21,7 @@
 namespace brick {
 
   namespace numeric {
-    
+
     class DifferentiableScalarTest
       : public brick::test::TestFixture<DifferentiableScalarTest> {
 
@@ -49,7 +49,7 @@ namespace brick {
 
       // Tests of associated classes.
       void testNumericTraits();
-      
+
       // Tests of non-member functions.
       void testOperatorTimes();
       void testOperatorDivide();
@@ -57,13 +57,16 @@ namespace brick {
       void testOperatorMinus();
       void testAbsoluteValue();
       void testCosine();
+      void testLogarithm();
+      void testRoundToCeiling();
+      void testRoundToFloor();
       void testSine();
       void testSquareRoot();
 
       // Additional tests.
       void testOverallFunction();
       void testWithBilinearInterpolator();
-    
+
     private:
 
       void
@@ -74,7 +77,7 @@ namespace brick {
       template <class Type>
       Type
       continuousFunction(Type arg0, Type arg1);
-      
+
       double m_defaultTolerance;
       double m_relaxedTolerance;
 
@@ -104,13 +107,16 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testGetValue);
 
       BRICK_TEST_REGISTER_MEMBER(testNumericTraits);
-      
+
       BRICK_TEST_REGISTER_MEMBER(testOperatorTimes);
       BRICK_TEST_REGISTER_MEMBER(testOperatorDivide);
       BRICK_TEST_REGISTER_MEMBER(testOperatorPlus);
       BRICK_TEST_REGISTER_MEMBER(testOperatorMinus);
       BRICK_TEST_REGISTER_MEMBER(testAbsoluteValue);
       BRICK_TEST_REGISTER_MEMBER(testCosine);
+      BRICK_TEST_REGISTER_MEMBER(testLogarithm);
+      BRICK_TEST_REGISTER_MEMBER(testRoundToCeiling);
+      BRICK_TEST_REGISTER_MEMBER(testRoundToFloor);
       BRICK_TEST_REGISTER_MEMBER(testSine);
       BRICK_TEST_REGISTER_MEMBER(testSquareRoot);
 
@@ -143,7 +149,7 @@ namespace brick {
       }
     }
 
-  
+
     void
     DifferentiableScalarTest::
     testConstructor__Type()
@@ -169,11 +175,11 @@ namespace brick {
                                  this->m_defaultTolerance));
           }
         }
-        
+
       }
     }
 
-  
+
     void
     DifferentiableScalarTest::
     testConstructor__Type__Iter()
@@ -198,7 +204,7 @@ namespace brick {
       }
     }
 
-  
+
     void
     DifferentiableScalarTest::
     testConstructor__DifferentiableScalar()
@@ -223,7 +229,7 @@ namespace brick {
         }
       }
     }
-  
+
 
     void
     DifferentiableScalarTest::
@@ -251,7 +257,7 @@ namespace brick {
       }
     }
 
-  
+
     void
     DifferentiableScalarTest::
     testTimesEqualsOperator()
@@ -261,7 +267,7 @@ namespace brick {
       DifferentiableScalar<double, 2> fourXCubedEtc;
       this->getExampleScalars(twoXSquaredPlusY, twoXPlusThreeYPlusFive,
                               fourXCubedEtc);
-      
+
       twoXSquaredPlusY *= twoXPlusThreeYPlusFive;
 
       BRICK_TEST_ASSERT(
@@ -278,7 +284,7 @@ namespace brick {
                            this->m_defaultTolerance));
     }
 
-  
+
     void
     DifferentiableScalarTest::
     testDivideEqualsOperator()
@@ -288,7 +294,7 @@ namespace brick {
       DifferentiableScalar<double, 2> fourXCubedEtc;
       this->getExampleScalars(twoXSquaredPlusY, twoXPlusThreeYPlusFive,
                               fourXCubedEtc);
-      
+
       fourXCubedEtc /= twoXPlusThreeYPlusFive;
 
       BRICK_TEST_ASSERT(
@@ -305,7 +311,7 @@ namespace brick {
                            this->m_defaultTolerance));
     }
 
-  
+
     void
     DifferentiableScalarTest::
     testPlusEqualsOperator()
@@ -340,7 +346,7 @@ namespace brick {
                            this->m_defaultTolerance));
     }
 
-  
+
     void
     DifferentiableScalarTest::
     testMinusEqualsOperator()
@@ -375,14 +381,14 @@ namespace brick {
                            this->m_defaultTolerance));
     }
 
-  
+
     void
     DifferentiableScalarTest::
     testGetDerivative()
     {
       double xx = 3.0;
       double yy = 2.0;
-      
+
       DifferentiableScalar<double, 2> twoXSquaredPlusY;
       DifferentiableScalar<double, 2> twoXPlusThreeYPlusFive;
       DifferentiableScalar<double, 2> fourXCubedEtc;
@@ -392,7 +398,7 @@ namespace brick {
       double referenceValue = 2.0 * xx * xx + yy;
       double referencePartial0 = 4.0 * xx;
       double referencePartial1 = 1.0;
-      
+
       BRICK_TEST_ASSERT(
         approximatelyEqual(twoXSquaredPlusY.getValue(),
                            referenceValue,
@@ -411,7 +417,7 @@ namespace brick {
                            this->m_defaultTolerance));
     }
 
-    
+
     void
     DifferentiableScalarTest::
     testGetPartialDerivative()
@@ -419,15 +425,15 @@ namespace brick {
       // Tested above.
     }
 
-    
+
     void
     DifferentiableScalarTest::
     testGetValue()
     {
       // Tested above.
     }
-    
-    
+
+
     void
     DifferentiableScalarTest::
     testNumericTraits()
@@ -445,8 +451,8 @@ namespace brick {
         NumericTraits< DifferentiableScalar<double> >::isIntegral() == false);
       // Tested above.
     }
-    
-    
+
+
     void
     DifferentiableScalarTest::
     testOperatorTimes()
@@ -464,7 +470,7 @@ namespace brick {
       DifferentiableScalar<double, 2> product1 = twoXSquaredPlusY;
       product1 *= twoXPlusThreeYPlusFive;
 
-      
+
       BRICK_TEST_ASSERT(
         approximatelyEqual(product0.getValue(),
                            product1.getValue(),
@@ -497,7 +503,7 @@ namespace brick {
       DifferentiableScalar<double, 2> quotient1 = twoXSquaredPlusY;
       quotient1 /= twoXPlusThreeYPlusFive;
 
-      
+
       BRICK_TEST_ASSERT(
         approximatelyEqual(quotient0.getValue(),
                            quotient1.getValue(),
@@ -530,7 +536,7 @@ namespace brick {
       DifferentiableScalar<double, 2> sum1 = twoXSquaredPlusY;
       sum1 += twoXPlusThreeYPlusFive;
 
-      
+
       BRICK_TEST_ASSERT(
         approximatelyEqual(sum0.getValue(),
                            sum1.getValue(),
@@ -544,7 +550,7 @@ namespace brick {
                            sum1.getPartialDerivative(1),
                            this->m_defaultTolerance));
     }
-  
+
 
     void
     DifferentiableScalarTest::
@@ -563,7 +569,7 @@ namespace brick {
       DifferentiableScalar<double, 2> difference1 = twoXSquaredPlusY;
       difference1 -= twoXPlusThreeYPlusFive;
 
-      
+
       BRICK_TEST_ASSERT(
         approximatelyEqual(difference0.getValue(),
                            difference1.getValue(),
@@ -578,7 +584,7 @@ namespace brick {
                            this->m_defaultTolerance));
     }
 
-    
+
     void
     DifferentiableScalarTest::
     testAbsoluteValue()
@@ -593,7 +599,7 @@ namespace brick {
       probe1.setPartialDerivative(0, 5.0);
       probe1.setPartialDerivative(1, -2.0);
 
-      // Do the operation under test. 
+      // Do the operation under test.
       DifferentiableScalar<double, 2> result0 = absoluteValue(probe0);
       DifferentiableScalar<double, 2> result1 = absoluteValue(probe1);
 
@@ -630,7 +636,7 @@ namespace brick {
       fiveTheta0PlusTwoTheta1.setPartialDerivative(0, 5.0);
       fiveTheta0PlusTwoTheta1.setPartialDerivative(1, 2.0);
 
-      // Do the operation under test. 
+      // Do the operation under test.
       DifferentiableScalar<double, 2> cosStuff = cosine(
         fiveTheta0PlusTwoTheta1);
 
@@ -639,7 +645,7 @@ namespace brick {
       double referenceValue = brick::common::cosine(omega);
       double referencePartial0 = -5.0 * brick::common::sine(omega);
       double referencePartial1 = -2.0 * brick::common::sine(omega);
-      
+
       BRICK_TEST_ASSERT(
         approximatelyEqual(cosStuff.getValue(),
                            referenceValue,
@@ -657,6 +663,120 @@ namespace brick {
 
     void
     DifferentiableScalarTest::
+    testLogarithm()
+    {
+      double theta0 = 2.5;
+      double theta1 = -3.0;
+
+      // This variable represents 5.0*theta0^2 + 2.0*theta1.
+      DifferentiableScalar<double, 2> fiveTheta0SqPlusTwoTheta1;
+      fiveTheta0SqPlusTwoTheta1.setValue(5.0 * theta0 * theta0 + 2.0 * theta1);
+      fiveTheta0SqPlusTwoTheta1.setPartialDerivative(0, 25.0);
+      fiveTheta0SqPlusTwoTheta1.setPartialDerivative(1, 2.0);
+
+      // Do the operation under test.
+      DifferentiableScalar<double, 2> logStuff = logarithm(
+        fiveTheta0SqPlusTwoTheta1);
+
+      // Check the result.
+      double omega = 5.0 * theta0 * theta0 + 2.0 * theta1;
+      double referenceValue = brick::common::logarithm(omega);
+      double referencePartial0 = 10.0 * theta0 / omega;
+      double referencePartial1 = 2.0 / omega;
+
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(logStuff.getValue(),
+                           referenceValue,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(logStuff.getPartialDerivative(0),
+                           referencePartial0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(logStuff.getPartialDerivative(1),
+                           referencePartial1,
+                           this->m_defaultTolerance));
+    }
+
+
+    void
+    DifferentiableScalarTest::
+    testRoundToCeiling()
+    {
+      DifferentiableScalar<double, 2> testValue0(1.5);
+      testValue0.setPartialDerivative(0, 5.0);
+      testValue0.setPartialDerivative(1, 2.0);
+
+      DifferentiableScalar<double, 2> testValue1(-1.5);
+      testValue1.setPartialDerivative(0, 5.0);
+      testValue1.setPartialDerivative(1, 2.0);
+
+      // Do the operation under test.
+      DifferentiableScalar<double, 2> myCeiling0 = roundToCeiling(testValue0);
+      DifferentiableScalar<double, 2> myCeiling1 = roundToCeiling(testValue1);
+
+      // Check the result.
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myCeiling0.getValue(), 2.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myCeiling0.getPartialDerivative(0), 0.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myCeiling0.getPartialDerivative(1), 0.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myCeiling1.getValue(), -1.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myCeiling1.getPartialDerivative(0), 0.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myCeiling1.getPartialDerivative(1), 0.0,
+                           this->m_defaultTolerance));
+    }
+
+
+    void
+    DifferentiableScalarTest::
+    testRoundToFloor()
+    {
+      DifferentiableScalar<double, 2> testValue0(1.5);
+      testValue0.setPartialDerivative(0, 5.0);
+      testValue0.setPartialDerivative(1, 2.0);
+
+      DifferentiableScalar<double, 2> testValue1(-1.5);
+      testValue1.setPartialDerivative(0, 5.0);
+      testValue1.setPartialDerivative(1, 2.0);
+
+      // Do the operation under test.
+      DifferentiableScalar<double, 2> myFloor0 = roundToFloor(testValue0);
+      DifferentiableScalar<double, 2> myFloor1 = roundToFloor(testValue1);
+
+      // Check the result.
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myFloor0.getValue(), 1.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myFloor0.getPartialDerivative(0), 0.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myFloor0.getPartialDerivative(1), 0.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myFloor1.getValue(), -2.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myFloor1.getPartialDerivative(0), 0.0,
+                           this->m_defaultTolerance));
+      BRICK_TEST_ASSERT(
+        approximatelyEqual(myFloor1.getPartialDerivative(1), 0.0,
+                           this->m_defaultTolerance));
+    }
+
+
+    void
+    DifferentiableScalarTest::
     testSine()
     {
       double theta0 = 0.312;
@@ -668,7 +788,7 @@ namespace brick {
       fiveTheta0PlusTwoTheta1.setPartialDerivative(0, 5.0);
       fiveTheta0PlusTwoTheta1.setPartialDerivative(1, 2.0);
 
-      // Do the operation under test. 
+      // Do the operation under test.
       DifferentiableScalar<double, 2> sinStuff = sine(
         fiveTheta0PlusTwoTheta1);
 
@@ -677,7 +797,7 @@ namespace brick {
       double referenceValue = brick::common::sine(omega);
       double referencePartial0 = 5.0 * brick::common::cosine(omega);
       double referencePartial1 = 2.0 * brick::common::cosine(omega);
-      
+
       BRICK_TEST_ASSERT(
         approximatelyEqual(sinStuff.getValue(),
                            referenceValue,
@@ -706,7 +826,7 @@ namespace brick {
       fiveTheta0PlusTwoTheta1.setPartialDerivative(0, 5.0);
       fiveTheta0PlusTwoTheta1.setPartialDerivative(1, 2.0);
 
-      // Do the operation under test. 
+      // Do the operation under test.
       DifferentiableScalar<double, 2> sqrtStuff = squareRoot(
         fiveTheta0PlusTwoTheta1);
 
@@ -715,7 +835,7 @@ namespace brick {
       double referenceValue = brick::common::squareRoot(omega);
       double referencePartial0 = 5.0 / (2.0 * referenceValue);
       double referencePartial1 = 2.0 / (2.0 * referenceValue);
-      
+
       BRICK_TEST_ASSERT(
         approximatelyEqual(sqrtStuff.getValue(),
                            referenceValue,
@@ -753,7 +873,7 @@ namespace brick {
       DifferentiableScalar<double, 2> result =
         this->continuousFunction(scalar0, scalar1);
 
-      
+
       BRICK_TEST_ASSERT(
         approximatelyEqual(result.getValue(),
                            referenceValue,
@@ -778,7 +898,7 @@ namespace brick {
       // Constant factors for our simple linear equation.
       double const k0 = 2.0;
       double const k1 = 3.0;
-      
+
       Array2D<double> myArray(3, 5);
       for(unsigned int rr = 0; rr < myArray.rows(); ++rr) {
         for(unsigned int cc = 0; cc < myArray.columns(); ++cc) {
@@ -817,7 +937,7 @@ namespace brick {
 
     }
 
-    
+
     void
     DifferentiableScalarTest::
     getExampleScalars(DifferentiableScalar<double, 2>& twoXSquaredPlusY,

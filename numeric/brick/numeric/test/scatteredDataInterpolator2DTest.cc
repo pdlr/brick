@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
-* @file scatteredDataInterpolator2DTest.cpp
-* 
+* @file brick/numeric/test/scatteredDataInterpolator2DTest.cpp
+*
 * Source file defining ScatteredDataInterpolator2DTest class.
 *
 * Copyright (C) 2014 David LaRose, dlr@cs.cmu.edu
@@ -41,7 +41,7 @@ namespace brick {
     private:
 
       double m_defaultTolerance;
-    
+
     }; // class ScatteredDataInterpolator2DTest
 
 
@@ -79,7 +79,7 @@ namespace brick {
       Array2D<double> sCoordArray = subArray(testData, Slice(), Slice(0, 1));
       Array2D<double> tCoordArray = subArray(testData, Slice(), Slice(1, 2));
       Array2D<double> valueArray = subArray(testData, Slice(), Slice(2, 3));
-        
+
       // Figure out how many spline levels we need to perfectly match
       // each datapoint.
       double minimumPointSeparation = 0.1; // From inspection of testData.
@@ -98,7 +98,7 @@ namespace brick {
       // control points.
       uint32_t maxNumberOfLevels = static_cast<uint32_t>(
         std::log(numberOfControlPoints) / std::log(2) + 2);
-      
+
       // Approximate the made up data using
       // ScatteredDataInterpolator2D instances of progressively
       // increasing resolution, verifying that the fidelity of the
@@ -121,7 +121,7 @@ namespace brick {
         for(size_t index0 = 0; index0 < testData.rows(); ++index0) {
           double computedResult =
             scatteredDataInterpolator(testData(index0, 0), testData(index0, 1));
-          currentResiduals[index0] = 
+          currentResiduals[index0] =
             common::absoluteValue(computedResult - testData(index0, 2));
         }
 
@@ -139,7 +139,7 @@ namespace brick {
         approximatelyEqual(largestResidual, 0.0, this->m_defaultTolerance));
 
     } // testApproximate()
-    
+
   } // namespace numeric
 
 } // namespace brick
@@ -163,4 +163,3 @@ namespace {
 }
 
 #endif
-

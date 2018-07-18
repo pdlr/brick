@@ -26,7 +26,7 @@
 namespace brick {
 
   namespace computerVision {
-    
+
     class ImageFilterTest : public brick::test::TestFixture<ImageFilterTest> {
 
     public:
@@ -44,7 +44,7 @@ namespace brick {
       void testFilter2D_separable();
       void testFilterColumnsBinomial();
       void testFilterRowsBinomial();
-      
+
       // Saved code (not currently used).
       void timeBinomialFilters();
 
@@ -57,7 +57,7 @@ namespace brick {
       numeric::Array2D<common::UnsignedInt16>
       localFilter2D(const numeric::Array2D<common::UnsignedInt16>& kernel,
                     const numeric::Array2D<common::UnsignedInt8>& inputImage);
-      
+
       numeric::Array2D<common::Float64>
       localFilter2D(const numeric::Array2D<common::Float64>& kernel,
                     const numeric::Array2D<common::Float64>& inputImage);
@@ -206,7 +206,7 @@ namespace brick {
       Image<GRAY8> inputImage = readPGM8(getTestImageFileNamePGM0());
       Image<GRAY_FLOAT64> inputImage0(inputImage.rows(), inputImage.columns());
       inputImage0.copy(inputImage);
-    
+
       numeric::Array1D<double> kernelRow("[1.0, 3.0, 4.0]");
       numeric::Array1D<double> kernelColumn("[3.0, 0.0, 2.0, 4.0, 1.0]");
       kernelRow /= numeric::sum<double>(kernelRow);
@@ -247,7 +247,7 @@ namespace brick {
     testFilterColumnsBinomial()
     {
       Image<GRAY8> inputImage = readPGM8(getTestImageFileNamePGM0());
-    
+
       numeric::Array1D<common::UInt16> kernelRow("[1]");
       numeric::Array1D<common::UInt16> kernelColumn121("[1, 2, 1]");
       numeric::Array1D<common::UInt16> kernelColumn14641("[1, 4, 6, 4, 1]");
@@ -278,7 +278,7 @@ namespace brick {
     testFilterRowsBinomial()
     {
       Image<GRAY8> inputImage = readPGM8(getTestImageFileNamePGM0());
-    
+
       numeric::Array1D<common::UInt16> kernelRow121("[1, 2, 1]");
       numeric::Array1D<common::UInt16> kernelRow14641("[1, 4, 6, 4, 1]");
       numeric::Array1D<common::UInt16> kernelRow16XXX61(
@@ -302,7 +302,7 @@ namespace brick {
         }
       }
     }
-  
+
 
 #if 0
     void
@@ -337,7 +337,7 @@ namespace brick {
       }
       time1 = utilities::getCurrentTime();
       std::cout << "121 x 2 ET: " << time1 - time0 << std::endl;
-      
+
       Image<GRAY16> outputImage121By3(inputImage.rows(), inputImage.columns());
       time0 = utilities::getCurrentTime();
       for(unsigned int ii = 0; ii < 100; ++ii) {
@@ -345,7 +345,7 @@ namespace brick {
       }
       time1 = utilities::getCurrentTime();
       std::cout << "121 x 3 ET: " << time1 - time0 << std::endl;
-      
+
       Image<GRAY16> outputImage14641(inputImage.rows(), inputImage.columns());
       time0 = utilities::getCurrentTime();
       for(unsigned int ii = 0; ii < 100; ++ii) {
@@ -384,7 +384,7 @@ namespace brick {
       std::cout << "Generic Col 1 6 15 20 15 6 1: " << time1 - time0
                 << std::endl;
 
-      
+
       Image<GRAY16> outputImage1_6_15_20_15_6_1;
       time0 = utilities::getCurrentTime();
       for(unsigned int ii = 0; ii < 100; ++ii) {
@@ -394,7 +394,7 @@ namespace brick {
       time1 = utilities::getCurrentTime();
       std::cout << "1_6_15_20_15_6_1 ET: " << time1 - time0 << std::endl;
 
-      
+
       Image<GRAY16> outputRowSimple;
       time0 = utilities::getCurrentTime();
       for(unsigned int ii = 0; ii < 100; ++ii) {
@@ -471,7 +471,7 @@ namespace brick {
       }
       time1 = utilities::getCurrentTime();
       std::cout << "DoubleSeparable: " << time1 - time0 << std::endl;
-      
+
     }
 #endif /* #if 0 */
 
@@ -586,7 +586,7 @@ namespace brick {
         }
       }
       return resultImage;
-    }  
+    }
 
 
     numeric::Array2D<common::UnsignedInt64>
@@ -621,8 +621,8 @@ namespace brick {
         }
       }
       return resultImage;
-    }  
-    
+    }
+
   } // namespace computerVision
 
 } // namespace brick

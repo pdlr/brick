@@ -64,15 +64,15 @@ namespace brick {
 
 
 #if 0
-    
+
     // Constructor.
     ImageReader::
     ImageReader()
     {
       // Empty.
     }
-      
-      
+
+
     // Destructor.
     ImageReader::
     ~ImageReader()
@@ -97,7 +97,7 @@ namespace brick {
     }
 
 #endif
-    
+
     Image<GRAY8>
     readPGM8(const std::string& fileName)
     {
@@ -105,7 +105,7 @@ namespace brick {
       return readPGM8(fileName, commentString);
     }
 
-  
+
     Image<GRAY8>
     readPGM8(const std::string& fileName, std::string& commentString)
     {
@@ -184,7 +184,7 @@ namespace brick {
         BRICK_THROW(brick::common::IOException,
                     "readPGM8()", message.str().c_str());
       }
-    
+
       // All done!
       inputStream.close();
       return newImage;
@@ -278,7 +278,7 @@ namespace brick {
         BRICK_THROW(brick::common::IOException,
                     "readPGM16()", message.str().c_str());
       }
-    
+
       // All done!
       inputStream.close();
       return newImage;
@@ -291,7 +291,7 @@ namespace brick {
       std::string commentString;
       return readPPM8(fileName, commentString);
     }
-      
+
 
     Image<RGB8>
     readPPM8(const std::string& fileName,
@@ -378,7 +378,7 @@ namespace brick {
         BRICK_THROW(brick::common::IOException,
                     "readPPM8()", message.str().c_str());
       }
-    
+
       // All done!
       inputStream.close();
       return newImage;
@@ -425,11 +425,11 @@ namespace brick {
         BRICK_THROW(brick::common::IOException,
                     "writePGM8()", message.str().c_str());
       }
-    
+
       // All done!
       outputStream.close();
     }
-  
+
 
     void
     writePGM16(const std::string& fileName,
@@ -485,11 +485,11 @@ namespace brick {
         BRICK_THROW(brick::common::IOException,
                     "writePGM16()", message.str().c_str());
       }
-    
+
       // All done!
       outputStream.close();
     }
-  
+
 
     void
     writePPM8(const std::string& fileName,
@@ -502,7 +502,7 @@ namespace brick {
           "Your compiler appears to pack RGB pixels in an unusual way.  "
           "Please update brick::computerVision::writePPM8() to handle this.");
       }
-      
+
       std::ofstream outputStream(fileName.c_str(), std::ios::binary);
       if(!outputStream) {
         std::ostringstream message;
@@ -538,7 +538,7 @@ namespace brick {
         BRICK_THROW(brick::common::IOException,
                     "writePPM8()", message.str().c_str());
       }
-    
+
       // All done!
       outputStream.close();
     }
@@ -555,7 +555,7 @@ namespace brick {
           "Your compiler appears to pack RGB pixels in an unusual way.  "
           "Please update brick::computerVision::writePPM16() to handle this.");
       }
-      
+
       std::ofstream outputStream(fileName.c_str(), std::ios::binary);
       if(!outputStream) {
         std::ostringstream message;
@@ -606,7 +606,7 @@ namespace brick {
         BRICK_THROW(brick::common::IOException,
                     "writePPM16()", message.str().c_str());
       }
-    
+
       // All done!
       outputStream.close();
     }
@@ -646,7 +646,7 @@ namespace brick {
                     message.str().c_str());
       }
     }
-    
+
     template<>
     void
     writePNG<GRAY16>(const std::string& fileName,
@@ -670,7 +670,7 @@ namespace brick {
                     message.str().c_str());
       }
     }
-    
+
     template<>
     void
     writePNG<RGB8>(const std::string& fileName,
@@ -720,7 +720,7 @@ namespace brick {
                     message.str().c_str());
       }
     }
-    
+
   } // namespace computerVision
 
 } // namespace brick

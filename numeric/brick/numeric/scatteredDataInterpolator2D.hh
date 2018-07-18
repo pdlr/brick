@@ -30,8 +30,8 @@ namespace brick {
     struct FailFunctor : public std::unary_function<ResidualType, bool> {
       bool operator()(ResidualType const&) {return false;}
     };
-    
-    
+
+
     /**
      ** Warning: This class is very new, and its test suite is
      ** incomplete.  It almost certainly contain bugs, and its
@@ -64,11 +64,11 @@ namespace brick {
                class TestType = FailFunctor<Type> >
     class ScatteredDataInterpolator2D {
     public:
-      
-      /** 
+
+      /**
        * This constructor builds a ScatteredDataInterpolator2D instance
        * of unspecified length and width.
-       * 
+       *
        * @param numberOfLevels This argument specifies how many levels
        * of spline interpolation are to be performed.  The ultimate
        * size of the grid of spline control points is approximately
@@ -93,14 +93,14 @@ namespace brick {
        * axis-aligned direction along which the data are most tightly
        * grouped.
        */
-      ScatteredDataInterpolator2D(size_t numberOfLevels = 8, 
+      ScatteredDataInterpolator2D(size_t numberOfLevels = 8,
                                   bool isMeanCentered = true,
                                   bool isIsotropic = true);
 
 
-      /** 
+      /**
        * The copy constructor does a deep copy.
-       * 
+       *
        * @param other This argument is the ScatteredDataInterpolator2D
        * instance to be copied.
        */
@@ -108,11 +108,11 @@ namespace brick {
         ScatteredDataInterpolator2D<Type, FloatType, TestType> const& other);
 
 
-      /** 
+      /**
        * This function specifies the data to be interpolated.  With
        * each call to this function, any previous approximation is
        * discarded, and the interpolating function is re-estimated.
-       * 
+       *
        * @param sBegin This iterator specifies the beginning of a
        * sequence of (possibly non-uniformly distributed) S
        * coordinates of points at which observations of the
@@ -150,13 +150,13 @@ namespace brick {
                   CoordIter tBegin,
                   ObsIter observationsBegin,
                   FloatType buffer = 1.0E-5);
-      
 
-      /** 
+
+      /**
        * This function specifies the data to be interpolated.  With
        * each call to this function, any previous approximation is
        * discarded, and the interpolating function is re-estimated.
-       * 
+       *
        * @param sBegin This iterator specifies the beginning of a
        * sequence of (possibly non-uniformly distributed) S
        * coordinates of points at which observations of the
@@ -198,18 +198,18 @@ namespace brick {
                   ObsIter observationsBegin,
                   Vector2D<FloatType> const& corner0,
                   Vector2D<FloatType> const& corner1);
-      
-      
-      /** 
+
+
+      /**
        * This member function returns the maximum value for the
        * interpolating function parameters S and T.  Calling
        * operator()(FloatType, FloatType) with arguments greater than
        * or equal to those reported by getMaximumSAndTValues() is an
        * error.
-       * 
+       *
        * @param maximumS This argument is used to return the maximum
        * value of parameter S by reference.
-       * 
+       *
        * @param maximumT This argument is used to return the maximum
        * value of parameter T by reference.
        */
@@ -217,15 +217,15 @@ namespace brick {
       getMaximumSAndTValues(FloatType& maximumS, FloatType& maximumT) const;
 
 
-      /** 
+      /**
        * This member function returns the minimum value for the
        * interpolating function parameters S and T.  Calling
        * operator()(FloatType, FloatType) with arguments less than
        * those reported by getMinimumSAndTValues() is an error.
-       * 
+       *
        * @param minimumS This argument is used to return the minimum
        * value of parameter S by reference.
-       * 
+       *
        * @param minimumT This argument is used to return the minimum
        * value of parameter T by reference.
        */
@@ -233,7 +233,7 @@ namespace brick {
       getMinimumSAndTValues(FloatType& minimumS, FloatType& minimumT) const;
 
 
-      /** 
+      /**
        * This member function specifies a functor that is used to
        * test the quality of the approximation.  At each iteration (up
        * to the number of iterations specified by constructor argument
@@ -251,7 +251,7 @@ namespace brick {
        * x){return x < 0.1;} as the value of this argument.  The
        * default value of this argument always returns false, and will
        * never terminate the iteration early.
-       * 
+       *
        * @param testFunctor This argument is the functor to be applied
        * to each residual.
        */
@@ -260,10 +260,10 @@ namespace brick {
         this->m_testFunctor = testFunctor;
       }
 
-      
-      /** 
+
+      /**
        * The assigment operator does a deep copy.
-       * 
+       *
        * @param other This argument is the ScatteredDataInterpolator2D
        * instance to be copied.
        */
@@ -271,16 +271,16 @@ namespace brick {
       operator=(
         ScatteredDataInterpolator2D<Type, FloatType, TestType> const& other);
 
-      
-      /** 
+
+      /**
        * This operator evaluates the interpolating function at the
        * specified values of spline parameters S and T.
-       * 
+       *
        * @return The return value is the calculated spline value.
        */
       Type
       operator()(FloatType sValue, FloatType tValue) const;
-      
+
 
     protected:
 
@@ -290,9 +290,9 @@ namespace brick {
       size_t m_numberOfLevels;
       TestType m_testFunctor;
     };
-    
+
   } // namespace numeric
-  
+
 } // namespace brick
 
 // Include file containing definitions of inline and template

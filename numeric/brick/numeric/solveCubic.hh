@@ -19,23 +19,23 @@
 namespace brick {
 
   namespace numeric {
-    
-    /** 
+
+    /**
      * This function computes the real roots of the cubic polynomial
      * x^3 + c0*x^2 + c1*x + c2 = 0.
      *
      * @param c0 This argument is the quadratic coefficient of the
      * polynomial.
-     * 
+     *
      * @param c1 This argument is the linear coefficient of the
      * polynomial.
-     * 
+     *
      * @param c2 This argument is the constant coefficient of the
      * polynomial.
-     * 
+     *
      * @param root0 This reference argument is used to return the
      * first real root of the polynomial.
-     * 
+     *
      * @param root1 If the polynomial has three real roots, this
      * reference argument is used to return the second root.
      *
@@ -52,25 +52,25 @@ namespace brick {
     solveCubic(Type c0, Type c1, Type c2,
                Type& root0, Type& root1, Type& root2);
 
-  
-    /** 
+
+    /**
      * This function computes the (possibly complex) roots of the
      * cubic polynomial x^3 + c0*x^2 + c1*x + c2 = 0.  As of mid-2015,
      * the std::complex API is not stable, so we use
      * brick::common::ComplexNumber instead.
-     * 
+     *
      * @param c0 This argument is the quadratic coefficient of the
      * polynomial.
-     * 
+     *
      * @param c1 This argument is the linear coefficient of the
      * polynomial.
-     * 
+     *
      * @param c2 This argument is the constant coefficient of the
      * polynomial.
-     * 
+     *
      * @param root0 This reference argument is used to return the
      * first root of the polynomial.
-     * 
+     *
      * @param root1 This reference argument is used to return the
      * second root of the polynomial.
      *
@@ -84,7 +84,7 @@ namespace brick {
                brick::common::ComplexNumber<Type>& root1,
                brick::common::ComplexNumber<Type>& root2);
 
-  
+
   } // namespace numeric
 
 } // namespace brick

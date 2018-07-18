@@ -17,7 +17,7 @@
 // This file is included by cameraIntrinsicsPinhole.hh, and should not be
 // directly included by user code, so no need to include
 // cameraIntrinsicsPinhole.hh here.
-// 
+//
 // #include <brick/computerVision/cameraIntrinsicsPinhole.hh>
 
 #include <iomanip>
@@ -43,7 +43,7 @@ namespace brick {
     {
       // Empty.
     }
-      
+
 
     // This constructor allows the caller to explicitly set the
     // camera intrinsic parameters.
@@ -90,8 +90,8 @@ namespace brick {
     {
       // Empty.
     }
-    
-    
+
+
     // This member function returns a coordinate transform that
     // "matches" *this.
     template <class FloatType>
@@ -118,7 +118,7 @@ namespace brick {
         m_kX * point.x() / point.z() + m_centerU,
         m_kY * point.y() / point.z() + m_centerV);
     }
-    
+
 
     // This member function sets the calibration from an input
     // stream.
@@ -133,7 +133,7 @@ namespace brick {
       }
 
       // We'll silently skip whitespace.
-      common::Expect::FormatFlag flags = common::Expect::SkipWhitespace;
+      common::Expect::FormatFlag flags = common::Expect::SkipWhitespace();
 
       // Read input data into temporary variables.
       FloatType centerU, centerV, kX, kY;
@@ -190,7 +190,7 @@ namespace brick {
       //
       //   x_pix = k_x * x_cam + x_c, and
       //   y_pix = k_y * y_cam + x_c.
-      // 
+      //
       // This is trivial to invert:
       //
       //   x_cam = (x_pix - x_c) / k_x, and
@@ -224,9 +224,9 @@ namespace brick {
       return stream;
     }
 
-    
+
   } // namespace computerVision
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_COMPUTERVISION_CAMERAINTRINSICSPINHOLE_IMPL_HH */

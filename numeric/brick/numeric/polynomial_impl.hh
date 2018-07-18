@@ -16,7 +16,7 @@
 
 // This file is included by polynomial.hh, and should not be directly included
 // by user code, so no need to include polynomial.hh here.
-// 
+//
 // #include <brick/numeric/polynomial.hh>
 
 #include <algorithm>
@@ -79,7 +79,7 @@ namespace brick {
     }
 
 
-#if BRICK_NUMERIC_POLYNOMIAL_TEMPLATED_CONSTRUCTORS 
+#if BRICK_NUMERIC_POLYNOMIAL_TEMPLATED_CONSTRUCTORS
     //  This constructor makes a polynomial of arbitrary order.
     template <class Type>
     template <class Iter>
@@ -90,7 +90,7 @@ namespace brick {
       std::copy(beginIter, endIter, m_coefficientArray.begin());
     }
 #endif /* #if BRICK_NUMERIC_POLYNOMIAL_TEMPLATED_CONSTRUCTORS */
-    
+
     // The copy constructor does a deep copy.
     template <class Type>
     Polynomial<Type>::
@@ -100,7 +100,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // This member function returns the coefficients of the
     // polynomial.
     template <class Type>
@@ -110,7 +110,7 @@ namespace brick {
     {
       return m_coefficientArray.copy();
     }
-      
+
 
     // The assigment operator does a deep copy.
     template <class Type>
@@ -124,7 +124,7 @@ namespace brick {
       return *this;
     }
 
-    
+
     // This operator evaluates the polynomial.
     template <class Type>
     Type
@@ -235,7 +235,7 @@ namespace brick {
       m_coefficientArray = newCoefficientArray;
       return *this;
     }
-      
+
 
 
     /* ============ Non-member function definitions ============ */
@@ -260,7 +260,7 @@ namespace brick {
       result += arg1;
       return result;
     }
-  
+
 
     // This operator subtracts two Polynomial instances.
     template<class Type>
@@ -271,10 +271,10 @@ namespace brick {
       result -= arg1;
       return result;
     }
-    
-    
+
+
   } // namespace numeric
-  
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_NUMERIC_POLYNOMIAL_IMPL_HH */

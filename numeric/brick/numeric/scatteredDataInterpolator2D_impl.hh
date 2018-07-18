@@ -17,7 +17,7 @@
 // This file is included by scatteredDataInterpolator2D.hh, and should
 // not be directly included by user code, so no need to include
 // scatteredDataInterpolator2D.hh here.
-// 
+//
 // #include <brick/numeric/scatteredDataInterpolator2D.hh>
 
 #include <cmath>
@@ -33,7 +33,7 @@ namespace brick {
     // of unspecified length and width.
     template <class Type, class FloatType, class TestType>
     ScatteredDataInterpolator2D<Type, FloatType, TestType>::
-    ScatteredDataInterpolator2D(size_t numberOfLevels, 
+    ScatteredDataInterpolator2D(size_t numberOfLevels,
                                 bool isMeanCentered,
                                 bool isIsotropic)
       : m_bSpline2D(isIsotropic),
@@ -43,13 +43,13 @@ namespace brick {
         m_testFunctor()
     {
       if(0 == numberOfLevels) {
-        BRICK_THROW(brick::common::ValueException, 
+        BRICK_THROW(brick::common::ValueException,
                     "ScatteredDataInterpolator::ScatteredDataInterpolator()",
                     "Argument numberOfLevels must be greater than 0.");
       }
     }
 
-    
+
     // The copy constructor does a deep copy.
     template <class Type, class FloatType, class TestType>
     ScatteredDataInterpolator2D<Type, FloatType, TestType>::
@@ -64,7 +64,7 @@ namespace brick {
       // Empty.
     }
 
-    
+
     // This function allows the spline parameters to be automatically
     // set in order to approximate an irregularly sampled function.
     template <class Type, class FloatType, class TestType>
@@ -77,7 +77,7 @@ namespace brick {
                 FloatType buffer)
     {
       CoordIter tEnd = tBegin + (sEnd - sBegin);
-    
+
       // Establish bounds for reconstruction
       Vector2D<FloatType> corner0(*std::min_element(sBegin, sEnd) - buffer,
                                   *std::min_element(tBegin, tEnd) - buffer);
@@ -122,10 +122,10 @@ namespace brick {
       this->m_bSpline2D.setNumberOfNodes(4, 4);
       this->m_bSpline2D.approximateScatteredData(
         sBegin, sEnd, tBegin, shiftedObservations.begin(), corner0, corner1);
-      
+
       // Iterate until there are no more refinements to be done.
       Array1D<Type> residuals(shiftedObservations.size());
-      for(size_t levelNumber = 1; levelNumber < this->m_numberOfLevels; 
+      for(size_t levelNumber = 1; levelNumber < this->m_numberOfLevels;
           ++levelNumber) {
 
         // Subtract the best-so-far interpolation from the observations
@@ -153,10 +153,10 @@ namespace brick {
         if(isTerminationOk) {
           break;
         }
-        
+
         // Resample the B-spline to the next higher resolution.
         this->m_bSpline2D.promote();
-        
+
         // Recover the dimensions of the current spline control grid.
         size_t numberOfNodesS;
         size_t numberOfNodesT;
@@ -215,7 +215,7 @@ namespace brick {
       }
     }
 
-    
+
     // This operator evaluates the spline at the specified values of
     // spline parameters s and t.
     template <class Type, class FloatType, class TestType>

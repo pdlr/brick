@@ -19,30 +19,30 @@
 namespace brick {
 
   namespace geometry {
-    
+
     /**
      ** The Triangle3D class represents a triangle in 3D space.
      **/
     template <class Type>
     class Triangle3D {
     public:
-      
-      /** 
+
+      /**
        * The default constructor initializes to a triangle in the X-Y
        * plane.
        */
       Triangle3D();
 
-    
-      /** 
+
+      /**
        * This constructor initializes the triangle using three points.
-       * 
+       *
        * @param vertex0 This argument is one of the three points that
        * define the triangle.
-       * 
+       *
        * @param vertex1 This argument is one of the three points that
        * define the triangle.
-       * 
+       *
        * @param vertex2 This argument is one of the three points that
        * define the triangle.
        */
@@ -50,64 +50,64 @@ namespace brick {
                  brick::numeric::Vector3D<Type> const& vertex1,
                  brick::numeric::Vector3D<Type> const& vertex2);
 
-    
-      /** 
+
+      /**
        * The copy constructor deep copies its argument.
-       * 
+       *
        * @param source This argument is the class instance to be copied.
        */
       Triangle3D(Triangle3D<Type> const& source);
 
 
-      /** 
+      /**
        * Destructor.
        */
       ~Triangle3D();
 
 
-      /** 
+      /**
        * The assignment operator deep copies its argument.
-       * 
+       *
        * @param source This argument is the class instance to be copied.
-       * 
+       *
        * @return The return value is a reference to *this.
        */
       Triangle3D<Type>&
       operator=(Triangle3D<Type> const& source);
 
 
-      /** 
+      /**
        * This member function returns the one of the three vertices
        * that define the triangle.
-       * 
+       *
        * @return The return value is a Vector3D representing the
        * first vertex of the triangle.
        */
       brick::numeric::Vector3D<Type> const&
       getVertex0() const;
-      
 
-      /** 
+
+      /**
        * This member function returns the one of the three vertices
        * that define the triangle.
-       * 
+       *
        * @return The return value is a Vector3D representing the
        * second vertex of the triangle.
        */
       brick::numeric::Vector3D<Type> const&
       getVertex1() const;
-      
 
-      /** 
+
+      /**
        * This member function returns the one of the three vertices
        * that define the triangle.
-       * 
+       *
        * @return The return value is a Vector3D representing the
        * first vertex of the triangle.
        */
       brick::numeric::Vector3D<Type> const&
       getVertex2() const;
-      
+
 
       Triangle3D<Type>&
       setValue(brick::numeric::Vector3D<Type> const& vertex0,
@@ -118,7 +118,7 @@ namespace brick {
         m_vertex2 = vertex2;
         return *this;
       }
-      
+
     private:
 
       // Private data members.
@@ -135,15 +135,15 @@ namespace brick {
     template <class Type>
     std::ostream&
     operator<<(std::ostream& stream, Triangle3D<Type> const& triangle);
-    
+
 
     template <class Type>
     std::istream&
     operator>>(std::istream& stream, Triangle3D<Type>& triangle);
-    
-    
+
+
   } // namespace utilities
-    
+
 } // namespace brick
 
 

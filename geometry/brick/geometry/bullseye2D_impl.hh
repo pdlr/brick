@@ -15,7 +15,7 @@
 
 // This file is included by bullseye2D.hh, and should not be directly included
 // by user code, so no need to include bullseye2D.hh here.
-// 
+//
 // #include <brick/geometry/bullseye2D.hh>
 
 #include <brick/linearAlgebra/linearAlgebra.hh>
@@ -29,7 +29,7 @@
 namespace brick {
 
   namespace geometry {
-    
+
     // The default constructor initializes to a 3-ring circular
     // bullseye, with rings at radii of 0.5, 1.0, and 1.5.
     template <class Type>
@@ -45,7 +45,7 @@ namespace brick {
       m_scales[2] = 1.5;
     }
 
-    
+
     // This constructor initializes to a circular bullseye, with a
     // user-specified number of rings at radii of 0.5, 1.0, 1.5,
     // etc.
@@ -79,7 +79,7 @@ namespace brick {
       std::copy(scalesBegin, scalesEnd, m_scales.begin());
     }
 
-    
+
     // The copy constructor deep copies its argument.
     template <class Type>
     Bullseye2D<Type>::
@@ -156,7 +156,7 @@ namespace brick {
 
       // We assume each ring of the bullseye is elliptical, with the
       // implicit parameterization
-      // 
+      //
       //   F(x, y) = a * x^2 + b * x * y + c * y^2 + d * x + e * y + f = 0,
       //
       // with the ellipse-specific constraint
@@ -167,7 +167,7 @@ namespace brick {
       // ring has its own f, which controls its scaling.  So, the
       // entire bullseye can be described by the parameter vector p =
       // [a, b, c, d, e, f_0, f_1, f_2, ...]^T.
-      // 
+      //
       // Note that the ellipse parameterization can be scaled
       // arbitrarily, allowing us to restate the constraint
       //
@@ -192,12 +192,12 @@ namespace brick {
       //
       // where k is the index of the first point in the second ring,
       // and m is the index of the first point in the third ring.
-      // 
-      // C is the (5 + number-of-rings) x (5 + number-of-rings) 
+      //
+      // C is the (5 + number-of-rings) x (5 + number-of-rings)
       // constraint matrix, identically zero except for a -1 in the
       // second element of the second row, and 2s in the third element
       // of the first row and the first element of the third row.
-      // 
+      //
       // Minimizing F(x, y) in the least squares sense, we have
       //
       //   pHat = min_over_p(p^T * S * p)
@@ -266,7 +266,7 @@ namespace brick {
                     "There are fewer input points than specified by the "
                     "countsBeginIter - countsEndIter input sequence.");
       }
-      
+
       // Compute the four quadrants of the scatter matrix.  Actually,
       // the upper right and lower left quadrants are identical, so only
       // three matrices to compute here.
@@ -294,7 +294,7 @@ namespace brick {
                     "Bullseye2D::estimate()",
                     "Input points are not sufficient to estimate bullseye.");
       }
-      
+
       // After some algebra, Halir & Flasser reduce this the solution
       // for the first three elements to an eigenproblem with 3x3
       // matrix M.
@@ -380,7 +380,7 @@ namespace brick {
       return Ellipse2D<Type>(m_origin, m_semimajorAxis, m_semiminorAxis);
     }
 
-    
+
     // Convert from implicit bullseye representation to trigonometric
     // parameters.
     template <class Type>
@@ -443,7 +443,7 @@ namespace brick {
 
       std::vector<Type> ffVector(numberOfRings);
       for(unsigned int ii = 0; ii < numberOfRings; ++ii) {
-        ffVector[ii] = algebraicParameters[5 + ii]; 
+        ffVector[ii] = algebraicParameters[5 + ii];
       }
 
       // Compute center of ellipse.
@@ -476,7 +476,7 @@ namespace brick {
          || ((aa > cc) && (bb < 0.0))){
         SS = -SS;
       }
-      
+
       // We'll compute scaling for each ring, then commit to semimajor
       // and semiminor axes later.
       std::vector<Type> alphaVector(numberOfRings);
@@ -537,9 +537,9 @@ namespace brick {
              << bullseye.getSemiminorAxis() << " }";
       return stream;
     }
-    
+
   } // namespace geometry
-    
+
 } // namespace brick
 
 #endif /* #ifndef BRICK_GEOMETRY_BULLSEYE2D_IMPL_HH */

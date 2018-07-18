@@ -1,7 +1,7 @@
 /**
 ***************************************************************************
-* @file array1DTest.cpp
-* 
+* @file brick/numeric/test/array1DTest.cpp
+*
 * Source file defining Array1DTest class.
 *
 * Copyright (C) 2004-2011 David LaRose, dlr@cs.cmu.edu
@@ -31,7 +31,7 @@ namespace brick {
 
       typedef Array1DTest<Type> TestFixtureType;
 
-    
+
       Array1DTest(const std::string& typeName);
       ~Array1DTest();
 
@@ -44,42 +44,42 @@ namespace brick {
       checkShapeEquality(const Array1D<Type>& array0,
                          const Array1D<Type>& array1);
 
-    
+
       virtual void
       checkShapeEquality(const Array1D<Type>& array0,
                          const Array1D<bool>& array1);
 
-    
+
       virtual void
       checkValueEquality(const Array1D<Type>& array0,
                          const Array1D<Type>& array1,
                          typename Array1D<Type>::value_type tolerance);
 
-    
+
       virtual typename Array1D<Type>::value_type
       getComparisonOperatorThreshold() {
         return m_fibonacciCArray[m_defaultArraySize / 2];
       }
 
-    
+
       virtual typename Array1D<Type>::value_type
       getEqualityOperatorTarget() {
         return m_squaresCArray[m_defaultArraySize / 2];
       }
 
-    
+
       virtual Array1D<Type>
       getFibonacciArray() {return Array1D<Type>(m_fibonacciString);}
 
-    
+
       virtual typename Array1D<Type>::value_type
       getIncrementOperatorArgument() {return static_cast<Type>(4);}
 
-    
+
       virtual typename Array1D<Type>::value_type
       getMultiplicationOperatorArgument() {return static_cast<Type>(2);}
 
-    
+
       virtual Array1D<Type>
       getSquaresArray() {return Array1D<Type>(m_squaresString);}
 
@@ -129,7 +129,7 @@ namespace brick {
       Type* m_squaresCArray;
       std::string m_squaresString;
       double m_testEpsilon;
-    
+
     }; // class Array1DTest
 
 
@@ -146,7 +146,7 @@ namespace brick {
         m_defaultMultiplier(2),
         m_fibonacciCArray(0),
         m_fibonacciString(""),
-        m_illegalString(),      
+        m_illegalString(),
         m_squaresCArray(0),
         m_squaresString(""),
         m_testEpsilon(1.0e-8)
@@ -185,7 +185,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testInputOperator);
       BRICK_TEST_REGISTER_MEMBER(testInitializerList);
 
-    
+
       // Set up fibonacci data for tests.
       m_fibonacciCArray = new Type[m_defaultArraySize];
       m_fibonacciCArray[0] = static_cast<Type>(1);
@@ -264,8 +264,8 @@ namespace brick {
         std::equal(array0.begin(), array0.end(), array1.begin(),
                    test::ApproximatelyEqualFunctor<Type>(tolerance)));
     }
-  
-  
+
+
     template <class Type>
     void
     Array1DTest<Type>::
@@ -275,7 +275,7 @@ namespace brick {
       Array1D<Type> array0;
       BRICK_TEST_ASSERT(array0.size() == 0);
     }
-  
+
 
     template <class Type>
     void
@@ -286,7 +286,7 @@ namespace brick {
       Array1D<Type> array0(m_defaultArraySize);
       BRICK_TEST_ASSERT(array0.size() == m_defaultArraySize);
     }
-  
+
 
     template <class Type>
     void
@@ -306,7 +306,7 @@ namespace brick {
                                   Array1D<Type> array1(m_illegalString));
 
     }
-  
+
 
     template <class Type>
     void
@@ -327,7 +327,7 @@ namespace brick {
       BRICK_TEST_ASSERT(std::equal(array1.begin(), array1.end(),
                                    m_fibonacciCArray));
     }
-  
+
 
     template <class Type>
     void
@@ -340,7 +340,7 @@ namespace brick {
       Type* cArray = new Type[m_defaultArraySize];
       std::copy(m_fibonacciCArray, m_fibonacciCArray + m_defaultArraySize,
                 cArray);
-    
+
       // Create an array using the constructor under test.
       Array1D<Type>* array0Ptr = new Array1D<Type>(m_defaultArraySize, cArray);
       BRICK_TEST_ASSERT(array0Ptr->data() == cArray);
@@ -355,7 +355,7 @@ namespace brick {
       // Clean up.
       delete[] cArray;
     }
-  
+
 
     template <class Type>
     void
@@ -458,7 +458,7 @@ namespace brick {
       Array1D<Type> array1 = array0.copy();
       BRICK_TEST_ASSERT(array1.size() == array0.size());
       BRICK_TEST_ASSERT(std::equal(array1.begin(), array1.end(), array0.begin()));
-      BRICK_TEST_ASSERT(array1.data() != array0.data());    
+      BRICK_TEST_ASSERT(array1.data() != array0.data());
     }
 
 
@@ -549,7 +549,7 @@ namespace brick {
                         == (m_fibonacciCArray + m_defaultArraySize - 1));
     }
 
-  
+
     template <class Type>
     void
     Array1DTest<Type>::
@@ -561,7 +561,7 @@ namespace brick {
       Type* finalElementPtr = m_fibonacciCArray + m_defaultArraySize;
       BRICK_TEST_ASSERT(&(*(array0.end())) == finalElementPtr);
     }
-    
+
 
     template <class Type>
     void
@@ -587,7 +587,7 @@ namespace brick {
       BRICK_TEST_ASSERT(array1.length() == m_defaultArraySize);
     }
 
-  
+
     template <class Type>
     void
     Array1DTest<Type>::
@@ -630,7 +630,7 @@ namespace brick {
       BRICK_TEST_ASSERT(array0.data() != m_fibonacciCArray);
     }
 
-  
+
     template <class Type>
     void
     Array1DTest<Type>::
@@ -658,7 +658,7 @@ namespace brick {
                                    m_fibonacciCArray));
     }
 
-  
+
     template <class Type>
     void
     Array1DTest<Type>::
@@ -677,13 +677,13 @@ namespace brick {
       // Check that all values were set by getting a pointer to the
       //
       // Strangely, std::find_if segfaults for me under g++-4.1.
-      // 
+      //
       // first one that's not equal to m_defaultArrayValue
       //   typename Array1D<Type>::iterator firstRenegade =
       //     std::find_if(array0.begin(), array0.end(),
       //                  std::bind2nd(std::not_equal_to<Type>(),
       //                               m_defaultArrayValue));
-    
+
       typename Array1D<Type>::iterator firstRenegade = array0.begin();
       while(firstRenegade != array0.end()) {
         if(*firstRenegade != static_cast<Type>(m_defaultArrayValue)) {
@@ -695,7 +695,7 @@ namespace brick {
       BRICK_TEST_ASSERT(firstRenegade == array0.end());
     }
 
-  
+
     template <class Type>
     void
     Array1DTest<Type>::
@@ -763,10 +763,10 @@ namespace brick {
         BRICK_TEST_ASSERT(array0[ii] == Type(ii));
       }
     }
-    
+
 
   } // namespace numeric
-  
+
 } // namespace brick
 
 
@@ -797,4 +797,3 @@ namespace {
 }
 
 #endif
-

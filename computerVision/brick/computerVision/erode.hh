@@ -18,20 +18,20 @@
 namespace brick {
 
   namespace computerVision {
-  
+
     template<ImageFormat FORMAT>
     Image<FORMAT>
     erode(const Image<FORMAT>& inputImage);
 
-    
+
     template<ImageFormat FORMAT>
     Image<FORMAT>
     erodeUsingBoxIntegrator(const Image<FORMAT>& inputImage,
                             unsigned int windowWidth = 3,
                             unsigned int windowHeight = 3);
-    
+
   } // namespace computerVision
-    
+
 } // namespace brick
 
 // Include file containing definitions of inline and template

@@ -116,7 +116,7 @@ namespace brick {
           binaryImage[index0] = brick::common::UnsignedInt8(1);
         }
       }
-      
+
       // This is the same image, but with labels that reflect ground
       // truth for connected components run in non-binary mode.
       Image<GRAY8> groundTruthImage = readPGM8(

@@ -26,13 +26,13 @@ extern "C" {
    */
   void dgeev_(char* JOBVL, char* JOBVR, brick::common::Int32* N,
               brick::common::Float64* A, brick::common::Int32* LDA,
-              brick::common::Float64* WR, brick::common::Float64* WI, 
+              brick::common::Float64* WR, brick::common::Float64* WI,
               brick::common::Float64* VL, brick::common::Int32* LDVL,
               brick::common::Float64* VR, brick::common::Int32* LDVR,
               brick::common::Float64* WORK, brick::common::Int32* LWORK,
               brick::common::Int32* INFO);
 
-  
+
   /**
    * This is a declaration for the LAPACK routine dgels(), which
    * computes the solution of a general system of linear equations.
@@ -44,7 +44,7 @@ extern "C" {
               brick::common::Float64* WORK, brick::common::Int32* LWORK,
               brick::common::Int32* INFO);
 
-  
+
   /**
    * This is a declaration for the LAPACK routine dgesdd(), which
    * computes the singular value decomposition of a matrix using a
@@ -59,7 +59,7 @@ extern "C" {
                brick::common::Float64* WORK, brick::common::Int32* LWORK,
                brick::common::Int32* IWORK, brick::common::Int32* INFO);
 
-  
+
   /**
    * This is a declaration for the LAPACK routine dgesv(), which
    * computes the solution to a systems of linear equations.
@@ -70,7 +70,7 @@ extern "C" {
               brick::common::Float64* B, brick::common::Int32* LDB,
               brick::common::Int32* INFO);
 
-  
+
   /**
    * This is a declaration for the LAPACK routine dgeqrf(), which
    * computes the QR factorization of a general MxN matrix.
@@ -109,7 +109,7 @@ extern "C" {
               brick::common::Float64* DU,
               brick::common::Float64* B, brick::common::Int32* LDB,
               brick::common::Int32* INFO);
-  
+
 
   /**
    * This is a declaration for the LAPACK routine dpotrf(), which
@@ -119,7 +119,7 @@ extern "C" {
   void dpotrf_(char* UPLO, brick::common::Int32* N, brick::common::Float64* A,
                brick::common::Int32* LDA, brick::common::Int32* INFO);
 
-  
+
   /**
    * This is a declaration for the LAPACK routine dsyev(), which
    * computes the eigenvalues and eigenvectors of a real symmetric

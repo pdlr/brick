@@ -39,6 +39,9 @@ namespace brick {
 
     private:
 
+      Array1D<double> getFFTMagnitude(Array1D<double> const& kernel,
+                                      std::size_t signalSize);
+
       double m_defaultTolerance;
       
     }; // class Iso12233Test
@@ -51,7 +54,7 @@ namespace brick {
       : brick::test::TestFixture<Iso12233Test>("Iso12233Test"),
         m_defaultTolerance(1.0E-8)
     {
-      // BRICK_TEST_REGISTER_MEMBER(testLowPassEdge);
+      BRICK_TEST_REGISTER_MEMBER(testLowPassEdge);
       BRICK_TEST_REGISTER_MEMBER(testVerticalEdge);
     }
 
@@ -65,7 +68,7 @@ namespace brick {
       constexpr std::size_t windowWidth = 64;
       constexpr double darkColor = 100.0;
       constexpr double lightColor = 200.0;
-      constexpr double kernelSigma = 0.25;
+      constexpr double kernelSigma = 0.51;
 
       // Create a single row with a dark-to-light transition.
       Array1D<double> prototypeRow(patchWidth);
@@ -122,6 +125,10 @@ namespace brick {
           rotatedCoord.setValue(
             brick::common::clip(rotatedCoord.x(), 0.1, patchWidth - 1.1),
             brick::common::clip(rotatedCoord.y(), 0.1, patchHeight - 1.1));
+          if(interpolator(rotatedCoord.y(), rotatedCoord.x()) < 0.0
+             || interpolator(rotatedCoord.y(), rotatedCoord.x()) >= 255.0) {
+            std::cout << "Something is wrong." << std::endl;
+          }
           rotatedImage(rr, cc) = static_cast<uint8_t>(
             interpolator(rotatedCoord.y(), rotatedCoord.x()) + 0.5);
         }
@@ -130,6 +137,17 @@ namespace brick {
       // Try to process the image.
       Array1D<double> mtf = iso12233<double>(rotatedImage, windowWidth,
                                              [](double arg){return arg;});
+
+      // Figure out what the expected MTF looks like.
+      Array1D<double> expectedMtf = this->getFFTMagnitude(
+        kernel, blurredRow.size());
+
+      // Expect that the two are similar within 2.5% of full scale.
+      for(std::size_t ii = 0; ii < mtf.size() / 2; ++ii) {
+        BRICK_TEST_ASSERT(mtf[ii] >= 0.0);
+        BRICK_TEST_ASSERT(mtf[ii] <= 1.0);
+        BRICK_TEST_ASSERT(std::fabs(mtf[ii] - expectedMtf[ii]) < 0.025);
+      }
     }
 
     
@@ -166,7 +184,41 @@ namespace brick {
                                [](double arg){return arg;}));
     }
 
-  } // namespace computerVision
+
+    Array1D<double>
+    Iso12233Test::
+    getFFTMagnitude(Array1D<double> const& kernel,
+                    std::size_t signalSize)
+    {
+      if(signalSize < kernel.size()) {
+        BRICK_THROW(brick::common::ValueException,
+                    "Iso12233Test::getFFTMagnitude()",
+                    "Kernel size exceeds signal size.");
+      }
+      
+      Array1D<std::complex<double>> signal(signalSize);
+      std::size_t ii = 0;
+      while(ii < kernel.size()) {
+        signal[ii] = std::complex<double>(kernel[ii], 0.0);
+        ++ii;
+      }
+      while(ii < signalSize) {
+        signal[ii] = std::complex<double>(0.0, 0.0);
+        ++ii;
+      }
+
+      Array1D<std::complex<double>> fft = brick::numeric::computeFFT(signal);
+      Array1D<double> fftMagnitude(signalSize);
+
+      ii = 0;
+      while(ii < signalSize) {
+        fftMagnitude[ii] = std::abs(fft[ii]);
+        ++ii;
+      }
+      return fftMagnitude;
+    }
+    
+  } // namespace iso12233
 
 } // namespace brick
 

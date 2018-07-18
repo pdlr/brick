@@ -16,7 +16,7 @@
 
 // This file is included by iso12233.hh, and should not be directly included
 // by user code, so no need to include iso12233.hh here.
-// 
+//
 // #include <brick/iso12233/iso12233.hh>
 
 #include <complex>
@@ -35,7 +35,7 @@ namespace brick {
   namespace iso12233 {
 
     namespace privateCode {
-      
+
       // Circularly rotate the input signal so that its maximum is
       // (nearly) at the center.
       template <class FloatType>
@@ -50,20 +50,37 @@ namespace brick {
 
       template <class FloatType>
       Array1D<FloatType>
-      computeSFR(Array1D<FloatType> const& lineSpreadFunction);
-      
+      computeSFR(Array1D<FloatType> const& lineSpreadFunction,
+                 Iso12233Config const& config);
+
       // Approximate the derivative along each row using [-1/2, 1/2]
       // FIR filter.
       template <class FloatType>
       Array2D<FloatType>
       computeTwoElementDerivative(Array2D<FloatType> const& inputImage);
-      
+
       template <class FloatType>
       void
       estimateEdgeSlopeAndOffset(FloatType& slope, FloatType& offset,
                                  Array2D<FloatType> const& reflectanceImage,
                                  std::size_t windowSize,
                                  Iso12233Config const& config);
+
+
+      // Compensate for non-ideal 3-element derivative using
+      // sinc-based weights as described in the standard.  WARNING:
+      // This currently doesn't appear to work correctly.
+      template <class FloatType>
+      void
+      reweightSFRSinc(Array1D<FloatType>& sfr);
+
+
+      // Compensate for non-ideal 3-element derivative using
+      // weights derived from first principles.
+      template <class FloatType>
+      void
+      reweightSFRDerived(Array1D<FloatType>& sfr);
+
 
       // Select windowSize pixels from each row of reflectanceImage,
       // with the windows centered at column coordinates given by
@@ -76,7 +93,7 @@ namespace brick {
                         Array1D<FloatType> const& centroidArray,
                         std::size_t windowSize);
 
-      
+
       // Align the rows of reflectanceImage and combine them into a
       // single supersampled version of the (nearly vertical) edge.
       template <class FloatType>
@@ -85,13 +102,19 @@ namespace brick {
                           std::size_t const windowSize,
                           FloatType const slope,
                           FloatType const offset);
-      
+
+      // Subsamble the input signal by a factor of four, using a binomial
+      // low-pass filter.
+      template <class FloatType>
+      Array1D<FloatType>
+      subsampleSfr(Array1D<FloatType> const& inputSfr);
+
     } // namespace privateCode
-  
+
   } // namespace iso12233
 
 } // namespace brick
-    
+
 
 namespace brick {
 
@@ -108,7 +131,7 @@ namespace brick {
     {
       // Argument checking.
       // TBD(xxx): initial check on windowSize.
-      
+
       // Paragraph 6.2.2 of the standard: undo the effects of gamma
       // correction, etc.
       Array2D<FloatType> reflectanceImage(inputPatch.rows(),
@@ -127,7 +150,7 @@ namespace brick {
       FloatType offset = 0.0;
       privateCode::estimateEdgeSlopeAndOffset(
         slope, offset, reflectanceImage, windowSize, config);
-      
+
       // Paragraph 6.2.4 of the standard: align the edges in all of (or a
       // plurality of) the rows.  Because the line crosses each row at a
       // different (non-integer) column location, this alignment gives us
@@ -141,7 +164,7 @@ namespace brick {
         reflectanceImage, windowSize, slope, offset);
       Array1D<FloatType> lineSpreadFunction = privateCode::computeDerivative(
         edgeSpreadFunction);
-  
+
       // Paragraph 6.2.5 of the standard: Compute spectral frequency response.
       Array1D<FloatType> centeredLineSpreadFunction =
         privateCode::centerMaximum(lineSpreadFunction);
@@ -150,7 +173,7 @@ namespace brick {
           centeredLineSpreadFunction.size());
       centeredLineSpreadFunction *= windowFunction;
       Array1D<FloatType> sfr = privateCode::computeSFR(
-        centeredLineSpreadFunction);
+        centeredLineSpreadFunction, config);
 
       return sfr;
     }
@@ -165,7 +188,7 @@ namespace brick {
   namespace iso12233 {
 
     namespace privateCode {
-      
+
       // Circularly rotate the input signal so that its maximum is
       // (nearly) at the center.
       template <class FloatType>
@@ -211,8 +234,8 @@ namespace brick {
         }
         return outputRow;
       }
-      
-    
+
+
       // Approximate the derivative along a row using [-1/2, 0, 1/2]
       // FIR filter.
       template <class FloatType>
@@ -231,11 +254,12 @@ namespace brick {
         derivativeRow[inputRow.size() - 1] = derivativeRow[inputRow.size() - 2];
         return derivativeRow;
       }
-    
-    
+
+
       template <class FloatType>
       Array1D<FloatType>
-      computeSFR(Array1D<FloatType> const& lineSpreadFunction)
+      computeSFR(Array1D<FloatType> const& lineSpreadFunction,
+                 Iso12233Config const& config)
       {
         // Our FFT routine only knows about complex numbers.
         Array1D<std::complex<FloatType> > complexLSF(lineSpreadFunction.size());
@@ -267,24 +291,24 @@ namespace brick {
         }
         sfr /= sfr[0];
 
-        // Finally, correct for the bias introduced by our discrete
-        // three-element derivative.  The standard specifies the inverse
-        // sin function used below without justification.  It looks
-        // about right to me, but I haven't actually verified that this
-        // is correct.
-        FloatType twoPiOverN = (
-          FloatType(2) * FloatType(brick::common::constants::pi)
-          / FloatType(sfr.size()));
-        for(std::size_t ii = 0; ii < sfr.size(); ++ii) {
-          FloatType weight = 1.0 / (FloatType(ii) * twoPiOverN);
-          weight = std::min(weight, FloatType(10));
-          sfr[ii] *= weight;
+        // correct for the bias introduced by our discrete three-element
+        // derivative.
+        if(config.postWeightStrategy
+           == Iso12233Config::PostWeightStrategy::SINC) {
+          reweightSFRSinc(sfr);
+        } else if(config.postWeightStrategy
+                  == Iso12233Config::PostWeightStrategy::DERIVED) {
+          reweightSFRDerived(sfr);
+        } else {
+          BRICK_THROW(brick::common::LogicException, "computeSFR()",
+                      "Unexpected post-weight strategy.");
         }
 
-        return sfr;
+        // Finally, subsample down to the original window size.
+        return subsampleSfr(sfr);
       }
 
-    
+
       // Approximate the derivative along each row using [-1/2, 1/2]
       // FIR filter.
       template <class FloatType>
@@ -305,8 +329,8 @@ namespace brick {
         }
         return derivativeImage;
       }
-    
-    
+
+
       template <class FloatType>
       void
       estimateEdgeSlopeAndOffset(FloatType& slope, FloatType& offset,
@@ -448,6 +472,95 @@ namespace brick {
         // Pass result back to calling context.
         slope = slope_offset.first;
         offset = slope_offset.second;
+      }
+
+
+      // Compensate for non-ideal 3-element derivative using
+      // sinc-based weights as described in the standard.  WARNING:
+      // This currently doesn't appear to work correctly.
+      template <class FloatType>
+      void
+      reweightSFRSinc(Array1D<FloatType>& sfr)
+      {
+        // The standard specifies the inverse sin function used below
+        // without justification.  This doesn't look right to me, and
+        // gives us terrible results.
+        FloatType twoPiOverN = (
+          FloatType(2) * FloatType(brick::common::constants::pi)
+          / FloatType(sfr.size()));
+        for(std::size_t ii = 0; ii < sfr.size(); ++ii) {
+          FloatType weight =
+            1.0 / brick::numeric::sine(FloatType(ii) * twoPiOverN);
+          weight = std::min(weight, FloatType(10));
+          sfr[ii] *= weight;
+        }
+      }
+
+
+      // Compensate for non-ideal 3-element derivative using
+      // weights derived from first principles.
+      template <class FloatType>
+      void
+      reweightSFRDerived(Array1D<FloatType>& sfr)
+      {
+        // Here's an alternate bias correction that appears to work
+        // better.
+        //
+        // If we were working in continuous signals, rather than
+        // discrete, then taking the ideal derivative of the edge
+        // image to get the line spread function would look like
+        // multiplying the DFT by a linear function with zero at the
+        // origin and slope == 1.0.
+        //
+        // Back in the real world, we convolved with [-0.5, 0, 0.5].
+        // If we think of this as a sequence, h[n] of N values that is
+        // nonzero only in the first and third elements, the DFT of
+        // this signal becomes clear.
+        //
+        // The response of the derivative filter is:
+        // @code
+        //   H[k]   = sum_n(h[n] * exp[-j*2*pi*k*n/N])
+        //          = 0.5*exp[-j*4*pi*k/N] - 0.5*exp[0]
+        //          = (0.5*cos(4*pi*k/N) - 0.5) - j*(0.5*sin(4*pi*k/N))
+        //   |H[k]| = sqrt(H[k] * conjugate(H[k]))
+        //          = sqrt(0.25*cos(4*pi*k/N)^2 - 0.5*cos(4*pi*k/N) + 0.25)
+        //                 + 0.25*sin(4*pi*k/N)^2)
+        //          = 0.5 * sqrt(cos(4*pi*k/N)^2 - 2*cos(4*pi*k/N) + 1)
+        //                       + sin(4*pi*k/N)^2)
+        //          = 0.5 * sqrt((cos(4*pi*k/N)^2 + sin(4*pi*k/N)^2) + 1
+        //                        - 2*cos(4*pi*k/N))
+        //          = 0.5 * sqrt(2 - 2*cos(4*pi*k/N))
+        // @endcode
+        //
+        // To get back to the ideal (linear) differentiation, we need
+        // to divide by this response, and multiply by the desired
+        // response.  As discussed above, the desired response is
+        // |F[k]| = 2*pi*k/N, but antisymmetric around the origin
+        // because our FFT implementation puts negative frequencies in
+        // the second half of the output vector.  At the origin, we
+        // use L'Hopitals rule to avoid dividing by zero, and set the
+        // corrective weight to 1.0.  That is, we leave sfr[0]
+        // untouched.
+        //
+        // At sfr[sfr.size() / 2], the actual response of the
+        // three-element derivative filter goes to zero, so we leave this
+        // element untouched, too.
+        FloatType twoPiOverN = (
+          FloatType(2) * FloatType(brick::common::constants::pi)
+          / FloatType(sfr.size()));
+        FloatType fourPiOverN = FloatType(2) * twoPiOverN;
+
+        for(std::size_t kk = 1; kk < sfr.size() / 2; ++kk) {
+          FloatType kkf(kk);
+          FloatType desiredResponse = kkf * twoPiOverN;
+          FloatType actualResponse =
+            brick::numeric::squareRoot(
+              FloatType(-2.0) * brick::numeric::cosine(kkf * fourPiOverN)
+              + FloatType(2.0)) * FloatType(0.5);
+          FloatType weight = desiredResponse / actualResponse;
+          sfr[kk] *= weight;
+          sfr[sfr.size() - kk] *= weight;
+        }
       }
 
 
@@ -612,8 +725,31 @@ namespace brick {
         return outputRow;
       }
 
+
+      // Subsamble the input signal by a factor of four, using a binomial
+      // low-pass filter.
+      template <class FloatType>
+      Array1D<FloatType>
+      subsampleSfr(Array1D<FloatType> const& inputSfr)
+      {
+        Array1D<FloatType> outputSfr(inputSfr.size() / 4);
+        outputSfr[0] = (6.0 * inputSfr[0]
+                        + 8.0 * inputSfr[1]
+                        + 2.0 * inputSfr[2]) / 16.0;
+        for(std::size_t ii = 1; ii < outputSfr.size(); ++ii) {
+          int jj = 4 * ii;
+          outputSfr[ii] = (inputSfr[jj - 2]
+                           + 4.0 * inputSfr[jj - 1]
+                           + 6.0 * inputSfr[jj]
+                           + 4.0 * inputSfr[jj + 1]
+                           + inputSfr[jj + 2]) / 16.0;
+        }
+        outputSfr /= outputSfr[0];
+        return outputSfr;
+      }
+
     } // namespace privateCode
-  
+
   } // namespace iso12233
 
 } // namespace brick

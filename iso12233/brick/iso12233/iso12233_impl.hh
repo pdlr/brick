@@ -50,8 +50,7 @@ namespace brick {
 
       template <class FloatType>
       Array1D<FloatType>
-      computeSFR(Array1D<FloatType> const& lineSpreadFunction,
-                 Iso12233Config const& config);
+      computeSFR(Array1D<FloatType> const& lineSpreadFunction);
 
       // Approximate the derivative along each row using [-1/2, 1/2]
       // FIR filter.
@@ -68,18 +67,10 @@ namespace brick {
 
 
       // Compensate for non-ideal 3-element derivative using
-      // sinc-based weights as described in the standard.  WARNING:
-      // This currently doesn't appear to work correctly.
+      // sinc-based weights.
       template <class FloatType>
       void
-      reweightSFRSinc(Array1D<FloatType>& sfr);
-
-
-      // Compensate for non-ideal 3-element derivative using
-      // weights derived from first principles.
-      template <class FloatType>
-      void
-      reweightSFRDerived(Array1D<FloatType>& sfr);
+      reweightSFR(Array1D<FloatType>& sfr);
 
 
       // Select windowSize pixels from each row of reflectanceImage,
@@ -173,7 +164,7 @@ namespace brick {
           centeredLineSpreadFunction.size());
       centeredLineSpreadFunction *= windowFunction;
       Array1D<FloatType> sfr = privateCode::computeSFR(
-        centeredLineSpreadFunction, config);
+        centeredLineSpreadFunction);
 
       return sfr;
     }
@@ -258,8 +249,7 @@ namespace brick {
 
       template <class FloatType>
       Array1D<FloatType>
-      computeSFR(Array1D<FloatType> const& lineSpreadFunction,
-                 Iso12233Config const& config)
+      computeSFR(Array1D<FloatType> const& lineSpreadFunction)
       {
         // Our FFT routine only knows about complex numbers.
         Array1D<std::complex<FloatType> > complexLSF(lineSpreadFunction.size());
@@ -293,16 +283,7 @@ namespace brick {
 
         // correct for the bias introduced by our discrete three-element
         // derivative.
-        if(config.postWeightStrategy
-           == Iso12233Config::PostWeightStrategy::SINC) {
-          reweightSFRSinc(sfr);
-        } else if(config.postWeightStrategy
-                  == Iso12233Config::PostWeightStrategy::DERIVED) {
-          reweightSFRDerived(sfr);
-        } else {
-          BRICK_THROW(brick::common::LogicException, "computeSFR()",
-                      "Unexpected post-weight strategy.");
-        }
+        reweightSFR(sfr);
 
         // Finally, subsample down to the original window size.
         return subsampleSfr(sfr);
@@ -476,36 +457,11 @@ namespace brick {
 
 
       // Compensate for non-ideal 3-element derivative using
-      // sinc-based weights as described in the standard.  WARNING:
-      // This currently doesn't appear to work correctly.
+      // sinc-based weights.
       template <class FloatType>
       void
-      reweightSFRSinc(Array1D<FloatType>& sfr)
+      reweightSFR(Array1D<FloatType>& sfr)
       {
-        // The standard specifies the inverse sin function used below
-        // without justification.  This doesn't look right to me, and
-        // gives us terrible results.
-        FloatType twoPiOverN = (
-          FloatType(2) * FloatType(brick::common::constants::pi)
-          / FloatType(sfr.size()));
-        for(std::size_t ii = 0; ii < sfr.size(); ++ii) {
-          FloatType weight =
-            1.0 / brick::numeric::sine(FloatType(ii) * twoPiOverN);
-          weight = std::min(weight, FloatType(10));
-          sfr[ii] *= weight;
-        }
-      }
-
-
-      // Compensate for non-ideal 3-element derivative using
-      // weights derived from first principles.
-      template <class FloatType>
-      void
-      reweightSFRDerived(Array1D<FloatType>& sfr)
-      {
-        // Here's an alternate bias correction that appears to work
-        // better.
-        //
         // If we were working in continuous signals, rather than
         // discrete, then taking the ideal derivative of the edge
         // image to get the line spread function would look like
@@ -531,6 +487,14 @@ namespace brick {
         //                        - 2*cos(4*pi*k/N))
         //          = 0.5 * sqrt(2 - 2*cos(4*pi*k/N))
         // @endcode
+        // But, we have the trig identity sin^2(theta) = (1 - cos(2*theta))/2.
+        // Substituting this into the above, we have:
+        // @code
+        //   |H[k]| = 0.5 * sqrt(4 * (1 - cos(4*pi*k/N)) / 2)
+        //          = sqrt((1 - cos(4*pi*k/N)) / 2)
+        //          = sqrt(sin(2*pi*k/N)^2)
+        //          = |sin(2*pi*k/N)|
+        // @endcode
         //
         // To get back to the ideal (linear) differentiation, we need
         // to divide by this response, and multiply by the desired
@@ -548,15 +512,12 @@ namespace brick {
         FloatType twoPiOverN = (
           FloatType(2) * FloatType(brick::common::constants::pi)
           / FloatType(sfr.size()));
-        FloatType fourPiOverN = FloatType(2) * twoPiOverN;
-
         for(std::size_t kk = 1; kk < sfr.size() / 2; ++kk) {
           FloatType kkf(kk);
           FloatType desiredResponse = kkf * twoPiOverN;
           FloatType actualResponse =
-            brick::numeric::squareRoot(
-              FloatType(-2.0) * brick::numeric::cosine(kkf * fourPiOverN)
-              + FloatType(2.0)) * FloatType(0.5);
+            brick::numeric::absoluteValue(
+              brick::numeric::sine(kkf * twoPiOverN));
           FloatType weight = desiredResponse / actualResponse;
           sfr[kk] *= weight;
           sfr[sfr.size() - kk] *= weight;

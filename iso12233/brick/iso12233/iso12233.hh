@@ -30,20 +30,15 @@ namespace brick {
      **/
     struct Iso12233Config {
 
-      // Local types.
-      enum class PostWeightStrategy : std::int8_t {SINC, DERIVED};
-
       // Configuration variables.
       bool useInitialHammingWindow = false;
       bool useSecondHammingWindow = false;
-      PostWeightStrategy postWeightStrategy = PostWeightStrategy::DERIVED;
 
       static Iso12233Config
       getStandardCompliant() {
         Iso12233Config result;
         result.useInitialHammingWindow = true;
         result.useSecondHammingWindow = true;
-        result.postWeightStrategy = PostWeightStrategy::SINC;
         return result;
       }
     };

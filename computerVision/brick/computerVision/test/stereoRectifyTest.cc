@@ -127,51 +127,51 @@ namespace brick {
 
       // Pick arbitrary, and slightly different, orientations for the
       // two cameras.
-      brick::numeric::Transform3D<double> camera0Tworld =
+      brick::numeric::Transform3D<double> camera0FromWorld =
         brick::numeric::rollPitchYawToTransform3D(
           brick::numeric::Vector3D<double>(0.1, 0.7, -0.3));
-      brick::numeric::Transform3D<double> camera1Tworld =
+      brick::numeric::Transform3D<double> camera1FromWorld =
         brick::numeric::rollPitchYawToTransform3D(
           brick::numeric::Vector3D<double>(-0.1, 0.5, -0.1));
 
-      // Make cameras be looking coords origin, from a distance of,
+      // Make cameras be looking towards origin, from a distance of,
       // say 5m.  Camera0 on the left.
-      camera0Tworld.setValue<0, 3>(0.01);
-      camera0Tworld.setValue<1, 3>(0.04);
-      camera0Tworld.setValue<2, 3>(5.2);
-      camera1Tworld.setValue<0, 3>(-0.01);
-      camera1Tworld.setValue<1, 3>(-0.06);
-      camera1Tworld.setValue<2, 3>(4.9);
+      camera0FromWorld.setValue<0, 3>(0.01);
+      camera0FromWorld.setValue<1, 3>(0.04);
+      camera0FromWorld.setValue<2, 3>(5.2);
+      camera1FromWorld.setValue<0, 3>(-0.01);
+      camera1FromWorld.setValue<1, 3>(-0.06);
+      camera1FromWorld.setValue<2, 3>(4.9);
 
       // Invert, since we'll need the inverses later.
-      brick::numeric::Transform3D<double> worldTcamera0 =
-        camera0Tworld.invert();
-      brick::numeric::Transform3D<double> worldTcamera1 =
-        camera1Tworld.invert();
+      brick::numeric::Transform3D<double> worldFromCamera0 =
+        camera0FromWorld.invert();
+      brick::numeric::Transform3D<double> worldFromCamera1 =
+        camera1FromWorld.invert();
 
       // Do the rectification.
       CameraIntrinsicsPinhole<double> rectifiedIntrinsics0;
       CameraIntrinsicsPinhole<double> rectifiedIntrinsics1;
-      brick::numeric::Transform3D<double> rcamera0Tworld;
-      brick::numeric::Transform3D<double> rcamera1Tworld;
-      brick::numeric::Transform2D<double> image0Trimage0;
-      brick::numeric::Transform2D<double> image1Trimage1;
-      stereoRectify(intrinsics0, intrinsics1, camera0Tworld, camera1Tworld,
+      brick::numeric::Transform3D<double> rcamera0FromWorld;
+      brick::numeric::Transform3D<double> rcamera1FromWorld;
+      brick::numeric::Transform2D<double> image0FromRImage0;
+      brick::numeric::Transform2D<double> image1FromRImage1;
+      stereoRectify(intrinsics0, intrinsics1, camera0FromWorld, camera1FromWorld,
                     rectifiedIntrinsics0, rectifiedIntrinsics1,
-                    rcamera0Tworld, rcamera1Tworld,
-                    image0Trimage0, image1Trimage1);
+                    rcamera0FromWorld, rcamera1FromWorld,
+                    image0FromRImage0, image1FromRImage1);
 
       // Check that camera centers are still at the same place.
-      brick::numeric::Transform3D<double> worldTrcamera0 = rcamera0Tworld.invert();
-      brick::numeric::Transform3D<double> worldTrcamera1 = rcamera1Tworld.invert();
+      brick::numeric::Transform3D<double> worldFromRCamera0 = rcamera0FromWorld.invert();
+      brick::numeric::Transform3D<double> worldFromRCamera1 = rcamera1FromWorld.invert();
       brick::numeric::Vector3D<double> center0(
-        worldTcamera0(0, 3), worldTcamera0(1, 3), worldTcamera0(2, 3));
+        worldFromCamera0(0, 3), worldFromCamera0(1, 3), worldFromCamera0(2, 3));
       brick::numeric::Vector3D<double> center1(
-        worldTcamera1(0, 3), worldTcamera1(1, 3), worldTcamera1(2, 3));
+        worldFromCamera1(0, 3), worldFromCamera1(1, 3), worldFromCamera1(2, 3));
       brick::numeric::Vector3D<double> rcenter0(
-        worldTrcamera0(0, 3), worldTrcamera0(1, 3), worldTrcamera0(2, 3));
+        worldFromRCamera0(0, 3), worldFromRCamera0(1, 3), worldFromRCamera0(2, 3));
       brick::numeric::Vector3D<double> rcenter1(
-        worldTrcamera1(0, 3), worldTrcamera1(1, 3), worldTrcamera1(2, 3));
+        worldFromRCamera1(0, 3), worldFromRCamera1(1, 3), worldFromRCamera1(2, 3));
 
       BRICK_TEST_ASSERT(
         approximatelyEqual(center0.x(), rcenter0.x(), m_defaultTolerance));
@@ -191,8 +191,8 @@ namespace brick {
       for(size_t row = 0; row < 3; ++row) {
         for(size_t column = 0; column < 3; ++column) {
           BRICK_TEST_ASSERT(
-            approximatelyEqual(worldTrcamera0(row, column),
-                               worldTrcamera1(row, column),
+            approximatelyEqual(worldFromRCamera0(row, column),
+                               worldFromRCamera1(row, column),
                                m_defaultTolerance));
         }
       }
@@ -201,7 +201,7 @@ namespace brick {
       brick::numeric::Array2D<double> rArray(3, 3);
       for(size_t row = 0; row < 3; ++row) {
         for(size_t column = 0; column < 3; ++column) {
-          rArray(row, column) = worldTrcamera0(row, column);
+          rArray(row, column) = worldFromRCamera0(row, column);
         }
       }
       brick::numeric::Array2D<double> rrt = brick::numeric::matrixMultiply<double>(
@@ -223,12 +223,21 @@ namespace brick {
       brick::numeric::Vector3D<double> baseline_world = rcenter1 - rcenter0;
       baseline_world /= brick::numeric::magnitude<double>(baseline_world);
       brick::numeric::Vector3D<double> xAxis(
-        rcamera1Tworld(0, 0), rcamera1Tworld(0, 1), rcamera1Tworld(0, 2));
+        rcamera1FromWorld(0, 0), rcamera1FromWorld(0, 1), rcamera1FromWorld(0, 2));
       brick::numeric::Vector3D<double> crossProduct = brick::numeric::cross(baseline_world, xAxis);
       double crossMag = brick::numeric::magnitude<double>(crossProduct);
       double dotProduct = brick::numeric::dot<double>(baseline_world, xAxis);
       BRICK_TEST_ASSERT(approximatelyEqual(crossMag, 0.0, m_defaultTolerance));
       BRICK_TEST_ASSERT(approximatelyEqual(dotProduct, 1.0, m_defaultTolerance));
+
+      // Check that rectified Y axis is in the image plane of the left camera
+      // (this is not true of all possible rectifications, but is an invariant
+      // of our rectification algorithm).
+      brick::numeric::Vector3D<double> rectifiedYPoint_camera0 =
+        camera0FromWorld * worldFromRCamera0 * brick::numeric::Vector3D<double>(
+          0.0, 1.0, 0.0);
+      BRICK_TEST_ASSERT(approximatelyEqual(rectifiedYPoint_camera0.getZ(),
+                                           0.0, m_defaultTolerance));
 
       // Pick some points against which to test.
       std::vector< brick::numeric::Vector3D<double> > testPoints;
@@ -247,10 +256,10 @@ namespace brick {
         brick::numeric::Vector3D<double> testPoint = testPoints[ii];
 
         // Project into all cameras.
-        brick::numeric::Vector3D<double> p_camera0 = camera0Tworld * testPoint;
-        brick::numeric::Vector3D<double> p_camera1 = camera1Tworld * testPoint;
-        brick::numeric::Vector3D<double> p_rcamera0 = rcamera0Tworld * testPoint;
-        brick::numeric::Vector3D<double> p_rcamera1 = rcamera1Tworld * testPoint;
+        brick::numeric::Vector3D<double> p_camera0 = camera0FromWorld * testPoint;
+        brick::numeric::Vector3D<double> p_camera1 = camera1FromWorld * testPoint;
+        brick::numeric::Vector3D<double> p_rcamera0 = rcamera0FromWorld * testPoint;
+        brick::numeric::Vector3D<double> p_rcamera1 = rcamera1FromWorld * testPoint;
         brick::numeric::Vector2D<double> p_image0 = intrinsics0.project(p_camera0);
         brick::numeric::Vector2D<double> p_image1 = intrinsics1.project(p_camera1);
         brick::numeric::Vector2D<double> p_rimage0 =
@@ -264,8 +273,8 @@ namespace brick {
 
         // Check that mappings from rectified to unrectified images
         // are correct.
-        brick::numeric::Vector2D<double> pHat_image0 = image0Trimage0 * p_rimage0;
-        brick::numeric::Vector2D<double> pHat_image1 = image1Trimage1 * p_rimage1;
+        brick::numeric::Vector2D<double> pHat_image0 = image0FromRImage0 * p_rimage0;
+        brick::numeric::Vector2D<double> pHat_image1 = image1FromRImage1 * p_rimage1;
         BRICK_TEST_ASSERT(approximatelyEqual(pHat_image0.x(), p_image0.x(),
                                            m_defaultTolerance));
         BRICK_TEST_ASSERT(approximatelyEqual(pHat_image0.y(), p_image0.y(),

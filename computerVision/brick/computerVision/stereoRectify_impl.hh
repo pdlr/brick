@@ -45,24 +45,24 @@ namespace brick {
       brick::numeric::Array2D<FloatType>
       extractUpperLeftBlock(
         CameraIntrinsicsPinhole<FloatType> const& intrinsics,
-        brick::numeric::Transform3D<FloatType> const& cameraTworld)
+        brick::numeric::Transform3D<FloatType> const& cameraFromWorld)
       {
         brick::numeric::Array2D<FloatType> result(3, 3);
-        result(0, 0) = (intrinsics.getKx() * cameraTworld(0, 0)
-                        + intrinsics.getCenterU() * cameraTworld(2, 0));
-        result(0, 1) = (intrinsics.getKx() * cameraTworld(0, 1)
-                        + intrinsics.getCenterU() * cameraTworld(2, 1));
-        result(0, 2) = (intrinsics.getKx() * cameraTworld(0, 2)
-                        + intrinsics.getCenterU() * cameraTworld(2, 2));
-        result(1, 0) = (intrinsics.getKy() * cameraTworld(1, 0)
-                        + intrinsics.getCenterV() * cameraTworld(2, 0));
-        result(1, 1) = (intrinsics.getKy() * cameraTworld(1, 1)
-                        + intrinsics.getCenterV() * cameraTworld(2, 1));
-        result(1, 2) = (intrinsics.getKy() * cameraTworld(1, 2)
-                        + intrinsics.getCenterV() * cameraTworld(2, 2));
-        result(2, 0) = cameraTworld(2, 0);
-        result(2, 1) = cameraTworld(2, 1);
-        result(2, 2) = cameraTworld(2, 2);
+        result(0, 0) = (intrinsics.getKx() * cameraFromWorld(0, 0)
+                        + intrinsics.getCenterU() * cameraFromWorld(2, 0));
+        result(0, 1) = (intrinsics.getKx() * cameraFromWorld(0, 1)
+                        + intrinsics.getCenterU() * cameraFromWorld(2, 1));
+        result(0, 2) = (intrinsics.getKx() * cameraFromWorld(0, 2)
+                        + intrinsics.getCenterU() * cameraFromWorld(2, 2));
+        result(1, 0) = (intrinsics.getKy() * cameraFromWorld(1, 0)
+                        + intrinsics.getCenterV() * cameraFromWorld(2, 0));
+        result(1, 1) = (intrinsics.getKy() * cameraFromWorld(1, 1)
+                        + intrinsics.getCenterV() * cameraFromWorld(2, 1));
+        result(1, 2) = (intrinsics.getKy() * cameraFromWorld(1, 2)
+                        + intrinsics.getCenterV() * cameraFromWorld(2, 2));
+        result(2, 0) = cameraFromWorld(2, 0);
+        result(2, 1) = cameraFromWorld(2, 1);
+        result(2, 2) = cameraFromWorld(2, 2);
 
         return result;
       }
@@ -185,22 +185,22 @@ namespace brick {
     void
     stereoRectify(CameraIntrinsicsPinhole<FloatType> const& intrinsics0,
                   CameraIntrinsicsPinhole<FloatType> const& intrinsics1,
-                  numeric::Transform3D<FloatType> const& camera0Tworld,
-                  numeric::Transform3D<FloatType> const& camera1Tworld,
+                  numeric::Transform3D<FloatType> const& camera0FromWorld,
+                  numeric::Transform3D<FloatType> const& camera1FromWorld,
                   CameraIntrinsicsPinhole<FloatType>& rectifiedIntrinsics0,
                   CameraIntrinsicsPinhole<FloatType>& rectifiedIntrinsics1,
-                  numeric::Transform3D<FloatType>& rcamera0Tworld,
-                  numeric::Transform3D<FloatType>& rcamera1Tworld,
-                  numeric::Transform2D<FloatType>& image0Trimage0,
-                  numeric::Transform2D<FloatType>& image1Trimage1)
+                  numeric::Transform3D<FloatType>& rcamera0FromWorld,
+                  numeric::Transform3D<FloatType>& rcamera1FromWorld,
+                  numeric::Transform2D<FloatType>& image0FromRImage0,
+                  numeric::Transform2D<FloatType>& image1FromRImage1)
     {
       FloatType rectifiedFocalLength =
         (intrinsics0.getFocalLength() + intrinsics1.getFocalLength()) / 2.0;
-      stereoRectify(intrinsics0, intrinsics1, camera0Tworld, camera1Tworld,
+      stereoRectify(intrinsics0, intrinsics1, camera0FromWorld, camera1FromWorld,
                     rectifiedFocalLength,
                     rectifiedIntrinsics0, rectifiedIntrinsics1,
-                    rcamera0Tworld, rcamera1Tworld,
-                    image0Trimage0, image1Trimage1);
+                    rcamera0FromWorld, rcamera1FromWorld,
+                    image0FromRImage0, image1FromRImage1);
     }
 
 
@@ -208,29 +208,29 @@ namespace brick {
     void
     stereoRectify(CameraIntrinsicsPinhole<FloatType> const& intrinsics0,
                   CameraIntrinsicsPinhole<FloatType> const& intrinsics1,
-                  numeric::Transform3D<FloatType> const& camera0Tworld,
-                  numeric::Transform3D<FloatType> const& camera1Tworld,
+                  numeric::Transform3D<FloatType> const& camera0FromWorld,
+                  numeric::Transform3D<FloatType> const& camera1FromWorld,
                   FloatType const& rectifiedFocalLength,
                   CameraIntrinsicsPinhole<FloatType>& rectifiedIntrinsics0,
                   CameraIntrinsicsPinhole<FloatType>& rectifiedIntrinsics1,
-                  numeric::Transform3D<FloatType>& rcamera0Tworld,
-                  numeric::Transform3D<FloatType>& rcamera1Tworld,
-                  numeric::Transform2D<FloatType>& image0Trimage0,
-                  numeric::Transform2D<FloatType>& image1Trimage1)
+                  numeric::Transform3D<FloatType>& rcamera0FromWorld,
+                  numeric::Transform3D<FloatType>& rcamera1FromWorld,
+                  numeric::Transform2D<FloatType>& image0FromRImage0,
+                  numeric::Transform2D<FloatType>& image1FromRImage1)
     {
       // Hack(xxx): find a principled way to set this threshold.
       FloatType localEpsilon = 1.0E-12;
 
       // Recover optical centers (focal points) of the two cameras in
       // world coords.  These won't change with rectification.
-      brick::numeric::Transform3D<FloatType> worldTcamera0 =
-        camera0Tworld.invert();
-      brick::numeric::Transform3D<FloatType> worldTcamera1 =
-        camera1Tworld.invert();
+      brick::numeric::Transform3D<FloatType> worldFromCamera0 =
+        camera0FromWorld.invert();
+      brick::numeric::Transform3D<FloatType> worldFromCamera1 =
+        camera1FromWorld.invert();
       brick::numeric::Vector3D<FloatType> focalPoint0(
-        worldTcamera0(0, 3), worldTcamera0(1, 3), worldTcamera0(2, 3));
+        worldFromCamera0(0, 3), worldFromCamera0(1, 3), worldFromCamera0(2, 3));
       brick::numeric::Vector3D<FloatType> focalPoint1(
-        worldTcamera1(0, 3), worldTcamera1(1, 3), worldTcamera1(2, 3));
+        worldFromCamera1(0, 3), worldFromCamera1(1, 3), worldFromCamera1(2, 3));
 
       // Recover new X axis (expressed in world coordinates) for both
       // cameras.  This is parallel to the stereo baseline.
@@ -247,8 +247,14 @@ namespace brick {
       // cameras, is orthogonal to X, and orthogonal to Z axis of
       // unrectified camera0.  Note that this fails if camera1 lies on
       // the optical axis of camera0.
+      //
+      // Note that selecting the first 3 elements of row 2 of camera0FromWorld
+      // is just like selecting the 2nd column of the "R" matrix in
+      // worldFromCamera0.  This is the direction vector that gets added
+      // as you move along camera0's X axis.
       brick::numeric::Vector3D<FloatType> oldZ(
-        camera0Tworld(2, 0), camera0Tworld(2, 1), camera0Tworld(2, 2));
+        camera0FromWorld(2, 0), camera0FromWorld(2, 1), camera0FromWorld(2, 2));
+      
       brick::numeric::Vector3D<FloatType> yAxis =
         brick::numeric::cross<FloatType>(oldZ, xAxis);
       FloatType yMagnitude = brick::numeric::magnitude<FloatType>(yAxis);
@@ -271,20 +277,20 @@ namespace brick {
 
       // The rectified cameras share the same orientation.  The
       // locations of the optical centers (i.e., the translation
-      // component of the cameraTworld transforms) remain unchanged.
-      brick::numeric::Transform3D<FloatType> worldTrcamera0(
-        xAxis.x(), yAxis.x(), zAxis.x(), worldTcamera0(0, 3),
-        xAxis.y(), yAxis.y(), zAxis.y(), worldTcamera0(1, 3),
-        xAxis.z(), yAxis.z(), zAxis.z(), worldTcamera0(2, 3),
+      // component of the cameraFromWorld transforms) remain unchanged.
+      brick::numeric::Transform3D<FloatType> worldFromRCamera0(
+        xAxis.x(), yAxis.x(), zAxis.x(), worldFromCamera0(0, 3),
+        xAxis.y(), yAxis.y(), zAxis.y(), worldFromCamera0(1, 3),
+        xAxis.z(), yAxis.z(), zAxis.z(), worldFromCamera0(2, 3),
         0.0, 0.0, 0.0, 1.0);
-      brick::numeric::Transform3D<FloatType> worldTrcamera1(
-        xAxis.x(), yAxis.x(), zAxis.x(), worldTcamera1(0, 3),
-        xAxis.y(), yAxis.y(), zAxis.y(), worldTcamera1(1, 3),
-        xAxis.z(), yAxis.z(), zAxis.z(), worldTcamera1(2, 3),
+      brick::numeric::Transform3D<FloatType> worldFromRCamera1(
+        xAxis.x(), yAxis.x(), zAxis.x(), worldFromCamera1(0, 3),
+        xAxis.y(), yAxis.y(), zAxis.y(), worldFromCamera1(1, 3),
+        xAxis.z(), yAxis.z(), zAxis.z(), worldFromCamera1(2, 3),
         0.0, 0.0, 0.0, 1.0);
 
-      rcamera0Tworld = worldTrcamera0.invert();
-      rcamera1Tworld = worldTrcamera1.invert();
+      rcamera0FromWorld = worldFromRCamera0.invert();
+      rcamera1FromWorld = worldFromRCamera1.invert();
 
       // The rectified cameras will share the same intrinsic
       // parameters.  Note that these parameters are not uniquely
@@ -315,15 +321,15 @@ namespace brick {
       // rectified images and return matching coordinates in the
       // unrectified image.
       brick::numeric::Array2D<FloatType> oldQ0 =
-        privateCode::extractUpperLeftBlock(intrinsics0, camera0Tworld);
+        privateCode::extractUpperLeftBlock(intrinsics0, camera0FromWorld);
       brick::numeric::Array2D<FloatType> oldQ1 =
-        privateCode::extractUpperLeftBlock(intrinsics1, camera1Tworld);
+        privateCode::extractUpperLeftBlock(intrinsics1, camera1FromWorld);
       brick::numeric::Array2D<FloatType> newQ0 =
         privateCode::extractUpperLeftBlock(
-          rectifiedIntrinsics0, rcamera0Tworld);
+          rectifiedIntrinsics0, rcamera0FromWorld);
       brick::numeric::Array2D<FloatType> newQ1 =
         privateCode::extractUpperLeftBlock(
-          rectifiedIntrinsics1, rcamera1Tworld);
+          rectifiedIntrinsics1, rcamera1FromWorld);
 
       brick::numeric::Array2D<FloatType> rectArray0 =
         brick::numeric::matrixMultiply<FloatType>(
@@ -331,11 +337,11 @@ namespace brick {
       brick::numeric::Array2D<FloatType> rectArray1 =
         brick::numeric::matrixMultiply<FloatType>(
           oldQ1, brick::linearAlgebra::inverse(newQ1));
-      image0Trimage0.setTransform(
+      image0FromRImage0.setTransform(
         rectArray0(0, 0), rectArray0(0, 1), rectArray0(0, 2),
         rectArray0(1, 0), rectArray0(1, 1), rectArray0(1, 2),
         rectArray0(2, 0), rectArray0(2, 1), rectArray0(2, 2));
-      image1Trimage1.setTransform(
+      image1FromRImage1.setTransform(
         rectArray1(0, 0), rectArray1(0, 1), rectArray1(0, 2),
         rectArray1(1, 0), rectArray1(1, 1), rectArray1(1, 2),
         rectArray1(2, 0), rectArray1(2, 1), rectArray1(2, 2));

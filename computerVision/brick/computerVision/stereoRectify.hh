@@ -40,17 +40,17 @@ namespace brick {
      * intrinsics0 only in the value of the U coordinate projection
      * center.
      *
-     * @param camera0Tworld This argument specifies the coordinate
+     * @param camera0FromWorld This argument specifies the coordinate
      * transformation taking world coordinates and returning the
      * corresponding coordinates in the camera coordinate system
      * corresponding to intrinsics0.
      *
-     * @param camera1Tworld This argument specifies the coordinate
+     * @param camera1FromWorld This argument specifies the coordinate
      * transformation taking world coordinates and returning the
      * corresponding coordinates in the camera coordinate system
      * corresponding to intrinsics1.  The rotation component of this
      * transform must be identical to the rotation component of
-     * camera0Tworld, although the translation components may differ.
+     * camera0FromWorld, although the translation components may differ.
      *
      * @return The return value is the calculated reprojection matrix.
      */
@@ -59,8 +59,8 @@ namespace brick {
     calculateReprojectionMatrix(
       CameraIntrinsicsPinhole<FloatType> const& intrinsics0,
       CameraIntrinsicsPinhole<FloatType> const& intrinsics1,
-      numeric::Transform3D<FloatType> const& camera0Tworld,
-      numeric::Transform3D<FloatType> const& camera1Tworld,
+      numeric::Transform3D<FloatType> const& camera0FromWorld,
+      numeric::Transform3D<FloatType> const& camera1FromWorld,
       FloatType epsilon);
 
 #endif /* #if 0 */
@@ -126,9 +126,9 @@ namespace brick {
      * located to the right (in the positive X direction).
      *
      * Warning: this routine assumes, but does not check, that the
-     * camera?Tworld arguments are euclidean rigid body
+     * camera?FromWorld arguments are euclidean rigid body
      * transformations.  That is, the routine assumes that the 3x3
-     * upper left block of each camera?Tworld argument is orthonormal,
+     * upper left block of each camera?FromWorld argument is orthonormal,
      * and the last row is [0, 0, 0, 1].
      *
      * [1] A. Fusiello, E. Trucco, and A. Verri. A compact algorithm for
@@ -141,13 +141,13 @@ namespace brick {
      * @param intrinsics1 This argument represents the intrinsic
      * calibration parameters of the right camera of the stereo pair.
      *
-     * @param camera0Tworld This argument represents the extrinsic
+     * @param camera0FromWorld This argument represents the extrinsic
      * parameters of the left camera of the stereo pair.  It specifies
      * a coordinate transform that takes coordinates in the world
      * coordinate system and returns camera0 coordinates representing
      * the same point.
      *
-     * @param camera1Tworld This argument represents the extrinsic
+     * @param camera1FromWorld This argument represents the extrinsic
      * parameters of the right camera of the stereo pair.  It specifies
      * a coordinate transform that takes coordinates in the world
      * coordinate system and returns camera1 coordinates representing
@@ -159,26 +159,26 @@ namespace brick {
      * @param rectifiedIntrinsics1 This argument returns the updated
      * (rectified) intrinsics of the right camera.
      *
-     * @param rcamera0Tworld This argument returns the rectified
+     * @param rcamera0FromWorld This argument returns the rectified
      * extrinsic parameters of the left camera.  That is, it specifies
      * a coordinate transform that takes coordinates in the world
      * coordinate system and returns coordinates in the coordinate
      * system of the rectified left camera that represent the same
      * point.
      *
-     * @param rcamera1Tworld This argument returns the rectified
+     * @param rcamera1FromWorld This argument returns the rectified
      * extrinsic parameters of the right camera.  That is, it
      * specifies a coordinate transform that takes coordinates in the
      * world coordinate system and returns coordinates in the
      * coordinate system of the rectified right camera that represent
      * the same point.
      *
-     * @param image0Trimage0 This argument returns a homography that
+     * @param image0FromRImage0 This argument returns a homography that
      * takes pixel coordinates in the unrectified left image, and
      * returns pixel coordinates in rectified left image that refer to
      * the same point in the image.
      *
-     * @param image1Trimage1 This argument returns a homography that
+     * @param image1FromRImage1 This argument returns a homography that
      * takes pixel coordinates in the unrectified right image, and
      * returns pixel coordinates in rectified right image that refer to
      * the same point in the image.
@@ -187,14 +187,14 @@ namespace brick {
     void
     stereoRectify(CameraIntrinsicsPinhole<FloatType> const& intrinsics0,
                   CameraIntrinsicsPinhole<FloatType> const& intrinsics1,
-                  numeric::Transform3D<FloatType> const& camera0Tworld,
-                  numeric::Transform3D<FloatType> const& camera1Tworld,
+                  numeric::Transform3D<FloatType> const& camera0FromWorld,
+                  numeric::Transform3D<FloatType> const& camera1FromWorld,
                   CameraIntrinsicsPinhole<FloatType>& rectifiedIntrinsics0,
                   CameraIntrinsicsPinhole<FloatType>& rectifiedIntrinsics1,
-                  numeric::Transform3D<FloatType>& rcamera0Tworld,
-                  numeric::Transform3D<FloatType>& rcamera1Tworld,
-                  numeric::Transform2D<FloatType>& image0Trimage0,
-                  numeric::Transform2D<FloatType>& image1Trimage1);
+                  numeric::Transform3D<FloatType>& rcamera0FromWorld,
+                  numeric::Transform3D<FloatType>& rcamera1FromWorld,
+                  numeric::Transform2D<FloatType>& image0FromRImage0,
+                  numeric::Transform2D<FloatType>& image1FromRImage1);
 
 
     /**
@@ -207,9 +207,9 @@ namespace brick {
      * intrinsics0 and intrinsics1 have their pixel sizes set to 1.0.
      *
      * Warning: this routine assumes, but does not check, that the
-     * camera?Tworld arguments are euclidean rigid body
+     * camera?FromWorld arguments are euclidean rigid body
      * transformations.  That is, the routine assumes that the 3x3
-     * upper left block of each camera?Tworld argument is orthonormal,
+     * upper left block of each camera?FromWorld argument is orthonormal,
      * and the last row is [0, 0, 0, 1].
      *
      * @param intrinsics0 This argument represents the intrinsic
@@ -218,13 +218,13 @@ namespace brick {
      * @param intrinsics1 This argument represents the intrinsic
      * calibration parameters of the right camera of the stereo pair.
      *
-     * @param camera0Tworld This argument represents the extrinsic
+     * @param camera0FromWorld This argument represents the extrinsic
      * parameters of the left camera of the stereo pair.  It specifies
      * a coordinate transform that takes coordinates in the world
      * coordinate system and returns camera0 coordinates representing
      * the same point.
      *
-     * @param camera1Tworld This argument represents the extrinsic
+     * @param camera1FromWorld This argument represents the extrinsic
      * parameters of the right camera of the stereo pair.  It specifies
      * a coordinate transform that takes coordinates in the world
      * coordinate system and returns camera1 coordinates representing
@@ -243,26 +243,26 @@ namespace brick {
      * @param rectifiedIntrinsics1 This argument returns the updated
      * (rectified) intrinsics of the right camera.
      *
-     * @param rcamera0Tworld This argument returns the rectified
+     * @param rcamera0FromWorld This argument returns the rectified
      * extrinsic parameters of the left camera.  That is, it specifies
      * a coordinate transform that takes coordinates in the world
      * coordinate system and returns coordinates in the coordinate
      * system of the rectified left camera that represent the same
      * point.
      *
-     * @param rcamera1Tworld This argument returns the rectified
+     * @param rcamera1FromWorld This argument returns the rectified
      * extrinsic parameters of the right camera.  That is, it
      * specifies a coordinate transform that takes coordinates in the
      * world coordinate system and returns coordinates in the
      * coordinate system of the rectified right camera that represent
      * the same point.
      *
-     * @param image0Trimage0 This argument returns a homography that
+     * @param image0FromRImage0 This argument returns a homography that
      * takes pixel coordinates in the unrectified left image, and
      * returns pixel coordinates in rectified left image that refer to
      * the same point in the image.
      *
-     * @param image1Trimage1 This argument returns a homography that
+     * @param image1FromRImage1 This argument returns a homography that
      * takes pixel coordinates in the unrectified right image, and
      * returns pixel coordinates in rectified right image that refer to
      * the same point in the image.
@@ -271,15 +271,15 @@ namespace brick {
     void
     stereoRectify(CameraIntrinsicsPinhole<FloatType> const& intrinsics0,
                   CameraIntrinsicsPinhole<FloatType> const& intrinsics1,
-                  numeric::Transform3D<FloatType> const& camera0Tworld,
-                  numeric::Transform3D<FloatType> const& camera1Tworld,
+                  numeric::Transform3D<FloatType> const& camera0FromWorld,
+                  numeric::Transform3D<FloatType> const& camera1FromWorld,
                   FloatType const& rectifiedFocalLength,
                   CameraIntrinsicsPinhole<FloatType>& rectifiedIntrinsics0,
                   CameraIntrinsicsPinhole<FloatType>& rectifiedIntrinsics1,
-                  numeric::Transform3D<FloatType>& rcamera0Tworld,
-                  numeric::Transform3D<FloatType>& rcamera1Tworld,
-                  numeric::Transform2D<FloatType>& image0Trimage0,
-                  numeric::Transform2D<FloatType>& image1Trimage1);
+                  numeric::Transform3D<FloatType>& rcamera0FromWorld,
+                  numeric::Transform3D<FloatType>& rcamera1FromWorld,
+                  numeric::Transform2D<FloatType>& image0FromRImage0,
+                  numeric::Transform2D<FloatType>& image1FromRImage1);
 
 
   } // namespace computerVision

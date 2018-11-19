@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file testImages.h
+* @file computerVision/test/testImages.hh
 *
 * Header file specifying file names for images to be used in image
 * processing tests.
@@ -11,8 +11,8 @@
 ***************************************************************************
 */
 
-#ifndef BRICK_IMAGEPROCESSING_TEST_TESTIMAGES_HH
-#define BRICK_IMAGEPROCESSING_TEST_TESTIMAGES_HH
+#ifndef BRICK_COMPUTERVISION_TEST_TESTIMAGES_HH
+#define BRICK_COMPUTERVISION_TEST_TESTIMAGES_HH
 
 #ifndef BRICK_TEST_DATA_DIR
 #define BRICK_TEST_DATA_DIR "."
@@ -23,20 +23,20 @@
 
 namespace brick {
 
-  
+
   inline std::string
   getBullseyeFileNamePGM0() {
     return brick::utilities::joinPath(
       BRICK_TEST_DATA_DIR, "bullseyeTestImage0.pgm");
   }
-  
+
 
   inline std::string
   getBullseyeFileNamePGM1() {
     return brick::utilities::joinPath(
       BRICK_TEST_DATA_DIR, "bullseyeTestImage1.pgm");
   }
-  
+
 
   inline std::string
   getConnectedComponentsFileNamePGM0() {
@@ -71,8 +71,8 @@ namespace brick {
     return brick::utilities::joinPath(
       BRICK_TEST_DATA_DIR, "edgeTestImage0.pgm");
   }
-  
-  
+
+
   inline std::string
   getErodedFileNamePGM0() {
     return brick::utilities::joinPath(
@@ -92,22 +92,22 @@ namespace brick {
     return brick::utilities::joinPath(
       BRICK_TEST_DATA_DIR, "testImagePGM1.pgm");
   }
-  
+
 
   inline std::string
   getTestImageFileNamePGM2() {
     return brick::utilities::joinPath(
       BRICK_TEST_DATA_DIR, "testImagePGM2.pgm");
   }
-  
+
 
   inline std::string
   getTestImageFileNamePGM3() {
     return brick::utilities::joinPath(
       BRICK_TEST_DATA_DIR, "testImagePGM3.pgm");
   }
-  
-  
+
+
   inline std::string
   getTestImageFileNamePPM0() {
     return brick::utilities::joinPath(
@@ -123,4 +123,4 @@ namespace brick {
 
 } // namespace brick
 
-#endif /* #ifndef BRICK_IMAGEPROCESSING_TEST_TESTIMAGES_HH */
+#endif /* #ifndef BRICK_COMPUTERVISION_TEST_TESTIMAGES_HH */

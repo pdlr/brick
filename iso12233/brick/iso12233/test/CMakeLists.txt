@@ -22,7 +22,7 @@ macro (brick_iso12233_set_up_test test_name)
 
   # All brick unit tests return 0 on success, nonzero otherwise,
   # so no need to set special properties that catch failures.
-  # 
+  #
   # # set_tests_properties (${test_name}_target
   # #   PROPERTIES PASS_REGULAR_EXPRESSION "All tests pass")
 endmacro (brick_iso12233_set_up_test test_name)
@@ -41,3 +41,8 @@ endmacro (brick_iso12233_set_up_test_data file_name)
 # Here are the tests to be run.
 
 brick_iso12233_set_up_test (iso12233Test)
+
+
+# These tests depend on some supporting files.
+
+brick_iso12233_set_up_test_data(slantedEdgeImage0.png)

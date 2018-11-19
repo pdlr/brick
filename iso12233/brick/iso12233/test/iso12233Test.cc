@@ -11,8 +11,10 @@
 **/
 
 #include <brick/iso12233/iso12233.hh>
+#include <brick/iso12233/test/testImages.hh>
 
 #include <brick/computerVision/image.hh>
+#include <brick/computerVision/imageIO.hh>
 #include <brick/numeric/bilinearInterpolator.hh>
 #include <brick/numeric/convolve1D.hh>
 #include <brick/numeric/transform2D.hh>
@@ -40,6 +42,7 @@ namespace brick {
       // Tests.
       void testLowPassEdge();
       void testVerticalEdge();
+      void testNaturalEdge();
 
     private:
 
@@ -65,6 +68,7 @@ namespace brick {
     {
       BRICK_TEST_REGISTER_MEMBER(testLowPassEdge);
       BRICK_TEST_REGISTER_MEMBER(testVerticalEdge);
+      BRICK_TEST_REGISTER_MEMBER(testNaturalEdge);
     }
 
 
@@ -136,6 +140,24 @@ namespace brick {
         brick::common::ValueException,
         mtf = iso12233<double>(edgeImage, windowSize,
                                [](double arg){return arg;}));
+    }
+
+
+    void
+    Iso12233Test::
+    testNaturalEdge()
+    {
+      constexpr std::size_t windowSize = 16;
+
+      std::string comment;
+      Image<brick::computerVision::GRAY8> naturalImage =
+        brick::computerVision::readPNG<GRAY8>(getSlantedEdgeImageFileNamePNG0(),
+                                              comment);
+
+      // Try to process the image.
+      Array1D<double> mtf = iso12233<double>(naturalImage, windowSize,
+                                             [](double arg){return arg;});
+      std::cout << mtf << std::endl;
     }
 
 
@@ -248,7 +270,7 @@ namespace brick {
       }
       return fftMagnitude;
     }
-    
+
   } // namespace iso12233
 
 } // namespace brick

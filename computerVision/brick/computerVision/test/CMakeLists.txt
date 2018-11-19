@@ -21,7 +21,7 @@ macro (brick_computer_vision_set_up_test test_name)
 
   # All brick unit tests return 0 on success, nonzero otherwise,
   # so no need to set special properties that catch failures.
-  # 
+  #
   # # set_tests_properties (${test_name}_target
   # #   PROPERTIES PASS_REGULAR_EXPRESSION "All tests pass")
 endmacro (brick_computer_vision_set_up_test test_name)

@@ -153,7 +153,7 @@ namespace brick {
           return;
         }
         std::ostringstream message;
-        message << "This function is not implemented for types of size"
+        message << "This function is not implemented for types of size "
                 << Size << ".";
         BRICK_THROW(NotImplementedException, "genericSwitchByteOrder()",
                     message.str().c_str());
@@ -243,7 +243,7 @@ namespace brick {
           return;
         }
         std::ostringstream message;
-        message << "This function is not implemented for types of size"
+        message << "This function is not implemented for types of size "
                 << Size << ".";
         BRICK_THROW(NotImplementedException, "genericSwitchByteOrder()",
                     message.str().c_str());

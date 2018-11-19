@@ -49,9 +49,11 @@ namespace brick {
 
       FILE *fp = fopen(fileName.c_str(), "rb");
       if (fp == 0) {
+        std::ostringstream message;
+        message << "Couldn't open input file: " << fileName;
         BRICK_THROW(brick::common::IOException,
                     "dlr::computerVision::readPng8()",
-                    "Couldn't open input file.");
+                    message.str().c_str());
       }
 
       // Be sure to clean up the open file.
@@ -61,14 +63,18 @@ namespace brick {
         // png image.
         unsigned char header[pngSignatureSize + 1];
         if(fread(header, 1, pngSignatureSize, fp) != pngSignatureSize) {
+          std::ostringstream message;
+          message << "Couldn't read png signature from file: " << fileName;
           BRICK_THROW(brick::common::IOException,
                       "brick::computerVision::readPng8()",
-                      "Couldn't read png signature from file.");
+                      message.str().c_str());
         }
         if(png_sig_cmp(header, 0, pngSignatureSize) != 0) {
+          std::ostringstream message;
+          message << "File doesn't seem to be a PNG image: " << fileName;
           BRICK_THROW(brick::common::IOException,
                       "brick::computerVision::readPng8()",
-                      "File doesn't seem to be a PNG image.");
+                      message.str().c_str());
         }
 
         // Create and initialize the png_struct with the default stderr
@@ -94,9 +100,11 @@ namespace brick {
 
           // Set error handling in case libpng calls longjmp().
           if(setjmp(png_jmpbuf(this->m_pngPtr))) {
+            std::ostringstream message;
+            message << "Trouble reading from file: " << fileName;
             BRICK_THROW(brick::common::IOException,
                         "dlr::computerVision::readPng8()",
-                        "Trouble reading from file.");
+                        message.str().c_str());
           }
 
           // Set up the input control.

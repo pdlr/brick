@@ -47,6 +47,22 @@ namespace brick {
 
 
     /**
+     ** This functor simply returns true when two pixels have the same
+     ** value.  By default, this is what connectedComponents uses to
+     ** decide if pixels have the same value.  Users can supply their
+     ** own functor (below) in order to change how pixels are
+     ** compared.
+     **/
+    template<class PixelType>
+    struct PixelEqualityComparator {
+      bool
+      operator()(PixelType const& value0, PixelType const& value1) const {
+        return value0 == value1;
+      }
+    };
+
+
+    /**
      * This function does connected components analysis on a previously
      * segmented image.
      *
@@ -64,11 +80,14 @@ namespace brick {
      * unspecified: it is _not_ true that the largest blob gets the
      * lowest label.
      */
-    template<ImageFormat FORMAT_OUT, ImageFormat FORMAT_IN>
+    template<ImageFormat FORMAT_OUT, ImageFormat FORMAT_IN,
+             class Comparator = PixelEqualityComparator<
+               typename ImageFormatTraits<FORMAT_IN>::PixelType>>
     Image<FORMAT_OUT>
     connectedComponents(const Image<FORMAT_IN>& inputImage,
                         ConnectedComponentsConfig const& config
-                        = ConnectedComponentsConfig());
+                        = ConnectedComponentsConfig(),
+                        Comparator comparator = Comparator());
 
 
     /**
@@ -94,12 +113,15 @@ namespace brick {
      * unspecified: it is _not_ true that the largest blob gets the
      * lowest label.
      */
-    template<ImageFormat FORMAT_OUT, ImageFormat FORMAT_IN>
+    template<ImageFormat FORMAT_OUT, ImageFormat FORMAT_IN,
+             class Comparator = PixelEqualityComparator<
+               typename ImageFormatTraits<FORMAT_IN>::PixelType>>
     Image<FORMAT_OUT>
     connectedComponents(const Image<FORMAT_IN>& inputImage,
                         unsigned int& numberOfComponents,
                         ConnectedComponentsConfig const& config
-                        = ConnectedComponentsConfig());
+                        = ConnectedComponentsConfig(),
+                        Comparator comparator = Comparator());
 
   } // namespace computerVision
 

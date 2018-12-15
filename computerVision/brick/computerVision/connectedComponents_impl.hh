@@ -31,12 +31,13 @@ namespace brick {
     /// @cond privateCode
     namespace privateCode {
 
-      template<ImageFormat FORMAT_IN>
+      template<ImageFormat FORMAT_IN, class Comparator>
       void
       labelImageSameColor4Connectedected(
         brick::numeric::Array2D<size_t>& labelImage,
         std::vector< std::unique_ptr< DisjointSet<size_t> > >& correspondenceVector,
-        Image<FORMAT_IN> const& inputImage);
+        Image<FORMAT_IN> const& inputImage,
+        Comparator const& comparator);
 
       template<ImageFormat FORMAT_IN>
       void
@@ -58,24 +59,26 @@ namespace brick {
 
     // This function does connected components analysis on a previously
     // segmented image.
-    template<ImageFormat FORMAT_OUT, ImageFormat FORMAT_IN>
+    template<ImageFormat FORMAT_OUT, ImageFormat FORMAT_IN, class Comparator>
     Image<FORMAT_OUT>
     connectedComponents(const Image<FORMAT_IN>& inputImage,
-                        ConnectedComponentsConfig const& config)
+                        ConnectedComponentsConfig const& config,
+                        Comparator comparator)
     {
       unsigned int numberOfComponents;
       return connectedComponents<FORMAT_OUT>(inputImage, numberOfComponents,
-                                             config);
+                                             config, comparator);
     }
 
 
     // This function does connected components analysis on a previously
     // segmented image.
-    template<ImageFormat FORMAT_OUT, ImageFormat FORMAT_IN>
+    template<ImageFormat FORMAT_OUT, ImageFormat FORMAT_IN, class Comparator>
     Image<FORMAT_OUT>
     connectedComponents(const Image<FORMAT_IN>& inputImage,
                         unsigned int& numberOfComponents,
-                        ConnectedComponentsConfig const& config)
+                        ConnectedComponentsConfig const& config,
+                        Comparator comparator)
     {
       // Allocate storage for the intermediate and final results.
       Image<FORMAT_OUT> outputImage(inputImage.rows(), inputImage.columns());
@@ -94,7 +97,7 @@ namespace brick {
           labelImage, correspondenceVector, inputImage);
       } else {
         privateCode::labelImageSameColor4Connectedected(
-          labelImage, correspondenceVector, inputImage);
+          labelImage, correspondenceVector, inputImage, comparator);
       }
 
       // === Resolve label equivalences. ===
@@ -138,12 +141,13 @@ namespace brick {
     /// @cond privateCode
     namespace privateCode {
 
-      template<ImageFormat FORMAT_IN>
+      template<ImageFormat FORMAT_IN, class Comparator>
       void
       labelImageSameColor4Connectedected(
         brick::numeric::Array2D<size_t>& labelImage,
         std::vector< std::unique_ptr< DisjointSet<size_t> > >& correspondenceVector,
-        Image<FORMAT_IN> const& inputImage)
+        Image<FORMAT_IN> const& inputImage,
+        Comparator const& comparator)
       {
         typedef typename Image<FORMAT_IN>::const_iterator InIterator;
         typedef brick::numeric::Array2D<size_t>::iterator LabelIterator;
@@ -166,7 +170,7 @@ namespace brick {
         size_t const numberOfColumns = inputImage.columns();
         for(size_t columnIndex = 1; columnIndex < numberOfColumns;
             ++columnIndex) {
-          if((*inIter) == (*(inIter - 1))) {
+          if(comparator(*inIter, *(inIter - 1))) {
             // The current pixel is in the same blob as the previous pixel.
             *labelIter = *(labelIter - 1);
           } else {
@@ -186,7 +190,7 @@ namespace brick {
         for(size_t rowIndex = 1; rowIndex < inputImage.rows(); ++rowIndex) {
 
           // Handle the first pixel of the row.
-          if((*inIter) == (*(inIter - numberOfColumns))) {
+          if(comparator(*inIter, *(inIter - numberOfColumns))) {
             // This pixel is in the same blob as the one immediately above it.
             *labelIter = *(labelIter - numberOfColumns);
           } else {
@@ -207,8 +211,9 @@ namespace brick {
             // Get the label of the pixel one row above the current
             // pixel.
             size_t parentLabel = *(labelIter - numberOfColumns);
-            bool matchesPrevious = ((*inIter) == (*(inIter - 1)));
-            bool matchesParent = ((*inIter) == (*(inIter - numberOfColumns)));
+            bool matchesPrevious = comparator(*inIter, *(inIter - 1));
+            bool matchesParent = comparator(
+              *inIter, *(inIter - numberOfColumns));
 
             if(matchesPrevious) {
               // The current pixel is in the same blob as the previous pixel.

@@ -235,7 +235,13 @@ namespace brick {
      * will be returned.  If you don't know this, you can simply call
      * the 10-argument version of stereoRectify(), which sets the
      * returned focal length to the average of the focal lengths of
-     * intrinsics0 and intrinsics1.
+     * intrinsics0 and intrinsics1.  Note that for this argument to
+     * have the desired effect, intrinsics0 and intrinsics1 must have
+     * their pixel sizes set correctly.  If you're used to thinking
+     * of focal lengths as numbers of pixels (i.e., if your focal
+     * lengths typically have values in the hundreds or thousands),
+     * simply multiply the number you're used to by the pixel size of
+     * the camera to get the focal length in physical units.
      *
      * @param rectifiedIntrinsics0 This argument returns the updated
      * (rectified) intrinsics of the left camera.

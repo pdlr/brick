@@ -321,6 +321,9 @@ namespace brick {
      */
     template <>
     bool
+    testApproximatelyEqual(bool argument0, bool argument1) __attribute__((__unused__));
+    template <>
+    bool
     testApproximatelyEqual(bool argument0, bool argument1) {
       return argument0 == argument1;
     }

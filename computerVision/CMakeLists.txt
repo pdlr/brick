@@ -9,6 +9,9 @@ if (PNG_FOUND)
     endif ()
     
     set (PNG_INCLUDE_DIRS ${PNG_INCLUDE_DIRS} ${PNGPP_INCLUDE_DIR})
+else (PNG_FOUND)
+  add_definitions("-DHAVE_LIBPNG=0")
+  set(PNGPP_INCLUDE_DIR "")
 endif ()
 
 add_subdirectory (brick/computerVision)

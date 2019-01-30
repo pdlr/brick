@@ -37,6 +37,7 @@ project (Brick)
 # Options for the project build.
 
 option (BRICK_BUILD_SHARED_LIBRARIES "Controls whether generated libraries are static or shared." OFF)
+option (BRICK_BUILD_POSITION_INDEPENDENT "Controls whether generated code is position independent." OFF)
 option (BRICK_BUILD_TESTS "Build tests along with brick library code." ON)
 option (BRICK_DEBUG_ARRAY_BOUNDS "Turn on run-time bounds checks." OFF)
 
@@ -112,6 +113,9 @@ macro (brick_configure_library directory_name library_name do_build)
   if (${do_build})
     include_directories ("${PROJECT_SOURCE_DIR}/${directory_name}")
     add_subdirectory (${directory_name})
+    if (BRICK_BUILD_POSITION_INDEPENDENT AND TARGET ${library_name})
+      set_property(TARGET ${library_name} PROPERTY POSITION_INDEPENDENT_CODE 1)
+    endif (BRICK_BUILD_POSITION_INDEPENDENT AND TARGET ${library_name})
     set (BRICK_LIBS ${BRICK_LIBS} ${library_name})
   endif (${do_build})
 endmacro (brick_configure_library directory_name library_name do_build)

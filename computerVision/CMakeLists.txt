@@ -6,6 +6,8 @@ if (PNG_FOUND)
     if (NOT PNGPP_INCLUDE_DIR)
       add_definitions("-DHAVE_LIBPNG=0")
       set(PNGPP_INCLUDE_DIR "")
+    else ()
+      add_definitions("-DHAVE_LIBPNG=1")
     endif ()
     
     set (PNG_INCLUDE_DIRS ${PNG_INCLUDE_DIRS} ${PNGPP_INCLUDE_DIR})

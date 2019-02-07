@@ -98,6 +98,8 @@ if (BRICK_DEBUG_ARRAY_BOUNDS)
   add_definitions (-DBRICK_NUMERIC_CHECKBOUNDS=1)
 endif (BRICK_DEBUG_ARRAY_BOUNDS)
 
+set(CMAKE_C_FLAGS_COVERAGE "${CMAKE_C_FLAGS_DEBUG} -O0 -fprofile-arcs -ftest-coverage")
+set(CMAKE_CXX_FLAGS_COVERAGE "${CMAKE_CXX_FLAGS_DEBUG} -O0 -fprofile-arcs -ftest-coverage")
 
 # Other configuration.
 
@@ -222,3 +224,18 @@ include (CPack)
 # # [...]
 # # #endif
 
+
+if (CMAKE_BUILD_TYPE STREQUAL "Coverage")
+add_custom_target(coverage
+  COMMAND mkdir -p coverage
+  COMMAND find ${CMAKE_BINARY_DIR} -name "*.gcda" -delete
+  COMMAND ctest --no-compress-output -T Test || true
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR})
+add_custom_command(TARGET coverage
+  COMMAND echo "------ COVERAGE ------"
+
+  COMMAND gcovr --xml-pretty -xs -o coverage.xml -r ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}
+  COMMAND gcovr --html --html-details -o coverage.html -r ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR}
+  WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/coverage)
+
+endif (CMAKE_BUILD_TYPE STREQUAL "Coverage") 

@@ -17,7 +17,9 @@ target_link_libraries (brickComputerVision
   ${PNG_LIBRARIES}
   )
 
-target_include_directories (brickComputerVision PRIVATE ${PNG_INCLUDE_DIRS})
+if (PNG_FOUND)
+  target_include_directories (brickComputerVision INTERFACE ${PNG_INCLUDE_DIRS})
+endif (PNG_FOUND)
 
 install (TARGETS brickComputerVision DESTINATION lib)
 install (FILES

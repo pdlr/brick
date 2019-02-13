@@ -42,8 +42,10 @@ namespace brick {
       // Tests.
       void testLowPassEdge();
       void testVerticalEdge();
+#if HAVE_LIBPNG
       void testNaturalEdge();
-
+#endif
+        
     private:
 
       Image<brick::computerVision::GRAY8>
@@ -68,7 +70,9 @@ namespace brick {
     {
       BRICK_TEST_REGISTER_MEMBER(testLowPassEdge);
       BRICK_TEST_REGISTER_MEMBER(testVerticalEdge);
+#if HAVE_LIBPNG
       BRICK_TEST_REGISTER_MEMBER(testNaturalEdge);
+#endif
     }
 
 
@@ -142,7 +146,7 @@ namespace brick {
                                [](double arg){return arg;}));
     }
 
-
+#if HAVE_LIBPNG
     void
     Iso12233Test::
     testNaturalEdge()
@@ -159,7 +163,7 @@ namespace brick {
                                              [](double arg){return arg;});
       std::cout << mtf << std::endl;
     }
-
+#endif
 
     Image<brick::computerVision::GRAY8>
     Iso12233Test::

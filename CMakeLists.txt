@@ -239,3 +239,16 @@ add_custom_command(TARGET coverage
   WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/coverage)
 
 endif (CMAKE_BUILD_TYPE STREQUAL "Coverage") 
+
+
+#documentation
+find_program(DOXYGEN doxygen)
+if (DOXYGEN)
+  configure_file (
+    "${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.cmakein"
+    "${CMAKE_CURRENT_BINARY_DIR}/Doxyfile"
+    @ONLY
+    )
+  add_custom_target(doc
+    COMMAND ${DOXYGEN})
+endif (DOXYGEN)

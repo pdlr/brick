@@ -41,6 +41,7 @@ install (FILES
   erode.hh erode_impl.hh
   extendedKalmanFilter.hh extendedKalmanFilter_impl.hh
   featureAssociation.hh featureAssociation_impl.hh
+  fitPolynomial.hh fitPolynomial_impl.hh
   fivePointAlgorithm.hh fivePointAlgorithm_impl.hh
   getEuclideanDistance.hh getEuclideanDistance_impl.hh
   histogramEqualize.hh

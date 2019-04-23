@@ -34,7 +34,7 @@ namespace brick {
     linearFit(brick::numeric::Array1D<FloatType> const& array0,
               brick::numeric::Array1D<FloatType> const& array1)
     {
-      // We're looking for constants a and b which most nearly (in the
+      // We're looking for constants a and b that most nearly (in the
       // least squares sense) satisfy the equation
       //
       //   a * array0 + b = array1

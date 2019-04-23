@@ -1,6 +1,6 @@
 /**
 ***************************************************************************
-* @file brick/linearAlgebra/linearAlgebra.h
+* @file brick/linearAlgebra/linearAlgebra.hh
 *
 * Header file declaring linear algebra functions.  Many of these depend
 * on the LAPACK and BLAS libraries.
@@ -157,14 +157,14 @@ namespace brick {
 
     /**
      * This function computes the best linear fit between the two input
-     * arrays.  That is, it solves for scalars a and b which minimize
+     * arrays.  That is, it solves for scalars a and b that minimize
      * the quantity
      *
      *   e = |(a * array0 + b) - array1|^2,
      *
      * where array0 and array1 are the two input arrays.  Put another
      * way, this means we're solving (in the least squares sense) for
-     * the variables a and b which most nearly satisfy the following
+     * the variables a and b that most nearly satisfy the following
      * equation:
      *
      *   a * array0 + b = array1
@@ -193,7 +193,7 @@ namespace brick {
      * b."  It must have the same number of elements as argument A has
      * rows.
      *
-     * @return The return value is the vector x which most nearly
+     * @return The return value is the vector x that most nearly
      * satisfies the equation.  "Nearly" is defined in the least-squares
      * sense.
      */
@@ -259,7 +259,7 @@ namespace brick {
      * @param b This argument specifies the b vector in the system "Ax =
      * b."  It must have the same length as argument centerDiagonal.
      *
-     * @return The return value is the vector x which most nearly
+     * @return The return value is the vector x that most nearly
      * satisfies the equation.  "Nearly" is defined in the least-squares
      * sense.
      */

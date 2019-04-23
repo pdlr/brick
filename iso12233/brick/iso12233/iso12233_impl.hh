@@ -237,7 +237,7 @@ namespace brick {
         Array1D<FloatType> derivativeRow(inputRow.size());
         for(std::size_t column = 1; column < inputRow.size() - 1; ++column) {
           derivativeRow[column] = ((inputRow[column + 1] - inputRow[column - 1])
-                                   / FloatType(0.5));
+                                   * FloatType(0.5));
         }
 
         // Copy first and last elements to fill out the array.
@@ -469,7 +469,7 @@ namespace brick {
         // origin and slope == 1.0.
         //
         // Back in the real world, we convolved with [-0.5, 0, 0.5].
-        // If we think of this as a sequence, h[n] of N values that is
+        // If we think of this as a sequence, h[n], of N values that is
         // nonzero only in the first and third elements, the DFT of
         // this signal becomes clear.
         //

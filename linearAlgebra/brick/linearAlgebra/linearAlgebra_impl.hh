@@ -102,6 +102,22 @@ namespace brick {
                             (a00 * x1 - a01 * x0) / determinant);
     }
 
+
+    // This function accepts an Array2D<Float64> instance having at least
+    // as many rows as columns, and returns the Moore-Penrose
+    // pseudoinverse.
+    template <class FloatType>
+    brick::numeric::Array2D<FloatType>
+    pseudoinverse(brick::numeric::Array2D<FloatType> const& AA)
+    {
+      using brick::numeric::Array2D;
+      using brick::numeric::matrixMultiply;
+
+      Array2D<FloatType> ATranspose = AA.transpose();
+      Array2D<FloatType> ATA = matrixMultiply<FloatType>(ATranspose, AA);
+      return matrixMultiply<FloatType>(inverse(ATA), ATranspose);
+    }
+
   } // namespace linearAlgebra
 
 } // namespace brick

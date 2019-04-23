@@ -275,15 +275,16 @@ namespace brick {
      * This function accepts an Array2D<Float64> instance having at least
      * as many rows as columns, and returns the Moore-Penrose
      * pseudoinverse.  That is, for an input matrix A, it returns
-     * inverse(matrixMultiply(transpose(A), A)).  It is an error if the
-     * rank of A is less than A.columns().
+     * matrixMultiply(inverse(matrixMultiply(transpose(A), A)), transpose(A)).
+     * It is an error if the rank of A is less than A.columns().
      *
-     * @param A This argument is the matrix to be psuedoinverted.
+     * @param AA This argument is the matrix to be psuedoinverted.
      *
-     * @return The return value is the pseudoinverse of argument A.
+     * @return The return value is the pseudoinverse of argument AA.
      */
-    brick::numeric::Array2D<brick::common::Float64>
-    pseudoinverse(brick::numeric::Array2D<brick::common::Float64> const& A);
+    template <class FloatType>
+    brick::numeric::Array2D<FloatType>
+    pseudoinverse(brick::numeric::Array2D<FloatType> const& AA);
 
 
     /**

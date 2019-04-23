@@ -41,6 +41,7 @@ namespace brick {
       void testLinearFit();
       void testLinearLeastSquares();
       void testLinearSolveInPlace();
+      void testPseudoinverse();
       void testQrFactorization();
       void testSingularValueDecomposition();
       void testSingularValues();
@@ -120,6 +121,7 @@ namespace brick {
       BRICK_TEST_REGISTER_MEMBER(testLinearFit);
       BRICK_TEST_REGISTER_MEMBER(testLinearLeastSquares);
       BRICK_TEST_REGISTER_MEMBER(testLinearSolveInPlace);
+      BRICK_TEST_REGISTER_MEMBER(testPseudoinverse);
       BRICK_TEST_REGISTER_MEMBER(testQrFactorization);
       BRICK_TEST_REGISTER_MEMBER(testSingularValueDecomposition);
       BRICK_TEST_REGISTER_MEMBER(testSingularValues);
@@ -629,6 +631,56 @@ namespace brick {
       }
     }
 
+
+    void
+    LinearAlgebraTest::
+    testPseudoinverse()
+    {
+      for(size_t index0 = 0;
+          index0 < LinearAlgebraTest::numberOfTestMatrixSets;
+          ++index0) {
+        // Do the inverse.
+        numeric::Array2D<common::Float64> squareMatrix =
+          m_squareMatrices[index0].copy();
+        numeric::Array2D<common::Float64> inverseMatrix =
+          pseudoinverse(squareMatrix);
+
+        // Check that input is unchanged.
+        BRICK_TEST_ASSERT(
+          this->approximatelyEqual(squareMatrix, m_squareMatrices[index0]));
+
+        // Check that results are correct.
+        BRICK_TEST_ASSERT(
+          this->approximatelyEqual(inverseMatrix, m_inverseMatrices[index0]));
+      }
+
+      // Test for a non-square matrix.
+      {
+        numeric::Array2D<common::Float64> aMatrix = m_aMatrices[0].copy();
+        numeric::Array2D<common::Float64> inverseMatrix =
+          pseudoinverse(aMatrix);
+
+        // Check that input is unchanged.
+        BRICK_TEST_ASSERT(this->approximatelyEqual(aMatrix, m_aMatrices[0]));
+
+        // Check that size of result is correct.
+        BRICK_TEST_ASSERT(inverseMatrix.columns() == aMatrix.rows());
+        BRICK_TEST_ASSERT(inverseMatrix.rows() == aMatrix.columns());
+
+        // Check that result "inverts" the matrix.
+        numeric::Array2D<common::Float64> identityMatrix =
+          numeric::matrixMultiply<common::Float64>(inverseMatrix, aMatrix);
+        for(std::size_t rr = 0; rr < identityMatrix.rows(); ++rr) {
+          for(std::size_t cc = 0; cc < identityMatrix.rows(); ++cc) {
+            common::Float64 targetValue = (rr == cc) ? 1.0 : 0.0;
+            BRICK_TEST_ASSERT(
+              brick::test::approximatelyEqual(
+                identityMatrix(rr, cc), targetValue,
+                this->m_defaultTolerance));
+          }
+        }
+      }
+    }
 
     void
     LinearAlgebraTest::

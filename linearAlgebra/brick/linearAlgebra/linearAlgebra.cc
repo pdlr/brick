@@ -865,18 +865,6 @@ namespace brick {
     }
 
 
-    // This function accepts an Array2D<Float64> instance having at least
-    // as many rows as columns, and returns the Moore-Penrose
-    // pseudoinverse.
-    Array2D<Float64>
-    pseudoinverse(Array2D<Float64> const& A)
-    {
-      Array2D<Float64> ATranspose = A.transpose();
-      Array2D<Float64> ATA = matrixMultiply<Float64>(ATranspose, A);
-      return matrixMultiply<Float64>(inverse(ATA), ATranspose);
-    }
-
-
     // This function computes the singular value decomposition of a
     // matrix.
     void

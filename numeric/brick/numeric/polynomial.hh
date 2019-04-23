@@ -94,7 +94,7 @@ namespace brick {
        * for the polynomial, as described above.
        */
       explicit
-      Polynomial(const Array1D<Type> coefficients);
+      Polynomial(Array1D<Type> const& coefficients);
 
 
 // Apparently, this construction doesn't work with g++, 2012-02

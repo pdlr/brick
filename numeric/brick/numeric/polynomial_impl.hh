@@ -72,7 +72,7 @@ namespace brick {
     // This constructor makes a polynomial of arbitrary order.
     template <class Type>
     Polynomial<Type>::
-    Polynomial(const Array1D<Type> coefficients)
+    Polynomial(Array1D<Type> const& coefficients)
       : m_coefficientArray(coefficients.copy())
     {
       // Empty.

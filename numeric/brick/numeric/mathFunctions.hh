@@ -5,7 +5,7 @@
 * Header file declaring general math function templates to replace
 * abs(), sin(), cos(), etc in portable code.  This builds on
 * brick::common::mathFunctions.hh, but uses explicit function
-* overloading rather than genereric templates.  The advantage of
+* overloading rather than generic templates.  The advantage of
 * explicit overloading is that the generic templated versions of math
 * functions are often inappropriate for unanticipated types.  If you
 * use brick::numeric functions, you can be confident that the generic

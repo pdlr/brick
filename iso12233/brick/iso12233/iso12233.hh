@@ -31,14 +31,38 @@ namespace brick {
     struct Iso12233Config {
 
       // Configuration variables.
+
+      // Setting this variable to true multiplies each row of the edge
+      // image by a Hamming window prior to detecting the edge (by
+      // finding the centroid of the first derivative of the row).
+      // This is called for by the standard, but in practice, it
+      // appears to bias the estimate of the edge location, so we
+      // default to false.  Note that the edge estimation is
+      // exclusively in the spatial domain (i.e., no FFTs), so it's
+      // not clear what the value of enabling this is.
       bool useInitialHammingWindow = false;
+
+      // This variable is very similar to useInitialHammingWindow, but
+      // affects a second iteration of the edge finding algorithm.  We
+      // default to false for the same reasons that
+      // useInitialHammingWindow is defaulted to false.
       bool useSecondHammingWindow = false;
+
+      // The standard models the image edge as a straight line, where
+      // column coordinate is a linear function of row coordinate.
+      // Our implementation lets column position be an arbitrary
+      // polynomial function of row position.  Setting this config
+      // variable to 1 makes the polynomial be linear, matching the
+      // standard.  Setting this variable to 2 or 3 allows the system
+      // to handle curved lines due to lens distortion.
+      std::size_t polynomialOrder = 2;
 
       static Iso12233Config
       getStandardCompliant() {
         Iso12233Config result;
         result.useInitialHammingWindow = true;
         result.useSecondHammingWindow = true;
+        result.polynomialOrder = 1;
         return result;
       }
     };

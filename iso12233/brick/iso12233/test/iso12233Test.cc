@@ -45,7 +45,7 @@ namespace brick {
 #if HAVE_LIBPNG
       void testNaturalEdge();
 #endif
-        
+
     private:
 
       Image<brick::computerVision::GRAY8>
@@ -282,13 +282,11 @@ namespace brick {
 
 #if 0
 
-int main(/* int argc, char** argv */)
+int main(int /* argc */, char** /* argv */)
 {
   brick::iso12233::Iso12233Test currentTest;
+
   bool result = currentTest.run();
-
-  currentTest.testLowPassEdge();
-
   return (result ? 0 : 1);
 }
 

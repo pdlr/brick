@@ -21,7 +21,8 @@
 
 #include <complex>
 
-#include <brick/linearAlgebra/linearAlgebra.hh>
+// #include <brick/linearAlgebra/linearAlgebra.hh>
+#include <brick/computerVision/fitPolynomial.hh>
 #include <brick/numeric/fft.hh>
 #include <brick/numeric/numericTraits.hh>
 #include <brick/numeric/sampledFunctions.hh>
@@ -60,10 +61,10 @@ namespace brick {
 
       template <class FloatType>
       void
-      estimateEdgeSlopeAndOffset(FloatType& slope, FloatType& offset,
-                                 Array2D<FloatType> const& reflectanceImage,
-                                 std::size_t windowSize,
-                                 Iso12233Config const& config);
+      estimateEdgeShape(brick::numeric::Polynomial<FloatType>& edgeShape,
+                        Array2D<FloatType> const& reflectanceImage,
+                        std::size_t windowSize,
+                        Iso12233Config const& config);
 
 
       // Compensate for non-ideal 3-element derivative using
@@ -89,10 +90,10 @@ namespace brick {
       // single supersampled version of the (nearly vertical) edge.
       template <class FloatType>
       Array1D<FloatType>
-      shiftAndCombineRows(Array2D<FloatType> const& reflectanceImage,
-                          std::size_t const windowSize,
-                          FloatType const slope,
-                          FloatType const offset);
+      shiftAndCombineRows(
+        Array2D<FloatType> const& reflectanceImage,
+        std::size_t const windowSize,
+        brick::numeric::Polynomial<FloatType> const& edgeShape);
 
       // Subsamble the input signal by a factor of four, using a binomial
       // low-pass filter.
@@ -132,15 +133,19 @@ namespace brick {
 
       // Paragraph 6.2.3 of the standard.  We assume the edge is close
       // to vertical in the image (nearly aligned with the image
-      // columns).  After this call, y ~= slope*x + offset, where y is
-      // column location of the edge, and x is the row number.  This
-      // reverses the conventional meanings of x and y (which normally
-      // mean column and row, respectively), but is consistent with
-      // the variable definitions in the standard.
-      FloatType slope = 0.0;
-      FloatType offset = 0.0;
-      privateCode::estimateEdgeSlopeAndOffset(
-        slope, offset, reflectanceImage, windowSize, config);
+      // columns).  The standard calls for computing slope and offset
+      // so that y ~= slope*x + offset, where y is column location of
+      // the edge, and x is the row number.  This reverses the
+      // conventional meanings of x and y (which normally mean column
+      // and row, respectively), but is consistent with the variable
+      // definitions in the standard.  By representing slope and
+      // offset as a polynomial, we make it easy to use higher-order
+      // shapes (quadratics, cubics) if the lens has significant
+      // distortion.  The degree of this polynomial is controlled by
+      // the config member variable polynomialOrder.
+      brick::numeric::Polynomial<FloatType> edgeShape;
+      privateCode::estimateEdgeShape(
+        edgeShape, reflectanceImage, windowSize, config);
 
       // Paragraph 6.2.4 of the standard: align the edges in all of (or a
       // plurality of) the rows.  Because the line crosses each row at a
@@ -152,7 +157,7 @@ namespace brick {
       // lineSpreadFunction is just the finite-differences derivative of
       // edgeSpreadFunction.
       Array1D<FloatType> edgeSpreadFunction = privateCode::shiftAndCombineRows(
-        reflectanceImage, windowSize, slope, offset);
+        reflectanceImage, windowSize, edgeShape);
       Array1D<FloatType> lineSpreadFunction = privateCode::computeDerivative(
         edgeSpreadFunction);
 
@@ -314,17 +319,17 @@ namespace brick {
 
       template <class FloatType>
       void
-      estimateEdgeSlopeAndOffset(FloatType& slope, FloatType& offset,
-                                 Array2D<FloatType> const& reflectanceImage,
-                                 std::size_t windowSize,
-                                 Iso12233Config const& config)
+      estimateEdgeShape(brick::numeric::Polynomial<FloatType>& edgeShape,
+                        Array2D<FloatType> const& reflectanceImage,
+                        std::size_t windowSize,
+                        Iso12233Config const& config)
       {
         // To make things easier later in the function, we require that
         // reflectanceImage be wider than windowSize, and process only a
         // subset of the image data.
         if(windowSize >= (reflectanceImage.columns() - 2)) {
           BRICK_THROW(brick::common::ValueException,
-                      "estimateEdgeSlopeAndOffset()",
+                      "estimateEdgeShape()",
                       "Argument reflectanceImage must have at least "
                       "(windowSize + 2) columns.");
         }
@@ -343,7 +348,7 @@ namespace brick {
         // Array2D<FloatType> windowedImage = brick::numeric::subArray(
         //   reflectanceImage, brick::numeric::Slice(),
         //   brick::numeric::Slice(roiStartColumn, roiStopColumn));
-        
+
         // Paragraph 6.2.3.2 of the standard.
         // Each line is multiplied by a Hamming window.
         Array2D<FloatType> windowedImage = reflectanceImage.copy();
@@ -374,33 +379,42 @@ namespace brick {
           centroidArray[rr] -= FloatType(0.5);
         }
 
-        // Estimate slope and offset of the line.  Defining rowIndices
-        // to be a vector [0, 1, 2, ...]^T, we're looking for slope and
-        // offset such that
+        // The standard calls for us to estimate slope and offset of
+        // the line here.  Defining rowIndices to be a vector
+        // [0, 1, 2, ...]^T, we would be looking for slope and offset
+        // such that
         //
         //   centroidArray^T = slope * rowIndices^T + offset.
+        //
+        // In practice, we're normally working with cameras that have
+        // some degree of lens distortion, so we allow the user to
+        // specify a polynomial of arbitrary order.  Setting
+        // polynomialOrder to 1 gives the (linear) fit called for by
+        // the standard and described above in this comment.  Setting
+        // polynomialOrder to 2 gives a quadratic fit, which is likely
+        // flexible enough for most applications.
         Array1D<FloatType> rowIndices(centroidArray.size());
         for(std::size_t ii = 0; ii < rowIndices.size(); ++ii) {
           rowIndices[ii] = static_cast<FloatType>(ii);
         }
-        std::pair<FloatType, FloatType> slope_offset =
-          brick::linearAlgebra::linearFit(rowIndices, centroidArray);
-
-        // If we're not using window functions, there's no point in
-        // processing further... we have the best estimate of edge
-        // location that we're going to get.
-        // xxx if(!config.useInitialHammingWindow
-        //    && !config.useSecondHammingWindow) {
-        //   slope = slope_offset.first;
-        //   offset = slope_offset.second;
-        //   return;
-        // }
+        // std::pair<FloatType, FloatType> slope_offset =
+        //   brick::linearAlgebra::linearFit(rowIndices, centroidArray);
+        edgeShape = brick::computerVision::fitPolynomial<FloatType>(
+          rowIndices.begin(), rowIndices.end(), centroidArray.begin(),
+          config.polynomialOrder);
 
         // Paragraph 6.2.3.3 of the standard.
 
         // Throw away the noise, and retain only the best fit location
         // of the line.
-        centroidArray = slope_offset.first * rowIndices + slope_offset.second;
+        //
+        // centroidArray = (slope_offset.first * rowIndices
+        //                  + slope_offset.second);
+        //
+        // This call just applies the polynomial to each row index,
+        // and stores the result in centroidArray.
+        std::transform(rowIndices.begin(), rowIndices.end(),
+                       centroidArray.begin(), edgeShape);
 
         // Repeat the Hamming window multiplication, but this time
         // center each window at the estimated line position, and
@@ -410,8 +424,7 @@ namespace brick {
         // filter, and we want to ignore the edges, where the filter
         // extends outside windowSize.  Argument pixelShiftArray tells
         // us which pixels got selected for each row of windowedImage,
-        // so we can correctly calculate the line slope and offset
-        // later.
+        // so we can correctly calculate the line polynomial later.
         Array1D<std::size_t> pixelShiftArray;
         windowedImage = privateCode::selectEdgeWindows(
           pixelShiftArray, reflectanceImage, centroidArray, windowSize + 2);
@@ -447,12 +460,14 @@ namespace brick {
 
         // Paragraph 6.2.3.5 of the standard.
         // Re-estimate slope and offset of the line, just as above.
-        slope_offset = brick::linearAlgebra::linearFit(
-          rowIndices, centroidArray);
-
-        // Pass result back to calling context.
-        slope = slope_offset.first;
-        offset = slope_offset.second;
+        //
+        // slope_offset = brick::linearAlgebra::linearFit(
+        // rowIndices, centroidArray);
+        //
+        // As before, allow polynomial fits of arbitrary order.
+        edgeShape = brick::computerVision::fitPolynomial<FloatType>(
+          rowIndices.begin(), rowIndices.end(), centroidArray.begin(),
+          config.polynomialOrder);
       }
 
 
@@ -584,16 +599,17 @@ namespace brick {
       // single supersampled version of the (nearly vertical) edge.
       template <class FloatType>
       Array1D<FloatType>
-      shiftAndCombineRows(Array2D<FloatType> const& reflectanceImage,
-                          std::size_t const windowSize,
-                          FloatType const slope,
-                          FloatType const offset)
+      shiftAndCombineRows(
+        Array2D<FloatType> const& reflectanceImage,
+        std::size_t const windowSize,
+        brick::numeric::Polynomial<FloatType> const& edgeShape)
       {
         // The standard requires us to supersample by a factor of four.
         // We choose to put the edge in the middle of the output row.
         std::size_t outputWindowSize = windowSize << 2;
-        FloatType outputEdgeLocation = (static_cast<FloatType>(outputWindowSize - 1)
-                                        / FloatType(2.0));
+        FloatType outputEdgeLocation =
+          (static_cast<FloatType>(outputWindowSize - 1)
+           / FloatType(2.0));
 
         // We'll accumulate pixel values in these arrays, which we
         // initialize to zero.
@@ -608,7 +624,7 @@ namespace brick {
 
           // Variable edgeLocation will be a number in input pixel column
           // coordinates.  Something like "55.21"
-          FloatType edgeLocation = offset + slope * rr;
+          FloatType edgeLocation = edgeShape(static_cast<FloatType>(rr));
 
           // There's a linear mapping between output column coordinate and
           // input column coordinate.  It has the form:

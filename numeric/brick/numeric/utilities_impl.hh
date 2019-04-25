@@ -1063,7 +1063,7 @@ namespace brick {
     Type
     maximum(Array2D<Type> const& array0, Functor comparator)
     {
-      Type maxElement = 0;
+      Type maxElement = Type(0);
 
       if(array0.size() == 0) {
         BRICK_THROW(brick::common::ValueException, "maximum()",
@@ -1091,7 +1091,7 @@ namespace brick {
     Type
     mean(Iterator beginIter, Iterator endIter)
     {
-      Type meanValue = 0;
+      Type meanValue = Type(0);
       size_t count = 0;
       while(beginIter != endIter) {
         meanValue += *beginIter;
@@ -1197,9 +1197,9 @@ namespace brick {
       // where uHat is the sample mean.
 
       meanArray.reinit(dimensionality);
-      meanArray = 0.0;
+      meanArray = Type(0);
       covarianceArray.reinit(dimensionality, dimensionality);
-      covarianceArray = 0.0;
+      covarianceArray = Type(0);
       typename Array2D<Type>::const_iterator sampleIterator =
         sampleArray.begin();
 
@@ -1276,9 +1276,9 @@ namespace brick {
     getMeanAndVariance(Iter beginIter, Iter endIter,
                        Type& mean, Type& variance)
     {
-      Type sumOfElements = 0;
-      Type sumOfSquaredElements = 0;
-      unsigned int numberOfElements = 0;
+      Type sumOfElements = Type(0);
+      Type sumOfSquaredElements = Type(0);
+      unsigned int numberOfElements = Type(0);
 
       while(beginIter != endIter) {
         Type elementValue = *beginIter;
@@ -1519,7 +1519,7 @@ namespace brick {
     Type1
     rms(Array1D<Type0> const& array0)
     {
-      Type1 accumulator = 0;
+      Type1 accumulator = Type1(0);
       for(size_t index = 0; index < array0.size(); ++index) {
         Type1 element = static_cast<Type1>(array0[index]);
         accumulator += element * element;
@@ -1591,17 +1591,17 @@ namespace brick {
                     message.str().c_str());
       }
       Array2D<Type> returnVal(3, 3);
-      returnVal(0, 0) = 0;
+      returnVal(0, 0) = Type(0);
       returnVal(0, 1) = -vector0(2);
       returnVal(0, 2) = vector0(1);
 
       returnVal(1, 0) = vector0(2);
-      returnVal(1, 1) = 0;
+      returnVal(1, 1) = Type(0);
       returnVal(1, 2) = -vector0(0);
 
       returnVal(2, 0) = -vector0(1);
       returnVal(2, 1) = vector0(0);
-      returnVal(2, 2) = 0;
+      returnVal(2, 2) = Type(0);
       return returnVal;
     }
 
@@ -1731,7 +1731,7 @@ namespace brick {
     variance(Array1D<Type0> const& array0)
     {
       Type1 meanValue = mean<Type1>(array0);
-      Type1 accumulator = 0;
+      Type1 accumulator = Type1(0);
       for(size_t index0 = 0; index0 < array0.size(); ++index0) {
         Type1 offset = static_cast<Type1>(array0[index0]) - meanValue;
         accumulator += offset * offset;
@@ -1747,7 +1747,7 @@ namespace brick {
     zeros(size_t size)
     {
       Array1D<Type> result(size);
-      result = 0;
+      result = Type(0);
       return result;
     }
 
@@ -1759,7 +1759,7 @@ namespace brick {
     zeros(size_t rows, size_t columns)
     {
       Array2D<Type> result(rows, columns);
-      result = 0;
+      result = Type(0);
       return result;
     }
 
@@ -1771,7 +1771,7 @@ namespace brick {
     zeros(size_t shape0, size_t shape1, size_t shape2)
     {
       Array3D<Type> result(shape0, shape1, shape2);
-      result = 0;
+      result = Type(0);
       return result;
     }
 

@@ -37,7 +37,7 @@ namespace brick {
       using brick::linearAlgebra::linearLeastSquares;
       using brick::numeric::Array1D;
       using brick::numeric::Array2D;
-      
+
       // Sadly, we need the size of the input sequences up front so we
       // can allocate storage.
       std::size_t numberOfElements = xEnd - xBegin;
@@ -51,7 +51,7 @@ namespace brick {
       for(std::size_t ii = 0; ii < numberOfElements; ++ii) {
 
         // Each row of the "A" matrix has powers of one of the X values.
-        // Multiplying these powers of X by the polynomial coefficients, 
+        // Multiplying these powers of X by the polynomial coefficients,
         // and summing the results, should give us the least squares
         // approximation of the corresponding Y value.
         FloatType const xx{*xBegin};
@@ -64,7 +64,7 @@ namespace brick {
         ++xBegin;
         ++yBegin;
       }
-      
+
       // All set.  Now we can solve for the coefficients that most nearly
       // match the input data.
       Array1D<FloatType> coefficients = linearLeastSquares(AMatrix, bVector);

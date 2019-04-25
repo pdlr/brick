@@ -35,7 +35,7 @@ namespace brick {
      *
      * @param xBegin This iterator, along with argument xEnd, specify the
      * sequence of "X" input values.
-     * 
+     *
      * @param xEnd This iterator, along with argument xBegin, specify the
      * sequence of "X" input values.
      *
@@ -45,7 +45,7 @@ namespace brick {
      *
      * @param order This argument specifies the order of the returned
      * polynomial.  Set this to 1 for linear, 2 for quadratic, etc.
-     * 
+     *
      * @return The return value is the best fit polynomial.
      */
     template <class FloatType, class Iter0Type, class Iter1Type>

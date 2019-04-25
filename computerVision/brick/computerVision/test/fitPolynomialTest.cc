@@ -50,7 +50,7 @@ namespace brick {
       void
       testFitPolynomial_arbitraryOrder(
         std::vector<FloatType> const& coefficients);
-      
+
       brick::common::Float64 m_defaultTolerance;
 
     }; // class FitPolynomialTest
@@ -81,7 +81,7 @@ namespace brick {
       using brick::numeric::Array1D;
       using brick::numeric::Polynomial;
       using brick::test::approximatelyEqual;
-      
+
       // Polynomial of order 0 should just compute the mean of the Y
       // coordinates.
       std::vector<Float64> xCoordinates;
@@ -119,7 +119,7 @@ namespace brick {
       using brick::common::Float64;
       std::vector<Float64> const coefficients {-2.0, 3.0};
       testFitPolynomial_arbitraryOrder(coefficients);
-    }      
+    }
 
 
     void
@@ -170,7 +170,7 @@ namespace brick {
       using brick::numeric::Array1D;
       using brick::numeric::Polynomial;
       using brick::test::approximatelyEqual;
-      
+
       std::vector<FloatType> xCoordinates;
       std::vector<FloatType> yCoordinates;
       Int32 constexpr minX{-3};
@@ -191,15 +191,15 @@ namespace brick {
       Polynomial<FloatType> polynomial = fitPolynomial<FloatType>(
         xCoordinates.begin(), xCoordinates.end(), yCoordinates.begin(),
         coefficients.size() - 1);
-      
-      BRICK_TEST_ASSERT(polynomial.getOrder() == coefficients.size() - 1); 
+
+      BRICK_TEST_ASSERT(polynomial.getOrder() == coefficients.size() - 1);
       for(Int32 ii = 0; ii < static_cast<int>(xCoordinates.size()); ++ii) {
         BRICK_TEST_ASSERT(approximatelyEqual(polynomial(xCoordinates[ii]),
                                              yCoordinates[ii],
                                              this->m_defaultTolerance));
       }
     }
-  
+
   } // namespace computerVision
 
 } // namespace brick

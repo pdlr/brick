@@ -130,6 +130,29 @@ extern "C" {
               brick::common::Float64* W, brick::common::Float64* WORK,
               brick::common::Int32* LWORK, brick::common::Int32* INFO);
 
+
+  /**
+   * This is a declaration for the LAPACK routine dgels(), which
+   * computes the solution of a general system of linear equations.
+   */
+  void sgels_(char* TRANS, brick::common::Int32* M, brick::common::Int32* N,
+              brick::common::Int32* NRHS,
+              brick::common::Float32* A, brick::common::Int32* LDA,
+              brick::common::Float32* B, brick::common::Int32* LDB,
+              brick::common::Float32* WORK, brick::common::Int32* LWORK,
+              brick::common::Int32* INFO);
+
+
+  /**
+   * This is a declaration for the LAPACK routine sgesv(), which
+   * computes the solution to a systems of linear equations.
+   */
+  void sgesv_(brick::common::Int32* N, brick::common::Int32* NRHS,
+              brick::common::Float32 *A, brick::common::Int32* LDA,
+              brick::common::Int32* IPIV,
+              brick::common::Float32* B, brick::common::Int32* LDB,
+              brick::common::Int32* INFO);
+
 #ifdef __cplusplus
 }
 #endif

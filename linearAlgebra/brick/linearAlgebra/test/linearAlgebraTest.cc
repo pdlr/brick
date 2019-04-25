@@ -18,6 +18,77 @@
 #include <brick/test/functors.hh>
 #include <brick/test/testFixture.hh>
 
+namespace {
+
+  class MyDouble {
+  public:
+    MyDouble() : m_value(0.0) {}
+    explicit MyDouble(brick::common::Float64 value) : m_value(value) {}
+    brick::common::Float64 getValue() const {return m_value;}
+
+    MyDouble& operator*=(MyDouble const& other) {
+      m_value *= other.m_value;
+      return *this;
+    }
+    MyDouble& operator/=(MyDouble const& other) {
+      m_value /= other.m_value;
+      return *this;
+    }
+    MyDouble& operator+=(MyDouble const& other) {
+      m_value += other.m_value;
+      return *this;
+    }
+    MyDouble& operator-=(MyDouble const& other) {
+      m_value -= other.m_value;
+      return *this;
+    }
+
+    MyDouble operator-() {
+      return MyDouble(-m_value);
+    }
+
+  private:
+    brick::common::Float64 m_value;
+  };
+
+  MyDouble operator*(MyDouble const& arg0, MyDouble const& arg1) {
+    MyDouble result(arg0);
+    return result *= arg1;
+  }
+  MyDouble operator/(MyDouble const& arg0, MyDouble const& arg1) {
+    MyDouble result(arg0);
+    return result /= arg1;
+  }
+  MyDouble operator+(MyDouble const& arg0, MyDouble const& arg1) {
+    MyDouble result(arg0);
+    return result += arg1;
+  }
+  MyDouble operator-(MyDouble const& arg0, MyDouble const& arg1) {
+    MyDouble result(arg0);
+    return result -= arg1;
+  }
+  bool operator==(MyDouble const& arg0, MyDouble const& arg1) {
+    return arg0.getValue() == arg1.getValue();
+  }
+  bool operator!=(MyDouble const& arg0, MyDouble const& arg1) {
+    return arg0.getValue() != arg1.getValue();
+  }
+  bool operator>(MyDouble const& arg0, MyDouble const& arg1) {
+    return arg0.getValue() > arg1.getValue();
+  }
+  bool operator<(MyDouble const& arg0, MyDouble const& arg1) {
+    return arg0.getValue() < arg1.getValue();
+  }
+  // bool operator>=(MyDouble const& arg0, MyDouble const& arg1) {
+  //   return arg0.getValue() >= arg1.getValue();
+  // }
+  // bool operator<=(MyDouble const& arg0, MyDouble const& arg1) {
+  //   return arg0.getValue() <= arg1.getValue();
+  // }
+
+} // namespace
+
+
 namespace brick {
 
   namespace linearAlgebra {
@@ -48,14 +119,28 @@ namespace brick {
 
     private:
 
+      template <class Type0, class Type1>
       bool
-      approximatelyEqual(const numeric::Array1D<common::Float64>& array0,
-                         const numeric::Array1D<common::Float64>& array1);
+      approximatelyEqual(const numeric::Array1D<Type0>& array0,
+                         const numeric::Array1D<Type1>& array1);
 
+      template <class Type0, class Type1>
       bool
-      approximatelyEqual(const numeric::Array2D<common::Float64>& array0,
-                         const numeric::Array2D<common::Float64>& array1);
+      approximatelyEqual(const numeric::Array2D<Type0>& array0,
+                         const numeric::Array2D<Type1>& array1);
 
+
+      numeric::Array1D<double>
+      convertToDouble(const numeric::Array1D<MyDouble>& array0);
+
+      numeric::Array2D<double>
+      convertToDouble(const numeric::Array2D<MyDouble>& array0);
+
+      numeric::Array1D<MyDouble>
+      convertToMyDouble(const numeric::Array1D<double>& array0);
+
+      numeric::Array2D<MyDouble>
+      convertToMyDouble(const numeric::Array2D<double>& array0);
 
       bool
       isUpperTriangular(const numeric::Array2D<common::Float64>& array0);
@@ -592,6 +677,70 @@ namespace brick {
     LinearAlgebraTest::
     testLinearLeastSquares()
     {
+      // Test generic version.
+      for(size_t index0 = 0;
+          index0 < LinearAlgebraTest::numberOfTestMatrixSets;
+          ++index0) {
+        // Compute the solution.
+        numeric::Array2D<MyDouble> aMatrix = convertToMyDouble(
+          m_aMatrices[index0]);
+
+        numeric::Array1D<MyDouble> bVector = convertToMyDouble(
+          m_bVectors[index0]);
+
+        numeric::Array1D<MyDouble> xVector;
+
+        if(index0 == 1) {
+          // This test matrix is underconstrained, and should throw in
+          // the generic version.
+          BRICK_TEST_ASSERT_EXCEPTION(
+            brick::common::ValueException,
+            xVector = linearLeastSquares(aMatrix, bVector));
+        } else {
+          xVector = linearLeastSquares(aMatrix, bVector);
+
+          // Check that input is unchanged.
+          BRICK_TEST_ASSERT(
+            this->approximatelyEqual(convertToDouble(aMatrix),
+                                     m_aMatrices[index0]));
+          BRICK_TEST_ASSERT(
+            this->approximatelyEqual(convertToDouble(bVector),
+                                     m_bVectors[index0]));
+
+          // Check that results are correct.
+          BRICK_TEST_ASSERT(
+            this->approximatelyEqual(convertToDouble(xVector),
+                                     m_xVectors[index0]));
+        }
+      }
+
+      // Test specialization for floats.
+      for(size_t index0 = 0;
+          index0 < LinearAlgebraTest::numberOfTestMatrixSets;
+          ++index0) {
+        // Compute the solution.
+        numeric::Array2D<common::Float32> aMatrix(
+          m_aMatrices[index0].rows(), m_aMatrices[index0].columns());
+        aMatrix.copy(m_aMatrices[index0]);
+
+        numeric::Array1D<common::Float32> bVector(m_bVectors[index0].size());
+        bVector.copy(m_bVectors[index0]);
+
+        numeric::Array1D<common::Float32> xVector = linearLeastSquares(
+          aMatrix, bVector);
+
+        // Check that input is unchanged.
+        BRICK_TEST_ASSERT(
+          this->approximatelyEqual(aMatrix, m_aMatrices[index0]));
+        BRICK_TEST_ASSERT(
+          this->approximatelyEqual(bVector, m_bVectors[index0]));
+
+        // Check that results are correct.
+        BRICK_TEST_ASSERT(
+          this->approximatelyEqual(xVector, m_xVectors[index0]));
+      }
+
+      // Test specialization for doubles.
       for(size_t index0 = 0;
           index0 < LinearAlgebraTest::numberOfTestMatrixSets;
           ++index0) {
@@ -617,12 +766,51 @@ namespace brick {
     LinearAlgebraTest::
     testLinearSolveInPlace()
     {
+      // Test generic version.
+      for(size_t index0 = 0;
+          index0 < LinearAlgebraTest::numberOfTestMatrixSets;
+          ++index0) {
+        // Compute the solution.
+        numeric::Array2D<MyDouble> aMatrix = convertToMyDouble(
+          m_squareMatrices[index0]);
+        numeric::Array1D<MyDouble> bVector = convertToMyDouble(
+          m_squareBVectors[index0]);
+
+        linearSolveInPlace(aMatrix, bVector);
+
+        // Check that results are correct.
+        BRICK_TEST_ASSERT(
+          this->approximatelyEqual(convertToDouble(bVector),
+                                   m_squareXVectors[index0]));
+      }
+
+      // Test double precision.
       for(size_t index0 = 0;
           index0 < LinearAlgebraTest::numberOfTestMatrixSets;
           ++index0) {
         // Compute the solution.
         numeric::Array2D<common::Float64> aMatrix = m_squareMatrices[index0].copy();
         numeric::Array1D<common::Float64> bVector = m_squareBVectors[index0].copy();
+        linearSolveInPlace(aMatrix, bVector);
+
+        // Check that results are correct.
+        BRICK_TEST_ASSERT(
+          this->approximatelyEqual(bVector, m_squareXVectors[index0]));
+      }
+
+      // Test single precision.
+      for(size_t index0 = 0;
+          index0 < LinearAlgebraTest::numberOfTestMatrixSets;
+          ++index0) {
+        numeric::Array2D<common::Float32> aMatrix(
+          m_squareMatrices[index0].rows(), m_squareMatrices[index0].columns());
+        aMatrix.copy(m_squareMatrices[index0]);
+
+        numeric::Array1D<common::Float32> bVector(
+          m_squareBVectors[index0].size());
+        bVector.copy(m_squareBVectors[index0]);
+
+        // Compute the solution.
         linearSolveInPlace(aMatrix, bVector);
 
         // Check that results are correct.
@@ -795,23 +983,29 @@ namespace brick {
     }
 
 
+    template<class Type0, class Type1>
     bool
     LinearAlgebraTest::
-    approximatelyEqual(const numeric::Array1D<common::Float64>& array0,
-                       const numeric::Array1D<common::Float64>& array1)
+    approximatelyEqual(const numeric::Array1D<Type0>& array0,
+                       const numeric::Array1D<Type1>& array1)
     {
       if(array0.size() != array1.size()) {
         return false;
       }
-      return std::equal(array0.begin(), array0.end(), array1.begin(),
+      numeric::Array1D<common::Float64> buffer0(array0.size());
+      buffer0.copy(array0);
+      numeric::Array1D<common::Float64> buffer1(array1.size());
+      buffer1.copy(array1);
+      return std::equal(buffer0.begin(), buffer0.end(), buffer1.begin(),
                         ApproximatelyEqualFunctor<common::Float64>(1.0E-5));
     }
 
 
+    template<class Type0, class Type1>
     bool
     LinearAlgebraTest::
-    approximatelyEqual(const numeric::Array2D<common::Float64>& array0,
-                       const numeric::Array2D<common::Float64>& array1)
+    approximatelyEqual(const numeric::Array2D<Type0>& array0,
+                       const numeric::Array2D<Type1>& array1)
     {
       if(array0.rows() != array1.rows()) {
         return false;
@@ -819,8 +1013,58 @@ namespace brick {
       if(array0.columns() != array1.columns()) {
         return false;
       }
-      return std::equal(array0.begin(), array0.end(), array1.begin(),
+      numeric::Array2D<common::Float64> buffer0(array0.rows(),
+                                                array0.columns());
+      buffer0.copy(array0);
+      numeric::Array2D<common::Float64> buffer1(array1.rows(),
+                                                array1.columns());
+      buffer1.copy(array1);
+      return std::equal(buffer0.begin(), buffer0.end(), buffer1.begin(),
                         ApproximatelyEqualFunctor<common::Float64>(1.0E-5));
+    }
+
+
+    numeric::Array1D<double>
+    LinearAlgebraTest::
+    convertToDouble(const numeric::Array1D<MyDouble>& array0)
+    {
+      numeric::Array1D<double> result(array0.size());
+      std::transform(array0.begin(), array0.end(), result.begin(),
+                     [](MyDouble const& arg){return arg.getValue();});
+      return result;
+    }
+
+
+    numeric::Array2D<double>
+    LinearAlgebraTest::
+    convertToDouble(const numeric::Array2D<MyDouble>& array0)
+    {
+      numeric::Array2D<double> result(array0.rows(), array0.columns());
+      std::transform(array0.begin(), array0.end(), result.begin(),
+                     [](MyDouble const& arg){return arg.getValue();});
+      return result;
+    }
+
+
+    numeric::Array1D<MyDouble>
+    LinearAlgebraTest::
+    convertToMyDouble(const numeric::Array1D<double>& array0)
+    {
+      numeric::Array1D<MyDouble> result(array0.size());
+      std::transform(array0.begin(), array0.end(), result.begin(),
+                     [](double const& arg){return MyDouble(arg);});
+      return result;
+    }
+
+
+    numeric::Array2D<MyDouble>
+    LinearAlgebraTest::
+    convertToMyDouble(const numeric::Array2D<double>& array0)
+    {
+      numeric::Array2D<MyDouble> result(array0.rows(), array0.columns());
+      std::transform(array0.begin(), array0.end(), result.begin(),
+                     [](double const& arg){return MyDouble(arg);});
+      return result;
     }
 
 
@@ -846,9 +1090,9 @@ namespace brick {
 
 #if 0
 
-int main(int argc, char** argv)
+int main(int /* argc */, char** /* argv */)
 {
-  brick::LinearAlgebraTest currentTest;
+  brick::linearAlgebra::LinearAlgebraTest currentTest;
   bool result = currentTest.run();
   return (result ? 0 : 1);
 }

@@ -143,16 +143,18 @@ namespace brick {
 
 
     /**
-     * This function accepts a square Array2D<Float64> instance and
-     * returns an Array2D<Float64> instance such that the matrix product
-     * of the two is equal to the identity matrix.  It is an error if
-     * the argument is not invertible.
+     * This function accepts a square Array2D instance and returns an
+     * Array2D instance such that the matrix product of the two is
+     * equal to the identity matrix.  It is an error if the argument
+     * is not invertible.
      *
-     * @param A This argument is the matrix to be inverted.
-     * @return The return value is the inverse of argument A.
+     * @param AA This argument is the matrix to be inverted.
+     *
+     * @return The return value is the inverse of argument AA.
      */
-    brick::numeric::Array2D<brick::common::Float64>
-    inverse(brick::numeric::Array2D<brick::common::Float64> const& A);
+    template <class FloatType>
+    brick::numeric::Array2D<FloatType>
+    inverse(brick::numeric::Array2D<FloatType> const& AA);
 
 
     /**
@@ -181,15 +183,24 @@ namespace brick {
 
 
     /**
-     * This function solves the system of equations A*x = b, where A and
-     * b are known Array2D<Float64> instances.  The contents of the
-     * arguments are not modified.  If the solution fails, a
-     * ValueException will be generated.
+     * This function solves the system of equations A*x = b, where A
+     * and b are known Array2D<Float64> instances.  The contents of
+     * the arguments are not modified.  If the solution fails, a
+     * ValueException will be generated.  The specializations of this
+     * function for Float32 and Float64 (float and double) work with
+     * square, overconstrained and underconstrained systems of
+     * equations.  For overconstrained systems they return the
+     * least-squares solution, and for underconstrained systems they
+     * return the minimum-norm solution.  The generic version of this
+     * function does not work with underconstrained systems, and
+     * throws ValueException if argument AA has more columns than
+     * rows.
      *
-     * @param A This argument specifies the A matrix in the system "Ax =
-     * b," and must either be square or have more rows than columns.
+     * @param AA This argument specifies the A matrix in the system
+     * "Ax = b," and (except as noted above) must either be square or
+     * have more rows than columns.
      *
-     * @param b This argument specifies the b vector in the system "Ax =
+     * @param bb This argument specifies the b vector in the system "Ax =
      * b."  It must have the same number of elements as argument A has
      * rows.
      *
@@ -197,46 +208,54 @@ namespace brick {
      * satisfies the equation.  "Nearly" is defined in the least-squares
      * sense.
      */
-    brick::numeric::Array1D<brick::common::Float64>
-    linearLeastSquares(brick::numeric::Array2D<brick::common::Float64> const& A,
-                       brick::numeric::Array1D<brick::common::Float64> const& b);
+    template<class FloatType>
+    brick::numeric::Array1D<FloatType>
+    linearLeastSquares(brick::numeric::Array2D<FloatType> const& AA,
+                       brick::numeric::Array1D<FloatType> const& bb);
 
 
     /**
-     * This function solves the system of equations A*x = b, where A is
-     * a known matrix, and b is a known vector.  The contents of both
-     * arguments are modified as part of the process.  If the solution
-     * fails, a ValueException will be generated.
+     * This function solves the system of equations A*x = b, where A
+     * is a known matrix, and b is a known vector.  The contents of
+     * both arguments are modified as part of the process.  If the
+     * solution fails, a ValueException will be generated.
      *
-     * @param A This argument specifies the A matrix in the system "Ax =
+     * TBD(xxx): The specializations of this function for Float32 and
+     * Float64 (float and double) currently do some extra copies in
+     * preparation for the underlying LAPACK calls.  These extra
+     * copies defeat the purpose (faster execution) of solving in
+     * place.  Ugh.
+     *
+     * @param AA This argument specifies the A matrix in the system "Ax =
      * b," and must be square.
      *
-     * @param b This argument specifies the b vector in the system "Ax =
+     * @param bb This argument specifies the b vector in the system "Ax =
      * b."  It must have the same size as x, and will be replaced with
      * the recovered value of x.
      */
+    template<class FloatType>
     void
-    linearSolveInPlace(brick::numeric::Array2D<brick::common::Float64>& A,
-                       brick::numeric::Array1D<brick::common::Float64>& b);
+    linearSolveInPlace(brick::numeric::Array2D<FloatType>& AA,
+                       brick::numeric::Array1D<FloatType>& bb);
 
 
     /**
-     * This function is identical to linearSolveInPlace(Array2D<Float64>,
-     * Array1D<Float64>&), except that b (and therefore x) is not
+     * This function is identical to linearSolveInPlace(Array2D<Float32>,
+     * Array1D<Float32>&), except that b (and therefore x) is not
      * constrained to be a vector.
      *
-     * @param A This argument specifies the A matrix in the system "Ax =
-     * b," and must be square.  In the current implementation, it will
-     * be replaced the LU decomposition of A, however this behavior may
-     * change in the future.
+     * @param AA This argument specifies the A matrix in the system "Ax =
+     * b," and must be square.  Note that the contents of AA will be
+     * altered by this call.
      *
-     * @param b This argument specifies the b matrix in the system "Ax =
+     * @param bb This argument specifies the b matrix in the system "Ax =
      * b."  It must have the same size as x, and will be replaced with
      * the recovered value of x.
      */
+    template<class FloatType>
     void
-    linearSolveInPlace(brick::numeric::Array2D<brick::common::Float64>& A,
-                       brick::numeric::Array2D<brick::common::Float64>& b);
+    linearSolveInPlace(brick::numeric::Array2D<FloatType>& AA,
+                       brick::numeric::Array2D<FloatType>& bb);
 
 
     /**

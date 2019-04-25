@@ -503,52 +503,113 @@ namespace brick {
     }
 
 
-    Array2D<Float64>
-    inverse(Array2D<Float64> const& A)
+    // This function solves the system of equations A*x = b, where A and
+    // b are known Array2D<double> instances.
+    template<>
+    Array1D<Float32>
+    linearLeastSquares(Array2D<Float32> const& AA,
+                       Array1D<Float32> const& bb)
     {
-      // First argument checking.
-      if(A.columns() != A.rows()) {
+      // First some argument checking.
+      if(AA.size() == 0) {
         BRICK_THROW(brick::common::ValueException,
-                    "inverse(Array2D<Float64> const&)",
-                    "Input array is not square.");
+                    "linearLeastSquares(Array2D<Float32> const&, "
+                    "Array1D<Float32> const&)",
+                    "Input array AA must have nonzero size.");
       }
-      // Now set up some linear equations to solve.
-      Array2D<Float64> AInverse = identity<Float64>(A.rows(), A.rows());
-      Array2D<Float64> AA = A.transpose();
-      // And solve for the inverse matrix.
-      linearSolveInPlace(AA, AInverse); //Modifies AInverse.
-      return AInverse;
+      if(AA.rows() != bb.size()) {
+        BRICK_THROW(brick::common::ValueException,
+                    "linearLeastSquares(Array2D<Float32> const&, "
+                    "Array1D<Float32> const&)",
+                    "The number of rows in input array AA must be "
+                    "the same as the number of elements in bb.");
+      }
+
+      // Set up scalar arguments for the LAPACK routine.
+      char trans = 'N';
+      Int32 rows = static_cast<Int32>(AA.rows());
+      Int32 columns = static_cast<Int32>(AA.columns());
+      Int32 nrhs = static_cast<Int32>(1);
+      Int32 ldb = static_cast<Int32>(std::max(rows, columns));
+      Float32 temporaryWorkspace;
+      Int32 lwork = -1;  // Request info on optimal workspace size.
+      Int32 info;
+
+      // Set up array arguments for the LAPACK routine.
+      Array2D<Float32> AColumnMajor = AA.transpose();
+      Array1D<Float32> bCopy(ldb);
+      std::copy(bb.begin(), bb.end(), bCopy.begin());
+
+      // Now invoke the LAPACK routine to find the optimal workspace
+      // size.
+      sgels_(&trans, &rows, &columns, &nrhs, AColumnMajor.data(), &rows,
+             bCopy.data(), &ldb, &temporaryWorkspace, &lwork, &info);
+
+      // Check for errors.
+      if(info != 0L) {
+        std::ostringstream message;
+        message << "First call to dgels_ returns " << info
+                << ".  Something is wrong.";
+        BRICK_THROW(brick::common::ValueException,
+                    "linearLeastSquares()",
+                    message.str().c_str());
+      }
+
+      // Resize workspace.
+      lwork = static_cast<Int32>(temporaryWorkspace);
+      Array1D<Float32> doubleWorkspace(static_cast<size_t>(lwork));
+
+      // Call again to solve the system of equations.
+      sgels_(&trans, &rows, &columns, &nrhs, AColumnMajor.data(), &rows,
+             bCopy.data(), &ldb, doubleWorkspace.data(), &lwork, &info);
+
+      // Check for errors.
+      if(info != 0L) {
+        std::ostringstream message;
+        message << "Second call to dgels_ returns " << info
+                << ".  Something is wrong.";
+        BRICK_THROW(brick::common::ValueException,
+                    "linearLeastSquares()",
+                    message.str().c_str());
+      }
+
+      if(bCopy.size() == AA.columns()) {
+        return bCopy;
+      } else {
+        Array1D<Float32> returnValue(AA.columns());
+        std::copy(bCopy.begin(), bCopy.begin() + AA.columns(),
+                  returnValue.begin());
+        return returnValue;
+      }
     }
 
 
     // This function solves the system of equations A*x = b, where A and
     // b are known Array2D<double> instances.
+    template<>
     Array1D<Float64>
-    linearLeastSquares(Array2D<Float64> const& A, Array1D<Float64> const& b)
+    linearLeastSquares(Array2D<Float64> const& AA,
+                       Array1D<Float64> const& bb)
     {
       // First some argument checking.
-      if(A.size() == 0) {
-        BRICK_THROW(brick::common::
-                    ValueException,
-                    "linearLeastSquares(Array2D<Float64> const&, Array1D<Float64> const&)",
-                    "Input array A must have nonzero size.");
+      if(AA.size() == 0) {
+        BRICK_THROW(brick::common::ValueException,
+                    "linearLeastSquares(Array2D<Float64> const&, "
+                    "Array1D<Float64> const&)",
+                    "Input array AA must have nonzero size.");
       }
-      if(A.rows() != b.size()) {
-        BRICK_THROW(brick::common::
-                    ValueException,
-                    "linearLeastSquares(Array2D<Float64> const&, Array1D<Float64> const&)",
-                    "The number of rows in input array A must be the same as the number "
-                    "of elements in b.");
+      if(AA.rows() != bb.size()) {
+        BRICK_THROW(brick::common::ValueException,
+                    "linearLeastSquares(Array2D<Float64> const&, "
+                    "Array1D<Float64> const&)",
+                    "The number of rows in input array AA must be "
+                    "the same as the number of elements in bb.");
       }
-
-      // This two-line implementation is slow.
-      // Array2D<Float64> APInv = pseudoinverse(A);
-      // return matrixMultiply<Float64>(APInv, b);
 
       // Set up scalar arguments for the LAPACK routine.
       char trans = 'N';
-      Int32 rows = static_cast<Int32>(A.rows());
-      Int32 columns = static_cast<Int32>(A.columns());
+      Int32 rows = static_cast<Int32>(AA.rows());
+      Int32 columns = static_cast<Int32>(AA.columns());
       Int32 nrhs = static_cast<Int32>(1);
       Int32 ldb = static_cast<Int32>(std::max(rows, columns));
       Float64 temporaryWorkspace;
@@ -556,9 +617,9 @@ namespace brick {
       Int32 info;
 
       // Set up array arguments for the LAPACK routine.
-      Array2D<Float64> AColumnMajor = A.transpose();
+      Array2D<Float64> AColumnMajor = AA.transpose();
       Array1D<Float64> bCopy(ldb);
-      std::copy(b.begin(), b.end(), bCopy.begin());
+      std::copy(bb.begin(), bb.end(), bCopy.begin());
 
       // Now invoke the LAPACK routine to find the optimal workspace
       // size.
@@ -593,58 +654,100 @@ namespace brick {
                     message.str().c_str());
       }
 
-      if(bCopy.size() == A.columns()) {
+      if(bCopy.size() == AA.columns()) {
         return bCopy;
       } else {
-        Array1D<Float64> returnValue(A.columns());
-        std::copy(bCopy.begin(), bCopy.begin() + A.columns(),
+        Array1D<Float64> returnValue(AA.columns());
+        std::copy(bCopy.begin(), bCopy.begin() + AA.columns(),
                   returnValue.begin());
         return returnValue;
       }
     }
 
 
-    // WARNING:  linearSolveInPlace() destructively modifies
-    // both arguments!
-    //
-    // This function solves the system of equations A*x = b, where A is
-    // a known matrix, and b is a known vector.
+    // This function is identical to linearSolveInPlace(Array2D<Float32>,
+    // Array1D<Float32>&), except that b (and therefore x) is not
+    // constrained to be a vector.
+    template <>
     void
-    linearSolveInPlace(Array2D<Float64>& A, Array1D<Float64>& b)
+    linearSolveInPlace(Array2D<Float32> &AA, Array2D<Float32> &bb)
     {
-      Array2D<Float64> bMatrix(b.size(), 1, b.data());
-      linearSolveInPlace(A, bMatrix);
+      // First some argument checking.
+      if(AA.rows() != bb.rows()) {
+        BRICK_THROW(brick::common::ValueException,
+                    "linearSolveInPlace(Array2D<Float32>&, Array2D<Float32>&)",
+                    "Input arrays AA and bb must have the same number of "
+                    "rows.");
+      }
+      if(AA.rows() != AA.columns()) {
+        BRICK_THROW(brick::common::ValueException,
+                    "linearSolveInPlace(Array2D<Float32>&, Array2D<Float32>&)",
+                    "Input array AA must be square.");
+      }
+
+      // Grr.  Have to transpose to match lapack.
+      Array2D<Float32> AColumnMajor = AA.transpose();
+      Array2D<Float32> bColumnMajor = bb.transpose();
+
+      // Now invoke the LAPACK routine.
+      Int32 rows = static_cast<Int32>(AA.rows());
+      Int32 xColumns = static_cast<Int32>(bb.columns());
+      Int32 *iPiv = new Int32[rows];
+      Int32 info;
+      sgesv_(&rows, &xColumns, AColumnMajor.data(), &rows, iPiv,
+             bColumnMajor.data(), &rows, &info );
+      // Clean up
+      delete[] iPiv;
+      // And do some error checking.
+      if(info != 0L) {
+        std::ostringstream message;
+        message << "Call to dgesv_ returns " << info << ".  Something is wrong."
+                << "  Perhaps the the input equations are poorly conditioned "
+                << "or perhaps there is no solution.";
+        BRICK_THROW(brick::common::ValueException,
+                    "linearSolveInPlace(Array2D<Float32>&, Array2D<Float32>&)",
+                    message.str().c_str());
+      }
+
+      for(std::size_t rr = 0; rr < bb.rows(); ++rr) {
+        for(std::size_t cc = 0; cc < bb.columns(); ++cc) {
+          bb(rr, cc) = bColumnMajor(cc, rr);
+        }
+      }
     }
 
 
     // This function is identical to linearSolveInPlace(Array2D<Float64>,
     // Array1D<Float64>&), except that b (and therefore x) is not
     // constrained to be a vector.
+    template <>
     void
-    linearSolveInPlace(Array2D<Float64> &A, Array2D<Float64> &b)
+    linearSolveInPlace(Array2D<Float64> &AA, Array2D<Float64> &bb)
     {
       // First some argument checking.
-      if(A.rows() != b.rows()) {
+      if(AA.rows() != bb.rows()) {
         BRICK_THROW(brick::common::ValueException,
                     "linearSolveInPlace(Array2D<Float64>&, Array2D<Float64>&)",
-                    "Input arrays A and b must have the same number of rows.");
+                    "Input arrays AA and bb must have the same number of "
+                    "rows.");
       }
-      if(A.rows() != A.columns()) {
+      if(AA.rows() != AA.columns()) {
         BRICK_THROW(brick::common::ValueException,
                     "linearSolveInPlace(Array2D<Float64>&, Array2D<Float64>&)",
-                    "Input array A must be square.");
+                    "Input array AA must be square.");
       }
 
       // Grr.  Have to transpose to match lapack.
-      Array2D<Float64> AColumnMajor = A.transpose();
+      Array2D<Float64> AColumnMajor = AA.transpose();
+      Array2D<Float64> bColumnMajor = bb.transpose();
 
       // Now invoke the LAPACK routine.
-      Int32 rows = static_cast<Int32>(A.rows());
-      Int32 xColumns = static_cast<Int32>(b.columns());
+      Int32 rows = static_cast<Int32>(AA.rows());
+      Int32 xColumns = static_cast<Int32>(bb.columns());
       Int32 *iPiv = new Int32[rows];
       Int32 info;
-      dgesv_(&rows, &xColumns, AColumnMajor.data(), &rows, iPiv, b.data(), &rows,
-             &info );
+      dgesv_(&rows, &xColumns, AColumnMajor.data(), &rows, iPiv,
+             bColumnMajor.data(), &rows, &info );
       // Clean up
       delete[] iPiv;
       // And do some error checking.
@@ -656,6 +759,12 @@ namespace brick {
         BRICK_THROW(brick::common::ValueException,
                     "linearSolveInPlace(Array2D<Float64>&, Array2D<Float64>&)",
                     message.str().c_str());
+      }
+
+      for(std::size_t rr = 0; rr < bb.rows(); ++rr) {
+        for(std::size_t cc = 0; cc < bb.columns(); ++cc) {
+          bb(rr, cc) = bColumnMajor(cc, rr);
+        }
       }
     }
 

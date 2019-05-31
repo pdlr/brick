@@ -34,7 +34,7 @@ build, and it should track these dependencies for you pretty
 painlessly.
 
 @verbatim
-            Dependencies When Not Building Unit Tests
+               Dependencies When Not Building Unit Tests
 -----------------------------------------------------------------------------
        Library       |                   Depends on                          |
                      |CMN|PTB|TST|NUM|LAL|RND|OPT|UTL|GEO|CTV|PXG|MTF|LPK|PNG|  
@@ -61,7 +61,7 @@ often depend on libraries that the tested code doesn't.  Again, CMake
 should invisibly track this for you.
 
 @verbatim
-               Dependencies When Building Unit Tests
+                  Dependencies When Building Unit Tests
 -----------------------------------------------------------------------------
        Library       |                   Depends on                          |
                      |CMN|PTB|TST|NUM|LAL|RND|OPT|UTL|GEO|CTV|PXG|MTF|LPK|PNG|
@@ -101,7 +101,7 @@ numeric types with known precision (the integer types are now obsoleted
 by standard sized types, but the floating point types are still
 relevant), byte order, and more.
 
-@subsubsection brickPortability Utility Library
+@subsubsection brickPortability
 
 This library was created to encapsulate whatever platform-specific
 code is required by other, higher level libraries in the brick

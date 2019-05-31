@@ -35,23 +35,24 @@ painlessly.
 
 @verbatim
             Dependencies When Not Building Unit Tests
--------------------------------------------------------------------------
-       Library       |                   Depends on                      |
-                     |CMN|PTB|TST|NUM|LAL|RND|OPT|UTL|GEO|CTV|PXG|LPK|PNG|
-Common         (CMN) | X |   |   |   |   |   |   |   |   |   |   |   |   |
-Portability    (PTB) | X | X |   |   |   |   |   |   |   |   |   |   |   |
-Test           (TST) | X |   | X |   |   |   |   |   |   |   |   |   |   |
-Numeric        (NUM) | X |   |   | X |   |   |   |   |   |   |   |   |   |
-LinearAlgebra  (LAL) | X |   |   | X | X |   |   |   |   |   |   | X |   |
-Random         (RND) | X | X |   |   |   | X |   |   |   |   |   | X |   |
-Optimization   (OPT) | X |   |   | X | X |   | X |   |   |   |   | X |   |
-Utilities      (UTL) | X | X |   |   |   |   |   | X |   |   |   |   |   |
-Geometry       (GEO) | X |   |   | X | X |   |   |   | X |   |   | X |   |
-ComputerVision (CTV) | X |   |   | X | X | X | X |   | X | X |   | X | X |
-PixelGraphics  (PXG) | X |   |   | X |   |   |   |   | X |   | X |   |   |
-LAPACK         (LPK) |   |   |   |   |   |   |   |   |   |   |   |   |   |
-libPng++       (PNG) |   |   |   |   |   |   |   |   |   |   |   |   |   |
--------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+       Library       |                   Depends on                          |
+                     |CMN|PTB|TST|NUM|LAL|RND|OPT|UTL|GEO|CTV|PXG|MTF|LPK|PNG|  
+Common         (CMN) | X |   |   |   |   |   |   |   |   |   |   |   |   |   |
+Portability    (PTB) | X | X |   |   |   |   |   |   |   |   |   |   |   |   |
+Test           (TST) | X |   | X |   |   |   |   |   |   |   |   |   |   |   |
+Numeric        (NUM) | X |   |   | X |   |   |   |   |   |   |   |   |   |   |
+LinearAlgebra  (LAL) | X |   |   | X | X |   |   |   |   |   |   |   | X |   |
+Random         (RND) | X | X |   |   |   | X |   |   |   |   |   |   | X |   |
+Optimization   (OPT) | X |   |   | X | X |   | X |   |   |   |   |   | X |   |
+Utilities      (UTL) | X | X |   |   |   |   |   | X |   |   |   |   |   |   |
+Geometry       (GEO) | X |   |   | X | X |   |   |   | X |   |   |   | X |   |
+ComputerVision (CTV) | X |   |   | X | X | X | X |   | X | X |   |   | X | X |
+PixelGraphics  (PXG) | X |   |   | X |   |   |   |   | X |   | X |   |   |   |
+Iso12233       (MTF) | X |   |   | X | X | X | X |   | X | X |   | X | X | X |
+LAPACK         (LPK) |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+libPng++       (PNG) |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+-----------------------------------------------------------------------------
 @endverbatim
 
 Each library comes with a bunch of unit tests.  If you want to build
@@ -61,23 +62,24 @@ should invisibly track this for you.
 
 @verbatim
                Dependencies When Building Unit Tests
--------------------------------------------------------------------------
-       Library       |                   Depends on                      |
-                     |CMN|PTB|TST|NUM|LAL|RND|OPT|UTL|GEO|CTV|PXG|LPK|PNG|
-Common         (CMN) | X |   |   |   |   |   |   |   |   |   |   |   |   |
-Portability    (PTB) | X | X |   |   |   |   |   |   |   |   |   |   |   |
-Test           (TST) | X |   | X |   |   |   |   |   |   |   |   |   |   |
-Numeric        (NUM) | X | X | X | X |   |   |   |   |   |   |   |   |   |
-LinearAlgebra  (LAL) | X |   | X | X | X |   |   |   |   |   |   | X |   |
-Random         (RND) | X | X |   |   |   | X |   |   |   |   |   | X |   |
-Optimization   (OPT) | X |   |   | X | X |   | X |   |   |   |   | X |   |
-Utilities      (UTL) | X | X | X |   |   |   |   | X |   |   |   |   |   |
-Geometry       (GEO) | X |   | X | X | X |   | X | X | X |   |   | X |   |
-ComputerVision (CTV) | X | X | X | X | X | X | X | X | X | X |   | X | X |
-PixelGraphics  (PXG) | X |   |   | X |   |   |   |   | X |   | X |   |   |
-LAPACK         (LPK) |   |   |   |   |   |   |   |   |   |   |   |   |   |
-libPng++       (PNG) |   |   |   |   |   |   |   |   |   |   |   |   |   |
--------------------------------------------------------------------------
+-----------------------------------------------------------------------------
+       Library       |                   Depends on                          |
+                     |CMN|PTB|TST|NUM|LAL|RND|OPT|UTL|GEO|CTV|PXG|MTF|LPK|PNG|
+Common         (CMN) | X |   |   |   |   |   |   |   |   |   |   |   |   |   |
+Portability    (PTB) | X | X |   |   |   |   |   |   |   |   |   |   |   |   |
+Test           (TST) | X |   | X |   |   |   |   |   |   |   |   |   |   |   |
+Numeric        (NUM) | X | X | X | X |   |   |   |   |   |   |   |   |   |   |
+LinearAlgebra  (LAL) | X |   | X | X | X |   |   |   |   |   |   |   | X |   |
+Random         (RND) | X | X |   |   |   | X |   |   |   |   |   |   | X |   |
+Optimization   (OPT) | X |   |   | X | X |   | X |   |   |   |   |   | X |   |
+Utilities      (UTL) | X | X | X |   |   |   |   | X |   |   |   |   |   |   |
+Geometry       (GEO) | X |   | X | X | X |   | X | X | X |   |   |   | X |   |
+ComputerVision (CTV) | X | X | X | X | X | X | X | X | X | X |   |   | X | X |
+PixelGraphics  (PXG) | X |   |   | X |   |   |   |   | X |   | X |   |   |   |
+Iso12233       (MTF) | X | X | X | X | X | X | X | X | X | X |   | X | X | X |
+LAPACK         (LPK) |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+libPng++       (PNG) |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
+-----------------------------------------------------------------------------
 @endverbatim
 
 We group these libraries into three subgoups, as described in the following
@@ -94,9 +96,10 @@ existing user code.
 
 This library is the foundation for all of the other libraries in the
 brick collection.  It provides classes for working with exceptions,
-reference counting, portable numeric types with known precision (the
-integer types are now obsoleted by standard sized types, but the
-floating point types are still relevant), byte order, and more.
+reference counting (now largely obsoleted by shared pointers), portable
+numeric types with known precision (the integer types are now obsoleted
+by standard sized types, but the floating point types are still
+relevant), byte order, and more.
 
 @subsubsection brickPortability Utility Library
 
@@ -107,13 +110,17 @@ filesystem operations, some time-related functions, and an incomplete
 implementation of snprintf.  For the most part, user code should not
 access routines in brick::portability directly.  Most of this
 functionality is already exposed through higher level libraries like
-brickUtilities.
+brickUtilities.  As with brickCommon, updates to the standard
+have made a bunch of this code obsolete.
 
 @subsubsection brickTest
 
 This is a unit testing library, similar to CPPUNIT or boost::test, but
 less featureful.  It provides classes and macros for writing tests and
-coordinating their execution.
+coordinating their execution.  Currently doesn't include any facility
+for interrupting tests that run too long, and lacks a formal schema
+for test output, but it runs the brick tests without requiring any
+outside dependencies.
 
 @subsubsection brickNumeric
 
@@ -128,7 +135,9 @@ they're marked as such.
 This library provides C++ wrappers around LAPACK linear algebra
 routines.  Currently it includes routines for matrix inverse, solution
 of linear equations, SVD, determinant, eigenvectors/eigenvalues of
-symmetric real matrices, etc.
+symmetric real matrices, etc.  A few routines are now templatized
+to work with arbitrary types, but obviously you won't get the
+LAPACK optimizations with types that aren't supported by LAPACK.
 
 @subsubsection brickRandom
 
@@ -145,6 +154,9 @@ follow the algorithms described in Numerical Recipes in C, by Press
 and Flannery.  This has been a stable library for some time, but we
 may extend it soon to take advantage of sparse matrices.  If this
 happens, there may be some non-backwards compatible interface changes.
+Note that the author now uses the Ceres nonlinear least squares
+solver (ceres-solver.org) for most nonlinear least squares
+optimization problems.
 
 @subsubsection brickUtilities
 
@@ -157,7 +169,7 @@ library.
 
 @subsection Unstable Libaries
 
-The libraries listed in this section are still growing fast.  Please feel
+The libraries listed in this section are still growing.  Please feel
 free to use them, but bear in mind that they may change out from under you.
 
 @subsubsection brickGeometry
@@ -173,17 +185,26 @@ It is still in the very early stages of development.
 This library includes for basic morphological operations, edge
 detection, simple deformable contours, histogram equalization, camera
 models, and a continually growing list of computer vision related
-things.
+things.  It's hard to compete with OpenCV these days, but the code
+in this library is often more readable.
 
 @subsubsection brickPixelGraphics
 
 This library provides some classes and functions for drawing in images
 and image-like objects.  It is still in early development.
 
+@subsubsection brickIso12233
+
+This library implements the e-SFR algorithm described in ISO 12233:2017.
+Use it if you need to compute the MTF of an optical system using a
+slanted edge target.  The code isn't super-robust yet (as of
+May, 2019), but seems to be doing the right things.  It passes its
+unit tests...
+
 @subsubsection brickSparse
 
-This library will provide some classes and functions for working with
-sparse matrices, but it hasn't been written yet.
+This library is intended to provide some classes and functions for
+working with sparse matrices, but it hasn't been written yet.
 
 @section contact_sec Contact
 

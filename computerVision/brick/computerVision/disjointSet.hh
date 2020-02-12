@@ -41,7 +41,7 @@ namespace brick {
      ** or...).
      **
      ** An Improved Equivalence Algorithm.  Bernard Galler, and
-     ** Michael Fischer. Communnications of the ACM, Volume 7, pages
+     ** Michael Fischer. Communications of the ACM, Volume 7, pages
      ** 301-303, 1964.
      **/
     template <class Type>

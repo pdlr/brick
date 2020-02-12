@@ -290,7 +290,7 @@ namespace brick {
         // derivative.
         reweightSFR(sfr);
 
-        // Finally, subsample down to the original window size.
+        // Finally, return the low-frequency component.
         return subsampleSfr(sfr);
       }
 
@@ -710,17 +710,8 @@ namespace brick {
       subsampleSfr(Array1D<FloatType> const& inputSfr)
       {
         Array1D<FloatType> outputSfr(inputSfr.size() / 4);
-        outputSfr[0] = (6.0 * inputSfr[0]
-                        + 8.0 * inputSfr[1]
-                        + 2.0 * inputSfr[2]) / 16.0;
-        for(std::size_t ii = 1; ii < outputSfr.size(); ++ii) {
-          int jj = 4 * ii;
-          outputSfr[ii] = (inputSfr[jj - 2]
-                           + 4.0 * inputSfr[jj - 1]
-                           + 6.0 * inputSfr[jj]
-                           + 4.0 * inputSfr[jj + 1]
-                           + inputSfr[jj + 2]) / 16.0;
-        }
+        std::copy(inputSfr.begin(), inputSfr.begin() + outputSfr.size(),
+                  outputSfr.begin());
         outputSfr /= outputSfr[0];
         return outputSfr;
       }

@@ -83,7 +83,7 @@ namespace brick {
       constexpr std::size_t patchWidth = 128;
       constexpr std::size_t patchHeight = 100;
       constexpr std::size_t windowSize = 64;
-      constexpr double kernelSigma = 0.26;
+      constexpr double kernelSigma = 0.7;
       constexpr double tolerance = 0.03;
       constexpr double noiseFloor = 0.1;
 
@@ -119,11 +119,11 @@ namespace brick {
     {
       constexpr std::size_t patchWidth = 100;
       constexpr std::size_t patchHeight = 100;
-      constexpr std::size_t windowSize = 50;
+      constexpr std::size_t windowSize = 32;
 
       // Create a test image with a vertically straight up and down
       // edge.  We should have trouble with this image because the
-      // vertical edge doesn't let us so super-resolution.
+      // vertical edge doesn't let us do super-resolution.
       Image<brick::computerVision::GRAY8> edgeImage(
         patchHeight, patchWidth); // Rows, columns.
       for(std::size_t rr = 0; rr < patchHeight; ++rr) {
@@ -172,7 +172,7 @@ namespace brick {
                           std::size_t windowSize, double kernelSigma)
     {
       // We'd like the slanted edge to slant at about 15 degrees.
-      // Note that tan(14.036deg) is 0.25, which is to convenient to
+      // Note that tan(14.036deg) is 0.25, which is too convenient to
       // pass up.  We'll oversample by a factor of four, and simply
       // shift one (oversampled) pixel for each row in the output
       // image.
@@ -220,22 +220,13 @@ namespace brick {
 
       // Now we have our slanted edge image.  Figure out what the MTF
       // of the filter is.
-      Array1D<double> fftMagnitude = getFFTMagnitude(kernel, 4 * windowSize);
+      Array1D<double> fftMagnitude = getFFTMagnitude(
+        kernel, oversampleFactor * windowSize);
 
-      // Note that we have to subsample this, too.  We'll use a simple
-      // binomial filter.
+      // We want the low-frequency section of the larger FFT.
       referenceMtf.reinitIfNecessary(windowSize);
-      referenceMtf[0] = (6.0 * fftMagnitude[0]
-                         + 8.0 * fftMagnitude[1]
-                         + 2.0 * fftMagnitude[2]) / 16.0;
-      for(std::size_t ii = 1; ii < windowSize; ++ii) {
-        int jj = 4 * ii;
-        referenceMtf[ii] = (fftMagnitude[jj - 2]
-                            + 4.0 * fftMagnitude[jj - 1]
-                            + 6.0 * fftMagnitude[jj]
-                            + 4.0 * fftMagnitude[jj + 1]
-                            + fftMagnitude[jj + 2]) / 16.0;
-      }
+      std::copy(fftMagnitude.begin(), fftMagnitude.begin() + windowSize,
+                referenceMtf.begin());
       referenceMtf /= referenceMtf[0];
 
       return edgeImage;

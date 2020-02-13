@@ -57,12 +57,22 @@ namespace brick {
       // to handle curved lines due to lens distortion.
       std::size_t polynomialOrder = 2;
 
+      // Sometimes it's useful to have the code figure out patch
+      // orientation for you and correct it.  If this is set to false,
+      // then the dark side of the slanted edge must be to the left
+      // side of the patch, and the slanted edge must be close to
+      // vertical.  If this is set to true, the orientation will be
+      // corrected (at cost O(N), where N is the number of pixels)
+      // prior to eSFR computation.
+      bool reorientPatch = true;
+
       static Iso12233Config
       getStandardCompliant() {
         Iso12233Config result;
         result.useInitialHammingWindow = true;
         result.useSecondHammingWindow = true;
         result.polynomialOrder = 1;
+        result.reorientPatch = false;
         return result;
       }
     };

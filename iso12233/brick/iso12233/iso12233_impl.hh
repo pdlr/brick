@@ -67,6 +67,19 @@ namespace brick {
                         Iso12233Config const& config);
 
 
+      // Figure out the orientation of the edge in the input patch,
+      // and rotate the patch so that it's dark on the left, light
+      // on the right, with the edge nearly vertical.  Apply the
+      // OECF during this reorientation.
+      template <class FloatType,
+                ImageFormat InputFormat,
+                class ConversionFunction>
+      void
+      reorientAndCorrectPatch(Array2D<FloatType>& reflectanceImage,
+                              Image<InputFormat> const& inputPatch,
+                              ConversionFunction const& oecf);
+
+
       // Compensate for non-ideal 3-element derivative using
       // sinc-based weights.
       template <class FloatType>
@@ -128,8 +141,16 @@ namespace brick {
       // correction, etc.
       Array2D<FloatType> reflectanceImage(inputPatch.rows(),
                                           inputPatch.columns());
-      std::transform(inputPatch.begin(), inputPatch.end(),
-                     reflectanceImage.begin(), oecf);
+      if(config.reorientPatch) {
+        // If requested, rotate/flip the patch so that it matches the
+        // canonical orientation of dark on the left, light on the
+        // right, with a nearly-vertical edge.
+        privateCode::reorientAndCorrectPatch(reflectanceImage, inputPatch,
+                                             oecf);
+      } else {
+        std::transform(inputPatch.begin(), inputPatch.end(),
+                       reflectanceImage.begin(), oecf);
+      }
 
       // Paragraph 6.2.3 of the standard.  We assume the edge is close
       // to vertical in the image (nearly aligned with the image
@@ -468,6 +489,104 @@ namespace brick {
         edgeShape = brick::computerVision::fitPolynomial<FloatType>(
           rowIndices.begin(), rowIndices.end(), centroidArray.begin(),
           config.polynomialOrder);
+      }
+
+
+      // Figure out the orientation of the edge in the input patch,
+      // and rotate the patch so that it's dark on the left, light
+      // on the right, with the edge nearly vertical.  Apply the
+      // OECF during this reorientation.
+      template <class FloatType,
+                ImageFormat InputFormat,
+                class ConversionFunction>
+      void
+      reorientAndCorrectPatch(Array2D<FloatType>& reflectanceImage,
+                              Image<InputFormat> const& inputPatch,
+                              ConversionFunction const& oecf)
+      {
+        if(inputPatch.rows() < 4 || inputPatch.columns() < 4) {
+          BRICK_THROW(brick::common::ValueException,
+                      "reorientAndCorrectPatch()",
+                      "Argument inputPatch must be larger than 4 pixels in "
+                      "both dimensions.");
+        }
+
+        // The four elements of this vector will hold the average
+        // intensity of left, top, right, bottom portions of the
+        // image, in that order.
+        constexpr int leftIndex = 0;
+        constexpr int topIndex = 1;
+        constexpr int rightIndex = 2;
+        constexpr int bottomIndex = 3;
+        std::vector<FloatType> brightnesses(4, FloatType(0));
+
+        // Take a look at left and right edges of the image.
+        const std::size_t rightColumn = inputPatch.columns() - 1;
+        for(std::size_t rr = 0; rr < inputPatch.rows(); ++rr) {
+          brightnesses[leftIndex] += oecf(inputPatch(rr, 0));
+          brightnesses[rightIndex] += oecf(inputPatch(rr, rightColumn));
+        }
+        brightnesses[leftIndex] /= static_cast<FloatType>(inputPatch.rows());
+        brightnesses[rightIndex] /= static_cast<FloatType>(inputPatch.rows());
+
+        // Take a look at top and bottom edges of the image.
+        const std::size_t bottomRow = inputPatch.rows() - 1;
+        for(std::size_t cc = 0; cc < inputPatch.columns(); ++cc) {
+          brightnesses[topIndex] += oecf(inputPatch(0, cc));
+          brightnesses[bottomIndex] += oecf(inputPatch(bottomRow, cc));
+        }
+        brightnesses[topIndex] /= static_cast<FloatType>(inputPatch.columns());
+        brightnesses[bottomIndex] /= static_cast<FloatType>(inputPatch.columns());
+
+        // OK, now that we have the brightesses at all four borders,
+        // figure out which is darkest and which is lightest.
+        auto iter = std::min_element(std::begin(brightnesses),
+                                     std::end(brightnesses));
+        std::size_t mindex = std::distance(std::begin(brightnesses), iter);
+
+        iter = std::max_element(std::begin(brightnesses),
+                                std::end(brightnesses));
+        std::size_t maxdex = std::distance(std::begin(brightnesses), iter);
+
+        // Sanity check: the brightest and darkest edges should be
+        // opposite each other.
+        if(maxdex != (mindex + 2) % 4) {
+          BRICK_THROW(brick::common::ValueException,
+                      "reorientAndCorrectPatch()",
+                      "Brightest and darkest edges of input patch must be "
+                      "opposite each other.");
+        }
+
+        // OK, finally we get to work.
+        if(mindex == leftIndex) {
+          // Patch is already in correct orientation.  Easy.
+          std::transform(inputPatch.begin(), inputPatch.end(),
+                         reflectanceImage.begin(), oecf);
+        } else if(mindex == rightIndex) {
+          // Patch is rotatee 180 degrees.
+          for(std::size_t rr = 0; rr < reflectanceImage.rows(); ++rr) {
+            for(std::size_t cc = 0; cc < reflectanceImage.columns(); ++cc) {
+              reflectanceImage(rr, cc) =
+                oecf(inputPatch(bottomRow - rr, rightColumn - cc));
+            }
+          }
+        } else if(mindex == topIndex) {
+          // Patch is rotated 90 degrees clockwise.
+          reflectanceImage.reshape(inputPatch.columns(), inputPatch.rows());
+          for(std::size_t rr = 0; rr < reflectanceImage.rows(); ++rr) {
+            for(std::size_t cc = 0; cc < reflectanceImage.columns(); ++cc) {
+              reflectanceImage(rr, cc) = oecf(inputPatch(cc, rightColumn - rr));
+            }
+          }
+        } else if(mindex == bottomIndex) {
+          // Patch is rotated 90 degrees counterclockwise.
+          reflectanceImage.reshape(inputPatch.columns(), inputPatch.rows());
+          for(std::size_t rr = 0; rr < reflectanceImage.rows(); ++rr) {
+            for(std::size_t cc = 0; cc < reflectanceImage.columns(); ++cc) {
+              reflectanceImage(rr, cc) = oecf(inputPatch(bottomRow - cc, rr));
+            }
+          }
+        }
       }
 
 

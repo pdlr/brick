@@ -578,7 +578,7 @@ namespace brick {
           inputValues[3], inputValues[4], inputValues[5],
           inputValues[6], inputValues[7], inputValues[8]);
 
-      } catch(std::ios_base::failure) {
+      } catch(std::ios_base::failure &) {
         // Empty
       }
       stream.exceptions(oldExceptionState);

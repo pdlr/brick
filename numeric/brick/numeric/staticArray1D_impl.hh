@@ -521,7 +521,7 @@ namespace brick {
         // Now we're done with all of the parsing.  Copy the data to *this.
         std::copy(inputBuffer.begin(), inputBuffer.end(), this->begin());
 
-      } catch(std::ios_base::failure) {
+      } catch(std::ios_base::failure &) {
         // Empty
       }
       inputStream.exceptions(oldExceptionState);

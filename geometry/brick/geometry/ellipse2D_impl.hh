@@ -194,7 +194,7 @@ namespace brick {
         TT = (Type(-1)
               * brick::numeric::matrixMultiply<Type>(
                 brick::linearAlgebra::inverse(S3), S2.transpose()));
-      } catch(brick::common::ValueException) {
+      } catch(brick::common::ValueException &) {
         BRICK_THROW(brick::common::ValueException,
                     "Ellipse2D::estimate()",
                     "Input points are not sufficient to estimate ellipse.");

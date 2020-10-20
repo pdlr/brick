@@ -534,7 +534,7 @@ namespace brick {
           std::copy(inputBuffer[index].begin(), inputBuffer[index].end(),
                     this->begin() + (index * arrayColumns));
         }
-      } catch(std::ios_base::failure) {
+      } catch(std::ios_base::failure &) {
         // Empty
       }
       inputStream.exceptions(oldExceptionState);

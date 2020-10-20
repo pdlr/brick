@@ -170,7 +170,7 @@ namespace brick {
 
         triangle.setValue(vertex0, vertex1, vertex2);
 
-      } catch(std::ios_base::failure) {
+      } catch(std::ios_base::failure &) {
         // Empty
       }
       stream.exceptions(oldExceptionState);

@@ -282,7 +282,7 @@ namespace brick {
       brick::numeric::Array2D<Type> APinv;
       try {
         APinv = privateCode::pseudoinverse(AMatrix);
-      } catch(brick::common::ValueException ) {
+      } catch(brick::common::ValueException &) {
         BRICK_THROW(brick::common::ValueException, "findIntersect()",
                   "Trouble inverting matrix.  "
                   "Perhaps input rays are parallel.");

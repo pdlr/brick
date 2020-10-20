@@ -763,7 +763,7 @@ namespace brick {
           m_bullseyePoints.begin(), m_bullseyePoints.end(),
           m_bullseyeEdgeCounts.begin(), m_bullseyeEdgeCounts.end(),
           residuals.begin());
-      } catch(brick::common::ValueException) {
+      } catch(brick::common::ValueException &) {
         // Input points weren't good enough to define a bullseye.
         return false;
       }
@@ -860,7 +860,7 @@ namespace brick {
         bullseye.estimate(
           inliers.begin(), inliers.end(),
           m_bullseyeEdgeCounts.begin(), m_bullseyeEdgeCounts.end(), false);
-      } catch(brick::common::ValueException) {
+      } catch(brick::common::ValueException &) {
         // If this call throws, we'll just return the un-updated
         // bullseye.
       }

@@ -340,7 +340,7 @@ namespace brick {
         this->reinit(inputBuffer.size());
         std::copy(inputBuffer.begin(), inputBuffer.end(), this->begin());
 
-      } catch(std::ios_base::failure) {
+      } catch(std::ios_base::failure &) {
         // Empty
       }
       inputStream.exceptions(oldExceptionState);

@@ -70,7 +70,7 @@ install (FILES
   vector2D.hh vector2D_impl.hh
   vector3D.hh vector3D_impl.hh
   utilities.hh utilities_impl.hh
-  
+
   DESTINATION include/brick/numeric)
 
 

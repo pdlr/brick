@@ -356,7 +356,7 @@ namespace brick {
           std::copy(inputBuffer[index].begin(), inputBuffer[index].end(),
                     this->begin() + (index * sliceSize));
         }
-      } catch(std::ios_base::failure) {
+      } catch(std::ios_base::failure &) {
         // Empty
       }
       inputStream.exceptions(oldExceptionState);

@@ -177,6 +177,36 @@ namespace brick {
 
 
       /**
+       * The copy assignment operator does a shallow copy.  The newly
+       * created image points to the same data as copied image.
+       *
+       * @param source The Image instance to be copied.
+       */
+      Image&
+      operator=(const Image<FORMAT> &source)
+      {
+          brick::numeric::Array2D<PixelType>::operator=(source);
+          return *this;
+      }
+
+
+      /**
+       * This copy assignment operator allows us to implicitly make an
+       * Image instance from an Array2D.  As with the copy assignment
+       * operator, the newly created image points to the same data as
+       * copied array.
+       *
+       * @param source The Array2D instance to be copied.
+       */
+      Image&
+      operator=(const brick::numeric::Array2D<PixelType> &source)
+      {
+          brick::numeric::Array2D<PixelType>::operator=(source);
+          return *this;
+      }
+
+
+      /**
        * Returns an image that references only a rectangular region of
        * interest drawn from *this.  The returned image will reference
        * the same memory, but may have different start, end, and

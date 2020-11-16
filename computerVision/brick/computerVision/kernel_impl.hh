@@ -36,7 +36,7 @@ namespace brick {
     }
 
 
-    // The copy constructor does a shallow copy.
+    // The copy constructor does a deep copy.
     template <class ELEMENT_TYPE>
     Kernel<ELEMENT_TYPE>::
     Kernel(const Kernel<ELEMENT_TYPE> &source)
@@ -50,7 +50,7 @@ namespace brick {
 
 
     // This constructor allows us to implicitly make a Kernel instance
-    // from an Array2D.
+    // from an Array2D using a deep copy.
     template <class ELEMENT_TYPE>
     Kernel<ELEMENT_TYPE>::
     Kernel(const brick::numeric::Array2D<ElementType> &source)
@@ -63,7 +63,7 @@ namespace brick {
     }
 
 
-    // Construct a kernel around external data.
+    // Construct a kernel around external data using a deep copy.
     template <class ELEMENT_TYPE>
     Kernel<ELEMENT_TYPE>::
     Kernel(size_t rows, size_t columns, ElementType* const dataPtr)
@@ -100,6 +100,20 @@ namespace brick {
     ~Kernel()
     {
       // Empty.
+    }
+
+
+    // The copy assignment operator does a deep copy.
+    template <class ELEMENT_TYPE>
+    Kernel<ELEMENT_TYPE>&
+    Kernel<ELEMENT_TYPE>::
+    operator=(const Kernel<ELEMENT_TYPE> &source)
+    {
+        m_data = source.m_data.copy();
+        m_isSeparable = source.m_isSeparable;
+        m_separableColumns = source.m_separableColumns;
+        m_separableRows = source.m_separableRows;
+        return *this;
     }
 
 

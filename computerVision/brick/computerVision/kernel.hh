@@ -102,6 +102,14 @@ namespace brick {
 
 
       /**
+       * The copy assignment operator does a deep copy.
+       *
+       * @param source The Kernel instance to be copied.
+       */
+      Kernel& operator=(const Kernel<ELEMENT_TYPE> &source);
+
+
+      /**
        * Return a copy of the kernel data in an Array2D object.
        *
        * @return The return value is an Array2D instance.  It does not

@@ -69,6 +69,21 @@ namespace brick {
 
 
       /**
+       * The copy assignment operator deep copies its argument.
+       *
+       * @param source This argument is the Date instance to be copied.
+       */
+      Date&
+      operator=(Date const& source)
+      {
+          m_day = source.m_day;
+          m_month = source.m_month;
+          m_year = source.m_year;
+          return *this;
+      }
+
+
+      /**
        * The function returns the day.
        *
        * @return The return value is the day.

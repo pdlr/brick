@@ -4,7 +4,7 @@
 *
 * Header file declaring the Ellipse2D class template.
 *
-* Copyright (C) 2008-2013 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2008-2013 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

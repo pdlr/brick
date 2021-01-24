@@ -4,7 +4,7 @@
 * Klugey header file to declare the LAPACK routines we need for
 * brick::random.
 *
-* Copyright (C) 2001-2004 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2001-2004 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

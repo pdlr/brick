@@ -5,7 +5,7 @@
 * Header file defining inline and template functions from
 * registerPoints3D.hh
 *
-* Copyright (C) 1998-2007,2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 1998-2007,2012 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

@@ -5,7 +5,7 @@
 * Header file declaring robust extensions of the utility routines
 * declared in calibrationTools.h.
 *
-* Copyright (C) 2010-2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2010-2012 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

@@ -5,7 +5,7 @@
 * Header file specifying file names for images to be used in image
 * processing tests.
 *
-* Copyright (C) 2005, 2011 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2005, 2011 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

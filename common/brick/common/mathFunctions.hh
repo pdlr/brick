@@ -5,7 +5,7 @@
 * Header file declaring general math function templates to replace
 * abs(), sin(), cos(), etc in portable code.
 *
-* Copyright (C) 2010, David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2010, David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

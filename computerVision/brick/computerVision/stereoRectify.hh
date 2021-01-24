@@ -5,7 +5,7 @@
 * Header file declaring code to compute image rectification parameters
 * for stereo image pairs.
 *
-* Copyright (C) 2009-2017 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2009-2017 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

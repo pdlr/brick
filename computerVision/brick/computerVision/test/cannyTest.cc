@@ -5,7 +5,7 @@
 * Source file defining tests for routines defined in
 * brick/computerVision/canny.hh.
 *
-* Copyright (C) 2006,2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2006,2012 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

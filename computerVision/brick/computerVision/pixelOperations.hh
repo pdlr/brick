@@ -7,7 +7,7 @@
 * templates for grayscale images, in which the pixels are built in
 * types.
 *
-* Copyright (C) 2015 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2015 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

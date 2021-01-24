@@ -5,7 +5,7 @@
 * Header file providing implementations for inline and template
 * functions declared in transform3D.hh.
 *
-* Copyright (C) 2001-2013 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2001-2013 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

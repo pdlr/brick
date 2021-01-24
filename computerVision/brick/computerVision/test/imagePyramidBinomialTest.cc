@@ -4,7 +4,7 @@
 *
 * Source file defining tests for the ImagePyramidBinomial class template.
 *
-* Copyright (C) 2011,2015 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2011,2015 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

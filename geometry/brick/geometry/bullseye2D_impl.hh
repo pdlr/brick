@@ -4,7 +4,7 @@
 *
 * Source file defining the Bullseye2D class.
 *
-* Copyright (C) 2008-2013 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2008-2013 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

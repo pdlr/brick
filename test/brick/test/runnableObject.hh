@@ -5,7 +5,7 @@
 * Header file declaring RunnableObject class, which is a parent class
 * for the TestFixture class template.
 *
-* Copyright (C) 2007-2011 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2007-2011 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

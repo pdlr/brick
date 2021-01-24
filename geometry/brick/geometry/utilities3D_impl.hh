@@ -5,7 +5,7 @@
 * Source file defining some 3D geometric utilities for finding
 * intersects, etc.
 *
-* Copyright (C) 2007 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2007 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

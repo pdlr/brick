@@ -5,7 +5,7 @@
 * Header file declaring a parent class from which to derive classes
 * that represent camera intrinsic parameters.
 *
-* Copyright (C) 2007,2011 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2007,2011 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

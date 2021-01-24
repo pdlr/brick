@@ -5,7 +5,7 @@
 * Header file defining a class template for selecting stable keypoints
 * from an image.
 *
-* Copyright (C) 2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2012 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

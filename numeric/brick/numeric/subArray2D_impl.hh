@@ -3,7 +3,7 @@
 * @file brick/numeric/subArray2D.hh
 * Header file declaring SubArray2D class template.
 *
-* Copyright (C) 2001-2011 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2001-2011 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

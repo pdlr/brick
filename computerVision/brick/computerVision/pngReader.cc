@@ -4,7 +4,7 @@
 *
 * Source file defining a class for interfacing with libpng.
 *
-* Copyright (C) 2014 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2014 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

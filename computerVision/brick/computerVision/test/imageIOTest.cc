@@ -4,7 +4,7 @@
 *
 * Source file defining tests for image I/O routines.
 *
-* Copyright (C) 2014 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2014 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

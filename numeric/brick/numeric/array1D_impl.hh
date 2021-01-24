@@ -4,7 +4,7 @@
 *
 * Header file defining Array1D inline and template functions.
 *
-* Copyright (C) 2001-2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2001-2012 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

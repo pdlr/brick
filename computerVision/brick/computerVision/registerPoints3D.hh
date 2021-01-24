@@ -5,7 +5,7 @@
 * Header file declaring an implementation of Horn's method for
 * registering 3D point sets.
 *
-* Copyright (C) 1998-2007,2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 1998-2007,2012 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

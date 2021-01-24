@@ -12,7 +12,7 @@
 * math functions won't be arbitrarily applied to types for which they
 * aren't appropriate.
 *
-* Copyright (C) 2015, David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2015, David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

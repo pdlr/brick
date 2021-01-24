@@ -4,7 +4,7 @@
 *
 * Source file defining IEEEFloat32Test class.
 *
-* Copyright (C) 2004-2005,2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2004-2005,2012 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

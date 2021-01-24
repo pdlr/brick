@@ -5,7 +5,7 @@
 * Header file declaring a specialization of brick::Exception which will
 * be thrown to indicate failed unit tests.
 *
-* Copyright (C) 2003-2004, David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2003-2004, David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

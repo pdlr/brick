@@ -4,7 +4,7 @@
 *
 * Header file declaring ReferenceCount class.
 *
-* Copyright (C) 2003-2010 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2003-2010 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

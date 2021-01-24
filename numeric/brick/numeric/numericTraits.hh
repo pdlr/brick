@@ -5,7 +5,7 @@
 * Header file declaring traits classes for handling type promotion and
 * similar tasks.
 *
-* Copyright (C) 2003-2017, David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2003-2017, David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

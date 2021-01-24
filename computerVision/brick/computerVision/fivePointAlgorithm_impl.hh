@@ -5,7 +5,7 @@
 * Header file defining inline and function templates declared in
 * fivePointAlgorithm.hh.
 *
-* Copyright (C) 2009,2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2009,2012 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

@@ -5,7 +5,7 @@
 * Header file declaring a class for representing scalar quantities and
 * their first derivatives.
 *
-* Copyright (C) 2014 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2014 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

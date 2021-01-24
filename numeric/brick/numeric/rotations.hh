@@ -5,7 +5,7 @@
 * Header file declaring functions which convert between different
 * representations of 3D rotation.
 *
-* Copyright (C) 2005-2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2005-2012 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 * The functions in this file deal with several different ways of

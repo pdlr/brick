@@ -4,7 +4,7 @@
 *
 * Source file defining the Plane3D class template.
 *
-* Copyright (C) 2007 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2007 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

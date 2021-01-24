@@ -4,7 +4,7 @@
 *
 * Header file declaring Array1D class.
 *
-* Copyright (C) 2001-2011 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2001-2011 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

@@ -5,7 +5,7 @@
 * Header file declaring functions which can be used to describe
 * arguments in stack traces.
 *
-* Copyright (c) 2005-2007, David LaRose, dlr@cs.cmu.edu
+* Copyright (c) 2005-2007, David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

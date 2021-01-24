@@ -5,7 +5,7 @@
 * Header file declaring a CameraIntrinsics subclass for cameras
 * conforming to Brown-Conrady "plumb bob" camera model.
 *
-* Copyright (C) 2007-2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2007-2012 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

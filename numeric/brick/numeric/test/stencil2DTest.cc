@@ -4,7 +4,7 @@
 *
 * Source file defining Stencil2DTest class.
 *
-* Copyright (C) 2004-2005 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2004-2005 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

@@ -31,7 +31,7 @@ def brickify(inputFileName, outputFileName):
 
   # Make email addresses consistent.
   os.system("sed "
-            + r"-e 's/dlr@alumni.carnegiemellon.edu/dlr@cs.cmu.edu/' "
+            + r"-e 's/dlr@alumni.carnegiemellon.edu/dlr@davidlarose.com/' "
             + "< %s > %s" % (outputFileName, tempFileName))
   os.system("cp %s %s" % (tempFileName, outputFileName))
 

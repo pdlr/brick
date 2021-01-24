@@ -5,7 +5,7 @@
 * Header file defining inline functions and function templates that
 * are declared in brick/numeric/fft.hh.
 *
-* Copyright (C) 2017 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2017 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

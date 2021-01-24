@@ -5,7 +5,7 @@
 * Header file declaring a class template implementing a derivative of
 * Besl's and McKay's Iterative Closest Point algorithm.
 *
-* Copyright (C) 2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2012 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

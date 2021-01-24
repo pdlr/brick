@@ -9,7 +9,7 @@
 * other libraries are not available, and fast execution is not
 * important.
 *
-* Copyright (C) 2017 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2017 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

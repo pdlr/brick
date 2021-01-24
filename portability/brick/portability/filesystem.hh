@@ -4,7 +4,7 @@
 *
 * Header file declaring portability routines for dealing with filesystems.
 *
-* Copyright (C) 2003-2011, David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2003-2011, David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

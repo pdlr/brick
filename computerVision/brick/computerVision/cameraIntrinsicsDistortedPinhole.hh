@@ -5,7 +5,7 @@
 * Header file declaring a parent class from which to derive classes which
 * represent "distorted" camera intrinsic parameters.
 *
-* Copyright (C) 2007-2014 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2007-2014 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

@@ -5,7 +5,7 @@
 * Implementation of inline and template functions for the
 * DerivativeRidders class template.
 *
-* (C) Copyright 2010-2012 David LaRose, dlr@cs.cmu.edu
+* (C) Copyright 2010-2012 David LaRose, dlr@davidlarose.com
 * See accompanying LICENSE file for details.
 *
 ***************************************************************************

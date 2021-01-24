@@ -5,7 +5,7 @@
 * Header file declaring code to approximate derivatives using Ridders's
 * method.
 *
-* (C) Copyright 2010-2011 David LaRose, dlr@cs.cmu.edu
+* (C) Copyright 2010-2011 David LaRose, dlr@davidlarose.com
 * See accompanying LICENSE file for details.
 *
 ***************************************************************************

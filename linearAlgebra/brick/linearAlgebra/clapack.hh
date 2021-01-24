@@ -3,7 +3,7 @@
 * @file brick/linearAlgebra/clapack.h
 * Klugey header file to declare the LAPACK routines we need.
 *
-* Copyright (C) 2001-2011 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2001-2011 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

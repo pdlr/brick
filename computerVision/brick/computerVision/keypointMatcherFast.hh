@@ -5,7 +5,7 @@
 * Header file declaring a class template for matching keypoints using
 * Rosten's 2005 FAST keypoint matching algorithm.
 *
-* Copyright (C) 2011 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2011 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

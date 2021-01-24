@@ -5,7 +5,7 @@
 * Source file defining tools for generating debugging traces when
 * failures occur.
 *
-* Copyright (C) 2005-2011, David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2005-2011, David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

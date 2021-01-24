@@ -5,7 +5,7 @@
 * Header file declaring some exception types and providing namespace
 * documentation.
 *
-* Copyright (c) 2007, David LaRose, dlr@cs.cmu.edu
+* Copyright (c) 2007, David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

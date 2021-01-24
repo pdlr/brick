@@ -6,7 +6,7 @@
 * quadratics to local patches of images or arrays, and using those
 * quadratics to find local maxima or minima with subpixel precision.
 *
-* Copyright (C) 2009,2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2009,2012 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

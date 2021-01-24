@@ -5,7 +5,7 @@
 * Include file defining a inline and template functions declared in
 * CameraIntrinsicsPinhole.hh
 *
-* Copyright (C) 2007,2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2007,2012 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

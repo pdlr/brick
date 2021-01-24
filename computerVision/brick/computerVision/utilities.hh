@@ -5,7 +5,7 @@
 * Header file declaring utility functions for brick::computerVision
 * library.
 *
-* Copyright (C) 2006, 2011 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2006, 2011 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

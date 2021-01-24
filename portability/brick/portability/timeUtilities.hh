@@ -4,7 +4,7 @@
 *
 * Header file declaring some useful time-related routines.
 *
-* (C) Copyright 2004-2011 David LaRose, dlr@cs.cmu.edu
+* (C) Copyright 2004-2011 David LaRose, dlr@davidlarose.com
 * See accompanying LICENSE.TXT file for details.
 *
 ***************************************************************************

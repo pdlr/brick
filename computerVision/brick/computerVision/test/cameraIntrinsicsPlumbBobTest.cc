@@ -4,7 +4,7 @@
 *
 * Source file defining tests for the CameraIntrinsicsPlumbBob class.
 *
-* Copyright (C) 2006-2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2006-2012 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

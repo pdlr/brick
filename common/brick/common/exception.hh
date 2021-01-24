@@ -4,7 +4,7 @@
 *
 * Header file declaring some exception types.
 *
-* Copyright (c) 2003-2011, David LaRose, dlr@cs.cmu.edu
+* Copyright (c) 2003-2011, David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

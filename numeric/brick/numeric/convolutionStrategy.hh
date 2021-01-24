@@ -5,7 +5,7 @@
 * Header file declaring an enum which represents different ways of
 * handling border effects when performing convolution and correlation.
 *
-* Copyright (C) 2006-2007, 2011 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2006-2007, 2011 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

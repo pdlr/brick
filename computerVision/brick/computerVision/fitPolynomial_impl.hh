@@ -5,7 +5,7 @@
 * Header file defining inline and template functions declared in
 * fitPolynomial.hh.
 *
-* Copyright (C) 2019 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2019 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 ***************************************************************************
 **/

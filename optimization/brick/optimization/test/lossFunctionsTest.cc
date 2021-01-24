@@ -5,7 +5,7 @@
 * Source file defining a test class for symbols declared in
 * brick/optimization/lossFunctions.hh.
 *
-* Copyright (C) 2018 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2018 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

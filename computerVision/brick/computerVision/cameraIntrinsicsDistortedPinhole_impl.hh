@@ -5,7 +5,7 @@
 * Definitions of inline and template functions for
 * CameraIntrinsicsDistortedPinhole.
 *
-* Copyright (C) 2007-2014 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2007-2014 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

@@ -9,7 +9,7 @@
 * Float64 type, and will remain so until the brickLinearAlgebra
 * library is extended to handle types besides Float64.
 *
-* Copyright (C) 2007 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2007 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

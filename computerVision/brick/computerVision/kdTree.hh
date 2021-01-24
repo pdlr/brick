@@ -4,7 +4,7 @@
 *
 * Header file declaring a class implementing a KD-Tree data structure.
 *
-* Copyright (C) 2009,2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2009,2012 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

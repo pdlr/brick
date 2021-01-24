@@ -4,7 +4,7 @@
 *
 * Source file defining tests for the Circle3D class template.
 *
-* Copyright (C) 2014 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2014 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

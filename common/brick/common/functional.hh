@@ -5,7 +5,7 @@
 * Header file declaring functors that are not part of the C++ standard
 * library.
 *
-* Copyright (C) 2003-2011, David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2003-2011, David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

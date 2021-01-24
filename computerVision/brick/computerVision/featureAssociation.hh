@@ -5,7 +5,7 @@
 * Header file declaring functions that pair features from two disjoint
 * sets based on a user supplied similarity measure.
 *
-* Copyright (C) 2008,2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2008,2012 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

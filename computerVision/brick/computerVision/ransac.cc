@@ -5,7 +5,7 @@
 * Source file defining helper functions for implementing Fischler's
 * and Bolles's RANSAC algorithm.
 *
-* Copyright (C) 2008, 2011 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2008, 2011 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 ***************************************************************************
 */

@@ -5,7 +5,7 @@
 * Header file declaring a class for sending out put to multiple streams
 * at once.
 *
-* Copyright (C) 2017 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2017 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

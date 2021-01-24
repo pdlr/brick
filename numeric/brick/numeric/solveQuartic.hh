@@ -5,7 +5,7 @@
 * Header file declaring a function for solving quartic polynomial
 * equations of a single variable.
 *
-* Copyright (C) 2001-2009 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2001-2009 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

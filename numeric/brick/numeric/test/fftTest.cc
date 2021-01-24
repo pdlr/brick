@@ -4,7 +4,7 @@
 *
 * Source file defining FFTTest class.
 *
-* Copyright (C) 2017 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2017 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

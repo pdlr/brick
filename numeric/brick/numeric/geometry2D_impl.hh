@@ -4,7 +4,7 @@
 *
 * Source file file declaring useful functions for dlrNumeric.
 *
-* Copyright (C) 2001-2007 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2001-2007 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

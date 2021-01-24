@@ -4,7 +4,7 @@
 *
 * Header file declaring functions for estimating polynomial coefficients.
 *
-* Copyright (C) 2019 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2019 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 ***************************************************************************
 **/

@@ -4,7 +4,7 @@
 *
 * Header file declaring ComplexNumber class template.
 *
-* Copyright (C) 2015 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2015 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

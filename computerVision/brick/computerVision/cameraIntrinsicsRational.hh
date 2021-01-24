@@ -5,7 +5,7 @@
 * Header file declaring a CameraIntrinsics subclass for cameras
 * conforming to the "full" camera model of OpenCV 2.4.
 *
-* Copyright (C) 2014 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2014 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

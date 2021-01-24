@@ -6,7 +6,7 @@
 * These are bare-minimum utility functions; see brick::computerVision
 * for better image IO routines.
 *
-* Copyright (C) 2004-2011, David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2004-2011, David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

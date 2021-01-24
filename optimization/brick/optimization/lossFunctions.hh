@@ -26,7 +26,7 @@
 * In these classes, the value of L(.) is available through member
 * function getValue(), although it is often inefficient to compute.
 *
-* Copyright (C) 2018 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2018 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 **********************************************************************

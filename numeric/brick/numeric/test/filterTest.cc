@@ -5,7 +5,7 @@
 * Source file defining tests for functions defined in
 * brick/numeric/filter.hh.
 *
-* Copyright (C) 2012 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2012 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

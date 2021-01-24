@@ -5,7 +5,7 @@
 * Header file declaring a class template for constructing scale-space
 * image pyramids.
 *
-* Copyright (C) 2011 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2011 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

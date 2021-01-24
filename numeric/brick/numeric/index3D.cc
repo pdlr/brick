@@ -4,7 +4,7 @@
 *
 * Source file defining Index3D class.
 *
-* Copyright (C) 2000-2011 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2000-2011 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

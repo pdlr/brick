@@ -4,7 +4,7 @@
 *
 * Source file defining tests for file handling.
 *
-* Copyright (C) 2004-2011 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2004-2011 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

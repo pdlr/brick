@@ -5,7 +5,7 @@
 * Source file defining routines that conform to ANSI C, but are
 * missing from various compilers.
 *
-* (C) Copyright 2004-2011 David LaRose, dlr@cs.cmu.edu
+* (C) Copyright 2004-2011 David LaRose, dlr@davidlarose.com
 * See accompanying LICENSE file for details.
 *
 ***************************************************************************

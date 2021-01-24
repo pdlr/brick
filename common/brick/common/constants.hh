@@ -4,7 +4,7 @@
 *
 * Header file declaring useful physical constants.
 *
-* Copyright (C) 2009-2010 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2009-2010 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

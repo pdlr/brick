@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <complex>
 #include <brick/common/functional.hh>
+#include <brick/common/mathFunctions.hh>
 #include <brick/linearAlgebra/linearAlgebra.hh>
 #include <brick/numeric/utilities.hh>
 
@@ -43,7 +44,7 @@ namespace {
       return *this;
     }
 
-    MyDouble operator-() {
+    MyDouble operator-() const {
       return MyDouble(-m_value);
     }
 
@@ -67,9 +68,9 @@ namespace {
     MyDouble result(arg0);
     return result -= arg1;
   }
-  bool operator==(MyDouble const& arg0, MyDouble const& arg1) {
-    return arg0.getValue() == arg1.getValue();
-  }
+  // bool operator==(MyDouble const& arg0, MyDouble const& arg1) {
+  //   return arg0.getValue() == arg1.getValue();
+  // }
   bool operator!=(MyDouble const& arg0, MyDouble const& arg1) {
     return arg0.getValue() != arg1.getValue();
   }
@@ -129,6 +130,11 @@ namespace brick {
       approximatelyEqual(const numeric::Array2D<Type0>& array0,
                          const numeric::Array2D<Type1>& array1);
 
+      template<class Type0, class Type1>
+      bool
+      approximatelyEqualComplex(
+        const numeric::Array1D<std::complex<Type0>>& array0,
+        const numeric::Array1D<std::complex<Type1>>& array1);
 
       numeric::Array1D<double>
       convertToDouble(const numeric::Array1D<MyDouble>& array0);
@@ -784,6 +790,28 @@ namespace brick {
                                    m_squareXVectors[index0]));
       }
 
+      // Test with complex numbers.
+      for(size_t index0 = 0;
+          index0 < LinearAlgebraTest::numberOfTestMatrixSets;
+          ++index0) {
+        // Compute the solution.
+        numeric::Array2D<std::complex<common::Float64>> aMatrix(
+          m_squareMatrices[index0].rows(), m_squareMatrices[index0].columns());
+        numeric::Array1D<std::complex<common::Float64>> bVector(
+          m_squareBVectors[index0].size());
+        numeric::Array1D<std::complex<common::Float64>> xVector(
+          m_squareXVectors[index0].size());
+
+        aMatrix.copy(m_squareMatrices[index0]);
+        bVector.copy(m_squareBVectors[index0]);
+        xVector.copy(m_squareXVectors[index0]);
+        linearSolveInPlace(aMatrix, bVector);
+
+        // Check that results are correct.
+        BRICK_TEST_ASSERT(
+          this->approximatelyEqualComplex(bVector, xVector));
+      }
+
       // Test double precision.
       for(size_t index0 = 0;
           index0 < LinearAlgebraTest::numberOfTestMatrixSets;
@@ -1021,6 +1049,27 @@ namespace brick {
       buffer1.copy(array1);
       return std::equal(buffer0.begin(), buffer0.end(), buffer1.begin(),
                         ApproximatelyEqualFunctor<common::Float64>(1.0E-5));
+    }
+
+
+    template<class Type0, class Type1>
+    bool
+    LinearAlgebraTest::
+    approximatelyEqualComplex(
+      const numeric::Array1D<std::complex<Type0>>& array0,
+      const numeric::Array1D<std::complex<Type1>>& array1)
+    {
+      if(array0.size() != array1.size()) {
+        return false;
+      }
+
+      for(std::size_t ii = 0; ii < array0.size(); ++ii) {
+        common::Float64 difference = std::abs(array1[ii] - array0[ii]);
+        if(common::absoluteValue(difference) > common::Float64(1.0E-5)) {
+          return false;
+        }
+      }
+      return true;
     }
 
 

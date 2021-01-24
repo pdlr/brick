@@ -36,6 +36,23 @@ namespace brick {
     namespace privateCode {
 
       template<class FloatType>
+      bool
+      hasLargerMagnitude(FloatType const& arg0, FloatType const& arg1) {
+        FloatType abs0 = arg0 < FloatType(0) ? -arg0 : arg0;
+        FloatType abs1 = arg1 < FloatType(1) ? -arg1 : arg1;
+        return abs0 > abs1;
+      }
+
+      template<class FloatType>
+      bool
+      hasLargerMagnitude(std::complex<FloatType> const& arg0,
+                         std::complex<FloatType> const& arg1) {
+        FloatType abs0 = std::abs(arg0);
+        FloatType abs1 = std::abs(arg1);
+        return abs0 > abs1;
+      }
+
+      template<class FloatType>
       std::size_t
       selectPivotRow(brick::numeric::Array2D<FloatType> const& AA,
                      std::size_t startRow);
@@ -345,25 +362,22 @@ namespace brick {
       selectPivotRow(brick::numeric::Array2D<FloatType> const& AA,
                      std::size_t startRow)
       {
-        brick::numeric::MaxRecorder<FloatType, std::size_t> maxRecorder;
-
-        // We go through a contortion here to duplicate "fabs()"
-        // functionality on arbitrary types.
-        FloatType const zero(0);
+        FloatType largestSoFar(0);
+        std::size_t pivotRow = AA.rows();
         for(std::size_t rr = startRow; rr < AA.rows(); ++rr) {
-          FloatType testValue = AA(rr, startRow);
-          if(testValue < zero) {
-            testValue = -testValue;
+          FloatType const& testValue = AA(rr, startRow);
+          if(privateCode::hasLargerMagnitude(testValue, largestSoFar)) {
+            largestSoFar = testValue;
+            pivotRow = rr;
           }
-          maxRecorder.test(testValue, rr);
         }
 
-        if(maxRecorder.getMaximum() == FloatType(0)) {
+        if(pivotRow == AA.rows()) {
           BRICK_THROW(brick::common::ValueException,
                       "brick::linearAlgebra::selectPivotRow()",
                       "Matrix appears to be singular.");
         }
-        return maxRecorder.getPayload();
+        return pivotRow;
       }
 
 

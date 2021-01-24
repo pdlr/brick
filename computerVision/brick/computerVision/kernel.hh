@@ -102,11 +102,12 @@ namespace brick {
 
 
       /**
-       * The copy assignment operator does a deep copy.
+       * The assignment operator does a deep copy.
        *
        * @param source The Kernel instance to be copied.
        */
-      Kernel& operator=(const Kernel<ELEMENT_TYPE> &source);
+      Kernel<ELEMENT_TYPE>&
+      operator=(Kernel<ELEMENT_TYPE> const& source);
 
 
       /**

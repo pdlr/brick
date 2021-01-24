@@ -274,6 +274,8 @@ namespace brick {
       }
 
 
+      // TBD(xxx) Make these return references!
+      
       /**
        * This assignment operator copies its argument into each pixel of
        * the image.  It is provided avoid an implicit cast when using
@@ -287,6 +289,22 @@ namespace brick {
       Image<FORMAT>
       operator=(const PixelType& value) {
         return brick::numeric::Array2D<PixelType>::operator=(value);
+      }
+
+
+      /**
+       * This assignment operator shallow-copies its argument.
+       *
+       * @param value This argument is the value to be copied.
+       *
+       * @return The return value is a reference to *this.
+       */
+      virtual
+      Image<FORMAT>
+      operator=(const Image<FORMAT>& other) {
+        return dynamic_cast<brick::numeric::Array2D<PixelType>*>(this)
+          ->operator=(
+            dynamic_cast<brick::numeric::Array2D<PixelType> const&>(other));
       }
 
 

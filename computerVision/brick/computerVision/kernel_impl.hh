@@ -103,17 +103,17 @@ namespace brick {
     }
 
 
-    // The copy assignment operator does a deep copy.
+    // The assignment operator does a deep copy.
     template <class ELEMENT_TYPE>
     Kernel<ELEMENT_TYPE>&
     Kernel<ELEMENT_TYPE>::
-    operator=(const Kernel<ELEMENT_TYPE> &source)
+    operator=(Kernel<ELEMENT_TYPE> const& source)
     {
-        m_data = source.m_data.copy();
-        m_isSeparable = source.m_isSeparable;
-        m_separableColumns = source.m_separableColumns;
-        m_separableRows = source.m_separableRows;
-        return *this;
+      this->m_data = source.m_data.copy();
+      this->m_isSeparable = source.m_isSeparable;
+      this->m_separableColumns = source.m_separableColumns;
+      this->m_separableRows = source.m_separableRows;
+      return *this;
     }
 
 

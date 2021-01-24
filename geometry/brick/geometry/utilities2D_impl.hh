@@ -14,8 +14,8 @@
 #ifndef BRICK_GEOMETRY_UTILITIES2D_IMPL_HH
 #define BRICK_GEOMETRY_UTILITIES2D_IMPL_HH
 
-// This file is included by circle2D.hh, and should not be directly included
-// by user code, so no need to include circle2D.hh here.
+// This file is included by utilities2D.hh, and should not be directly included
+// by user code, so no need to include utilities2D.hh here.
 //
 // #include <brick/geometry/utilities2D.hh>
 #include <brick/numeric/utilities.hh>

@@ -40,12 +40,12 @@ namespace brick {
      ** Here is example code:
      **
      ** @code
-     **   // Create an OptionParser which automatically generates
-     **   // help messages, and which prints usage and calls exit(65)
+     **   // Create an OptionParser that automatically generates
+     **   // help messages, and that prints usage and calls exit(65)
      **   // if it encounters an inappropriate command line.
      **   OptionParser optionParser(65);
      **
-     **   // Specify options which do not take arguments.
+     **   // Specify options that do not take arguments.
      **   optionParser.addOption(
      **     "NOLINK", "-c", "--no_link",
      **     "Don't run the linker.  Instead, generate .o files.");
@@ -71,7 +71,7 @@ namespace brick {
      **   optionParser.addPositionalArgument(
      **     "INPUT_FILE", "File to be compiled.", true);
      **
-     **   // Specify positional arguments which are not required.
+     **   // Specify positional arguments that are not required.
      **   optionParser.addPositionalArgument(
      **     "SECOND_FILE", "Additional file to be compiled.", false);
      **
@@ -97,7 +97,7 @@ namespace brick {
      ** version of an option if it begins with the entire text of the
      ** short version.  For example, each of "-p", "-pdf", and "-pp"
      ** would match an option with a short version of "-p".  Arguments
-     ** which match the short version of an option, but have
+     ** that match the short version of an option, but have
      ** additional text (such as "-pdf" in the example above) are
      ** interpreted in one of two ways.  If constructor argument
      ** allowStackedShortOptions was set to true, and the short
@@ -149,7 +149,7 @@ namespace brick {
        * whether it is permissible to decompose arguments such as
        * "-plr" into "-p -l -r".  If allowStackedShortOptions is true,
        * then this type of decomposition will be carried out for short
-       * options which do not accept values.  If option "-p" does
+       * options that do not accept values.  If option "-p" does
        * accept a value, then "-plr" will (as always) be interpreted
        * as "-p" with the argument "lr".  Note that this type of
        * decomposition may lead to ambiguity.  For example, if you
@@ -160,7 +160,7 @@ namespace brick {
        * allowStackedShortOptions to false.
        *
        * @param allowOptionishArguments This argument specifies how to
-       * handle command line arguments which start with "-", but which
+       * handle command line arguments that start with "-", but that
        * don't correspond to any of the specified options.  If
        * allowOptionishArguments is true, then such arguments will be
        * simply recorded as positional arguments.  If
@@ -177,7 +177,7 @@ namespace brick {
        * parsed, the OptionParser should exit instead of throwing an
        * exception, optionally printing a usage message first.
        *
-       * @param exitCode This argument specifies the exit code which
+       * @param exitCode This argument specifies the exit code that
        * should be used to report a bad command line.
        *
        * @param handleMinusMinusHelp This argument specifies whether
@@ -317,8 +317,8 @@ namespace brick {
 
 
       /**
-       * This member function adds an option which requires a value to
-       * the list which will be recognized during command line
+       * This member function adds an option that requires a value to
+       * the list that will be recognized during command line
        * parsing.  It is like the 8-argument version of
        * addOption(), but allows greater control over getUsage()
        * output.
@@ -452,9 +452,9 @@ namespace brick {
        * This member function is like getValue(std::string const&),
        * but attempts to convert the returned string to the specified
        * type.  It works for all built-in types, and for user-defined
-       * types which define a stream input operator.  If the
+       * types that define a stream input operator.  If the
        * conversion fails, and you used the OptionParser constructor
-       * which specifies an exit code, then the OptionParser will
+       * that specifies an exit code, then the OptionParser will
        * behave as if the command line parsing failed, printing usage
        * and calling exit() as appropriate.  If the conversion fails
        * and the non-exit code constructor was used, then getValue()
@@ -517,9 +517,9 @@ namespace brick {
        * This member function is like getValue(std::string const&, int),
        * but attempts to convert the returned string to the specified
        * type.  It works for all built-in types, and for user-defined
-       * types which define a stream input operator.  If the
+       * types that define a stream input operator.  If the
        * conversion fails, and you used the OptionParser constructor
-       * which specifies an exit code, then the OptionParser will
+       * that specifies an exit code, then the OptionParser will
        * behave as if the command line parsing failed, printing usage
        * and calling exit() as appropriate.  If the conversion fails
        * and the non-exit code constructor was used, then getValue()
@@ -618,7 +618,7 @@ namespace brick {
        * the available command line options, as specified using
        * addOption() and addOptionWithValue().  It is useful for
        * building your own usage messages if you used the default
-       * constructor.  If you used the constructor which specifies an
+       * constructor.  If you used the constructor that specifies an
        * exit code, you probably have no use for
        * getOptionsDescription().  The string returned by
        * getOptionsDescription() will be much more informative if the
@@ -637,7 +637,7 @@ namespace brick {
        * a usage message.  It includes the string returned by
        * getOptionsDescription(), so if you call getUsage(), you
        * probably don't need to call getOptionsDescription().  If you
-       * used the constructor which specifies an exit code, you
+       * used the constructor that specifies an exit code, you
        * probably have no use for getUsage().  The string returned by
        * getOptionsDescription() will be much more informative if the
        * docString arguments of addOption(), addOptionWithValue(), and
@@ -813,8 +813,8 @@ namespace brick {
   namespace utilities {
 
 
-    // This member function adds an option which requires a value to
-    // the list which will be recognized during command line
+    // This member function adds an option that requires a value to
+    // the list that will be recognized during command line
     // parsing.  This template is specialized for std::string.
     template<>
     void
@@ -831,8 +831,8 @@ namespace brick {
                                     bool allowOptionishValue);
 
 
-    // This member function adds an option which requires a value to
-    // the list which will be recognized during command line
+    // This member function adds an option that requires a value to
+    // the list that will be recognized during command line
     // parsing.
     template<class Type>
     void

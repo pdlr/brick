@@ -3,7 +3,7 @@
 * @file brick/test/runnableObject.hh
 *
 * Header file declaring RunnableObject class, which is a parent class
-* for the TestFuxture class template.
+* for the TestFixture class template.
 *
 * Copyright (C) 2007-2011 David LaRose, dlr@cs.cmu.edu
 * See accompanying file, LICENSE.TXT, for details.
@@ -22,8 +22,8 @@ namespace brick {
 
     /**
      ** This class serves a parent class for the various
-     ** TestFuxture<foo> types, allowing virtual function dispatch to
-     ** TestFuxture<foo>::run(), and (if BRICK_TEST_USE_AUTOMATIC_MAIN
+     ** TestFixture<foo> types, allowing virtual function dispatch to
+     ** TestFixture<foo>::run(), and (if BRICK_TEST_USE_AUTOMATIC_MAIN
      ** is defined) automatic registration with the pre-written main()
      ** function.  User code will most likely never need to access
      ** this class.

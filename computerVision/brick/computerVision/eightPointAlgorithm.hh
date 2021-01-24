@@ -37,6 +37,19 @@ namespace brick {
      * described in [2] to improve the numerical stability of the
      * result.
      *
+     * One note about the existance of the fundamental matrix (which
+     * otherwise isn't obvious to the author of this file).  Consider
+     * a pair of cameras, and the two rays that join the foci of the
+     * cameras to a point in space.  The 3D point, the foci of the
+     * cameras, and the epipolar lines in each camera image are all
+     * coplanar.  Pick a pair of vectors in this plane (such as the
+     * projection from image point 0 into 3D space, and the
+     * translation joining the foci) and take their cross product.
+     * This vector is by construction perpendicular to the plane, so
+     * its cross product with the other projection into 3D space has
+     * zero magnitude. These equations need only be arranged into the
+     * appropriate form to give us the fundamental matrix equation.
+     *
      * [1] Longuet-Higgins, H.C., "A Computer Algorithm for
      * Reconstructing a Scene From Two Projections," Nature, vol. 293,
      * pp. 133­135, Sept 1981.

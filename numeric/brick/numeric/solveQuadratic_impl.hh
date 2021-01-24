@@ -28,7 +28,7 @@ namespace brick {
   namespace numeric {
 
     // This function computes the real roots of the quadratic polynomial
-    // c0*x^2 + c1*x + c0 = 0.
+    // c0*x^2 + c1*x + c2 = 0.
     template <class Type>
     bool
     solveQuadratic(Type c0, Type c1, Type c2,

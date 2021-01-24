@@ -5,7 +5,7 @@
 * Header file defining functions that implement the ISO12233 MTF
 * measurement algorithms.
 *
-* Copyright (C) 2017 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2017 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

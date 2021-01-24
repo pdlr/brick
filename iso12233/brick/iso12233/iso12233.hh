@@ -5,7 +5,7 @@
 * Header file declaring functions that implement the ISO12233 MTF
 * measurement algorithms.
 *
-* Copyright (C) 2017 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2017 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
@@ -105,7 +105,8 @@ namespace brick {
      * For example, you should be able to write "FloatType intensity =
      * oecf(inputPatch(rr, cc));" This is also a good way to select
      * specific color channels if you want to measure their MTFs
-     * independently.
+     * independently.  See brick/iso12233/oecf.hh for a few pre-built
+     * functors that you might use here.
      *
      * @return The return value is the computed MTF of the imaging
      * system, assuming the physical edge being observed is a perfect

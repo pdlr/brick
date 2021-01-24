@@ -4,12 +4,13 @@
 *
 * Source file defining tests for the MTF calculating routines.
 *
-* Copyright (C) 2017 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2017 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************
 **/
 
+#include <brick/iso12233/oecf.hh>
 #include <brick/iso12233/iso12233.hh>
 #include <brick/iso12233/test/testImages.hh>
 
@@ -159,8 +160,8 @@ namespace brick {
                                               comment);
 
       // Try to process the image.
-      Array1D<double> mtf = iso12233<double>(naturalImage, windowSize,
-                                             [](double arg){return arg;});
+      Array1D<double> mtf = iso12233<double>(
+        naturalImage, windowSize, ShiftOECF<double, GRAY8>(naturalImage));
       std::cout << mtf << std::endl;
     }
 #endif

@@ -5,7 +5,7 @@
 * Header file that includes other brick library symbols in the
 * iso12233 namespace to avoid lots of explicit namespace qualifiers.
 *
-* Copyright (C) 2017 David LaRose, dlr@cs.cmu.edu
+* Copyright (C) 2017 David LaRose, dlr@davidlarose.com
 * See accompanying file, LICENSE.TXT, for details.
 *
 ***************************************************************************

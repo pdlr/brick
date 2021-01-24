@@ -19,10 +19,13 @@ install (TARGETS brickIso12233 DESTINATION lib)
 install (FILES
 
   iso12233.hh iso12233_impl.hh
+  oecf.hh oecf_impl.hh
   symbolImports.hh
   
   DESTINATION include/brick/iso12233)
 
+
+add_subdirectory (demos)
 
 if (BRICK_BUILD_TESTS)
   add_subdirectory (test)

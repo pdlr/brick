@@ -1139,7 +1139,7 @@ namespace brick {
         ++beginIter;
       }
 
-      if(accumulator < NumericTraits<FloatType>::epsilon()) {
+      if(absoluteValue(accumulator) < NumericTraits<FloatType>::epsilon()) {
         BRICK_THROW(brick::common::ValueException,
                     "getCentroid()",
                     "Sum of input sequence is too small to reliably "

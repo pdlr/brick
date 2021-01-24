@@ -182,8 +182,8 @@ namespace brick {
        *
        * @param source The Image instance to be copied.
        */
-      Image&
-      operator=(const Image<FORMAT> &source)
+      Image<FORMAT>&
+      operator=(Image<FORMAT> const& source)
       {
           brick::numeric::Array2D<PixelType>::operator=(source);
           return *this;
@@ -290,23 +290,6 @@ namespace brick {
       operator=(const PixelType& value) {
         return brick::numeric::Array2D<PixelType>::operator=(value);
       }
-
-
-      /**
-       * This assignment operator shallow-copies its argument.
-       *
-       * @param value This argument is the value to be copied.
-       *
-       * @return The return value is a reference to *this.
-       */
-      virtual
-      Image<FORMAT>
-      operator=(const Image<FORMAT>& other) {
-        return dynamic_cast<brick::numeric::Array2D<PixelType>*>(this)
-          ->operator=(
-            dynamic_cast<brick::numeric::Array2D<PixelType> const&>(other));
-      }
-
 
     private:
 

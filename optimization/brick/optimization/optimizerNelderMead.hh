@@ -290,7 +290,6 @@ namespace brick {
       FloatType m_beta;
       FloatType m_gamma;
       FloatType m_minimumSimplexValueSpan;
-      bool m_deltaValueHack;
 
       std::vector<size_t> m_functionCallCount;
       argument_type m_theta0;
@@ -405,7 +404,6 @@ namespace brick {
         m_verbosity(0)
     {
       this->setParameters(argument_type());
-      this->m_deltaValueHack = true;
     }
 
 
@@ -420,7 +418,6 @@ namespace brick {
         m_verbosity(0)
     {
       this->setParameters(argument_type());
-      this->m_deltaValueHack = true;
     }
 
     // Copy constructor.
@@ -435,7 +432,6 @@ namespace brick {
         m_beta(source.m_beta),
         m_gamma(source.m_gamma),
         m_minimumSimplexValueSpan(source.m_minimumSimplexValueSpan),
-        m_deltaValueHack(source.m_deltaValueHack),
         m_functionCallCount(source.m_functionCallCount),
         m_verbosity(source.m_verbosity)
     {
@@ -497,7 +493,6 @@ namespace brick {
       this->m_gamma = gamma;
       this->m_minimumSimplexValueSpan = minimumSimplexValueSpan;
       this->m_verbosity = verbosity;
-      this->m_deltaValueHack = false;
 
       // Inherited member
       Optimizer<Functor>::m_needsOptimization = true;
@@ -531,7 +526,6 @@ namespace brick {
       this->m_beta = source.m_beta;
       this->m_gamma = source.m_gamma;
       this->m_minimumSimplexValueSpan = source.m_minimumSimplexValueSpan;
-      this->m_deltaValueHack = source.m_deltaValueHack;
       this->m_functionCallCount = source.m_functionCallCount;
     }
 
@@ -680,12 +674,11 @@ namespace brick {
         BRICK_THROW(brick::common::ValueException, "OptimizerNelderMead::run()",
                   "invalid starting point has zero size.");
       }
-      if(this->m_deltaValueHack) {
+      if(this->m_delta.size() != dimension) {
         // Initialize delta using only operations that we expect to be
         // supported by argtype, and which we don't expect to be
         // defined in surprising ways.
         this->m_delta = (this->m_theta0 * 0.0) + 1.0;
-        this->m_deltaValueHack = false;
       }
 
       // The algorithm requires dimension + 1 initial points and values.

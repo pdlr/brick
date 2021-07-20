@@ -55,8 +55,14 @@ int main(int argc, char* argv[])
 
   // Get file input.
   std::string comment;
+
+#if HAVE_LIBPNG
   bcv::Image<bcv::GRAY8> inputImage = bcv::readPNG<bcv::GRAY8>(
     appConfig.inputFileName, comment);
+#else
+  bcv::Image<bcv::GRAY8> inputImage = bcv::readPGM8(
+    appConfig.inputFileName, comment);
+#endif
 
   // Condition input arguments based on image size.
   appConfig.topLeftRow = std::min(appConfig.topLeftRow,
@@ -77,7 +83,11 @@ int main(int argc, char* argv[])
                   bnm::Slice(appConfig.topLeftColumn, bottomLeftColumn));
   bcv::Image<bcv::GRAY8> inputPatch(patchArray);
   if(appConfig.outputImageFileName != "") {
+#if HAVE_LIBPNG
     bcv::writePNG(appConfig.outputImageFileName, inputPatch, "");
+#else
+    bcv::writePGM8(appConfig.outputImageFileName, inputPatch, "");
+#endif
   }
   
   // Try to process the image and output the result.

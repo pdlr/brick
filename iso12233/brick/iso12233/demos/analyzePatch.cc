@@ -150,13 +150,23 @@ namespace {
     brick::utilities::OptionParser optionParser(65);
 
     // Specify required positional arguments.
+#if HAVE_LIBPNG
     optionParser.addPositionalArgument(
-      "PNG_FILE",
+      "IMG_FILE",
       "Image containing input patch.  This must be an 8-bit grayscale PNG "
       "image from which we can snip out a patch that contains a single "
       "\"slanted edge.\"  The patch should be significantly wider (say, more "
       "than 2x) than argument WINDOW_SIZE.  The patch should have plenty "
       "(say, more than 10, fewer than 1000) rows.", true);
+#else
+    optionParser.addPositionalArgument(
+      "IMG_FILE",
+      "Image containing input patch.  This must be a PGM image (8-bit "
+      "grayscale) from which we can snip out a patch that contains a single "
+      "\"slanted edge.\"  The patch should be significantly wider (say, more "
+      "than 2x) than argument WINDOW_SIZE.  The patch should have plenty "
+      "(say, more than 10, fewer than 1000) rows.", true);
+#endif
 
     // Specify positional arguments that are not required.
     {
@@ -184,10 +194,17 @@ namespace {
     // "values are written to a text file, not an image.");
 
     // Specify options that require values.
+#if HAVE_LIBPNG
     optionParser.addOptionWithValue(
-      "OUTPUT_PNG", "-o", "--output-image", appConfig.outputImageFileName,
+      "OUTPUT_IMG", "-o", "--output-image", appConfig.outputImageFileName,
       "If this option is not set to the empty string, the selected image "
       "patch will be saved to the specified PNG output file.");
+#else
+    optionParser.addOptionWithValue(
+      "OUTPUT_IMG", "-o", "--output-image", appConfig.outputImageFileName,
+      "If this option is not set to the empty string, the selected image "
+      "patch will be saved to the specified PGM output file.");
+#endif
 
     optionParser.addOptionWithValue(
       "PATCH_HEIGHT", "-h", "--patch-height", appConfig.patchHeight,
@@ -224,8 +241,8 @@ namespace {
     optionParser.parseCommandLine(argc, argv);
 
     // Recover results of parse.
-    appConfig.inputFileName = optionParser.getValue("PNG_FILE");
-    appConfig.outputImageFileName = optionParser.getValue("OUTPUT_PNG");
+    appConfig.inputFileName = optionParser.getValue("IMG_FILE");
+    appConfig.outputImageFileName = optionParser.getValue("OUTPUT_IMG");
     appConfig.topLeftColumn = optionParser.convertValue<std::size_t>(
       "TOP_LEFT_COLUMN");
     appConfig.topLeftRow = optionParser.convertValue<std::size_t>(

@@ -14,10 +14,10 @@ add_library(brickComputerVision
 target_link_libraries (brickComputerVision
   brickLinearAlgebra
   brickNumeric
-  ${PNG_LIBRARIES}
   )
 
 if (PNG_FOUND)
+  target_link_libraries (brickComputerVision ${PNG_LIBRARIES})
   target_include_directories (brickComputerVision INTERFACE ${PNG_INCLUDE_DIRS})
 endif (PNG_FOUND)
 

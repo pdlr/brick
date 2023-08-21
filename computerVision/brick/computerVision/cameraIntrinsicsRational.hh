@@ -40,7 +40,7 @@ namespace brick {
      ** The distortion model is as follows:
      **
      ** @code
-     **   x_d = x * ((1 + k_0*r^2 + k_0*r^4 + k_2*r^6)
+     **   x_d = x * ((1 + k_0*r^2 + k_1*r^4 + k_2*r^6)
      **              / (1 + k_3*r^2 + k_4*r^4 + k_5*r^6))
      **         + 2 * p_0 * x * y
      **         + p_1 * (r^2 + 2 * x^2)

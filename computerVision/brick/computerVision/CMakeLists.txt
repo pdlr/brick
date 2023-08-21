@@ -54,6 +54,7 @@ install (FILES
   imagePyramidBinomial.hh imagePyramidBinomial_impl.hh
   imageWarper.hh imageWarper_impl.hh
   kdTree.hh kdTree_impl.hh
+  nTree.hh nTree_impl.hh
   kernel.hh kernel_impl.hh
   kernels.hh kernels_impl.hh
   keypointMatcherFast.hh keypointMatcherFast_impl.hh

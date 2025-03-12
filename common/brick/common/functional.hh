@@ -172,7 +172,6 @@ namespace brick {
      **/
     template <class Type0, class Type1>
     class ExtractFirstFunctor
-      : public std::unary_function<std::pair<Type0, Type1>, Type0>
     {
     public:
       /**
@@ -216,7 +215,6 @@ namespace brick {
      **/
     template <class Type0, class Type1>
     class ExtractSecondFunctor
-      : public std::unary_function<std::pair<Type0, Type1>, Type1>
     {
     public:
       /**
@@ -373,8 +371,6 @@ namespace brick {
      **/
     template <class Functor0, class Functor1>
     class UnaryComposeFunctor
-      : public std::unary_function<typename Functor1::argument_type,
-                                   typename Functor0::result_type>
     {
     public:
       /**

@@ -349,7 +349,8 @@ namespace brick {
      ** of one type into instances of another.
      **/
     template <class TypeIn, class TypeOut>
-    struct StaticCastFunctor : public std::unary_function<TypeIn, TypeOut> {
+    struct StaticCastFunctor
+    {
 
       /**
        * Static cast the input argument to TypeOut, and return the result.

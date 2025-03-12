@@ -14,6 +14,7 @@
 #include <brick/common/functional.hh>
 #include <brick/common/mathFunctions.hh>
 #include <brick/linearAlgebra/linearAlgebra.hh>
+#include <brick/numeric/subArray2D.hh>
 #include <brick/numeric/utilities.hh>
 
 #include <brick/test/functors.hh>
@@ -594,9 +595,21 @@ namespace brick {
         BRICK_TEST_ASSERT(
           this->approximatelyEqual(
             eigenvalueArray, m_symmetricEigenvalues[index0]));
-        BRICK_TEST_ASSERT(
-          this->approximatelyEqual(
-            eigenvectorArray, m_symmetricEigenvectors[index0]));
+        for(size_t ii = 0; ii < eigenvectorArray.columns(); ++ii) {
+          numeric::Array2D<common::Float64> testVector = (
+            numeric::subArray(eigenvectorArray, numeric::Slice(),
+                              numeric::Slice(ii, ii + 1)));
+          numeric::Array2D<common::Float64> referenceVector = (
+            numeric::subArray(m_symmetricEigenvectors[index0], numeric::Slice(),
+                              numeric::Slice(ii, ii + 1)));
+          common::Float64 k0 = 1.0;
+          if(numeric::dot<common::Float64>(testVector.ravel(),
+                                           referenceVector.ravel()) < 0.0) {
+            k0 = -1.0;
+          }
+          BRICK_TEST_ASSERT(
+            this->approximatelyEqual(k0 * testVector, referenceVector));
+        }
       }
     }
 
@@ -982,10 +995,30 @@ namespace brick {
           this->approximatelyEqual(aMatrix, m_testMatrices[index0]));
 
         // Check that results are correct.
-        BRICK_TEST_ASSERT(this->approximatelyEqual(uMatrix, m_uMatrices[index0]));
         BRICK_TEST_ASSERT(this->approximatelyEqual(sVector, m_sVectors[index0]));
-        BRICK_TEST_ASSERT(
-          this->approximatelyEqual(vtMatrix, m_vtMatrices[index0]));
+        for(size_t ii = 0; ii < uMatrix.columns(); ++ii) {
+          numeric::Array2D<common::Float64> uVector = (
+            numeric::subArray(uMatrix, numeric::Slice(),
+                              numeric::Slice(ii, ii + 1)));
+          numeric::Array2D<common::Float64> referenceUVector = (
+            numeric::subArray(m_uMatrices[index0], numeric::Slice(),
+                              numeric::Slice(ii, ii + 1)));
+          numeric::Array2D<common::Float64> vtVector = (
+            numeric::subArray(vtMatrix, numeric::Slice(ii, ii + 1),
+                              numeric::Slice()));
+          numeric::Array2D<common::Float64> referenceVtVector = (
+            numeric::subArray(m_vtMatrices[index0], numeric::Slice(ii, ii + 1),
+                              numeric::Slice()));
+          common::Float64 k0 = 1.0;
+          if(numeric::dot<common::Float64>(uVector.ravel(),
+                                           referenceUVector.ravel()) < 0.0) {
+            k0 = -1.0;
+          }
+          BRICK_TEST_ASSERT(
+            this->approximatelyEqual(k0 * uVector, referenceUVector));
+          BRICK_TEST_ASSERT(
+            this->approximatelyEqual(k0 * vtVector, referenceVtVector));
+        }
       }
     }
 

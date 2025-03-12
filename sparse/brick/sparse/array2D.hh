@@ -545,7 +545,6 @@ namespace brick {
 
       typedef brick::numeric::Index2D Key;
       struct Index2DComparator
-        : public std::binary_function<Key, Key, bool>
       {
         bool operator()(Key const& key0, Key const& key1) {
           if(key0.getRow() > key1.getRow()) {return true;}

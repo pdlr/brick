@@ -31,10 +31,6 @@ namespace brick {
     class BinaryComposeFunctor
     {
     public:
-      using first_argument_type  = typename Functor1::first_argument_type;
-      using second_argument_type = typename Functor1::second_argument_type;
-      using result_type          = typename Functor0::result_type;
-
       /**
        * The constructor accepts instances of the three functor types to
        * be composed, and makes local copies of them for use in
@@ -109,10 +105,6 @@ namespace brick {
     class ComposeFunctor_1_2
     {
     public:
-      using first_argument_type  = typename Functor1::first_argument_type;
-      using second_argument_type = typename Functor1::second_argument_type;
-      using result_type          = typename Functor0::result_type;
-
       /**
        * The constructor accepts instances of the two functor types to
        * be composed, and makes local copies of them for use in

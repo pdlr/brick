@@ -23,8 +23,6 @@ namespace brick {
 
     template<ImageFormat FORMAT0, ImageFormat FORMAT1>
     class ColorspaceConverter
-      : public std::unary_function<typename Image<FORMAT0>::PixelType,
-                                   typename Image<FORMAT1>::PixelType>
     {
     public:
 
@@ -33,8 +31,6 @@ namespace brick {
        * std::unary_function constructor.
        */
       ColorspaceConverter()
-        : std::unary_function<typename Image<FORMAT0>::PixelType,
-                              typename Image<FORMAT1>::PixelType>()
         {}
 
 

@@ -285,7 +285,7 @@ namespace brick {
      **/
     template <class Type>
     class Transform2DFunctor
-      : public std::unary_function< Vector2D<Type>, Vector2D<Type> > {
+    {
 
     public:
 

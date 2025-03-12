@@ -61,8 +61,6 @@ namespace brick {
      **/
     template <class Functor, class Scalar = double>
     class GradientFunction
-      : public std::unary_function<typename Functor::argument_type,
-                                   typename Functor::result_type>
     {
     public:
       /**

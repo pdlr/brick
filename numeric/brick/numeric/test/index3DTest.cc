@@ -23,9 +23,8 @@ namespace num = brick::numeric;
 // Anonymous namespace for local functions and classes.
 namespace {
 
-  class cmp : public std::binary_function<num::Index3D, num::Index3D, bool> {
+  class cmp {
   public:
-
     bool operator()(num::Index3D const& arg0, num::Index3D const& arg1) {
       return arg0.getSlice() < arg1.getSlice();
     }

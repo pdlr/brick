@@ -49,7 +49,7 @@ namespace brick {
        ** operator()(Type const&) input argument.
        **/
       template <class Type>
-      struct absFunctor : public std::unary_function<Type, Type> {
+      struct absFunctor {
         /**
          * This is the operator which does all the work.  Since there's
          * no generic way to compute the absolute value of a type, the
@@ -69,8 +69,7 @@ namespace brick {
        ** This functor specializes absFunctor for long double floats.
        **/
       template <>
-      struct absFunctor<long double>
-        : public std::unary_function<long double, long double> {
+      struct absFunctor<long double> {
         /**
          * This is the operator which does all the work.  It returns the
          * absolute value of its input argument.
@@ -89,7 +88,7 @@ namespace brick {
        ** This functor specializes absFunctor for double precision floats.
        **/
       template <>
-      struct absFunctor<double> : public std::unary_function<double, double> {
+      struct absFunctor<double> {
         /**
          * This is the operator which does all the work.  It returns the
          * absolute value of its input argument.
@@ -106,7 +105,7 @@ namespace brick {
        ** This functor specializes absFunctor for single precision floats.
        **/
       template <>
-      struct absFunctor<float> : public std::unary_function<float, float> {
+      struct absFunctor<float> {
         /**
          * This is the operator which does all the work.  It returns the
          * absolute value of its input argument.
@@ -125,8 +124,7 @@ namespace brick {
        ** This functor specializes absFunctor for long ints.
        **/
       template <>
-      struct absFunctor<long int>
-        : public std::unary_function<long int, long int> {
+      struct absFunctor<long int> {
         /**
          * This is the operator which does all the work.  It returns the
          * absolute value of its input argument.
@@ -143,8 +141,7 @@ namespace brick {
        ** This functor specializes absFunctor for long long ints.
        **/
       template <>
-      struct absFunctor<long long int>
-        : public std::unary_function<long long int, long long int> {
+      struct absFunctor<long long int> {
         /**
          * This is the operator which does all the work.  It returns the
          * absolute value of its input argument.
@@ -163,7 +160,7 @@ namespace brick {
        ** This functor specializes absFunctor for ints.
        **/
       template <>
-      struct absFunctor<int> : public std::unary_function<int, int> {
+      struct absFunctor<int> {
         /**
          * This is the operator which does all the work.  It returns the
          * absolute value of its input argument.

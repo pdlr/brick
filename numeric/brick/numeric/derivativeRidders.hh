@@ -192,7 +192,6 @@ namespace brick {
      **/
     template <class Functor, class Scalar>
     class NDimensionalFunctorAdapter
-      : public std::unary_function<Scalar, typename Functor::result_type>
     {
     public:
 

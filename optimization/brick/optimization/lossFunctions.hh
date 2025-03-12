@@ -53,9 +53,10 @@ namespace brick {
      **/
     template <class FloatType>
     class LossFunctionCauchy
-      : public std::unary_function<FloatType, FloatType>
     {
     public:
+      using argument_type = FloatType;
+      using return_type = FloatType;
       /**
        * Constructs a loss function based on the Cauchy distribution:
        *
@@ -149,9 +150,11 @@ namespace brick {
      **/
     template <class FloatType>
     class LossFunctionHuber
-      : public std::unary_function<FloatType, FloatType>
     {
     public:
+      using argument_type = FloatType;
+      using return_type = FloatType;
+
       /**
        * Constructs a Huber loss function, specifying the desired
        * transition point between quadratic and linear shape.
@@ -244,9 +247,10 @@ namespace brick {
      **/
     template <class FloatType>
     class LossFunctionPseudoHuber
-      : public std::unary_function<FloatType, FloatType>
     {
     public:
+      using argument_type = FloatType;
+      using return_type = FloatType;
       /**
        * Constructs a pseudo-Huber loss function, specifying the delta
        * parameter that controlls the asymptotic shape of the
@@ -330,9 +334,11 @@ namespace brick {
      **/
     template <class FloatType>
     class LossFunctionTukeyBiweight
-      : public std::unary_function<FloatType, FloatType>
     {
     public:
+      using argument_type = FloatType;
+      using return_type = FloatType;
+
       /**
        * Constructs a Tukey biweight loss function, which has first
        * derivative as follows:
@@ -443,9 +449,8 @@ namespace brick {
     template <class FloatType>
     LossFunctionCauchy<FloatType>::
     LossFunctionCauchy()
-      : std::unary_function<FloatType, FloatType>()
     {
-      // Empty.
+      // Empty
     }
 
 
@@ -487,11 +492,10 @@ namespace brick {
     template <class FloatType>
     LossFunctionHuber<FloatType>::
     LossFunctionHuber(FloatType const& delta)
-      : std::unary_function<FloatType, FloatType>(),
-        m_delta(delta),
+      : m_delta(delta),
         m_deltaSquaredOverTwo(delta * delta * FloatType(0.5))
     {
-      // Empty.
+      // Empty
     }
 
 
@@ -546,10 +550,9 @@ namespace brick {
     template <class FloatType>
     LossFunctionPseudoHuber<FloatType>::
     LossFunctionPseudoHuber(FloatType const& delta)
-      : std::unary_function<FloatType, FloatType>(),
-        m_deltaSquared(delta * delta)
+      : m_deltaSquared(delta * delta)
     {
-      // Empty.
+      // Empty
     }
 
 
@@ -593,11 +596,10 @@ namespace brick {
     template <class FloatType>
     LossFunctionTukeyBiweight<FloatType>::
     LossFunctionTukeyBiweight(FloatType const& cc)
-      : std::unary_function<FloatType, FloatType>(),
-        m_c(cc),
+      : m_c(cc),
         m_cSquared(cc * cc)
     {
-      // Empty.
+      // Empty
     }
 
 

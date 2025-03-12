@@ -353,8 +353,7 @@ namespace brick {
      ** This helper class works with Transform3D::getFunctor()
      **/
     template <class Type>
-    class Transform3DFunctor
-      : public std::unary_function< Vector3D<Type>, Vector3D<Type> > {
+    class Transform3DFunctor {
 
     public:
 

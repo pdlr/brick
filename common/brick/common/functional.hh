@@ -29,9 +29,6 @@ namespace brick {
      **/
     template <class Functor0, class Functor1, class Functor2>
     class BinaryComposeFunctor
-      : public std::binary_function<typename Functor1::argument_type,
-                                    typename Functor2::argument_type,
-                                    typename Functor0::result_type>
     {
     public:
       /**
@@ -106,9 +103,6 @@ namespace brick {
      **/
     template <class Functor0, class Functor1>
     class ComposeFunctor_1_2
-      : public std::binary_function<typename Functor1::first_argument_type,
-                                    typename Functor1::second_argument_type,
-                                    typename Functor0::result_type>
     {
     public:
       /**
@@ -170,7 +164,6 @@ namespace brick {
      **/
     template <class Type0, class Type1>
     class ExtractFirstFunctor
-      : public std::unary_function<std::pair<Type0, Type1>, Type0>
     {
     public:
       /**
@@ -214,7 +207,6 @@ namespace brick {
      **/
     template <class Type0, class Type1>
     class ExtractSecondFunctor
-      : public std::unary_function<std::pair<Type0, Type1>, Type1>
     {
     public:
       /**
@@ -260,7 +252,6 @@ namespace brick {
      **/
     template <class Type>
     class ApproximatelyEqualFunctor
-      : public std::binary_function<Type, Type, bool>
     {
     public:
       /**
@@ -311,7 +302,6 @@ namespace brick {
      **/
     template <class ArgumentType0, class ArgumentType1, class ResultType>
     class PointerToBinaryFunctionRA
-      : public std::binary_function<ArgumentType0, ArgumentType0, ResultType>
     {
     public:
       /// Typedef describing what type of function is to be wrapped by this
@@ -351,7 +341,8 @@ namespace brick {
      ** of one type into instances of another.
      **/
     template <class TypeIn, class TypeOut>
-    struct StaticCastFunctor : public std::unary_function<TypeIn, TypeOut> {
+    struct StaticCastFunctor
+    {
 
       /**
        * Static cast the input argument to TypeOut, and return the result.
@@ -373,8 +364,6 @@ namespace brick {
      **/
     template <class Functor0, class Functor1>
     class UnaryComposeFunctor
-      : public std::unary_function<typename Functor1::argument_type,
-                                   typename Functor0::result_type>
     {
     public:
       /**

@@ -46,8 +46,8 @@ namespace brick {
     // @endcode
     // which Ridders used as an example in his paper.
     struct RiddersFunctor0
-      : public std::unary_function<double, double>
     {
+      using argument_type = double;
       double operator()(double xx) {
         return std::exp(xx) / (std::sin(xx) - xx * xx);
       }

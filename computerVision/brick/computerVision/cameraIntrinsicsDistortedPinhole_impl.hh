@@ -38,10 +38,11 @@ namespace brick {
        **/
       template <class FloatType>
       class ReverseProjectionObjective
-        : public std::unary_function<brick::numeric::Array1D<FloatType>,
-                                     FloatType>
       {
       public:
+        using argument_type = brick::numeric::Array1D<FloatType>;
+        using result_type = FloatType;
+
         ReverseProjectionObjective();
 
         ReverseProjectionObjective(

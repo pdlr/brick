@@ -27,7 +27,6 @@ namespace brick {
      **/
     template <class Type>
     class ApproximatelyEqualFunctor
-      : public std::binary_function<Type, Type, bool>
     {
     public:
       /**

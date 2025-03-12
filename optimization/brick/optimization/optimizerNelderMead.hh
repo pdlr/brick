@@ -328,9 +328,11 @@ namespace brick {
 
       template <class Type0, class Type1>
       class extractSecond
-        : public std::unary_function<std::pair<Type0, Type1>, Type1>
       {
       public:
+          using argument_type = std::pair<Type0, Type1>;
+          using return_type = Type1;
+
         Type1 operator()(const std::pair<Type0, Type1>& inputPair) {
           return inputPair.second;
         }

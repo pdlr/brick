@@ -27,7 +27,6 @@ namespace brick {
      **/
     template <class Type>
     struct Gaussian1DFunctor
-      : public std::unary_function<Type, Type>
     {
       /**
        * The constructor initializes the Gaussian to zero mean and the
@@ -64,7 +63,6 @@ namespace brick {
      **/
     template <class Type>
     struct LogFunctor
-      : public std::unary_function<Type, Type>
     {
       /**
        * Compute the log of the input argument, and return the result.
@@ -87,7 +85,6 @@ namespace brick {
      **/
     template <class TypeIn, class TypeOut>
     struct NumericTypeConversionFunctor
-      : public std::unary_function<TypeIn, TypeOut>
     {
       /**
        * This operator returns the output value which minimizes the
@@ -116,7 +113,6 @@ namespace brick {
      **/
     template <class Type>
     struct SquareRootFunctor
-      : public std::unary_function<Type, Type>
     {
       /**
        * Take the square root of the input argument, and return the result.

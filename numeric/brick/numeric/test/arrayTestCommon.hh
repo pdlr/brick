@@ -30,13 +30,13 @@ namespace brick {
 
     typedef ArrayType array_type;
     typedef FixtureType TestFixtureType;
-    
+
     // Constructor
     ArrayTestCommon(const std::string& testFixtureName);
 
     // Destructor
     virtual ~ArrayTestCommon() {}
-    
+
     // Pure virtual members must be overridden by a child class.
     virtual void
     checkShapeEquality(const ArrayType& array0,
@@ -45,7 +45,7 @@ namespace brick {
     virtual void
     checkShapeEquality(const ArrayType& array0,
                        const ComparisonResultType& array1) = 0;
-    
+
     virtual void
     checkValueEquality(const ArrayType& array0,
                        const ArrayType& array1,
@@ -68,8 +68,8 @@ namespace brick {
 
     virtual ArrayType
     getSquaresArray() = 0;
-    
-    
+
+
     // Tests of member functions.
     void testOperatorPlusEquals__ArrayND();
     void testOperatorPlusEquals__Type();
@@ -106,7 +106,7 @@ namespace brick {
   protected:
 
     // Currently no protected members.
-    
+
   }; // class ArrayTestCommon
 
 
@@ -115,19 +115,19 @@ namespace brick {
   namespace {
 
     template<class Type0, class Type1, class Type2>
-    class DividedByFunctor
-      : public std::binary_function<Type0, Type1, Type2> {
+    class DividedByFunctor {
     public:
+      using result_type = Type2;
       Type2 operator()(Type0& arg0, const Type1& arg1) {
         return arg0 / arg1;
       }
     };
-    
-    
+
+
     template<class Type0, class Type1>
-    class DividedByEqualsFunctor
-      : public std::binary_function<Type0, Type1, Type0> {
+    class DividedByEqualsFunctor {
     public:
+      using result_type = Type0;
       Type0 operator()(Type0& arg0, const Type1& arg1) {
         return arg0 /= arg1;
       }
@@ -135,39 +135,39 @@ namespace brick {
 
 
     template<class Type0, class Type1, class Type2>
-    class EqualEqualFunctor
-      : public std::binary_function<Type0, Type1, Type2> {
+    class EqualEqualFunctor {
     public:
+      using result_type = Type2;
       Type2 operator()(const Type0& arg0, const Type1& arg1) {
         return arg0 == arg1;
       }
     };
-    
-    
+
+
     template<class Type0, class Type1, class Type2>
-    class GreaterThanFunctor
-      : public std::binary_function<Type0, Type1, Type2> {
+    class GreaterThanFunctor {
     public:
+      using result_type = Type2;
       Type2 operator()(const Type0& arg0, const Type1& arg1) {
         return arg0 > arg1;
       }
     };
-    
-    
+
+
     template<class Type0, class Type1, class Type2>
-    class GreaterThanOrEqualToFunctor
-      : public std::binary_function<Type0, Type1, Type2> {
+    class GreaterThanOrEqualToFunctor {
     public:
+      using result_type = Type2;
       Type2 operator()(const Type0& arg0, const Type1& arg1) {
         return arg0 >= arg1;
       }
     };
-    
-    
+
+
     template<class Type0, class Type1, class Type2>
-    class LessThanFunctor
-      : public std::binary_function<Type0, Type1, Type2> {
+    class LessThanFunctor {
     public:
+      using result_type = Type2;
       Type2 operator()(const Type0& arg0, const Type1& arg1) {
         return arg0 < arg1;
       }
@@ -175,9 +175,9 @@ namespace brick {
 
 
     template<class Type0, class Type1, class Type2>
-    class LessThanOrEqualToFunctor
-      : public std::binary_function<Type0, Type1, Type2> {
+    class LessThanOrEqualToFunctor {
     public:
+      using result_type = Type2;
       Type2 operator()(const Type0& arg0, const Type1& arg1) {
         return arg0 <= arg1;
       }
@@ -185,9 +185,9 @@ namespace brick {
 
 
     template<class Type0, class Type1, class Type2>
-    class MinusFunctor
-      : public std::binary_function<Type0, Type1, Type2> {
+    class MinusFunctor {
     public:
+      using result_type = Type2;
       Type2 operator()(Type0& arg0, const Type1& arg1) {
         return arg0 - arg1;
       }
@@ -195,19 +195,19 @@ namespace brick {
 
 
     template<class Type0, class Type1>
-    class MinusEqualsFunctor
-      : public std::binary_function<Type0, Type1, Type0> {
+    class MinusEqualsFunctor {
     public:
+      using result_type = Type0;
       Type0 operator()(Type0& arg0, const Type1& arg1) {
         return arg0 -= arg1;
       }
     };
 
-    
+
     template<class Type0, class Type1, class Type2>
-    class PlusFunctor
-      : public std::binary_function<Type0, Type1, Type2> {
+    class PlusFunctor {
     public:
+      using result_type = Type2;
       Type2 operator()(Type0& arg0, const Type1& arg1) {
         return arg0 + arg1;
       }
@@ -215,19 +215,19 @@ namespace brick {
 
 
     template<class Type0, class Type1>
-    class PlusEqualsFunctor
-      : public std::binary_function<Type0, Type1, Type0> {
+    class PlusEqualsFunctor {
     public:
+      using result_type = Type0;
       Type0 operator()(Type0& arg0, const Type1& arg1) {
         return arg0 += arg1;
       }
     };
 
-    
+
     template<class Type0, class Type1, class Type2>
-    class TimesFunctor
-      : public std::binary_function<Type0, Type1, Type2> {
+    class TimesFunctor {
     public:
+      using result_type = Type2;
       Type2 operator()(Type0& arg0, const Type1& arg1) {
         return arg0 * arg1;
       }
@@ -235,15 +235,15 @@ namespace brick {
 
 
     template<class Type0, class Type1>
-    class TimesEqualsFunctor
-      : public std::binary_function<Type0, Type1, Type0> {
+    class TimesEqualsFunctor {
     public:
+      using result_type = Type0;
       Type0 operator()(Type0& arg0, const Type1& arg1) {
         return arg0 *= arg1;
       }
     };
 
-    
+
     /* ============== Locally defined functions ============== */
 
     template <class NumericType>
@@ -284,19 +284,19 @@ namespace brick {
         10.0 * std::pow((double)2.0, (double)(exponent - 52)));
     }
 
-    
 
-    /** 
+
+    /**
      * This function template simply dispatches to
      * brick::test::approximatelyEqual().  We use it instead of using
      * brick::test::approximatelyEqual() directly because we can specialize
      * this function to handle funky cases, such as comparing two
      * bools.
-     * 
+     *
      * @param argument0 This argument is the first element to be compared.
-     * 
+     *
      * @param argument1 This argument is the second element to be compared.
-     * 
+     *
      * @return The return value is true if the two elements are just
      * about equal, false otherwise.
      */
@@ -306,16 +306,16 @@ namespace brick {
       return test::approximatelyEqual(
         argument0, argument1, static_cast<Type>(1.0E-14));
     }
-      
-    
-    /** 
+
+
+    /**
      * This function specializes testApproximatelyEqual() for
      * arguments of type bool.
-     * 
+     *
      * @param argument0 This argument is the first element to be compared.
-     * 
+     *
      * @param argument1 This argument is the second element to be compared.
-     * 
+     *
      * @return The return value is true if the two elements are equal,
      * false otherwise.
      */
@@ -327,17 +327,17 @@ namespace brick {
     testApproximatelyEqual(bool argument0, bool argument1) {
       return argument0 == argument1;
     }
-    
-    
-    /** 
+
+
+    /**
      * This function is a helper to avoid code duplication in operator
      * tests.  We'd like to make this function be a member of
      * ArrayTestCommon, but instead we make it external because this is a
      * little easier on the compiler.
-     * 
+     *
      * @param arrayFunctor This argument will be applied to an ArrayND
      * instance and an element instance.
-     * 
+     *
      * @param elementFunctor This argument will be applied to element
      * instances, mimicing the effect of arrayFunctor.
      */
@@ -350,10 +350,10 @@ namespace brick {
       typedef typename TestClass::array_type ArrayType;
       ArrayType array0 = testInstance.getSquaresArray();
       ArrayType array1 = testInstance.getFibonacciArray();
-      
+
       // Apply the operator.
       typename Functor0::result_type result = arrayFunctor(array0, array1);
-      
+
       // Get the data again, just in case it was screwed up somehow
       // by the operator.
       array0 = testInstance.getSquaresArray();
@@ -382,17 +382,17 @@ namespace brick {
 	BRICK_TEST_ASSERT(equalFlag);
       }
     }
-    
 
-    /** 
+
+    /**
      * This member function is a helper to avoid code duplication in
      * operator tests.  We'd like to make this function be a member of
      * ArrayTestCommon, but instead we make it external because this is a
      * little easier on the compiler.
-     * 
+     *
      * @param arrayFunctor This argument will be applied to an ArrayND
      * instance and an element instance.
-     * 
+     *
      * @param elementFunctor This argument will be applied to element
      * instances, mimicing the effect of arrayFunctor.
      */
@@ -434,15 +434,15 @@ namespace brick {
     }
 
 
-    /** 
+    /**
      * This member function is a helper to avoid code duplication in
      * operator tests.  We'd like to make this function be a member of
      * ArrayTestCommon, but instead we make it external because this is a
      * little easier on the compiler.
-     * 
+     *
      * @param arrayFunctor This argument will be applied to an ArrayND
      * instance and an element instance.
-     * 
+     *
      * @param elementFunctor This argument will be applied to element
      * instances, mimicing the effect of arrayFunctor.
      */
@@ -482,18 +482,18 @@ namespace brick {
 	BRICK_TEST_ASSERT(equalFlag);
       }
     }
-    
 
-    
-    /** 
+
+
+    /**
      * This member function is a helper to avoid code duplication in
      * operator tests.  We'd like to make this function be a member of
      * ArrayTestCommon, but instead we make it external because this is a
      * little easier on the compiler.
-     * 
+     *
      * @param arrayFunctor This argument will be applied to ArrayND
      * instances.
-     * 
+     *
      * @param elementFunctor This argument will be applied to element
      * instances, mimicing the effect of arrayFunctor.
      */
@@ -510,10 +510,10 @@ namespace brick {
 
       // Preliminary recordkeeping.
       typename ArrayType::value_type* dataPtr = array0.data();
-      
+
       // Apply the operator.  This should modify array0.
       arrayFunctor(array0, array1);
-      
+
       // Get the data again, just in case it was screwed up somehow
       // by the operator.
       array1 = testInstance.getFibonacciArray();
@@ -537,17 +537,17 @@ namespace brick {
                                            tolerance));
       }
     }
-    
 
-    /** 
+
+    /**
      * This member function is a helper to avoid code duplication in
      * operator tests.  We'd like to make this function be a member of
      * ArrayTestCommon, but instead we make it external because this is a
      * little easier on the compiler.
-     * 
+     *
      * @param arrayFunctor This argument will be applied to an ArrayND
      * instance and an element instance.
-     * 
+     *
      * @param elementFunctor This argument will be applied to element
      * instances, mimicing the effect of arrayFunctor.
      */
@@ -564,10 +564,10 @@ namespace brick {
 
       // Preliminary recordkeeping.
       typename ArrayType::value_type* dataPtr = array0.data();
-      
+
       // Apply the operator.
       arrayFunctor(array0, argument);
-      
+
       // Get another array, for size checking.
       ArrayType array1 = testInstance.getFibonacciArray();
 
@@ -589,11 +589,11 @@ namespace brick {
           test::approximatelyEqual(array0[index0], targetValue, tolerance));
       }
     }
-    
-    
+
+
   }
 
-  
+
   /* ============== Member Function Definititions ============== */
 
   template <class FixtureType, class ArrayType, class ComparisonResultType>
@@ -652,12 +652,12 @@ namespace brick {
         ElementType,
         ElementType >
       ElementFunctor;
-      
+
     testOperatorXEquals__ArrayND(
       *this, ArrayFunctor(), ElementFunctor());
   }
 
-  
+
   template <class FixtureType, class ArrayType, class ComparisonResultType>
   void
   ArrayTestCommon<FixtureType, ArrayType, ComparisonResultType>::
@@ -677,7 +677,7 @@ namespace brick {
         ElementType,
         ElementType >
       ElementFunctor;
-      
+
     testOperatorXEquals__Type(
       *this, ArrayFunctor(), ElementFunctor(), increment);
   }
@@ -699,7 +699,7 @@ namespace brick {
         ElementType,
         ElementType >
       ElementFunctor;
-      
+
     testOperatorXEquals__ArrayND(
       *this, ArrayFunctor(), ElementFunctor());
   }
@@ -726,7 +726,7 @@ namespace brick {
         ElementType,
         ElementType >
       ElementFunctor;
-      
+
     testOperatorXEquals__Type(
       *this, ArrayFunctor(), ElementFunctor(), increment);
   }
@@ -751,7 +751,7 @@ namespace brick {
         ElementType,
         ElementType >
       ElementFunctor;
-      
+
     testOperatorXEquals__ArrayND(
       *this, ArrayFunctor(), ElementFunctor());
   }
@@ -778,7 +778,7 @@ namespace brick {
         ElementType,
         ElementType >
       ElementFunctor;
-      
+
     testOperatorXEquals__Type(
       *this, ArrayFunctor(), ElementFunctor(), multiplier);
   }
@@ -803,7 +803,7 @@ namespace brick {
         ElementType,
         ElementType >
       ElementFunctor;
-      
+
     testOperatorXEquals__ArrayND(
       *this, ArrayFunctor(), ElementFunctor());
   }
@@ -830,7 +830,7 @@ namespace brick {
         ElementType,
         ElementType >
       ElementFunctor;
-      
+
     testOperatorXEquals__Type(
       *this, ArrayFunctor(), ElementFunctor(), multiplier);
   }
@@ -851,17 +851,17 @@ namespace brick {
                          ElementType,
                          ComparisonResultType >
       ArrayFunctor;
-    
+
     typedef EqualEqualFunctor< ElementType,
                                ElementType,
                                typename ComparisonResultType::value_type >
       ElementFunctor;
-    
+
     testOperatorX__ArrayND__Type(
       *this, ArrayFunctor(), ElementFunctor(), target);
   }
 
-  
+
   template <class FixtureType, class ArrayType, class ComparisonResultType>
   void
   ArrayTestCommon<FixtureType, ArrayType, ComparisonResultType>::
@@ -874,17 +874,17 @@ namespace brick {
                          ArrayType,
                          ComparisonResultType >
       ArrayFunctor;
-    
+
     typedef EqualEqualFunctor< ElementType,
                                ElementType,
                                typename ComparisonResultType::value_type >
       ElementFunctor;
-    
+
     testOperatorX__ArrayND__ArrayND(
       *this, ArrayFunctor(), ElementFunctor());
   }
 
-  
+
   template <class FixtureType, class ArrayType, class ComparisonResultType>
   void
   ArrayTestCommon<FixtureType, ArrayType, ComparisonResultType>::
@@ -900,17 +900,17 @@ namespace brick {
                           ElementType,
                           ComparisonResultType >
       ArrayFunctor;
-    
+
     typedef GreaterThanFunctor< ElementType,
                                 ElementType,
                                 typename ComparisonResultType::value_type >
       ElementFunctor;
-    
+
     testOperatorX__ArrayND__Type(
       *this, ArrayFunctor(), ElementFunctor(), threshold);
   }
 
-  
+
 
   template <class FixtureType, class ArrayType, class ComparisonResultType>
   void
@@ -928,14 +928,14 @@ namespace brick {
         ElementType,
         ComparisonResultType >
       ArrayFunctor;
-    
+
     typedef
       GreaterThanOrEqualToFunctor<
         ElementType,
         ElementType,
         typename ComparisonResultType::value_type >
       ElementFunctor;
-    
+
     testOperatorX__ArrayND__Type(
       *this, ArrayFunctor(), ElementFunctor(), threshold);
   }
@@ -956,12 +956,12 @@ namespace brick {
                        ElementType,
                        ComparisonResultType >
       ArrayFunctor;
-    
+
     typedef LessThanFunctor< ElementType,
                              ElementType,
                              typename ComparisonResultType::value_type >
       ElementFunctor;
-    
+
     testOperatorX__ArrayND__Type(
       *this, ArrayFunctor(), ElementFunctor(), threshold);
   }
@@ -983,14 +983,14 @@ namespace brick {
         ElementType,
         ComparisonResultType >
       ArrayFunctor;
-    
+
     typedef
       LessThanOrEqualToFunctor<
         ElementType,
         ElementType,
         typename ComparisonResultType::value_type >
       ElementFunctor;
-    
+
     testOperatorX__ArrayND__Type(
       *this, ArrayFunctor(), ElementFunctor(), threshold);
   }
@@ -1016,12 +1016,12 @@ namespace brick {
         ElementType,
         ElementType >
       ElementFunctor;
-      
+
     testOperatorX__ArrayND__ArrayND(
       *this, ArrayFunctor(), ElementFunctor());
   }
 
-  
+
   template <class FixtureType, class ArrayType, class ComparisonResultType>
   void
   ArrayTestCommon<FixtureType, ArrayType, ComparisonResultType>::
@@ -1043,12 +1043,12 @@ namespace brick {
         ElementType,
         ElementType >
       ElementFunctor;
-      
+
     testOperatorX__ArrayND__ArrayND(
       *this, ArrayFunctor(), ElementFunctor());
   }
 
-  
+
   template <class FixtureType, class ArrayType, class ComparisonResultType>
   void
   ArrayTestCommon<FixtureType, ArrayType, ComparisonResultType>::
@@ -1075,7 +1075,7 @@ namespace brick {
       *this, ArrayFunctor(), ElementFunctor());
   }
 
-  
+
   template <class FixtureType, class ArrayType, class ComparisonResultType>
   void
   ArrayTestCommon<FixtureType, ArrayType, ComparisonResultType>::
@@ -1098,12 +1098,12 @@ namespace brick {
         ElementType,
         ElementType >
       ElementFunctor;
-      
+
     testOperatorX__ArrayND__ArrayND(
       *this, ArrayFunctor(), ElementFunctor());
   }
 
-  
+
   template <class FixtureType, class ArrayType, class ComparisonResultType>
   void
   ArrayTestCommon<FixtureType, ArrayType, ComparisonResultType>::
@@ -1128,12 +1128,12 @@ namespace brick {
         ElementType,
         ElementType >
       ElementFunctor;
-      
+
     testOperatorX__ArrayND__Type(
       *this, ArrayFunctor(), ElementFunctor(), increment);
   }
 
-  
+
   template <class FixtureType, class ArrayType, class ComparisonResultType>
   void
   ArrayTestCommon<FixtureType, ArrayType, ComparisonResultType>::
@@ -1158,12 +1158,12 @@ namespace brick {
         ElementType,
         ElementType >
       ElementFunctor;
-      
+
     testOperatorX__ArrayND__Type(
       *this, ArrayFunctor(), ElementFunctor(), increment);
   }
 
-  
+
   template <class FixtureType, class ArrayType, class ComparisonResultType>
   void
   ArrayTestCommon<FixtureType, ArrayType, ComparisonResultType>::
@@ -1188,12 +1188,12 @@ namespace brick {
         ElementType,
         ElementType >
       ElementFunctor;
-      
+
     testOperatorX__ArrayND__Type(
       *this, ArrayFunctor(), ElementFunctor(), multiplier);
   }
 
-  
+
   template <class FixtureType, class ArrayType, class ComparisonResultType>
   void
   ArrayTestCommon<FixtureType, ArrayType, ComparisonResultType>::
@@ -1218,12 +1218,12 @@ namespace brick {
         ElementType,
         ElementType >
       ElementFunctor;
-      
+
     testOperatorX__ArrayND__Type(
       *this, ArrayFunctor(), ElementFunctor(), multiplier);
   }
 
-  
+
   template <class FixtureType, class ArrayType, class ComparisonResultType>
   void
   ArrayTestCommon<FixtureType, ArrayType, ComparisonResultType>::
@@ -1248,12 +1248,12 @@ namespace brick {
         ElementType,
         ElementType >
       ElementFunctor;
-      
+
     testOperatorX__Type__ArrayND(
       *this, ArrayFunctor(), ElementFunctor(), increment);
   }
 
-  
+
 //   template <class FixtureType, class ArrayType, class ComparisonResultType>
 //   void
 //   ArrayTestCommon<FixtureType, ArrayType, ComparisonResultType>::
@@ -1278,12 +1278,12 @@ namespace brick {
 //         ElementType,
 //         ElementType >
 //       ElementFunctor;
-      
+
 //     testOperatorX__Type__ArrayND(
 //       *this, ArrayFunctor(), ElementFunctor(), increment);
 //   }
 
-  
+
   template <class FixtureType, class ArrayType, class ComparisonResultType>
   void
   ArrayTestCommon<FixtureType, ArrayType, ComparisonResultType>::
@@ -1308,12 +1308,12 @@ namespace brick {
         ElementType,
         ElementType >
       ElementFunctor;
-      
+
     testOperatorX__Type__ArrayND(
       *this, ArrayFunctor(), ElementFunctor(), multiplier);
   }
 
-  
+
 //   template <class FixtureType, class ArrayType, class ComparisonResultType>
 //   void
 //   ArrayTestCommon<FixtureType, ArrayType, ComparisonResultType>::
@@ -1338,12 +1338,12 @@ namespace brick {
 //         ElementType,
 //         ElementType >
 //       ElementFunctor;
-      
+
 //     testOperatorX__Type__ArrayND(
 //       *this, ArrayFunctor(), ElementFunctor(), multiplier);
 //   }
 
-  
+
   template <class FixtureType, class ArrayType, class ComparisonResultType>
   void
   ArrayTestCommon<FixtureType, ArrayType, ComparisonResultType>::
@@ -1359,7 +1359,7 @@ namespace brick {
       array0, array1, static_cast<typename ArrayType::value_type>(1.0E-10));
   }
 
-  
+
   template <class FixtureType, class ArrayType, class ComparisonResultType>
   void
   ArrayTestCommon<FixtureType, ArrayType, ComparisonResultType>::
@@ -1368,5 +1368,5 @@ namespace brick {
     // No explicit test.
   }
 
-  
+
 } // namespace brick

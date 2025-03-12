@@ -361,7 +361,7 @@ namespace brick {
        *
        * @return The return value is a reference to *this.
        */
-      virtual Exception& operator=(const Exception& source) throw();
+      Exception& operator=(const Exception& source) throw();
 
     protected:
       /**

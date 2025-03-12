@@ -47,10 +47,8 @@ namespace brick {
      **/
     template <unsigned int Dimension, class Type, class FloatType = double>
     class KDComparator
-      : public std::binary_function<Type, Type, bool>
     {
       public:
-
       /**
        * Constructor.  Each KDComparator is associated with a specific
        * level of the KD-Tree, and therefor with a specific axis in

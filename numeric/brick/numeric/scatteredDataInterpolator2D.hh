@@ -27,7 +27,7 @@ namespace brick {
      ** when approximation residuals are sufficiently small.
      **/
     template <class ResidualType>
-    struct FailFunctor : public std::unary_function<ResidualType, bool> {
+    struct FailFunctor {
       bool operator()(ResidualType const&) {return false;}
     };
 
